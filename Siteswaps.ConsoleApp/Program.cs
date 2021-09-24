@@ -3,7 +3,7 @@ using DotNetGraph.Extensions;
 using Siteswaps;
 using Siteswaps.Visualization;
 
-var input = new SiteswapGeneratorInput(3, 4);
+var input = new StateGraphGeneratorInput(3, 4);
 var graph = new StateGraphGenerator().Generate(input);
 var dot = new GraphFactory()
     .Create(graph)

@@ -1,4 +1,5 @@
 ﻿namespace Siteswaps
 {
-    public record StateGraphGeneratorInput(int NumberOfBalls, int Period);
+    public record StateGraphGeneratorInput(int NumberOfObjects, int Period);
+
 }

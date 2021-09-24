@@ -11,7 +11,7 @@ namespace Siteswaps.Visualization.Test
         [Test]
         public async Task Verify_Dot_File_For_Simple_State_Graph()
         {
-            var input = new SiteswapGeneratorInput(3, 5);
+            var input = new StateGraphGeneratorInput(3, 5);
             var graph = new StateGraphGenerator().Generate(input);
             var dot = new GraphFactory()
                 .Create(graph)

@@ -1,10 +1,28 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Siteswaps.Test
 {
     public class SiteswapTest
     {
+        [Test]
+        public void UniqueRepresentationOfSiteswap()
+        {
+            Siteswap.TryCreate(new[]{4, 4, 1}, out var siteswap1);
+            Siteswap.TryCreate(new[]{4, 1, 4}, out var siteswap2);
+
+            siteswap1.Should().Be(siteswap2);
+        }
+
+        [Test]
+        public void Siteswap_Unique_Representation()
+        {
+            Siteswap.TryCreate(new[]{4, 1, 4}, out var siteswap1);
+
+            siteswap1.Items.Enumerate(1).Select(x => x.value).Should().BeEquivalentTo(new[]{4,4,1});
+        }
+
         [Test]
         [TestCase(4,4,1)]
         [TestCase(5,3,1)]

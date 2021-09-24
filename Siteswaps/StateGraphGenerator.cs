@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Siteswaps.Graph;
 
@@ -7,7 +6,7 @@ namespace Siteswaps
 {
     public class StateGraphGenerator
     {
-        public StateGraph Generate(SiteswapGeneratorInput input)
+        public StateGraph Generate(StateGraphGeneratorInput input)
         {
             var states = GenerateStates(input);
             var allTransitions = states.SelectMany(GenerateTransitions).ToHashSet();
@@ -20,6 +19,6 @@ namespace Siteswaps
             return state.Transitions();
         }
         
-        private HashSet<State> GenerateStates(SiteswapGeneratorInput input) => new StateFactory().Create(input.NumberOfObjects, input.Period).ToHashSet();
+        private HashSet<State> GenerateStates(StateGraphGeneratorInput input) => new StateFactory().Create(input.NumberOfObjects, input.Period).ToHashSet();
     }
 }
