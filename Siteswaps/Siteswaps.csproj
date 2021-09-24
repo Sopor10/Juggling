@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <WarningLevel>9999</WarningLevel>
+        <TreatWarningsAsErrors></TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Linq.Extras" Version="5.0.0-beta.1" />
+    </ItemGroup>
+
+</Project>
