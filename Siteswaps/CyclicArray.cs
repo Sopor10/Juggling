@@ -53,6 +53,11 @@ namespace Siteswaps
             }
         }
 
+        public IEnumerable<T> EnumerateValues(int i)
+        {
+            return Enumerate(i).Select(x => x.value);
+        }
+
         public CyclicArray<T> Rotate(int i)
         {
             return new (this.Skip(i).Take(Length).ToImmutableArray());

@@ -4,7 +4,6 @@ using Siteswaps.Graph;
 
 namespace Siteswaps.Test
 {
-
     public class StateTest
     {
         [Test]

@@ -83,7 +83,7 @@ namespace Siteswaps
 
         public override string ToString()
         {
-            return string.Concat("", Items.Enumerate(1).Select(x => x.value));
+            return string.Join("", Items.EnumerateValues(1));
         }
     }
 }
