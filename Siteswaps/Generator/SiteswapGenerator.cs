@@ -57,9 +57,6 @@ namespace Siteswaps.Generator
 
         private IEnumerable<PartialSiteswap> GenerateNext(PartialSiteswap current, SiteswapGeneratorInput input)
         {
-            //1. fill next position respecting unique representation of siteswaps
-
-
             foreach (var siteswap in ThisPositionWithLower(current, input))
             {
                 yield return siteswap;
@@ -74,7 +71,7 @@ namespace Siteswaps.Generator
 
         private IEnumerable<PartialSiteswap> ThisPositionWithLower(PartialSiteswap current, SiteswapGeneratorInput input)
         {
-            for (var i =  input.MinHeight; i <= new[] { current.Max(), input.MaxHeight, current.MaxForNextFree() }.Min() - 1 ; i++)
+            for (var i =  input.MinHeight; i <= new[] { current.Max(), input.MaxHeight}.Min() ; i++)
             {
                 yield return current.SetPosition(current.CurrentIndex(), i);
             }
@@ -95,7 +92,7 @@ namespace Siteswaps.Generator
         {
             return new[]
             {
-                current.Max(),
+                current.MaxForNextFree(),
                 input.MaxHeight
             }.Min();
         }

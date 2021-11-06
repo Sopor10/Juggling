@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+using Linq.Extras;
 
 namespace Siteswaps.Generator
 {
@@ -75,7 +77,39 @@ namespace Siteswaps.Generator
         /// </summary>
         public int MaxForNextFree()
         {
-            return Items[CurrentIndex()];
+            if (CurrentIndex()<0)
+            {
+                throw new InvalidOperationException("this Siteswap is already filled");
+            }
+
+
+            var absteigendeSeq = Items.AbsteigendeSeq().ToList();
+            var first = absteigendeSeq.First().ToImmutableList();
+            var last = absteigendeSeq.Last().ToImmutableList();
+            
+            if (first.SequenceEqual(last))
+            {
+                if (CountOpenPositions() == 1)
+                {
+                    return Max() - 1;
+                }
+            }
+
+            for (var i = Max(); i >= 0; i--)
+            {
+                var result =  first.CompareSequences(last.SetItem(last.IndexOf(Free), i));
+
+                if (result > 0)
+                {
+                    return i;
+                }
+            }
+
+            return Max();
         }
+
+
+
+        private int CountOpenPositions() => Items.Count(x => x < 0);
     }
 }

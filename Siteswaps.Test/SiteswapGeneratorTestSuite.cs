@@ -10,17 +10,6 @@ namespace Siteswaps.Test
     {
         protected abstract ISiteswapGenerator CreateTestObject();
         
-        
-        [Test]
-        public void Generator_Generates_Trivial_Siteswap()
-        {
-            var generator = CreateTestObject();
-            var input = new SiteswapGeneratorInput(3, 3, 0, 5, ISiteswapFilter.Standard());
-
-            var result = generator.Generate(input).ToList();
-            result.Should().Contain(3, 3, 3);
-        }
-        
         [Test]
         [TestCase(new[]{3,3,3})]
         [TestCase(new[]{5,3,1})]
