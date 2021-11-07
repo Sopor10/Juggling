@@ -5,7 +5,7 @@ using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Test.Generator.Filter
 {
-    public class AverageToHighFilterTest
+    public class RightAmountOfBallsFilterTest
     {
         [Test]
         [TestCase(new[]{5,5,-1})]

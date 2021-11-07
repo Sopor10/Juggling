@@ -5,14 +5,14 @@ using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Test.Generator.Filter
 {
-    public class AverageToHighFilterTest
+    public class AtMostXXXTimesFilterTest
     {
         [Test]
         [TestCase(new[]{5,5,-1})]
-        [TestCase(new[]{8,3,-1})]
-        public void Average_Is_To_High(int[] input)
+        [TestCase(new[]{8,5,-1})]
+        public void At_Most_Two_Fives_In_Siteswap(int[] input)
         {
-            var sut = new AverageToHighFilter();
+            var sut = new AtMostXXXTimesFilter(2, 5);
             var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
 
             result.Should().BeFalse();
