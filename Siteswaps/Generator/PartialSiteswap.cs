@@ -95,29 +95,36 @@ namespace Siteswaps.Generator
             var absteigendeSeq = Items.AbsteigendeSeq().ToList();
             var first = absteigendeSeq.First().ToImmutableList();
             var last = absteigendeSeq.Last().ToImmutableList();
-            
-            if (first.SequenceEqual(last))
-            {
-                if (CountOpenPositions() == 1)
-                {
-                    return Max() - 1;
-                }
-            }
 
-            for (var i = Max(); i >= 0; i--)
+            var possibleMax = 0;
+            if (CountOpenPositions() > 1)
             {
-                var result =  first.CompareSequences(last.SetItem(last.IndexOf(Free), i));
+                possibleMax = Max();
+            }
+            else
+            {
+                possibleMax = Max() - 1;
+
+            }
+            
+            for (var i = possibleMax; i >= 0; i--)
+            {
+                var newLast = last.SetItem(last.IndexOf(Free), i);
+                if (newLast.Contains(Free))
+                {
+                    newLast = newLast.Replace(Free, 0);
+                }
+                var result =  first.CompareSequences(newLast);
 
                 if (result > 0)
                 {
                     return i;
+
                 }
             }
 
-            return Max();
+            return possibleMax;
         }
-
-
 
         private int CountOpenPositions() => Items.Count(x => x < 0);
 

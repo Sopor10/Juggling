@@ -36,15 +36,25 @@ namespace Siteswaps.Test
         }
         
         [Test]
-        [TestCase(new[]{4}, new[]{4,2},ExpectedResult = 1)]
-        [TestCase(new[]{4,2}, new[]{4},ExpectedResult = -1)]
-        [TestCase(new[]{5,3}, new[]{4,2},ExpectedResult = 1)]
-        [TestCase(new[]{4,2}, new[]{4,2,4},ExpectedResult = -1)]
-        [TestCase(new[]{4,2}, new[]{4,2,3},ExpectedResult = 1)]
-        [TestCase(new[]{4,2,3}, new[]{4,2},ExpectedResult = -1)]
-        [TestCase(new[]{4,2,4}, new[]{4,2},ExpectedResult = 1)]
-        [TestCase(new[]{4,2}, new[]{4,2, 4},ExpectedResult = -1)]
-        public int Compare_2_Sequences_Works_As_Expected(int[] arr1, int[] arr2) => arr1.CompareSequences(arr2);
+        [TestCase(new[]{4}, new[]{4,2})]
+        [TestCase(new[]{5,3}, new[]{4,2})]
+        [TestCase(new[]{4,2}, new[]{4,2,3})]
+        [TestCase(new[]{4,2,4}, new[]{4,2})]
+        public void Compare_2_Sequences_First_Sequence_Is_Bigger(int[] arr1, int[] arr2)
+        {
+             arr1.CompareSequences(arr2).Should().Be(1);
+        }
+
+        [Test]
+        [TestCase(new[]{5,0}, new[]{5,5})]
+        [TestCase(new[]{4,2}, new[]{4})]
+        [TestCase(new[]{4,2}, new[]{4,2,4})]
+        [TestCase(new[]{4,2,3}, new[]{4,2})]
+        [TestCase(new[]{4,2}, new[]{4,2, 4})]
+        public void Compare_2_Sequences_Second_Sequence_Is_Bigger(int[] arr1, int[] arr2)
+        {
+            arr1.CompareSequences(arr2).Should().Be(-1);
+        }
 
         [Test]
         [Repeat(100)]
