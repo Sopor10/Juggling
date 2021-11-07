@@ -1,46 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Generator
 {
-
-    public class HashsetStack<T>
-    {
-        private HashSet<T> HashSet { get; } = new ();
-        private Stack<T> Stack { get; } = new();
-
-        public void Push(T item)
-        {
-            if (HashSet.Contains(item))
-            {
-                return;
-            }
-            Stack.Push(item);
-            HashSet.Add(item);
-        }
-
-        public bool TryPop([MaybeNullWhen(false)] out T o)
-        {
-            return Stack.TryPop(out o);
-        }
-    }
     public class SiteswapGenerator : ISiteswapGenerator
     {
         private HashsetStack<PartialSiteswap> Stack = new();
+        
         public IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input)
         {
-            return GeneratePartialSiteswaps(input)
+            var siteswaps = GeneratePartialSiteswaps(input)
                 .Select(x => x.TryCreateSiteswap())
-                .WhereNotNull();
+                .WhereNotNull()
+                .ToList();
+            return siteswaps;
         }
 
         private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
         {
+            var siteswapFilter = input.Filter.Combine(ISiteswapFilter.Standard());
+
             for (var i = 0; i <= input.MaxHeight; i++)
             {
                 var partialSiteswap = PartialSiteswap.Standard(input.Period, i);
-                if (!input.Filter.CanFulfill(partialSiteswap, input)) continue;
+                if (!siteswapFilter.CanFulfill(partialSiteswap, input)) continue;
                 Stack.Push(partialSiteswap);
             }
             
@@ -54,7 +38,7 @@ namespace Siteswaps.Generator
 
                 foreach (var siteswap in GenerateNext(partialSiteswap, input))
                 {
-                    if (!input.Filter.CanFulfill(siteswap, input)) continue;
+                    if (!siteswapFilter.CanFulfill(siteswap, input)) continue;
 
                     Stack.Push(siteswap);
                 }

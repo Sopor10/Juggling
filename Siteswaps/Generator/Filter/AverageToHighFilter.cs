@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Siteswaps.Generator.Filter
 {
@@ -12,17 +11,6 @@ namespace Siteswaps.Generator.Filter
             
             var average = (value.Items.Where(x => x >= 0).Sum() * 1.0 + minAdditionalValue) / value.Period();
             return average <= siteswapGeneratorInput.NumberOfObjects;
-        }
-    }
-    
-    public class RightAmountOfBallsFilter : ISiteswapFilter
-    {
-        public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
-        {
-            if (!value.IsFilled()) return true;
-
-            return Math.Abs(value.Items.Average() - siteswapGeneratorInput.NumberOfObjects) < 0.001;
-
         }
     }
 }
