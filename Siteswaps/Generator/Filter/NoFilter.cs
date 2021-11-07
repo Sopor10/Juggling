@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace Siteswaps.Generator.Filter
+﻿namespace Siteswaps.Generator.Filter
 {
     public class NoFilter : ISiteswapFilter
     {

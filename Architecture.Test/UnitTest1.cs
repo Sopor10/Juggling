@@ -3,7 +3,7 @@ using ArchUnitNET.Loader;
 using ArchUnitNET.Fluent.Slices;
 using ArchUnitNET.NUnit;
 using Siteswaps;
-using static ArchUnitNET.Fluent.ArchRuleDefinition;
+
 namespace Architecture.Test
 {
     public class Tests
