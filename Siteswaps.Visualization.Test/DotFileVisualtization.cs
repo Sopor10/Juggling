@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DotNetGraph.Extensions;
 using NUnit.Framework;
+using Siteswaps.StateDiagram;
 using VerifyNUnit;
 
 namespace Siteswaps.Visualization.Test

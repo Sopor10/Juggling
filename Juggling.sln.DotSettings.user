@@ -3,7 +3,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2e3b41e8_002D24b8_002D40c7_002D9ca1_002Dc2f73859810c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="2" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b46f1814_002D474d_002D4902_002D8201_002D1872ebf5e914/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="SiteswapGeneratorTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b46f1814_002D474d_002D4902_002D8201_002D1872ebf5e914/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" IsActive="True" Name="SiteswapGeneratorTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using DotNetGraph.Extensions;
 using Siteswaps;
+using Siteswaps.StateDiagram;
 using Siteswaps.Visualization;
 
 var input = new StateGraphGeneratorInput(3, 4);

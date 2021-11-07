@@ -60,7 +60,16 @@ namespace Siteswaps.Generator
         /// If all positions are filled, this function returns -1
         /// </summary>
         /// <returns></returns>
-        public int CurrentIndex() => Items.IndexOf(Free) - 1;
+        public int CurrentIndex()
+        {
+            var currentIndex = Items.IndexOf(Free) - 1;
+            if (currentIndex < 0)
+            {
+                return Items.Count - 1;
+            }
+            
+            return currentIndex;
+        }
 
         public int Max() => Items.Max();
 
@@ -111,5 +120,9 @@ namespace Siteswaps.Generator
 
 
         private int CountOpenPositions() => Items.Count(x => x < 0);
+
+        public PartialSiteswap WithLastFilledPosition(int i) => SetPosition(CurrentIndex(), i);
+
+        public int ValueAtCurrentIndex() => Items[CurrentIndex()];
     }
 }

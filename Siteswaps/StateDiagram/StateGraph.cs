@@ -1,6 +1,6 @@
-﻿using Siteswaps.Graph;
+﻿using Siteswaps.StateDiagram.Graph;
 
-namespace Siteswaps
+namespace Siteswaps.StateDiagram
 {
     public class StateGraph
     {

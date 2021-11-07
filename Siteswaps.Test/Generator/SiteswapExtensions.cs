@@ -2,7 +2,7 @@
 using FluentAssertions;
 using FluentAssertions.Collections;
 
-namespace Siteswaps.Test
+namespace Siteswaps.Test.Generator
 {
     public static class SiteswapExtensions
     {

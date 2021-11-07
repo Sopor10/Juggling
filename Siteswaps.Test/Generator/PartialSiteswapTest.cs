@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Siteswaps.Generator;
 
-namespace Siteswaps.Test
+namespace Siteswaps.Test.Generator
 {
     public class PartialSiteswapTest
     {

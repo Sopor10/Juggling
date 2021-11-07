@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Bogus;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator;
@@ -44,9 +47,27 @@ namespace Siteswaps.Test
         public int Compare_2_Sequences_Works_As_Expected(int[] arr1, int[] arr2) => arr1.CompareSequences(arr2);
 
         [Test]
+        [Repeat(100)]
         public void Compare_2_Sequences_Is_Symmetrical()
         {
-            Assert.Fail();//Todo
+            var value = new Random().Next();
+            Randomizer.Seed = new Random(value);
+            var faker = new Faker();
+            var len = faker.Random.Int(1, 30);
+            var array1 = Enumerable.Range(0, len).Select(x => faker.Random.Int()).ToArray();
+            var array2 = Enumerable.Range(0, len).Select(x => faker.Random.Int()).ToArray();
+
+            array1.CompareSequences(array2).Should().NotBe(array2.CompareSequences(array1), $"The seed for this failed run is {value}");
+        }
+        [Test]
+        [Repeat(100)]
+        public void Compare_2_Sequences_Throws_If_Both_Sequeces_Are_Empty()
+        {
+            var array1 = new int[]{};
+            var array2 = new int[]{};
+
+            Action sut = () =>array1.CompareSequences(array2);
+            sut.Should().Throw<InvalidOperationException>();
         }
     }
 }

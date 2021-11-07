@@ -2,9 +2,9 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
-using Siteswaps.Graph;
+using Siteswaps.StateDiagram.Graph;
 
-namespace Siteswaps
+namespace Siteswaps.StateDiagram
 {
     /// <summary>
     /// true indicates an object is scheduled to land on this timeslot.

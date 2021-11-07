@@ -37,11 +37,15 @@ namespace Siteswaps.Generator
 
         private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
         {
-            Stack.Push(PartialSiteswap.Standard(input.Period, input.MaxHeight));
+            for (var i = 0; i <= input.MaxHeight; i++)
+            {
+                var partialSiteswap = PartialSiteswap.Standard(input.Period, i);
+                if (!input.Filter.CanFulfill(partialSiteswap, input)) continue;
+                Stack.Push(partialSiteswap);
+            }
+            
             while (Stack.TryPop(out var partialSiteswap))
             {
-                if (!input.Filter.CanFulfill(partialSiteswap, input)) continue;
-                
                 if (partialSiteswap.IsFilled())
                 {
                     yield return partialSiteswap;
@@ -50,6 +54,8 @@ namespace Siteswaps.Generator
 
                 foreach (var siteswap in GenerateNext(partialSiteswap, input))
                 {
+                    if (!input.Filter.CanFulfill(siteswap, input)) continue;
+
                     Stack.Push(siteswap);
                 }
             }
@@ -57,23 +63,22 @@ namespace Siteswaps.Generator
 
         private IEnumerable<PartialSiteswap> GenerateNext(PartialSiteswap current, SiteswapGeneratorInput input)
         {
-            foreach (var siteswap in ThisPositionWithLower(current, input))
-            {
-                yield return siteswap;
-            }
-            
             var nextPosition = CreateNextFilledPosition(current, input);
             if (nextPosition is not null)
             {
+                foreach (var siteswap in ThisPositionWithLower(nextPosition, input))
+                {
+                    yield return siteswap;
+                }
                 yield return nextPosition;
             }
         }
 
         private IEnumerable<PartialSiteswap> ThisPositionWithLower(PartialSiteswap current, SiteswapGeneratorInput input)
         {
-            for (var i =  input.MinHeight; i <= new[] { current.Max(), input.MaxHeight}.Min() ; i++)
+            for (var i =  input.MinHeight; i < current.ValueAtCurrentIndex() ; i++)
             {
-                yield return current.SetPosition(current.CurrentIndex(), i);
+                yield return current.WithLastFilledPosition(i);
             }
         }
 
