@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CausalDiagramComponents", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{25AB65E3-BD19-46CC-933A-6DFE379509ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorComponents", "GeneratorComponents\GeneratorComponents.csproj", "{6A98806C-1614-417F-B329-103AD3927F80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{25AB65E3-BD19-46CC-933A-6DFE379509ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25AB65E3-BD19-46CC-933A-6DFE379509ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25AB65E3-BD19-46CC-933A-6DFE379509ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A98806C-1614-417F-B329-103AD3927F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A98806C-1614-417F-B329-103AD3927F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A98806C-1614-417F-B329-103AD3927F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A98806C-1614-417F-B329-103AD3927F80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

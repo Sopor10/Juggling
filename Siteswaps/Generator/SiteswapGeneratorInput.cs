@@ -1,43 +1,30 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
-using Siteswaps.Generator.Filter;
+﻿using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Generator
 {
-    public record SiteswapGeneratorInput(
-        int NumberOfObjects,
-        int Period,
-        int MinHeight,
-        int MaxHeight,
-        ISiteswapFilter Filter)
+    public record SiteswapGeneratorInput
     {
-        public static SiteswapGeneratorInput Standard => new SiteswapGeneratorInput(7, 5, 2, 9, new NoFilter());
-        
-    }
-
-    public record SiteswapGeneratorInputBuilder
-    {
-        public SiteswapGeneratorInputBuilder()
+        public SiteswapGeneratorInput()
         {
-            NumberOfObjects = 7;
+            Filter = ISiteswapFilter.Standard();
             Period = 5;
+            MaxHeight = 10;
             MinHeight = 2;
-            MaxHeight = 9;
-            Filter = ImmutableList<ISiteswapFilter>.Empty;
+            NumberOfObjects = 7;
         }
-
-        public int NumberOfObjects { get; init; }
-        public int Period { get; init; }
-        public int MinHeight { get; init; }
-        public int MaxHeight { get; init; }
-        public ImmutableList<ISiteswapFilter> Filter { get; init; }
-
-        public SiteswapGeneratorInputBuilder AddFilter(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
-        
-
-        public SiteswapGeneratorInput Build()
+        public SiteswapGeneratorInput(int period, int numberOfObjects, int minHeight, int maxHeight, ISiteswapFilter filter)
         {
-            return new(NumberOfObjects, Period, MinHeight, MaxHeight, new FilterList(Filter.ToArray()));
+            Period = period;
+            NumberOfObjects = numberOfObjects;
+            MinHeight = minHeight;
+            MaxHeight = maxHeight;
+            Filter = filter;
         }
+
+        public int NumberOfObjects { get; init; } = 7;
+        public int Period { get; init; } = 5;
+        public int MinHeight { get; init; } = 2;
+        public int MaxHeight { get; init; } = 10;
+        public ISiteswapFilter Filter { get; init; } = ISiteswapFilter.Standard();
     }
 }

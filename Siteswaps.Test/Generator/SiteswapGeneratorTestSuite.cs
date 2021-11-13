@@ -18,10 +18,22 @@ namespace Siteswaps.Test.Generator
         {
             var generator = CreateTestObject();
 
-            var input = new SiteswapGeneratorInput(3, 3, 0, 5, Filter());
+            var input = Input(3, 5, 0, 3);
 
             var result = generator.Generate(input).ToList();
             result.Should().Contain(expected);
+        }
+
+        private SiteswapGeneratorInput Input(int period, int maxHeight, int minHeight, int numberOfObjects)
+        {
+            return new SiteswapGeneratorInput()
+            {
+                Period = period,
+                Filter = Filter(),
+                MaxHeight = maxHeight,
+                MinHeight = minHeight,
+                NumberOfObjects = numberOfObjects
+            };
         }
 
         [Test]
@@ -32,7 +44,7 @@ namespace Siteswaps.Test.Generator
             {
                 var generator = CreateTestObject();
 
-                var input = new SiteswapGeneratorInput(3, 3, 0, 5, Filter());
+                var input = Input(3,5,0,3);
 
                 var result = generator.Generate(input).ToList();
                 result.Should().NotContain(expectedSiteswap);
@@ -49,7 +61,7 @@ namespace Siteswaps.Test.Generator
         {
             var generator = CreateTestObject();
 
-            var input = new SiteswapGeneratorInput(3, 5, 0, 5, Filter());
+            var input = Input(5,5,0,3);
 
             var result = generator.Generate(input).ToList();
             result.Should().Contain(expected);
@@ -59,7 +71,7 @@ namespace Siteswaps.Test.Generator
         public void Standard_Filter_Should_Filter_Out_No_Valid_Siteswap()
         {
             var generator = CreateTestObject();
-            var input = new SiteswapGeneratorInput(3, 5, 0, 5, Filter());
+            var input = Input(5,5,0,3);
 
             var siteswaps = generator.Generate(input).Where(x => x.NumberOfObjects() == input.NumberOfObjects).ToList();
             siteswaps.Should().HaveCount(26);

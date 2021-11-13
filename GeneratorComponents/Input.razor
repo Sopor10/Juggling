@@ -1,0 +1,49 @@
+﻿@using Siteswaps
+@using Siteswaps.Generator
+<label for="numberOfBalls">#Objects</label>
+<input id="numberOfBalls" type="number" min="0" value="@_values.NumberOfBalls"/>
+
+<label for="period">Period</label>
+<input id="period" type="number" min="0" value="@_values.Period"/>
+
+<label for="maxThrow">max throw</label>
+<input id="maxThrow" type="number" min="0" value="@_values.MaxThrow"/>
+
+<label for="minThrow">min throw</label>
+<input id="minThrow" type="number" min="0" value="@_values.MinThrow"/>
+
+<label for="numberOfJugglers">#Jugglers</label>
+<input id="numberOfJugglers" type="number" min="1" value="@_values.NumberOfJugglers"/>
+
+<label for="generate">Generate</label>
+<input id="generate" type="button" @onclick="Generate"/>
+
+@foreach (var siteswap in Siteswaps)
+{
+    <div>
+        <text>
+            @siteswap.ToString()
+        </text>
+    </div>
+    <br/>
+}
+
+@code {
+    public List<Siteswap> Siteswaps { get; set; } = new();
+    private InputValues _values = new();
+
+    public void Generate()
+    {
+        Siteswaps = new SiteswapGenerator().Generate(new SiteswapGeneratorInput()).ToList();
+    }
+
+    private class InputValues
+    {
+        public int NumberOfBalls { get; set; } = 3;
+        public int Period { get; set; } = 3;
+        public int MaxThrow { get; set; } = 5;
+        public int MinThrow { get; set; } = 2;
+        public int NumberOfJugglers { get; set; } = 2;
+    }
+
+}
