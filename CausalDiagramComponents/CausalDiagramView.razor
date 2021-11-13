@@ -1,0 +1,61 @@
+﻿@using Siteswaps.CausalDiagram
+<svg width="200" height="200" viewBox="-100 -100 200 200">
+    @foreach (var person in Persons)
+    {
+        @foreach (var node in NodesForJuggler(person))
+        {
+            <circle cx="@GetXPositionFor(node)" cy="@(GetHeightForPerson(person))" r="20" stroke="@GetColor(node)" stroke-width="4" fill="@GetColor(node)"/>
+            <text>
+                <text x="@GetXPositionFor(node)"
+                      y="@(GetHeightForPerson(person))"
+                      text-anchor="middle"
+                      stroke="red"
+                      stroke-width="1px"
+                      alignment-baseline="middle">
+                    @node.Hand.Name
+                </text>
+            </text>
+        }
+        
+        @foreach (var transition in Value.Transitions)
+        {
+            <path id="lineBC" 
+                  d="M @GetXPositionFor(transition.Start) @(GetHeightForPerson(transition.Start.Hand.Person)) l @GetXPositionFor(transition.End) @(GetHeightForPerson(transition.End.Hand.Person))" 
+                  stroke="red" 
+                  stroke-width="3" 
+                  fill="none" />
+        }
+    }
+</svg>
+
+@code {
+
+    [Parameter]
+    public CausalDiagram Value { get; set; }
+
+    private List<Person> Persons => Value.Nodes.Select(x => x.Hand.Person).Distinct().ToList();
+
+    private List<Node> NodesForJuggler(Person person)
+    {
+        return Value.Nodes.Where(x => x.Hand.Person == person).ToList();
+    }
+
+    private int GetHeightForPerson(Person person)
+    {
+        return (int)(100 * (1.0 * Persons.IndexOf(person) / Persons.Count));
+    }
+
+    private int GetXPositionFor(Node node)
+    {
+        return (int)(node.Time * 50);
+    }
+
+    private string GetColor(Node node)
+    {
+        var differentHands = Value.Nodes.Select(x => x.Hand.Name).Distinct().ToList();
+        List<(string Hand, double Value)> mapping = differentHands.Select((x, i) => (x, 255.0 * i / differentHands.Count)).ToList();
+        var value = mapping.FirstOrDefault(x => x.Hand == node.Hand.Name).Value;
+        return $"rgb(100, 100, {value}";
+    }
+
+}

@@ -1,0 +1,31 @@
+@page "/"
+@using Siteswaps.CausalDiagram
+@using System.Collections.Immutable
+
+<CausalDiagramView Value="@Diagram"></CausalDiagramView>
+
+@code {
+    public CausalDiagram Diagram
+    {
+        get
+        {
+            Node n1 = new(new Hand("R", new Person("A")), 0);
+            Node n2 = new(new Hand("R", new Person("B")), 0.5m);
+            Node n3 = new(new Hand("L", new Person("A")), 1);
+            Node n4 = new(new Hand("L", new Person("B")), 1.5m);
+            return new(new List<Node>()
+            {
+                n1,
+                n2,
+                n3,
+                n4,
+            }.ToImmutableList(), new List<Transition>()
+            {
+                new(n1,n3),
+                new(n2,n4),
+                new(n3,n3),
+            }.ToImmutableList());
+        }
+    }
+
+}
