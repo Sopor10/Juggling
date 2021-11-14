@@ -1,0 +1,16 @@
+﻿@using Siteswaps
+
+@foreach (var siteswap in Siteswaps)
+{
+    <div>
+        <text>
+            @siteswap.ToString()
+        </text>
+    </div>
+    <br/>
+}
+
+@code {
+    [Parameter]
+    public List<Siteswap> Siteswaps { get; set; } = new();
+}

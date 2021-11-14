@@ -6,8 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CausalDiagramComponents\CausalDiagramComponents.csproj" />
-      <ProjectReference Include="..\GeneratorComponents\GeneratorComponents.csproj" />
+      <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
     </ItemGroup>
 
 </Project>

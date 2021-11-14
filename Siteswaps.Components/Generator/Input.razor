@@ -1,5 +1,7 @@
 ﻿@using Siteswaps
 @using Siteswaps.Generator
+
+@inject ISiteswapGenerator _generator;
 <label for="numberOfBalls">#Objects</label>
 <input id="numberOfBalls" type="number" min="0" value="@_values.NumberOfBalls"/>
 
@@ -18,15 +20,7 @@
 <label for="generate">Generate</label>
 <input id="generate" type="button" @onclick="Generate"/>
 
-@foreach (var siteswap in Siteswaps)
-{
-    <div>
-        <text>
-            @siteswap.ToString()
-        </text>
-    </div>
-    <br/>
-}
+
 
 @code {
     public List<Siteswap> Siteswaps { get; set; } = new();
@@ -34,7 +28,13 @@
 
     public void Generate()
     {
-        Siteswaps = new SiteswapGenerator().Generate(new SiteswapGeneratorInput()).ToList();
+        Siteswaps = _generator.Generate(new SiteswapGeneratorInput()
+        {
+            Period = _values.Period,
+            MaxHeight = _values.MaxThrow,
+            MinHeight = _values.MinThrow,
+            NumberOfObjects = _values.NumberOfBalls
+        }).ToList();
     }
 
     private class InputValues
@@ -45,5 +45,4 @@
         public int MinThrow { get; set; } = 2;
         public int NumberOfJugglers { get; set; } = 2;
     }
-
 }
