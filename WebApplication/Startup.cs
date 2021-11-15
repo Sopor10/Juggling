@@ -20,7 +20,7 @@ namespace WebApplication
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<ISiteswapGenerator, SiteswapGenerator>();
+            services.AddTransient<ISiteswapGenerator, SiteswapGenerator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

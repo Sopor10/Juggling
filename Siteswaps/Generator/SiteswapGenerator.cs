@@ -8,11 +8,15 @@ namespace Siteswaps.Generator
     {
         private HashsetStack<PartialSiteswap> Stack { get; } = new();
         
-        public IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input) =>
-            GeneratePartialSiteswaps(input)
+        public IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input)
+        {
+            var siteswaps = GeneratePartialSiteswaps(input)
                 .Select(x => x.TryCreateSiteswap())
                 .WhereNotNull()
                 .ToList();
+            Stack.Reset();
+            return siteswaps;
+        }
 
         private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
         {

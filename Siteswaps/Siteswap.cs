@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Linq.Extras;
+using System.Text;
+using System.Threading.Tasks.Dataflow;
 
 namespace Siteswaps
 {
@@ -83,7 +84,16 @@ namespace Siteswaps
 
         public override string ToString()
         {
-            return string.Join("", Items.EnumerateValues(1));
+            return string.Join("", Items.EnumerateValues(1).Select(x => Transform(x)));
+        }
+
+        private string Transform(int i)
+        {
+            return i switch
+            {
+                < 10 => $"{i}",
+                _ => Convert.ToChar(i + 87).ToString()
+            };
         }
     }
 }

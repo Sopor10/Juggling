@@ -25,5 +25,12 @@ namespace Siteswaps.Generator
         {
             return Stack.TryPop(out o);
         }
+
+        public void Reset()
+        {
+            Stack.Clear();
+            HashSet.Clear();
+            MultipleInsert.Clear();
+        }
     }
 }

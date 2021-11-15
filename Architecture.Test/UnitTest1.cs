@@ -4,18 +4,17 @@ using ArchUnitNET.Fluent.Slices;
 using ArchUnitNET.NUnit;
 using Siteswaps;
 
-namespace Architecture.Test
-{
-    public class Tests
-    {
-        private static readonly ArchUnitNET.Domain.Architecture Architecture =
-            new ArchLoader().LoadAssemblies(typeof(Siteswap).Assembly)
-                .Build();
+namespace Architecture.Test;
 
-        [Test]
-        public void No_Dependencies_Between_High_Level_Folders()
-        {
-            SliceRuleDefinition.Slices().Matching("Siteswaps.(*)").Should().NotDependOnEachOther().Check(Architecture);
-        }
+public class Tests
+{
+    private static readonly ArchUnitNET.Domain.Architecture Architecture =
+        new ArchLoader().LoadAssemblies(typeof(Siteswap).Assembly)
+            .Build();
+
+    [Test]
+    public void No_Dependencies_Between_High_Level_Folders()
+    {
+        SliceRuleDefinition.Slices().Matching("Siteswaps.(*)").Should().NotDependOnEachOther().Check(Architecture);
     }
 }

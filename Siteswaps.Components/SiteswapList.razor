@@ -1,16 +1,20 @@
-﻿@using Siteswaps
-
-@foreach (var siteswap in Siteswaps)
+﻿@foreach (var siteswaps in Siteswaps.Batch(4))
 {
-    <div>
-        <text>
-            @siteswap.ToString()
-        </text>
+    <div class="row">
+        @foreach (var siteswap in siteswaps)
+        {
+            <div class="col-md-3">
+                <text>
+                    @siteswap.ToString()
+                </text>
+            </div>
+        }
     </div>
-    <br/>
 }
 
 @code {
+
     [Parameter]
     public List<Siteswap> Siteswaps { get; set; } = new();
+
 }

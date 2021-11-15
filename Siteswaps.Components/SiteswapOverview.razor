@@ -1,0 +1,7 @@
+﻿<h3>SiteswapOverview</h3>
+<GeneratorView @bind-Siteswaps="@Siteswaps"></GeneratorView>
+<SiteswapList Siteswaps="Siteswaps"></SiteswapList>
+@code {
+    public List<Siteswap> Siteswaps { get; set; } = new();
+    
+}
