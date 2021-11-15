@@ -71,4 +71,4 @@ jobs:
           host: "${{ secrets.CAPROVER_URL }}"
           password: "${{ secrets.CAPROVER_PASSWORD }}"
           app: "juggling"
-          image: https://${{ env.REGISTRY }}/sopor10/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          image: ${{ env.REGISTRY }}/sopor10/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
