@@ -60,7 +60,7 @@ jobs:
         run: |
           echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
       - name: deploy to caprover
-        uses: floms/caprover-action@v1
+        uses: floms/action-caprover@v1
         with:
           server: "${{ secrets.CAPROVER_URL }}"
           password: "${{ secrets.CAPROVER_PASSWORD }}"
