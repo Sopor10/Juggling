@@ -60,8 +60,11 @@ jobs:
         run: |
           echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
       - name: deploy to caprover
-        uses: AlexxNB/caprover-action@v1
+        uses: floms/caprover-action@v1
         with:
           server: "${{ secrets.CAPROVER_URL }}"
           password: "${{ secrets.CAPROVER_PASSWORD }}"
           appname: "juggling"
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          
+  
