@@ -1,0 +1,88 @@
+﻿@using Siteswaps.Generator
+@inject ISiteswapGenerator _generator;
+<EditForm Model="_values" OnValidSubmit="@Generate">
+    <label for="numberOfBalls">#Objects</label>
+    <InputNumber id="numberOfBalls" min="0" @bind-Value="@_values.Objects.NumberOfBalls"/>
+    
+    <label for="minNumberOfBalls">min Objects</label>
+    <InputNumber id="minNumberOfBalls" min="0" @bind-Value="@_values.Objects.MinNumberOfBalls"/>
+    
+    <label for="maxNumberOfBalls">max Objects</label>
+    <InputNumber id="maxNumberOfBalls" min="0" @bind-Value="@_values.Objects.MaxNumberOfBalls"/>
+    
+    <label for="period">Period</label>
+    <InputNumber id="period" min="0" @bind-Value="@_values.Period"/>
+
+    <label for="maxThrow">max throw</label>
+    <InputNumber id="maxThrow" min="0" @bind-Value="@_values.MaxThrow"/>
+
+    <label for="minThrow">min throw</label>
+    <InputNumber id="minThrow" min="0" @bind-Value="@_values.MinThrow"/>
+
+    <label for="numberOfJugglers">#Jugglers</label>
+    <InputNumber id="numberOfJugglers" min="1" @bind-Value="@_values.NumberOfJugglers"/>
+
+    <label for="generate">Generate</label>
+    <input id="generate" type="submit"/>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public List<Siteswap> Siteswaps { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<Siteswap>> SiteswapsChanged { get; set; }
+
+    private InputValues _values = new();
+
+    private async Task Generate()
+    {
+
+        if (_values.Objects.NumberOfBalls is not null)
+        {
+            Siteswaps = _generator.Generate(new SiteswapGeneratorInput
+            {
+                Period = _values.Period,
+                MaxHeight = _values.MaxThrow,
+                MinHeight = _values.MinThrow,
+                NumberOfObjects = _values.Objects.NumberOfBalls.Value
+            }).ToList();
+            return;
+        }
+        if (_values.Objects.MaxNumberOfBalls is not null && _values.Objects.MinNumberOfBalls is not null)
+        {
+            var siteswaps = new List<Siteswap>();
+            for (var i = _values.Objects.MinNumberOfBalls.Value; i <= _values.Objects.MaxNumberOfBalls.Value; i++)
+            {
+                siteswaps.AddRange(_generator.Generate(new SiteswapGeneratorInput
+                {
+                    Period = _values.Period,
+                    MaxHeight = _values.MaxThrow,
+                    MinHeight = _values.MinThrow,
+                    NumberOfObjects = i
+                }).ToList());
+            }
+            Siteswaps = siteswaps;
+        }
+        
+        await SiteswapsChanged.InvokeAsync(Siteswaps);
+    }
+
+    private class InputValues
+    {
+        public Objects Objects = new();
+        public int Period { get; set; } = 5;
+        public int MaxThrow { get; set; } = 10;
+        public int MinThrow { get; set; } = 2;
+        public int NumberOfJugglers { get; set; } = 2;
+    }
+
+    private class Objects
+    {
+        public int? NumberOfBalls { get; set; } = 7;
+        public int? MinNumberOfBalls { get; set; }
+        public int? MaxNumberOfBalls { get; set; }
+    }
+
+}
