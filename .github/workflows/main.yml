@@ -62,9 +62,9 @@ jobs:
       - name: deploy to caprover
         uses: floms/action-caprover@v1
         with:
-          server: "${{ secrets.CAPROVER_URL }}"
+          host: "${{ secrets.CAPROVER_URL }}"
           password: "${{ secrets.CAPROVER_PASSWORD }}"
-          appname: "juggling"
+          app: "juggling"
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
           
   
