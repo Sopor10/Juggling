@@ -1,0 +1,49 @@
+﻿@using Siteswaps.Components.Generator.State
+@using ExhaustiveMatching
+<EditForm Model="Values" OnValidSubmit="@Generate">
+    
+    @switch(Values.Objects)
+    {
+        case Between between:
+            <label for="minNumberOfObjects">Period</label>
+            <InputNumber id="minNumberOfObjects" min="0" Value="@between.MinNumber"/>
+            
+            <label for="maxNumberOfObjects">Period</label>
+            <InputNumber id="maxNumberOfObjects" min="0" Value="@between.MaxNumber"/>
+            break;
+        case ExactNumber exactNumber:
+            <label for="numberOfObjects">Period</label>
+            <InputNumber id="numberOfObjects" min="0" Value="@exactNumber.Number"/>
+            break;
+        default:
+            ExhaustiveMatch.Failed(Values.Objects);
+            break;
+    }
+    
+    <label for="period">Period</label>
+    <InputNumber id="period" min="0" Value="@Values.Period"/>
+
+    <label for="maxThrow">max throw</label>
+    <InputNumber id="maxThrow" min="0" Value="@Values.MaxThrow"/>
+
+    <label for="minThrow">min throw</label>
+    <InputNumber id="minThrow" min="0" Value="@Values.MinThrow"/>
+
+    <label for="numberOfJugglers">#Jugglers</label>
+    <InputNumber id="numberOfJugglers" min="1" Value="@Values.NumberOfJugglers"/>
+
+    <label for="generate">Generate</label>
+    <input id="generate" type="submit"/>
+</EditForm>
+
+@code {
+    
+    [Parameter]
+    public GeneratorState Values { get; set; }
+
+    private void Generate()
+    {
+        throw new NotImplementedException();
+    }
+
+}

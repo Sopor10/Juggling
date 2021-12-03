@@ -6,7 +6,7 @@ namespace Siteswaps.Generator.Filter
     {
         private protected override bool CanFulfillNumberFilter(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
         {
-            return value.Items.Count(x => x == Number || x == PartialSiteswap.Free) >= Number;
+            return value.Items.Count(x => x == Number || x == PartialSiteswap.Free) >= Amount;
         }
 
         public AtLeastXXXTimesFilter(int number, int amount) : base(number, amount)

@@ -7,6 +7,6 @@ namespace Siteswaps.Test.Generator
     {
         protected override ISiteswapGenerator CreateTestObject() => new SiteswapGenerator();
 
-        protected override ISiteswapFilter Filter() => new NoFilter();
+        protected virtual ISiteswapFilter Filter() => new NoFilter();
     }
 }

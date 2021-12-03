@@ -9,7 +9,6 @@ namespace Siteswaps.Test.Generator
     public abstract class SiteswapGeneratorTestSuite
     {
         protected abstract ISiteswapGenerator CreateTestObject();
-        protected abstract ISiteswapFilter Filter();
 
         [Test]
         [TestCase(new[] { 5, 3, 1 })]
@@ -29,7 +28,7 @@ namespace Siteswaps.Test.Generator
             return new SiteswapGeneratorInput()
             {
                 Period = period,
-                Filter = Filter(),
+                Filter = new NoFilter(),
                 MaxHeight = maxHeight,
                 MinHeight = minHeight,
                 NumberOfObjects = numberOfObjects
