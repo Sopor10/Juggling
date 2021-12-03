@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
+using Siteswaps.Generator;
 
 namespace Siteswaps
 {
@@ -42,28 +43,25 @@ namespace Siteswaps
 
         private static CyclicArray<int> ToUniqueRepresentation(CyclicArray<int> input)
         {
+            var biggest = input.EnumerateValues(1).ToList();
 
-            var result = Enumerable.Range(0, input.Length).Select(x =>
+            foreach (var list in Enumerable.Range(0,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
             {
-                var cyclicArray = input.Rotate(x);
-                return new
+                if (biggest.CompareSequences(list) < 0)
                 {
-                 Array = cyclicArray,
-                 Rank = Rank(cyclicArray)
-                };
-                
-            });
+                    biggest = list;
+                }
+            }
 
-            return result.MaxBy(x => x.Rank)?.Array??throw new ArgumentNullException();
+            return biggest.ToCyclicArray();
         }
 
         private static int Rank(CyclicArray<int> input)
         {
             var values = input
-                .Enumerate(1)
-                .Select(x => x.value)
-                .Reverse();
-
+                .EnumerateValues(1)
+                .AbsteigendeSeq()
+                .First();
             var pos = 0;
             var res = 0;
             foreach (var value in values)

@@ -18,4 +18,10 @@
       <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="Generator\result.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

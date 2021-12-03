@@ -89,7 +89,6 @@ namespace Siteswaps.Generator
                 throw new InvalidOperationException("this Siteswap is already filled");
             }
 
-
             var absteigendeSeq = Items.AbsteigendeSeq().ToList();
             var first = absteigendeSeq.First().ToImmutableList();
             var last = absteigendeSeq.Last().ToImmutableList();
@@ -102,7 +101,6 @@ namespace Siteswaps.Generator
             else
             {
                 possibleMax = Max() - 1;
-
             }
             
             for (var i = possibleMax; i >= 0; i--)

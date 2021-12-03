@@ -4,23 +4,22 @@ using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.CausalDiagram;
 
-namespace Siteswaps.Test.CausalDiagram
-{
-    public class CausalDiagramGeneratorTest
-    {
-        [Test]
-        public void METHOD()
-        {
-            var sut = new CausalDiagramGenerator();
-            var hands = new List<Hand>()
-            {
-                new("R", new Person("A")),
-                new("L", new Person("A")),
-            }.ToImmutableList();
-            var result = sut.Generate(new Siteswaps.CausalDiagram.Siteswap(new[] { 4,2,3 }.ToCyclicArray()), hands.ToCyclicArray());
+namespace Siteswaps.Test.CausalDiagram;
 
-            result.Nodes.Should().HaveCount(6);
+public class CausalDiagramGeneratorTest
+{
+    [Test]
+    public void METHOD()
+    {
+        var sut = new CausalDiagramGenerator();
+        var hands = new List<Hand>()
+        {
+            new("R", new Person("A")),
+            new("L", new Person("A")),
+        }.ToImmutableList();
+        var result = sut.Generate(new Siteswaps.CausalDiagram.Siteswap(new[] { 4,2,3 }.ToCyclicArray()), hands.ToCyclicArray());
+
+        result.Nodes.Should().HaveCount(6);
             
-        }
     }
 }
