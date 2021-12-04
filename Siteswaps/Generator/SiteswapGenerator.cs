@@ -70,7 +70,7 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     private PartialSiteswap? CreateNextFilledPosition(PartialSiteswap current, SiteswapGeneratorInput input)
     {
-        var currentIndex = current.CurrentIndex();
+        var currentIndex = current.LastFilledPosition;
         if (currentIndex < 0 || currentIndex >= current.Period() - 1)
         {
             return null;

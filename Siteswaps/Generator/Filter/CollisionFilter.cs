@@ -8,7 +8,7 @@ public class CollisionFilter : ISiteswapFilter
     {
         var bools = new bool [ value.Items.Count ];
 
-        var currentIndex = value.CurrentIndex();
+        var currentIndex = value.LastFilledPosition;
         for (var i = 0; i <= currentIndex; i++)
         {
             var count = (i + value.Items[i]) % value.Items.Count;

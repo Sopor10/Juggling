@@ -10,18 +10,23 @@ namespace Siteswaps.Generator;
 public record PartialSiteswap
 {
 
+    public int LastFilledPosition { get; } 
+    
     public PartialSiteswap(params int[] items) : this(items.ToImmutableList())
     {
-            
+
     }
 
     private PartialSiteswap(IEnumerable<int> items)
     {
         Items = items.ToImmutableList();
+        var currentIndex = Items.IndexOf(Free) - 1;
+            
+        LastFilledPosition = currentIndex < 0 ?Items.Count - 1: currentIndex;
     }
 
     public const int Free = -1;
-    public ImmutableList<int> Items { get; private init; }
+    public ImmutableList<int> Items { get; }
 
     public virtual bool Equals(PartialSiteswap? other)
     {
@@ -51,38 +56,19 @@ public record PartialSiteswap
         return Items.IndexOf(Free) == -1;
     }
 
-    /// <summary>
-    /// returns the position of the first Free hand.
-    /// If all positions are filled, this function returns -1
-    /// </summary>
-    /// <returns></returns>
-    public int CurrentIndex()
-    {
-        var currentIndex = Items.IndexOf(Free) - 1;
-        if (currentIndex < 0)
-        {
-            return Items.Count - 1;
-        }
-            
-        return currentIndex;
-    }
-
     public int Max() => Items.Max();
 
     public int Period() => Items.Count;
 
     public PartialSiteswap SetPosition(int index, int value) =>
-        this with
-        {
-            Items = Items.SetItem(index, value)
-        };
+        new(Items.SetItem(index, value));
 
     /// <summary>
     /// Calculates the max height for the next free hand according ti the unique representation
     /// </summary>
     public int MaxForNextFree()
     {
-        if (CurrentIndex()<0)
+        if (LastFilledPosition<0)
         {
             throw new InvalidOperationException("this Siteswap is already filled");
         }
@@ -122,7 +108,7 @@ public record PartialSiteswap
 
     private int CountOpenPositions() => Items.Count(x => x < 0);
 
-    public PartialSiteswap WithLastFilledPosition(int i) => SetPosition(CurrentIndex(), i);
+    public PartialSiteswap WithLastFilledPosition(int i) => SetPosition(LastFilledPosition, i);
 
-    public int ValueAtCurrentIndex() => Items[CurrentIndex()];
+    public int ValueAtCurrentIndex() => Items[LastFilledPosition];
 }
