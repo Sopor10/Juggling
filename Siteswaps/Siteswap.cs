@@ -4,87 +4,86 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Siteswaps.Generator;
 
-namespace Siteswaps
+namespace Siteswaps;
+
+public record Siteswap : IEquatable<Siteswap>
 {
-    public record Siteswap : IEquatable<Siteswap>
+    public CyclicArray<int> Items { get; }
+
+    public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap)
     {
-        public CyclicArray<int> Items { get; }
+        return TryCreate(new(items), out siteswap);
+    }
+    private Siteswap(CyclicArray<int> items)
+    {
+        Items = ToUniqueRepresentation(items);
+    }
 
-        public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap)
+    public static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
+    {
+        if (IsValid(items))
         {
-            return TryCreate(new(items), out siteswap);
-        }
-        private Siteswap(CyclicArray<int> items)
-        {
-            Items = ToUniqueRepresentation(items);
+            siteswap = new(items);
+            return true;
         }
 
-        public static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
+        siteswap = null;
+        return false;
+    }
+
+    private static bool IsValid(CyclicArray<int> items) =>
+        items
+            .Enumerate(1)
+            .Select(x => x.value)
+            .Select((x, i) => (x + i) % items.Length)
+            .ToHashSet()
+            .Count == items.Length;
+
+    private static CyclicArray<int> ToUniqueRepresentation(CyclicArray<int> input)
+    {
+        var biggest = input.EnumerateValues(1).ToList();
+
+        foreach (var list in Enumerable.Range(0,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
         {
-            if (IsValid(items))
+            if (biggest.CompareSequences(list) < 0)
             {
-                siteswap = new(items);
-                return true;
+                biggest = list;
             }
-
-            siteswap = null;
-            return false;
         }
 
-        private static bool IsValid(CyclicArray<int> items) =>
-            items
-                .Enumerate(1)
-                .Select(x => x.value)
-                .Select((x, i) => (x + i) % items.Length)
-                .ToHashSet()
-                .Count == items.Length;
+        return biggest.ToCyclicArray();
+    }
 
-        private static CyclicArray<int> ToUniqueRepresentation(CyclicArray<int> input)
+    public bool IsGroundState() => HasNoRethrow();
+
+    private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
+
+    public bool IsExcitedState() => !IsGroundState();
+    public decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
+
+    public override string ToString()
+    {
+        return string.Join("", Items.EnumerateValues(1).Select(Transform));
+    }
+
+    private string Transform(int i)
+    {
+        return i switch
         {
-            var biggest = input.EnumerateValues(1).ToList();
+            < 10 => $"{i}",
+            _ => Convert.ToChar(i + 87).ToString()
+        };
+    }
 
-            foreach (var list in Enumerable.Range(0,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
-            {
-                if (biggest.CompareSequences(list) < 0)
-                {
-                    biggest = list;
-                }
-            }
+    public virtual bool Equals(Siteswap? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return ToString().Equals(other.ToString());
+    }
 
-            return biggest.ToCyclicArray();
-        }
-
-        public bool IsGroundState() => HasNoRethrow();
-
-        private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
-
-        public bool IsExcitedState() => !IsGroundState();
-        public decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
-
-        public override string ToString()
-        {
-            return string.Join("", Items.EnumerateValues(1).Select(Transform));
-        }
-
-        private string Transform(int i)
-        {
-            return i switch
-            {
-                < 10 => $"{i}",
-                _ => Convert.ToChar(i + 87).ToString()
-            };
-        }
-
-        public virtual bool Equals(Siteswap? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return ToString().Equals(other.ToString());
-        }
-
-        public override int GetHashCode()
-        {
-            return ToString().GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return ToString().GetHashCode();
     }
 }

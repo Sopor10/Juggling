@@ -1,4 +1,3 @@
-﻿namespace Siteswaps.Components
-{
-    public class Assembly{}
-}
+﻿namespace Siteswaps.Components;
+
+public class Assembly{}

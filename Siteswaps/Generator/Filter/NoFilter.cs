@@ -1,10 +1,9 @@
-﻿namespace Siteswaps.Generator.Filter
+﻿namespace Siteswaps.Generator.Filter;
+
+public class NoFilter : ISiteswapFilter
 {
-    public class NoFilter : ISiteswapFilter
+    public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {
-        public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
-        {
-            return true;
-        }
+        return true;
     }
 }

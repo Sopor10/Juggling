@@ -2,90 +2,89 @@
 using System.Linq;
 using Siteswaps.Generator.Filter;
 
-namespace Siteswaps.Generator
+namespace Siteswaps.Generator;
+
+public class SiteswapGenerator : ISiteswapGenerator
 {
-    public class SiteswapGenerator : ISiteswapGenerator
-    {
-        public HashsetStack<PartialSiteswap> Stack { get; } = new();
+    public HashsetStack<PartialSiteswap> Stack { get; } = new();
         
-        public IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input)
+    public IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input)
+    {
+        var siteswaps = GeneratePartialSiteswaps(input)
+            .Select(x => x.TryCreateSiteswap())
+            .WhereNotNull()
+            .Distinct()
+            .ToList();
+        Stack.Reset();
+        return siteswaps;
+    }
+
+    private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
+    {
+        var siteswapFilter = input.Filter.Combine(ISiteswapFilter.Standard());
+
+        for (var i = 0; i <= input.MaxHeight; i++)
         {
-            var siteswaps = GeneratePartialSiteswaps(input)
-                .Select(x => x.TryCreateSiteswap())
-                .WhereNotNull()
-                .Distinct()
-                .ToList();
-            Stack.Reset();
-            return siteswaps;
+            var partialSiteswap = PartialSiteswap.Standard(input.Period, i);
+            if (!siteswapFilter.CanFulfill(partialSiteswap, input)) continue;
+            Stack.Push(partialSiteswap);
         }
-
-        private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
-        {
-            var siteswapFilter = input.Filter.Combine(ISiteswapFilter.Standard());
-
-            for (var i = 0; i <= input.MaxHeight; i++)
-            {
-                var partialSiteswap = PartialSiteswap.Standard(input.Period, i);
-                if (!siteswapFilter.CanFulfill(partialSiteswap, input)) continue;
-                Stack.Push(partialSiteswap);
-            }
             
-            while (Stack.TryPop(out var partialSiteswap))
-            {
-                if (partialSiteswap.IsFilled())
-                {
-                    yield return partialSiteswap;
-                    continue;
-                }
-
-                foreach (var siteswap in GenerateNext(partialSiteswap, input))
-                {
-                    if (!siteswapFilter.CanFulfill(siteswap, input)) continue;
-
-                    Stack.Push(siteswap);
-                }
-            }
-        }
-
-        private IEnumerable<PartialSiteswap> GenerateNext(PartialSiteswap current, SiteswapGeneratorInput input)
+        while (Stack.TryPop(out var partialSiteswap))
         {
-            var nextPosition = CreateNextFilledPosition(current, input);
-            if (nextPosition is not null)
+            if (partialSiteswap.IsFilled())
             {
-                foreach (var siteswap in ThisPositionWithLower(nextPosition, input))
-                {
-                    yield return siteswap;
-                }
-                yield return nextPosition;
-            }
-        }
-
-        private IEnumerable<PartialSiteswap> ThisPositionWithLower(PartialSiteswap current, SiteswapGeneratorInput input)
-        {
-            for (var i =  input.MinHeight; i < current.ValueAtCurrentIndex() ; i++)
-            {
-                yield return current.WithLastFilledPosition(i);
-            }
-        }
-
-        private PartialSiteswap? CreateNextFilledPosition(PartialSiteswap current, SiteswapGeneratorInput input)
-        {
-            var currentIndex = current.CurrentIndex();
-            if (currentIndex < 0 || currentIndex >= current.Period() - 1)
-            {
-                return null;
+                yield return partialSiteswap;
+                continue;
             }
 
-            return current.SetPosition(currentIndex + 1, GetNextMax(current, input));
+            foreach (var siteswap in GenerateNext(partialSiteswap, input))
+            {
+                if (!siteswapFilter.CanFulfill(siteswap, input)) continue;
+
+                Stack.Push(siteswap);
+            }
+        }
+    }
+
+    private IEnumerable<PartialSiteswap> GenerateNext(PartialSiteswap current, SiteswapGeneratorInput input)
+    {
+        var nextPosition = CreateNextFilledPosition(current, input);
+        if (nextPosition is not null)
+        {
+            foreach (var siteswap in ThisPositionWithLower(nextPosition, input))
+            {
+                yield return siteswap;
+            }
+            yield return nextPosition;
+        }
+    }
+
+    private IEnumerable<PartialSiteswap> ThisPositionWithLower(PartialSiteswap current, SiteswapGeneratorInput input)
+    {
+        for (var i =  input.MinHeight; i < current.ValueAtCurrentIndex() ; i++)
+        {
+            yield return current.WithLastFilledPosition(i);
+        }
+    }
+
+    private PartialSiteswap? CreateNextFilledPosition(PartialSiteswap current, SiteswapGeneratorInput input)
+    {
+        var currentIndex = current.CurrentIndex();
+        if (currentIndex < 0 || currentIndex >= current.Period() - 1)
+        {
+            return null;
         }
 
-        private int GetNextMax(PartialSiteswap current, SiteswapGeneratorInput input)
+        return current.SetPosition(currentIndex + 1, GetNextMax(current, input));
+    }
+
+    private int GetNextMax(PartialSiteswap current, SiteswapGeneratorInput input)
+    {
+        return new[]
         {
-            return new[]
-            {
-                current.MaxForNextFree(),
-                input.MaxHeight
-            }.Min();
-        }
+            current.MaxForNextFree(),
+            input.MaxHeight
+        }.Min();
     }
 }

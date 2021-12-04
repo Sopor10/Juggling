@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Siteswaps.Generator
+namespace Siteswaps.Generator;
+
+public interface ISiteswapGenerator
 {
-    public interface ISiteswapGenerator
-    {
-        IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input);
-    }
+    IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input);
 }

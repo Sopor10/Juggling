@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Siteswaps.Generator.Filter
+namespace Siteswaps.Generator.Filter;
+
+public class FilterList : ISiteswapFilter
 {
-    public class FilterList : ISiteswapFilter
+
+    private List<ISiteswapFilter> Filters { get; }
+
+    private FilterList(IEnumerable<ISiteswapFilter> filters)
     {
-
-        private List<ISiteswapFilter> Filters { get; }
-
-        private FilterList(IEnumerable<ISiteswapFilter> filters)
-        {
-            Filters = filters.ToList();
-        }
-
-        public FilterList(params ISiteswapFilter[] filter) : this(filter.AsEnumerable())
-        {
-            
-        }
-        public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput) => Filters.All(x => x.CanFulfill(value, siteswapGeneratorInput));
+        Filters = filters.ToList();
     }
+
+    public FilterList(params ISiteswapFilter[] filter) : this(filter.AsEnumerable())
+    {
+            
+    }
+    public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput) => Filters.All(x => x.CanFulfill(value, siteswapGeneratorInput));
 }
