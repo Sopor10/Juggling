@@ -6,7 +6,15 @@ public class CollisionFilter : ISiteswapFilter
 {
     public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {
-        var result = value.Items.TakeWhile(x => x != PartialSiteswap.Free).Select((height, pos) => (height + pos) % value.Items.Count).ToList();
-        return result.Distinct().Count() == result.Count;
+        var bools = new bool [ value.Items.Count ];
+
+        var currentIndex = value.CurrentIndex();
+        for (var i = 0; i <= currentIndex; i++)
+        {
+            var count = (i + value.Items[i]) % value.Items.Count;
+            bools[count] = true;
+        }
+
+        return bools.Count(x => x) == currentIndex + 1;
     }
 }

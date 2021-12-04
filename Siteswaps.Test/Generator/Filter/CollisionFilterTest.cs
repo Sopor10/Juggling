@@ -21,7 +21,7 @@ public class CollisionFilterTest
     [Test]
     [TestCase(new[]{5,3,-1})]
     [TestCase(new[]{8,3,-1})]
-    public void CollisionFilter_Detects_o_Collisions(int[] input)
+    public void CollisionFilter_Detects_No_Collisions(int[] input)
     {
         var sut = new CollisionFilter();
         var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5, new NoFilter()));

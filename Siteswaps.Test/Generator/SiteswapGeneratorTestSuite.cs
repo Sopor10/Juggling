@@ -51,7 +51,7 @@ public abstract class SiteswapGeneratorTestSuite
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
 
         var siteswaps = generator.Generate(input).ToList();
-        return siteswaps.Count();
+        return siteswaps.Count;
     }
 
     [TestCase(7, 13, 2, 8, "result.json")]
