@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Filter
+﻿namespace Siteswaps.Generator.Filter.NumberFilter
 {
     public abstract class NumberFilter : ISiteswapFilter
     {

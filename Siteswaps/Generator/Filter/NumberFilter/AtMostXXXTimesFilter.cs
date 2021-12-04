@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Siteswaps.Generator.Filter
+namespace Siteswaps.Generator.Filter.NumberFilter
 {
     public class AtMostXXXTimesFilter : NumberFilter
     {

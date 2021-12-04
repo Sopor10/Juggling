@@ -2,8 +2,9 @@
 using NUnit.Framework;
 using Siteswaps.Generator;
 using Siteswaps.Generator.Filter;
+using Siteswaps.Generator.Filter.NumberFilter;
 
-namespace Siteswaps.Test.Generator.Filter;
+namespace Siteswaps.Test.Generator.Filter.NumberFilter;
 
 public class AtMostXXXTimesFilterTest
 {
