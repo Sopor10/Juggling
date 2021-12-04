@@ -8,6 +8,7 @@ namespace Siteswaps.Generator
         private HashSet<T> HashSet { get; } = new ();
         private Stack<T> Stack { get; } = new();
         private List<T> MultipleInsert { get; } = new();
+        public IReadOnlyCollection<T> MultipleInserts => MultipleInsert;
 
         public void Push(T item)
         {

@@ -7,17 +7,6 @@ namespace Siteswaps
 {
     public record CyclicArray<T> : IEnumerable<T>
     {
-        public virtual bool Equals(CyclicArray<T>? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Items.SequenceEqual(other.Items);
-        }
-
-        public override int GetHashCode()
-        {
-            return Items.GetHashCode();
-        }
 
         public CyclicArray(IEnumerable<T> items)
         {

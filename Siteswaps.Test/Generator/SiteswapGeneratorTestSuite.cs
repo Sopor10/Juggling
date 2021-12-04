@@ -39,84 +39,36 @@ public abstract class SiteswapGeneratorTestSuite
     }
 
     [Test]
-    [TestCase(new[] { 3, 3, 3 })]
-    public void Generator_Should_Not_Generate_Siteswap(int[] expected)
-    {
-        if (Siteswap.TryCreate(expected, out var expectedSiteswap))
-        {
-            var generator = CreateTestObject();
-
-            var input = Input(3, 5, 0, 3);
-
-            var result = generator.Generate(input).ToList();
-            result.Should().NotContain(expectedSiteswap);
-        }
-        else
-        {
-            Assert.Fail("Given Array is no valid Siteswap");
-        }
-    }
-
-    [Test]
-    [TestCase(new[] { 4, 2, 4, 2, 3 })]
-    public void Generator_Generates_Longer_Siteswap(int[] expected)
-    {
-        var generator = CreateTestObject();
-
-        var input = Input(5, 5, 0, 3);
-
-        var result = generator.Generate(input).ToList();
-        result.Should().Contain(expected);
-    }
-
-    [Test]
-    public void Standard_Filter_Should_Filter_Out_No_Valid_Siteswap()
-    {
-        var generator = CreateTestObject();
-        var input = Input(5, 5, 0, 3);
-
-        var siteswaps = generator.Generate(input).Where(x => x.NumberOfObjects() == input.NumberOfObjects).ToList();
-        siteswaps.Should().HaveCount(26);
-    }
-
-    [Test]
     [TestCase(5, 10, 2, 7, ExpectedResult = 110)]
     [TestCase(5, 10, 2, 6, ExpectedResult = 152)]
     [TestCase(7, 13, 2, 8, ExpectedResult = 8946)]
     [TestCase(3, 13, 0, 8, ExpectedResult = 28)]
     [TestCase(3, 10, 0, 5, ExpectedResult = 20)]
+    [TestCase(5, 5, 0, 3, ExpectedResult = 26)]
     public int Number_Of_Siteswaps_Should_Be_Correct(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var generator = CreateTestObject();
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
 
-        var siteswaps = generator.Generate(input).Where(x => x.NumberOfObjects() == input.NumberOfObjects).ToList();
+        var siteswaps = generator.Generate(input).ToList();
         return siteswaps.Count();
     }
 
-    [TestCase(7, 13, 2, 8)]
-    public void Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects)
+    [TestCase(7, 13, 2, 8, "result.json")]
+    public void Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects, string resultFilename)
     {
         var generator = CreateTestObject();
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
 
-        var siteswaps = generator.Generate(input).Where(x => x.NumberOfObjects() == input.NumberOfObjects).ToList();
+        var siteswaps = generator.Generate(input).ToList();
 
         var siteswapsAsStrings = siteswaps.Select(x => x.ToString()).ToList();
         
-        var deserialize = JsonSerializer.Deserialize<Result>(File.ReadAllText("result.json"));
+        var deserialize = JsonSerializer.Deserialize<Result>(File.ReadAllText(resultFilename));
 
-        // all generated siteswaps are correct
-        foreach (var value in siteswapsAsStrings)
-        {
-            deserialize.List.Should().Contain(value, "I generated this siteswap");
-        }
-
-        // all correct siteswaps are generated
-        foreach (var value in deserialize.List)
-        {
-            siteswapsAsStrings.Should().Contain(value, "this siteswap should be generated");
-        }
+        siteswapsAsStrings.Should().OnlyContain(x => deserialize.List.Contains(x));
+        
+        deserialize.List.Should().OnlyContain(x => siteswapsAsStrings.Contains(x));
     }
 }
 

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks.Dataflow;
 using Siteswaps.Generator;
 
 namespace Siteswaps
 {
-    public record Siteswap
+    public record Siteswap : IEquatable<Siteswap>
     {
         public CyclicArray<int> Items { get; }
 
@@ -56,23 +54,6 @@ namespace Siteswaps
             return biggest.ToCyclicArray();
         }
 
-        private static int Rank(CyclicArray<int> input)
-        {
-            var values = input
-                .EnumerateValues(1)
-                .AbsteigendeSeq()
-                .First();
-            var pos = 0;
-            var res = 0;
-            foreach (var value in values)
-            {
-                res += (int)Math.Pow(10, pos) * value;
-                pos++;
-            }
-
-            return res;
-        }
-
         public bool IsGroundState() => HasNoRethrow();
 
         private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
@@ -82,7 +63,7 @@ namespace Siteswaps
 
         public override string ToString()
         {
-            return string.Join("", Items.EnumerateValues(1).Select(x => Transform(x)));
+            return string.Join("", Items.EnumerateValues(1).Select(Transform));
         }
 
         private string Transform(int i)
@@ -92,6 +73,18 @@ namespace Siteswaps
                 < 10 => $"{i}",
                 _ => Convert.ToChar(i + 87).ToString()
             };
+        }
+
+        public virtual bool Equals(Siteswap? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return ToString().Equals(other.ToString());
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
         }
     }
 }
