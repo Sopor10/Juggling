@@ -15,4 +15,9 @@ public class FilterFactory
     public ISiteswapFilter AverageToHighFilter() => new AverageToHighFilter();
     public ISiteswapFilter AverageToLowFilter() => new AverageToLowFilter();
     public ISiteswapFilter RightAmountOfBallsFilter() => new RightAmountOfBallsFilter();
+
+    public ISiteswapFilter ExactNumberOfPassesFilter(int numberOfPasses, int numberOfJugglers)
+    {
+        return new NumberOfPassesFilter(numberOfPasses,numberOfJugglers);
+    }
 }
