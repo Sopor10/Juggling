@@ -53,7 +53,7 @@ public abstract class SiteswapGeneratorTestSuite
         return siteswaps.Count;
     }
 
-    [TestCase(7, 13, 2, 8, "result.json")]
+    [TestCase(7, 13, 2, 8, "Generator/result.txt")]
     public void Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects, string resultFilename)
     {
         var generator = CreateTestObject();

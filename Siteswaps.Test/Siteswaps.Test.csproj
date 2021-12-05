@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,13 +13,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
+        <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Generator\result.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+      <Content Include="Generator\result.txt" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
 </Project>
