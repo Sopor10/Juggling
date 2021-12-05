@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Siteswaps.Generator.Filter;
 
-public class RightAmountOfBallsFilter : ISiteswapFilter
+internal class RightAmountOfBallsFilter : ISiteswapFilter
 {
     public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {

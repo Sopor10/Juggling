@@ -6,7 +6,7 @@ public record SiteswapGeneratorInput
 {
     public SiteswapGeneratorInput()
     {
-        Filter = ISiteswapFilter.Standard();
+        Filter = new FilterFactory().Standard();
         Period = 5;
         MaxHeight = 10;
         MinHeight = 2;
@@ -20,10 +20,18 @@ public record SiteswapGeneratorInput
         MaxHeight = maxHeight;
         Filter = filter;
     }
+    public SiteswapGeneratorInput(int period, int numberOfObjects, int minHeight, int maxHeight)
+    {
+        Period = period;
+        NumberOfObjects = numberOfObjects;
+        MinHeight = minHeight;
+        MaxHeight = maxHeight;
+        Filter = new NoFilter();
+    }
 
     public int NumberOfObjects { get; init; } = 7;
     public int Period { get; init; } = 5;
     public int MinHeight { get; init; } = 2;
     public int MaxHeight { get; init; } = 10;
-    public ISiteswapFilter Filter { get; init; } = ISiteswapFilter.Standard();
+    public ISiteswapFilter Filter { get; init; } = new FilterFactory().Standard();
 }

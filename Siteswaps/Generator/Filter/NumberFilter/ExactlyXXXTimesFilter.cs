@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Filter.NumberFilter;
 
-public class ExactlyXXXTimesFilter : NumberFilter
+internal class ExactlyXXXTimesFilter : NumberFilter
 {
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {

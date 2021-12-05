@@ -8,23 +8,23 @@ namespace Siteswaps.Test.Generator.Filter;
 public class RightAmountOfBallsFilterTest
 {
     [Test]
-    [TestCase(new[]{5,5,-1})]
-    [TestCase(new[]{8,3,-1})]
-    public void Average_Is_To_High(int[] input)
+    [TestCase(new[]{5,5,5})]
+    [TestCase(new[]{4,1,1})]
+    public void Number_Of_Balls_Is_Wrong(int[] input)
     {
-        var sut = new AverageToHighFilter();
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
+        var sut = new FilterFactory().RightAmountOfBallsFilter();
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10));
 
         result.Should().BeFalse();
     }
         
     [Test]
-    [TestCase(new[]{5,4,-1})]
-    [TestCase(new[]{8,0,-1})]
-    public void Average_Is_Okay(int[] input)
+    [TestCase(new[]{5,3,1})]
+    [TestCase(new[]{9,0,0})]
+    public void Number_Of_Balls_Is_Correct(int[] input)
     {
-        var sut = new AverageToHighFilter();
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5, new NoFilter()));
+        var sut = new FilterFactory().RightAmountOfBallsFilter();
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5));
 
         result.Should().BeTrue();
     }

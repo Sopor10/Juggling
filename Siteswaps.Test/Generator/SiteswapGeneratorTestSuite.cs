@@ -31,7 +31,6 @@ public abstract class SiteswapGeneratorTestSuite
         return new SiteswapGeneratorInput
         {
             Period = period,
-            Filter = new NoFilter(),
             MaxHeight = maxHeight,
             MinHeight = minHeight,
             NumberOfObjects = numberOfObjects

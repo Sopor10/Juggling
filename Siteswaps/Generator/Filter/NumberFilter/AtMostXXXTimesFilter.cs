@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Filter.NumberFilter;
 
-public class AtMostXXXTimesFilter : NumberFilter
+internal class AtMostXXXTimesFilter : NumberFilter
 {
     public AtMostXXXTimesFilter(int number, int amount): base(number, amount)
     {

@@ -12,8 +12,8 @@ public class CollisionFilterTest
     [TestCase(new[]{8,4,-1})]
     public void CollisionFilter_Detects_Collisions(int[] input)
     {
-        var sut = new CollisionFilter();
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
+        var sut = new FilterFactory().CollisionFilter();
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10));
 
         result.Should().BeFalse();
     }
@@ -23,8 +23,8 @@ public class CollisionFilterTest
     [TestCase(new[]{8,3,-1})]
     public void CollisionFilter_Detects_No_Collisions(int[] input)
     {
-        var sut = new CollisionFilter();
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5, new NoFilter()));
+        var sut = new FilterFactory().CollisionFilter();
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5));
 
         result.Should().BeTrue();
     }

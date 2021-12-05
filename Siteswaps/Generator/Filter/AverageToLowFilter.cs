@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Filter;
 
-public class AverageToLowFilter : ISiteswapFilter
+internal class AverageToLowFilter : ISiteswapFilter
 {
     public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {

@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Filter;
 
-public class CollisionFilter : ISiteswapFilter
+internal class CollisionFilter : ISiteswapFilter
 {
     public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {

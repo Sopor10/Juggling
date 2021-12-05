@@ -21,7 +21,7 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
     {
-        var siteswapFilter = input.Filter.Combine(ISiteswapFilter.Standard());
+        var siteswapFilter = input.Filter.Combine(new FilterFactory().Standard());
 
         for (var i = 0; i <= input.MaxHeight; i++)
         {

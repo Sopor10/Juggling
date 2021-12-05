@@ -1,6 +1,6 @@
 ﻿namespace Siteswaps.Generator.Filter;
 
-public class NoFilter : ISiteswapFilter
+internal class NoFilter : ISiteswapFilter
 {
     public bool CanFulfill(PartialSiteswap value, SiteswapGeneratorInput siteswapGeneratorInput)
     {

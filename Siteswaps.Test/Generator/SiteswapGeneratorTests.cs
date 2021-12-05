@@ -16,7 +16,7 @@ public class SiteswapGeneratorTests : SiteswapGeneratorTestSuite
     public void There_Should_Be_No_Multiple_Inserts(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var generator = new SiteswapGenerator();
-        generator.Generate(new SiteswapGeneratorInput(period, numberOfObjects, minHeight, maxHeight, new NoFilter()));
+        generator.Generate(new SiteswapGeneratorInput(period, numberOfObjects, minHeight, maxHeight));
 
         generator.Stack.MultipleInserts.Should().BeEmpty();
     }

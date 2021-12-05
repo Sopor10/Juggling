@@ -12,8 +12,8 @@ public class AverageToLowFilterTest
     [TestCase(new[]{1,1,-1})]
     public void Average_Is_To_Low(int[] input)
     {
-        var sut = new AverageToLowFilter();
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5, new NoFilter()));
+        var sut = new FilterFactory().AverageToLowFilter();
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5));
 
         result.Should().BeFalse();
     }
@@ -24,8 +24,8 @@ public class AverageToLowFilterTest
     [TestCase(new[]{5,1,-1})]
     public void Average_Is_Okay(int[] input)
     {
-        var sut = new AverageToLowFilter();
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5, new NoFilter()));
+        var sut = new FilterFactory().AverageToLowFilter();
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 5));
 
         result.Should().BeTrue();
     }

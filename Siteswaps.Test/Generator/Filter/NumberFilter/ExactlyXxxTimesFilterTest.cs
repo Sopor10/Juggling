@@ -14,8 +14,8 @@ public class ExactlyXxxTimesFilterTest
     [TestCase(new[]{5,5,5})]
     public void Exactly_Two_Fives_In_Siteswap_Is_False(int[] input)
     {
-        var sut = new ExactlyXXXTimesFilter(5,2);
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
+        var sut = new FilterFactory().ExactOccurenceFilter(5,2);
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10));
 
         result.Should().BeFalse();
     }
@@ -29,8 +29,8 @@ public class ExactlyXxxTimesFilterTest
     [TestCase(new[]{8,5,-1,-1})]
     public void Exactly_Two_Fives_In_Siteswap_Is_True(int[] input)
     {
-        var sut = new ExactlyXXXTimesFilter(5,2);
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
+        var sut = new FilterFactory().ExactOccurenceFilter(5,2);
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10));
 
         result.Should().BeTrue();
     }

@@ -1,6 +1,6 @@
 ﻿namespace Siteswaps.Generator.Filter.NumberFilter;
 
-public abstract class NumberFilter : ISiteswapFilter
+internal abstract class NumberFilter : ISiteswapFilter
 {
     public NumberFilter(int number, int amount)
     {

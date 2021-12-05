@@ -13,8 +13,8 @@ public class AtLeastXxxTimesFilterTest
     [TestCase(new[]{5,4,4})]
     public void At_Least_Two_Fives_In_Siteswap_Is_False(int[] input)
     {
-        var sut = new AtLeastXXXTimesFilter(5,2);
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
+        var sut = new FilterFactory().MinimumOccurenceFilter(5,2);
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10));
 
         result.Should().BeFalse();
     }
@@ -27,8 +27,8 @@ public class AtLeastXxxTimesFilterTest
     [TestCase(new[]{8,5,-1})]
     public void At_Least_Two_Fives_In_Siteswap_Is_True(int[] input)
     {
-        var sut = new AtLeastXXXTimesFilter(5,2);
-        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10, new NoFilter()));
+        var sut = new FilterFactory().MinimumOccurenceFilter(5,2);
+        var result = sut.CanFulfill(new PartialSiteswap(input), new SiteswapGeneratorInput(3, 3, 0, 10));
 
         result.Should().BeTrue();
     }

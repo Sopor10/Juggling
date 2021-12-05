@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Siteswaps.Generator.Filter;
 
-public class FilterList : ISiteswapFilter
+internal class FilterList : ISiteswapFilter
 {
 
     private List<ISiteswapFilter> Filters { get; }
