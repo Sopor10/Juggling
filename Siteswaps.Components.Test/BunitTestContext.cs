@@ -1,4 +1,5 @@
 ﻿using Bunit;
+using Fluxor;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
 
@@ -10,6 +11,9 @@ public abstract class BunitTestContext : TestContextWrapper
     public void Setup()
     {
         TestContext = new TestContext();
+        TestContext
+            .Services
+            .AddFluxor(options => options.ScanAssemblies(typeof(Components.Assembly).Assembly));
     }
 
     [TearDown]
@@ -17,4 +21,19 @@ public abstract class BunitTestContext : TestContextWrapper
     {
         TestContext?.Dispose();
     }
+}
+
+public abstract class FluxorTestContext : BunitTestContext
+{
+    [SetUp]
+    public void ExtraSetup()
+    {
+        TestContext
+            .Services
+            .AddFluxor(options => options.ScanAssemblies(typeof(Components.Assembly).Assembly));
+        RenderComponent<Fluxor.Blazor.Web.StoreInitializer>();
+    }
+
+    public IState<T> GetState<T>() => this.TestContext.Services.GetService<IState<T>>();
+
 }

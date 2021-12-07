@@ -1,3 +1,5 @@
+using System.Reflection;
+using Fluxor;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,7 @@ public class Startup
         services.AddRazorPages();
         services.AddServerSideBlazor();
         services.AddTransient<ISiteswapGenerator, SiteswapGenerator>();
+        services.AddFluxor(options => options.ScanAssemblies(typeof(Siteswaps.Components.Assembly).Assembly));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
