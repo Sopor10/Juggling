@@ -23,7 +23,7 @@
     <InputNumber id="numberOfJugglers" min="1" @bind-Value="@_values.NumberOfJugglers"/>
 
     <label for="generate">Generate</label>
-    <input id="generate" type="submit"/>
+    <input id="generate" type="submit" disabled="@(Generating)"/>
 </EditForm>
 
 @code {
@@ -35,10 +35,29 @@
     public EventCallback<List<Siteswap>> SiteswapsChanged { get; set; }
 
     private InputValues _values = new();
-
+    
+    [Parameter]
+    public bool Generating { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> GeneratingChanged { get; set; } 
     private async Task Generate()
     {
+        Siteswaps.Clear();
+        await SiteswapsChanged.InvokeAsync(Siteswaps);
+        Generating = true;
+        await GeneratingChanged.InvokeAsync(Generating);
+        await InvokeAsync(StateHasChanged);
+        
+        await GenerateSiteswaps();
 
+        Generating = false;
+        await GeneratingChanged.InvokeAsync(Generating);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task GenerateSiteswaps()
+    {
         if (_values.Objects.NumberOfBalls is not null)
         {
             Siteswaps = _generator.Generate(new SiteswapGeneratorInput
@@ -48,9 +67,8 @@
                 MinHeight = _values.MinThrow,
                 NumberOfObjects = _values.Objects.NumberOfBalls.Value
             }).ToList();
-            return;
         }
-        if (_values.Objects.MaxNumberOfBalls is not null && _values.Objects.MinNumberOfBalls is not null)
+        else if (_values.Objects.MaxNumberOfBalls is not null && _values.Objects.MinNumberOfBalls is not null)
         {
             var siteswaps = new List<Siteswap>();
             for (var i = _values.Objects.MinNumberOfBalls.Value; i <= _values.Objects.MaxNumberOfBalls.Value; i++)
@@ -63,9 +81,10 @@
                     NumberOfObjects = i
                 }).ToList());
             }
+
             Siteswaps = siteswaps;
         }
-        
+
         await SiteswapsChanged.InvokeAsync(Siteswaps);
     }
 

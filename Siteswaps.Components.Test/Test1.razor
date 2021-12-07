@@ -1,0 +1,20 @@
+﻿@using Siteswaps.Components.Generator
+@using Siteswaps.Components.Generator.State
+@using FluentAssertions
+@inherits BunitTestContext
+@code
+{
+    [Test]
+    public void Period_Change_Should_Fire_Correct_Method()
+    {
+        var generatorState = new GeneratorState();
+        var cut = Render(@<GeneratorView2 Values="generatorState" PeriodChanged="ShouldBeCalledOnce"/>);
+
+        cut.Find("#period").Change("6");
+    }
+    
+    private void ShouldBeCalledOnce(int newValue)
+    {
+        newValue.Should().Be(6);
+    }
+}
