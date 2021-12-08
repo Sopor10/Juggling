@@ -5,36 +5,51 @@
     @switch (Values.Objects)
     {
         case Between between:
-            <label for="minNumberOfObjects">Period</label>
-            <InputNumber id="minNumberOfObjects" min="0" Value="@between.MinNumber" ValueChanged="MinNumberChanged" ValueExpression="@(() => between.MinNumber)"/>
+            <div class="form-floating">
+                <label for="minNumberOfObjects">Min Number of Objects</label>
+                <InputNumber id="minNumberOfObjects" class="form-control" min="0" Value="@between.MinNumber" ValueChanged="MinNumberChanged" ValueExpression="@(() => between.MinNumber)"/>
+            </div>
 
-            <label for="maxNumberOfObjects">Period</label>
-            <InputNumber id="maxNumberOfObjects" min="0" Value="@between.MaxNumber" ValueExpression="@(() => between.MaxNumber)"/>
+            <div class="form-floating">
+                <InputNumber id="maxNumberOfObjects" class="form-control" min="0" Value="@between.MaxNumber" ValueExpression="@(() => between.MaxNumber)"/>
+                <label for="maxNumberOfObjects">Max Number of Objects</label>
+            </div>
             break;
         case ExactNumber exactNumber:
-            <label for="numberOfObjects">Period</label>
-            <InputNumber id="numberOfObjects" min="0" Value="@exactNumber.Number" ValueExpression="@(() => exactNumber.Number)"/>
+            <div class="form-floating">
+                <InputNumber id="numberOfObjects" class="form-control" min="0" placeholder="7" Value="@exactNumber.Number" ValueExpression="@(() => exactNumber.Number)"/>
+                <label for="numberOfObjects" class="bmd-label-floating"># Objects</label>
+            </div>
             break;
         default:
             ExhaustiveMatch.Failed(Values.Objects);
             break;
     }
 
-    <label for="period">Period</label>
-    <InputNumber id="period" min="0" Value="@Values.Period" ValueChanged="PeriodChanged" ValueExpression="@(() => Values.Period)"/>
+    <div class="form-floating">
+        <InputNumber id="period" class="form-control" min="0" placeholder="5" Value="@Values.Period" ValueChanged="PeriodChanged" ValueExpression="@(() => Values.Period)"/>
+        <label for="period">Period</label>
+    </div>
 
-    <label for="maxThrow">max throw</label>
-    <InputNumber id="maxThrow" min="0" Value="@Values.MaxThrow" ValueExpression="@(() => Values.MaxThrow)"/>
+    <div class="form-floating">
+        <InputNumber id="maxThrow" class="form-control" min="0" placeholder="10" Value="@Values.MaxThrow" ValueExpression="@(() => Values.MaxThrow)"/>
+        <label for="maxThrow">max throw</label>
+    </div>
 
-    <label for="minThrow">min throw</label>
-    <InputNumber id="minThrow" min="0" Value="@Values.MinThrow" ValueExpression="@(() => Values.MinThrow)"/>
+    <div class="form-floating">
+        <InputNumber id="minThrow" class="form-control" min="0" placeholder="2" Value="@Values.MinThrow" ValueExpression="@(() => Values.MinThrow)"/>
+        <label for="minThrow">min throw</label>
+    </div>
 
-    <label for="numberOfJugglers">#Jugglers</label>
-    <InputNumber id="numberOfJugglers" min="1" Value="@Values.NumberOfJugglers" ValueExpression="@(() => Values.NumberOfJugglers)"/>
+    <div class="form-floating">
+        <InputNumber id="numberOfJugglers" class="form-control" placeholder="2" min="1" Value="@Values.NumberOfJugglers" ValueExpression="@(() => Values.NumberOfJugglers)"/>
+        <label for="numberOfJugglers">#Jugglers</label>
+    </div>
 
     <label for="generate">Generate</label>
     <input id="generate" type="submit"/>
 </EditForm>
+
 
 @code {
 
@@ -47,7 +62,7 @@
     [Parameter]
     public EventCallback<int> PeriodChanged { get; set; }
 
-    
+
     [Parameter]
     public EventCallback<int> MinNumberChanged { get; set; }
 
