@@ -1,11 +1,10 @@
-﻿@page "/test"
-@using Siteswaps.Components.Generator.State
+﻿@using Siteswaps.Components.Generator.State
 @inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
 
-<GeneratorView2
+<GeneratorView
     Values="State.Value.State"
     PeriodChanged="x => Dispatcher.Dispatch(new PeriodChangedAction(x))"
     ExactNumberChanged="x => Dispatcher.Dispatch(new ExactNumberChangedAction(x))"
@@ -14,8 +13,10 @@
     MinThrowChanged="x => Dispatcher.Dispatch(new MinThrowChangedAction(x))"
     MaxThrowChanged="x => Dispatcher.Dispatch(new MaxThrowChangedAction(x))"
     NumberOfJugglersChanged="x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x))"
-    Generate="()=>Dispatcher.Dispatch(new GenerateSiteswapsAction())">
-</GeneratorView2>
+    ExactNumberOrRangeOfBallsSwitched="x => Dispatcher.Dispatch(new ExactNumberOrRangeOfBallsSwitchedAction(x))"
+    Generate="() => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State))">
+</GeneratorView>
+
 
 @code {
 }

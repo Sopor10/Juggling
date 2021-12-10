@@ -1,107 +1,88 @@
-﻿@using Siteswaps.Generator
-@inject ISiteswapGenerator _generator;
-<EditForm Model="_values" OnValidSubmit="@Generate">
-    <label for="numberOfBalls">#Objects</label>
-    <InputNumber id="numberOfBalls" min="0" @bind-Value="@_values.Objects.NumberOfBalls"/>
-    
-    <label for="minNumberOfBalls">min Objects</label>
-    <InputNumber id="minNumberOfBalls" min="0" @bind-Value="@_values.Objects.MinNumberOfBalls"/>
-    
-    <label for="maxNumberOfBalls">max Objects</label>
-    <InputNumber id="maxNumberOfBalls" min="0" @bind-Value="@_values.Objects.MaxNumberOfBalls"/>
-    
-    <label for="period">Period</label>
-    <InputNumber id="period" min="0" @bind-Value="@_values.Period"/>
+﻿@using Siteswaps.Components.Generator.State
+@using ExhaustiveMatching
+<EditForm Model="Values" OnValidSubmit="@Generate">
 
-    <label for="maxThrow">max throw</label>
-    <InputNumber id="maxThrow" min="0" @bind-Value="@_values.MaxThrow"/>
+    <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Exact number or Range</label>
+    <InputCheckbox id="exactNumberOrRangeOfBallsSwitchedCheckBox" Value="Values.IsExactNumber" ValueChanged="ExactNumberOrRangeOfBallsSwitched" ValueExpression="() => Values.IsExactNumber"></InputCheckbox>
 
-    <label for="minThrow">min throw</label>
-    <InputNumber id="minThrow" min="0" @bind-Value="@_values.MinThrow"/>
+    @switch (Values.Objects)
+    {
+        case Between between:
+            <div class="form-floating">
+                <InputNumber id="minNumberOfObjects" class="form-control" min="0" Value="@between.MinNumber" ValueChanged="MinNumberChanged" ValueExpression="@(() => between.MinNumber)"/>
+                <label for="minNumberOfObjects">Min Number of Objects</label>
+            </div>
 
-    <label for="numberOfJugglers">#Jugglers</label>
-    <InputNumber id="numberOfJugglers" min="1" @bind-Value="@_values.NumberOfJugglers"/>
+            <div class="form-floating">
+                <InputNumber id="maxNumberOfObjects" class="form-control" min="0" Value="@between.MaxNumber" ValueChanged="MaxNumberChanged" ValueExpression="@(() => between.MaxNumber)"/>
+                <label for="maxNumberOfObjects">Max Number of Objects</label>
+            </div>
+            break;
+        case ExactNumber exactNumber:
+            <div class="form-floating">
+                <InputNumber id="numberOfObjects" class="form-control" min="0" placeholder="7" Value="@exactNumber.Number" ValueChanged="ExactNumberChanged" ValueExpression="@(() => exactNumber.Number)"/>
+                <label for="numberOfObjects" class="bmd-label-floating"># Objects</label>
+            </div>
+            break;
+        default:
+            ExhaustiveMatch.Failed(Values.Objects);
+            break;
+    }
 
-    <label for="generate">Generate</label>
-    <input id="generate" type="submit" disabled="@(Generating)"/>
+    <div class="form-floating">
+        <InputNumber id="period" class="form-control" min="0" placeholder="5" Value="@Values.Period" ValueChanged="PeriodChanged" ValueExpression="@(() => Values.Period)"/>
+        <label for="period">Period</label>
+    </div>
+
+    <div class="form-floating">
+        <InputNumber id="maxThrow" class="form-control" min="0" placeholder="10" Value="@Values.MaxThrow" ValueChanged="MaxThrowChanged" ValueExpression="@(() => Values.MaxThrow)"/>
+        <label for="maxThrow">max throw</label>
+    </div>
+
+    <div class="form-floating">
+        <InputNumber id="minThrow" class="form-control" min="0" placeholder="2" Value="@Values.MinThrow" ValueChanged="MinThrowChanged" ValueExpression="@(() => Values.MinThrow)"/>
+        <label for="minThrow">min throw</label>
+    </div>
+
+    <div class="form-floating">
+        <InputNumber id="numberOfJugglers" class="form-control" placeholder="2" min="1" Value="@Values.NumberOfJugglers" ValueChanged="NumberOfJugglersChanged" ValueExpression="@(() => Values.NumberOfJugglers)"/>
+        <label for="numberOfJugglers">#Jugglers</label>
+    </div>
+
+    <input id="generate" type="submit" disabled="@Values.IsGenerating"/>
 </EditForm>
 
 @code {
 
     [Parameter]
-    public List<Siteswap> Siteswaps { get; set; } = new();
+    public GeneratorState Values { get; set; }
 
     [Parameter]
-    public EventCallback<List<Siteswap>> SiteswapsChanged { get; set; }
+    public Action Generate { get; set; }
 
-    private InputValues _values = new();
-    
     [Parameter]
-    public bool Generating { get; set; }
-    
+    public EventCallback<int> PeriodChanged { get; set; }
+
+
     [Parameter]
-    public EventCallback<bool> GeneratingChanged { get; set; } 
-    private async Task Generate()
-    {
-        Siteswaps.Clear();
-        await SiteswapsChanged.InvokeAsync(Siteswaps);
-        Generating = true;
-        await GeneratingChanged.InvokeAsync(Generating);
-        await InvokeAsync(StateHasChanged);
-        
-        await GenerateSiteswaps();
+    public EventCallback<int> MinNumberChanged { get; set; }
 
-        Generating = false;
-        await GeneratingChanged.InvokeAsync(Generating);
-        await InvokeAsync(StateHasChanged);
-    }
+    [Parameter]
+    public EventCallback<int> MaxNumberChanged { get; set; }
 
-    private async Task GenerateSiteswaps()
-    {
-        if (_values.Objects.NumberOfBalls is not null)
-        {
-            Siteswaps = _generator.Generate(new SiteswapGeneratorInput
-            {
-                Period = _values.Period,
-                MaxHeight = _values.MaxThrow,
-                MinHeight = _values.MinThrow,
-                NumberOfObjects = _values.Objects.NumberOfBalls.Value
-            }).ToList();
-        }
-        else if (_values.Objects.MaxNumberOfBalls is not null && _values.Objects.MinNumberOfBalls is not null)
-        {
-            var siteswaps = new List<Siteswap>();
-            for (var i = _values.Objects.MinNumberOfBalls.Value; i <= _values.Objects.MaxNumberOfBalls.Value; i++)
-            {
-                siteswaps.AddRange(_generator.Generate(new SiteswapGeneratorInput
-                {
-                    Period = _values.Period,
-                    MaxHeight = _values.MaxThrow,
-                    MinHeight = _values.MinThrow,
-                    NumberOfObjects = i
-                }).ToList());
-            }
+    [Parameter]
+    public EventCallback<int> ExactNumberChanged { get; set; }
 
-            Siteswaps = siteswaps;
-        }
+    [Parameter]
+    public EventCallback<int> MaxThrowChanged { get; set; }
 
-        await SiteswapsChanged.InvokeAsync(Siteswaps);
-    }
+    [Parameter]
+    public EventCallback<int> MinThrowChanged { get; set; }
 
-    private class InputValues
-    {
-        public Objects Objects = new();
-        public int Period { get; set; } = 5;
-        public int MaxThrow { get; set; } = 10;
-        public int MinThrow { get; set; } = 2;
-        public int NumberOfJugglers { get; set; } = 2;
-    }
+    [Parameter]
+    public EventCallback<int> NumberOfJugglersChanged { get; set; }
 
-    private class Objects
-    {
-        public int? NumberOfBalls { get; set; } = 7;
-        public int? MinNumberOfBalls { get; set; }
-        public int? MaxNumberOfBalls { get; set; }
-    }
+    [Parameter]
+    public EventCallback<bool> ExactNumberOrRangeOfBallsSwitched { get; set; }
 
 }

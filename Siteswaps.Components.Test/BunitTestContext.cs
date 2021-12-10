@@ -1,6 +1,9 @@
 ﻿using Bunit;
 using Fluxor;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
+using Siteswaps.Generator;
 using TestContext = Bunit.TestContext;
 
 namespace Siteswaps.Components.Test;
@@ -30,10 +33,11 @@ public abstract class FluxorTestContext : BunitTestContext
     {
         TestContext
             .Services
+            .AddTransient<ISiteswapGenerator>(x => Mock.Of<ISiteswapGenerator>())
             .AddFluxor(options => options.ScanAssemblies(typeof(Components.Assembly).Assembly));
         RenderComponent<Fluxor.Blazor.Web.StoreInitializer>();
     }
 
     public IState<T> GetState<T>() => this.TestContext.Services.GetService<IState<T>>();
-
+    
 }

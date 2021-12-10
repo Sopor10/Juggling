@@ -4,8 +4,9 @@
 @inherits FluxorTestContext
 @code
 {
+
     [Test]
-    public void Period_Change_Should_Fire_Correct_Method()
+    public void Period_Change_Should_Update_State()
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
 
@@ -13,5 +14,74 @@
 
         var state = GetState<SiteswapGeneratorState>();
         state.Value.State.Period.Should().Be(6);
+    }
+
+    [Test]
+    public void MinThrow_Change_Should_Update_State()
+    {
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+
+        cut.Find("#minThrow").Change("3");
+
+        var state = GetState<SiteswapGeneratorState>();
+        state.Value.State.MinThrow.Should().Be(3);
+    }
+    
+    [Test]
+    public void MaxThrow_Change_Should_Update_State()
+    {
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+
+        cut.Find("#maxThrow").Change("7");
+
+        var state = GetState<SiteswapGeneratorState>();
+        state.Value.State.MaxThrow.Should().Be(7);
+    }
+    
+    [Test]
+    public void MinNumberOfObjects_Change_Should_Update_State()
+    {
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Change(false);
+
+        cut.Find("#minNumberOfObjects").Change("7");
+
+        var state = GetState<SiteswapGeneratorState>();
+        (state.Value.State.Objects as Between).MinNumber.Should().Be(7);
+    }
+    
+    [Test]
+    public void MaxNumberOfObjects_Change_Should_Update_State()
+    {
+        
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Change(false);
+        
+        cut.Find("#maxNumberOfObjects").Change("7");
+
+        var state = GetState<SiteswapGeneratorState>();
+        (state.Value.State.Objects as Between).MaxNumber.Should().Be(7);
+    }
+    
+    [Test]
+    public void NumberOfObjects_Change_Should_Update_State()
+    {
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+
+        cut.Find("#numberOfObjects").Change("7");
+
+        var state = GetState<SiteswapGeneratorState>();
+        (state.Value.State.Objects as ExactNumber).Number.Should().Be(7);
+    }
+    
+    [Test]
+    public void NumberOfJugglers_Change_Should_Update_State()
+    {
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+
+        cut.Find("#numberOfJugglers").Change("7");
+
+        var state = GetState<SiteswapGeneratorState>();
+        state.Value.State.NumberOfJugglers.Should().Be(7);
     }
 }

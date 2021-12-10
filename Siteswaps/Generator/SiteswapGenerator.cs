@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Generator;
@@ -8,15 +9,20 @@ public class SiteswapGenerator : ISiteswapGenerator
 {
     public HashsetStack<PartialSiteswap> Stack { get; } = new();
         
-    public IEnumerable<Siteswap> Generate(SiteswapGeneratorInput input)
+    public Task<IEnumerable<Siteswap>> GenerateAsync(SiteswapGeneratorInput input)
     {
-        var siteswaps = GeneratePartialSiteswaps(input)
-            .Select(x => x.TryCreateSiteswap())
-            .WhereNotNull()
-            .Distinct()
-            .ToList();
-        Stack.Reset();
-        return siteswaps;
+        return Task.Run(() =>
+        {
+            var tmp = GeneratePartialSiteswaps(input)
+                .Select(x => x.TryCreateSiteswap())
+                .WhereNotNull()
+                .Distinct()
+                .ToList()
+                .AsEnumerable();
+            Stack.Reset();
+            return tmp;
+        });
+
     }
 
     private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)

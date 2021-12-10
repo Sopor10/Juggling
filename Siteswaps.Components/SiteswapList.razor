@@ -1,4 +1,4 @@
-﻿@foreach (var siteswaps in Siteswaps.Batch(4))
+﻿    @foreach (var siteswaps in Siteswaps.Batch(4))
 {
     <div class="row">
         @foreach (var siteswap in siteswaps)
@@ -15,6 +15,6 @@
 @code {
 
     [Parameter]
-    public List<Siteswap> Siteswaps { get; set; } = new();
+    public IReadOnlyCollection<Siteswap> Siteswaps { get; set; } = new List<Siteswap>();
 
 }

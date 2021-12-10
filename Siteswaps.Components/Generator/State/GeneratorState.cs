@@ -4,11 +4,13 @@ namespace Siteswaps.Components.Generator.State;
 
 public record GeneratorState
 {
-    public int NumberOfJugglers { get; init; }
-    public Objects Objects => new ExactNumber();
+    public bool IsExactNumber => Objects is ExactNumber;
+    public int NumberOfJugglers { get; init; } = 2;
+    public Objects Objects { get; init; } = new ExactNumber();
     public int Period { get; init; } = 5;
     public int MaxThrow { get; init; } = 10;
     public int MinThrow { get; init; } = 2;
+    public bool IsGenerating { get; init; } = false;
 }
 
 [Closed(typeof(ExactNumber), typeof(Between))]

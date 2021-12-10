@@ -2,10 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator;
-using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Test.Generator;
 
@@ -16,13 +16,13 @@ public abstract class SiteswapGeneratorTestSuite
     [Test]
     [TestCase(new[] { 5, 3, 1 })]
     [TestCase(new[] { 4, 2, 3 })]
-    public void Generator_Generates_Siteswap(int[] expected)
+    public async Task Generator_Generates_Siteswap(int[] expected)
     {
         var generator = CreateTestObject();
 
         var input = Input(3, 5, 0, 3);
 
-        var result = generator.Generate(input).ToList();
+        var result = (await generator.GenerateAsync(input)).ToList();
         result.Should().Contain(expected);
     }
 
@@ -44,22 +44,22 @@ public abstract class SiteswapGeneratorTestSuite
     [TestCase(3, 13, 0, 8, ExpectedResult = 28)]
     [TestCase(3, 10, 0, 5, ExpectedResult = 20)]
     [TestCase(5, 5, 0, 3, ExpectedResult = 26)]
-    public int Number_Of_Siteswaps_Should_Be_Correct(int period, int maxHeight, int minHeight, int numberOfObjects)
+    public async Task<int> Number_Of_Siteswaps_Should_Be_Correct(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var generator = CreateTestObject();
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
 
-        var siteswaps = generator.Generate(input).ToList();
+        var siteswaps = (await generator.GenerateAsync(input)).ToList();
         return siteswaps.Count;
     }
 
     [TestCase(7, 13, 2, 8, "Generator/result.txt")]
-    public void Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects, string resultFilename)
+    public async Task Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects, string resultFilename)
     {
         var generator = CreateTestObject();
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
 
-        var siteswaps = generator.Generate(input).ToList();
+        var siteswaps = (await generator.GenerateAsync(input)).ToList();
 
         var siteswapsAsStrings = siteswaps.Select(x => x.ToString()).ToList();
         
