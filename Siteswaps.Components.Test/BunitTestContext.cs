@@ -14,9 +14,6 @@ public abstract class BunitTestContext : TestContextWrapper
     public void Setup()
     {
         TestContext = new TestContext();
-        TestContext
-            .Services
-            .AddFluxor(options => options.ScanAssemblies(typeof(Components.Assembly).Assembly));
     }
 
     [TearDown]
@@ -33,7 +30,7 @@ public abstract class FluxorTestContext : BunitTestContext
     {
         TestContext
             .Services
-            .AddTransient<ISiteswapGenerator>(x => Mock.Of<ISiteswapGenerator>())
+            .AddSingleton(x => Mock.Of<ISiteswapGenerator>())
             .AddFluxor(options => options.ScanAssemblies(typeof(Components.Assembly).Assembly));
         RenderComponent<Fluxor.Blazor.Web.StoreInitializer>();
     }

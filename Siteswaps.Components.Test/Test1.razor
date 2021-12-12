@@ -1,16 +1,18 @@
 ﻿@using Siteswaps.Components.Generator
 @using Siteswaps.Components.Generator.State
 @using FluentAssertions
+@using Moq
+@using Siteswaps.Generator
+
 @inherits FluxorTestContext
 @code
 {
-
     [Test]
     public void Period_Change_Should_Update_State()
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
 
-        cut.Find("#period").Change("6");
+        cut.Find("#period").Input("6");
 
         var state = GetState<SiteswapGeneratorState>();
         state.Value.State.Period.Should().Be(6);
@@ -21,7 +23,7 @@
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
 
-        cut.Find("#minThrow").Change("3");
+        cut.Find("#minThrow").Input("3");
 
         var state = GetState<SiteswapGeneratorState>();
         state.Value.State.MinThrow.Should().Be(3);
@@ -32,7 +34,7 @@
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
 
-        cut.Find("#maxThrow").Change("7");
+        cut.Find("#maxThrow").Input("7");
 
         var state = GetState<SiteswapGeneratorState>();
         state.Value.State.MaxThrow.Should().Be(7);
@@ -42,9 +44,9 @@
     public void MinNumberOfObjects_Change_Should_Update_State()
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
-        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Change(false);
+        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Input(false);
 
-        cut.Find("#minNumberOfObjects").Change("7");
+        cut.Find("#minNumberOfObjects").Input("7");
 
         var state = GetState<SiteswapGeneratorState>();
         (state.Value.State.Objects as Between).MinNumber.Should().Be(7);
@@ -55,9 +57,9 @@
     {
         
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
-        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Change(false);
+        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Input(false);
         
-        cut.Find("#maxNumberOfObjects").Change("7");
+        cut.Find("#maxNumberOfObjects").Input("7");
 
         var state = GetState<SiteswapGeneratorState>();
         (state.Value.State.Objects as Between).MaxNumber.Should().Be(7);
@@ -68,7 +70,7 @@
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
 
-        cut.Find("#numberOfObjects").Change("7");
+        cut.Find("#numberOfObjects").Input("7");
 
         var state = GetState<SiteswapGeneratorState>();
         (state.Value.State.Objects as ExactNumber).Number.Should().Be(7);
@@ -79,7 +81,7 @@
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
 
-        cut.Find("#numberOfJugglers").Change("7");
+        cut.Find("#numberOfJugglers").Input("7");
 
         var state = GetState<SiteswapGeneratorState>();
         state.Value.State.NumberOfJugglers.Should().Be(7);

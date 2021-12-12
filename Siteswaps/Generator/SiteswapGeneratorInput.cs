@@ -1,4 +1,5 @@
-﻿using Siteswaps.Generator.Filter;
+﻿using System;
+using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Generator;
 
@@ -35,3 +36,4 @@ public record SiteswapGeneratorInput
     public int MaxHeight { get; init; } = 10;
     public ISiteswapFilter Filter { get; init; } = new FilterFactory().Standard();
 }
+public record StopCriteria(TimeSpan TimeOut, int MaxNumberOfResults);

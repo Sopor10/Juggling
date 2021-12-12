@@ -3,24 +3,24 @@
 <EditForm Model="Values" OnValidSubmit="@Generate">
 
     <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Exact number or Range</label>
-    <InputCheckbox id="exactNumberOrRangeOfBallsSwitchedCheckBox" Value="Values.IsExactNumber" ValueChanged="ExactNumberOrRangeOfBallsSwitched" ValueExpression="() => Values.IsExactNumber"></InputCheckbox>
+    <input type="number" id="exactNumberOrRangeOfBallsSwitchedCheckBox"  value="Values.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
 
     @switch (Values.Objects)
     {
         case Between between:
             <div class="form-floating">
-                <InputNumber id="minNumberOfObjects" class="form-control" min="0" Value="@between.MinNumber" ValueChanged="MinNumberChanged" ValueExpression="@(() => between.MinNumber)"/>
+                <input type="number" id="minNumberOfObjects" class="form-control" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
                 <label for="minNumberOfObjects">Min Number of Objects</label>
             </div>
 
             <div class="form-floating">
-                <InputNumber id="maxNumberOfObjects" class="form-control" min="0" Value="@between.MaxNumber" ValueChanged="MaxNumberChanged" ValueExpression="@(() => between.MaxNumber)"/>
+                <input type="number" id="maxNumberOfObjects" class="form-control" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
                 <label for="maxNumberOfObjects">Max Number of Objects</label>
             </div>
             break;
         case ExactNumber exactNumber:
             <div class="form-floating">
-                <InputNumber id="numberOfObjects" class="form-control" min="0" placeholder="7" Value="@exactNumber.Number" ValueChanged="ExactNumberChanged" ValueExpression="@(() => exactNumber.Number)"/>
+                <input type="number" id="numberOfObjects" class="form-control" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
                 <label for="numberOfObjects" class="bmd-label-floating"># Objects</label>
             </div>
             break;
@@ -30,22 +30,22 @@
     }
 
     <div class="form-floating">
-        <InputNumber id="period" class="form-control" min="0" placeholder="5" Value="@Values.Period" ValueChanged="PeriodChanged" ValueExpression="@(() => Values.Period)"/>
+        <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Values.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
         <label for="period">Period</label>
     </div>
 
     <div class="form-floating">
-        <InputNumber id="maxThrow" class="form-control" min="0" placeholder="10" Value="@Values.MaxThrow" ValueChanged="MaxThrowChanged" ValueExpression="@(() => Values.MaxThrow)"/>
+        <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Values.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
         <label for="maxThrow">max throw</label>
     </div>
 
     <div class="form-floating">
-        <InputNumber id="minThrow" class="form-control" min="0" placeholder="2" Value="@Values.MinThrow" ValueChanged="MinThrowChanged" ValueExpression="@(() => Values.MinThrow)"/>
+        <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Values.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
         <label for="minThrow">min throw</label>
     </div>
 
     <div class="form-floating">
-        <InputNumber id="numberOfJugglers" class="form-control" placeholder="2" min="1" Value="@Values.NumberOfJugglers" ValueChanged="NumberOfJugglersChanged" ValueExpression="@(() => Values.NumberOfJugglers)"/>
+        <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Values.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
         <label for="numberOfJugglers">#Jugglers</label>
     </div>
 
@@ -62,7 +62,6 @@
 
     [Parameter]
     public EventCallback<int> PeriodChanged { get; set; }
-
 
     [Parameter]
     public EventCallback<int> MinNumberChanged { get; set; }
@@ -84,5 +83,8 @@
 
     [Parameter]
     public EventCallback<bool> ExactNumberOrRangeOfBallsSwitched { get; set; }
+
+    private int ToInt(ChangeEventArgs eventArgs) => int.Parse((string)eventArgs.Value ?? throw new ArgumentNullException());
+    private bool ToBool(ChangeEventArgs eventArgs) => (bool)(eventArgs.Value ?? throw new ArgumentNullException());
 
 }
