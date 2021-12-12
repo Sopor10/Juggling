@@ -3,7 +3,7 @@
 <EditForm Model="Values" OnValidSubmit="@Generate">
 
     <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Exact number or Range</label>
-    <input type="number" id="exactNumberOrRangeOfBallsSwitchedCheckBox"  value="Values.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
+    <input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox"  value="Values.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
 
     @switch (Values.Objects)
     {
