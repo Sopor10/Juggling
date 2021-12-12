@@ -7,14 +7,11 @@ public class HashsetStack<T>
 {
     private HashSet<T> HashSet { get; } = new ();
     private Stack<T> Stack { get; } = new();
-    private List<T> MultipleInsert { get; } = new();
-    public IReadOnlyCollection<T> MultipleInserts => MultipleInsert;
 
     public void Push(T item)
     {
         if (HashSet.Contains(item))
         {
-            MultipleInsert.Add(item);
             return;
         }
             
@@ -31,6 +28,5 @@ public class HashsetStack<T>
     {
         Stack.Clear();
         HashSet.Clear();
-        MultipleInsert.Clear();
     }
 }

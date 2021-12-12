@@ -35,5 +35,6 @@ public record SiteswapGeneratorInput
     public int MinHeight { get; init; } = 2;
     public int MaxHeight { get; init; } = 10;
     public ISiteswapFilter Filter { get; init; } = new FilterFactory().Standard();
+    public StopCriteria StopCriteria { get; init; } = new (TimeSpan.FromSeconds(15), 1000);
 }
 public record StopCriteria(TimeSpan TimeOut, int MaxNumberOfResults);

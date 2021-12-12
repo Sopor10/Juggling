@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Siteswaps.Generator.Filter;
@@ -14,8 +15,6 @@ public class SiteswapGenerator : ISiteswapGenerator
         return Task.Run(() =>
         {
             var tmp = GeneratePartialSiteswaps(input)
-                .Select(x => x.TryCreateSiteswap())
-                .WhereNotNull()
                 .Distinct()
                 .ToList()
                 .AsEnumerable();
@@ -25,8 +24,11 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     }
 
-    private IEnumerable<PartialSiteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
+    private IEnumerable<Siteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
     {
+        var count = 0;
+        var sw = new Stopwatch();
+        sw.Start();
         var siteswapFilter = input.Filter.Combine(new FilterFactory().Standard());
 
         for (var i = 0; i <= input.MaxHeight; i++)
@@ -38,10 +40,16 @@ public class SiteswapGenerator : ISiteswapGenerator
             
         while (Stack.TryPop(out var partialSiteswap))
         {
-            if (partialSiteswap.IsFilled())
+            if (sw.Elapsed > input.StopCriteria.TimeOut || count > input.StopCriteria.MaxNumberOfResults)
             {
-                yield return partialSiteswap;
-                continue;
+                yield break;
+            }
+            
+            if (partialSiteswap.IsFilled() && Siteswap.TryCreate(partialSiteswap.Items, out var s))
+            {
+                count++;
+                yield return s;
+                continue;   
             }
 
             foreach (var siteswap in GenerateNext(partialSiteswap, input))

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -33,7 +34,8 @@ public abstract class SiteswapGeneratorTestSuite
             Period = period,
             MaxHeight = maxHeight,
             MinHeight = minHeight,
-            NumberOfObjects = numberOfObjects
+            NumberOfObjects = numberOfObjects,
+            StopCriteria = new (TimeSpan.FromSeconds(15),10000 )
         };
     }
 
