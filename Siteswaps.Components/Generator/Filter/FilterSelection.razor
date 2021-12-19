@@ -8,9 +8,9 @@
             <label for="filterSelect">Select Filter</label>
             <select id="filterSelect" class="custom-select" value="@Value?.FilterType" @onchange="SelectionChanged">
                 <option disabled selected value> -- select an option -- </option>
-                @foreach (var filter in KnownFilters)
+                @foreach (var filter in KnownFilters.AvailableSelection())
                 {
-                    <option value="@filter.Key">@filter.Key</option>
+                    <option value="@filter">@filter</option>
                 }
             </select>
         </div>
@@ -19,7 +19,11 @@
     @if (Value is not null)
     {
         <div class="row">
-            <DynamicComponent Type="@MapFilterInformationToRenderType(Value)" Parameters="@Parameters(Value)"></DynamicComponent>
+
+            @{
+                IFilterInformation filterInformation = Value;
+            }
+            <DynamicComponent Type="@KnownFilters.MapFilterInformationToRenderType(filterInformation)" Parameters="@Parameters(Value)"></DynamicComponent>
             <div class="col-md-3">
                 <button type="button" class="btn-primary " @onclick="OnClick">Add</button>
             </div>
@@ -40,7 +44,7 @@
         Value = null;
         if (Enum.TryParse(eventArgs.Value?.ToString(), out FilterType yeah))
         {
-            Value = KnownFilters.Single(x => x.Key == yeah).Default();
+            Value = KnownFilters.GetDefault(yeah);
         }
     }
 
@@ -56,8 +60,6 @@
         {"Value", information}
     };
 
-    private Type MapFilterInformationToRenderType(IFilterInformation filterInformation) => KnownFilters.Single(x => x.Key == filterInformation.FilterType).ViewType;
-
-    private List<SiteswapGeneratorState.FilterRendererMap> KnownFilters => _state.Value.KnownFilters;
+    private KnownFilterTypes KnownFilters => _state.Value.KnownFilters;
 
 }

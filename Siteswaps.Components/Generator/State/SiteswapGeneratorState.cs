@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Fluxor;
-using Siteswaps.Components.Generator.Filter;
 
 namespace Siteswaps.Components.Generator.State;
 
@@ -25,11 +24,6 @@ public record SiteswapGeneratorState
 
     public GeneratorState State { get; init; }
     
-    public List<FilterRendererMap> KnownFilters => new()
-    { 
-        new(FilterType.Number, typeof(NumberFilter), ()=>new NumberFilterInformation()),
-        new(FilterType.Pattern, typeof(PatternFilter), ()=>new PatternFilterInformation()),
-    };
-    public record FilterRendererMap(FilterType Key, Type ViewType, Func<IFilterInformation> Default);
+    public KnownFilterTypes KnownFilters => new();
 
 }
