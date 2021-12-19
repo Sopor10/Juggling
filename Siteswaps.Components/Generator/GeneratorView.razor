@@ -1,11 +1,11 @@
 ﻿@using Siteswaps.Components.Generator.State
 @using ExhaustiveMatching
-<EditForm Model="Values" OnValidSubmit="@Generate">
+<EditForm Model="Value" OnValidSubmit="@Generate">
 
     <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Exact number or Range</label>
     <input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox"  value="Values.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
 
-    @switch (Values.Objects)
+    @switch (Value.Objects)
     {
         case Between between:
             <div class="form-floating">
@@ -25,37 +25,47 @@
             </div>
             break;
         default:
-            ExhaustiveMatch.Failed(Values.Objects);
+            ExhaustiveMatch.Failed(Value.Objects);
             break;
     }
 
     <div class="form-floating">
-        <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Values.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
         <label for="period">Period</label>
     </div>
 
     <div class="form-floating">
-        <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Values.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
         <label for="maxThrow">max throw</label>
     </div>
 
     <div class="form-floating">
-        <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Values.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
         <label for="minThrow">min throw</label>
     </div>
 
     <div class="form-floating">
-        <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Values.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
         <label for="numberOfJugglers">#Jugglers</label>
     </div>
 
-    <input id="generate" type="submit" disabled="@Values.IsGenerating"/>
+    <h3>Filter</h3>
+    <li>
+        @foreach (var filter in Value.Filter)
+        {
+            <ul>@filter.Display()</ul>
+        }
+    </li>
+    
+    <FilterSelection></FilterSelection>
+
+    <input id="generate" type="submit" disabled="@Value.IsGenerating"/>
 </EditForm>
 
 @code {
 
     [Parameter]
-    public GeneratorState Values { get; set; }
+    public GeneratorState Value { get; set; }
 
     [Parameter]
     public Action Generate { get; set; }

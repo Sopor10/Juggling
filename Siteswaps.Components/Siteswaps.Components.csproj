@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+<!--        <WarningsAsErrors>nullable</WarningsAsErrors>-->
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
 
@@ -13,6 +16,7 @@
         <PackageReference Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
         <PackageReference Include="Fluxor" Version="4.2.2-Alpha" />
         <PackageReference Include="Fluxor.Blazor.Web" Version="4.2.2-Alpha" />
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.3" />
     </ItemGroup>
 

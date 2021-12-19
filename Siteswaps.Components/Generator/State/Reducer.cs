@@ -101,4 +101,16 @@ public static class Reducer
                     }
                 }
             };
+        
+        [ReducerMethod]
+        public static SiteswapGeneratorState ReduceNewFilterCreatedActionAction(
+            SiteswapGeneratorState state,
+            NewFilterCreatedAction action) =>
+            state with
+            {
+                State = state.State with
+                {
+                    Filter = state.State.Filter.Add(action.Value)
+                }
+            };
 }

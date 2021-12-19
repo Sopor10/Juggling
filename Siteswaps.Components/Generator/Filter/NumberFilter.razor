@@ -1,0 +1,32 @@
+﻿@using Siteswaps.Components.Generator.State
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <label for="numberFilterType">Filter type</label>
+            <select id="numberFilterType" class="custom-select" @bind="@Value.Type">
+                <option value="@NumberFilterType.Exactly">Exactly</option>
+                <option value="@NumberFilterType.Maximum">Maximal</option>
+                <option value="@NumberFilterType.AtLeast">Minimal</option>
+            </select>
+        </div>
+
+        <div class="form-floating col-sm">
+            <input type="number" id="numberFilterAmount" class="form-control" min="0" @bind="@Value.Amount"/>
+            <label for="numberFilterAmount">Times</label>
+        </div>
+
+        <div class="form-floating col-sm">
+            <input type="number" id="numberFilterHeight" class="form-control" min="0" @bind="@Value.Height"/>
+            <label for="numberFilterHeight">Height</label>
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public NumberFilterInformation Value { get; init; } = new();
+
+}

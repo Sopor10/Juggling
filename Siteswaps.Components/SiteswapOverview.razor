@@ -2,7 +2,6 @@
 @inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> State
 
-<h3>SiteswapOverview</h3>
 <GeneratorViewFluxor></GeneratorViewFluxor>
 
 @if (!State.Value.IsGenerating)
@@ -13,4 +12,3 @@ else
 {
     <text>Generating...</text>
 }
-

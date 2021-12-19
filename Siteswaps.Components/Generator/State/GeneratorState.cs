@@ -1,4 +1,5 @@
-﻿using ExhaustiveMatching;
+﻿using System.Collections.Immutable;
+using ExhaustiveMatching;
 
 namespace Siteswaps.Components.Generator.State;
 
@@ -11,6 +12,8 @@ public record GeneratorState
     public int MaxThrow { get; init; } = 10;
     public int MinThrow { get; init; } = 2;
     public bool IsGenerating { get; init; } = false;
+
+    public ImmutableList<IFilterInformation> Filter { get; init; } = ImmutableList<IFilterInformation>.Empty;
 }
 
 [Closed(typeof(ExactNumber), typeof(Between))]

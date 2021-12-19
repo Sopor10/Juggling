@@ -1,8 +1,10 @@
-﻿using Siteswaps.Generator.Filter.NumberFilter;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Siteswaps.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Filter;
 
-public class FilterFactory
+public class FilterFactory : IFilterFactory
 {
     public ISiteswapFilter Standard() => new FilterList(new CollisionFilter(), new AverageToHighFilter(), new AverageToLowFilter(), new RightAmountOfBallsFilter());
 
@@ -16,8 +18,6 @@ public class FilterFactory
     public ISiteswapFilter AverageToLowFilter() => new AverageToLowFilter();
     public ISiteswapFilter RightAmountOfBallsFilter() => new RightAmountOfBallsFilter();
 
-    public ISiteswapFilter ExactNumberOfPassesFilter(int numberOfPasses, int numberOfJugglers)
-    {
-        return new NumberOfPassesFilter(numberOfPasses,numberOfJugglers);
-    }
+    public ISiteswapFilter ExactNumberOfPassesFilter(int numberOfPasses, int numberOfJugglers) => new NumberOfPassesFilter(numberOfPasses,numberOfJugglers);
+    public ISiteswapFilter Combine(IEnumerable<ISiteswapFilter> filter) => new FilterList(filter.ToArray());
 }

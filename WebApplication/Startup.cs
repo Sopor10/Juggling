@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Siteswaps.Generator;
+using Siteswaps.Generator.Filter;
 
 namespace WebApplication;
 
@@ -23,6 +24,7 @@ public class Startup
         services.AddRazorPages();
         services.AddServerSideBlazor();
         services.AddTransient<ISiteswapGenerator, SiteswapGenerator>();
+        services.AddTransient<IFilterFactory, FilterFactory>();
         services.AddFluxor(options => options.ScanAssemblies(typeof(Siteswaps.Components.Assembly).Assembly));
     }
 

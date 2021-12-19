@@ -5,7 +5,7 @@
 @inject IState<SiteswapGeneratorState> State
 
 <GeneratorView
-    Values="State.Value.State"
+    Value="State.Value.State"
     PeriodChanged="x => Dispatcher.Dispatch(new PeriodChangedAction(x))"
     ExactNumberChanged="x => Dispatcher.Dispatch(new ExactNumberChangedAction(x))"
     MinNumberChanged="x => Dispatcher.Dispatch(new MinNumberChangedAction(x))"
@@ -19,4 +19,5 @@
 
 
 @code {
+    
 }
