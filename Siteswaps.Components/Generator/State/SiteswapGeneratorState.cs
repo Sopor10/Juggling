@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Fluxor;
 
 namespace Siteswaps.Components.Generator.State;
@@ -25,5 +24,7 @@ public record SiteswapGeneratorState
     public GeneratorState State { get; init; }
     
     public KnownFilterTypes KnownFilters => new();
+    
+    public IFilterInformation? NewFilter { get; init; }
 
 }

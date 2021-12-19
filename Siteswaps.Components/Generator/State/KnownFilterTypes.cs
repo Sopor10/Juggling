@@ -22,5 +22,6 @@ public class KnownFilterTypes
     public IFilterInformation? GetDefault(FilterType result) => Items.FirstOrDefault(x => x.Key == result)?.Default();
 
     public IEnumerable<FilterType> AvailableSelection() => Items.Select(x => x.Key).ToList();
+    
     private record FilterRendererMap(FilterType Key, Type ViewType, Func<IFilterInformation> Default);
 }

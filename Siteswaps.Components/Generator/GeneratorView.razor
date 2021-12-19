@@ -51,9 +51,12 @@
 
     <h3>Filter</h3>
     <li>
-        @foreach (var filter in Value.Filter)
+        @foreach (var (filter,i) in Value.Filter.Select((x,i) => (x,i)))
         {
-            <ul>@filter.Display()</ul>
+            <ul>
+                <text>@filter.Display()</text>
+                <button type="button" @onclick="@(x =>RemoveFilter.InvokeAsync(i))"> - </button>
+            </ul>
         }
     </li>
     
@@ -94,7 +97,10 @@
     [Parameter]
     public EventCallback<bool> ExactNumberOrRangeOfBallsSwitched { get; set; }
 
-    private int ToInt(ChangeEventArgs eventArgs) => int.Parse((string)eventArgs.Value ?? throw new ArgumentNullException());
+    [Parameter]
+    public EventCallback<int> RemoveFilter { get; set; } 
+    
+    private int ToInt(ChangeEventArgs eventArgs) => int.Parse((string)(eventArgs.Value ?? throw new ArgumentNullException()));
     private bool ToBool(ChangeEventArgs eventArgs) => (bool)(eventArgs.Value ?? throw new ArgumentNullException());
 
 }

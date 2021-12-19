@@ -20,10 +20,7 @@
     {
         <div class="row">
 
-            @{
-                IFilterInformation filterInformation = Value;
-            }
-            <DynamicComponent Type="@KnownFilters.MapFilterInformationToRenderType(filterInformation)" Parameters="@Parameters(Value)"></DynamicComponent>
+            <DynamicComponent Type="@KnownFilters.MapFilterInformationToRenderType(Value)" Parameters="@Parameter(Value)"></DynamicComponent>
             <div class="col-md-3">
                 <button type="button" class="btn-primary " @onclick="OnClick">Add</button>
             </div>
@@ -34,17 +31,13 @@
 
 @code {
 
-    [Parameter]
-    public IFilterInformation? Value { get; set; }
-
-  
+    public IFilterInformation? Value => _state.Value.NewFilter;
 
     private void SelectionChanged(ChangeEventArgs eventArgs)
     {
-        Value = null;
-        if (Enum.TryParse(eventArgs.Value?.ToString(), out FilterType yeah))
+        if (Enum.TryParse(eventArgs.Value?.ToString(), out FilterType filterType))
         {
-            Value = KnownFilters.GetDefault(yeah);
+           _dispatcher.Dispatch(new FilterTypeSelectionChangedAction(filterType));
         }
     }
 
@@ -55,7 +48,7 @@
             _dispatcher.Dispatch(new NewFilterCreatedAction(Value));
         }
     }
-    private IDictionary<string, object> Parameters(IFilterInformation information) => new Dictionary<string, object>()
+    private IDictionary<string, object> Parameter(IFilterInformation information) => new Dictionary<string, object>()
     {
         {"Value", information}
     };

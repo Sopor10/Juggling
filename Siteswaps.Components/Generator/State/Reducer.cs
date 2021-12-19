@@ -70,47 +70,69 @@ public static class Reducer
         };
 
     [ReducerMethod]
-        public static SiteswapGeneratorState ReduceIncrementMaxNumberOfObjectsChangedAction(
-            SiteswapGeneratorState state,
-            MaxNumberChangedAction action) =>
-            state with
+    public static SiteswapGeneratorState ReduceIncrementMaxNumberOfObjectsChangedAction(
+        SiteswapGeneratorState state,
+        MaxNumberChangedAction action) =>
+        state with
+        {
+            State = state.State with
             {
-                State = state.State with
+                Objects = state.State.Objects switch
                 {
-                    Objects = state.State.Objects switch
-                    {
-                        Between between => between with { MaxNumber = action.Value },
-                        ExactNumber _ => new Between { MaxNumber = action.Value },
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
+                    Between between => between with { MaxNumber = action.Value },
+                    ExactNumber _ => new Between { MaxNumber = action.Value },
+                    _ => throw new ArgumentOutOfRangeException()
                 }
-            };
+            }
+        };
 
-        [ReducerMethod]
-        public static SiteswapGeneratorState ReduceIncrementExactNumberOrRangeOfBallsSwitchedAction(
-            SiteswapGeneratorState state,
-            ExactNumberOrRangeOfBallsSwitchedAction action) =>
-            state with
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementExactNumberOrRangeOfBallsSwitchedAction(
+        SiteswapGeneratorState state,
+        ExactNumberOrRangeOfBallsSwitchedAction action) =>
+        state with
+        {
+            State = state.State with
             {
-                State = state.State with
+                Objects = action.Value switch
                 {
-                    Objects = action.Value switch
-                    {
-                        true => new ExactNumber(),
-                        false => new Between()
-                    }
+                    true => new ExactNumber(),
+                    false => new Between()
                 }
-            };
-        
-        [ReducerMethod]
-        public static SiteswapGeneratorState ReduceNewFilterCreatedActionAction(
-            SiteswapGeneratorState state,
-            NewFilterCreatedAction action) =>
-            state with
+            }
+        };
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceNewFilterCreatedActionAction(
+        SiteswapGeneratorState state,
+        NewFilterCreatedAction action) =>
+        state with
+        {
+            State = state.State with
             {
-                State = state.State with
-                {
-                    Filter = state.State.Filter.Add(action.Value)
-                }
-            };
+                Filter = state.State.Filter.Add(action.Value)
+            }
+        };
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceNewFilterCreatedAction(
+        SiteswapGeneratorState state,
+        RemoveFilterNumber action) =>
+        state with
+        {
+            State = state.State with
+            {
+                Filter = state.State.Filter.RemoveAt(action.Value)
+            }
+        };
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceFilterTypeSelectionChangedAction(
+        SiteswapGeneratorState state,
+        FilterTypeSelectionChangedAction action) =>
+        state with
+        {
+            NewFilter = state.KnownFilters.GetDefault(action.FilterType)
+        };
+    
 }

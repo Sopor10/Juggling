@@ -14,6 +14,7 @@
     MaxThrowChanged="x => Dispatcher.Dispatch(new MaxThrowChangedAction(x))"
     NumberOfJugglersChanged="x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x))"
     ExactNumberOrRangeOfBallsSwitched="x => Dispatcher.Dispatch(new ExactNumberOrRangeOfBallsSwitchedAction(x))"
+    RemoveFilter="x => Dispatcher.Dispatch(new RemoveFilterNumber(x))"
     Generate="() => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State))">
 </GeneratorView>
 
