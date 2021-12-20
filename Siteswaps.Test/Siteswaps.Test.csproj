@@ -16,8 +16,4 @@
         <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="Generator\result.txt" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
 </Project>

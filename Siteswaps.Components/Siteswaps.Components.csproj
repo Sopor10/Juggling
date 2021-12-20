@@ -24,4 +24,12 @@
       <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Generator\Filter\FilterSelection.razor" />
+      <_ContentIncludedByDefault Remove="Generator\Filter\NumberFilter.razor" />
+      <_ContentIncludedByDefault Remove="Generator\Filter\PatternFilter.razor" />
+      <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
+      <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
+    </ItemGroup>
+
 </Project>

@@ -1,28 +1,10 @@
-﻿using Bunit;
-using Fluxor;
+﻿using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
-using Siteswaps.Generator;
 using Siteswaps.Generator.Api;
-using TestContext = Bunit.TestContext;
 
-namespace Siteswaps.Components.Test;
-
-public abstract class BunitTestContext : TestContextWrapper
-{
-    [SetUp]
-    public void Setup()
-    {
-        TestContext = new TestContext();
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        TestContext?.Dispose();
-    }
-}
+namespace Siteswaps.Generator.Components.Test;
 
 public abstract class FluxorTestContext : BunitTestContext
 {
@@ -32,7 +14,9 @@ public abstract class FluxorTestContext : BunitTestContext
         TestContext
             .Services
             .AddSingleton(x => Mock.Of<ISiteswapGenerator>())
-            .AddFluxor(options => options.ScanAssemblies(typeof(Components.Assembly).Assembly));
+            .AddSingleton(x => Mock.Of<ISiteswapGeneratorFactory>())
+            .AddSingleton(x => Mock.Of<IFilterBuilder>())
+            .AddFluxor(options => options.ScanAssemblies(typeof(Generator.Components.AssemblyInfo).Assembly));
         RenderComponent<Fluxor.Blazor.Web.StoreInitializer>();
     }
 

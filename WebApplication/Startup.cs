@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Siteswaps.Generator;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Filter;
 
@@ -22,9 +23,9 @@ public class Startup
     {
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        services.AddTransient<ISiteswapGenerator>(x => new SiteswapGeneratorFactory().Create());
-        services.AddTransient<IFilterFactory, FilterFactory>();
-        services.AddFluxor(options => options.ScanAssemblies(typeof(Siteswaps.Components.Assembly).Assembly));
+        services.AddTransient<ISiteswapGeneratorFactory, SiteswapGeneratorFactory>();
+        services.AddTransient<IFilterBuilder, FilterBuilder>();
+        services.AddFluxor(options => options.ScanAssemblies(typeof(Siteswaps.Generator.Components.AssemblyInfo).Assembly));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

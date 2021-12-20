@@ -137,7 +137,8 @@ public static class Reducer
             State = state.State with
             {
                 Filter = state.State.Filter.Add(action.Value)
-            }
+            },
+            NewFilter = null,
         };
     }
 

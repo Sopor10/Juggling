@@ -1,8 +1,9 @@
 ﻿@using Siteswaps.Generator.Components.State
 <EditForm Model="Value" OnValidSubmit="@Generate">
 
-    <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Exact number or Range</label>
-    <input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox"  value="Values.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
+    <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Switch to @(Value.IsExactNumber ? "range" : "exact number")</label>
+    <input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox" checked="@Value.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
+                                                                                      
 
     @switch (Value.Objects)
     {

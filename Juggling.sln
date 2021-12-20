@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Components", "Siteswaps.Components\Siteswaps.Components.csproj", "{6A98806C-1614-417F-B329-103AD3927F80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Components.Test", "Siteswaps.Components.Test\Siteswaps.Components.Test.csproj", "{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generator", "Generator", "{0349A18F-78C3-4147-8278-9FEB304857A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator", "Generator\Siteswaps.Generator\Siteswaps.Generator.csproj", "{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}"
@@ -74,10 +72,6 @@ Global
 		{6A98806C-1614-417F-B329-103AD3927F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A98806C-1614-417F-B329-103AD3927F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A98806C-1614-417F-B329-103AD3927F80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
