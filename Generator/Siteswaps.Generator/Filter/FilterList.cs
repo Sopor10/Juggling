@@ -8,7 +8,7 @@ internal class FilterList : ISiteswapFilter
 
     private List<ISiteswapFilter> Filters { get; }
 
-    private FilterList(IEnumerable<ISiteswapFilter> filters)
+    public FilterList(IEnumerable<ISiteswapFilter> filters)
     {
         Filters = filters.ToList();
     }

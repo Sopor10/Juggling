@@ -22,7 +22,7 @@ public class Startup
     {
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        services.AddTransient<ISiteswapGenerator>(() => new SiteswapGeneratorFactory().Create());
+        services.AddTransient<ISiteswapGenerator>(x => new SiteswapGeneratorFactory().Create());
         services.AddTransient<IFilterFactory, FilterFactory>();
         services.AddFluxor(options => options.ScanAssemblies(typeof(Siteswaps.Components.Assembly).Assembly));
     }

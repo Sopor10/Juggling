@@ -8,11 +8,16 @@
 
 
     <ItemGroup>
-        <SupportedPlatform Include="browser"/>
+        <SupportedPlatform Include="browser" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0"/>
+        <PackageReference Include="Fluxor.Blazor.Web" Version="4.2.2-Alpha" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Siteswaps.Generator.Api\Siteswaps.Generator.Api.csproj" />
     </ItemGroup>
 
 </Project>
