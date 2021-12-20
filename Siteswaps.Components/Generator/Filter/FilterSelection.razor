@@ -20,7 +20,7 @@
     {
         <div class="row">
 
-            <DynamicComponent Type="@KnownFilters.MapFilterInformationToRenderType(Value)" Parameters="@Parameter(Value)"></DynamicComponent>
+            <DynamicComponent Type="@KnownFilters.MapFilterInformationToRenderType(Value)"></DynamicComponent>
             <div class="col-md-3">
                 <button type="button" class="btn-primary " @onclick="OnClick">Add</button>
             </div>
@@ -48,10 +48,6 @@
             _dispatcher.Dispatch(new NewFilterCreatedAction(Value));
         }
     }
-    private IDictionary<string, object> Parameter(IFilterInformation information) => new Dictionary<string, object>()
-    {
-        {"Value", information}
-    };
 
     private KnownFilterTypes KnownFilters => _state.Value.KnownFilters;
 

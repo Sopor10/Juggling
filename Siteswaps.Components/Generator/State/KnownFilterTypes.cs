@@ -11,17 +11,15 @@ public class KnownFilterTypes
     {
         Items = new()
         { 
-            new(FilterType.Number, typeof(NumberFilter), ()=>new NumberFilterInformation()),
-            // new(FilterType.Pattern, typeof(PatternFilter), ()=>new PatternFilterInformation()),
+            new(FilterType.Number, typeof(NumberFilter)),
+            new(FilterType.Pattern, typeof(PatternFilter)),
         };
     }
 
     private List<FilterRendererMap> Items { get; }
     public Type? MapFilterInformationToRenderType(IFilterInformation filterInformation) => Items.FirstOrDefault(x => x.Key == filterInformation.FilterType)?.ViewType;
 
-    public IFilterInformation? GetDefault(FilterType result) => Items.FirstOrDefault(x => x.Key == result)?.Default();
-
     public IEnumerable<FilterType> AvailableSelection() => Items.Select(x => x.Key).ToList();
     
-    private record FilterRendererMap(FilterType Key, Type ViewType, Func<IFilterInformation> Default);
 }
+public record FilterRendererMap(FilterType Key, Type ViewType);
