@@ -18,6 +18,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Components", "Sit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Components.Test", "Siteswaps.Components.Test\Siteswaps.Components.Test.csproj", "{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generator", "Generator", "{0349A18F-78C3-4147-8278-9FEB304857A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator", "Generator\Siteswaps.Generator\Siteswaps.Generator.csproj", "{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Api", "Generator\Siteswaps.Generator.Api\Siteswaps.Generator.Api.csproj", "{4A821D0C-DDC1-44B5-83C1-A970F6434732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Test", "Generator\Siteswaps.Generator.Test\Siteswaps.Generator.Test.csproj", "{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Components", "Generator\Siteswaps.Generator.Components\Siteswaps.Generator.Components.csproj", "{A691A804-91A2-4C55-8168-DA72EC42A8B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{9F6809DB-D965-4AEC-868B-5CAD9A46A577}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared\Shared.csproj", "{89A19C85-6279-4EEC-B536-65143AB41CC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Test", "Shared\Shared.Test\Shared.Test.csproj", "{A3C0DE9B-AF6B-4E7A-8685-777952C0480F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +76,37 @@ Global
 		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F9778DA-7AD2-4A0B-BE3C-DCE713173328}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A821D0C-DDC1-44B5-83C1-A970F6434732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A821D0C-DDC1-44B5-83C1-A970F6434732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A821D0C-DDC1-44B5-83C1-A970F6434732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A821D0C-DDC1-44B5-83C1-A970F6434732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A691A804-91A2-4C55-8168-DA72EC42A8B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A691A804-91A2-4C55-8168-DA72EC42A8B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A691A804-91A2-4C55-8168-DA72EC42A8B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A691A804-91A2-4C55-8168-DA72EC42A8B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89A19C85-6279-4EEC-B536-65143AB41CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89A19C85-6279-4EEC-B536-65143AB41CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89A19C85-6279-4EEC-B536-65143AB41CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89A19C85-6279-4EEC-B536-65143AB41CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3C0DE9B-AF6B-4E7A-8685-777952C0480F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3C0DE9B-AF6B-4E7A-8685-777952C0480F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3C0DE9B-AF6B-4E7A-8685-777952C0480F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3C0DE9B-AF6B-4E7A-8685-777952C0480F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C} = {0349A18F-78C3-4147-8278-9FEB304857A5}
+		{4A821D0C-DDC1-44B5-83C1-A970F6434732} = {0349A18F-78C3-4147-8278-9FEB304857A5}
+		{FD3D2A67-D201-4F68-9E51-752FA1DD6C06} = {0349A18F-78C3-4147-8278-9FEB304857A5}
+		{A691A804-91A2-4C55-8168-DA72EC42A8B7} = {0349A18F-78C3-4147-8278-9FEB304857A5}
+		{89A19C85-6279-4EEC-B536-65143AB41CC5} = {9F6809DB-D965-4AEC-868B-5CAD9A46A577}
+		{A3C0DE9B-AF6B-4E7A-8685-777952C0480F} = {9F6809DB-D965-4AEC-868B-5CAD9A46A577}
 	EndGlobalSection
 EndGlobal

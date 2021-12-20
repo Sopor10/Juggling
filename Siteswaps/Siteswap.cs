@@ -6,7 +6,7 @@ using Siteswaps.Generator;
 
 namespace Siteswaps;
 
-public record Siteswap : IEquatable<Siteswap>
+public record Siteswap
 {
     public CyclicArray<int> Items { get; }
 
@@ -19,7 +19,7 @@ public record Siteswap : IEquatable<Siteswap>
         Items = ToUniqueRepresentation(items);
     }
 
-    public static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
+    private static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
     {
         if (IsValid(items))
         {

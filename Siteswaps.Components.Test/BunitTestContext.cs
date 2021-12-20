@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using Siteswaps.Generator;
+using Siteswaps.Generator.Api;
 using TestContext = Bunit.TestContext;
 
 namespace Siteswaps.Components.Test;

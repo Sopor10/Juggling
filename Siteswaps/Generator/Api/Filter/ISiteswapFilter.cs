@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Filter;
+﻿namespace Siteswaps.Generator.Api.Filter;
 
 public interface ISiteswapFilter
 {

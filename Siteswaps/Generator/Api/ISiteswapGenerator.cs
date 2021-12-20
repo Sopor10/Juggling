@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Siteswaps.Generator;
+namespace Siteswaps.Generator.Api;
 
 public interface ISiteswapGenerator
 {

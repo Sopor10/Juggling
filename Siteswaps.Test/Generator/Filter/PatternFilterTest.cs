@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator;
+using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Test.Generator.Filter;

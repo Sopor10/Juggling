@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fluxor;
 using Siteswaps.Generator;
+using Siteswaps.Generator.Api;
+using Siteswaps.Generator.Api.Filter;
 using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Components.Generator.State;

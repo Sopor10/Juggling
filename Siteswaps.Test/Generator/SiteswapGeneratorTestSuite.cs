@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator;
+using Siteswaps.Generator.Api;
 
 namespace Siteswaps.Test.Generator;
 

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Siteswaps.Generator.Api.Filter;
 
-namespace Siteswaps.Generator.Filter;
+namespace Siteswaps.Generator.Api;
 
 public interface IFilterFactory
 {

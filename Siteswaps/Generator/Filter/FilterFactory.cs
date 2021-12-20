@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Siteswaps.Generator.Api;
+using Siteswaps.Generator.Api.Filter;
 using Siteswaps.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Filter;

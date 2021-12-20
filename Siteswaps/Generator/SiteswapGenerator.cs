@@ -2,11 +2,12 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Generator;
 
-public class SiteswapGenerator : ISiteswapGenerator
+internal class SiteswapGenerator : ISiteswapGenerator
 {
     public HashsetStack<PartialSiteswap> Stack { get; } = new();
         

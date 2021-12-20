@@ -1,7 +1,8 @@
 ﻿using System;
+using Siteswaps.Generator.Api.Filter;
 using Siteswaps.Generator.Filter;
 
-namespace Siteswaps.Generator;
+namespace Siteswaps.Generator.Api;
 
 public record SiteswapGeneratorInput
 {

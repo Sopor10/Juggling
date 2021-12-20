@@ -1,4 +1,7 @@
-﻿namespace Siteswaps.Generator.Filter.NumberFilter;
+﻿using Siteswaps.Generator.Api;
+using Siteswaps.Generator.Api.Filter;
+
+namespace Siteswaps.Generator.Filter.NumberFilter;
 
 internal abstract class NumberFilter : ISiteswapFilter
 {

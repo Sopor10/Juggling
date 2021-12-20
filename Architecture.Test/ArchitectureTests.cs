@@ -4,6 +4,7 @@ using ArchUnitNET.Loader;
 using ArchUnitNET.Fluent.Slices;
 using ArchUnitNET.NUnit;
 using Siteswaps;
+using Siteswaps.Generator.Api.Filter;
 using Siteswaps.Generator.Filter;
 
 namespace Architecture.Test;
