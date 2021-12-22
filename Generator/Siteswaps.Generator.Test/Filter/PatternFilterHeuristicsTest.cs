@@ -12,6 +12,6 @@ public class PatternFilterHeuristicsTest
     {
         var sut = new FilterFactory(new SiteswapGeneratorInput(3,3,0,10)).GeneratePatternFilterHeuristics(new []{5,-1,5},2);
 
-        sut.CanFulfill(new PartialSiteswap(new[] { 4,4, -1})).Should().BeFalse();
+        sut.CanFulfill(new PartialSiteswap(4, 4, -1)).Should().BeFalse();
     }
 }
