@@ -28,7 +28,7 @@ public class PatternFilterTest
     [TestCase(new[]{8,0,5})]
     public void Fully_Filled_PartialSiteswap_Can_Be_Filtered(int[] input)
     {
-        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 5)).PatternFilter(new []{-1,-1,5}.ToImmutableArray(), 2);
+        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 5)).PatternFilter(new []{-1,-1,5}, 2);
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
     }
@@ -38,7 +38,7 @@ public class PatternFilterTest
     [TestCase(new[]{8,0,1})]
     public void Fully_Filled_PartialSiteswap_Can_Be_Filtered_2(int[] input)
     {
-        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(new []{-1,-1,5}.ToImmutableArray(), 2);
+        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(new []{-1,-1,5}, 2);
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeFalse();
     }
@@ -49,7 +49,7 @@ public class PatternFilterTest
     [TestCase(new[]{4,4,1}, new []{1,4,4})]
     public void Fully_Filled_PartialSiteswap_Can_Be_Filtered_3(int[] input, int[] filter)
     {
-        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(filter.ToImmutableArray(), 2);
+        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(filter, 2);
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
     }
@@ -60,7 +60,7 @@ public class PatternFilterTest
     [TestCase(new[]{7,5,0}, new []{-2,-2,0})]
     public void Passes_Will_Be_Filtered_Correctly(int[] input, int[] filter)
     {
-        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(filter.ToImmutableArray(), 2);
+        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(filter, 2);
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
     }
@@ -71,7 +71,7 @@ public class PatternFilterTest
     [TestCase(new[]{4,4,1}, new []{-1,-1,-3})]
     public void Selfs_Will_Be_Filtered_Correctly(int[] input, int[] filter)
     {
-        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(filter.ToImmutableArray(), 2);
+        var sut = new FilterFactory(new SiteswapGeneratorInput(3, 3, 0, 8)).PatternFilter(filter, 2);
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
     }
