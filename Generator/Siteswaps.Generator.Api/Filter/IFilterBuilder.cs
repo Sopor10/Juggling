@@ -11,4 +11,5 @@ public interface IFilterBuilder
     IFilterBuilder AddRange(IEnumerable<ISiteswapFilter> filter);
     IFilterBuilder Add(ISiteswapFilter filter);
     ISiteswapFilter Build();
+    IFilterBuilder AddPatternFilter(IEnumerable<int> pattern, int numberOfJuggler);
 }

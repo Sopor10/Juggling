@@ -17,10 +17,18 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 
     public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
+        if (action.State.Period is null ||
+            action.State.MinThrow is null ||
+            action.State.MaxThrow is null ||
+            action.State.NumberOfJugglers is null)
+        {
+            return;
+        }
+        
         var range = action.State.Objects switch
         {
-            Between between => Enumerable.Range(between.MinNumber, between.MaxNumber - between.MinNumber),
-            ExactNumber exactNumber => new[] { exactNumber.Number },
+            Between between => Enumerable.Range(between.MinNumber.Value, between.MaxNumber.Value - between.MinNumber.Value),
+            ExactNumber exactNumber => new [] { exactNumber.Number.Value },
             _ => throw new ArgumentOutOfRangeException()
         };
         var siteswaps = new List<ISiteswap>();
@@ -29,16 +37,16 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         {
             var siteswapGeneratorInput = new SiteswapGeneratorInput
             {
-                Period = action.State.Period,
-                MaxHeight = action.State.MaxThrow,
-                MinHeight = action.State.MinThrow,
+                Period = action.State.Period.Value,
+                MaxHeight = action.State.MaxThrow.Value,
+                MinHeight = action.State.MinThrow.Value,
                 NumberOfObjects = number,
             };
 
             FilterBuilder = FilterBuilder.WithInput(siteswapGeneratorInput);
             foreach (var filterInformation in action.State.Filter)
             {
-                FilterBuilder = ToFilter(filterInformation);
+                FilterBuilder = ToFilter(filterInformation, action.State.NumberOfJugglers.Value);
             }
 
             siteswaps.AddRange(await SiteswapGeneratorFactory.Create(FilterBuilder.Build()).GenerateAsync(siteswapGeneratorInput));
@@ -47,7 +55,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
     }
 
 
-    private IFilterBuilder ToFilter(IFilterInformation filterInformation)
+    private IFilterBuilder ToFilter(IFilterInformation filterInformation, int numberOfJugglers)
     {
         switch (filterInformation.FilterType)
         {
@@ -64,6 +72,12 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                         NumberFilterType.Maximum => FilterBuilder.AddMaximumOccurenceFilter(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
                         _ => throw new ArgumentOutOfRangeException()
                     };
+                }
+                break;
+            case FilterType.Pattern:
+                if (filterInformation is PatternFilterInformation patternFilterInformation)
+                {
+                    return FilterBuilder.AddPatternFilter(patternFilterInformation.Pattern, numberOfJugglers);
                 }
                 break;
         }

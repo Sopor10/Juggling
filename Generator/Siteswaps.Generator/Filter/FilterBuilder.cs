@@ -30,4 +30,14 @@ public record FilterBuilder : IFilterBuilder
     public IFilterBuilder Add(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
 
     public ISiteswapFilter Build() => new FilterList(Filter);
+    public IFilterBuilder AddPatternFilter(IEnumerable<int> pattern, int numberOfJuggler)
+    {
+        pattern = pattern.ToList();
+        return this with
+        {
+            Filter = Filter
+                .Add(Factory.PatternFilter(pattern, numberOfJuggler))
+                .Add(Factory.GeneratePatternFilterHeuristics(pattern, numberOfJuggler))
+        };
+    }
 }

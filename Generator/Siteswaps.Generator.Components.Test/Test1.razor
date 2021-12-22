@@ -14,6 +14,17 @@
         var state = GetState<SiteswapGeneratorState>();
         state.Value.State.Period.Should().Be(6);
     }
+    
+    [Test]
+    public void Period_Change_To_Empty_String_Should_Update_State()
+    {
+        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+
+        cut.Find("#period").Input("");
+
+        var state = GetState<SiteswapGeneratorState>();
+        state.Value.State.Period.Should().Be(null);
+    }
 
     [Test]
     public void MinThrow_Change_Should_Update_State()

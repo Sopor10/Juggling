@@ -73,25 +73,25 @@
     public Action Generate { get; set; }
 
     [Parameter]
-    public EventCallback<int> PeriodChanged { get; set; }
+    public EventCallback<int?> PeriodChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> MinNumberChanged { get; set; }
+    public EventCallback<int?> MinNumberChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> MaxNumberChanged { get; set; }
+    public EventCallback<int?> MaxNumberChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> ExactNumberChanged { get; set; }
+    public EventCallback<int?> ExactNumberChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> MaxThrowChanged { get; set; }
+    public EventCallback<int?> MaxThrowChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> MinThrowChanged { get; set; }
+    public EventCallback<int?> MinThrowChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> NumberOfJugglersChanged { get; set; }
+    public EventCallback<int?> NumberOfJugglersChanged { get; set; }
 
     [Parameter]
     public EventCallback<bool> ExactNumberOrRangeOfBallsSwitched { get; set; }
@@ -99,7 +99,15 @@
     [Parameter]
     public EventCallback<int> RemoveFilter { get; set; } 
     
-    private int ToInt(ChangeEventArgs eventArgs) => int.Parse((string)(eventArgs.Value ?? throw new ArgumentNullException()));
+    private int? ToInt(ChangeEventArgs eventArgs)
+    {
+        if (int.TryParse((eventArgs.Value as string), out var result))
+        {
+            return result;
+        }
+        return null;
+    }
+
     private bool ToBool(ChangeEventArgs eventArgs) => (bool)(eventArgs.Value ?? throw new ArgumentNullException());
 
 }

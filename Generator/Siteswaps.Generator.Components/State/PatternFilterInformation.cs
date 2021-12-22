@@ -13,5 +13,14 @@ public record PatternFilterInformation : IFilterInformation
     public FilterType FilterType => FilterType.Pattern;
     public ImmutableArray<int> Pattern { get; init; }
 
-    public string Display() => "Pattern";
+    public string Display() => "include " + string.Join(" ", Pattern.Select(ToDisplay).ToList());
+
+    private string ToDisplay(int i) => 
+        i switch
+        {
+            -3 => "s",
+            -2 => "p",
+            -1 => "_",
+            var x => x.ToString(),
+        };
 }

@@ -1,18 +1,22 @@
-﻿@page "/test"
-@using Fluxor
-@using Siteswaps.Generator.Components.State
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @inject IState<SiteswapGeneratorState> _state
+@inject IDispatcher _dispatcher
+
 @if (Value is null)
 {
     return;
 }
 <div class="row">
 
-    @foreach (var i in Value.Pattern)
+    @for (var index = 0; index < Value.Pattern.Length; index++)
     {
+        var localIndex = index;
         <div class="col">
-            <select id="@("patternFilterNumber" + i)" class="custom-select" value="@i">
+            <select 
+                id="@("patternFilterNumber" + Value.Pattern[index])" 
+                class="custom-select" 
+                value="@Value.Pattern[index]" 
+                @onchange="x => OnClick(localIndex, x)">
                 <option value="-1">_</option>
                 <option value="-2">p</option>
                 <option value="-3">s</option>
@@ -27,10 +31,17 @@
 
 @code {
 
-    private int MaxValue => _state.Value.State.MaxThrow;
+    private int? MaxValue => _state.Value.State.MaxThrow;
 
-    private int MinValue => _state.Value.State.MinThrow;
+    private int? MinValue => _state.Value.State.MinThrow;
 
     private PatternFilterInformation? Value => _state.Value.NewFilter as PatternFilterInformation;
 
+    private void OnClick(int index, ChangeEventArgs changeEventArgs)
+    {
+        if (int.TryParse(changeEventArgs.Value as string, out var chosenNumber))
+        {
+            _dispatcher.Dispatch(new PatternFilterValueChangedAction(index, chosenNumber));
+        }
+    }
 }

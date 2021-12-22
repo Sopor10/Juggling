@@ -32,8 +32,8 @@ internal class PatternFilter : ISiteswapFilter
         NumberOfJuggler = numberOfJuggler;
         
         
-        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight).Where(x => x % NumberOfJuggler != 0).ToHashSet();
-        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight).Where(x => x % NumberOfJuggler == 0).ToHashSet();
+        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight).Where(x => x % NumberOfJuggler != 0).ToHashSet();
+        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight).Where(x => x % NumberOfJuggler == 0).ToHashSet();
 
     }
     
@@ -60,8 +60,23 @@ internal class PatternFilter : ISiteswapFilter
         foreach (var (siteswapValue, patternValue) in value.Items.Zip(pattern))
         {
             if (patternValue == DontCare) continue;
-            if (patternValue == Pass) return PassValues.Contains(siteswapValue);
-            if (patternValue == Self) return SelfValues.Contains(siteswapValue);
+            if (patternValue == Pass)
+            {
+                if (!PassValues.Contains(siteswapValue))
+                {
+                    return false;
+                }
+                continue;
+            }
+            if (patternValue == Self)
+            {
+                if (!SelfValues.Contains(siteswapValue))
+                {
+                    return false;
+                }
+                continue;
+            }
+
             if (siteswapValue != patternValue) return false;
         }
 

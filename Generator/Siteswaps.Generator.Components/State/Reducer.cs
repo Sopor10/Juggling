@@ -26,7 +26,7 @@ public static class Reducer
         return state with
         {
             State = state.State with { Period = action.Value },
-            NewFilter = (state.NewFilter is PatternFilterInformation patternFilterInformation) ? new PatternFilterInformation(Enumerable.Repeat(-1, action.Value).ToImmutableArray()): state.NewFilter,
+            NewFilter = state.NewFilter is PatternFilterInformation ? null: state.NewFilter,
             
         };
     }
@@ -161,14 +161,38 @@ public static class Reducer
         SiteswapGeneratorState state,
         FilterTypeSelectionChangedAction action)
     {
+        if (state.State.Period is null)
+        {
+            return state;
+        }
+        
         return state with
         {
             NewFilter = action.FilterType switch
             {
                 FilterType.Number => new NumberFilterInformation(),
-                FilterType.Pattern => new PatternFilterInformation(Enumerable.Repeat(-1, state.State.Period).ToImmutableArray()),
+                FilterType.Pattern => new PatternFilterInformation(Enumerable.Repeat(-1, state.State.Period.Value).ToImmutableArray()),
                 _ => throw new ArgumentOutOfRangeException()
             }
         };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReducePatternFilterValueChangedAction(
+        SiteswapGeneratorState state,
+        PatternFilterValueChangedAction action)
+    {
+        if (state.NewFilter is PatternFilterInformation patternFilterInformation)
+        {
+            return state with
+            {
+                NewFilter = patternFilterInformation with
+                {
+                    Pattern = patternFilterInformation.Pattern.SetItem(action.Pos, action.Value)
+                } 
+            };
+        }
+
+        throw new InvalidOperationException("This action should only be dispatch if we have a PatternInformation");
     }
 }
