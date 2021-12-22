@@ -1,6 +1,4 @@
-﻿using Siteswaps.Generator.Api.Filter;
-
-namespace Siteswaps.Generator.Api;
+﻿namespace Siteswaps.Generator.Api.Filter;
 
 public interface IFilterBuilder
 {

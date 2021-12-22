@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Shared;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
@@ -18,9 +19,22 @@ internal class PatternFilter : ISiteswapFilter
     private const int Self = -3;
     
     private ImmutableList<int> Pattern { get; }
-    public PatternFilter(ImmutableList<int> pattern)
+
+    private int NumberOfJuggler { get; }
+
+    private HashSet<int> PassValues { get; }
+
+    private HashSet<int> SelfValues { get; }
+    
+    public PatternFilter(ImmutableList<int> pattern, int numberOfJuggler, SiteswapGeneratorInput input)
     {
         Pattern = pattern;
+        NumberOfJuggler = numberOfJuggler;
+        
+        
+        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight).Where(x => x % NumberOfJuggler != 0).ToHashSet();
+        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight).Where(x => x % NumberOfJuggler == 0).ToHashSet();
+
     }
     
     public bool CanFulfill(IPartialSiteswap value)
@@ -30,7 +44,35 @@ internal class PatternFilter : ISiteswapFilter
             return true;
         }
 
-        // TODO implement check on filled partial siteswap
+        for (var i = 0; i < value.Items.Count; i++)
+        {
+            if (IsMatch(value, Pattern.Rotate(i)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsMatch(IPartialSiteswap value, ImmutableList<int> pattern)
+    {
+        foreach (var (siteswapValue, patternValue) in value.Items.Zip(pattern))
+        {
+            if (patternValue == DontCare) continue;
+            if (patternValue == Pass) return PassValues.Contains(siteswapValue);
+            if (patternValue == Self) return SelfValues.Contains(siteswapValue);
+            if (siteswapValue != patternValue) return false;
+        }
+
         return true;
+    }
+}
+
+public static class Extensions
+{
+    public static ImmutableList<int> Rotate(this ImmutableList<int> source, int number)
+    {
+        return source.ToCyclicArray().Rotate(number).EnumerateValues(1).ToImmutableList();
     }
 }

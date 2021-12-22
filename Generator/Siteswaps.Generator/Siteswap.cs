@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Shared;
 using Siteswaps.Generator.Api;
 
 namespace Siteswaps.Generator;

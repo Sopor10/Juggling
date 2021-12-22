@@ -70,8 +70,8 @@ public class FilterFactory
         return new FilterList(filter.ToArray());
     }
 
-    public ISiteswapFilter PatternFilter(IEnumerable<int> pattern)
+    public ISiteswapFilter PatternFilter(IEnumerable<int> pattern, int numberOfJuggler)
     {
-        return new PatternFilter(pattern.ToImmutableList());
+        return new PatternFilter(pattern.ToImmutableList(), numberOfJuggler, Input);
     }
 }

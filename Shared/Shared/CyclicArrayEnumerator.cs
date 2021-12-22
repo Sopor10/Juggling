@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Siteswaps.Generator;
+namespace Shared;
 
 public class CyclicArrayEnumerator<T> : IEnumerator<T>
 {

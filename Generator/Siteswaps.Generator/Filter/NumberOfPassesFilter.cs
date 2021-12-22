@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Siteswaps.Generator.Api;
+﻿using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Filter;

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Siteswaps.Generator;
 using Siteswaps.Generator.Api;
+using Siteswaps.Generator.Api.Filter;
 using Siteswaps.Generator.Filter;
 
 namespace WebApplication;

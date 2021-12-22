@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Siteswaps.Generator;
+﻿namespace Siteswaps.Generator;
 
 public static class EnumerableExtension
 {

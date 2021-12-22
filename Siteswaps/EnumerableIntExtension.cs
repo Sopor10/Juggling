@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Linq.Extras;
 using MoreLinq.Extensions;
 
-namespace Siteswaps.Generator;
+namespace Siteswaps;
 
 public static class EnumerableIntExtension
 {
@@ -42,35 +41,4 @@ public static class EnumerableIntExtension
 
         return arr1.Count() < arr2.Count() ? -1 : 1;
     }
-        
-    public static IEnumerable<IEnumerable<int>> AbsteigendeSeq(this IEnumerable<int> input)
-    {
-        using var enumerator = input.GetEnumerator();
-        var list = new List<int>();
-        int? last = null;
-        while (enumerator.MoveNext())
-        {
-            if (last is null)
-            {
-                last = enumerator.Current;
-                list.Add(enumerator.Current);
-                continue;
-            }
-
-            if (enumerator.Current > last)
-            {
-                yield return list;
-                list = new List<int>();
-            }
-
-            last = enumerator.Current;
-            list.Add(enumerator.Current);
-                
-        }
-
-        if (!list.IsNullOrEmpty())
-        {
-            yield return list;
-        }
-    }   
 }
