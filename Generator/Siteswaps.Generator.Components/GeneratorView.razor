@@ -1,68 +1,66 @@
 ﻿@using Siteswaps.Generator.Components.State
-<EditForm Model="Value" OnValidSubmit="@Generate">
 
-    <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Switch to @(Value.IsExactNumber ? "range" : "exact number")</label>
-    <input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox" checked="@Value.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
-                                                                                      
+<label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Switch to @(Value.IsExactNumber ? "range" : "exact number")</label>
+<input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox" checked="@Value.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
+                                                                                  
 
-    @switch (Value.Objects)
+@switch (Value.Objects)
+{
+    case Between between:
+        <div class="form-floating">
+            <input type="number" id="minNumberOfObjects" class="form-control" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
+            <label for="minNumberOfObjects">Min Number of Objects</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="number" id="maxNumberOfObjects" class="form-control" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
+            <label for="maxNumberOfObjects">Max Number of Objects</label>
+        </div>
+        break;
+    case ExactNumber exactNumber:
+        <div class="form-floating">
+            <input type="number" id="numberOfObjects" class="form-control" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
+            <label for="numberOfObjects" class="bmd-label-floating"># Objects</label>
+        </div>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+
+<div class="form-floating">
+    <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
+    <label for="period">Period</label>
+</div>
+
+<div class="form-floating">
+    <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
+    <label for="maxThrow">max throw</label>
+</div>
+
+<div class="form-floating">
+    <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
+    <label for="minThrow">min throw</label>
+</div>
+
+<div class="form-floating">
+    <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
+    <label for="numberOfJugglers">#Jugglers</label>
+</div>
+
+<h3>Filter</h3>
+<li>
+    @foreach (var (filter,i) in Value.Filter.Select((x,i) => (x,i)))
     {
-        case Between between:
-            <div class="form-floating">
-                <input type="number" id="minNumberOfObjects" class="form-control" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
-                <label for="minNumberOfObjects">Min Number of Objects</label>
-            </div>
-
-            <div class="form-floating">
-                <input type="number" id="maxNumberOfObjects" class="form-control" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
-                <label for="maxNumberOfObjects">Max Number of Objects</label>
-            </div>
-            break;
-        case ExactNumber exactNumber:
-            <div class="form-floating">
-                <input type="number" id="numberOfObjects" class="form-control" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
-                <label for="numberOfObjects" class="bmd-label-floating"># Objects</label>
-            </div>
-            break;
-        default:
-            throw new ArgumentOutOfRangeException();
+        <ul>
+            <text>@filter.Display()</text>
+            <button type="button" @onclick="@(x =>RemoveFilter.InvokeAsync(i))"> - </button>
+        </ul>
     }
+</li>
 
-    <div class="form-floating">
-        <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
-        <label for="period">Period</label>
-    </div>
+<FilterSelection></FilterSelection>
 
-    <div class="form-floating">
-        <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
-        <label for="maxThrow">max throw</label>
-    </div>
-
-    <div class="form-floating">
-        <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
-        <label for="minThrow">min throw</label>
-    </div>
-
-    <div class="form-floating">
-        <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
-        <label for="numberOfJugglers">#Jugglers</label>
-    </div>
-
-    <h3>Filter</h3>
-    <li>
-        @foreach (var (filter,i) in Value.Filter.Select((x,i) => (x,i)))
-        {
-            <ul>
-                <text>@filter.Display()</text>
-                <button type="button" @onclick="@(x =>RemoveFilter.InvokeAsync(i))"> - </button>
-            </ul>
-        }
-    </li>
-    
-    <FilterSelection></FilterSelection>
-
-    <input id="generate" type="submit" disabled="@Value.IsGenerating"/>
-</EditForm>
+<input id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="Generate"/>
 
 @code {
 
@@ -101,7 +99,7 @@
     
     private int? ToInt(ChangeEventArgs eventArgs)
     {
-        if (int.TryParse((eventArgs.Value as string), out var result))
+        if (int.TryParse(eventArgs.Value as string, out var result))
         {
             return result;
         }
