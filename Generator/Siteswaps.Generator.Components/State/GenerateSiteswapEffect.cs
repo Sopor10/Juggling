@@ -51,7 +51,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 
             siteswaps.AddRange(await SiteswapGeneratorFactory.Create(FilterBuilder.Build()).GenerateAsync(siteswapGeneratorInput));
         }
-        dispatcher.Dispatch(new SiteswapsGeneratetAction(siteswaps));
+        dispatcher.Dispatch(new SiteswapsGeneratedAction(siteswaps));
     }
 
 

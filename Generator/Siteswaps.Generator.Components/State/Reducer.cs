@@ -7,7 +7,7 @@ public static class Reducer
 {
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(SiteswapGeneratorState state,
-        SiteswapsGeneratetAction action)
+        SiteswapsGeneratedAction action)
     {
         return state with { Siteswaps = action.Siteswaps, State = state.State with { IsGenerating = false } };
     }
