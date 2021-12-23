@@ -1,8 +1,12 @@
 ﻿@using Siteswaps.Generator.Components.State
 
+@if (Value is null)
+{
+    throw new ArgumentNullException(nameof(Value));
+}
+
 <label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Switch to @(Value.IsExactNumber ? "range" : "exact number")</label>
 <input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox" checked="@Value.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
-                                                                                  
 
 @switch (Value.Objects)
 {
@@ -53,7 +57,7 @@
     {
         <ul>
             <text>@filter.Display()</text>
-            <button type="button" @onclick="@(x =>RemoveFilter.InvokeAsync(i))"> - </button>
+            <button type="button" @onclick="@(_ =>RemoveFilter.InvokeAsync(i))"> - </button>
         </ul>
     }
 </li>
@@ -65,10 +69,10 @@
 @code {
 
     [Parameter]
-    public GeneratorState Value { get; set; }
+    public GeneratorState? Value { get; set; }
 
     [Parameter]
-    public Action Generate { get; set; }
+    public Action Generate { get; set; } = () => { };
 
     [Parameter]
     public EventCallback<int?> PeriodChanged { get; set; }
