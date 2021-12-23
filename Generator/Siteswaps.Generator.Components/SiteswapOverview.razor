@@ -1,11 +1,11 @@
 ﻿@inherits FluxorComponent
-@inject IState<SiteswapGeneratorState> State
+@inject IState<SiteswapGeneratorState> _state
 
 <GeneratorViewFluxor></GeneratorViewFluxor>
 
-@if (!State.Value.IsGenerating)
+@if (!_state.Value.IsGenerating)
 {
-    <SiteswapList Siteswaps="@State.Value.Siteswaps"></SiteswapList>
+    <SiteswapList Siteswaps="@_state.Value.Siteswaps"></SiteswapList>
 }
 else
 {
