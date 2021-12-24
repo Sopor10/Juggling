@@ -23,18 +23,18 @@
     {
         case Between between:
             <div class="form-floating col">
-                <input type="number" id="minNumberOfObjects" class="form-control" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
-                <label for="minNumberOfObjects">Min Number of Clubs</label>
+                <input type="number" id="minNumberOfObjects" class="form-control hasMaxWidth" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
+                <label for="minNumberOfObjects">From</label>
             </div>
 
             <div class="form-floating col">
-                <input type="number" id="maxNumberOfObjects" class="form-control" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
-                <label for="maxNumberOfObjects">Max Number of Clubs</label>
+                <input type="number" id="maxNumberOfObjects" class="form-control hasMaxWidth" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
+                <label for="maxNumberOfObjects">To</label>
             </div>
             break;
         case ExactNumber exactNumber:
             <div class="form-floating col">
-                <input type="number" id="numberOfObjects" class="form-control" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
+                <input type="number" id="numberOfObjects" class="form-control hasMaxWidth" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
                 <label for="numberOfObjects" class="bmd-label-floating">Clubs</label>
             </div>
             break;
@@ -43,57 +43,52 @@
     }
 </div>
 
-<div class="row row-cols-auto mt-4">
+<div class="row row-cols-auto mt-2">
 
     <div class="form-floating col">
-        <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="period" class="form-control hasMaxWidth" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
         <label for="period">Period</label>
     </div>
 
     <div class="form-floating col">
-        <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="maxThrow" class="form-control hasMaxWidth" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
         <label for="maxThrow">Max Throw</label>
     </div>
 
     <div class="form-floating col">
-        <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="minThrow" class="form-control hasMaxWidth" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
         <label for="minThrow">Min Throw</label>
     </div>
 
     <div class="form-floating col">
-        <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
+        <input type="number" id="numberOfJugglers" class="form-control hasMaxWidth" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
         <label for="numberOfJugglers">Jugglers</label>
     </div>
 </div>
 
 <div class="row mt-5">
 
-    <div class="row">
-        <div class="col">
-            <div class="row">
-                <FilterSelection></FilterSelection>
-            </div>
-        </div>
-        <div class="col">
-            <div class="row">
-                <h5>Your currently applied Filters</h5>
-                <ul class="list-group">
-                    @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
-                    {
-                        <li class="list-group-item">
-                            <text>@filter.Display()</text>
-                            <button type="button" class="btn btn-outline-warning float-end" @onclick="@(_ => RemoveFilter.InvokeAsync(i))"> - </button>
-                        </li>
-                    }
-                </ul>
-            </div>
+    <div class="col">
+        <FilterSelection></FilterSelection>
+    </div>
+    <div class="col">
+        <div class="row">
+            <h5>Your currently applied Filters</h5>
+            <ul class="list-group">
+                @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
+                {
+                    <li class="list-group-item">
+                        <text>@filter.Display()</text>
+                        <button type="button" class="btn btn-outline-warning float-end" @onclick="@(_ => RemoveFilter.InvokeAsync(i))"> - </button>
+                    </li>
+                }
+            </ul>
         </div>
     </div>
-
-
-    <input class="btn btn-primary mt-5 w-25" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="Generate"/>
 </div>
-
+    <div class="row mt-5">
+        <button class="btn btn-primary w-25" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="Generate">Generate</button>
+    </div>
 @code {
 
     [Parameter]
