@@ -1,0 +1,18 @@
+﻿using Fluxor;
+using Microsoft.Extensions.DependencyInjection;
+using Siteswaps.Generator.Api;
+using Siteswaps.Generator.Api.Filter;
+using Siteswaps.Generator.Components;
+using Siteswaps.Generator.Filter;
+
+namespace Siteswaps.Generator.DependencyInjection;
+
+public static class DependencyInjectionExtensions
+{
+    public static void InstallGenerator(this IServiceCollection services)
+    {
+        services.AddTransient<ISiteswapGeneratorFactory, SiteswapGeneratorFactory>()
+            .AddTransient<IFilterBuilder, FilterBuilder>()
+            .AddFluxor(options => options.ScanAssemblies(typeof(AssemblyInfo).Assembly));
+    }
+}

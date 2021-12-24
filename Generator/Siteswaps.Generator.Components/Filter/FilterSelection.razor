@@ -5,13 +5,13 @@
 <div class="row row-cols-auto">
     <div class="col-11">
         <div class="form-floating">
-            <select id="filterSelect" class="form-select" value="@Value?.FilterType" @onchange="SelectionChanged">
+            <select id="filterSelect" class="form-select" value="@Value.FilterType" @onchange="SelectionChanged">
                 @foreach (var filter in KnownFilters.AvailableSelection())
                 {
                     <option value="@filter">@filter</option>
                 }
             </select>
-            <label for="filterSelect">Which type Filter do you want to add?</label>
+            <label for="filterSelect">Which type of Filter do you want to add?</label>
         </div>
     </div>
     <div class="col">
@@ -24,7 +24,6 @@
         </a>
     </div>
 </div>
-
 
 <div class="modal fade" id="@PatternFilterInformationId" tabindex="-1" aria-labelledby="patternFilterExplanationModalLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl">

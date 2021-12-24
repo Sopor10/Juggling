@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Compone
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webassembly", "Webassembly\Webassembly.csproj", "{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.DependencyInjection", "Generator\Siteswaps.Generator.DependencyInjection\Siteswaps.Generator.DependencyInjection.csproj", "{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,10 @@ Global
 		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C} = {0349A18F-78C3-4147-8278-9FEB304857A5}
@@ -115,5 +121,6 @@ Global
 		{89A19C85-6279-4EEC-B536-65143AB41CC5} = {9F6809DB-D965-4AEC-868B-5CAD9A46A577}
 		{A3C0DE9B-AF6B-4E7A-8685-777952C0480F} = {9F6809DB-D965-4AEC-868B-5CAD9A46A577}
 		{9949DC66-28BB-434C-B5B6-7654B8A9C276} = {0349A18F-78C3-4147-8278-9FEB304857A5}
+		{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2} = {0349A18F-78C3-4147-8278-9FEB304857A5}
 	EndGlobalSection
 EndGlobal
