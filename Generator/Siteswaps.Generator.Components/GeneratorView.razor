@@ -1,70 +1,98 @@
-﻿@using Siteswaps.Generator.Components.State
-
-@if (Value is null)
+﻿@if (Value is null)
 {
     throw new ArgumentNullException(nameof(Value));
 }
-
-<label for="exactNumberOrRangeOfBallsSwitchedCheckBox">Switch to @(Value.IsExactNumber ? "range" : "exact number")</label>
-<input type="checkbox" id="exactNumberOrRangeOfBallsSwitchedCheckBox" checked="@Value.IsExactNumber" @oninput="@(x => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(ToBool(x)))"/>
-
-@switch (Value.Objects)
-{
-    case Between between:
-        <div class="form-floating">
-            <input type="number" id="minNumberOfObjects" class="form-control" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
-            <label for="minNumberOfObjects">Min Number of Objects</label>
-        </div>
-
-        <div class="form-floating">
-            <input type="number" id="maxNumberOfObjects" class="form-control" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
-            <label for="maxNumberOfObjects">Max Number of Objects</label>
-        </div>
-        break;
-    case ExactNumber exactNumber:
-        <div class="form-floating">
-            <input type="number" id="numberOfObjects" class="form-control" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
-            <label for="numberOfObjects" class="bmd-label-floating"># Objects</label>
-        </div>
-        break;
-    default:
-        throw new ArgumentOutOfRangeException();
-}
-
-<div class="form-floating">
-    <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
-    <label for="period">Period</label>
+<h1 class="display-6 mb-4">Siteswap Generator</h1>
+<div class="row row-cols-auto">
+    <div class="form-check col">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="radio1" checked="@Value.IsExactNumber" @onclick="@(() => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(true))">
+        <label class="form-check-label" for="radio1">
+            Exact Number
+        </label>
+    </div>
+    <div class="form-check col">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="radio2" checked="@(!Value.IsExactNumber)" @onclick="@(() => ExactNumberOrRangeOfBallsSwitched.InvokeAsync(false))">
+        <label class="form-check-label" for="radio2">
+            Range
+        </label>
+    </div>
 </div>
 
-<div class="form-floating">
-    <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
-    <label for="maxThrow">max throw</label>
-</div>
-
-<div class="form-floating">
-    <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
-    <label for="minThrow">min throw</label>
-</div>
-
-<div class="form-floating">
-    <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
-    <label for="numberOfJugglers">#Jugglers</label>
-</div>
-
-<h3>Filter</h3>
-<li>
-    @foreach (var (filter,i) in Value.Filter.Select((x,i) => (x,i)))
+<div class="row row-cols-auto mt-1">
+    @switch (Value.Objects)
     {
-        <ul>
-            <text>@filter.Display()</text>
-            <button type="button" @onclick="@(_ =>RemoveFilter.InvokeAsync(i))"> - </button>
-        </ul>
+        case Between between:
+            <div class="form-floating col">
+                <input type="number" id="minNumberOfObjects" class="form-control" min="0" value="@between.MinNumber" @oninput="@(x => MinNumberChanged.InvokeAsync(ToInt(x)))"/>
+                <label for="minNumberOfObjects">Min Number of Clubs</label>
+            </div>
+
+            <div class="form-floating col">
+                <input type="number" id="maxNumberOfObjects" class="form-control" min="0" value="@between.MaxNumber" @oninput="@(x => MaxNumberChanged.InvokeAsync(ToInt(x)))"/>
+                <label for="maxNumberOfObjects">Max Number of Clubs</label>
+            </div>
+            break;
+        case ExactNumber exactNumber:
+            <div class="form-floating col">
+                <input type="number" id="numberOfObjects" class="form-control" min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => ExactNumberChanged.InvokeAsync(ToInt(x)))"/>
+                <label for="numberOfObjects" class="bmd-label-floating">Clubs</label>
+            </div>
+            break;
+        default:
+            throw new ArgumentOutOfRangeException();
     }
-</li>
+</div>
 
-<FilterSelection></FilterSelection>
+<div class="row row-cols-auto mt-4">
 
-<input id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="Generate"/>
+    <div class="form-floating col">
+        <input type="number" id="period" class="form-control" min="0" placeholder="5" value="@Value.Period" @oninput="@(x => PeriodChanged.InvokeAsync(ToInt(x)))"/>
+        <label for="period">Period</label>
+    </div>
+
+    <div class="form-floating col">
+        <input type="number" id="maxThrow" class="form-control" min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => MaxThrowChanged.InvokeAsync(ToInt(x)))"/>
+        <label for="maxThrow">Max Throw</label>
+    </div>
+
+    <div class="form-floating col">
+        <input type="number" id="minThrow" class="form-control" min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => MinThrowChanged.InvokeAsync(ToInt(x)))"/>
+        <label for="minThrow">Min Throw</label>
+    </div>
+
+    <div class="form-floating col">
+        <input type="number" id="numberOfJugglers" class="form-control" placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => NumberOfJugglersChanged.InvokeAsync(ToInt(x)))"/>
+        <label for="numberOfJugglers">Jugglers</label>
+    </div>
+</div>
+
+<div class="row mt-5">
+
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <FilterSelection></FilterSelection>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                <h5>Your currently applied Filters</h5>
+                <ul class="list-group">
+                    @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
+                    {
+                        <li class="list-group-item">
+                            <text>@filter.Display()</text>
+                            <button type="button" class="btn btn-outline-warning float-end" @onclick="@(_ => RemoveFilter.InvokeAsync(i))"> - </button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <input class="btn btn-primary mt-5 w-25" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="Generate"/>
+</div>
 
 @code {
 
@@ -99,8 +127,8 @@
     public EventCallback<bool> ExactNumberOrRangeOfBallsSwitched { get; set; }
 
     [Parameter]
-    public EventCallback<int> RemoveFilter { get; set; } 
-    
+    public EventCallback<int> RemoveFilter { get; set; }
+
     private int? ToInt(ChangeEventArgs eventArgs)
     {
         if (int.TryParse(eventArgs.Value as string, out var result))
@@ -110,6 +138,9 @@
         return null;
     }
 
-    private bool ToBool(ChangeEventArgs eventArgs) => (bool)(eventArgs.Value ?? throw new ArgumentNullException());
+    private bool ToBool(ChangeEventArgs eventArgs)
+    {
+        return (bool)(eventArgs.Value ?? throw new ArgumentNullException());
+    }
 
 }

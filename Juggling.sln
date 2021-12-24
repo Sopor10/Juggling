@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Test", "Shared\Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Components.Test", "Generator\Siteswaps.Generator.Components.Test\Siteswaps.Generator.Components.Test.csproj", "{9949DC66-28BB-434C-B5B6-7654B8A9C276}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webassembly", "Webassembly\Webassembly.csproj", "{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +102,10 @@ Global
 		{9949DC66-28BB-434C-B5B6-7654B8A9C276}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9949DC66-28BB-434C-B5B6-7654B8A9C276}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9949DC66-28BB-434C-B5B6-7654B8A9C276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6A2B0DC-399D-48B5-9E0C-A04FFC60EE1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C} = {0349A18F-78C3-4147-8278-9FEB304857A5}

@@ -5,24 +5,28 @@
     return;
 }
 
-<div class="container">
+<div class="col">
     <div class="row">
-        <div class="col-sm">
-            <label for="numberFilterType">Filter type</label>
-            <select id="numberFilterType" class="custom-select" @bind="@Value.Type">
-                <option value="@NumberFilterType.Exactly">Exactly</option>
-                <option value="@NumberFilterType.Maximum">Maximal</option>
-                <option value="@NumberFilterType.AtLeast">Minimal</option>
-            </select>
+        <div class="col">
+            <div class="form-floating">
+                <select id="numberFilterType" class="form-select" @bind="@Value.Type">
+                    <option value="@NumberFilterType.Exactly">Exactly</option>
+                    <option value="@NumberFilterType.Maximum">Maximal</option>
+                    <option value="@NumberFilterType.AtLeast">Minimal</option>
+                </select>
+                <label for="numberFilterType">Filter type</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="form-floating col">
+            <input type="number" id="numberFilterAmount" class="form-control" min="0" max="@_state.Value.State.Period" @bind="@Value.Amount"/>
+            <label for="numberFilterAmount">Amount</label>
         </div>
 
-        <div class="form-floating col-sm">
-            <input type="number" id="numberFilterAmount" class="form-control" min="0" @bind="@Value.Amount"/>
-            <label for="numberFilterAmount">Times</label>
-        </div>
-
-        <div class="form-floating col-sm">
-            <input type="number" id="numberFilterHeight" class="form-control" min="0" @bind="@Value.Height"/>
+        <div class="form-floating col">
+            <input type="number" id="numberFilterHeight" class="form-control" min="@(_state.Value.State.MinThrow ?? 0)" max="@_state.Value.State.MaxThrow" @bind="@Value.Height"/>
             <label for="numberFilterHeight">Height</label>
         </div>
     </div>

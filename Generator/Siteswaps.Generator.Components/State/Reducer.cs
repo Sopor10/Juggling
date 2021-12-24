@@ -26,11 +26,20 @@ public static class Reducer
         return state with
         {
             State = state.State with { Period = action.Value },
-            NewFilter = state.NewFilter is PatternFilterInformation ? null: state.NewFilter,
-            
+            NewFilter = state.NewFilter switch
+            {
+                PatternFilterInformation patternFilterInformation => action.Value switch
+                {
+                    null => new NumberFilterInformation(),
+                    _ => patternFilterInformation with
+                    {
+                        Pattern = patternFilterInformation.Pattern.Take(action.Value.Value).ToImmutableArray()
+                    }
+                },
+                _ => state.NewFilter
+            }
         };
     }
-
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIncrementMinThrowChangedAction(SiteswapGeneratorState state,
@@ -138,7 +147,7 @@ public static class Reducer
             {
                 Filter = state.State.Filter.Add(action.Value)
             },
-            NewFilter = null,
+            NewFilter = new NumberFilterInformation()
         };
     }
 
@@ -161,17 +170,15 @@ public static class Reducer
         SiteswapGeneratorState state,
         FilterTypeSelectionChangedAction action)
     {
-        if (state.State.Period is null)
-        {
-            return state;
-        }
-        
+        if (state.State.Period is null) return state;
+
         return state with
         {
             NewFilter = action.FilterType switch
             {
                 FilterType.Number => new NumberFilterInformation(),
-                FilterType.Pattern => new PatternFilterInformation(Enumerable.Repeat(-1, state.State.Period.Value).ToImmutableArray()),
+                FilterType.Pattern => new PatternFilterInformation(Enumerable.Repeat(-1, state.State.Period.Value)
+                    .ToImmutableArray()),
                 _ => throw new ArgumentOutOfRangeException()
             }
         };
@@ -183,15 +190,13 @@ public static class Reducer
         PatternFilterValueChangedAction action)
     {
         if (state.NewFilter is PatternFilterInformation patternFilterInformation)
-        {
             return state with
             {
                 NewFilter = patternFilterInformation with
                 {
                     Pattern = patternFilterInformation.Pattern.SetItem(action.Pos, action.Value)
-                } 
+                }
             };
-        }
 
         throw new InvalidOperationException("This action should only be dispatch if we have a PatternInformation");
     }

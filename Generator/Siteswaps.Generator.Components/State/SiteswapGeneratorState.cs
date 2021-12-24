@@ -24,7 +24,7 @@ public record SiteswapGeneratorState
     public GeneratorState State { get; init; }
     
     public KnownFilterTypes KnownFilters => new();
-    
-    public IFilterInformation? NewFilter { get; init; }
+
+    public IFilterInformation NewFilter { get; init; } = new NumberFilterInformation();
 
 }

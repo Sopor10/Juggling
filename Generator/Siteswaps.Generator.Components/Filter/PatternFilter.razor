@@ -1,4 +1,4 @@
-﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> _state
 @inject IDispatcher _dispatcher
 
@@ -6,16 +6,16 @@
 {
     return;
 }
-<div class="row">
+<div class="row mt-4">
 
     @for (var index = 0; index < Value.Pattern.Length; index++)
     {
         var localIndex = index;
-        <div class="col">
-            <select 
-                id="@("patternFilterNumber" + Value.Pattern[index])" 
-                class="custom-select" 
-                value="@Value.Pattern[index]" 
+        <div class="col row-cols-auto mt-1">
+            <select
+                id="@("patternFilterNumber" + Value.Pattern[index])"
+                class="form-select"
+                value="@Value.Pattern[index]"
                 @onchange="x => OnClick(localIndex, x)">
                 <option value="-1">_</option>
                 <option value="-2">p</option>
@@ -27,6 +27,7 @@
             </select>
         </div>
     }
+
 </div>
 
 @code {
@@ -44,4 +45,5 @@
             _dispatcher.Dispatch(new PatternFilterValueChangedAction(index, chosenNumber));
         }
     }
+
 }
