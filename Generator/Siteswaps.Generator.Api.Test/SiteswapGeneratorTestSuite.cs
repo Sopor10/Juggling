@@ -4,12 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Bogus.DataSets;
 using FluentAssertions;
 using NUnit.Framework;
-using Siteswaps.Generator.Api;
-using Siteswaps.Generator.Api.Filter;
 
-namespace Siteswaps.Generator.Test;
+namespace Siteswaps.Generator.Api.Test;
 
 public abstract class SiteswapGeneratorTestSuite
 {
@@ -66,7 +65,7 @@ public abstract class SiteswapGeneratorTestSuite
 
         var siteswapsAsStrings = siteswaps.Select(x => x.ToString()).ToList();
         
-        var deserialize = JsonSerializer.Deserialize<Result>(File.ReadAllText(resultFilename));
+        var deserialize = JsonSerializer.Deserialize<Result>(await File.ReadAllTextAsync(resultFilename)) ?? throw new FileNotFoundException(nameof(resultFilename));
 
         siteswapsAsStrings.Should().OnlyContain(x => deserialize.List.Contains(x));
         

@@ -52,7 +52,7 @@
     public void MinNumberOfObjects_Change_Should_Update_State()
     {
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
-        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Input(false);
+        cut.Find("#radio2").Click();
 
         cut.Find("#minNumberOfObjects").Input("7");
 
@@ -65,7 +65,7 @@
     {
         
         var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
-        cut.Find("#exactNumberOrRangeOfBallsSwitchedCheckBox").Input(false);
+        cut.Find("#radio2").Click();
         
         cut.Find("#maxNumberOfObjects").Input("7");
 
