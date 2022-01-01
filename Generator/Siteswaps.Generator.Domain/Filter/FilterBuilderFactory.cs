@@ -7,6 +7,6 @@ public class FilterBuilderFactory :IFilterBuilderFactory
 {
     public IFilterBuilder Create(SiteswapGeneratorInput input)
     {
-        return new FilterBuilder().WithInput(input).And(new FilterFactory(input).Standard());
+        return new FilterBuilder().WithInput(input);
     }
 }

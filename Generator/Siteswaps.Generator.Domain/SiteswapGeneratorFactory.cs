@@ -6,8 +6,8 @@ namespace Siteswaps.Generator.Domain;
 
 public record SiteswapGeneratorFactory(IFilterBuilderFactory FilterBuilderFactory) : ISiteswapGeneratorFactory
 {
-    public ImmutableList<Func<IFilterBuilder, IFilterBuilder>> Config { get; init; } = ImmutableList<Func<IFilterBuilder, IFilterBuilder>>.Empty;
-    public SiteswapGeneratorInput Input { get; init; } = new();
+    private ImmutableList<Func<IFilterBuilder, IFilterBuilder>> Config { get; init; } = ImmutableList<Func<IFilterBuilder, IFilterBuilder>>.Empty;
+    private SiteswapGeneratorInput Input { get; init; } = new();
     public ISiteswapGeneratorFactory ConfigureFilter(Func<IFilterBuilder, IFilterBuilder> builder) => this with { Config = Config.Add(builder) };
     public ISiteswapGeneratorFactory WithInput(SiteswapGeneratorInput input) => this with {Input = input};
     
