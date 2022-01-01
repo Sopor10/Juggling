@@ -16,7 +16,7 @@ public class FilterFactory
 
     internal ISiteswapFilter Standard()
     {
-        return new FilterList(new CollisionFilter(), new AverageToHighFilter(Input), new AverageToLowFilter(Input),
+        return new AndFilter(new CollisionFilter(), new AverageToHighFilter(Input), new AverageToLowFilter(Input),
             new RightAmountOfBallsFilter(Input));
     }
 
@@ -67,7 +67,7 @@ public class FilterFactory
 
     public ISiteswapFilter Combine(IEnumerable<ISiteswapFilter> filter)
     {
-        return new FilterList(filter.ToArray());
+        return new AndFilter(filter.ToArray());
     }
 
     public ISiteswapFilter PatternFilter(IEnumerable<int> pattern, int numberOfJuggler)
@@ -76,4 +76,6 @@ public class FilterFactory
     }
 
     public ISiteswapFilter GeneratePatternFilterHeuristics(IEnumerable<int> pattern, int numberOfJuggler) => new PatternFilterHeuristicBuilder(this).Build(pattern, numberOfJuggler, Input);
+
+    public ISiteswapFilter OrFilter(ImmutableList<ISiteswapFilter> filter, ISiteswapFilter siteswapFilter) => new OrFilter(Combine(filter), siteswapFilter);
 }

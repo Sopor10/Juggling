@@ -15,22 +15,21 @@ internal record FilterBuilder : IFilterBuilder
             Factory = new FilterFactory(input)
         };
 
-    public IFilterBuilder AddMinimumOccurenceFilter(int number, int amount) => this with { Filter = Filter.Add(Factory.MinimumOccurenceFilter(number, amount)) };
+    public IFilterBuilder MinimumOccurence(int number, int amount) => this with { Filter = Filter.Add(Factory.MinimumOccurenceFilter(number, amount)) };
 
-    public IFilterBuilder AddMaximumOccurenceFilter(int number, int amount) => this with { Filter = Filter.Add(Factory.MaximumOccurenceFilter(number, amount)) };
+    public IFilterBuilder MaximumOccurence(int number, int amount) => this with { Filter = Filter.Add(Factory.MaximumOccurenceFilter(number, amount)) };
 
-    public IFilterBuilder AddExactOccurenceFilter(int number, int amount) => this with { Filter = Filter.Add(Factory.ExactOccurenceFilter(number, amount)) };
+    public IFilterBuilder ExactOccurence(int number, int amount) => this with { Filter = Filter.Add(Factory.ExactOccurenceFilter(number, amount)) };
 
-    public IFilterBuilder AddNoFilter() => this with { Filter = Filter.Add(Factory.NoFilter()) };
+    public IFilterBuilder No() => this with { Filter = Filter.Add(Factory.NoFilter()) };
 
-    public IFilterBuilder AddExactNumberOfPassesFilter(int numberOfPasses, int numberOfJugglers) => this with { Filter = Filter.Add(Factory.ExactNumberOfPassesFilter(numberOfPasses, numberOfJugglers)) };
+    public IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers) => this with { Filter = Filter.Add(Factory.ExactNumberOfPassesFilter(numberOfPasses, numberOfJugglers)) };
 
-    public IFilterBuilder AddRange(IEnumerable<ISiteswapFilter> filter) => this with { Filter = Filter.AddRange(filter) };
+    public IFilterBuilder And(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
+    public IFilterBuilder Or(ISiteswapFilter filter) => this with { Filter = new[]{Factory.OrFilter(Filter, filter)}.ToImmutableList() };
 
-    public IFilterBuilder Add(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
-
-    public ISiteswapFilter Build() => new FilterList(Filter);
-    public IFilterBuilder AddPatternFilter(IEnumerable<int> pattern, int numberOfJuggler)
+    public ISiteswapFilter Build() => new AndFilter(Filter);
+    public IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler)
     {
         pattern = pattern.ToList();
         return this with

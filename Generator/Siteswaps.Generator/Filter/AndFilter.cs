@@ -2,17 +2,17 @@
 
 namespace Siteswaps.Generator.Filter;
 
-internal class FilterList : ISiteswapFilter
+internal class AndFilter : ISiteswapFilter
 {
 
     private List<ISiteswapFilter> Filters { get; }
 
-    public FilterList(IEnumerable<ISiteswapFilter> filters)
+    public AndFilter(IEnumerable<ISiteswapFilter> filters)
     {
         Filters = filters.ToList();
     }
 
-    public FilterList(params ISiteswapFilter?[] filter) : this(filter.WhereNotNull().AsEnumerable())
+    public AndFilter(params ISiteswapFilter?[] filter) : this(filter.WhereNotNull().AsEnumerable())
     {
             
     }

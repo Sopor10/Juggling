@@ -61,13 +61,13 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                 if (filterInformation is NumberFilterInformation numberFilterInformation)
                 {
                     if (numberFilterInformation.Amount is null || numberFilterInformation.Height is null)
-                        return builder.AddNoFilter();
+                        return builder.No();
 
                     return numberFilterInformation.Type switch
                     {
-                        NumberFilterType.Exactly => builder.AddExactOccurenceFilter(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
-                        NumberFilterType.AtLeast => builder.AddMinimumOccurenceFilter(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
-                        NumberFilterType.Maximum => builder.AddMaximumOccurenceFilter(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
+                        NumberFilterType.Exactly => builder.ExactOccurence(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
+                        NumberFilterType.AtLeast => builder.MinimumOccurence(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
+                        NumberFilterType.Maximum => builder.MaximumOccurence(numberFilterInformation.Height.Value, numberFilterInformation.Amount.Value),
                         _ => throw new ArgumentOutOfRangeException()
                     };
                 }
@@ -75,7 +75,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
             case FilterType.Pattern:
                 if (filterInformation is PatternFilterInformation patternFilterInformation)
                 {
-                    return builder.AddPatternFilter(patternFilterInformation.Pattern, numberOfJugglers);
+                    return builder.Pattern(patternFilterInformation.Pattern, numberOfJugglers);
                 }
                 break;
         }
