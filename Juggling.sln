@@ -18,11 +18,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Components", "Sit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generator", "Generator", "{0349A18F-78C3-4147-8278-9FEB304857A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator", "Generator\Siteswaps.Generator\Siteswaps.Generator.csproj", "{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Domain", "Generator\Siteswaps.Generator.Domain\Siteswaps.Generator.Domain.csproj", "{9F5D1C32-3D8D-4E0D-85E8-12904D3D6C0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Api", "Generator\Siteswaps.Generator.Api\Siteswaps.Generator.Api.csproj", "{4A821D0C-DDC1-44B5-83C1-A970F6434732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Test", "Generator\Siteswaps.Generator.Test\Siteswaps.Generator.Test.csproj", "{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Domain.Test", "Generator\Siteswaps.Generator.Domain.Test\Siteswaps.Generator.Domain.Test.csproj", "{FD3D2A67-D201-4F68-9E51-752FA1DD6C06}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siteswaps.Generator.Components", "Generator\Siteswaps.Generator.Components\Siteswaps.Generator.Components.csproj", "{A691A804-91A2-4C55-8168-DA72EC42A8B7}"
 EndProject
