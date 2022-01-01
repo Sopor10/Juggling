@@ -4,5 +4,7 @@ namespace Siteswaps.Generator.Api;
 
 public interface ISiteswapGeneratorFactory
 {
-    public ISiteswapGenerator Create(ISiteswapFilter filter);
+    public ISiteswapGeneratorFactory ConfigureFilter(Func<IFilterBuilder, IFilterBuilder> builder);
+    ISiteswapGeneratorFactory WithInput(SiteswapGeneratorInput input);
+    public ISiteswapGenerator Create();
 }

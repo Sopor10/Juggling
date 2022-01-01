@@ -16,7 +16,7 @@ public abstract class FluxorTestContext : BunitTestContext
             .Services
             .AddSingleton(x => Mock.Of<ISiteswapGenerator>())
             .AddSingleton(x => Mock.Of<ISiteswapGeneratorFactory>())
-            .AddSingleton(x => Mock.Of<IFilterBuilder>())
+            .AddSingleton(x => Mock.Of<IFilterBuilderFactory>())
             .AddFluxor(options => options.ScanAssemblies(typeof(Generator.Components.AssemblyInfo).Assembly));
         RenderComponent<Fluxor.Blazor.Web.StoreInitializer>();
     }

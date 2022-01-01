@@ -4,7 +4,7 @@ namespace Siteswaps.Generator.Api;
 
 public interface ISiteswapGenerator
 {
-    Task<IEnumerable<ISiteswap>> GenerateAsync(SiteswapGeneratorInput input);
+    Task<IEnumerable<ISiteswap>> GenerateAsync();
 }
 
 public interface ISiteswap

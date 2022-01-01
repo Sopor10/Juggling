@@ -4,7 +4,7 @@ using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Filter;
 
-public record FilterBuilder : IFilterBuilder
+internal record FilterBuilder : IFilterBuilder
 {
     private FilterFactory Factory { get; init; } = new( new());
     private ImmutableList<ISiteswapFilter> Filter { get; init; } = ImmutableList<ISiteswapFilter>.Empty;

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Bogus.DataSets;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -12,18 +11,19 @@ namespace Siteswaps.Generator.Api.Test;
 
 public abstract class SiteswapGeneratorTestSuite
 {
-    protected abstract ISiteswapGenerator CreateTestObject();
+    protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input);
 
     [Test]
     [TestCase(new[] { 5, 3, 1 })]
     [TestCase(new[] { 4, 2, 3 })]
     public async Task Generator_Generates_Siteswap(int[] expected)
     {
-        var generator = CreateTestObject();
-
         var input = Input(3, 5, 0, 3);
 
-        var result = (await generator.GenerateAsync(input)).ToList();
+        var generator = CreateTestObject(input);
+
+
+        var result = (await generator.GenerateAsync()).ToList();
         result.Should().Contain(expected);
     }
 
@@ -48,20 +48,20 @@ public abstract class SiteswapGeneratorTestSuite
     [TestCase(5, 5, 0, 3, ExpectedResult = 26)]
     public async Task<int> Number_Of_Siteswaps_Should_Be_Correct(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
-        var generator = CreateTestObject();
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
+        var generator = CreateTestObject(input);
 
-        var siteswaps = (await generator.GenerateAsync(input)).ToList();
+        var siteswaps = (await generator.GenerateAsync()).ToList();
         return siteswaps.Count;
     }
 
     [TestCase(7, 13, 2, 8, "result.txt")]
     public async Task Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects, string resultFilename)
     {
-        var generator = CreateTestObject();
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
+        var generator = CreateTestObject(input);
 
-        var siteswaps = (await generator.GenerateAsync(input)).ToList();
+        var siteswaps = (await generator.GenerateAsync()).ToList();
 
         var siteswapsAsStrings = siteswaps.Select(x => x.ToString()).ToList();
         
@@ -75,5 +75,5 @@ public abstract class SiteswapGeneratorTestSuite
 
 public class Result
 {
-    public List<string> List { get; set; }
+    public List<string> List { get; set; } = new();
 }

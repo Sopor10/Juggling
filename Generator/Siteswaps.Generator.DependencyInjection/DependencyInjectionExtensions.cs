@@ -12,7 +12,7 @@ public static class DependencyInjectionExtensions
     public static void InstallGenerator(this IServiceCollection services)
     {
         services.AddTransient<ISiteswapGeneratorFactory, SiteswapGeneratorFactory>()
-            .AddTransient<IFilterBuilder, FilterBuilder>()
+            .AddTransient<IFilterBuilderFactory, FilterBuilderFactory>()
             .AddFluxor(options => options.ScanAssemblies(typeof(AssemblyInfo).Assembly));
     }
 }

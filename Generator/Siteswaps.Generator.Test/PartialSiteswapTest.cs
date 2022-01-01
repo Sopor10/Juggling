@@ -19,7 +19,7 @@ public class PartialSiteswapTest
     [TestCase(new[]{5,0,2,5,-1, - 1}, ExpectedResult = 0)]
     public int Calculation_Of_Next_Max_Value_Is_Correct(int[] values) => new PartialSiteswap(values).MaxForNextFree();
     
-    [Ignore("future optimization")]
+    [Ignore("todo future optimization")]
     [TestCase(new[]{5,0,2,-1,-1}, ExpectedResult = 4)]
     public int Calculation_Of_Next_Max_Value_Is_Correct_Ignored(int[] values) => new PartialSiteswap(values).MaxForNextFree();
 

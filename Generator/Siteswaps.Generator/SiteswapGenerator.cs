@@ -1,27 +1,26 @@
 ﻿using System.Diagnostics;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
-using Siteswaps.Generator.Filter;
 
 namespace Siteswaps.Generator;
 
 internal class SiteswapGenerator : ISiteswapGenerator
 {
-    public SiteswapGenerator(ISiteswapFilter siteswapFilter)
+    public SiteswapGenerator(ISiteswapFilter siteswapFilter, SiteswapGeneratorInput input)
     {
         SiteswapFilter = siteswapFilter;
+        Input = input;
     }
 
     private ISiteswapFilter SiteswapFilter { get; set; }
+    public SiteswapGeneratorInput Input { get; }
     private HashsetStack<PartialSiteswap> Stack { get; } = new();
 
-    public Task<IEnumerable<ISiteswap>> GenerateAsync(SiteswapGeneratorInput input)
+    public Task<IEnumerable<ISiteswap>> GenerateAsync()
     {
-        SiteswapFilter = new FilterFactory(input).Standard().Combine(SiteswapFilter);
-        
         return Task.Run(() =>
         {
-            var tmp = GeneratePartialSiteswaps(input)
+            var tmp = GeneratePartialSiteswaps()
                 .Distinct()
                 .Select(x => x as ISiteswap)
                 .ToList()
@@ -31,22 +30,22 @@ internal class SiteswapGenerator : ISiteswapGenerator
         });
     }
 
-    private IEnumerable<Siteswap> GeneratePartialSiteswaps(SiteswapGeneratorInput input)
+    private IEnumerable<Siteswap> GeneratePartialSiteswaps()
     {
         var count = 0;
         var sw = new Stopwatch();
         sw.Start();
 
-        for (var i = 0; i <= input.MaxHeight; i++)
+        for (var i = 0; i <= Input.MaxHeight; i++)
         {
-            var partialSiteswap = PartialSiteswap.Standard(input.Period, i);
+            var partialSiteswap = PartialSiteswap.Standard(Input.Period, i);
             if (!SiteswapFilter.CanFulfill(partialSiteswap)) continue;
             Stack.Push(partialSiteswap);
         }
 
         while (Stack.TryPop(out var partialSiteswap))
         {
-            if (sw.Elapsed > input.StopCriteria.TimeOut || count > input.StopCriteria.MaxNumberOfResults) yield break;
+            if (sw.Elapsed > Input.StopCriteria.TimeOut || count > Input.StopCriteria.MaxNumberOfResults) yield break;
 
             if (partialSiteswap.IsFilled() && Siteswap.TryCreate(partialSiteswap.Items, out var s))
             {
@@ -55,7 +54,7 @@ internal class SiteswapGenerator : ISiteswapGenerator
                 continue;
             }
 
-            foreach (var siteswap in GenerateNext(partialSiteswap, input))
+            foreach (var siteswap in GenerateNext(partialSiteswap, Input))
             {
                 if (!SiteswapFilter.CanFulfill(siteswap)) continue;
 
