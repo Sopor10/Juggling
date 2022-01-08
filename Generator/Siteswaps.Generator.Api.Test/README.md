@@ -10,4 +10,4 @@ In short:
 
 This can be set in rider at:
 
-![Documentation\img_1.png](Documentation\img_1.png)
+![Documentation\img_1.png](Documentation\img_1.png "setting in rider to add environment variables")
