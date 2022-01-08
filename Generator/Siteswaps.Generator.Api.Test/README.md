@@ -6,8 +6,8 @@ It uses Verify to verify the output from the generator.
 To change the diff tool you can look at [Documentation](https://github.com/VerifyTests/DiffEngine/blob/main/docs/diff-tool.order.md).
 In short:
 
-![Documentation\img.png](Documentation\img.png "Set environment variable to control dif tool")
+![Set environment variable to control diff tool](Documentation\img.png "Set environment variable to control diff tool")
 
 This can be set in rider at:
 
-![Documentation\img_1.png](Documentation\img_1.png "setting in rider to add environment variables")
+![Setting in rider to add environment variables](Documentation\img_1.png "setting in rider to add environment variables")
