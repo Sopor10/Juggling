@@ -9,8 +9,3 @@ public abstract partial class FilterTestSuite
     protected abstract IFilterBuilder FilterBuilder { get; }
     protected abstract void ConfigureSiteswapGeneratorInput(SiteswapGeneratorInput input);
 }
-
-public abstract class FilterTestBase
-{
-
-}

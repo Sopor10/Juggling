@@ -20,6 +20,6 @@ public record SiteswapGeneratorFactory(IFilterBuilderFactory FilterBuilderFactor
             builder = func(builder);
         }
 
-        return new SiteswapGenerator(builder.Build(), Input);
+        return new SiteswapGenerator(builder.WithDefault().Build(), Input);
     }
 }
