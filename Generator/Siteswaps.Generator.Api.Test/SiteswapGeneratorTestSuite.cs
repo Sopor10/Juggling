@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using static VerifyNUnit.Verifier;
 
 namespace Siteswaps.Generator.Api.Test;
 
@@ -55,8 +53,8 @@ public abstract class SiteswapGeneratorTestSuite
         return siteswaps.Count;
     }
 
-    [TestCase(7, 13, 2, 8, "result.txt")]
-    public async Task Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects, string resultFilename)
+    [TestCase(7, 13, 2, 8)]
+    public async Task Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
         var generator = CreateTestObject(input);
@@ -64,16 +62,7 @@ public abstract class SiteswapGeneratorTestSuite
         var siteswaps = (await generator.GenerateAsync()).ToList();
 
         var siteswapsAsStrings = siteswaps.Select(x => x.ToString()).ToList();
-        
-        var deserialize = JsonSerializer.Deserialize<Result>(await File.ReadAllTextAsync(resultFilename)) ?? throw new FileNotFoundException(nameof(resultFilename));
+        await Verify(siteswapsAsStrings);
 
-        siteswapsAsStrings.Should().OnlyContain(x => deserialize.List.Contains(x));
-        
-        deserialize.List.Should().OnlyContain(x => siteswapsAsStrings.Contains(x));
     }
-}
-
-public class Result
-{
-    public List<string> List { get; set; } = new();
 }
