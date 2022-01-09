@@ -20,16 +20,7 @@ public abstract class SiteswapGeneratorTestSuite
     [TestCase(7, 13, 2, 8)]
     public async Task Verify_SiteswapGenerator_Against_Older_Version(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
-        var input = Input(period, maxHeight, minHeight, numberOfObjects);
-        var sut = CreateTestObject(input);
-
-        var siteswaps = (await sut.GenerateAsync()).Select(x => x.ToString()).ToList();
-        await Verify(siteswaps).UseTypeName(nameof(SiteswapGeneratorTestSuite));
-    }
-    
-    private SiteswapGeneratorInput Input(int period, int maxHeight, int minHeight, int numberOfObjects)
-    {
-        return new SiteswapGeneratorInput
+        var input = new SiteswapGeneratorInput
         {
             Period = period,
             MaxHeight = maxHeight,
@@ -37,5 +28,10 @@ public abstract class SiteswapGeneratorTestSuite
             NumberOfObjects = numberOfObjects,
             StopCriteria = new(TimeSpan.FromSeconds(15), 10000)
         };
+
+        var siteswaps = await CreateTestObject(input).GenerateAsync();
+        
+        await Verify(siteswaps.Select(x => x.ToString()).ToList())
+            .UseTypeName(nameof(SiteswapGeneratorTestSuite));
     }
 }
