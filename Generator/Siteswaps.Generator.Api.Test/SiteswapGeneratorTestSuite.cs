@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -10,15 +11,21 @@ public abstract class SiteswapGeneratorTestSuite
 {
     protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input);
 
-    [Test]
-    [TestCase(3, 13, 0, 8)]
-    [TestCase(3, 10, 0, 5)]
-    [TestCase(3,  5, 0, 3)]
-    [TestCase(5, 10, 2, 7)]
-    [TestCase(5, 10, 2, 6)]
-    [TestCase(5,  5, 0, 3)]
-    [TestCase(7, 13, 2, 8)]
-    public async Task Verify_SiteswapGenerator_Against_Older_Version(int period, int maxHeight, int minHeight, int numberOfObjects)
+   
+    [TestCaseSource(typeof(GenerateInputs))]
+    public async Task Verify_SiteswapGenerator_Against_Older_Version(SiteswapGeneratorInput input)
+    {
+        var siteswaps = await CreateTestObject(input).GenerateAsync();
+        
+        await Verify(siteswaps.Select(x => x.ToString()).ToList())
+            .UseTypeName(nameof(SiteswapGeneratorTestSuite))
+            .UseTextForParameters($"Input({input.Period},{input.MaxHeight},{input.MinHeight},{input.NumberOfObjects})");
+    }
+}
+
+class GenerateInputs : IEnumerable
+{
+    private TestCaseData Next(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var input = new SiteswapGeneratorInput
         {
@@ -28,10 +35,18 @@ public abstract class SiteswapGeneratorTestSuite
             NumberOfObjects = numberOfObjects,
             StopCriteria = new(TimeSpan.FromSeconds(15), 10000)
         };
-
-        var siteswaps = await CreateTestObject(input).GenerateAsync();
-        
-        await Verify(siteswaps.Select(x => x.ToString()).ToList())
-            .UseTypeName(nameof(SiteswapGeneratorTestSuite));
+        return new TestCaseData(input).SetName($"Input({input.Period},{input.MaxHeight},{input.MinHeight},{input.NumberOfObjects})");
+    }
+    
+    
+    public IEnumerator GetEnumerator()
+    {
+        yield return Next(3, 13, 0, 8);
+        yield return Next(3, 10, 0, 5);
+        yield return Next(3,  5, 0, 3);
+        yield return Next(5, 10, 2, 7);
+        yield return Next(5, 10, 2, 6);
+        yield return Next(5,  5, 0, 3);
+        yield return Next(7, 13, 2, 8);
     }
 }

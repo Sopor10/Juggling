@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "diffenginetray": {
+      "version": "8.5.3",
+      "commands": [
+        "DiffEngineTray"
+      ]
+    }
+  }
+}
