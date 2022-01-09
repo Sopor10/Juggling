@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using NUnit.Framework;
 using static VerifyNUnit.Verifier;
 
@@ -12,9 +11,9 @@ public abstract class SiteswapGeneratorTestSuite
     protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input);
 
     [Test]
-    [TestCase(3,  5, 0, 3)]
     [TestCase(3, 13, 0, 8)]
     [TestCase(3, 10, 0, 5)]
+    [TestCase(3,  5, 0, 3)]
     [TestCase(5, 10, 2, 7)]
     [TestCase(5, 10, 2, 6)]
     [TestCase(5,  5, 0, 3)]
