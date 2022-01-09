@@ -16,5 +16,16 @@ internal class AndFilter : ISiteswapFilter
     {
             
     }
-    public bool CanFulfill(IPartialSiteswap value) => Filters.All(x => x.CanFulfill(value));
+    public bool CanFulfill(IPartialSiteswap value)
+    {
+        foreach (var filter in Filters)
+        {
+            if (filter.CanFulfill(value) is false)
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 }

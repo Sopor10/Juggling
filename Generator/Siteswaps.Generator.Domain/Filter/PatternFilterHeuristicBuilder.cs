@@ -16,7 +16,6 @@ internal class PatternFilterHeuristicBuilder
     {
         var filter = GenerateAtLeastNumberFilter(pattern);
 
-
         return filter;
     }
 

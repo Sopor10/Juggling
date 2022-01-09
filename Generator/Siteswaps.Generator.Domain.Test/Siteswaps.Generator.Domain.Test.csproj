@@ -17,12 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="result.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\Siteswaps.Generator.Api.Test\Siteswaps.Generator.Api.Test.csproj" />
         <ProjectReference Include="..\Siteswaps.Generator.Domain\Siteswaps.Generator.Domain.csproj" />
     </ItemGroup>

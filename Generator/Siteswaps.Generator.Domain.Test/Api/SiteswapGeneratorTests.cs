@@ -2,7 +2,7 @@
 using Siteswaps.Generator.Api.Test;
 using Siteswaps.Generator.Domain.Filter;
 
-namespace Siteswaps.Generator.Domain.Test;
+namespace Siteswaps.Generator.Domain.Test.Api;
 
 public class SiteswapGeneratorTests : SiteswapGeneratorTestSuite
 {

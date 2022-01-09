@@ -5,7 +5,7 @@ using Siteswaps.Generator.Domain.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Domain.Filter;
 
-public class FilterFactory
+internal class FilterFactory
 {
     public FilterFactory(SiteswapGeneratorInput input)
     {
@@ -14,7 +14,7 @@ public class FilterFactory
 
     private SiteswapGeneratorInput Input { get; }
 
-    internal ISiteswapFilter Standard()
+    public ISiteswapFilter Standard()
     {
         return new AndFilter(new CollisionFilter(), new AverageToHighFilter(Input), new AverageToLowFilter(Input),
             new RightAmountOfBallsFilter(Input));

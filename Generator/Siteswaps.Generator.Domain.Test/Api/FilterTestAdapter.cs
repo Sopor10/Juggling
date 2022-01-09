@@ -4,7 +4,7 @@ using Siteswaps.Generator.Api.Filter;
 using Siteswaps.Generator.Api.Test.Filter;
 using Siteswaps.Generator.Domain.Filter;
 
-namespace Siteswaps.Generator.Domain.Test.Filter;
+namespace Siteswaps.Generator.Domain.Test.Api;
 
 public class FilterTestAdapter : FilterTestSuite
 {

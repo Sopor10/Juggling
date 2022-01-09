@@ -14,6 +14,6 @@ public static class DependencyInjectionExtensions
     {
         services.AddTransient<ISiteswapGeneratorFactory, SiteswapGeneratorFactory>()
             .AddTransient<IFilterBuilderFactory, FilterBuilderFactory>()
-            .AddFluxor(options => options.ScanAssemblies(typeof(AssemblyInfo).Assembly));
+            .AddFluxor(options => options.ScanAssemblies(typeof(Components.AssemblyInfo).Assembly));
     }
 }
