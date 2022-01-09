@@ -33,36 +33,24 @@ public abstract class SiteswapGeneratorTestSuite
             MaxHeight = maxHeight,
             MinHeight = minHeight,
             NumberOfObjects = numberOfObjects,
-            StopCriteria = new (TimeSpan.FromSeconds(15),10000 )
+            StopCriteria = new(TimeSpan.FromSeconds(15), 10000)
         };
     }
 
     [Test]
-    [TestCase(5, 10, 2, 7, ExpectedResult = 110)]
-    [TestCase(5, 10, 2, 6, ExpectedResult = 152)]
-    [TestCase(7, 13, 2, 8, ExpectedResult = 8946)]
-    [TestCase(3, 13, 0, 8, ExpectedResult = 28)]
-    [TestCase(3, 10, 0, 5, ExpectedResult = 20)]
-    [TestCase(5, 5, 0, 3, ExpectedResult = 26)]
-    public async Task<int> Number_Of_Siteswaps_Should_Be_Correct(int period, int maxHeight, int minHeight, int numberOfObjects)
-    {
-        var input = Input(period, maxHeight, minHeight, numberOfObjects);
-        var generator = CreateTestObject(input);
-
-        var siteswaps = (await generator.GenerateAsync()).ToList();
-        return siteswaps.Count;
-    }
-
+    [TestCase(5, 10, 2, 7)]
+    [TestCase(5, 10, 2, 6)]
     [TestCase(7, 13, 2, 8)]
-    public async Task Siteswaps_Should_Be_In_Result_List(int period, int maxHeight, int minHeight, int numberOfObjects)
+    [TestCase(3, 13, 0, 8)]
+    [TestCase(3, 10, 0, 5)]
+    [TestCase(5, 5, 0, 3)]
+    public async Task Verify_SiteswapGenerator_Against_Older_Version(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var input = Input(period, maxHeight, minHeight, numberOfObjects);
-        var generator = CreateTestObject(input);
+        var sut = CreateTestObject(input);
 
-        var siteswaps = (await generator.GenerateAsync()).ToList();
-
-        var siteswapsAsStrings = siteswaps.Select(x => x.ToString()).ToList();
-        await Verify(siteswapsAsStrings);
+        var siteswaps = (await sut.GenerateAsync()).Select(x => x.ToString()).ToList();
+        await Verify(siteswaps).UseTypeName(nameof(SiteswapGeneratorTestSuite));
 
     }
 }
