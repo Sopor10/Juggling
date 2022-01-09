@@ -19,12 +19,15 @@ public abstract class SiteswapGeneratorTestSuite
         
         await Verify(siteswaps.Select(x => x.ToString()).ToList())
             .UseTypeName(nameof(SiteswapGeneratorTestSuite))
-            .UseTextForParameters($"Input({input.Period},{input.MaxHeight},{input.MinHeight},{input.NumberOfObjects})");
+            .UseTextForParameters(GenerateInputs.ToName(input));
     }
 }
 
 class GenerateInputs : IEnumerable
 {
+    public static string ToName(SiteswapGeneratorInput input) =>
+        $"Input({input.Period},{input.MaxHeight},{input.MinHeight},{input.NumberOfObjects})";
+    
     private TestCaseData Next(int period, int maxHeight, int minHeight, int numberOfObjects)
     {
         var input = new SiteswapGeneratorInput
@@ -35,7 +38,7 @@ class GenerateInputs : IEnumerable
             NumberOfObjects = numberOfObjects,
             StopCriteria = new(TimeSpan.FromSeconds(15), 10000)
         };
-        return new TestCaseData(input).SetName($"Input({input.Period},{input.MaxHeight},{input.MinHeight},{input.NumberOfObjects})");
+        return new TestCaseData(input).SetName(ToName(input));
     }
     
     
