@@ -1,18 +1,22 @@
-﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
+<div class="container">
 
-<h5>Your currently applied Filters</h5>
-<ul class="list-group">
-    @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
-    {
-        <li class="list-group-item">
-            <text>@filter.Display()</text>
-            <button type="button" class="btn btn-outline-warning float-end" @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))"> - </button>
-        </li>
-    }
-</ul>
+    <h5>Your currently applied Filters</h5>
+    <div style="height: 200px; overflow-y: scroll">
+        <ul class="list-group">
+            @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
+            {
+                <li class="list-group-item">
+                    <text>@filter.Display()</text>
+                    <button type="button" class="btn btn-outline-warning float-end" @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))"> - </button>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
 
 @code
 {

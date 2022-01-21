@@ -1,61 +1,24 @@
 ﻿@inherits FluxorComponent
 @inject IDispatcher _dispatcher
 @inject IState<SiteswapGeneratorState> _state
-
-<div class="row row-cols-auto">
-    <div class="col-11">
-        <div class="form-floating">
-            <select id="filterSelect" class="form-select" value="@Value.FilterType" @onchange="SelectionChanged">
-                @foreach (var filter in KnownFilters.AvailableSelection())
-                {
-                    <option value="@filter">@filter</option>
-                }
-            </select>
-            <label for="filterSelect">Which type of Filter do you want to add?</label>
-        </div>
-    </div>
-    <div class="col">
-
-        <a class="float-end" data-bs-toggle="modal" data-bs-target="#@GetPatternInformationId()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-            </svg>
-        </a>
-    </div>
-</div>
-
-<div class="modal fade" id="@PatternFilterInformationId" tabindex="-1" aria-labelledby="patternFilterExplanationModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title h4" id="patternFilterExplanationModalLabel">Pattern Filter</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Which pattern should be included in all generated siteswaps? <br/>
-                I will calculate Passes and Selfs based on the number of jugglers given above.
+<div class="container">
+    <h5 class="pb-1">Add Filter</h5>
+    <div class="row">
+        <div class="row-cols-auto">
+            <div class="col-11">
+                <div class="form-floating">
+                    <select id="filterSelect" class="form-select" value="@Value.FilterType" @onchange="SelectionChanged">
+                        @foreach (var filter in KnownFilters.AvailableSelection())
+                        {
+                            <option value="@filter">@filter</option>
+                        }
+                    </select>
+                    <label for="filterSelect">Filter Type</label>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="modal fade" id="@NumberFilterInformationId" tabindex="-1" aria-labelledby="numberFilterExplanationModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title h4" id="numberFilterExplanationModalLabel">Number Filter</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                You can choose to require any amount throws of a given height<br/>
-            </div>
-        </div>
     </div>
-</div>
-
-@if (Value is not null)
-{
     <div class="row">
         <div class="mt-4">
             <DynamicComponent Type="@KnownFilters.MapFilterInformationToRenderType(Value)"></DynamicComponent>
@@ -65,21 +28,23 @@
     <div class="row w-25">
         <button type="button" class="btn btn-outline-primary mt-2" @onclick="OnClick">Add</button>
     </div>
-}
 
-
+</div>
 
 @code {
 
-    private const string PatternFilterInformationId = "patternFilterExplanationModal";
-    private const string NumberFilterInformationId = "numberFilterExplanationModal";
+        private const string PatternFilterInformationId = "patternFilterExplanationModal";
+        private const string NumberFilterInformationId = "numberFilterExplanationModal";
 
-    private string GetPatternInformationId() => Value.FilterType switch
-    { 
-        FilterType.Number => NumberFilterInformationId,
-        FilterType.Pattern => PatternFilterInformationId,
-        _ => throw new ArgumentOutOfRangeException()
-    };
+    private string GetPatternInformationId()
+    {
+        return Value.FilterType switch
+        { 
+            FilterType.Number => NumberFilterInformationId,
+            FilterType.Pattern => PatternFilterInformationId,
+            _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
     private IFilterInformation Value => _state.Value.NewFilter;
 
