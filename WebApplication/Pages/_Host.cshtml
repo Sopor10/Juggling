@@ -12,8 +12,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>WebApplication</title>
         <base href="~/"/>
-        <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <link href="css/reset.css" rel="stylesheet"/>
         <link href="css/site.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>
     </head>
     <body>
         <component type="typeof(App)" render-mode="ServerPrerendered"/>
@@ -28,8 +29,8 @@
             <a href="" class="reload">Reload</a>
             <a class="dismiss">🗙</a>
         </div>
-        <script src="js/bootstrap.bundle.min.js"></script>
         <script src="_framework/blazor.server.js"></script>
         <script src="_content/Fluxor.Blazor.Web/scripts/index.js"></script>
-    </body>
+        <script src="js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

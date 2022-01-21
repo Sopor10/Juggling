@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
+using Siteswaps.Generator.Domain.Filter.Combinatorics;
 using Siteswaps.Generator.Domain.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Domain.Filter;

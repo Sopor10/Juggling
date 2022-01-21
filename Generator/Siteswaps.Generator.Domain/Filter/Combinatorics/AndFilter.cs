@@ -1,6 +1,6 @@
 ﻿using Siteswaps.Generator.Api.Filter;
 
-namespace Siteswaps.Generator.Domain.Filter;
+namespace Siteswaps.Generator.Domain.Filter.Combinatorics;
 
 internal class AndFilter : ISiteswapFilter
 {
