@@ -1,4 +1,4 @@
-﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> _state
 @if (Value is null)
 {
@@ -19,17 +19,19 @@
 </div>
 
 <div class="row mt-2">
-    <div class="form-floating col">
-        <input type="number" id="numberFilterAmount" class="form-control" min="0" max="@_state.Value.State.Period" @bind="@Value.Amount"/>
-        <label for="numberFilterAmount">Amount</label>
+    <div class="col">
+        <div class="form-floating">
+            <input type="number" id="numberFilterAmount" class="form-control" min="0" max="@_state.Value.State.Period" @bind="@Value.Amount"/>
+            <label for="numberFilterAmount">Amount</label>
+        </div>
     </div>
-
-    <div class="form-floating col">
-        <input type="number" id="numberFilterHeight" class="form-control" min="@(_state.Value.State.MinThrow ?? 0)" max="@_state.Value.State.MaxThrow" @bind="@Value.Height"/>
-        <label for="numberFilterHeight">Height</label>
+    <div class="col">
+        <div class="form-floating">
+            <input type="number" id="numberFilterHeight" class="form-control" min="@(_state.Value.State.MinThrow ?? 0)" max="@_state.Value.State.MaxThrow" @bind="@Value.Height"/>
+            <label for="numberFilterHeight">Height</label>
+        </div>
     </div>
 </div>
-
 
 @code {
 

@@ -1,13 +1,5 @@
-﻿@inherits FluxorComponent
-@inject IState<SiteswapGeneratorState> _state
-
-<GeneratorViewFluxor></GeneratorViewFluxor>
-
-@if (!_state.Value.IsGenerating)
-{
-    <SiteswapList Siteswaps="@_state.Value.Siteswaps"></SiteswapList>
-}
-else
-{
-    <text>Generating...</text>
-}
+﻿<BaseInputs/>
+<FilterSelection/>
+<SelectedFilters/>
+<GenerateButton/>
+<GenerationResults/>

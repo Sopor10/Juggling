@@ -1,4 +1,4 @@
-﻿using Siteswaps.Generator.Components.Filter;
+﻿using Siteswaps.Generator.Components.Internal.Filter;
 
 namespace Siteswaps.Generator.Components.State;
 

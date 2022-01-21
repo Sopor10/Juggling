@@ -3,13 +3,9 @@
 namespace Siteswaps.Generator.Components.State;
 
 public record GenerateSiteswapsAction(GeneratorState State);
-
 public record PeriodChangedAction(int? Value);
-
 public record ExactNumberChangedAction(int? Value);
-
 public record MinNumberChangedAction(int? Value);
-
 public record MaxNumberChangedAction(int? Value);
 
 public record NumberOfJugglersChangedAction(int? Value);

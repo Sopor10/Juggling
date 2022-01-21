@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace Siteswaps.Components;
-public static class MyLinqExtensions
+﻿namespace Siteswaps.Generator.Components;
+public static class EnumerableExtensions
 {
     public static IEnumerable<IEnumerable<T>> Batch<T>(
         this IEnumerable<T> source, int batchSize)
     {
-        using (var enumerator = source.GetEnumerator())
-        {
-            while (enumerator.MoveNext())
-                yield return YieldBatchElements(enumerator, batchSize - 1);
-        }
+        using var enumerator = source.GetEnumerator();
+        while (enumerator.MoveNext())
+            yield return YieldBatchElements(enumerator, batchSize - 1);
     }
 
     private static IEnumerable<T> YieldBatchElements<T>(
