@@ -33,19 +33,6 @@
 
 @code {
 
-        private const string PatternFilterInformationId = "patternFilterExplanationModal";
-        private const string NumberFilterInformationId = "numberFilterExplanationModal";
-
-    private string GetPatternInformationId()
-    {
-        return Value.FilterType switch
-        { 
-            FilterType.Number => NumberFilterInformationId,
-            FilterType.Pattern => PatternFilterInformationId,
-            _ => throw new ArgumentOutOfRangeException()
-            };
-    }
-
     private IFilterInformation Value => _state.Value.NewFilter;
 
     private void SelectionChanged(ChangeEventArgs eventArgs)
