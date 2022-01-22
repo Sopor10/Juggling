@@ -7,28 +7,28 @@
 
 <div class="row">
     <div class="col">
-        <div class="form-floating">
+        <div class="input-group">
+            <label for="numberFilterType" class="input-group-text">Filter Type</label>
             <select id="numberFilterType" class="form-select" @bind="@Value.Type">
                 <option value="@NumberFilterType.Exactly">Exactly</option>
                 <option value="@NumberFilterType.Maximum">Maximal</option>
                 <option value="@NumberFilterType.AtLeast">Minimal</option>
             </select>
-            <label for="numberFilterType">Filter type</label>
         </div>
     </div>
 </div>
 
 <div class="row mt-2">
     <div class="col">
-        <div class="form-floating">
-            <input type="number" id="numberFilterAmount" class="form-control" min="0" max="@_state.Value.State.Period" @bind="@Value.Amount"/>
-            <label for="numberFilterAmount">Amount</label>
+        <div class="input-group">
+            <span class="input-group-text" style="width: 100px">Amount</span>
+            <input type="number" id="numberFilterAmount" class="form-control" style="max-width: 75px" min="0" max="@_state.Value.State.Period" @bind="@Value.Amount"/>
         </div>
     </div>
     <div class="col">
-        <div class="form-floating">
-            <input type="number" id="numberFilterHeight" class="form-control" min="@(_state.Value.State.MinThrow ?? 0)" max="@_state.Value.State.MaxThrow" @bind="@Value.Height"/>
-            <label for="numberFilterHeight">Height</label>
+        <div class="input-group">
+            <span class="input-group-text" style="width: 100px">Height</span>
+            <input type="number" id="numberFilterHeight" class="form-control" style="max-width: 75px" min="@(_state.Value.State.MinThrow ?? 0)" max="@_state.Value.State.MaxThrow" @bind="@Value.Height"/>
         </div>
     </div>
 </div>

@@ -25,25 +25,16 @@
         {
             case Between between:
                 <div class="col">
-                    <div class="form-floating">
-                        <input type="number" id="minNumberOfObjects" class="form-control " min="0" value="@between.MinNumber" @oninput="@(x => Dispatcher.Dispatch(new MinNumberChangedAction(ToInt(x))))"/>
-                        <label for="minNumberOfObjects">From</label>
-                    </div>
+                    <NumberInput Label="From" Value="@between.MinNumber" OnInput="@(x => Dispatcher.Dispatch(new MinNumberChangedAction(ToInt(x))))"></NumberInput>
                 </div>
 
                 <div class="col">
-                    <div class="form-floating">
-                        <input type="number" id="maxNumberOfObjects" class="form-control " min="0" value="@between.MaxNumber" @oninput="@(x => Dispatcher.Dispatch(new MaxNumberChangedAction(ToInt(x))))"/>
-                        <label for="maxNumberOfObjects">To</label>
-                    </div>
+                    <NumberInput Label="To" Value="@between.MaxNumber" OnInput="@(x => Dispatcher.Dispatch(new MaxNumberChangedAction(ToInt(x))))"></NumberInput>
                 </div>
                 break;
             case ExactNumber exactNumber:
                 <div class="col">
-                    <div class="form-floating">
-                        <input type="number" id="numberOfObjects" class="form-control " min="0" placeholder="7" value="@exactNumber.Number" @oninput="@(x => Dispatcher.Dispatch(new ExactNumberChangedAction(ToInt(x))))"/>
-                        <label for="numberOfObjects" class="bmd-label-floating">Clubs</label>
-                    </div>
+                    <NumberInput Label="Clubs" Value="@exactNumber.Number" OnInput="@(x => Dispatcher.Dispatch(new ExactNumberChangedAction(ToInt(x))))"></NumberInput>
                 </div>
                 break;
             default:
@@ -53,31 +44,18 @@
 
     <div class="row row-cols-auto mt-2">
         <div class="col">
-            <div class="form-floating">
-                <input type="number" id="period" class="form-control " min="0" placeholder="5" value="@Value.Period" @oninput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToInt(x))))"/>
-                <label for="period">Period</label>
-            </div>
+            <NumberInput Label="Period" Value="@Value.Period" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToInt(x))))"></NumberInput>
+        </div>
+        <div class="col">
+            <NumberInput Label="Max Throw" Value="@Value.MaxThrow" OnInput="@(x => Dispatcher.Dispatch(new MaxThrowChangedAction(ToInt(x))))"></NumberInput>
         </div>
 
         <div class="col">
-            <div class="form-floating">
-                <input type="number" id="maxThrow" class="form-control " min="0" placeholder="10" value="@Value.MaxThrow" @oninput="@(x => Dispatcher.Dispatch(new MaxThrowChangedAction(ToInt(x))))"/>
-                <label for="maxThrow">Max Throw</label>
-            </div>
-        </div>
+            <NumberInput Label="Min Throw" Value="@Value.MinThrow" OnInput="@(x => Dispatcher.Dispatch(new MinThrowChangedAction(ToInt(x))))"></NumberInput>
+       </div>
 
         <div class="col">
-            <div class="form-floating">
-                <input type="number" id="minThrow" class="form-control " min="0" placeholder="2" value="@Value.MinThrow" @oninput="@(x => Dispatcher.Dispatch(new MinThrowChangedAction(ToInt(x))))"/>
-                <label for="minThrow">Min Throw</label>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="form-floating">
-                <input type="number" id="numberOfJugglers" class="form-control " placeholder="2" min="1" value="@Value.NumberOfJugglers" @oninput="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(ToInt(x))))"/>
-                <label for="numberOfJugglers">Jugglers</label>
-            </div>
+            <NumberInput Label="Jugglers" Value="@Value.NumberOfJugglers" OnInput="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(ToInt(x))))"></NumberInput>
         </div>
     </div>
 </div>

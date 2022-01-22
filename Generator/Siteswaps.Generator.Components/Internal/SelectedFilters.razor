@@ -2,9 +2,10 @@
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
+
 <div class="container">
 
-    <h5>Your currently applied Filters</h5>
+    <h5>Your currently selected Filters</h5>
     <div style="height: 200px; overflow-y: scroll">
         <ul class="list-group">
             @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))

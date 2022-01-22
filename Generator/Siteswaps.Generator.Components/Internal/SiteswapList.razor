@@ -12,7 +12,7 @@
             {
                 <div class="col-md-3">
                     <p>
-                        @siteswap.ToString()
+                        <a href="@GenerateUrl(siteswap)" target="_blank" rel="noopener noreferrer">@siteswap.ToString()</a> 
                     </p>
                 </div>
             }
@@ -25,4 +25,11 @@
     [Parameter]
     public IReadOnlyCollection<ISiteswap> Siteswaps { get; set; } = new List<ISiteswap>();
 
+    [Parameter]
+    public int? NumberOfJugglers { get; set; } = 2;
+
+    private string GenerateUrl(ISiteswap siteswap)
+    {
+        return $"https://passist.org/siteswap/{string.Concat(siteswap.Items.Select(x => x.ToString()))}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
+    }
 }
