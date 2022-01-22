@@ -1,6 +1,6 @@
-﻿<div class="input-group">
+﻿<div class="input-group flex-nowrap">
     <span class="input-group-text" style="width: 100px">@Label</span>
-    <input type="number" class="form-control" style="max-width: 75px" min="0" value="@Value" @oninput="@(x => OnInput.InvokeAsync(x))"/>
+    <input type="number" class="form-control" style="width: 75px; " min="0" value="@Value" @oninput="@(x => OnInput.InvokeAsync(x))"/>
 </div>
 
 @code

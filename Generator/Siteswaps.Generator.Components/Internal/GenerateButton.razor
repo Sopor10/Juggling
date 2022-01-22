@@ -1,10 +1,12 @@
-﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
 
-<div class="row mt-5">
-    <button class="btn btn-primary w-25" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State))">Generate</button>
+<div class="row">
+    <div class="col-3">
+        <button class="btn btn-primary" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State))">Generate</button>
+    </div>
 </div>
 
 @code

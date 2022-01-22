@@ -2,8 +2,7 @@
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
-<div class="container">
-
+<div>
     <h5 class="pb-1">Inputs</h5>
     <div class="row row-cols-auto">
         <div class="form-check col">
@@ -20,20 +19,20 @@
         </div>
     </div>
 
-    <div class="row row-cols-auto mt-1">
+    <div class="d-flex flex-row ">
         @switch (Value.Objects)
         {
             case Between between:
-                <div class="col">
+                <div class="">
                     <NumberInput Label="From" Value="@between.MinNumber" OnInput="@(x => Dispatcher.Dispatch(new MinNumberChangedAction(ToInt(x))))"></NumberInput>
                 </div>
 
-                <div class="col">
+                <div class="ms-2">
                     <NumberInput Label="To" Value="@between.MaxNumber" OnInput="@(x => Dispatcher.Dispatch(new MaxNumberChangedAction(ToInt(x))))"></NumberInput>
                 </div>
                 break;
             case ExactNumber exactNumber:
-                <div class="col">
+                <div class="">
                     <NumberInput Label="Clubs" Value="@exactNumber.Number" OnInput="@(x => Dispatcher.Dispatch(new ExactNumberChangedAction(ToInt(x))))"></NumberInput>
                 </div>
                 break;
@@ -42,20 +41,23 @@
         }
     </div>
 
-    <div class="row row-cols-auto mt-2">
-        <div class="col">
-            <NumberInput Label="Period" Value="@Value.Period" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToInt(x))))"></NumberInput>
+    <div class="d-flex flex-column flex-md-row">
+        <div class="d-flex flex-row">
+            <div>
+                <NumberInput Label="Period" Value="@Value.Period" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToInt(x))))"/>
+            </div>
+            <div class="ms-2 me-2">
+                <NumberInput Label="Max Throw" Value="@Value.MaxThrow" OnInput="@(x => Dispatcher.Dispatch(new MaxThrowChangedAction(ToInt(x))))"/>
+            </div>
         </div>
-        <div class="col">
-            <NumberInput Label="Max Throw" Value="@Value.MaxThrow" OnInput="@(x => Dispatcher.Dispatch(new MaxThrowChangedAction(ToInt(x))))"></NumberInput>
-        </div>
+        <div class="d-flex flex-row">
+            <div >
+                <NumberInput Label="Min Throw" Value="@Value.MinThrow" OnInput="@(x => Dispatcher.Dispatch(new MinThrowChangedAction(ToInt(x))))"/>
+            </div>
 
-        <div class="col">
-            <NumberInput Label="Min Throw" Value="@Value.MinThrow" OnInput="@(x => Dispatcher.Dispatch(new MinThrowChangedAction(ToInt(x))))"></NumberInput>
-       </div>
-
-        <div class="col">
-            <NumberInput Label="Jugglers" Value="@Value.NumberOfJugglers" OnInput="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(ToInt(x))))"></NumberInput>
+            <div class="ms-2">
+                <NumberInput Label="Jugglers" Value="@Value.NumberOfJugglers" OnInput="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(ToInt(x))))"/>
+            </div>
         </div>
     </div>
 </div>
