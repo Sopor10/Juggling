@@ -11,10 +11,6 @@
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 
-    <EmbeddedResource Include="ILLink.Descriptors.xml">
-			<LogicalName>ILLink.Descriptors.xml</LogicalName>
-		</EmbeddedResource>
-
 		<!-- Display name -->
 		<ApplicationTitle>MauiRuntime</ApplicationTitle>
 
@@ -67,5 +63,9 @@
 	  <ProjectReference Include="..\Generator\Siteswaps.Generator.Components\Siteswaps.Generator.Components.csproj" />
 	  <ProjectReference Include="..\Generator\Siteswaps.Generator.DependencyInjection\Siteswaps.Generator.DependencyInjection.csproj" />
 	</ItemGroup>
+
+  <EmbeddedResource Include="ILLink.Descriptors.xml">
+    <LogicalName>ILLink.Descriptors.xml</LogicalName>
+  </EmbeddedResource>
 
 </Project>
