@@ -1,5 +1,4 @@
-﻿using MauiRuntime.Data;
-using Microsoft.AspNetCore.Components.WebView.Maui;
+﻿using Microsoft.AspNetCore.Components.WebView.Maui;
 using Siteswaps.Generator.DependencyInjection;
 
 namespace MauiRuntime
@@ -18,7 +17,6 @@ namespace MauiRuntime
 				});
 
 			builder.Services.AddBlazorWebView();
-			builder.Services.AddSingleton<WeatherForecastService>();
 			builder.Services.InstallGenerator();
 
 			return builder.Build();
