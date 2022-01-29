@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siteswaps.Generator.Depende
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siteswaps.Generator.Api.Test", "Generator\Siteswaps.Generator.Api.Test\Siteswaps.Generator.Api.Test.csproj", "{110F2977-8297-4549-A7DE-DF7C7D7619A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiRuntime", "MauiRuntime\MauiRuntime.csproj", "{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiRuntime", "MauiRuntime\MauiRuntime.csproj", "{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
