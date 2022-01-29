@@ -6,3 +6,4 @@ riderModule.iml
 *.received.txt
 **/.idea
 **/*Dotsettings*
+**/.vs
