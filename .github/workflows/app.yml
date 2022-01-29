@@ -32,3 +32,9 @@ jobs:
         with:
           name: Android App
           path: MauiRuntime/bin/Release/net6.0-android/publish
+      - name: Send .apk
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          document: ${{ github.workspace }}/MauiRuntime/bin/Release/net6.0-android/publish/com.companyname.mauiruntime-Signed.apk
