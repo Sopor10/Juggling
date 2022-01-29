@@ -26,7 +26,7 @@ jobs:
       - name: publish Maui
         run: |
           cd MauiRuntime
-          dotnet publish -f:net6.0-android -c Release
+          dotnet publish -f:net6.0-android -c:Release
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
