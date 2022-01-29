@@ -10,6 +10,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
+    <AndroidLinkMode>none</AndroidLinkMode>
+    <AndroidDexTool>r8</AndroidDexTool>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiRuntime</ApplicationTitle>
