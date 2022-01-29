@@ -7,7 +7,7 @@
     [Test]
     public void Period_Change_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
 
         cut.Find("#period").Input("6");
 
@@ -18,7 +18,7 @@
     [Test]
     public void Period_Change_To_Empty_String_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
 
         cut.Find("#period").Input("");
 
@@ -29,7 +29,7 @@
     [Test]
     public void MinThrow_Change_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
 
         cut.Find("#minThrow").Input("3");
 
@@ -40,7 +40,7 @@
     [Test]
     public void MaxThrow_Change_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
 
         cut.Find("#maxThrow").Input("7");
 
@@ -51,7 +51,7 @@
     [Test]
     public void MinNumberOfObjects_Change_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
         cut.Find("#radio2").Click();
 
         cut.Find("#minNumberOfObjects").Input("7");
@@ -64,7 +64,7 @@
     public void MaxNumberOfObjects_Change_Should_Update_State()
     {
         
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
         cut.Find("#radio2").Click();
         
         cut.Find("#maxNumberOfObjects").Input("7");
@@ -76,7 +76,7 @@
     [Test]
     public void NumberOfObjects_Change_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
 
         cut.Find("#numberOfObjects").Input("7");
 
@@ -87,7 +87,7 @@
     [Test]
     public void NumberOfJugglers_Change_Should_Update_State()
     {
-        var cut = Render(@<GeneratorViewFluxor></GeneratorViewFluxor>);
+        var cut = Render(@<SiteswapOverview/>);
 
         cut.Find("#numberOfJugglers").Input("7");
 
