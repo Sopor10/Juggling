@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Web
 @namespace WebApplication.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -15,6 +16,7 @@
         <link href="css/reset.css" rel="stylesheet"/>
         <link href="css/site.css" rel="stylesheet"/>
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
     </head>
     <body>
         <component type="typeof(App)" render-mode="ServerPrerendered"/>

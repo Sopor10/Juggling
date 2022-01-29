@@ -6,15 +6,13 @@
 {
     return;
 }
-<div class="row mt-4">
+<div class="d-flex flex-row mt-4">
 
     @for (var index = 0; index < Value.Pattern.Length; index++)
     {
         var localIndex = index;
-        <div class="col">
-            <div class="row-cols-auto mt-1">
+        <div class="d-flex flex-row">
                 <select
-                    id="@("patternFilterNumber" + Value.Pattern[index])"
                     class="form-select"
                     value="@Value.Pattern[index]"
                     @onchange="x => OnClick(localIndex, x)">
@@ -26,7 +24,6 @@
                         <option value="@j">@j</option>
                     }
                 </select>
-            </div>
         </div>
     }
 
