@@ -10,8 +10,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
-    <AndroidLinkMode>none</AndroidLinkMode>
-    <AndroidDexTool>r8</AndroidDexTool>
+
+    <EmbeddedResource Include="ILLink.Descriptors.xml">
+			<LogicalName>ILLink.Descriptors.xml</LogicalName>
+		</EmbeddedResource>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiRuntime</ApplicationTitle>

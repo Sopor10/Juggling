@@ -32,9 +32,17 @@ jobs:
         with:
           name: Android App
           path: MauiRuntime/bin/Release/net6.0-android/publish
+  sendtotelegram:
+    name: Send to Telegram
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: Android App
       - name: Send .apk
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          document: ${{ github.workspace }}/MauiRuntime/bin/Release/net6.0-android/publish/com.companyname.mauiruntime-Signed.apk
+          document: ${{ github.workspace }}/com.companyname.mauiruntime-Signed.apk
