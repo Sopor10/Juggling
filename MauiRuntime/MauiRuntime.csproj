@@ -64,8 +64,9 @@
 	  <ProjectReference Include="..\Generator\Siteswaps.Generator.DependencyInjection\Siteswaps.Generator.DependencyInjection.csproj" />
 	</ItemGroup>
 
-  <EmbeddedResource Include="ILLink.Descriptors.xml">
-    <LogicalName>ILLink.Descriptors.xml</LogicalName>
-  </EmbeddedResource>
-
+  <ItemGroup>
+    <EmbeddedResource Include="ILLink.Descriptors.xml">
+      <LogicalName>ILLink.Descriptors.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
