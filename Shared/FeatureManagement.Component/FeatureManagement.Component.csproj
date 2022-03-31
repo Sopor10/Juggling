@@ -12,13 +12,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Fluxor.Blazor.Web" Version="4.2.2-Alpha" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Shared\FeatureManagement.Component\FeatureManagement.Component.csproj" />
-      <ProjectReference Include="..\Siteswaps.Generator.Api\Siteswaps.Generator.Api.csproj" />
+      <Folder Include="wwwroot" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FeatureManagement.Abstractions\FeatureManagement.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

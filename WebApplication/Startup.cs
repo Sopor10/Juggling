@@ -1,3 +1,4 @@
+using FeatureManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ public class Startup
         services.AddRazorPages();
         services.AddServerSideBlazor();
         services.InstallGenerator();
+        services.InstallFeatureFlags();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
