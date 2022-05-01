@@ -7,13 +7,14 @@
     <ItemGroup>
         <PackageReference Include="Bogus" Version="33.1.1" />
         <PackageReference Include="FluentAssertions" Version="6.1.0" />
-        <PackageReference Include="NUnit" Version="3.12.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="Verify" Version="16.7.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
+        <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MoreLinq.Extensions;
 
-namespace Siteswaps;
+namespace Siteswap.Details;
 
 public static class EnumerableIntExtension
 {

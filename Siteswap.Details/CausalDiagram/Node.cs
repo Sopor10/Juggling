@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Siteswaps.CausalDiagram;
+namespace Siteswap.Details.CausalDiagram;
 
 public record Offset(Decimal Value);
 public record Person(string Name);
@@ -13,7 +13,11 @@ public record Node(Hand Hand, decimal Time);
 public record Transition(Node Start, Node End);
 public record Siteswap(CyclicArray<int> Values);
 
-public record CausalDiagram(ImmutableList<Node> Nodes, ImmutableList<Transition> Transitions);
+public record CausalDiagram(ImmutableList<Node> Nodes, ImmutableList<Transition> Transitions)
+{
+    public decimal MaxTime => Nodes.Max(x => x.Time);
+}
+
 public class CausalDiagramGenerator
 {
     public CausalDiagram Generate(Siteswap siteswap, CyclicArray<Hand> hands)

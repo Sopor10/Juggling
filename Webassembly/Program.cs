@@ -1,3 +1,4 @@
+using FeatureManagement;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Siteswaps.Generator.DependencyInjection;
@@ -9,6 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder
     .Services
+    .InstallFeatureFlags()
     .InstallGenerator();
     
 await builder.Build().RunAsync();

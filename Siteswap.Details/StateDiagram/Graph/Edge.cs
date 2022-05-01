@@ -1,5 +1,5 @@
 ﻿
-namespace Siteswaps.StateDiagram.Graph;
+namespace Siteswap.Details.StateDiagram.Graph;
 
 public record Edge<TNode, TData>(TNode N1, TNode N2, TData Data)
 {

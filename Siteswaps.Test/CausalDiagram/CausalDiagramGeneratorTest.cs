@@ -2,7 +2,8 @@
 using System.Collections.Immutable;
 using FluentAssertions;
 using NUnit.Framework;
-using Siteswaps.CausalDiagram;
+using Siteswap.Details;
+using Siteswap.Details.CausalDiagram;
 
 namespace Siteswaps.Test.CausalDiagram;
 
@@ -17,7 +18,7 @@ public class CausalDiagramGeneratorTest
             new("R", new Person("A")),
             new("L", new Person("A")),
         }.ToImmutableList();
-        var result = sut.Generate(new Siteswaps.CausalDiagram.Siteswap(new[] { 4,2,3 }.ToCyclicArray()), hands.ToCyclicArray());
+        var result = sut.Generate(new Siteswap.Details.CausalDiagram.Siteswap(new[] { 4,2,3 }.ToCyclicArray()), hands.ToCyclicArray());
 
         result.Nodes.Should().HaveCount(6);
             

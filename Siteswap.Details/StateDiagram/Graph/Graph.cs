@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Siteswaps.StateDiagram.Graph;
+namespace Siteswap.Details.StateDiagram.Graph;
 
 public class Graph<TNode, TData>
 {

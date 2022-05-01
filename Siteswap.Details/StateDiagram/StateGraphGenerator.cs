@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Siteswaps.StateDiagram.Graph;
+using Siteswap.Details.StateDiagram.Graph;
 
-namespace Siteswaps.StateDiagram;
+namespace Siteswap.Details.StateDiagram;
 
 public class StateGraphGenerator
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Siteswaps;
+namespace Siteswap.Details;
 
 public record CyclicArray<T> : IEnumerable<T>
 {

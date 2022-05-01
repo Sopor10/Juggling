@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Siteswaps;
+namespace Siteswap.Details;
 
 public class CyclicArrayEnumerator<T> : IEnumerator<T>
 {

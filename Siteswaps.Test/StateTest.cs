@@ -1,7 +1,7 @@
 using FluentAssertions;
 using NUnit.Framework;
-using Siteswaps.StateDiagram;
-using Siteswaps.StateDiagram.Graph;
+using Siteswap.Details.StateDiagram;
+using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswaps.Test;
 

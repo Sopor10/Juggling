@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using Siteswap.Details;
 
 namespace Siteswaps.Test;
 

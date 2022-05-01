@@ -1,0 +1,17 @@
+﻿@page "/skia" 
+@using Siteswap.Details
+
+<h3>Skia</h3>
+
+<SKGLView OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" EnableRenderLoop="false"></SKGLView>
+@code {
+
+    private SkiasharpExample _skiasharpExample = new();
+    
+    private void OnPaintSurface(SKPaintGLSurfaceEventArgs obj)
+    {
+        var canvas = obj.Surface.Canvas;
+        _skiasharpExample.Test(canvas);
+    }
+
+}

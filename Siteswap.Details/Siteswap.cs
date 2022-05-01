@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Siteswaps;
+namespace Siteswap.Details;
 
 public record Siteswap
 {

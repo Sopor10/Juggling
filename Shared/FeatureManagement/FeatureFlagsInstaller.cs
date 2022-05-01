@@ -6,9 +6,10 @@ namespace FeatureManagement;
 
 public static class FeatureFlagsInstaller
 {
-    public static void InstallFeatureFlags(this IServiceCollection services)
+    public static IServiceCollection InstallFeatureFlags(this IServiceCollection services)
     {
         services.AddFeatureManagement();
         services.AddSingleton<FeatureManagement.Abstractions.IFeatureManager, FeatureManager>();
+        return services;
     }
 }

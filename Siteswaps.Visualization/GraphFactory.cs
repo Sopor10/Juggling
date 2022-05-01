@@ -3,8 +3,8 @@ using DotNetGraph;
 using DotNetGraph.Core;
 using DotNetGraph.Edge;
 using DotNetGraph.Node;
-using Siteswaps.StateDiagram;
-using Siteswaps.StateDiagram.Graph;
+using Siteswap.Details.StateDiagram;
+using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswaps.Visualization;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Siteswaps.StateDiagram;
+namespace Siteswap.Details.StateDiagram;
 
 public class StateFactory
 {
