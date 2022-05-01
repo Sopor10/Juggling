@@ -19,17 +19,23 @@ public static class ModuleInitializer
 [TestFixture]
 public class CausalDiagramRendererTests
 {
-    [Test]
-    public async Task TestMethod()
-    {
-        var path = $"{Guid.NewGuid()}.png";
+    private readonly string _path = $"{Guid.NewGuid()}.png";
 
+    [TearDown]
+    public void Teardown()
+    {
+        File.Delete(_path);
+    }
+    
+    [Test]
+    public async Task Render_531_CausalDiagram()
+    {
         var causalDiagram = new CausalDiagramGenerator()
             .Generate(new Siteswap.Details.CausalDiagram.Siteswap(5, 3, 1), HandsFor4HandedSiteswap());
 
         var bitmap = RenderToBitmap(causalDiagram);
-        await SaveToFile(path, bitmap);
-        await VerifyFile(path).UseExtension("png");
+        await SaveToFile(_path, bitmap);
+        await VerifyFile(_path).UseExtension("png");
     }
 
     private static CyclicArray<Hand> HandsFor4HandedSiteswap()
