@@ -13,6 +13,11 @@ public record CyclicArray<T> : IEnumerable<T>
         Items = items.ToImmutableArray();
     }
 
+    public CyclicArray(params T[] items)
+    {
+        Items = items.ToImmutableArray();
+    }
+
     private ImmutableArray<T> Items { get; }
     public int Length => Items.Length;
 
