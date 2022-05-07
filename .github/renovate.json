@@ -1,0 +1,16 @@
+{
+    "packageRules": [
+        {
+            "timezone": "America/New_York",
+            "schedule": "before 5am every weekday",
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ],
+            "automerge": true
+        }
+    ]
+}
