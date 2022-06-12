@@ -25,49 +25,30 @@ public record PartialSiteswap : IPartialSiteswap
 
     private int Max { get; }
 
+    public int LastFilledPosition { get; }
+    public ImmutableList<int> Items { get; }
+
     public virtual bool Equals(PartialSiteswap? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
         return ToString().Equals(other.ToString());
     }
+    
+    public bool IsFilled() => Items.IndexOf(Free) == -1;
 
-    public int LastFilledPosition { get; }
-    public ImmutableList<int> Items { get; }
+    public override int GetHashCode() => ToString().GetHashCode();
 
-    public bool IsFilled()
-    {
-        return Items.IndexOf(Free) == -1;
-    }
+    public static PartialSiteswap Standard(int period, int maxHeight) => new(Enumerable.Repeat(Free, period - 1).Prepend(maxHeight).ToImmutableList());
 
-    public override int GetHashCode()
-    {
-        return ToString().GetHashCode();
-    }
+    public override string ToString() => string.Join("", Items.Select(Transform));
 
-    public static PartialSiteswap Standard(int period, int maxHeight)
-    {
-        return new(Enumerable.Repeat(Free, period - 1).Prepend(maxHeight).ToImmutableList());
-    }
-
-    public override string ToString()
-    {
-        return string.Join("", Items.Select(Transform));
-    }
-
-    private string Transform(int i)
-    {
-        return i switch
+    private string Transform(int i) =>
+        i switch
         {
             < 10 => $"{i}",
             _ => Convert.ToChar(i + 87).ToString()
         };
-    }
-
-    private PartialSiteswap SetPosition(int index, int value)
-    {
-        return new(Items.SetItem(index, value));
-    }
 
     /// <summary>
     ///     Calculates the max height for the next free hand according ti the unique representation
@@ -98,34 +79,24 @@ public record PartialSiteswap : IPartialSiteswap
         return possibleMax;
     }
 
-    private int CountOpenPositions()
-    {
-        return Items.Count(x => x < 0);
-    }
+    private int CountOpenPositions() => Items.Count(x => x < 0);
 
-    public PartialSiteswap WithLastFilledPosition(int i)
-    {
-        return SetPosition(LastFilledPosition, i);
-    }
+    public PartialSiteswap WithLastFilledPosition(int i) => new(Items.SetItem(LastFilledPosition, i));
 
-    public int ValueAtCurrentIndex()
-    {
-        return Items[LastFilledPosition];
-    }
+    public int ValueAtCurrentIndex() => Items[LastFilledPosition];
 
     public PartialSiteswap? CreateNextFilledPosition(SiteswapGeneratorInput input)
     {
         if (LastFilledPosition < 0 || LastFilledPosition >= input.Period - 1) return null;
 
-        return SetPosition(LastFilledPosition + 1, GetNextMax(input));
+        int value = GetNextMax(input);
+        return (PartialSiteswap)new(Items.SetItem(LastFilledPosition + 1, value));
     }
 
-    private int GetNextMax(SiteswapGeneratorInput input)
-    {
-        return new[]
+    private int GetNextMax(SiteswapGeneratorInput input) =>
+        new[]
         {
             MaxForNextFree(),
             input.MaxHeight
         }.Min();
-    }
 }
