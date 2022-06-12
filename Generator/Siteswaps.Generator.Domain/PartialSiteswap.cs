@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
+using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Domain;
@@ -104,4 +105,20 @@ public record PartialSiteswap :IPartialSiteswap
     public PartialSiteswap WithLastFilledPosition(int i) => SetPosition(LastFilledPosition, i);
 
     public int ValueAtCurrentIndex() => Items[LastFilledPosition];
+
+    public PartialSiteswap? CreateNextFilledPosition(SiteswapGeneratorInput input)
+    {
+        if (LastFilledPosition < 0 || LastFilledPosition >= input.Period - 1) return null;
+
+        return SetPosition(LastFilledPosition + 1, GetNextMax(input));
+    }
+
+    private int GetNextMax(SiteswapGeneratorInput input)
+    {
+        return new[]
+        {
+            MaxForNextFree(),
+            input.MaxHeight
+        }.Min();
+    }
 }

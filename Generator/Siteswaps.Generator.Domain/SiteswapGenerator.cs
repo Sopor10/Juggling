@@ -65,7 +65,7 @@ internal class SiteswapGenerator : ISiteswapGenerator
 
     private IEnumerable<PartialSiteswap> GenerateNext(PartialSiteswap current, SiteswapGeneratorInput input)
     {
-        var nextPosition = CreateNextFilledPosition(current, input);
+        var nextPosition = current.CreateNextFilledPosition(input);
         if (nextPosition is not null)
         {
             foreach (var siteswap in ThisPositionWithLower(nextPosition, input)) yield return siteswap;
@@ -77,22 +77,5 @@ internal class SiteswapGenerator : ISiteswapGenerator
     {
         for (var i = input.MinHeight; i < current.ValueAtCurrentIndex(); i++)
             yield return current.WithLastFilledPosition(i);
-    }
-
-    private static PartialSiteswap? CreateNextFilledPosition(PartialSiteswap current, SiteswapGeneratorInput input)
-    {
-        var currentIndex = current.LastFilledPosition;
-        if (currentIndex < 0 || currentIndex >= input.Period - 1) return null;
-
-        return current.SetPosition(currentIndex + 1, GetNextMax(current, input));
-    }
-
-    private static int GetNextMax(PartialSiteswap current, SiteswapGeneratorInput input)
-    {
-        return new[]
-        {
-            current.MaxForNextFree(),
-            input.MaxHeight
-        }.Min();
     }
 }
