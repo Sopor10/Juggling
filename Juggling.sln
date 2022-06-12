@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiRuntime", "MauiRuntime\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiteswapDetails", "SiteswapDetails", "{F9EE1493-EAA8-41A5-B97D-3854779AB2BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Generator\Benchmark\Benchmark.csproj", "{7052D7CD-15D4-4494-B5D3-6694ADBF2112}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{9949DC66-28BB-434C-B5B6-7654B8A9C276} = {0349A18F-78C3-4147-8278-9FEB304857A5}
 		{819CA92D-7AFD-4E31-8DB1-32E4016E4DA2} = {0349A18F-78C3-4147-8278-9FEB304857A5}
 		{110F2977-8297-4549-A7DE-DF7C7D7619A1} = {0349A18F-78C3-4147-8278-9FEB304857A5}
+		{7052D7CD-15D4-4494-B5D3-6694ADBF2112} = {0349A18F-78C3-4147-8278-9FEB304857A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F9935D6-544A-4A8A-A426-C9EE3CDCBA3C}
