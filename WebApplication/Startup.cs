@@ -22,7 +22,6 @@ public class Startup
         services.AddRazorPages();
         services.AddServerSideBlazor();
         services.InstallGenerator();
-        services.InstallFeatureFlags();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

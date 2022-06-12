@@ -1,0 +1,5 @@
+﻿{
+  Instance: {},
+  NodeCount: 33,
+  Bytes: 1.958
+}

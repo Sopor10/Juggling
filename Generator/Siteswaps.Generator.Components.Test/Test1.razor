@@ -1,9 +1,28 @@
 ﻿
 @using Siteswaps.Generator.Components.State
+@using Siteswaps.Generator.Components.Internal
 @using FluentAssertions
 @inherits FluxorTestContext
 @code
 {
+
+    [Test]
+    public Task Verify_test()
+    {
+        var cut = Render(@<SiteswapOverview/>);
+        return Verify(cut);
+
+    }
+    
+    
+    [Test]
+    public Task Verify_smallerComponents()
+    {
+        var cut = Render(@<BaseInputs/>);
+        return Verify(cut);
+
+    }
+    
     [Test]
     public void Period_Change_Should_Update_State()
     {
