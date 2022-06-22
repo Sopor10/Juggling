@@ -14,19 +14,19 @@ public record PartialSiteswap : IPartialSiteswap
     {
     }
 
-    private PartialSiteswap(IEnumerable<int> items)
+    private PartialSiteswap(ImmutableList<int> items, int posOfMaxPossibleValue = 0)
     {
-        Items = items.ToImmutableList();
+        Items = items;
+        PosOfMaxPossibleValue = posOfMaxPossibleValue;
         var currentIndex = Items.IndexOf(Free) - 1;
 
         LastFilledPosition = currentIndex < 0 ? Items.Count - 1 : currentIndex;
-        Max = Items.Max();
     }
 
-    private int Max { get; }
 
     public int LastFilledPosition { get; }
     public ImmutableList<int> Items { get; }
+    private int PosOfMaxPossibleValue { get; }
 
     public virtual bool Equals(PartialSiteswap? other)
     {
@@ -34,12 +34,13 @@ public record PartialSiteswap : IPartialSiteswap
         if (ReferenceEquals(this, other)) return true;
         return ToString().Equals(other.ToString());
     }
-    
+
     public bool IsFilled() => Items.IndexOf(Free) == -1;
 
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public static PartialSiteswap Standard(int period, int maxHeight) => new(Enumerable.Repeat(Free, period - 1).Prepend(maxHeight).ToImmutableList());
+    public static PartialSiteswap Standard(int period, int maxHeight) =>
+        new(Enumerable.Repeat(Free, period - 1).Prepend(maxHeight).ToImmutableList());
 
     public override string ToString() => string.Join("", Items.Select(Transform));
 
@@ -50,37 +51,6 @@ public record PartialSiteswap : IPartialSiteswap
             _ => Convert.ToChar(i + 87).ToString()
         };
 
-    /// <summary>
-    ///     Calculates the max height for the next free hand according ti the unique representation
-    /// </summary>
-    public int MaxForNextFree()
-    {
-        if (LastFilledPosition < 0) throw new InvalidOperationException("this Siteswap is already filled");
-
-        var absteigendeSeq = Items.AbsteigendeSeq().ToList();
-        var first = absteigendeSeq.First().ToImmutableList();
-        var last = absteigendeSeq.Last().ToImmutableList();
-
-        int possibleMax;
-        if (CountOpenPositions() > 1)
-            possibleMax = Max;
-        else
-            possibleMax = Max - 1;
-
-        for (var i = possibleMax; i >= 0; i--)
-        {
-            var newLast = last.SetItem(last.IndexOf(Free), i);
-            if (newLast.Contains(Free)) newLast = newLast.Replace(Free, 0);
-            var result = first.CompareSequences(newLast);
-
-            if (result > 0) return i;
-        }
-
-        return possibleMax;
-    }
-
-    private int CountOpenPositions() => Items.Count(x => x < 0);
-
     public PartialSiteswap WithLastFilledPosition(int i) => new(Items.SetItem(LastFilledPosition, i));
 
     public int ValueAtCurrentIndex() => Items[LastFilledPosition];
@@ -89,14 +59,6 @@ public record PartialSiteswap : IPartialSiteswap
     {
         if (LastFilledPosition < 0 || LastFilledPosition >= input.Period - 1) return null;
 
-        int value = GetNextMax(input);
-        return (PartialSiteswap)new(Items.SetItem(LastFilledPosition + 1, value));
+        return (PartialSiteswap)new(Items.SetItem(LastFilledPosition + 1, Items[PosOfMaxPossibleValue]), LastFilledPosition + 1);
     }
-
-    private int GetNextMax(SiteswapGeneratorInput input) =>
-        new[]
-        {
-            MaxForNextFree(),
-            input.MaxHeight
-        }.Min();
 }
