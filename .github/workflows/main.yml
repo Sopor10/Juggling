@@ -22,10 +22,8 @@ jobs:
           dotnet-version: 6.0.x
       - name: Install workload
         run: dotnet workload install wasm-tools
-      - name: Publish
-        run: dotnet publish        
       - name: Test
-        run: dotnet test --no-build --no-restore
+        run: dotnet test -c Release
   publish-docker-image:
     needs: build
     runs-on: ubuntu-latest
