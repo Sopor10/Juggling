@@ -36,7 +36,7 @@ class GenerateInputs : IEnumerable
             MaxHeight = maxHeight,
             MinHeight = minHeight,
             NumberOfObjects = numberOfObjects,
-            StopCriteria = new(TimeSpan.FromSeconds(15), 10000)
+            StopCriteria = new(TimeSpan.FromSeconds(15), 100000)
         };
         return new TestCaseData(input).SetName(ToName(input));
     }
