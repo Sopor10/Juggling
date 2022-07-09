@@ -12,7 +12,7 @@ env:
   IMAGE_NAME: "juggling"
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
       - name: Test
         run: dotnet test -c Release
   publish-docker-image:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
