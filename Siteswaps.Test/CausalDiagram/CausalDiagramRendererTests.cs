@@ -11,6 +11,7 @@ public static class ModuleInitializer
     {
         VerifyImageMagick.Initialize();
         VerifyImageMagick.RegisterComparers();
+        VerifyImageMagick.RegisterComparers(0.05);
     }
 }
 
