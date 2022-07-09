@@ -59,6 +59,6 @@ public record PartialSiteswap : IPartialSiteswap
     {
         if (LastFilledPosition < 0 || LastFilledPosition >= input.Period - 1) return null;
 
-        return (PartialSiteswap)new(Items.SetItem(LastFilledPosition + 1, Items[PosOfMaxPossibleValue]), LastFilledPosition + 1);
+        return new PartialSiteswap(Items.SetItem(LastFilledPosition + 1, Items[PosOfMaxPossibleValue]), LastFilledPosition + 1);
     }
 }

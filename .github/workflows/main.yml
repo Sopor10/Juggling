@@ -54,28 +54,3 @@ jobs:
           file: WebApplication/Dockerfile
           push: true
           tags: "${{ env.REGISTRY }}/sopor10/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}"
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ github.ref == 'refs/heads/main' }}
-    steps:
-      - name: run minver
-        id: version
-        uses: thefringeninja/action-minver@2.0.0-preview1
-      - name: New Version
-        run: |
-          echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-      - name: Login to GithubRegistry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: deploy to caprover
-        uses: floms/action-caprover@v1
-        with:
-          host: "${{ secrets.CAPROVER_URL }}"
-          password: "${{ secrets.CAPROVER_PASSWORD }}"
-          app: "juggling"
-          image: ${{ env.REGISTRY }}/sopor10/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}

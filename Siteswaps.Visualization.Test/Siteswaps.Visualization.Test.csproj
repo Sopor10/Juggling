@@ -11,8 +11,8 @@
         <PackageReference Include="NUnit" Version="3.13.2" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-        <PackageReference Include="Verify" Version="12.0.0-beta.5" />
-        <PackageReference Include="Verify.Nunit" Version="12.0.0-beta.5" />
+        <PackageReference Include="Verify" Version="17.1.4" />
+        <PackageReference Include="Verify.Nunit" Version="14.13.1" />
     </ItemGroup>
 
     <ItemGroup>

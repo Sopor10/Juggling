@@ -12,8 +12,8 @@ internal class SiteswapGenerator : ISiteswapGenerator
         Input = input;
     }
 
-    private ISiteswapFilter SiteswapFilter { get; set; }
-    public SiteswapGeneratorInput Input { get; }
+    private ISiteswapFilter SiteswapFilter { get; }
+    private SiteswapGeneratorInput Input { get; }
     private HashsetStack<PartialSiteswap> Stack { get; } = new();
 
     public Task<IEnumerable<ISiteswap>> GenerateAsync()
