@@ -32,6 +32,11 @@ jobs:
         run: dotnet publish        
       - name: Test
         run: dotnet test --no-build --no-restore
+  publish-docker-image:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
       - name: Login to GithubRegistry
         uses: docker/login-action@v1
         with:
