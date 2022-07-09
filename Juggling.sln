@@ -43,8 +43,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siteswaps.Generator.Depende
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siteswaps.Generator.Api.Test", "Generator\Siteswaps.Generator.Api.Test\Siteswaps.Generator.Api.Test.csproj", "{110F2977-8297-4549-A7DE-DF7C7D7619A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiRuntime", "MauiRuntime\MauiRuntime.csproj", "{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiteswapDetails", "SiteswapDetails", "{F9EE1493-EAA8-41A5-B97D-3854779AB2BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Generator\Benchmark\Benchmark.csproj", "{7052D7CD-15D4-4494-B5D3-6694ADBF2112}"
@@ -127,12 +125,6 @@ Global
 		{110F2977-8297-4549-A7DE-DF7C7D7619A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{110F2977-8297-4549-A7DE-DF7C7D7619A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{110F2977-8297-4549-A7DE-DF7C7D7619A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCACE57B-34C1-484E-AEAA-D1BB61DD4FEC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7052D7CD-15D4-4494-B5D3-6694ADBF2112}.Release|Any CPU.ActiveCfg = Release|Any CPU
