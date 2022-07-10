@@ -6,7 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Fluxor.Blazor.Web" Version="5.4.0" />
-        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="4.2.2-Alpha" />
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.4.0" />
     </ItemGroup>
 
     <ItemGroup>
