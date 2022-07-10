@@ -13,10 +13,11 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait Netlify to Deploy
+      - name: Waiting for 200 from the Netlify Preview
+        uses: jakepartusch/wait-for-netlify-action@v1.3
         id: netlifyDeploy
-        uses: denar90/wait-for-netlify-deploy-action@v2.0.2
         with:
-          site_id: "8360ea31-7bb7-4604-a0fa-2659b7d35c57"
+          site_name: "siteswaps"
+          max_timeout: 60          
       - name: Run a one-line script
         run: echo The site is deployed to ${{ steps.waitForNetlify.outputs.url }}
