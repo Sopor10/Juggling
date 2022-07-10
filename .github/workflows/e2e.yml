@@ -19,3 +19,14 @@ jobs:
           
       - name: Run a one-line script
         run: echo The site is deployed to ${{ steps.deployPreview.outputs.NETLIFY_PREVIEW_URL }}
+        
+      - name: Archive production logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: logs
+          retention-days: 1
+          path: |
+            /home/runner/.npm/_logs/*
+            /github/home/runner/.npm/_logs/*
+            /github/home/.npm/_logs/*        
