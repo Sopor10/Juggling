@@ -1,5 +1,4 @@
-﻿
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Domain;
@@ -9,24 +8,27 @@ var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
 
 
 
-[MarkdownExporter, AsciiDocExporter, HtmlExporter, CsvExporter, RPlotExporter]
-public class GeneratorBenchmarks
+namespace Benchmark
 {
-
-    [Benchmark]
-    public void Generate()
+    [MarkdownExporter, AsciiDocExporter, HtmlExporter, CsvExporter, RPlotExporter]
+    public class GeneratorBenchmarks
     {
-        var input = new SiteswapGeneratorInput()
+
+        [Benchmark]
+        public void Generate()
         {
-            Period = 5,
-            MaxHeight = 10,
-            MinHeight = 2,
-            NumberOfObjects = 7,
-            StopCriteria = new StopCriteria(TimeSpan.FromDays(5), Int32.MaxValue)
-        };
-        var generator = new SiteswapGeneratorFactory(new FilterBuilderFactory())
-            .WithInput(input)
-            .Create();
-        generator.GenerateAsync();
+            var input = new SiteswapGeneratorInput()
+            {
+                Period = 5,
+                MaxHeight = 10,
+                MinHeight = 2,
+                NumberOfObjects = 7,
+                StopCriteria = new StopCriteria(TimeSpan.FromDays(5), Int32.MaxValue)
+            };
+            var generator = new SiteswapGeneratorFactory(new FilterBuilderFactory())
+                .WithInput(input)
+                .Create();
+            generator.GenerateAsync();
+        }
     }
 }
