@@ -1,7 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/runtime:5.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Siteswaps.ConsoleApp/Siteswaps.ConsoleApp.csproj", "Siteswaps.ConsoleApp/"]
 RUN dotnet restore "Siteswaps.ConsoleApp/Siteswaps.ConsoleApp.csproj"
