@@ -15,7 +15,9 @@ jobs:
         with:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          build_command: dotnet workload install wasm-tools && dotnet publish -o release -c Release
+          build_command: dotnet publish -o release -c Release
+          build_directory: /Webassembly/release/wwwroot
+          install_command: dotnet workload install wasm-tools
           
       - name: Run a one-line script
         run: echo The site is deployed to ${{ steps.deployPreview.outputs.NETLIFY_PREVIEW_URL }}
