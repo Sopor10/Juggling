@@ -5,4 +5,5 @@ namespace Siteswaps.Generator.Api;
 public interface ISiteswap
 {
     public ImmutableList<int> Items { get; }
+    public string ToString();
 }

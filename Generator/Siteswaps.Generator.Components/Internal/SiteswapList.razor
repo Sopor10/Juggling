@@ -12,7 +12,7 @@
             {
                 <div class="col-md-3">
                     <p>
-                        <a href="@GenerateUrl(siteswap)" target="_blank" rel="noopener noreferrer">@siteswap.ToString()</a> 
+                        <a id="passist-link-@siteswap.ToString()" href="@GenerateUrl(siteswap)" target="_blank" rel="noopener noreferrer">@siteswap.ToString()</a> 
                     </p>
                 </div>
             }
@@ -30,6 +30,7 @@
 
     private string GenerateUrl(ISiteswap siteswap)
     {
-        return $"https://passist.org/siteswap/{string.Concat(siteswap.Items.Select(x => x.ToString()))}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
+        return $"https://passist.org/siteswap/{siteswap.ToString()}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
     }
+
 }
