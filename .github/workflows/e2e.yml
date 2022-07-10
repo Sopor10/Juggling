@@ -1,8 +1,6 @@
 name: end to end tests
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches:
       - "**"
@@ -11,11 +9,13 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Waiting for 200 from the Netlify Preview
-        uses: jakepartusch/wait-for-netlify-action@v1.3
-        id: netlifyDeploy
+      - uses: actions/checkout@v1
+      - uses: jsmrcaga/action-netlify-deploy@master
+        id: deployPreview
         with:
-          site_name: "siteswaps"
-          max_timeout: 500          
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          build_command: dotnet workload install wasm-tools && dotnet publish -o release -c Release
+          
       - name: Run a one-line script
-        run: echo The site is deployed to ${{ steps.waitForNetlify.outputs.url }}
+        run: echo The site is deployed to ${{ steps.deployPreview.outputs.NETLIFY_PREVIEW_URL }}
