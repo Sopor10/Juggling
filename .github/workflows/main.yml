@@ -23,7 +23,7 @@ jobs:
       - name: Install workload
         run: dotnet workload install wasm-tools
       - name: Test
-        run: dotnet test -c Release
+        run: dotnet test -c Release --filter TestCategory!=E2E
   publish-docker-image:
     needs: test
     runs-on: ubuntu-latest
