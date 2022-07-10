@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="bunit" Version="1.9.8" />
         <PackageReference Include="FluentAssertions" Version="6.7.0" />
-        <PackageReference Include="Fluxor" Version="4.2.2-Alpha" />
+        <PackageReference Include="Fluxor" Version="5.4.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="Moq" Version="4.18.1" />
         <PackageReference Include="NUnit" Version="3.13.3" />
