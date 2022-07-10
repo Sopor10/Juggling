@@ -16,6 +16,6 @@ jobs:
         id: netlifyDeploy
         with:
           site_name: "siteswaps"
-          max_timeout: 60          
+          max_timeout: 500          
       - name: Run a one-line script
         run: echo The site is deployed to ${{ steps.waitForNetlify.outputs.url }}
