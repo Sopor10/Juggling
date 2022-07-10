@@ -15,11 +15,9 @@ jobs:
         with:
           dotnet-version: 6.0.x
       - name: Install workload
-        run: dotnet workload install wasm-tools          
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet workload install wasm-tools           
       - name: Publish Blazor webassembly using dotnet
-        run: dotnet publish -c Release --no-build 
+        run: dotnet publish -c Release
       - name: Publish generated Blazor webassembly to Netlify
         uses: netlify/actions/cli@master 
         env: 
