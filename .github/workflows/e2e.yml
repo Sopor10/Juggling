@@ -24,7 +24,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=/github/workspace/Webassembly/release/wwwroot 
+          args: deploy --dir=Webassembly/release/wwwroot 
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
       - name: Run a one-line script
         run: echo The site is deployed to ${{ steps.deployPreview.outputs.NETLIFY_PREVIEW_URL }}
