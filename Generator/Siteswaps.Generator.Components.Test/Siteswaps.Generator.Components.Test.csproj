@@ -8,7 +8,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="bunit" Version="1.3.42" />
+        <PackageReference Include="bunit" Version="1.9.8" />
         <PackageReference Include="FluentAssertions" Version="6.7.0" />
         <PackageReference Include="Fluxor" Version="4.2.2-Alpha" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
