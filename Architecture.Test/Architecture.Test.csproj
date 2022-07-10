@@ -10,7 +10,7 @@
         <PackageReference Include="NUnit3TestAdapter" Version="4.3.0-alpha-net7.4" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="TngTech.ArchUnitNET" Version="0.10.1" />
-        <PackageReference Include="TngTech.ArchUnitNET.NUnit" Version="0.8.4" />
+        <PackageReference Include="TngTech.ArchUnitNET.NUnit" Version="0.10.1" />
     </ItemGroup>
 
     <ItemGroup>
