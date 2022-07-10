@@ -12,10 +12,5 @@ internal class RightAmountOfBallsFilter : ISiteswapFilter
 
     private SiteswapGeneratorInput GeneratorInput { get; }
 
-    public bool CanFulfill(IPartialSiteswap value)
-    {
-        if (!value.IsFilled()) return true;
-
-        return Math.Abs(value.Items.Average() - GeneratorInput.NumberOfObjects) < 0.001;
-    }
+    public bool CanFulfill(IPartialSiteswap value) => !value.IsFilled() || Math.Abs(value.Items.Average() - GeneratorInput.NumberOfObjects) < 0.001;
 }

@@ -11,7 +11,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Generator\Siteswaps.Generator.DependencyInjection\Siteswaps.Generator.DependencyInjection.csproj" />
-      <ProjectReference Include="..\Shared\FeatureManagement\FeatureManagement.csproj" />
       <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
     </ItemGroup>
 
