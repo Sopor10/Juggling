@@ -35,15 +35,18 @@ jobs:
           dotnet-version: 6.0.x
       - name: Install workload
         run: dotnet workload install wasm-tools
+      - name: restore packages
+        run: dotnet restore
+      - name: build E2E Tests
+        run: dotnet build -c release --project ./Siteswaps.E2ETests/Siteswaps.E2ETests.csproj --no-restore
       - name: install playwright
         run: |
-          npx playwright
-          npx playwright install-deps 
-          npx playwright install-deps chromium 
+          npx playwright install-deps # install dependencies for all browsers
+          npx playwright install-deps chromium # install dependencies for Chromium only
       - name: run Webassembly 
-        run: dotnet run -c release --project ./Webassembly/Webassembly.csproj &
+        run: dotnet run -c release --project ./Webassembly/Webassembly.csproj --no-build &
       - name: Test
-        run: dotnet test -c Release --filter TestCategory=E2E        
+        run: dotnet test -c Release --filter TestCategory=E2E --no-build --project ./Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
         env:
           E2E_TEST_BASEURL: https://localhost:7021
   publish-docker-image:
