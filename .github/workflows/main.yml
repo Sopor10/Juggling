@@ -35,6 +35,10 @@ jobs:
           dotnet-version: 6.0.x
       - name: Install workload
         run: dotnet workload install wasm-tools
+      - name: install playwright
+        run: |
+          npx playwright install-deps # install dependencies for all browsers
+          npx playwright install-deps chromium # install dependencies for Chromium only
       - name: run Webassembly 
         run: dotnet run -c release --project ./Webassembly/Webassembly.csproj &
       - name: Test
