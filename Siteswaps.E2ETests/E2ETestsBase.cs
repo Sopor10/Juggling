@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -17,6 +18,11 @@ public abstract class E2ETestsBase : PageTest
         if (baseUrl != null)
         {
             BaseUrl = baseUrl;
+        }
+        
+        if (Debugger.IsAttached)
+        {
+            Environment.SetEnvironmentVariable("HEADED","1");
         }
     }
 }
