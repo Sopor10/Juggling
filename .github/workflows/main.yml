@@ -25,7 +25,7 @@ jobs:
       - name: Build Solution
         run: dotnet build -c release  
       - name: Cache Everything
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}-build  
@@ -36,7 +36,7 @@ jobs:
       - build
     steps:
       - name: Load from cache
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}-build
@@ -53,7 +53,7 @@ jobs:
       - build
     steps:
       - name: Load from cache
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}-build
