@@ -55,7 +55,7 @@ jobs:
       - name: Load from cache
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}
+          path: ${{ github.workspace }}/Webassembly
           key: ${{ github.sha }}-build
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
