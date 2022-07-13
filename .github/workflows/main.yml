@@ -42,7 +42,7 @@ jobs:
       - name: run Webassembly 
         run: nohup dotnet run -c release --project ./Webassembly/Webassembly.csproj --no-build &
       - name: Test
-        run: dotnet test -c Release --filter TestCategory=E2E --project ./Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
+        run: dotnet test -c Release --filter TestCategory=E2E
         env:
           E2E_TEST_BASEURL: https://localhost:7021
   publish-docker-image:
