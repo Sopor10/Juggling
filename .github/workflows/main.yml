@@ -44,7 +44,7 @@ jobs:
           npx playwright install-deps # install dependencies for all browsers
           npx playwright install-deps chromium # install dependencies for Chromium only
       - name: run Webassembly 
-        run: dotnet run -c release --project ./Webassembly/Webassembly.csproj --no-build &
+        run: nohup dotnet run -c release --project ./Webassembly/Webassembly.csproj --no-build &
       - name: Test
         run: dotnet test -c Release --filter TestCategory=E2E --no-build --project ./Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
         env:
