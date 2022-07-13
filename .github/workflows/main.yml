@@ -27,7 +27,7 @@ jobs:
       - name: Cache Everything
         uses: actions/cache@v3
         with:
-          path: ./
+          path: ${{ github.workspace }}
           key: ${{ github.sha }}-build  
   
   unit-test:
@@ -38,7 +38,7 @@ jobs:
       - name: Load from cache
         uses: actions/cache@v3
         with:
-          path: ./
+          path: ${{ github.workspace }}
           key: ${{ github.sha }}-build
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
@@ -55,7 +55,7 @@ jobs:
       - name: Load from cache
         uses: actions/cache@v3
         with:
-          path: ./
+          path: ${{ github.workspace }}
           key: ${{ github.sha }}-build
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
@@ -73,7 +73,7 @@ jobs:
         with:
           url: 'https://localhost:7021'
           responseCode: '200,500'
-          timeout: 180000
+          timeout: 15000
           interval: 500        
       - name: Test
         run: dotnet test -c Release --no-build --filter TestCategory=E2E
