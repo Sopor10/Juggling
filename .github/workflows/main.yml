@@ -36,7 +36,14 @@ jobs:
       - name: Install workload
         run: dotnet workload install wasm-tools
       - name: run Webassembly 
-        run: dotnet run -c release --project ./Webassembly/Webassembly.csproj
+        run: dotnet run -c release --project ./Webassembly/Webassembly.csproj &
+      - uses: cygnetdigital/wait_for_response@v2.0.0
+        name: Wait for website to start
+        with:
+          url: https://localhost:7021
+          responseCode: '200,500'
+          timeout: 60000
+          interval: 500        
       - name: Test
         run: dotnet test -c Release --filter TestCategory=E2E        
         env:
