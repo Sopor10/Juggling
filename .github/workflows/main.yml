@@ -36,7 +36,7 @@ jobs:
       - name: Install workload
         run: dotnet workload install wasm-tools
       - name: run Webassembly 
-        run: dotnet -c release --project .\Webassembly\Webassembly.csproj
+        run: dotnet run -c release --project .\Webassembly\Webassembly.csproj
       - name: Test
         run: dotnet test -c Release --filter TestCategory=E2E        
         env:
