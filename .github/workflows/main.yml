@@ -27,7 +27,7 @@ jobs:
       - name: Cache Everything
         uses: actions/cache@v3
         with:
-          path: .
+          path: ./
           key: ${{ github.sha }}-build  
   
   unit-test:
@@ -38,7 +38,7 @@ jobs:
       - name: Load from cache
         uses: actions/cache@v3
         with:
-          path: .
+          path: ./
           key: ${{ github.sha }}-build
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
@@ -55,7 +55,7 @@ jobs:
       - name: Load from cache
         uses: actions/cache@v3
         with:
-          path: .
+          path: ./
           key: ${{ github.sha }}-build
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
