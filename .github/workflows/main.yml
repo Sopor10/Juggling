@@ -12,7 +12,7 @@ env:
   IMAGE_NAME: "juggling"
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -48,7 +48,7 @@ jobs:
           E2E_TEST_BASEURL: https://localhost:7021
           
   publish-docker-image:
-    needs: [unit-test, integration-test]
+    needs: build-and-test
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
