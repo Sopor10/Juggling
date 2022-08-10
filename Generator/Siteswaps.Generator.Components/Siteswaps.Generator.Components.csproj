@@ -13,7 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Fluxor.Blazor.Web" Version="5.4.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
     </ItemGroup>
 
     <ItemGroup>
