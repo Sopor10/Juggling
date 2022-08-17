@@ -1,10 +1,10 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.ObjectModel;
 
 namespace Siteswaps.Generator.Api.Filter;
 
 public interface IPartialSiteswap
 {
-    ImmutableList<int> Items { get; }
+    ReadOnlyCollection<int> Items { get; }
     int LastFilledPosition { get;}
     bool IsFilled();
 }

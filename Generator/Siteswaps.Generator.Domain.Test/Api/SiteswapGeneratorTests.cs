@@ -7,7 +7,15 @@ namespace Siteswaps.Generator.Domain.Test.Api;
 public class SiteswapGeneratorTests : SiteswapGeneratorTestSuite
 {
     protected override ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input) => 
-        new SiteswapGeneratorFactory(new FilterBuilderFactory())
+        new OldGenerator.SiteswapGeneratorFactory(new FilterBuilderFactory())
+            .WithInput(input)
+            .Create();
+}
+
+public class NewSiteswapGeneratorTests : SiteswapGeneratorTestSuite
+{
+    protected override ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input) => 
+        new NewGenerator.SiteswapGeneratorFactory(new FilterBuilderFactory())
             .WithInput(input)
             .Create();
 }

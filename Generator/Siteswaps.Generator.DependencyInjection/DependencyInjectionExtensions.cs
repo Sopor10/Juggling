@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
-using Siteswaps.Generator.Domain;
 using Siteswaps.Generator.Domain.Filter;
+using Siteswaps.Generator.Domain.NewGenerator;
 
 namespace Siteswaps.Generator.DependencyInjection;
 

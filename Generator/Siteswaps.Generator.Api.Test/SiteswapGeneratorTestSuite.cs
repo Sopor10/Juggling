@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using VerifyTests;
 using static VerifyNUnit.Verifier;
 
 namespace Siteswaps.Generator.Api.Test;
@@ -11,6 +12,10 @@ public abstract class SiteswapGeneratorTestSuite
 {
     protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input);
 
+    static SiteswapGeneratorTestSuite()
+    {
+        VerifierSettings.DisableRequireUniquePrefix();
+    }
    
     [TestCaseSource(typeof(GenerateInputs))]
     public async Task Verify_SiteswapGenerator_Against_Older_Version(SiteswapGeneratorInput input)

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Linq.Extras;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
@@ -26,6 +28,7 @@ public record PartialSiteswap : IPartialSiteswap
 
     public int LastFilledPosition { get; }
     public ImmutableList<int> Items { get; }
+    ReadOnlyCollection<int> IPartialSiteswap.Items => this.Items.AsReadOnly();
     private int PosOfMaxPossibleValue { get; }
 
     public virtual bool Equals(PartialSiteswap? other)
