@@ -2,7 +2,7 @@
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
-namespace Siteswaps.Generator.Domain.NewGenerator;
+namespace Siteswaps.Generator.Domain;
 
 public class SiteswapGenerator : ISiteswapGenerator
 {
@@ -10,7 +10,7 @@ public class SiteswapGenerator : ISiteswapGenerator
     {
         Filter = filter;
         Input = input;
-        PartialSiteswap = PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
+        PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
     }
 
     private Stopwatch Stopwatch { get; set; }
@@ -45,6 +45,11 @@ public class SiteswapGenerator : ISiteswapGenerator
             }
             
             if ((PartialSiteswap.PartialSum + ((Input.Period - PartialSiteswap.LastFilledPosition) * min))/ Input.Period > Input.NumberOfObjects)
+            {
+                continue;
+            }
+            
+            if ((PartialSiteswap.PartialSum + ((Input.Period - PartialSiteswap.LastFilledPosition) * max))/ Input.Period < Input.NumberOfObjects)
             {
                 continue;
             }

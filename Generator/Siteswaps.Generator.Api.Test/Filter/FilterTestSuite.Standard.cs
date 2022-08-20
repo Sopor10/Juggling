@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Siteswaps.Generator.Api.Test.Filter;
@@ -16,7 +17,7 @@ public abstract partial class FilterTestSuite
     {
         var sut = FilterBuilder.WithDefault().Build();
 
-        sut.CanFulfill(AsPartialSiteswap(input)).Should().BeFalse();
+        sut.CanFulfill(AsPartialSiteswap(input.Select(x => (sbyte)x).ToArray())).Should().BeFalse();
     }
         
     [Test]
@@ -30,6 +31,6 @@ public abstract partial class FilterTestSuite
     {
         var sut = FilterBuilder.WithDefault().Build();
 
-        sut.CanFulfill(AsPartialSiteswap(input)).Should().BeTrue();
+        sut.CanFulfill(AsPartialSiteswap(input.Select(x => (sbyte)x).ToArray())).Should().BeTrue();
     }
 } 

@@ -85,4 +85,9 @@ public record Siteswap :  ISiteswap
     }
 
     ImmutableList<int> ISiteswap.Items => this.Items.EnumerateValues(1).ToImmutableList();
+
+    public static ISiteswap CreateFromCorrect(sbyte[] partialSiteswapItems)
+    {
+        return CreateFromCorrect(partialSiteswapItems.Select(x => (int)x));
+    }
 }

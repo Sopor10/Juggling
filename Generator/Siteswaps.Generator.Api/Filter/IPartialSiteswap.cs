@@ -4,7 +4,7 @@ namespace Siteswaps.Generator.Api.Filter;
 
 public interface IPartialSiteswap
 {
-    ReadOnlyCollection<int> Items { get; }
-    int LastFilledPosition { get;}
+    ReadOnlyCollection<sbyte> Items { get; }
+    sbyte LastFilledPosition { get;}
     bool IsFilled();
 }

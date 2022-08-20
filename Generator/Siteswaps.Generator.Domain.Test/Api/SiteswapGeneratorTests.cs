@@ -6,41 +6,32 @@ using Siteswaps.Generator.Domain.Filter;
 
 namespace Siteswaps.Generator.Domain.Test.Api;
 
-public class SiteswapGeneratorTests : SiteswapGeneratorTestSuite
-{
-    protected override ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input) => 
-        new OldGenerator.SiteswapGeneratorFactory(new FilterBuilderFactory())
-            .WithInput(input)
-            .Create();
-}
-
 public class NewSiteswapGeneratorTests : SiteswapGeneratorTestSuite
 {
     protected override ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input) => 
-        new NewGenerator.SiteswapGeneratorFactory(new FilterBuilderFactory())
+        new SiteswapGeneratorFactory(new FilterBuilderFactory())
             .WithInput(input)
             .Create();
 }
-
 
 public class PartialSiteswapTests
 {
 
     [Test]
-    [TestCase(new []{4,4,4}, 2, 3, ExpectedResult = false)]
-    [TestCase(new []{4,4,-1}, 2, 3, ExpectedResult = false)]
-    [TestCase(new []{5,3,4}, 2, 1, ExpectedResult = true)]
-    [TestCase(new []{5,3,4}, 2, 3, ExpectedResult = false)]
-    public bool METHOD(int[] items, int lastFilledPosition, int throwHeight)
+    [TestCase(new sbyte[]{4,4,4}, 2, 3, ExpectedResult = false)]
+    [TestCase(new sbyte[]{4,4,-1}, 2, 3, ExpectedResult = false)]
+    [TestCase(new sbyte[]{5,3,4}, 2, 1, ExpectedResult = true)]
+    [TestCase(new sbyte[]{5,3,4}, 2, 3, ExpectedResult = false)]
+    public bool METHOD(sbyte[] items, sbyte lastFilledPosition, sbyte throwHeight)
     {
-        return new NewGenerator.PartialSiteswap(items, lastFilledPosition)
+        return new PartialSiteswap(items, lastFilledPosition)
             .FillCurrentPosition(throwHeight);
     }
 
     [Test]
     public void PartialSum_Should_Be_Correct()
     {
-        var sut = new NewGenerator.PartialSiteswap(new[] { 5, 3, 1 }, 2);
+        var sut = new PartialSiteswap(new sbyte[] { 5, 3, 1 }, 2);
         sut.FillCurrentPosition(3);
         sut.FillCurrentPosition(1);
         sut.PartialSum.Should().Be(9);

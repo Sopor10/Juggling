@@ -2,7 +2,7 @@
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
-namespace Siteswaps.Generator.Domain.NewGenerator;
+namespace Siteswaps.Generator.Domain;
 
 public record SiteswapGeneratorFactory(IFilterBuilderFactory FilterBuilderFactory) : ISiteswapGeneratorFactory
 {

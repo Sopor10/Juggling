@@ -5,12 +5,28 @@ namespace Siteswaps.Generator.Domain.Filter;
 
 internal class RightAmountOfBallsFilter : ISiteswapFilter
 {
+    private readonly sbyte _generatorInputNumberOfObjects;
+
     public RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput)
     {
-        GeneratorInput = generatorInput;
+        _generatorInputNumberOfObjects = (sbyte)generatorInput.NumberOfObjects;
+
     }
 
-    private SiteswapGeneratorInput GeneratorInput { get; }
 
-    public bool CanFulfill(IPartialSiteswap value) => !value.IsFilled() || Math.Abs(value.Items.Average() - GeneratorInput.NumberOfObjects) < 0.001;
+    public bool CanFulfill(IPartialSiteswap value)
+    {
+        var sum = 0;
+
+        foreach (int item in value.Items)
+        {
+            if (item > 0)
+            {
+                sum += item;
+            }
+        }
+
+        
+        return !value.IsFilled() || sum == _generatorInputNumberOfObjects * value.Items.Count;
+    }
 }
