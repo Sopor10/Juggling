@@ -36,4 +36,23 @@ public class PartialSiteswapTests
         return new NewGenerator.PartialSiteswap(items, lastFilledPosition)
             .FillCurrentPosition(throwHeight);
     }
+
+    [Test]
+    public void PartialSum_Should_Be_Correct()
+    {
+        var sut = new NewGenerator.PartialSiteswap(new[] { 5, 3, 1 }, 2);
+        sut.FillCurrentPosition(3);
+        sut.FillCurrentPosition(1);
+        sut.PartialSum.Should().Be(9);
+    }
+
+    [Test]
+    public void ByteTest()
+    {
+        byte byte1 = 1;
+        byte byte2 = 2;
+        (byte1 + byte2).Should().Be(3);
+
+        (byte1 + 1).Should().Be(2);
+    }
 }

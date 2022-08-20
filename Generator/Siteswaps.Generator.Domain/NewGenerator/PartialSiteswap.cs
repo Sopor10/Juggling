@@ -17,12 +17,15 @@ public class PartialSiteswap : IPartialSiteswap
         {
             Interface[i + this[i]] = this[i];
         }
+
+        PartialSum = Items.Where(x => x > 0).Sum();
     }
 
     public int[] Items { get; }
-    public int CurrentHeight => this[LastFilledPosition];
     private CyclicArray<int> Interface { get; }
 
+    public int PartialSum { get; set; }
+    
 
     private int this[int i]
     {
@@ -41,6 +44,8 @@ public class PartialSiteswap : IPartialSiteswap
             }
             
             Items[i] = value;
+            PartialSum += value;
+            PartialSum -= Math.Abs(oldValue);
             if (value == -1)
             {
                 return;

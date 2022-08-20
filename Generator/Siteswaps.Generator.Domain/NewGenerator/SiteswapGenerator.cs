@@ -38,11 +38,17 @@ public class SiteswapGenerator : ISiteswapGenerator
         for (var i = max; i >= min; i--)
         {
             if (ShouldStop()) return;
+            
             if (PartialSiteswap.FillCurrentPosition(i) is false)
             {
                 continue;
             }
-
+            
+            if ((PartialSiteswap.PartialSum + ((Input.Period - PartialSiteswap.LastFilledPosition) * min))/ Input.Period > Input.NumberOfObjects)
+            {
+                continue;
+            }
+            
             if (Filter.CanFulfill(PartialSiteswap) is false)
             {
                 PartialSiteswap.FillCurrentPosition(-1);
@@ -64,6 +70,7 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     private bool ShouldStop()
     {
+        // return false;
         return Stopwatch.Elapsed > Input.StopCriteria.TimeOut ||
                Siteswaps.Count > Input.StopCriteria.MaxNumberOfResults;
     }

@@ -15,9 +15,11 @@ internal class AverageToHighFilter : ISiteswapFilter
     public bool CanFulfill(IPartialSiteswap value)
     {
         var minAdditionalValue =
-            value.Items.Count(x => x == PartialSiteswap.Free) * GeneratorInput.MinHeight; 
-            
-        var average = (value.Items.Where(x => x >= 0).Sum() * 1.0 + minAdditionalValue) / GeneratorInput.Period;
+            value.Items.Count(x => x == PartialSiteswap.Free) * GeneratorInput.MinHeight;
+
+        var sum = value.Items.Where(x => x >= 0).Sum();
+
+        var average = (sum * 1.0 + minAdditionalValue) / GeneratorInput.Period;
         return average <= GeneratorInput.NumberOfObjects;
     }
 }

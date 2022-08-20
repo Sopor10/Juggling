@@ -19,7 +19,7 @@ internal class FilterFactory
     {
         return new AndFilter(
             // new CollisionFilter(), 
-            new AverageToHighFilter(Input), 
+            // new AverageToHighFilter(Input), 
             new AverageToLowFilter(Input),
             new RightAmountOfBallsFilter(Input),
             new TrivialSiteswapFilter());
