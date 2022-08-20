@@ -8,13 +8,17 @@ public record CyclicArray<T> : IEnumerable<T>
 
     public CyclicArray(IEnumerable<T> items)
     {
-        Items = items.ToImmutableArray();
+        Items = items.ToArray();
     }
 
-    private ImmutableArray<T> Items { get; }
+    private T[] Items { get; }
     public int Length => Items.Length;
 
-    public T this[int i] => Items[i % Items.Length];
+    public T this[int i]
+    {
+        get => Items[(i + Items.Length) % Items.Length];
+        set => Items[(i + Items.Length) % Items.Length] = value;
+    }
 
     public IEnumerator<T> GetEnumerator()
     {

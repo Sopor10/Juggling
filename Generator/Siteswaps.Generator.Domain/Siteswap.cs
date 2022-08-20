@@ -13,6 +13,11 @@ public record Siteswap :  ISiteswap
     {
         return TryCreate(new(items), out siteswap);
     }
+    
+    public static Siteswap CreateFromCorrect(IEnumerable<int> items)
+    {
+        return new Siteswap(items.ToCyclicArray());
+    }
     private Siteswap(CyclicArray<int> items)
     {
         Items = ToUniqueRepresentation(items);

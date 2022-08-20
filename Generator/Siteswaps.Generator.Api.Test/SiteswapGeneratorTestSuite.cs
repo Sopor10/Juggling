@@ -41,7 +41,7 @@ class GenerateInputs : IEnumerable
             MaxHeight = maxHeight,
             MinHeight = minHeight,
             NumberOfObjects = numberOfObjects,
-            StopCriteria = new(TimeSpan.FromSeconds(15), 100000)
+            StopCriteria = new(TimeSpan.FromSeconds(120), 100000)
         };
         return new TestCaseData(input).SetName(ToName(input));
     }
@@ -56,5 +56,6 @@ class GenerateInputs : IEnumerable
         yield return Next(5, 10, 2, 6);
         yield return Next(5,  5, 0, 3);
         yield return Next(7, 13, 2, 8);
+        yield return Next(12, 20, 2, 8);
     }
 }

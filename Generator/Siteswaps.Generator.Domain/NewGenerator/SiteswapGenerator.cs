@@ -1,52 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using Linq.Extras;
+﻿using System.Diagnostics;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Domain.NewGenerator;
-
-public class PartialSiteswap : IPartialSiteswap
-{
-    private PartialSiteswap(int[] items, int lastFilledPosition = 0)
-    {
-        LastFilledPosition = lastFilledPosition;
-        Items = items;
-    }
-
-    public int[] Items { get; }
-    public int CurrentHeight => Items[LastFilledPosition];
-
-    ReadOnlyCollection<int> IPartialSiteswap.Items => Items.AsReadOnly();
-    public int LastFilledPosition { get; private set; }
-
-    public bool IsFilled()
-    {
-        return Items.Last() != -1;
-    }
-
-    public static PartialSiteswap Standard(int period, int maxHeight)
-    {
-        return new PartialSiteswap(Enumerable.Prepend(Enumerable.Repeat(-1, period - 1), maxHeight).ToArray());
-    }
-
-
-    public void FillCurrentPosition(int throwHeight)
-    {
-        Items[LastFilledPosition] = throwHeight;
-    }
-
-    public void MoveForward(int height)
-    {
-        Items[LastFilledPosition + 1] = height;
-        LastFilledPosition++;
-    }
-
-    public void MoveBack()
-    {
-        Items[LastFilledPosition] = -1;
-        LastFilledPosition--;
-    }
-}
 
 public class SiteswapGenerator : ISiteswapGenerator
 {
@@ -57,14 +13,19 @@ public class SiteswapGenerator : ISiteswapGenerator
         PartialSiteswap = PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
     }
 
-    public HashSet<ISiteswap> Siteswaps { get; } = new();
-    public ISiteswapFilter Filter { get; }
-    public SiteswapGeneratorInput Input { get; }
-    public PartialSiteswap PartialSiteswap { get; }
+    private Stopwatch Stopwatch { get; set; }
+
+    private HashSet<ISiteswap> Siteswaps { get; } = new();
+    private ISiteswapFilter Filter { get; }
+    private SiteswapGeneratorInput Input { get; }
+    private PartialSiteswap PartialSiteswap { get; }
 
     public async Task<IEnumerable<ISiteswap>> GenerateAsync()
     {
-        BackTrack(0);
+        Stopwatch = new Stopwatch();
+        Stopwatch.Start();
+
+        await Task.Run(() => BackTrack(0));
 
         return Siteswaps;
     }
@@ -76,19 +37,34 @@ public class SiteswapGenerator : ISiteswapGenerator
 
         for (var i = max; i >= min; i--)
         {
-            PartialSiteswap.FillCurrentPosition(i);
-            if (Filter.CanFulfill(PartialSiteswap))
+            if (ShouldStop()) return;
+            if (PartialSiteswap.FillCurrentPosition(i) is false)
             {
-                if (PartialSiteswap.IsFilled())
-                {
-                    if (Siteswap.TryCreate(PartialSiteswap.Items, out var s)) Siteswaps.Add(s);
-                    return;
-                }
-
-                PartialSiteswap.MoveForward(max);
-                BackTrack(i==max ? uniqueMaxIndex + 1: 0);
-                PartialSiteswap.MoveBack();
+                continue;
             }
+
+            if (Filter.CanFulfill(PartialSiteswap) is false)
+            {
+                PartialSiteswap.FillCurrentPosition(-1);
+                continue;
+            }
+
+            if (PartialSiteswap.IsFilled())
+            {
+                Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
+                PartialSiteswap.FillCurrentPosition(-1);
+                continue;
+            }
+
+            PartialSiteswap.MoveForward(max);
+            BackTrack(i == max ? uniqueMaxIndex + 1 : 0);
+            PartialSiteswap.MoveBack();
         }
+    }
+
+    private bool ShouldStop()
+    {
+        return Stopwatch.Elapsed > Input.StopCriteria.TimeOut ||
+               Siteswaps.Count > Input.StopCriteria.MaxNumberOfResults;
     }
 }

@@ -18,7 +18,7 @@ internal class FilterFactory
     public ISiteswapFilter Standard()
     {
         return new AndFilter(
-            new CollisionFilter(), 
+            // new CollisionFilter(), 
             new AverageToHighFilter(Input), 
             new AverageToLowFilter(Input),
             new RightAmountOfBallsFilter(Input),

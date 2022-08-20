@@ -1,4 +1,6 @@
-﻿using Siteswaps.Generator.Api;
+﻿using FluentAssertions;
+using NUnit.Framework;
+using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Test;
 using Siteswaps.Generator.Domain.Filter;
 
@@ -18,4 +20,20 @@ public class NewSiteswapGeneratorTests : SiteswapGeneratorTestSuite
         new NewGenerator.SiteswapGeneratorFactory(new FilterBuilderFactory())
             .WithInput(input)
             .Create();
+}
+
+
+public class PartialSiteswapTests
+{
+
+    [Test]
+    [TestCase(new []{4,4,4}, 2, 3, ExpectedResult = false)]
+    [TestCase(new []{4,4,-1}, 2, 3, ExpectedResult = false)]
+    [TestCase(new []{5,3,4}, 2, 1, ExpectedResult = true)]
+    [TestCase(new []{5,3,4}, 2, 3, ExpectedResult = false)]
+    public bool METHOD(int[] items, int lastFilledPosition, int throwHeight)
+    {
+        return new NewGenerator.PartialSiteswap(items, lastFilledPosition)
+            .FillCurrentPosition(throwHeight);
+    }
 }
