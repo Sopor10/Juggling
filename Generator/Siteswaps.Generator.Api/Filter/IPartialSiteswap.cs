@@ -4,7 +4,8 @@ namespace Siteswaps.Generator.Api.Filter;
 
 public interface IPartialSiteswap
 {
-    ReadOnlyCollection<sbyte> Items { get; }
+    sbyte[] Items { get; }
     sbyte LastFilledPosition { get;}
+    sbyte PartialSum { get; set; }
     bool IsFilled();
 }

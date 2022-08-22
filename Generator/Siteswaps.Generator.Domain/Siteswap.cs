@@ -18,9 +18,9 @@ public record Siteswap :  ISiteswap
     {
         return new Siteswap(items.ToCyclicArray());
     }
-    private Siteswap(CyclicArray<int> items)
+    private Siteswap(CyclicArray<int> items, bool isAlreadyUnique = false)
     {
-        Items = ToUniqueRepresentation(items);
+        Items = isAlreadyUnique ? items : ToUniqueRepresentation(items);
     }
 
     public static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)

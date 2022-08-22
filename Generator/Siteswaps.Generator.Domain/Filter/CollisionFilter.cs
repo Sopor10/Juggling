@@ -6,12 +6,12 @@ internal class CollisionFilter : ISiteswapFilter
 {
     public bool CanFulfill(IPartialSiteswap value)
     {
-        var bools = new bool [ value.Items.Count ];
+        var bools = new bool [ value.Items.Length ];
 
         var currentIndex = value.LastFilledPosition;
         for (var i = 0; i <= currentIndex; i++)
         {
-            var count = (i + value.Items[i]) % value.Items.Count;
+            var count = (i + value.Items[i]) % value.Items.Length;
             bools[count] = true;
         }
 

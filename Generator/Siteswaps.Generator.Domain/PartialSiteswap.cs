@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Linq.Extras;
-using Shared;
+﻿using Shared;
 using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Domain;
@@ -62,7 +60,6 @@ public class PartialSiteswap : IPartialSiteswap
         }
     }
 
-    ReadOnlyCollection<sbyte> IPartialSiteswap.Items => Items.AsReadOnly();
     public sbyte LastFilledPosition { get; private set; }
 
     public bool IsFilled()
@@ -94,6 +91,16 @@ public class PartialSiteswap : IPartialSiteswap
         this[LastFilledPosition] = oldHeight;
 
         return false;
+    }
+
+    public void ResetCurrentPosition()
+    {
+        var oldHeight = this[LastFilledPosition];
+        if (oldHeight == -1)
+        {
+            return;
+        }
+        this[LastFilledPosition] = -1;
     }
 
     public void MoveForward(sbyte max)

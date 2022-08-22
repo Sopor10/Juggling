@@ -56,14 +56,14 @@ public class SiteswapGenerator : ISiteswapGenerator
             
             if (Filter.CanFulfill(PartialSiteswap) is false)
             {
-                PartialSiteswap.FillCurrentPosition(-1);
+                PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
 
             if (PartialSiteswap.IsFilled())
             {
                 Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
-                PartialSiteswap.FillCurrentPosition(-1);
+                PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
 

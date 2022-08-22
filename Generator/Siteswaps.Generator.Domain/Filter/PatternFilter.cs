@@ -44,7 +44,7 @@ internal class PatternFilter : ISiteswapFilter
             return true;
         }
 
-        for (var i = 0; i < value.Items.Count; i++)
+        for (var i = 0; i < value.Items.Length; i++)
         {
             if (IsMatch(value, Pattern.Rotate(i)))
             {

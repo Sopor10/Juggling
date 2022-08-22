@@ -16,17 +16,12 @@ internal class RightAmountOfBallsFilter : ISiteswapFilter
 
     public bool CanFulfill(IPartialSiteswap value)
     {
-        var sum = 0;
-
-        foreach (int item in value.Items)
+        if (!value.IsFilled())
         {
-            if (item > 0)
-            {
-                sum += item;
-            }
+            return true;
         }
-
         
-        return !value.IsFilled() || sum == _generatorInputNumberOfObjects * value.Items.Count;
+
+        return value.PartialSum == _generatorInputNumberOfObjects * value.Items.Length;
     }
 }
