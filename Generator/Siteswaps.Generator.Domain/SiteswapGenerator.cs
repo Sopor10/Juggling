@@ -11,6 +11,8 @@ public class SiteswapGenerator : ISiteswapGenerator
         Filter = filter;
         Input = input;
         PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
+        Stopwatch = new Stopwatch();
+
     }
 
     private Stopwatch Stopwatch { get; set; }
@@ -22,7 +24,6 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     public async Task<IEnumerable<ISiteswap>> GenerateAsync()
     {
-        Stopwatch = new Stopwatch();
         Stopwatch.Start();
 
         await Task.Run(() => BackTrack(0));
@@ -34,7 +35,6 @@ public class SiteswapGenerator : ISiteswapGenerator
     {
         var min = Input.MinHeight;
         var max = PartialSiteswap.Items[uniqueMaxIndex];
-
         for (var i = max; i >= min; i--)
         {
             if (ShouldStop()) return;
