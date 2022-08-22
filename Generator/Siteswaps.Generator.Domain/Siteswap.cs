@@ -47,11 +47,11 @@ public record Siteswap :  ISiteswap
     {
         var biggest = input.EnumerateValues(1).ToList();
 
-        foreach (var list in Enumerable.Range(0,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
+        foreach (var list in Enumerable.Repeat(1,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
         {
             if (biggest.CompareSequences(list) < 0)
             {
-                biggest = list;
+                biggest = list.ToList();
             }
         }
 
