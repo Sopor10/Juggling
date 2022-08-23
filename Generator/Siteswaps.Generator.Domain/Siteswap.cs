@@ -16,7 +16,7 @@ public record Siteswap :  ISiteswap
     
     public static Siteswap CreateFromCorrect(IEnumerable<int> items)
     {
-        return new Siteswap(items.ToCyclicArray());
+        return new Siteswap(items.ToCyclicArray(), true);
     }
     private Siteswap(CyclicArray<int> items, bool isAlreadyUnique = false)
     {

@@ -34,7 +34,8 @@ public class SiteswapGenerator : ISiteswapGenerator
     private void BackTrack(int uniqueMaxIndex)
     {
         var min = Input.MinHeight;
-        var max = PartialSiteswap.Items[uniqueMaxIndex];
+        var max = PartialSiteswap.Items[uniqueMaxIndex] != -1? PartialSiteswap.Items[uniqueMaxIndex]:PartialSiteswap.Items[uniqueMaxIndex - 1];
+
         for (var i = max; i >= min; i--)
         {
             if (ShouldStop()) return;
@@ -43,14 +44,16 @@ public class SiteswapGenerator : ISiteswapGenerator
             {
                 continue;
             }
-            
-            if ((PartialSiteswap.PartialSum + ((Input.Period - PartialSiteswap.LastFilledPosition) * min))/ Input.Period > Input.NumberOfObjects)
+             
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * min)/ Input.Period > Input.NumberOfObjects)
             {
+                PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
             
-            if ((PartialSiteswap.PartialSum + ((Input.Period - PartialSiteswap.LastFilledPosition) * max))/ Input.Period < Input.NumberOfObjects)
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * max)/ Input.Period < Input.NumberOfObjects)
             {
+                PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
             
@@ -62,7 +65,10 @@ public class SiteswapGenerator : ISiteswapGenerator
 
             if (PartialSiteswap.IsFilled())
             {
-                Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
+                if (PartialSiteswap.Items[^1] != max)
+                {
+                    Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
+                }
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
             }

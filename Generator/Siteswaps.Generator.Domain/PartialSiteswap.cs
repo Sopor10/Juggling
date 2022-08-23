@@ -106,7 +106,6 @@ public class PartialSiteswap : IPartialSiteswap
     public void MoveForward(sbyte max)
     {
         LastFilledPosition++;
-        var result= FillCurrentPosition(max);
     }
 
     public void MoveBack()
