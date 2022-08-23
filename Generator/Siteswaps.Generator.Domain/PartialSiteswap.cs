@@ -80,7 +80,7 @@ public class PartialSiteswap : IPartialSiteswap
         {
             return true;
         }
-        this[LastFilledPosition] = -1;
+        ResetCurrentPosition();
 
         if (Interface[LastFilledPosition + throwHeight] == -1)
         {
@@ -110,7 +110,7 @@ public class PartialSiteswap : IPartialSiteswap
 
     public void MoveBack()
     {
-        this[LastFilledPosition] = -1;
+        ResetCurrentPosition();
         LastFilledPosition--;
     }
 }

@@ -46,7 +46,6 @@ class GenerateInputs : IEnumerable
         return new TestCaseData(input).SetName(ToName(input));
     }
     
-    
     public IEnumerator GetEnumerator()
     {
         yield return Next(3, 13, 0, 8);

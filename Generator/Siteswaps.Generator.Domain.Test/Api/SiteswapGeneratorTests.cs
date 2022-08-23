@@ -1,8 +1,12 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Test;
 using Siteswaps.Generator.Domain.Filter;
+using static VerifyNUnit.Verifier;
 
 namespace Siteswaps.Generator.Domain.Test.Api;
 
@@ -12,6 +16,21 @@ public class NewSiteswapGeneratorTests : SiteswapGeneratorTestSuite
         new SiteswapGeneratorFactory(new FilterBuilderFactory())
             .WithInput(input)
             .Create();
+
+
+    [Test]
+    public async Task PatternFilterTest()
+    {
+        var siteswaps = await new SiteswapGeneratorFactory(new FilterBuilderFactory())
+            .WithInput(new SiteswapGeneratorInput(10, 6, 2, 10)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60),1000 )
+            })
+            .ConfigureFilter(x => x.Pattern(new[]{2,-1,6,-1,5,-1,-1,-1,-1,-1}, 2))
+            .Create()
+            .GenerateAsync();
+        await Verify(siteswaps.Select(x => x.ToString()).ToList());
+    }
 }
 
 public class PartialSiteswapTests
