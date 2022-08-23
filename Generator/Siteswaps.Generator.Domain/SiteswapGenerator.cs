@@ -51,7 +51,7 @@ public class SiteswapGenerator : ISiteswapGenerator
                 continue;
             }
             
-            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * max)/ Input.Period < Input.NumberOfObjects)
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * Input.MaxHeight)/ Input.Period < Input.NumberOfObjects)
             {
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
