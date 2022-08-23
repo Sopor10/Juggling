@@ -11,12 +11,10 @@ public class SiteswapGenerator : ISiteswapGenerator
         Filter = filter;
         Input = input;
         PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
-        Stopwatch = new Stopwatch();
 
     }
 
-    private Stopwatch Stopwatch { get; set; }
-
+    private bool CountExceedsLimit { get; set; }
     private HashSet<ISiteswap> Siteswaps { get; } = new();
     private ISiteswapFilter Filter { get; }
     private SiteswapGeneratorInput Input { get; }
@@ -24,12 +22,16 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     public async Task<IEnumerable<ISiteswap>> GenerateAsync()
     {
-        Stopwatch.Start();
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.CancelAfter(Input.StopCriteria.TimeOut);
+        Token = cancellationTokenSource.Token;
 
-        await Task.Run(() => BackTrack(0));
+        await Task.Run(() => BackTrack(0), Token);
 
         return Siteswaps;
     }
+
+    private CancellationToken Token { get; set; }
 
     private void BackTrack(int uniqueMaxIndex)
     {
@@ -68,6 +70,10 @@ public class SiteswapGenerator : ISiteswapGenerator
                 if (PartialSiteswap.Items[^1] != max)
                 {
                     Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
+                    if (Siteswaps.Count > Input.StopCriteria.MaxNumberOfResults)
+                    {
+                        CountExceedsLimit = true;
+                    }
                 }
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
@@ -81,8 +87,6 @@ public class SiteswapGenerator : ISiteswapGenerator
 
     private bool ShouldStop()
     {
-        // return false;
-        return Stopwatch.Elapsed > Input.StopCriteria.TimeOut ||
-               Siteswaps.Count > Input.StopCriteria.MaxNumberOfResults;
+        return CountExceedsLimit || Token.IsCancellationRequested;
     }
 }
