@@ -13,7 +13,6 @@ namespace Benchmark
     [HtmlExporter]
     public class GeneratorBenchmarks
     {
-
         [Benchmark]
         public async Task<IEnumerable<ISiteswap>> Generate_Old()
         {
