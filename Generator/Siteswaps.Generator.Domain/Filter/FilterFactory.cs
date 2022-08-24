@@ -17,9 +17,7 @@ internal class FilterFactory
 
     public ISiteswapFilter Standard()
     {
-        return new AndFilter(
-            new RightAmountOfBallsFilter(Input),
-            new TrivialSiteswapFilter());
+        return new RightAmountOfBallsFilter(Input);
     }
 
     public ISiteswapFilter MinimumOccurenceFilter(int number, int amount)
@@ -40,16 +38,6 @@ internal class FilterFactory
     public ISiteswapFilter NoFilter()
     {
         return new NoFilter();
-    }
-
-    public ISiteswapFilter CollisionFilter()
-    {
-        return new CollisionFilter();
-    }
-
-    public ISiteswapFilter RightAmountOfBallsFilter()
-    {
-        return new RightAmountOfBallsFilter(Input);
     }
 
     public ISiteswapFilter ExactNumberOfPassesFilter(int numberOfPasses, int numberOfJugglers)

@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using FluentAssertions;
-using NUnit.Framework;
 using Siteswap.Details;
 using Siteswap.Details.CausalDiagram;
 
