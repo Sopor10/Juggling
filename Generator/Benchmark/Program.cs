@@ -13,8 +13,6 @@ namespace Benchmark
     [MarkdownExporter, AsciiDocExporter, HtmlExporter, CsvExporter, RPlotExporter]
     public class GeneratorBenchmarks
     {
-
-        
         [Benchmark]
         public void Generate()
         {
