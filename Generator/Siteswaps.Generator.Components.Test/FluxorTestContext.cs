@@ -1,7 +1,6 @@
 ﻿using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 

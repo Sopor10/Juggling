@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using Siteswap.Details.StateDiagram;
 
 namespace Siteswaps.Test;

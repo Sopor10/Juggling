@@ -1,5 +1,4 @@
 using FluentAssertions;
-using NUnit.Framework;
 using Siteswap.Details.StateDiagram;
 using Siteswap.Details.StateDiagram.Graph;
 
