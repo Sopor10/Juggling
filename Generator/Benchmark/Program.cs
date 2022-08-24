@@ -14,6 +14,7 @@ namespace Benchmark
     public class GeneratorBenchmarks
     {
 
+        
         [Benchmark]
         public void Generate()
         {
