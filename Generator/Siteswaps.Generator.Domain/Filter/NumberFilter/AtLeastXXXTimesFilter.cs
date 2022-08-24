@@ -9,5 +9,5 @@ internal class AtLeastXXXTimesFilter : NumberFilter
     }
 
     private protected override bool CanFulfillNumberFilter(IPartialSiteswap value) 
-        => value.Items.Count(x => x == Number || x == PartialSiteswap.Free) >= Amount;
+        => value.Items.Count(x => x == Number || x == -1) >= Amount;
 }

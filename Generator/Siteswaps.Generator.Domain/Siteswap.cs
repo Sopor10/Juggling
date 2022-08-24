@@ -13,9 +13,14 @@ public record Siteswap :  ISiteswap
     {
         return TryCreate(new(items), out siteswap);
     }
-    private Siteswap(CyclicArray<int> items)
+    
+    public static Siteswap CreateFromCorrect(IEnumerable<int> items)
     {
-        Items = ToUniqueRepresentation(items);
+        return new Siteswap(items.ToCyclicArray(), true);
+    }
+    private Siteswap(CyclicArray<int> items, bool isAlreadyUnique = false)
+    {
+        Items = isAlreadyUnique ? items : ToUniqueRepresentation(items);
     }
 
     public static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
@@ -42,11 +47,11 @@ public record Siteswap :  ISiteswap
     {
         var biggest = input.EnumerateValues(1).ToList();
 
-        foreach (var list in Enumerable.Range(0,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
+        foreach (var list in Enumerable.Repeat(1,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
         {
             if (biggest.CompareSequences(list) < 0)
             {
-                biggest = list;
+                biggest = list.ToList();
             }
         }
 
@@ -80,4 +85,9 @@ public record Siteswap :  ISiteswap
     }
 
     ImmutableList<int> ISiteswap.Items => this.Items.EnumerateValues(1).ToImmutableList();
+
+    public static ISiteswap CreateFromCorrect(sbyte[] partialSiteswapItems)
+    {
+        return CreateFromCorrect(partialSiteswapItems.Select(x => (int)x));
+    }
 }

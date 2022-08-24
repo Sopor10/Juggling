@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Linq.Extras;
 using Shared;
 using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
@@ -19,6 +20,7 @@ internal class PatternFilter : ISiteswapFilter
     private const int Self = -3;
     
     private ImmutableList<int> Pattern { get; }
+    private List<List<int>> Patterns { get; }
 
     private int NumberOfJuggler { get; }
 
@@ -30,7 +32,12 @@ internal class PatternFilter : ISiteswapFilter
     {
         Pattern = pattern;
         NumberOfJuggler = numberOfJuggler;
-        
+        Patterns = new List<List<int>>();
+
+        for (var i = 0; i < pattern.Count; i++)
+        {
+            Patterns.Add(pattern.Rotate(i).ToList());
+        }
         
         PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight).Where(x => x % NumberOfJuggler != 0).ToHashSet();
         SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight).Where(x => x % NumberOfJuggler == 0).ToHashSet();
@@ -44,9 +51,9 @@ internal class PatternFilter : ISiteswapFilter
             return true;
         }
 
-        for (var i = 0; i < value.Items.Count; i++)
+        for (var i = 0; i < value.Items.Length; i++)
         {
-            if (IsMatch(value, Pattern.Rotate(i)))
+            if (IsMatch(value, Patterns[i]))
             {
                 return true;
             }
@@ -55,7 +62,7 @@ internal class PatternFilter : ISiteswapFilter
         return false;
     }
 
-    private bool IsMatch(IPartialSiteswap value, ImmutableList<int> pattern)
+    private bool IsMatch(IPartialSiteswap value, List<int> pattern)
     {
         foreach (var (siteswapValue, patternValue) in value.Items.Zip(pattern))
         {

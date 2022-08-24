@@ -43,8 +43,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siteswaps.Generator.Depende
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Siteswaps.Generator.Api.Test", "Generator\Siteswaps.Generator.Api.Test\Siteswaps.Generator.Api.Test.csproj", "{110F2977-8297-4549-A7DE-DF7C7D7619A1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiteswapDetails", "SiteswapDetails", "{F9EE1493-EAA8-41A5-B97D-3854779AB2BE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Generator\Benchmark\Benchmark.csproj", "{7052D7CD-15D4-4494-B5D3-6694ADBF2112}"
 EndProject
 Global

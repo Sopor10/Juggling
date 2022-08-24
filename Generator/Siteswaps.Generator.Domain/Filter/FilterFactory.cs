@@ -18,9 +18,6 @@ internal class FilterFactory
     public ISiteswapFilter Standard()
     {
         return new AndFilter(
-            new CollisionFilter(), 
-            new AverageToHighFilter(Input), 
-            new AverageToLowFilter(Input),
             new RightAmountOfBallsFilter(Input),
             new TrivialSiteswapFilter());
     }
@@ -48,16 +45,6 @@ internal class FilterFactory
     public ISiteswapFilter CollisionFilter()
     {
         return new CollisionFilter();
-    }
-
-    public ISiteswapFilter AverageToHighFilter()
-    {
-        return new AverageToHighFilter(Input);
-    }
-
-    public ISiteswapFilter AverageToLowFilter()
-    {
-        return new AverageToLowFilter(Input);
     }
 
     public ISiteswapFilter RightAmountOfBallsFilter()

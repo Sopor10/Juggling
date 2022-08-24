@@ -10,7 +10,7 @@ internal class ExactlyXXXTimesFilter : NumberFilter
         {
             return false;
         }
-        return value.Items.Count(x => x == Number || x == PartialSiteswap.Free) >= Amount;
+        return value.Items.Count(x => x == Number || x == -1) >= Amount;
     }
 
     public ExactlyXXXTimesFilter(int number, int amount) : base(number, amount)
