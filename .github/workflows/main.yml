@@ -30,6 +30,7 @@ jobs:
 
       - name: install playwright
         run: |
+          npm install @playwright/test                                              ║
           npx playwright install
           npx playwright install-deps
           npx playwright install-deps chromium 
