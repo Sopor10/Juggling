@@ -7,3 +7,5 @@ riderModule.iml
 **/.idea
 **/*Dotsettings*
 **/.vs
+
+node_modules

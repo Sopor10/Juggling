@@ -31,9 +31,6 @@ jobs:
       - name: install playwright
         run: |
           npm install
-          npx playwright install
-          npx playwright install-deps
-          npx playwright install-deps chromium 
       - name: Wait for Netlify Deploy
         uses: probablyup/wait-for-netlify-action@3.2.0
         id: waitForDeployment
