@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Siteswaps.Generator.Api.Filter;
 using VerifyTests;
 using static VerifyNUnit.Verifier;
 
@@ -10,7 +11,7 @@ namespace Siteswaps.Generator.Api.Test;
 
 public abstract class SiteswapGeneratorTestSuite
 {
-    protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input);
+    protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input, Func<IFilterBuilder, IFilterBuilder>? builder = null);
 
     static SiteswapGeneratorTestSuite()
     {
@@ -25,6 +26,20 @@ public abstract class SiteswapGeneratorTestSuite
         await Verify(siteswaps.Select(x => x.ToString()).ToList())
             .UseTypeName(nameof(SiteswapGeneratorTestSuite))
             .UseTextForParameters(GenerateInputs.ToName(input));
+    }
+    
+    
+    [Test]
+    public async Task PatternFilterTest()
+    {
+        var sut = CreateTestObject(
+                new SiteswapGeneratorInput(10, 6, 2, 10)
+                {
+                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60),1000 )
+                },
+                x => x.Pattern(new[]{2,-1,6,-1,5,-1,-1,-1,-1,-1}, 2));
+        var siteswaps = await sut.GenerateAsync();
+        await Verify(siteswaps.Select(x => x.ToString()).ToList());
     }
 }
 
