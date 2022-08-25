@@ -34,6 +34,7 @@ jobs:
           npx playwright install
           npx playwright install-deps
           npx playwright install-deps chromium 
+          pwsh bin\Debug\netX\playwright.ps1 install
       - name: Wait for Netlify Deploy
         uses: probablyup/wait-for-netlify-action@3.2.0
         id: waitForDeployment
