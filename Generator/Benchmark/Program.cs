@@ -6,23 +6,11 @@ using Siteswaps.Generator.Domain;
 
 var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
 
-
-
 namespace Benchmark
 {
     [HtmlExporter]
     public class GeneratorBenchmarks
     {
-        [Benchmark]
-        public async Task<IEnumerable<ISiteswap>> Generate_Old()
-        {
-            var generator = new Siteswaps.Generator.Domain.OldGenerator.SiteswapGeneratorFactory(new FilterBuilderFactory())
-                .WithInput(Input())
-                .Create();
-            return await generator.GenerateAsync();
-        }
-        
-        
         [Benchmark]
         public async Task<IEnumerable<ISiteswap>> Generate_New()
         {
