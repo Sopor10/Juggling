@@ -33,19 +33,17 @@ jobs:
           npx playwright install
           npx playwright install-deps
           npx playwright install-deps chromium 
-      - name: run Webassembly 
-        run: nohup dotnet run -c release --project ./Webassembly/Webassembly.csproj --no-build &
-      - uses: cygnetdigital/wait_for_response@v2.0.0
-        name: Wait for application to start up
+      - name: Wait for Netlify Deploy
+        uses: probablyup/wait-for-netlify-action@3.2.0
+        id: waitForDeployment
         with:
-          url: 'https://localhost:7021'
-          responseCode: '200,500'
-          timeout: 15000
-          interval: 500        
+          site_id: ${{ secrets.NETLIFY_SITE_ID }}
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       - name: Test
         run: dotnet test -c Release --no-build --filter TestCategory=E2E
         env:
-          E2E_TEST_BASEURL: https://localhost:7021
+          E2E_TEST_BASEURL: ${{ steps.waitForDeployment.outputs.url }}
           
   publish-docker-image:
     needs: build-and-test
