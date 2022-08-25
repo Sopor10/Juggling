@@ -1,5 +1,4 @@
 ﻿using Bunit;
-using NUnit.Framework;
 using TestContext = Bunit.TestContext;
 
 namespace Siteswaps.Generator.Components.Test;

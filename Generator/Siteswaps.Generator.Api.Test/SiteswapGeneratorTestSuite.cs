@@ -3,14 +3,20 @@ using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Siteswaps.Generator.Api.Filter;
+using VerifyTests;
 using static VerifyNUnit.Verifier;
 
 namespace Siteswaps.Generator.Api.Test;
 
 public abstract class SiteswapGeneratorTestSuite
 {
-    protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input);
+    protected abstract ISiteswapGenerator CreateTestObject(SiteswapGeneratorInput input, Func<IFilterBuilder, IFilterBuilder>? builder = null);
 
+    static SiteswapGeneratorTestSuite()
+    {
+        VerifierSettings.DisableRequireUniquePrefix();
+    }
    
     [TestCaseSource(typeof(GenerateInputs))]
     public async Task Verify_SiteswapGenerator_Against_Older_Version(SiteswapGeneratorInput input)
@@ -20,6 +26,20 @@ public abstract class SiteswapGeneratorTestSuite
         await Verify(siteswaps.Select(x => x.ToString()).ToList())
             .UseTypeName(nameof(SiteswapGeneratorTestSuite))
             .UseTextForParameters(GenerateInputs.ToName(input));
+    }
+    
+    
+    [Test]
+    public async Task PatternFilterTest()
+    {
+        var sut = CreateTestObject(
+                new SiteswapGeneratorInput(10, 6, 2, 10)
+                {
+                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60),1000 )
+                },
+                x => x.Pattern(new[]{2,-1,6,-1,5,-1,-1,-1,-1,-1}, 2));
+        var siteswaps = await sut.GenerateAsync();
+        await Verify(siteswaps.Select(x => x.ToString()).ToList());
     }
 }
 
@@ -36,11 +56,10 @@ class GenerateInputs : IEnumerable
             MaxHeight = maxHeight,
             MinHeight = minHeight,
             NumberOfObjects = numberOfObjects,
-            StopCriteria = new(TimeSpan.FromSeconds(15), 100000)
+            StopCriteria = new(TimeSpan.FromSeconds(60), 100000)
         };
         return new TestCaseData(input).SetName(ToName(input));
     }
-    
     
     public IEnumerator GetEnumerator()
     {
@@ -51,5 +70,6 @@ class GenerateInputs : IEnumerable
         yield return Next(5, 10, 2, 6);
         yield return Next(5,  5, 0, 3);
         yield return Next(7, 13, 2, 8);
+        yield return Next(12, 20, 2, 8);
     }
 }

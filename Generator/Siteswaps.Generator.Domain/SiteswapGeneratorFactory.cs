@@ -8,7 +8,7 @@ public record SiteswapGeneratorFactory(IFilterBuilderFactory FilterBuilderFactor
 {
     private ImmutableList<Func<IFilterBuilder, IFilterBuilder>> Config { get; init; } = ImmutableList<Func<IFilterBuilder, IFilterBuilder>>.Empty;
     private SiteswapGeneratorInput Input { get; init; } = new();
-    public ISiteswapGeneratorFactory ConfigureFilter(Func<IFilterBuilder, IFilterBuilder> builder) => this with { Config = Config.Add(builder) };
+    public ISiteswapGeneratorFactory ConfigureFilter(Func<IFilterBuilder, IFilterBuilder>? builder) => this with { Config = builder is null ? Config : Config.Add(builder) };
     public ISiteswapGeneratorFactory WithInput(SiteswapGeneratorInput input) => this with {Input = input};
     
     

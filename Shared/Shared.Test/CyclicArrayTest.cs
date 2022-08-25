@@ -26,6 +26,7 @@ public class CyclicArrayTest
     {
         var sut = new CyclicArray<int>(Enumerable.Range(0,5));
 
-        sut.Rotate(i)[0].Should().Be(i);
+        sut.Rotate(i);
+        sut[0].Should().Be(i);
     }
 }

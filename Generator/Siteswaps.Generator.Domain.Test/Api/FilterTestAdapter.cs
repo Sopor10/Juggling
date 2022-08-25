@@ -8,7 +8,7 @@ namespace Siteswaps.Generator.Domain.Test.Api;
 
 public class FilterTestAdapter : FilterTestSuite
 {
-    protected override IPartialSiteswap AsPartialSiteswap(int[] values) => new PartialSiteswap(values);
+    protected override IPartialSiteswap AsPartialSiteswap(sbyte[] values) => new PartialSiteswap(values);
 
     protected override IFilterBuilder FilterBuilder => new FilterBuilderFactory().Create(Input ?? throw new InvalidOperationException("Please set a Input via ConfigureSiteswapGeneratorInput"));
     protected override void ConfigureSiteswapGeneratorInput(SiteswapGeneratorInput input) => Input = input;

@@ -1,64 +1,116 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
-using Siteswaps.Generator.Api;
+﻿using Shared;
 using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Domain;
 
-[DebuggerDisplay("{ToString()}")]
-public record PartialSiteswap : IPartialSiteswap
+public class PartialSiteswap : IPartialSiteswap
 {
-    public const int Free = -1;
-
-    public PartialSiteswap(params int[] items) : this(items.ToImmutableList())
+    internal PartialSiteswap(sbyte[] items, sbyte lastFilledPosition = 0)
     {
-    }
-
-    private PartialSiteswap(ImmutableList<int> items, int posOfMaxPossibleValue = 0)
-    {
+        LastFilledPosition = lastFilledPosition;
         Items = items;
-        PosOfMaxPossibleValue = posOfMaxPossibleValue;
-        var currentIndex = Items.IndexOf(Free) - 1;
+        Interface = new CyclicArray<sbyte>(Enumerable.Repeat((sbyte)-1, Items.Length));
 
-        LastFilledPosition = currentIndex < 0 ? Items.Count - 1 : currentIndex;
-    }
-
-
-    public int LastFilledPosition { get; }
-    public ImmutableList<int> Items { get; }
-    private int PosOfMaxPossibleValue { get; }
-
-    public virtual bool Equals(PartialSiteswap? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return ToString().Equals(other.ToString());
-    }
-
-    public bool IsFilled() => Items.IndexOf(Free) == -1;
-
-    public override int GetHashCode() => ToString().GetHashCode();
-
-    public static PartialSiteswap Standard(int period, int maxHeight) =>
-        new(Enumerable.Repeat(Free, period - 1).Prepend(maxHeight).ToImmutableList());
-
-    public override string ToString() => string.Join("", Items.Select(Transform));
-
-    private string Transform(int i) =>
-        i switch
+        for (sbyte i = 0; i < Items.Length; i++)
         {
-            < 10 => $"{i}",
-            _ => Convert.ToChar(i + 87).ToString()
-        };
+            Interface[i + this[i]] = this[i];
+        }
 
-    public PartialSiteswap WithLastFilledPosition(int i) => new(Items.SetItem(LastFilledPosition, i));
+        foreach (var item in Items)
+        {
+            if (item>0)
+            {
+                PartialSum += item;
+            }
+        }
+    }
 
-    public int ValueAtCurrentIndex() => Items[LastFilledPosition];
+    public sbyte[] Items { get; }
+    private CyclicArray<sbyte> Interface { get; }
 
-    public PartialSiteswap? CreateNextFilledPosition(SiteswapGeneratorInput input)
+    public sbyte PartialSum { get; set; }
+    
+
+    private sbyte this[sbyte i]
     {
-        if (LastFilledPosition < 0 || LastFilledPosition >= input.Period - 1) return null;
+        get => Items[i];
+        set
+        {
+            var oldValue = Items[i];
+            if (oldValue == value)
+            {
+                return;
+            }
+            
+            if (oldValue != -1)
+            {
+                Interface[i + oldValue] = -1;
+                PartialSum -= oldValue;
 
-        return new PartialSiteswap(Items.SetItem(LastFilledPosition + 1, Items[PosOfMaxPossibleValue]), LastFilledPosition + 1);
+            }
+            
+            Items[i] = value;
+            if (value == -1)
+            {
+                return;
+            }
+
+            PartialSum += value;
+            Interface[i + value] = value;
+        }
+    }
+
+    public sbyte LastFilledPosition { get; private set; }
+
+    public bool IsFilled()
+    {
+        return Items.Last() != -1;
+    }
+
+    public static PartialSiteswap Standard(sbyte period, sbyte maxHeight)
+    {
+        return new PartialSiteswap(Enumerable.Repeat((sbyte)-1, period - 1).Prepend(maxHeight).ToArray());
+    }
+
+
+    public bool FillCurrentPosition(sbyte throwHeight)
+    {
+        var oldHeight = this[LastFilledPosition];
+        if (oldHeight == throwHeight)
+        {
+            return true;
+        }
+        ResetCurrentPosition();
+
+        if (Interface[LastFilledPosition + throwHeight] == -1)
+        {
+            this[LastFilledPosition] = throwHeight;
+            return true;
+        }
+
+        this[LastFilledPosition] = oldHeight;
+
+        return false;
+    }
+
+    public void ResetCurrentPosition()
+    {
+        var oldHeight = this[LastFilledPosition];
+        if (oldHeight == -1)
+        {
+            return;
+        }
+        this[LastFilledPosition] = -1;
+    }
+
+    public void MoveForward(sbyte max)
+    {
+        LastFilledPosition++;
+    }
+
+    public void MoveBack()
+    {
+        ResetCurrentPosition();
+        LastFilledPosition--;
     }
 }

@@ -1,81 +1,91 @@
-﻿using System.Diagnostics;
-using Siteswaps.Generator.Api;
+﻿using Siteswaps.Generator.Api;
 using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Domain;
 
-internal class SiteswapGenerator : ISiteswapGenerator
+public class SiteswapGenerator : ISiteswapGenerator
 {
-    public SiteswapGenerator(ISiteswapFilter siteswapFilter, SiteswapGeneratorInput input)
+    public SiteswapGenerator(ISiteswapFilter filter, SiteswapGeneratorInput input)
     {
-        SiteswapFilter = siteswapFilter;
+        Filter = filter;
         Input = input;
+        PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
+
     }
 
-    private ISiteswapFilter SiteswapFilter { get; }
+    private bool CountExceedsLimit { get; set; }
+    private HashSet<ISiteswap> Siteswaps { get; } = new();
+    private ISiteswapFilter Filter { get; }
     private SiteswapGeneratorInput Input { get; }
-    private HashsetStack<PartialSiteswap> Stack { get; } = new();
+    private PartialSiteswap PartialSiteswap { get; }
 
-    public Task<IEnumerable<ISiteswap>> GenerateAsync()
+    public async Task<IEnumerable<ISiteswap>> GenerateAsync()
     {
-        return Task.Run(() =>
-        {
-            var tmp = GeneratePartialSiteswaps()
-                .Distinct()
-                .Select(x => x as ISiteswap)
-                .ToList()
-                .AsEnumerable();
-            Stack.Reset();
-            return tmp;
-        });
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.CancelAfter(Input.StopCriteria.TimeOut);
+        Token = cancellationTokenSource.Token;
+
+        await Task.Run(() => BackTrack(0), Token);
+
+        return Siteswaps;
     }
 
-    private IEnumerable<Siteswap> GeneratePartialSiteswaps()
+    private CancellationToken Token { get; set; }
+
+    private void BackTrack(int uniqueMaxIndex)
     {
-        var count = 0;
-        var sw = new Stopwatch();
-        sw.Start();
+        var min = Input.MinHeight;
+        var max = PartialSiteswap.Items[uniqueMaxIndex] != -1? PartialSiteswap.Items[uniqueMaxIndex]:PartialSiteswap.Items[uniqueMaxIndex - 1];
 
-        for (var i = 0; i <= Input.MaxHeight; i++)
+        for (var i = max; i >= min; i--)
         {
-            var partialSiteswap = PartialSiteswap.Standard(Input.Period, i);
-            if (!SiteswapFilter.CanFulfill(partialSiteswap)) continue;
-            Stack.Push(partialSiteswap);
-        }
-
-        while (Stack.TryPop(out var partialSiteswap))
-        {
-            if (sw.Elapsed > Input.StopCriteria.TimeOut || count > Input.StopCriteria.MaxNumberOfResults) yield break;
-
-            if (partialSiteswap.IsFilled() && Siteswap.TryCreate(partialSiteswap.Items, out var s))
+            if (ShouldStop()) return;
+            
+            if (PartialSiteswap.FillCurrentPosition(i) is false)
             {
-                count++;
-                yield return s;
+                continue;
+            }
+             
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * min)/ Input.Period > Input.NumberOfObjects)
+            {
+                PartialSiteswap.ResetCurrentPosition();
+                continue;
+            }
+            
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * Input.MaxHeight)/ Input.Period < Input.NumberOfObjects)
+            {
+                PartialSiteswap.ResetCurrentPosition();
+                continue;
+            }
+            
+            if (Filter.CanFulfill(PartialSiteswap) is false)
+            {
+                PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
 
-            foreach (var siteswap in GenerateNext(partialSiteswap, Input))
+            if (PartialSiteswap.IsFilled())
             {
-                if (!SiteswapFilter.CanFulfill(siteswap)) continue;
-
-                Stack.Push(siteswap);
+                if (PartialSiteswap.Items[^1] != max)
+                {
+                    Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
+                    if (Siteswaps.Count > Input.StopCriteria.MaxNumberOfResults)
+                    {
+                        CountExceedsLimit = true;
+                    }
+                }
+                PartialSiteswap.ResetCurrentPosition();
+                continue;
             }
+
+            PartialSiteswap.MoveForward(max);
+            BackTrack(i == max ? uniqueMaxIndex + 1 : 0);
+            PartialSiteswap.MoveBack();
         }
     }
 
-    private IEnumerable<PartialSiteswap> GenerateNext(PartialSiteswap current, SiteswapGeneratorInput input)
+    private bool ShouldStop()
     {
-        var nextPosition = current.CreateNextFilledPosition(input);
-        if (nextPosition is not null)
-        {
-            foreach (var siteswap in ThisPositionWithLower(nextPosition, input)) yield return siteswap;
-            yield return nextPosition;
-        }
-    }
-
-    private IEnumerable<PartialSiteswap> ThisPositionWithLower(PartialSiteswap current, SiteswapGeneratorInput input)
-    {
-        for (var i = input.MinHeight; i < current.ValueAtCurrentIndex(); i++)
-            yield return current.WithLastFilledPosition(i);
+        return CountExceedsLimit || Token.IsCancellationRequested;
     }
 }

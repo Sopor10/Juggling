@@ -38,8 +38,8 @@ internal record FilterBuilder : IFilterBuilder
         return this with
         {
             Filter = Filter
-                .Add(Factory.PatternFilter(pattern, numberOfJuggler))
                 .Add(Factory.GeneratePatternFilterHeuristics(pattern, numberOfJuggler))
+                .Add(Factory.PatternFilter(pattern, numberOfJuggler))
         };
     }
 }

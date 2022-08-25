@@ -66,7 +66,7 @@ jobs:
         uses: thefringeninja/action-minver@2.0.0-preview1
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v3.0.0
+        uses: docker/build-push-action@v3.1.0
         with:
           context: .
           file: WebApplication/Dockerfile

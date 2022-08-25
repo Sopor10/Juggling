@@ -13,9 +13,3 @@ public interface IFilterBuilder
     IFilterBuilder WithDefault();
     ISiteswapFilter Build();
 }
-
-public interface IFilterBuilderFactory
-{
-    public IFilterBuilder Create(SiteswapGeneratorInput input);
-}
-

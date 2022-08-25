@@ -1,22 +1,24 @@
 ﻿using System.Collections;
-using System.Collections.Immutable;
 
 namespace Shared;
 
 public record CyclicArray<T> : IEnumerable<T>
 {
 
-    public CyclicArray(IEnumerable<T> items)
+    public CyclicArray(IEnumerable<T> items, int rotationIndex = 0)
     {
-        Items = items.ToImmutableArray();
+        RotationIndex = rotationIndex;
+        Items = items.ToArray();
     }
 
-    private ImmutableArray<T> Items { get; }
+    private int RotationIndex { get; set; }
+    private T[] Items { get; }
     public int Length => Items.Length;
 
     public T this[int i]
     {
-        get => Items[i % Items.Length];
+        get => Items[(i + Items.Length + RotationIndex) % Items.Length];
+        set => Items[(i + Items.Length + RotationIndex) % Items.Length] = value;
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -32,7 +34,7 @@ public record CyclicArray<T> : IEnumerable<T>
         {
             for (var k = 0; k < Items.Length; k++)
             {
-                yield return (j * Items.Length + k, Items[k]);
+                yield return (j * Items.Length + k, this[k]);
 
             }
 
@@ -46,7 +48,8 @@ public record CyclicArray<T> : IEnumerable<T>
 
     public CyclicArray<T> Rotate(int i)
     {
-        return new (this.Skip(i).Take(Length).ToImmutableArray());
+        RotationIndex += i;
+        return this;
     }
 }
 
