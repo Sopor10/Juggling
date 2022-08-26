@@ -37,6 +37,7 @@ jobs:
         uses: probablyup/wait-for-netlify-action@3.2.0
         id: waitForDeployment
         with:
+          max_timeout: 60
           site_id: ${{ secrets.NETLIFY_SITE_ID }}
         env:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
