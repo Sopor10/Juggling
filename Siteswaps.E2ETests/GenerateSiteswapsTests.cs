@@ -46,8 +46,5 @@ public class GenerateSiteswapsTests: E2ETestsBase
         {
             (await Page.Locator("#passist-link-aaa50").CountAsync()).Should().Be(1);
         });
-
-        var title = await popup.TitleAsync();
-        title.Should().Contain("passist");
     }
 }
