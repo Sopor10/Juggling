@@ -13,7 +13,7 @@ public record GeneratorState
     public bool IsGenerating { get; init; } = false;
 
     public ImmutableList<Throw> Throws { get; init; } =
-        new[] { Throw.Zip, Throw.Self, Throw.SinglePass, Throw.Heff, Throw.DoublePass, Throw.TripleSelf  }
+        new[] { Throw.Zip,Throw.Hold, Throw.Zap, Throw.Self, Throw.SinglePass, Throw.Heff, Throw.DoublePass, Throw.TripleSelf  }
             .ToImmutableList();
 
 
@@ -50,6 +50,31 @@ public record Throw(string Name, int Height)
     public static Throw TripleSelf => new("Triple Self", 10);
     public static Throw TriplePass => new("Triple Pass", 11);
 
+    public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
+    {
+        var result = new HashSet<int>();
+        if (IsSelf)
+        {
+            var min = Height - 1;
+            var max = Height + 1;
+            for (var i = (min * amountOfJugglers) + 1; i < max * amountOfJugglers; i++)
+            {
+                var item = i/2;
+                if (item % amountOfJugglers != 0)
+                {
+                    result.Add(item);
+                }
+            }
+        }
+        else
+        {
+            result.Add(Height * amountOfJugglers / 2);
+        }
+
+        return result;
+    }
+
+    private bool IsSelf => Height % 2 == 1;
 
     public static IEnumerable<Throw> All => new List<Throw>
     {
