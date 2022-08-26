@@ -6,27 +6,6 @@ namespace Siteswaps.Generator.Components.State;
 public static class Reducer
 {
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceSetStateFromIntuitiveUi(SiteswapGeneratorState state,
-        SetStateFromIntuitiveUiAndGenerateSiteswaps action)
-    {
-        return state with
-        {
-            State = state.State with
-            {
-                Objects = new Between
-                {
-                    MaxNumber = action.Clubs.Last(),
-                    MinNumber = action.Clubs.First()
-                },
-                Period = action.Period,
-                MaxThrow = action.Throws.Select(x => x.Height).Max(),
-                MinThrow = action.Throws.Select(x => x.Height).Min(),
-                NumberOfJugglers = action.NumberOfJugglers
-            }
-        };
-    }
-
-    [ReducerMethod]
     public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(SiteswapGeneratorState state,
         SiteswapsGeneratedAction action)
     {
@@ -228,6 +207,30 @@ public static class Reducer
         return state with
         {
             State = action.State
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceThrowsChangedAction(SiteswapGeneratorState state, ThrowsChangedAction action)
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Throws = action.Throws.ToImmutableList()
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceCreateFilterFromThrowList(SiteswapGeneratorState state, CreateFilterFromThrowList action)
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                CreateFilterFromThrowList = action.Value
+            }
         };
     }
 }

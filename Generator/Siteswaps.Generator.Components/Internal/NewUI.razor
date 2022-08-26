@@ -1,5 +1,7 @@
 ﻿@page "/listbox"
+@using System.Collections
 @inherits FluxorComponent
+@inject IState<SiteswapGeneratorState> State
 
 @inject IDispatcher Dispatcher
 
@@ -7,7 +9,7 @@
     <div class="col-md-6 col-lg-4 col-xl-3 p-3">
         <RadzenCard>
             <h4>Throws</h4>
-            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="@throws" Multiple="true" Data="@(allThrows)"
+            <RadzenListBox TValue="IEnumerable<Throw>" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Value="@Throws" Change="ThrowsChanged" Multiple="true" Data="@(allThrows)"
                            TextProperty="@(nameof(Throw.Name))"/>
         </RadzenCard>
     </div>
@@ -15,15 +17,15 @@
     <div class="col-md-6 col-lg-4 col-xl-3 p-3">
         <h4>Number of Jugglers</h4>
         <div class="row">
-            <RadzenNumeric TValue="int" Step="1" Min="1" Max="5" @bind-Value="numberOfJugglers" ShowUpDown="false"/>
-            <RadzenSlider TValue="int" Step="1" Min="1" Max="5" @bind-Value="numberOfJugglers" Style="width: 100%"/>
+            <RadzenNumeric TValue="int" Step="1" Min="1" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
+            <RadzenSlider TValue="int" Step="1" Min="1" Max="5" Value="State.Value.State.NumberOfJugglers.Value"  Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
         </div>
     </div>
     <div class="col-md-6 col-lg-4 col-xl-3 p-3">
         <h4>Period</h4>
-        <div class="row">
-            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" @bind-Value="period" ShowUpDown="false"/>
-            <RadzenSlider TValue="int" Step="1" Min="1" Max="30" @bind-Value="period" Style="width: 100%"/>
+        <div class="row">                                                                          
+            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(new PeriodChangedAction(x)))" ShowUpDown="false"/>
+            <RadzenSlider TValue="int" Step="1" Min="1" Max="30"  Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(new PeriodChangedAction(x)))" Style="width: 100%"/>
         </div>
     </div>
     <div class="col-md-6 col-lg-4 col-xl-3 p-3">
@@ -31,11 +33,11 @@
         <div class="row">
             <div class="col">
                 <div class="row">
-                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
-                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
                 </div>
                 <div class="row">
-                    <RadzenSlider Range="true" @bind-Value="@clubs" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
+                    <RadzenSlider Range="true" Value="@Clubs" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
                 </div>
 
             </div>
@@ -44,7 +46,7 @@
 </div>
 <div class="row px-3">
     <div class="col-md-6 col-lg-4 col-xl-3 p-3">
-        <RadzenButton Click="@Generate" Text="Generate"/>
+        <GenerateButton/>
     </div>
 </div>
 <div class="row px-3">
@@ -54,59 +56,47 @@
 </div>
 
 @code {
-    IEnumerable<Throw> throws = new[] { Throw.Heff, Throw.Self };
-    readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
-    private int numberOfJugglers = 2;
-    private int period = 7;
-    private IEnumerable<int> clubs = new[] { 6, 7};
+    IEnumerable<Throw> Throws => State.Value.State.Throws;
+    private readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
+    private IEnumerable<int> Clubs => new[] { (State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber??7};
 
-    public record Throw(string Name, int Height)
+    protected override void OnInitialized()
     {
-        public static Throw EmptyHand => new("Empty Hand", 0);
-        public static Throw Zip => new("Zip", 2);
-        public static Throw Hold => new("Hold", 4);
-        public static Throw Zap => new("Zap", 5);
-        public static Throw Self => new("Self", 6);
-        public static Throw SinglePass => new("Single Pass", 7);
-        public static Throw Heff => new("Heff", 8);
-        public static Throw DoublePass => new("Double Pass", 9);
-        public static Throw TripleSelf => new("Triple Self", 10);
-        public static Throw TriplePass => new("Triple Pass", 11);
-
-
-        public static IEnumerable<Throw> All => new List<Throw>
-        {
-            EmptyHand,
-            Zip,
-            Hold,
-            Zap,
-            Self,
-            SinglePass,
-            Heff,
-            DoublePass,
-            TripleSelf,
-            TriplePass
-        };
+        Dispatcher.Dispatch(new CreateFilterFromThrowList(true));
     }
-
-    private void Generate()
-    {
-        Dispatcher.Dispatch(new SetStateFromIntuitiveUiAndGenerateSiteswaps(clubs,period,throws, numberOfJugglers));
-    }
-
 
     private void MaxClubsChanged(int value)
     {
-        var temp = clubs.ToList();
-        temp[1] = value;
-        clubs = temp;
+        Dispatcher.Dispatch(new MinNumberChangedAction(value));
     }
 
     private void MinClubsChanged(int value)
     {
-        var temp = clubs.ToList();
-        temp[0] = value;
-        clubs = temp;
+        Dispatcher.Dispatch(new MaxNumberChangedAction(value));
     }
+
+    private void SliderChanged(IEnumerable<int> values)
+    {
+        Dispatcher.Dispatch(new MinNumberChangedAction(values.First()));
+        Dispatcher.Dispatch(new MaxNumberChangedAction(values.Last()));
+
+    }
+
+    private void ThrowsChanged(object obj)
+    {
+        if (obj is IEnumerable<Throw> newThrows)
+        {
+            Dispatcher.Dispatch(new ThrowsChangedAction(newThrows));
+
+        if (Throws.Any() is false)
+        {
+            return;
+        }
+        Dispatcher.Dispatch(new MaxThrowChangedAction(Throws.Select(x => x.Height).Max()));
+        Dispatcher.Dispatch(new MinThrowChangedAction(Throws.Select(x => x.Height).Min()));
+        }
+        
+    }
+
 
 }

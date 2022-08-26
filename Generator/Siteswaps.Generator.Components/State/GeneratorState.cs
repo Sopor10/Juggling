@@ -12,7 +12,14 @@ public record GeneratorState
     public int? MinThrow { get; init; } = 2;
     public bool IsGenerating { get; init; } = false;
 
+    public ImmutableList<Throw> Throws { get; init; } =
+        new[] { Throw.Zip, Throw.Self, Throw.SinglePass, Throw.Heff, Throw.DoublePass, Throw.TripleSelf  }
+            .ToImmutableList();
+
+
+
     public ImmutableList<IFilterInformation> Filter { get; init; } = ImmutableList<IFilterInformation>.Empty;
+    public bool CreateFilterFromThrowList { get; init; } = false;
 }
 
 public abstract record Objects;
@@ -26,4 +33,35 @@ public record Between : Objects
 {
     public int? MinNumber { get; init; } = 6;
     public int? MaxNumber { get; init; } = 7;
+}
+
+
+
+public record Throw(string Name, int Height)
+{
+    public static Throw EmptyHand => new("Empty Hand", 0);
+    public static Throw Zip => new("Zip", 2);
+    public static Throw Hold => new("Hold", 4);
+    public static Throw Zap => new("Zap", 5);
+    public static Throw Self => new("Self", 6);
+    public static Throw SinglePass => new("Single Pass", 7);
+    public static Throw Heff => new("Heff", 8);
+    public static Throw DoublePass => new("Double Pass", 9);
+    public static Throw TripleSelf => new("Triple Self", 10);
+    public static Throw TriplePass => new("Triple Pass", 11);
+
+
+    public static IEnumerable<Throw> All => new List<Throw>
+    {
+        EmptyHand,
+        Zip,
+        Hold,
+        Zap,
+        Self,
+        SinglePass,
+        Heff,
+        DoublePass,
+        TripleSelf,
+        TriplePass
+    };
 }
