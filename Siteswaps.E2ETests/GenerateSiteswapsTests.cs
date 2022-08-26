@@ -37,7 +37,7 @@ public class GenerateSiteswapsTests: E2ETestsBase
     [Test]
     public async Task EasyUI_Generates_Siteswaps()
     {
-        await Page.GotoAsync(BaseUrl + "/easyUi");
+        await Page.GotoAsync(BaseUrl + "easyUi");
 
         await Page.ClickAsync("#generate");
         await Page.WaitForSelectorAsync("#passist-link-aaa50");
