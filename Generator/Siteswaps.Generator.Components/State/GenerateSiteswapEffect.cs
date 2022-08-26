@@ -36,15 +36,37 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
             var siteswapGeneratorInput = new SiteswapGeneratorInput
             {
                 Period = action.State.Period.Value,
-                MaxHeight = action.State.MaxThrow.Value,
-                MinHeight = action.State.MinThrow.Value,
+                MaxHeight = action.State.CreateFilterFromThrowList ? action.State.Throws.MaxBy(x => x.Height).GetHeightForJugglers(action.State.NumberOfJugglers.Value).Max() : action.State.MaxThrow.Value,
+                MinHeight = action.State.CreateFilterFromThrowList ? action.State.Throws.MinBy(x => x.Height).GetHeightForJugglers(action.State.NumberOfJugglers.Value).Min() : action.State.MinThrow.Value,
                 NumberOfObjects = number,
             };
 
-            siteswaps.AddRange(await SiteswapGeneratorFactory
+            Func<IFilterBuilder,IFilterBuilder> filterConfig = builder => action.State.Filter
+                .Aggregate(builder, (current, filterInformation) => ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value));
+
+            
+
+            var siteswapGeneratorFactory = SiteswapGeneratorFactory
                 .WithInput(siteswapGeneratorInput)
-                .ConfigureFilter(builder => action.State.Filter
-                    .Aggregate(builder, (current, filterInformation) => ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value)))
+                .ConfigureFilter(filterConfig);
+            
+            var liste = new List<Func<IFilterBuilder, IFilterBuilder>>();
+            if (action.State.CreateFilterFromThrowList)
+            {
+                for (var i = siteswapGeneratorInput.MinHeight; i <= siteswapGeneratorInput.MaxHeight; i++)
+                {
+                    if (action.State.Throws.SelectMany(x => x.GetHeightForJugglers(action.State.NumberOfJugglers.Value)).Contains(i)) continue;
+                    var n = i;
+                    liste.Add(x => x.ExactOccurence(n,0));
+                }
+            }
+            
+            foreach (var func in liste)
+            {
+                siteswapGeneratorFactory = siteswapGeneratorFactory.ConfigureFilter(func);
+            }
+            
+            siteswaps.AddRange(await siteswapGeneratorFactory
                 .Create()
                 .GenerateAsync()
                 .ToListAsync());

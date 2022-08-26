@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-3">
-        <button class="btn btn-primary" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State))">Generate</button>
+        <button class="btn btn-primary" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(Value))">Generate</button>
     </div>
 </div>
 

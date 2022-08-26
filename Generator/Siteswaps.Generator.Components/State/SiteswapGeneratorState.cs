@@ -4,25 +4,14 @@ using Siteswaps.Generator.Api;
 namespace Siteswaps.Generator.Components.State;
 
 [FeatureState]
-public record SiteswapGeneratorState
+public record SiteswapGeneratorState(GeneratorState State, IReadOnlyCollection<ISiteswap> Siteswaps)
 {
-    public IReadOnlyCollection<ISiteswap> Siteswaps { get; init; }
     public bool IsGenerating => State.IsGenerating;
 
-    public SiteswapGeneratorState()
+    public SiteswapGeneratorState() : this(new GeneratorState(), new List<ISiteswap>())
     {
-        State = new GeneratorState();
-        Siteswaps = new List<ISiteswap>();
     }
 
-    public SiteswapGeneratorState(GeneratorState state, IReadOnlyCollection<ISiteswap> siteswaps)
-    {
-        Siteswaps = siteswaps;
-        State = state;
-    }
-
-    public GeneratorState State { get; init; }
-    
     public KnownFilterTypes KnownFilters => new();
 
     public IFilterInformation NewFilter { get; init; } = new NumberFilterInformation();

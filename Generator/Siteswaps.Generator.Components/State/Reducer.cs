@@ -200,4 +200,37 @@ public static class Reducer
 
         throw new InvalidOperationException("This action should only be dispatch if we have a PatternInformation");
     }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceSetState(SiteswapGeneratorState state, SetState action)
+    {
+        return state with
+        {
+            State = action.State
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceThrowsChangedAction(SiteswapGeneratorState state, ThrowsChangedAction action)
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Throws = action.Throws.ToImmutableList()
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceCreateFilterFromThrowList(SiteswapGeneratorState state, CreateFilterFromThrowList action)
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                CreateFilterFromThrowList = action.Value
+            }
+        };
+    }
 }

@@ -65,7 +65,12 @@
 @code
 {
     private GeneratorState Value => State.Value.State;
-
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new CreateFilterFromThrowList(false));
+        base.OnInitialized();
+    }
+    
     private static int? ToInt(ChangeEventArgs eventArgs)
     {
         if (int.TryParse(eventArgs.Value as string, out var result))
