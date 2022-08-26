@@ -46,7 +46,8 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                 .ConfigureFilter(builder => action.State.Filter
                     .Aggregate(builder, (current, filterInformation) => ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value)))
                 .Create()
-                .GenerateAsync());
+                .GenerateAsync()
+                .ToListAsync());
         }
         
         dispatcher.Dispatch(new SiteswapsGeneratedAction(siteswaps));

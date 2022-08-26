@@ -14,32 +14,30 @@ public class SiteswapGenerator : ISiteswapGenerator
     }
 
     private bool CountExceedsLimit { get; set; }
-    private HashSet<ISiteswap> Siteswaps { get; } = new();
+    private int Count { get; set; }
     private ISiteswapFilter Filter { get; }
     private SiteswapGeneratorInput Input { get; }
     private PartialSiteswap PartialSiteswap { get; }
 
-    public async Task<IEnumerable<ISiteswap>> GenerateAsync()
+    public IAsyncEnumerable<ISiteswap> GenerateAsync()
     {
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.CancelAfter(Input.StopCriteria.TimeOut);
         Token = cancellationTokenSource.Token;
 
-        await Task.Run(() => BackTrack(0), Token);
-
-        return Siteswaps;
+        return BackTrack(0);
     }
 
     private CancellationToken Token { get; set; }
 
-    private void BackTrack(int uniqueMaxIndex)
+    private async IAsyncEnumerable<ISiteswap> BackTrack(int uniqueMaxIndex)
     {
         var min = Input.MinHeight;
         var max = PartialSiteswap.Items[uniqueMaxIndex] != -1? PartialSiteswap.Items[uniqueMaxIndex]:PartialSiteswap.Items[uniqueMaxIndex - 1];
 
         for (var i = max; i >= min; i--)
         {
-            if (ShouldStop()) return;
+            if (ShouldStop()) yield break;
             
             if (PartialSiteswap.FillCurrentPosition(i) is false)
             {
@@ -68,8 +66,9 @@ public class SiteswapGenerator : ISiteswapGenerator
             {
                 if (PartialSiteswap.Items[^1] != max)
                 {
-                    Siteswaps.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items));
-                    if (Siteswaps.Count > Input.StopCriteria.MaxNumberOfResults)
+                    yield return Siteswap.CreateFromCorrect(PartialSiteswap.Items);
+                    Count++;
+                    if (Count > Input.StopCriteria.MaxNumberOfResults)
                     {
                         CountExceedsLimit = true;
                     }
@@ -79,7 +78,10 @@ public class SiteswapGenerator : ISiteswapGenerator
             }
 
             PartialSiteswap.MoveForward(max);
-            BackTrack(i == max ? uniqueMaxIndex + 1 : 0);
+            await foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0).WithCancellation(Token))
+            {
+                yield return siteswap;
+            }
             PartialSiteswap.MoveBack();
         }
     }

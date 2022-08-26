@@ -21,7 +21,7 @@ public abstract class SiteswapGeneratorTestSuite
     [TestCaseSource(typeof(GenerateInputs))]
     public async Task Verify_SiteswapGenerator_Against_Older_Version(SiteswapGeneratorInput input)
     {
-        var siteswaps = await CreateTestObject(input).GenerateAsync();
+        var siteswaps = await CreateTestObject(input).GenerateAsync().ToListAsync();
         
         await Verify(siteswaps.Select(x => x.ToString()).ToList())
             .UseTypeName(nameof(SiteswapGeneratorTestSuite))
@@ -38,7 +38,7 @@ public abstract class SiteswapGeneratorTestSuite
                     StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60),1000 )
                 },
                 x => x.Pattern(new[]{2,-1,6,-1,5,-1,-1,-1,-1,-1}, 2));
-        var siteswaps = await sut.GenerateAsync();
+        var siteswaps = await sut.GenerateAsync().ToListAsync();
         await Verify(siteswaps.Select(x => x.ToString()).ToList());
     }
 }
