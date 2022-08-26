@@ -2,5 +2,5 @@
 
 public interface ISiteswapGenerator
 {
-    Task<IEnumerable<ISiteswap>> GenerateAsync();
+    IAsyncEnumerable<ISiteswap> GenerateAsync();
 }

@@ -17,7 +17,7 @@ namespace Benchmark
             var generator = new SiteswapGeneratorFactory(new FilterBuilderFactory())
                 .WithInput(Input())
                 .Create();
-            return await generator.GenerateAsync();
+            return await generator.GenerateAsync().ToListAsync();
         }
 
         private static SiteswapGeneratorInput Input()
