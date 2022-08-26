@@ -4,6 +4,29 @@ using Siteswaps.Generator.Api.Filter;
 
 namespace Siteswaps.Generator.Components.State;
 
+public class GenerateSiteswapsFromIntuitiveUiEffect : Effect<SetStateFromIntuitiveUiAndGenerateSiteswaps>
+{
+    public override async Task HandleAsync(SetStateFromIntuitiveUiAndGenerateSiteswaps action, IDispatcher dispatcher)
+    {
+        var state = new GeneratorState()
+        {
+            Objects = new Between
+            {
+                MaxNumber = action.Clubs.Last(),
+                MinNumber = action.Clubs.First()
+            },
+            Period = action.Period,
+            MaxThrow = action.Throws.Select(x => x.Height).Max(),
+            MinThrow = action.Throws.Select(x => x.Height).Min(),
+            NumberOfJugglers = action.NumberOfJugglers
+        };
+        dispatcher.Dispatch(new SetState(state));
+        dispatcher.Dispatch(new GenerateSiteswapsAction(state));
+    }
+}
+
+
+
 public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 {
     public GenerateSiteswapEffect(ISiteswapGeneratorFactory siteswapGeneratorFactory)

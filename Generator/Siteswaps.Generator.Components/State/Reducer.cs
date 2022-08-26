@@ -6,6 +6,27 @@ namespace Siteswaps.Generator.Components.State;
 public static class Reducer
 {
     [ReducerMethod]
+    public static SiteswapGeneratorState ReduceSetStateFromIntuitiveUi(SiteswapGeneratorState state,
+        SetStateFromIntuitiveUiAndGenerateSiteswaps action)
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Objects = new Between
+                {
+                    MaxNumber = action.Clubs.Last(),
+                    MinNumber = action.Clubs.First()
+                },
+                Period = action.Period,
+                MaxThrow = action.Throws.Select(x => x.Height).Max(),
+                MinThrow = action.Throws.Select(x => x.Height).Min(),
+                NumberOfJugglers = action.NumberOfJugglers
+            }
+        };
+    }
+
+    [ReducerMethod]
     public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(SiteswapGeneratorState state,
         SiteswapsGeneratedAction action)
     {
@@ -199,5 +220,14 @@ public static class Reducer
             };
 
         throw new InvalidOperationException("This action should only be dispatch if we have a PatternInformation");
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceSetState(SiteswapGeneratorState state, SetState action)
+    {
+        return state with
+        {
+            State = action.State
+        };
     }
 }

@@ -1,0 +1,112 @@
+﻿@page "/listbox"
+@inherits FluxorComponent
+
+@inject IDispatcher Dispatcher
+
+<div class="row px-3">
+    <div class="col-md-6 col-lg-4 col-xl-3 p-3">
+        <RadzenCard>
+            <h4>Throws</h4>
+            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="@throws" Multiple="true" Data="@(allThrows)"
+                           TextProperty="@(nameof(Throw.Name))"/>
+        </RadzenCard>
+    </div>
+
+    <div class="col-md-6 col-lg-4 col-xl-3 p-3">
+        <h4>Number of Jugglers</h4>
+        <div class="row">
+            <RadzenNumeric TValue="int" Step="1" Min="1" Max="5" @bind-Value="numberOfJugglers" ShowUpDown="false"/>
+            <RadzenSlider TValue="int" Step="1" Min="1" Max="5" @bind-Value="numberOfJugglers" Style="width: 100%"/>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4 col-xl-3 p-3">
+        <h4>Period</h4>
+        <div class="row">
+            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" @bind-Value="period" ShowUpDown="false"/>
+            <RadzenSlider TValue="int" Step="1" Min="1" Max="30" @bind-Value="period" Style="width: 100%"/>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4 col-xl-3 p-3">
+        <h4>Number of clubs</h4>
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                </div>
+                <div class="row">
+                    <RadzenSlider Range="true" @bind-Value="@clubs" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row px-3">
+    <div class="col-md-6 col-lg-4 col-xl-3 p-3">
+        <RadzenButton Click="@Generate" Text="Generate"/>
+    </div>
+</div>
+<div class="row px-3">
+    <div class="mb-5">
+        <GenerationResults/>
+    </div>
+</div>
+
+@code {
+    IEnumerable<Throw> throws = new[] { Throw.Heff, Throw.Self };
+    readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
+    private int numberOfJugglers = 2;
+    private int period = 7;
+    private IEnumerable<int> clubs = new[] { 6, 7};
+
+    public record Throw(string Name, int Height)
+    {
+        public static Throw EmptyHand => new("Empty Hand", 0);
+        public static Throw Zip => new("Zip", 2);
+        public static Throw Hold => new("Hold", 4);
+        public static Throw Zap => new("Zap", 5);
+        public static Throw Self => new("Self", 6);
+        public static Throw SinglePass => new("Single Pass", 7);
+        public static Throw Heff => new("Heff", 8);
+        public static Throw DoublePass => new("Double Pass", 9);
+        public static Throw TripleSelf => new("Triple Self", 10);
+        public static Throw TriplePass => new("Triple Pass", 11);
+
+
+        public static IEnumerable<Throw> All => new List<Throw>
+        {
+            EmptyHand,
+            Zip,
+            Hold,
+            Zap,
+            Self,
+            SinglePass,
+            Heff,
+            DoublePass,
+            TripleSelf,
+            TriplePass
+        };
+    }
+
+    private void Generate()
+    {
+        Dispatcher.Dispatch(new SetStateFromIntuitiveUiAndGenerateSiteswaps(clubs,period,throws, numberOfJugglers));
+    }
+
+
+    private void MaxClubsChanged(int value)
+    {
+        var temp = clubs.ToList();
+        temp[1] = value;
+        clubs = temp;
+    }
+
+    private void MinClubsChanged(int value)
+    {
+        var temp = clubs.ToList();
+        temp[0] = value;
+        clubs = temp;
+    }
+
+}

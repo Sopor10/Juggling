@@ -1,4 +1,5 @@
 ﻿using Siteswaps.Generator.Api;
+using Siteswaps.Generator.Components.Internal;
 
 namespace Siteswaps.Generator.Components.State;
 
@@ -23,3 +24,5 @@ public record NewFilterCreatedAction(IFilterInformation Value);
 public record SiteswapsGeneratedAction(IReadOnlyCollection<ISiteswap> Siteswaps);
 public record FilterTypeSelectionChangedAction(FilterType FilterType);
 public record PatternFilterValueChangedAction(int Pos, int Value);
+public record SetStateFromIntuitiveUiAndGenerateSiteswaps(IEnumerable<int> Clubs, int Period, IEnumerable<NewUI.Throw> Throws, int NumberOfJugglers);
+public record SetState(GeneratorState State);
