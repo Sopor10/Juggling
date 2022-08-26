@@ -33,4 +33,21 @@ public class GenerateSiteswapsTests: E2ETestsBase
         var title = await popup.TitleAsync();
         title.Should().Contain("passist");
     }
+        
+    [Test]
+    public async Task EasyUI_Generates_Siteswaps()
+    {
+        await Page.GotoAsync(BaseUrl + "/easyUi");
+
+        await Page.ClickAsync("#generate");
+
+        
+        var popup = await Context.RunAndWaitForPageAsync(async () =>
+        {
+            (await Page.Locator("#passist-link-aaa50").CountAsync()).Should().Be(1);
+        });
+
+        var title = await popup.TitleAsync();
+        title.Should().Contain("passist");
+    }
 }
