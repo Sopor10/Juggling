@@ -41,10 +41,6 @@ public class GenerateSiteswapsTests: E2ETestsBase
 
         await Page.ClickAsync("#generate");
 
-        
-        var popup = await Context.RunAndWaitForPageAsync(async () =>
-        {
-            (await Page.Locator("#passist-link-aaa50").CountAsync()).Should().Be(1);
-        });
+        (await Page.Locator("#passist-link-aaa50").CountAsync()).Should().Be(1);
     }
 }
