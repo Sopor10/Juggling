@@ -33,7 +33,7 @@
             <div class="col">
                 <div class="row">
                     <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
-                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last() -1)" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
                 </div>
                 <div class="row">
                     <RadzenSlider Range="true" Value="@Clubs" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
@@ -43,6 +43,7 @@
         </div>
     </div>
 </div>
+
 <div class="row px-3">
     <div class="col-md-6 col-lg-4 col-xl-3 p-3">
         <GenerateButton/>
@@ -67,7 +68,7 @@
 
     private void MaxClubsChanged(int value)
     {
-        Dispatcher.Dispatch(new MinNumberChangedAction(value));
+        Dispatcher.Dispatch(new MinNumberChangedAction(value - 1));
     }
 
     private void MinClubsChanged(int value)
