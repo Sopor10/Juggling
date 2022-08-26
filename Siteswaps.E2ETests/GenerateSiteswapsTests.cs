@@ -40,7 +40,7 @@ public class GenerateSiteswapsTests: E2ETestsBase
         await Page.GotoAsync(BaseUrl + "/easyUi");
 
         await Page.ClickAsync("#generate");
-
+        await Page.WaitForSelectorAsync("#passist-link-aaa50");
         (await Page.Locator("#passist-link-aaa50").CountAsync()).Should().Be(1);
     }
 }
