@@ -1,18 +1,28 @@
-﻿<div style="overflow-x: auto; white-space: nowrap;">
+﻿@inherits FluxorComponent
+@inject IState<SiteswapGeneratorState> State
+
+@inject IDispatcher Dispatcher
+<div style="overflow-x: auto; white-space: nowrap;">
     <div class="row" style="flex-wrap: nowrap; width: 100%;">
 
-        @foreach (var t in Throws)
+        @for (var i = 0; i < Throws.Count; i++)
         {
+            var i1 = i;
+
+            var t = Throws[i];
             <div style="width: 150px;">
                 <Dropdown
-                    SelectedThrow="@t"/>
+                    SelectedThrow="@t"
+                    SelectedThrowChanged="@(x => ThrowChanged(i1, x))"/>
             </div>
         }
         <div style="width: 150px;">
-            <RadzenButton Text="Add" Click="Add" Disabled="@(CanAddThrow() is false)"/>
+            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Add" Click="Add" Disabled="@(CanAddThrow() is false)"/>
         </div>
 
     </div>
+    <RadzenButton Text="Add Filter" Click="AddFilter"/>
+    
 </div>
 @code {
 
@@ -25,5 +35,9 @@
     private void Add() => Throws.Add(Throw.Empty);
 
     private bool CanAddThrow() => Throws.Count < Period;
+
+    private void AddFilter() => Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, Period)));
+
+    private void ThrowChanged(int i, Throw t) => Throws[i] = t;
 
 }

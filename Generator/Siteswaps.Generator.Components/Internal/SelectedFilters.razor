@@ -5,7 +5,11 @@
 
 <div class="container">
 
-    <h5>Your currently selected Filters</h5>
+    @if (ShowHeading)
+    {
+        <h5>Your currently selected Filters</h5>
+    }
+    
     <div style="height: 200px; overflow-y: scroll">
         <ul class="list-group">
             @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
@@ -21,5 +25,8 @@
 
 @code
 {
+    [Parameter]
+    public bool ShowHeading { get; set; } = true;
+
     private GeneratorState Value => State.Value.State;
 }

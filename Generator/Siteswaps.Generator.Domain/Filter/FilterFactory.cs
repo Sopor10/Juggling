@@ -54,8 +54,14 @@ internal class FilterFactory
     {
         return new PatternFilter(pattern.ToImmutableList(), numberOfJuggler, Input);
     }
+    
+    public ISiteswapFilter FlexiblePatternFilter(List<List<int>> pattern, int numberOfJuggler)
+    {
+        return new FlexiblePatternFilter(pattern, numberOfJuggler, Input);
+    }
 
     public ISiteswapFilter GeneratePatternFilterHeuristics(IEnumerable<int> pattern, int numberOfJuggler) => new PatternFilterHeuristicBuilder(this).Build(pattern, numberOfJuggler, Input);
 
     public ISiteswapFilter OrFilter(ImmutableList<ISiteswapFilter> filter, ISiteswapFilter siteswapFilter) => new OrFilter(Combine(filter), siteswapFilter);
+
 }

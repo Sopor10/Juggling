@@ -101,7 +101,37 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                     return builder.Pattern(patternFilterInformation.Pattern, numberOfJugglers);
                 }
                 break;
+            case FilterType.NewPattern:
+                if (filterInformation is NewPatternFilterInformation newPatternFilterInformation)
+                {
+                    return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder);
+                }
+                break;
         }
         throw new ArgumentOutOfRangeException();
+    }
+
+    private IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation, int numberOfJugglers, IFilterBuilder builder)
+    {
+        var result = new List<List<int>>();
+        foreach (var t in newPatternFilterInformation.Pattern)
+        {
+            var heights = t.Height switch
+            {
+                -1 => new List<int>{-1},
+                -2 => new List<int>{-2},
+                -3 => new List<int>{-3},
+
+                _ => t.GetHeightForJugglers(numberOfJugglers) .ToList()
+            };
+            result.Add(heights);
+        }
+
+        for (int i = 0; i < newPatternFilterInformation.MissingLength; i++)
+        {
+            result.Add(new List<int>(){-1});
+        }
+
+        return builder.FlexiblePattern(result, numberOfJugglers);
     }
 }

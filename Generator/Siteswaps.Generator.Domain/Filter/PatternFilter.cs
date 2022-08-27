@@ -35,7 +35,7 @@ internal class PatternFilter : ISiteswapFilter
 
         for (var i = 0; i < pattern.Count; i++)
         {
-            Patterns.Add(pattern.Rotate(i).ToList());
+            Patterns.Add(pattern.Rotate(i));
         }
         
         PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight).Where(x => x % NumberOfJuggler != 0).ToHashSet();
@@ -90,10 +90,113 @@ internal class PatternFilter : ISiteswapFilter
     }
 }
 
+
+internal class FlexiblePatternFilter : ISiteswapFilter
+{
+    private const int DontCare = -1;
+    private const int Pass = -2;
+    private const int Self = -3;
+
+    //each position in a pattern can have multiple possible values
+    private List<List<int>> Pattern { get; }
+    private List<List<List<int>>> Patterns { get; }
+
+    private int NumberOfJuggler { get; }
+
+    private HashSet<int> PassValues { get; }
+
+    private HashSet<int> SelfValues { get; }
+
+    public FlexiblePatternFilter(List<List<int>> pattern, int numberOfJuggler, SiteswapGeneratorInput input)
+    {
+        Pattern = pattern;
+        NumberOfJuggler = numberOfJuggler;
+        Patterns = new List<List<List<int>>>();
+
+        for (var i = 0; i < pattern.Count; i++)
+        {
+            var rotate = pattern.Rotate(i);
+            Patterns.Add(rotate);
+        }
+
+        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight)
+            .Where(x => x % NumberOfJuggler != 0).ToHashSet();
+        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight)
+            .Where(x => x % NumberOfJuggler == 0).ToHashSet();
+
+    }
+
+    public bool CanFulfill(IPartialSiteswap value)
+    {
+        if (!value.IsFilled())
+        {
+            return true;
+        }
+
+        for (var i = 0; i < value.Items.Length; i++)
+        {
+            if (IsMatch(value, Patterns[i]))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsMatch(IPartialSiteswap value, List<List<int>> pattern)
+    {
+        foreach (var (siteswapValue, patternValues) in value.Items.Zip(pattern))
+        {
+            var singleMatch = false;
+            foreach (var patternValue in patternValues)
+            {
+                if (IsSingleMatch(siteswapValue, patternValue) )
+                {
+                    singleMatch = true;
+                }
+            }
+
+            if (singleMatch is false)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private bool IsSingleMatch(sbyte siteswapValue, int patternValue)
+    {
+        if (patternValue == DontCare) return true;
+        if (patternValue == Pass)
+        {
+            if (!PassValues.Contains(siteswapValue))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (patternValue == Self)
+        {
+            if (!SelfValues.Contains(siteswapValue))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (siteswapValue != patternValue) return false;
+        return true;
+    }
+}
+
 public static class Extensions
 {
-    public static ImmutableList<int> Rotate(this ImmutableList<int> source, int number)
+    public static List<T> Rotate<T>(this IEnumerable<T> source, int number)
     {
-        return source.ToCyclicArray().Rotate(number).EnumerateValues(1).ToImmutableList();
+        return source.ToCyclicArray().Rotate(number).EnumerateValues(1).ToList();
     }
 }

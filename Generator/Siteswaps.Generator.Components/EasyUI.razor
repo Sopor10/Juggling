@@ -19,8 +19,8 @@
             <div class="p-3">
                 <h4>Number of Jugglers</h4>
                 <div class="row">
-                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
-                    <RadzenSlider TValue="int" Step="1" Min="1" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
+                    <RadzenNumeric TValue="int" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
+                    <RadzenSlider TValue="int" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
                 </div>
             </div>
             <div class="p-3">
@@ -52,8 +52,13 @@
             <div class="p-3">
                 <h4>Filter</h4>
                 <div class="row">
+                    <SelectedFilters ShowHeading="false"/>
+                </div>
+                <div class="row">
                     <RadzenButton Text="Add Filter" Click="@ShowInlineDialog"/>
                 </div>
+
+
             </div>
         </RadzenCard>
     </div>

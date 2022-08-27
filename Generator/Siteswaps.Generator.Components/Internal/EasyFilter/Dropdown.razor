@@ -2,7 +2,8 @@
     AllowClear="false" 
     TValue="Throw" 
     Data="@(PossibleThrows)"
-    @bind-Value="@SelectedThrow"
+    Value="@SelectedThrow"
+    Change="Change"
     TextProperty="@nameof(Throw.Name)" 
     Style="width: 150px"/>
 
@@ -13,5 +14,16 @@
 
     [Parameter]
     public Throw SelectedThrow { get; set; } = Throw.Empty;
+
+    [Parameter]
+    public EventCallback<Throw> SelectedThrowChanged { get; set; }
+
+    private async Task Change(object obj)
+    {
+        if (obj is Throw t)
+        {
+            await  SelectedThrowChanged.InvokeAsync(t);
+        }
+    }
 
 }
