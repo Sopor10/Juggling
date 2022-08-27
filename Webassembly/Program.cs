@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Radzen;
 using Siteswaps.Generator.DependencyInjection;
 using Webassembly;
 
@@ -10,5 +11,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder
     .Services
     .InstallGenerator();
-    
+
+builder
+    .Services.AddScoped<DialogService>();
+
 await builder.Build().RunAsync();
