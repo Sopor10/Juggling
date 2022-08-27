@@ -17,18 +17,18 @@
             var i1 = i;
 
             var t = Throws[i];
-            <div style="width: 150px;">
-                <Dropdown
+            <div id="pattern-filter-dropdown-@(i1)" style="width: 150px;">
+                <Dropdown 
                     SelectedThrow="@t"
                     SelectedThrowChanged="@(x => ThrowChanged(i1, x))"/>
             </div>
         }
         <div style="width: 150px;">
-            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Add" Click="Add" Disabled="@(CanAddThrow() is false)"/>
+            <RadzenButton id="add-new-filter" ButtonStyle="ButtonStyle.Secondary" Text="Add" Click="Add" Disabled="@(CanAddThrow() is false)"/>
         </div>
 
     </div>
-    <RadzenButton Text="Add Filter" Click="AddFilter"/>
+    <RadzenButton id="finish-new-filter" Text="Add Filter" Click="AddFilter"/>
     
 </div>
 @code {
@@ -46,7 +46,7 @@
 
     private bool CanAddThrow() => Throws.Count < Period;
 
-    private void AddFilter() => Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, Period, IsGlobalPattern)));
+    private void AddFilter() => Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, IsGlobalPattern)));
 
     private void ThrowChanged(int i, Throw t) => Throws[i] = t;
 
