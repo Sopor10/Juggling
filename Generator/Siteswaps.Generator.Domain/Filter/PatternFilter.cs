@@ -35,7 +35,7 @@ internal class PatternFilter : ISiteswapFilter
 
         for (var i = 0; i < pattern.Count; i++)
         {
-            Patterns.Add(pattern.Rotate(i).ToList());
+            Patterns.Add(pattern.Rotate(i));
         }
         
         PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight).Where(x => x % NumberOfJuggler != 0).ToHashSet();
@@ -92,8 +92,8 @@ internal class PatternFilter : ISiteswapFilter
 
 public static class Extensions
 {
-    public static ImmutableList<int> Rotate(this ImmutableList<int> source, int number)
+    public static List<T> Rotate<T>(this IEnumerable<T> source, int number)
     {
-        return source.ToCyclicArray().Rotate(number).EnumerateValues(1).ToImmutableList();
+        return source.ToCyclicArray().Rotate(number).EnumerateValues(1).ToList();
     }
 }

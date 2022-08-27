@@ -1,0 +1,130 @@
+﻿@page "/easyUI"
+@inherits FluxorComponent
+@inject IState<SiteswapGeneratorState> State
+@inject DialogService DialogService
+
+@inject IDispatcher Dispatcher
+
+<div class="row px-3">
+    <div class="col p-3" style="min-width: 350px;">
+        <RadzenCard>
+            <h4>Throws</h4>
+            <RadzenListBox TValue="IEnumerable<Throw>" AllowFiltering="false" Value="@Throws" Change="ThrowsChanged" Multiple="true" Data="@(allThrows)"
+                           TextProperty="@(nameof(Throw.Name))"/>
+        </RadzenCard>
+    </div>
+
+    <div class="col p-3" style="min-width: 350px;">
+        <RadzenCard>
+            <div class="p-3">
+                <h4>Number of Jugglers</h4>
+                <div class="row">
+                    <RadzenNumeric TValue="int" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
+                    <RadzenSlider TValue="int" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
+                </div>
+            </div>
+            <div class="p-3">
+                <h4>Period</h4>
+                <div class="row">
+                    <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(new PeriodChangedAction(x)))" ShowUpDown="false"/>
+                    <RadzenSlider TValue="int" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(new PeriodChangedAction(x)))" Style="width: 100%"/>
+                </div>
+            </div>
+            <div class="p-3">
+                <h4>Number of clubs</h4>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last() - 1)" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+                        </div>
+                        <div class="row">
+                            <RadzenSlider Range="true" Value="@Clubs" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+
+    <div class="col p-3" style="min-width: 350px;">
+        <RadzenCard>
+            <div class="p-3">
+                <h4>Filter</h4>
+                <div class="row">
+                    <SelectedFilters ShowHeading="false"/>
+                </div>
+                <div class="row">
+                    <RadzenButton Text="Add Filter" Click="@ShowInlineDialog"/>
+                </div>
+
+
+            </div>
+        </RadzenCard>
+    </div>
+</div>
+
+
+<div class="row px-3">
+    <div class="col p-3">
+        <GenerateButton/>
+    </div>
+</div>
+<div class="row px-3">
+    <div class="mb-5">
+        <GenerationResults/>
+    </div>
+</div>
+
+@code {
+    IEnumerable<Throw> Throws => State.Value.State.Throws;
+    private readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
+    private IEnumerable<int> Clubs => new[] { (State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 7 };
+
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new CreateFilterFromThrowList(true));
+        base.OnInitialized();
+    }
+
+    private void MaxClubsChanged(int value)
+    {
+        Dispatcher.Dispatch(new MinNumberChangedAction(value - 1));
+    }
+
+    private void MinClubsChanged(int value)
+    {
+        Dispatcher.Dispatch(new MaxNumberChangedAction(value));
+    }
+
+    private void SliderChanged(IEnumerable<int> values)
+    {
+        Dispatcher.Dispatch(new MinNumberChangedAction(values.First()));
+        Dispatcher.Dispatch(new MaxNumberChangedAction(values.Last()));
+    }
+
+    private void ThrowsChanged(object obj)
+    {
+        if (obj is IEnumerable<Throw> newThrows)
+        {
+            Dispatcher.Dispatch(new ThrowsChangedAction(newThrows));
+
+            if (Throws.Any() is false)
+            {
+                return;
+            }
+            Dispatcher.Dispatch(new MaxThrowChangedAction(Throws.Select(x => x.Height).Max()));
+            Dispatcher.Dispatch(new MinThrowChangedAction(Throws.Select(x => x.Height).Min()));
+        }
+    }
+
+    private async Task ShowInlineDialog()
+    {
+        await DialogService.OpenAsync("New Pattern Filter", ds => @<Filter/>, new DialogOptions()
+                                                                            {
+                                                                                CloseDialogOnOverlayClick = true,
+                                                                                Height = "300px"
+                                                                            });
+    }
+
+}

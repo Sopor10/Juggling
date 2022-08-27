@@ -3,5 +3,6 @@
 public enum FilterType
 {
     Number,
-    Pattern
+    Pattern,
+    NewPattern
 }

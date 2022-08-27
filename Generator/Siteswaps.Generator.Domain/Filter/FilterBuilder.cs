@@ -29,6 +29,14 @@ internal record FilterBuilder : IFilterBuilder
     public IFilterBuilder And(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
     public IFilterBuilder Or(ISiteswapFilter filter) => this with { Filter = new[]{Factory.OrFilter(Filter, filter)}.ToImmutableList() };
 
+    public IFilterBuilder FlexiblePattern(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern)
+    {
+        return this with
+        {
+            Filter = Filter.Add(Factory.FlexiblePatternFilter(pattern, numberOfJuggler, isGlobalPattern))
+        };
+    }
+
     public IFilterBuilder WithDefault() => this with { Filter = Filter.Add(Factory.Standard()) };
 
     public ISiteswapFilter Build() => new AndFilter(Filter);

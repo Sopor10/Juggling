@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Radzen;
 using Siteswaps.Generator.DependencyInjection;
 
 namespace WebApplication;
@@ -21,6 +22,7 @@ public class Startup
         services.AddRazorPages();
         services.AddServerSideBlazor();
         services.InstallGenerator();
+        services.AddScoped<DialogService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
