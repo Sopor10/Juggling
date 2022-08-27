@@ -115,7 +115,7 @@
 
     private async Task ShowInlineDialog()
     {
-        await DialogService.OpenAsync("Simple Dialog", ds => @<Filter/>);
+        await DialogService.OpenAsync("New Pattern Filter", ds => @<Filter/>, new DialogOptions() { CloseDialogOnOverlayClick = true });
     }
 
 }
