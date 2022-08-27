@@ -46,6 +46,9 @@ public record Between : Objects
 
 public record Throw(string Name, int Height)
 {
+    public static Throw AnySelf => new Throw("Any Pass", -3);
+    public static Throw AnyPass => new Throw("Any Self", -2);
+    public static Throw Empty => new Throw("Empty", -1);
     public static Throw EmptyHand => new("Empty Hand", 0);
     public static Throw Zip => new("Zip", 2);
     public static Throw Hold => new("Hold", 4);

@@ -1,0 +1,17 @@
+﻿<RadzenDropDown 
+    AllowClear="false" 
+    TValue="Throw" 
+    Data="@(PossibleThrows)"
+    @bind-Value="@SelectedThrow"
+    TextProperty="@nameof(Throw.Name)" 
+    Style="width: 150px"/>
+
+@code {
+
+    [Parameter]
+    public IEnumerable<Throw> PossibleThrows { get; set; } = Throw.All.Prepend(Throw.AnySelf).Prepend(Throw.AnyPass).Prepend(Throw.Empty);
+
+    [Parameter]
+    public Throw SelectedThrow { get; set; } = Throw.Empty;
+
+}

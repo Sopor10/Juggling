@@ -1,0 +1,30 @@
+﻿@page "/filter"
+<div style="overflow-x: auto; white-space: nowrap;">
+    <div class="row" style="flex-wrap: nowrap; width: 100%;">
+
+        @foreach (var t in Throws)
+        {
+            <div style="width: 150px;">
+                <Dropdown
+                    SelectedThrow="@t"/>
+            </div>
+        }
+        <div style="width: 150px;">
+            <RadzenButton Text="Add" Click="Add" Disabled="@(CanAddThrow() is false)"/>
+        </div>
+
+    </div>
+</div>
+@code {
+
+    [Parameter]
+    public List<Throw> Throws { get; set; } = new() { Throw.Empty};
+
+    [Parameter]
+    public int Period { get; set; } = 5;
+
+    private void Add() => Throws.Add(Throw.Empty);
+
+    private bool CanAddThrow() => Throws.Count < Period;
+
+}
