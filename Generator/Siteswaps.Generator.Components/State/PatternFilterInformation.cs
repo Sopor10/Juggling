@@ -18,14 +18,3 @@ public record PatternFilterInformation(ImmutableArray<int> Pattern) : IFilterInf
             var x => x.ToString(),
         };
 }
-
-public record NewPatternFilterInformation(List<Throw> Pattern, int Period) : IFilterInformation
-{
-    public bool IsCompleted => false;
-    public FilterType FilterType => FilterType.NewPattern;
-    public int MissingLength => Period - Pattern.Count;
-
-    public string Display() => "include " + string.Join(" ", Pattern.Select(Display).ToList());
-
-    private static string Display(Throw i) => i.Name;
-}

@@ -132,6 +132,6 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
             result.Add(new List<int>(){-1});
         }
 
-        return builder.FlexiblePattern(result, numberOfJugglers);
+        return builder.FlexiblePattern(result, numberOfJugglers, newPatternFilterInformation.IsGlobalPattern);
     }
 }

@@ -4,6 +4,13 @@
 @inject IDispatcher Dispatcher
 <div style="overflow-x: auto; white-space: nowrap;">
     <div class="row" style="flex-wrap: nowrap; width: 100%;">
+        <div>
+            <RadzenCheckBox @bind-Value="IsGlobalPattern" Name="IsGlobal"/>
+            <RadzenLabel Text="Global" Component="IsGlobal" Style="vertical-align: middle;"/>
+        </div>
+    </div>
+
+    <div class="row" style="flex-wrap: nowrap; width: 100%;">
 
         @for (var i = 0; i < Throws.Count; i++)
         {
@@ -32,11 +39,14 @@
     [Parameter]
     public int Period { get; set; } = 5;
 
+    [Parameter]
+    public bool IsGlobalPattern { get; set; } = true;
+
     private void Add() => Throws.Add(Throw.Empty);
 
     private bool CanAddThrow() => Throws.Count < Period;
 
-    private void AddFilter() => Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, Period)));
+    private void AddFilter() => Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, Period, IsGlobalPattern)));
 
     private void ThrowChanged(int i, Throw t) => Throws[i] = t;
 
