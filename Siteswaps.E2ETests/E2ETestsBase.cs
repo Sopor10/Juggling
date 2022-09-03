@@ -10,6 +10,7 @@ namespace Siteswaps.E2ETests;
 public abstract class E2ETestsBase : PageTest
 {
     protected static string BaseUrl { get; private set; } = "https://siteswaps.netlify.app/";
+    protected static string ExpertUi { get; private set; } = BaseUrl + "generator";
 
     [ModuleInitializer]
     public static void ModuleInitialize()
