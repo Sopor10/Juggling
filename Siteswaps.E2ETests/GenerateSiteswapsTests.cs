@@ -9,7 +9,7 @@ public class GenerateSiteswapsTests: E2ETestsBase
     [Test]
     public async Task Standard_Values_Should_Generate_Siteswap_aa753()
     {
-        await Page.GotoAsync(BaseUrl);
+        await Page.GotoAsync(ExpertUi);
 
         await Page.ClickAsync("#generate");
 
@@ -20,7 +20,7 @@ public class GenerateSiteswapsTests: E2ETestsBase
     [Test]
     public async Task Clicking_On_A_Siteswap_Link_Opens_Passist_In_A_New_Tab()
     {
-        await Page.GotoAsync(BaseUrl);
+        await Page.GotoAsync(ExpertUi);
 
         await Page.ClickAsync("#generate");
 
@@ -37,7 +37,7 @@ public class GenerateSiteswapsTests: E2ETestsBase
     [Test]
     public async Task EasyUI_Generates_Siteswaps()
     {
-        await Page.GotoAsync(BaseUrl + "/easyUi");
+        await Page.GotoAsync(BaseUrl);
 
         await Page.ClickAsync("#generate");
         await Page.WaitForSelectorAsync("#passist-link-aaa50");
