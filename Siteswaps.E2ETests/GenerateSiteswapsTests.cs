@@ -42,5 +42,6 @@ public class GenerateSiteswapsTests: E2ETestsBase
         await Page.ClickAsync("#generate");
         await Page.WaitForSelectorAsync("#passist-link-aaa00");
         (await Page.Locator("#passist-link-aaa00").CountAsync()).Should().Be(1);
+        
     }
 }
