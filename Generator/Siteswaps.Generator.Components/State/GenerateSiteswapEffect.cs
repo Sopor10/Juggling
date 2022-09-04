@@ -25,7 +25,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         
         var range = action.State.Objects switch
         {
-            Between between => Enumerable.Range(between.MinNumber.Value, between.MaxNumber.Value - between.MinNumber.Value),
+            Between between => Enumerable.Range(between.MinNumber.Value, between.MaxNumber.Value - between.MinNumber.Value + 1),
             ExactNumber exactNumber => new [] { exactNumber.Number.Value },
             _ => throw new ArgumentOutOfRangeException()
         };

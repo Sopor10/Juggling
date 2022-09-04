@@ -1,0 +1,57 @@
+﻿@page "/RangeInput"
+<div class="col">
+    <div class="row">
+        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+    </div>
+    <div class="row">
+        <RadzenSlider Range="true" Value="@InternalValues" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
+    </div>
+</div>
+
+@code {
+
+    private IEnumerable<int> InternalValues { get; set; } = new[] { 6, 7 };
+
+
+    [Parameter]
+    public IEnumerable<int> Clubs { get; set; } = new[] { 6, 6 };
+
+    [Parameter]
+    public EventCallback<IEnumerable<int>> ClubsChanged { get; set; }
+
+    private async Task SliderChanged(IEnumerable<int> values)
+    {
+        InternalValues = values;
+        Clubs = ToClubs(InternalValues);
+
+        await ClubsChanged.InvokeAsync(Clubs);
+    }
+
+
+    private async Task MaxClubsChanged(int value)
+    {
+        if (value < InternalValues.Last())
+        {
+            return;
+        }
+
+        InternalValues = new List<int> { Clubs.First(), value + 1 };
+        Clubs = ToClubs(InternalValues);
+        await ClubsChanged.InvokeAsync(Clubs);
+    }
+
+    private async Task MinClubsChanged(int value)
+    {
+        if (value > InternalValues.First())
+        {
+            return;
+        }
+        
+        InternalValues = new List<int> { value, Clubs.Last() };
+        Clubs = ToClubs(InternalValues);
+        await ClubsChanged.InvokeAsync(Clubs);
+    }
+    
+    private List<int> ToClubs(IEnumerable<int> internalValues) => new List<int> { internalValues.First(), internalValues.Last() - 1 };
+}
