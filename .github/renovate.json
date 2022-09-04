@@ -1,19 +1,18 @@
 {
+
+    "timezone": "America/New_York",
+    "schedule": "before 5am every weekday",
+    "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+    ],
+    "automerge": true,
     "packageRules": [
         {
-            "timezone": "America/New_York",
-            "schedule": "before 5am every weekday",
-            "matchUpdateTypes": [
-                "major",
-                "minor",
-                "patch",
-                "pin",
-                "digest"
-            ],
-            "automerge": true
-        },
-        {
-            "matchPackagePatterns": "^Verify",
+            "matchPackagePatterns": "^Verify.*",
             "groupName": ["Verify and dependencies"]
         }
     ],
