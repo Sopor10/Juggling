@@ -2,18 +2,19 @@
 
     "timezone": "America/New_York",
     "schedule": "before 5am every weekday",
-    "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-    ],
+
     "automerge": true,
     "packageRules": [
         {
             "matchPackagePatterns": "^Verify.*",
-            "groupName": ["Verify and dependencies"]
+            "groupName": ["Verify and dependencies"],
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ]
         }
     ],
   "branchConcurrentLimit": 3
