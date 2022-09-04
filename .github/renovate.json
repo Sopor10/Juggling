@@ -23,5 +23,5 @@
             ]
         }        
     ],
-  "branchConcurrentLimit": 3
+  "branchConcurrentLimit": 6
 }
