@@ -1,8 +1,5 @@
 {
 
-    "timezone": "America/New_York",
-    "schedule": "before 5am every weekday",
-
     "automerge": true,
     "packageRules": [
         {
