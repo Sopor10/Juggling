@@ -229,7 +229,13 @@ public static class Reducer
         {
             State = state.State with
             {
-                CreateFilterFromThrowList = action.Value
+                CreateFilterFromThrowList = action.Value,
+                Objects = (action.Value, state.State.CreateFilterFromThrowList) switch
+                {
+                    (true, false) => new Between(){MinNumber = 6, MaxNumber = 6},
+                    (false, true) => new ExactNumber(),
+                    _ => state.State.Objects
+                }
             }
         };
     }

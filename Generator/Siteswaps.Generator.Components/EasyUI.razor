@@ -33,15 +33,7 @@
             <div class="p-3">
                 <h4>Number of clubs</h4>
                 <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
-                            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last() - 1)" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
-                        </div>
-                        <div class="row">
-                            <RadzenSlider Range="true" Value="@Clubs" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
-                        </div>
-                    </div>
+                    <RangeInput Clubs="Clubs" ClubsChanged="SliderChanged"></RangeInput>
                 </div>
             </div>
         </RadzenCard>
@@ -57,8 +49,6 @@
                 <div class="row">
                     <RadzenButton id="add-filter" Text="Add Filter" Click="@ShowInlineDialog"/>
                 </div>
-
-
             </div>
         </RadzenCard>
     </div>
@@ -79,22 +69,12 @@
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
     private readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
-    private IEnumerable<int> Clubs => new[] { (State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 7 };
+    private IEnumerable<int> Clubs => new[] { (State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6 };
 
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new CreateFilterFromThrowList(true));
         base.OnInitialized();
-    }
-
-    private void MaxClubsChanged(int value)
-    {
-        Dispatcher.Dispatch(new MinNumberChangedAction(value - 1));
-    }
-
-    private void MinClubsChanged(int value)
-    {
-        Dispatcher.Dispatch(new MaxNumberChangedAction(value));
     }
 
     private void SliderChanged(IEnumerable<int> values)
@@ -123,7 +103,8 @@
         await DialogService.OpenAsync("New Pattern Filter", ds => @<Filter/>, new DialogOptions()
                                                                             {
                                                                                 CloseDialogOnOverlayClick = true,
-                                                                                Height = "300px"
+                                                                                Height = "300px",
+                                                                                Style = "mind-width: 300px"
                                                                             });
     }
 
