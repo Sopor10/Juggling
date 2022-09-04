@@ -15,7 +15,16 @@
                 "pin",
                 "digest"
             ]
-        }
+        },
+        {
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ]
+        }        
     ],
   "branchConcurrentLimit": 3
 }
