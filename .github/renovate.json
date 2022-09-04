@@ -11,6 +11,10 @@
                 "digest"
             ],
             "automerge": true
+        },
+        {
+            "matchPackagePatterns": "^Verify",
+            "groupName": ["Verify and dependencies"]
         }
     ],
   "branchConcurrentLimit": 3
