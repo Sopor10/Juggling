@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Radzen;
-using Siteswaps.Generator.DependencyInjection;
+using Siteswaps.Generator;
 
 namespace WebApplication;
 
@@ -20,8 +20,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddRazorPages();
-        services.AddServerSideBlazor();
         services.InstallGenerator();
+        services.AddServerSideBlazor();
         services.AddScoped<DialogService>();
     }
 

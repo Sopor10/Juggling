@@ -13,8 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Siteswaps.Generator.Api\Siteswaps.Generator.Api.csproj" />
-      <ProjectReference Include="..\Siteswaps.Generator.Domain\Siteswaps.Generator.Domain.csproj" />
+      <ProjectReference Include="..\Siteswaps.Generator\Siteswaps.Generator.csproj" />
     </ItemGroup>
 
 </Project>

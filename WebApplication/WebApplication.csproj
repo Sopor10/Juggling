@@ -10,8 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Generator\Siteswaps.Generator.DependencyInjection\Siteswaps.Generator.DependencyInjection.csproj" />
-      <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
+      <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
     </ItemGroup>
 
 </Project>

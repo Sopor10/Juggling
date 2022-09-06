@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
-using Siteswaps.Generator.DependencyInjection;
+using Siteswaps.Generator;
 using Webassembly;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

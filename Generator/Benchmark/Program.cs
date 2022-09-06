@@ -1,8 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using Siteswaps.Generator.Api;
-using Siteswaps.Generator.Domain.Filter;
-using Siteswaps.Generator.Domain;
+using Siteswaps.Generator.Generator;
 
 var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
 
@@ -12,17 +10,15 @@ namespace Benchmark
     public class GeneratorBenchmarks
     {
         [Benchmark]
-        public async Task<IEnumerable<ISiteswap>> Generate_New()
+        public async Task<IEnumerable<Siteswap>> Generate_New()
         {
-            var generator = new SiteswapGeneratorFactory(new FilterBuilderFactory())
-                .WithInput(Input())
-                .Create();
+            var generator = new SiteswapGeneratorFactory().Create(Input());
             return await generator.GenerateAsync().ToListAsync();
         }
 
         private static SiteswapGeneratorInput Input()
         {
-            var input = new SiteswapGeneratorInput()
+            var input = new SiteswapGeneratorInput
             {
                 Period = 3,
                 MaxHeight = 10,
