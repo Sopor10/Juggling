@@ -1,24 +1,25 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using Benchmark;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Siteswaps.Generator.Generator;
 
-var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+var summary = BenchmarkRunner.Run<GeneratorBenchmarks>();
 
 namespace Benchmark
 {
     [HtmlExporter]
+    [MemoryDiagnoser]
     public class GeneratorBenchmarks
     {
         [Benchmark]
-        public async Task<IEnumerable<Siteswap>> Generate_New()
+        public static async Task<List<Siteswap>> Generate()
         {
             var generator = new SiteswapGeneratorFactory().Create(Input());
             return await generator.GenerateAsync().ToListAsync();
         }
 
-        private static SiteswapGeneratorInput Input()
-        {
-            var input = new SiteswapGeneratorInput
+        private static SiteswapGeneratorInput Input() =>
+            new()
             {
                 Period = 3,
                 MaxHeight = 10,
@@ -26,7 +27,5 @@ namespace Benchmark
                 NumberOfObjects = 5,
                 StopCriteria = new StopCriteria(TimeSpan.FromDays(5), Int32.MaxValue)
             };
-            return input;
-        }
     }
 }
