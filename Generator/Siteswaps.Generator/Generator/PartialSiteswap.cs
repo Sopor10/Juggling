@@ -10,17 +10,18 @@ public class PartialSiteswap
         Items = items;
         Interface = new CyclicArray<sbyte>(Enumerable.Repeat((sbyte)-1, Items.Length));
 
-        for (sbyte i = 0; i < Items.Length; i++)
-        {
-            Interface[i + this[i]] = this[i];
-        }
-
+        PartialSum = 0;
         foreach (var item in Items)
         {
             if (item>0)
             {
                 PartialSum += item;
             }
+        }
+        
+        for (sbyte i = 0; i < Items.Length; i++)
+        {
+            Interface[i + this[i]] = this[i];
         }
     }
 
@@ -61,15 +62,9 @@ public class PartialSiteswap
 
     public sbyte LastFilledPosition { get; private set; }
 
-    public bool IsFilled()
-    {
-        return Items.Last() != -1;
-    }
+    public bool IsFilled() => Items[^1] != -1;
 
-    public static PartialSiteswap Standard(sbyte period, sbyte maxHeight)
-    {
-        return new PartialSiteswap(Enumerable.Repeat((sbyte)-1, period - 1).Prepend(maxHeight).ToArray());
-    }
+    public static PartialSiteswap Standard(sbyte period, sbyte maxHeight) => new(Enumerable.Repeat((sbyte)-1, period - 1).Prepend(maxHeight).ToArray());
 
 
     public bool FillCurrentPosition(sbyte throwHeight)
@@ -79,6 +74,7 @@ public class PartialSiteswap
         {
             return true;
         }
+        
         ResetCurrentPosition();
 
         if (Interface[LastFilledPosition + throwHeight] == -1)
@@ -102,7 +98,7 @@ public class PartialSiteswap
         this[LastFilledPosition] = -1;
     }
 
-    public void MoveForward(sbyte max)
+    public void MoveForward()
     {
         LastFilledPosition++;
     }

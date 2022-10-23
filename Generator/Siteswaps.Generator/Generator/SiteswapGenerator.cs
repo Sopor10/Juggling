@@ -73,7 +73,7 @@ public class SiteswapGenerator
                 continue;
             }
 
-            PartialSiteswap.MoveForward(max);
+            PartialSiteswap.MoveForward();
             await foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0))
             {
                 yield return siteswap;
