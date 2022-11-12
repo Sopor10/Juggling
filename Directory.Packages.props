@@ -23,7 +23,7 @@
         <PackageVersion Include="Verify.ImageMagick" Version="2.15.1" />
         <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
 
-        <PackageVersion Include="TngTech.ArchUnitNET" Version="0.10.4" />
+        <PackageVersion Include="TngTech.ArchUnitNET" Version="0.10.5" />
         <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.10.4" />
 
         <PackageVersion Include="SkiaSharp" Version="2.88.3" />
