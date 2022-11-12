@@ -34,7 +34,7 @@
         <PackageVersion Include="SkiaSharp.Views.Blazor" Version="2.88.3" />
 
         <PackageVersion Include="Microsoft.Playwright" Version="1.25.0" />
-        <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.25.0" />
+        <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.27.2" />
         <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
 
         <PackageVersion Include="DotNetGraph" Version="2.7.0" />
