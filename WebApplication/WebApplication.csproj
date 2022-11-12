@@ -5,8 +5,8 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Fluxor.Blazor.Web" Version="5.5.0" />
-        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.5.0" />
+        <PackageReference Include="Fluxor.Blazor.Web" />
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
     </ItemGroup>
 
     <ItemGroup>
