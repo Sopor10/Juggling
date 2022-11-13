@@ -9,6 +9,11 @@ public record Siteswap
 {
     public CyclicArray<int> Items { get; }
 
+    public Siteswap(params int[] items) : this(new CyclicArray<int>(items))
+    {
+        IsValid(new CyclicArray<int>(items));
+    }
+    
     public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap)
     {
         return TryCreate(new(items), out siteswap);
@@ -85,4 +90,8 @@ public record Siteswap
     {
         return ToString().GetHashCode();
     }
+
+    public int Max() => Items.EnumerateValues(1).Max();
+    
+    public int this[int i] => Items[i];
 }
