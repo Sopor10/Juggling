@@ -10,4 +10,6 @@ public class StateGraph
     }
 
     public Graph<State, int> Graph { get; }
+
+    public StateGraph Combine(StateGraph other) => new(Graph.Combine(other.Graph));
 }
