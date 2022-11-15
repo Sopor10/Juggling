@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using DotNetGraph.Extensions;
+﻿using DotNetGraph.Extensions;
 using FluentAssertions;
-using MoreLinq;
 using Siteswap.Details;
 using Siteswap.Details.StateDiagram;
 using Siteswap.Details.StateDiagram.Graph;
@@ -9,8 +7,12 @@ using Siteswaps.Visualization;
 
 namespace Siteswaps.Test;
 
-public class SiteswapGraphTest
+public class SiteswapGraphTest : VerifyBase
 {
+    public SiteswapGraphTest() : base()
+    {
+        
+    }
     [Test]
     public void Advance_State_Forward()
     {
@@ -61,11 +63,15 @@ public class SiteswapGraphTest
     }
 
     [Test]
-    public void METHOD()
+    public async Task Create_Graph_For_Siteswap_531()
     {
-        var stategraph = CalculateGraph(5, 3, 1);
-        var dotgraph = new GraphFactory().Create(stategraph).Compile(true);
-        File.WriteAllText("dotfile.txt", dotgraph);
+        await Verify(CalculateGraph(5, 3, 1).Graph).AddExtraSettings(_=>
+            {
+                _.Converters.Add(new StateConverter());
+                _.Converters.Add(new EdgeConverter());
+                
+            }
+            );
     }
     
     private StateGraph CalculateGraph(params int[] siteswap)
@@ -80,23 +86,23 @@ public class SiteswapGraphTest
             states.Add(calculateState);
         }
 
-        var mappedStates = new HashSet<Siteswap.Details.StateDiagram.State>(states.Select(Map).ToList());
+        var mappedStates = new HashSet<State>(states.Select(Map).ToList());
 
-        var cyclicArrayStates = new CyclicArray<Siteswap.Details.StateDiagram.State>(mappedStates);
-        var edges = new HashSet<Edge<Siteswap.Details.StateDiagram.State, int>>();
+        var cyclicArrayStates = new CyclicArray<State>(mappedStates);
+        var edges = new HashSet<Edge<State, int>>();
         for (int i = 0; i < cyclicArrayStates.Length; i++)
         {
-            edges.Add(new Edge<Siteswap.Details.StateDiagram.State, int>(cyclicArrayStates[i], cyclicArrayStates[i + 1],
+            edges.Add(new Edge<State, int>(cyclicArrayStates[i], cyclicArrayStates[i + 1],
                 siteswap[i]));
         }
         
         
         
-        return new StateGraph(new Graph<Siteswap.Details.StateDiagram.State, int>(mappedStates, edges));
+        return new StateGraph(new Graph<State, int>(mappedStates, edges));
 
     }
 
-    private Siteswap.Details.StateDiagram.State Map(State state)
+    private State Map(State state)
     {
         return new(state.StateRepresentation()
             .Select(c => c switch
@@ -130,51 +136,18 @@ public class SiteswapGraphTest
 
         return state;
     }
+}
 
-    [DebuggerDisplay("{StateRepresentation()}")]
-    private record State(uint Value, int Length)
-    {
-        public static State Empty(int length)
-        {
-            return new(0, length);
-        }
+public class StateConverter :
+    WriteOnlyJsonConverter<State>
+{
+    public override void Write(VerifyJsonWriter writer, State state) =>
+        writer.WriteValue(state.StateRepresentation());
+}
 
-        public static State GroundState(int numberOfBalls, int length)
-        {
-            if (length < numberOfBalls) throw new ArgumentException();
-
-            var mask = 0xffffffff;
-            mask >>= 32 - numberOfBalls;
-            mask <<= 0;
-            return new State(mask, length);
-        }
-
-        public string StateRepresentation()
-        {
-            return string.Concat(Convert.ToString(Value, 2).Reverse().ToArray()) + string.Concat("0".Repeat(Length - Convert.ToString(Value, 2).Length));
-        }
-
-        public override string ToString()
-        {
-            return StateRepresentation();
-        }
-
-        public State Advance()
-        {
-            var advance = this with
-            {
-                Value = Value >> 1
-            };
-            return advance;
-        }
-
-        public State Throw(int i)
-        {
-            var state = this with
-            {
-                Value = Value | (uint)(1 << (i - 1))
-            };
-            return state;
-        }
-    }
+public class EdgeConverter :
+    WriteOnlyJsonConverter<Edge<State, int>>
+{
+    public override void Write(VerifyJsonWriter writer, Edge<State, int> edge) =>
+        writer.WriteValue(edge.N1.StateRepresentation() + " -" + edge.Data + "-> " + edge.N2.StateRepresentation());
 }

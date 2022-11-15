@@ -12,7 +12,7 @@ public class GraphFactory
 {
     public DotGraph Create(StateGraph graph)
     {
-        var directedGraph = new DotGraph("Graph", true);
+        var directedGraph = new DotGraph("G", true);
 
         foreach (var node in graph.Graph.Nodes)
         {
