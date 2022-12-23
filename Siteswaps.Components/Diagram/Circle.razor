@@ -1,0 +1,23 @@
+﻿@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Core.Models
+
+<circle cx="0" cy="0" r="40" stroke="black" stroke-width="2" fill="none"/>
+<text text-anchor="middle">@Node.Name</text>
+
+@code {
+
+    [Parameter]
+    public CircleNode Node { get; set; }
+
+
+    public class CircleNode : NodeModel
+    {
+        public CircleNode(string name, Point? position = null, RenderLayer layer = RenderLayer.SVG, ShapeDefiner? shape = null) : base(position, layer, shape)
+        {
+            Name = name;
+        }
+
+        public string Name { get; }
+    }
+
+}

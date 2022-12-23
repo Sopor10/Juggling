@@ -1,44 +1,43 @@
 ﻿<Project>
-    <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.11" />
-        <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.11" PrivateAssets="all" />
-        <PackageVersion Include="BenchmarkDotNet" Version="0.13.2" />
-        <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
-        <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="6.0.11" />
-        <PackageVersion Include="morelinq" Version="3.3.2" />
-        <PackageVersion Include="Fluxor.Blazor.Web" Version="5.5.0" />
-        <PackageVersion Include="Radzen.Blazor" Version="4.3.2" />
-
-        <PackageVersion Include="Bogus" Version="34.0.2" />
-        <PackageVersion Include="FluentAssertions" Version="6.8.0" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-        <PackageVersion Include="NUnit" Version="3.13.3" />
-        <PackageVersion Include="NUnit3TestAdapter" Version="4.3.0-alpha-net7.4" />
-        <PackageVersion Include="coverlet.collector" Version="3.1.2" />
-        <PackageVersion Include="Verify" Version="17.10.2" />
-        <PackageVersion Include="Verify.Nunit" Version="17.10.2" />
-        <PackageVersion Include="Verify.ImageMagick" Version="2.15.1" />
-        <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
-
-        <PackageVersion Include="TngTech.ArchUnitNET" Version="0.10.4" />
-        <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.10.4" />
-
-        <PackageVersion Include="SkiaSharp" Version="2.88.3" />
-
-        <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
-        <PackageVersion Include="Fluxor" Version="5.5.0" />
-        <PackageVersion Include="Microsoft.AspNetCore.Components" Version="6.0.11" />
-        <PackageVersion Include="SkiaSharp.Views.Blazor" Version="2.88.3" />
-
-        <PackageVersion Include="Microsoft.Playwright" Version="1.25.0" />
-        <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.25.0" />
-        <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
-
-        <PackageVersion Include="DotNetGraph" Version="2.7.0" />
-
-        <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.5.0" />
-    </ItemGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="AutomaticGraphLayout" Version="1.1.12" />
+    <PackageVersion Include="AutomaticGraphLayout.Drawing" Version="1.1.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.11" PrivateAssets="all" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.2" />
+    <PackageVersion Include="Svg" Version="3.4.4" />
+    <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="6.0.11" />
+    <PackageVersion Include="morelinq" Version="3.3.2" />
+    <PackageVersion Include="Fluxor.Blazor.Web" Version="5.5.0" />
+    <PackageVersion Include="Radzen.Blazor" Version="4.3.2" />
+    <PackageVersion Include="Bogus" Version="34.0.2" />
+    <PackageVersion Include="FluentAssertions" Version="6.8.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.3.0-alpha-net7.4" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="Verify" Version="17.10.2" />
+    <PackageVersion Include="Verify.Nunit" Version="17.10.2" />
+    <PackageVersion Include="Verify.ImageMagick" Version="2.15.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
+    <PackageVersion Include="TngTech.ArchUnitNET" Version="0.10.4" />
+    <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.10.4" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.3" />
+    <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
+    <PackageVersion Include="Fluxor" Version="5.5.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="6.0.11" />
+    <PackageVersion Include="SkiaSharp.Views.Blazor" Version="2.88.3" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.25.0" />
+    <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.25.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageVersion Include="DotNetGraph" Version="2.7.0" />
+    <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.5.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageVersion Include="TextCopy" Version="4.3.0" />
+    <PackageVersion Include="Z.Blazor.Diagrams" Version="2.1.6" />
+  </ItemGroup>
 </Project>
