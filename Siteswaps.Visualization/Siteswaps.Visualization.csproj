@@ -5,11 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DotNetGraph" />
+        <PackageReference Include="AutomaticGraphLayout" />
+        <PackageReference Include="AutomaticGraphLayout.Drawing" />
+        <PackageReference Include="DotNetGraph" />
+        <PackageReference Include="Svg" />
+        <PackageReference Include="System.Drawing.Common" />
+        <PackageReference Include="TextCopy" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+        <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
     </ItemGroup>
 
 </Project>

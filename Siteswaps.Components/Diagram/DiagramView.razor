@@ -1,0 +1,80 @@
+﻿@page "/diagrams"
+
+@using Blazor.Diagrams.Core
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Core.Models
+
+@using Blazor.Diagrams.Components
+@using Siteswap.Details.StateDiagram
+@using Siteswap.Details.StateDiagram.Graph
+@using Siteswaps.Visualization.SVG
+
+<h1>Z Blazor Diagrams</h1>
+
+<p>This component demonstrates a diagram.</p>
+
+<!--
+Parent of DiagramCanvas has to have a fixed width/height
+or it will not be rendered.
+100vw = 100% viewport width
+100vh = 100% viewport height
+-->
+<div style="width:100vw; height: 100vh">
+    <CascadingValue Value="Diagram">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+@code {
+
+    [Parameter]
+    public StateGraph Graph { get; set; } = new StateGraphGenerator().Generate(new StateGraphGeneratorInput(5, 3));
+
+    private GraphLayoutFactory GraphLayoutFactory = new();
+    private Diagram Diagram { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+
+
+        var options = new DiagramOptions
+        {
+            AllowMultiSelection = true, // Whether to allow multi selection using CTRL
+            Zoom = new DiagramZoomOptions
+            {
+                Minimum = 0.5, // Minimum zoom value
+                Inverse = false, // Whether to inverse the direction of the zoom when using the wheel
+            },
+            EnableVirtualization = true,
+        };
+        Diagram = new Diagram(options);
+        Diagram.RegisterModelComponent<Circle.CircleNode, Circle>();
+        
+        var graph = GraphLayoutFactory.Create(Graph);
+
+        Setup(graph);
+    }
+  
+    private void Setup(Graph<Visualization.SVG.Renderer.Diagram.DiagramNode, string> graph)
+    {
+
+        foreach (var node in graph.Nodes)
+        {
+            Diagram.Nodes.Add(NewNode(node.X, node.Y, node.Id));
+        }
+    
+        // Diagram.Links.Add(new LinkModel(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left)));
+    }
+  
+    private static NodeModel NewNode(double x, double y, string state)
+    {
+        var node = new Circle.CircleNode(state, new Point(x, y));
+        node.AddPort(PortAlignment.Bottom);
+        node.AddPort(PortAlignment.Top);
+        node.AddPort(PortAlignment.Left);
+        node.AddPort(PortAlignment.Right);
+        return node;
+    }
+}

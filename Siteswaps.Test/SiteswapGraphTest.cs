@@ -1,6 +1,9 @@
-﻿using FluentAssertions;
+﻿using System.Xml;
+using FluentAssertions;
 using Siteswap.Details.StateDiagram;
 using Siteswap.Details.StateDiagram.Graph;
+using Siteswaps.Visualization.SVG;
+using Siteswaps.Visualization.SVG.Renderer;
 
 namespace Siteswaps.Test;
 
@@ -40,7 +43,6 @@ public class SiteswapGraphTest : VerifyBase
             .Be(State.GroundState(4, 5));
     }
 
-
     [Test]
     public void Siteswap_531_Is_Ground_State()
     {
@@ -72,6 +74,7 @@ public class SiteswapGraphTest : VerifyBase
             }
         );
     }
+
 }
 
 public class StateConverter :
