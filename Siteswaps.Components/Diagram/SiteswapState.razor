@@ -1,0 +1,73 @@
+﻿@page "/SiteswapState"
+@using Siteswap.Details.StateDiagram
+@using Siteswap.Details
+
+
+<h3>State</h3>
+
+<input @bind="SiteswapInput" @oninput="OnInput"/>
+
+<ul>
+    @if (States is not null)
+    {
+        @foreach (var state in States.Graph.Nodes)
+        {
+            <li style="display: flex">
+                <div style="padding: 4px">
+                    Siteswap: @States.SiteswapInState[state].Single().ToString()
+                </div>
+                <div style="padding: 4px">
+                    State: @state.StateRepresentation()
+                </div>
+            </li>
+        }
+    }
+</ul>
+
+@code {
+
+    private Siteswap? Siteswap { get; set; }
+    private string? _siteswapInput;
+    private string? SiteswapInput
+    {
+        get => _siteswapInput;
+        set
+        {
+            _siteswapInput = value;
+
+            if (_siteswapInput is null)
+            {
+                return;
+            }
+            
+            if (Siteswap.TryCreate(_siteswapInput, out var siteswap))
+            {
+                Siteswap = siteswap;
+                StateHasChanged();
+            }
+            else
+            {
+                Siteswap = null;
+            }
+            
+        }
+    }
+
+    private StateGraph? States
+    {
+        get
+        {
+            if (Siteswap is null) return null;
+            var stateGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Siteswap.Items.EnumerateValues(1).ToArray());
+            return stateGraph;
+        }
+    }
+
+    private void OnInput(ChangeEventArgs obj)
+    {
+        if (obj.Value is string s)
+        {
+            SiteswapInput = s;
+        }
+    }
+}

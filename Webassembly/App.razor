@@ -1,7 +1,7 @@
 ﻿@using AssemblyInfo = Siteswaps.Generator.AssemblyInfo
 <Fluxor.Blazor.Web.StoreInitializer/>
 <RadzenDialog />
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@(new[]{typeof(AssemblyInfo).Assembly})">
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@(new[]{typeof(AssemblyInfo).Assembly, typeof(Siteswaps.Components.Assembly).Assembly})">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
