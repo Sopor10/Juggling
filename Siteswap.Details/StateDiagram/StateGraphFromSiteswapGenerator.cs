@@ -11,11 +11,13 @@ public static class StateGraphFromSiteswapGenerator
         var cyclicArray = siteswap.ToCyclicArray();
 
         var states = new List<State>();
+        var stateToSiteswap = new Dictionary<State, List<Siteswap>>();
         for (var i = 0; i < siteswap.Length; i++)
         {
             var rotate = cyclicArray.Rotate(i);
             var calculateState = StateGenerator.CalculateState(rotate.EnumerateValues(1).ToArray());
             states.Add(calculateState);
+            stateToSiteswap.Add(calculateState, new (){new Siteswap(rotate)});
         }
 
         var mappedStates = new HashSet<State>(states.Select(state => state).ToList());
@@ -27,6 +29,6 @@ public static class StateGraphFromSiteswapGenerator
                 siteswap[i]));
 
 
-        return new StateGraph(new Graph<State, int>(mappedStates, edges));
+        return new StateGraph(new Graph<State, int>(mappedStates, edges), stateToSiteswap);
     }
 }
