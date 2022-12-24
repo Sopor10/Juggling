@@ -21,10 +21,14 @@ public abstract class E2ETestsBase : PageTest
         {
             throw new NotSupportedException("E2E_TEST_BASEURL is not set");
         }
-        
+    }
+    
+    [ModuleInitializer]
+    public static void ModuleInitializer()
+    {
         if (Debugger.IsAttached)
         {
             Environment.SetEnvironmentVariable("HEADED","1");
-        }
+        }        
     }
 }
