@@ -10,7 +10,7 @@ namespace Siteswaps.E2ETests;
 public abstract class E2ETestsBase : PageTest
 {
     protected string? BaseUrl { get; private set; }
-    protected string ExpertUi => BaseUrl + "generator";
+    protected string ExpertUi => BaseUrl + "/generator";
 
     [SetUp]
     public void ModuleInitialize()
