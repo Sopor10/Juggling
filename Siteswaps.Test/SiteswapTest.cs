@@ -7,50 +7,39 @@ public class SiteswapTest
     [Test]
     public void UniqueRepresentationOfSiteswap()
     {
-        Siteswap.Details.Siteswap.TryCreate(new[]{4, 4, 1}, out var siteswap1);
-        Siteswap.Details.Siteswap.TryCreate(new[]{4, 1, 4}, out var siteswap2);
-
-        siteswap1.Should().Be(siteswap2);
+        var s1 = Siteswap.Details.Siteswap.ToUniqueRepresentation(new[]{4, 4, 1});
+        var s2 = Siteswap.Details.Siteswap.ToUniqueRepresentation(new[]{4, 1, 4});
+        s1.EnumerateValues(1).Should().Equal(s2.EnumerateValues(1));
     }
         
     [Test]
     public void UniqueRepresentationOfSiteswap2()
     {
-        Siteswap.Details.Siteswap.TryCreate(new[]{13, 8,13,9,3,6,4}, out var siteswap1);
-        Siteswap.Details.Siteswap.TryCreate(new[]{13,9,3,6,4,13,8}, out var siteswap2);
+        var s1 = Siteswap.Details.Siteswap.ToUniqueRepresentation(new[]{13, 8,13,9,3,6,4});
+        var s2 = Siteswap.Details.Siteswap.ToUniqueRepresentation(new[]{13,9,3,6,4,13,8});
 
-        siteswap1.Should().Be(siteswap2);
+        s1.EnumerateValues(1).Should().Equal(s2.EnumerateValues(1));
+    }
+    
+    
+    [Test]
+    public void DifferentUniqueRepresentation()
+    {
+        var s1 = Siteswap.Details.Siteswap.ToUniqueRepresentation(new[]{3,1,5});
+
+        s1.EnumerateValues(1).Should().NotEqual(new[]{3,1,5});
     }
     
     [Test]
     public void UniqueRepresentationOfSiteswapShouldWork()
     {
-        Siteswap.Details.Siteswap.TryCreate(new[]{13, 8,13,9,3,6,4}, out var siteswap1);
+        var s1 = Siteswap.Details.Siteswap.ToUniqueRepresentation(new[]{13, 8,13,9,3,6,4});
 
-        var enumerateValues = siteswap1.Items.EnumerateValues(1).ToList();
+        var enumerateValues = s1.EnumerateValues(1).ToList();
         enumerateValues.First().Should().Be(13);
         enumerateValues.Skip(1).First().Should().Be(9);
     }
     
-    [Test]
-    public void UniqueRepresentationOfSiteswapShouldWork2()
-    {
-        // 9742dd8
-        Siteswap.Details.Siteswap.TryCreate(new[]{9,7,4,2,13,13,8}, out var siteswap1);
-
-        var enumerateValues = siteswap1.Items.EnumerateValues(1).ToList();
-        enumerateValues.First().Should().Be(13);
-        enumerateValues.Skip(1).First().Should().Be(13);
-    }
-
-    [Test]
-    public void Siteswap_Unique_Representation()
-    {
-        Siteswap.Details.Siteswap.TryCreate(new[]{4, 1, 4}, out var siteswap1);
-
-        siteswap1.Items.Enumerate(1).Select(x => x.value).Should().BeEquivalentTo(new[]{4,4,1});
-    }
-
     [Test]
     [TestCase(4,4,1)]
     [TestCase(5,3,1)]

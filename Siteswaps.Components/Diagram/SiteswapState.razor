@@ -4,8 +4,7 @@
 
 
 <h3>State</h3>
-
-<input @bind="SiteswapInput" @oninput="OnInput"/>
+<SiteswapInput @bind-Siteswap="Siteswap" />
 
 <ul>
     @if (States is not null)
@@ -30,31 +29,6 @@
 @code {
 
     private Siteswap? Siteswap { get; set; }
-    private string? _siteswapInput;
-    private string? SiteswapInput
-    {
-        get => _siteswapInput;
-        set
-        {
-            _siteswapInput = value;
-
-            if (_siteswapInput is null)
-            {
-                return;
-            }
-            
-            if (Siteswap.TryCreate(_siteswapInput, out var siteswap))
-            {
-                Siteswap = siteswap;
-                StateHasChanged();
-            }
-            else
-            {
-                Siteswap = null;
-            }
-            
-        }
-    }
 
     private StateGraph? States
     {
@@ -63,14 +37,6 @@
             if (Siteswap is null) return null;
             var stateGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Siteswap.Items.EnumerateValues(1).ToArray());
             return stateGraph;
-        }
-    }
-
-    private void OnInput(ChangeEventArgs obj)
-    {
-        if (obj.Value is string s)
-        {
-            SiteswapInput = s;
         }
     }
 }
