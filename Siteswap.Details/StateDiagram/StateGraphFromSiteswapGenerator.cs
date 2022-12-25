@@ -17,7 +17,15 @@ public static class StateGraphFromSiteswapGenerator
             var rotate = cyclicArray.Rotate(i);
             var calculateState = StateGenerator.CalculateState(rotate.EnumerateValues(1).ToArray());
             states.Add(calculateState);
-            stateToSiteswap.Add(calculateState, new (){new Siteswap(rotate)});
+            
+            if (stateToSiteswap.TryGetValue(calculateState, out var values))
+            {
+                values.Add(new Siteswap(rotate));
+            }
+            else
+            {
+                stateToSiteswap.Add(calculateState, new (){new Siteswap(rotate)});
+            }
         }
 
         var mappedStates = new HashSet<State>(states.Select(state => state).ToList());
