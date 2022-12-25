@@ -2,13 +2,13 @@
 
 namespace Siteswap.Details.StateDiagram;
 
-public static class StateGenerator
+public abstract class StateGenerator
 {
-    public static State CalculateState(params int[] siteswap)
+    public static State CalculateState(int[] siteswap, int? length = null)
     {
         var stable = false;
 
-        var state = State.Empty(siteswap.Max());
+        var state = State.Empty(new[]{siteswap.Max(), length??0}.Max());
 
         while (stable is false)
         {
@@ -19,5 +19,10 @@ public static class StateGenerator
         }
 
         return state;
+    }
+
+    public static State CalculateState(Siteswap siteswap, int maxHeight)
+    {
+        return CalculateState(siteswap.Items.EnumerateValues(1).ToArray(), maxHeight);
     }
 }

@@ -1,0 +1,59 @@
+﻿@page "/CalculateTransition"
+@using Siteswap.Details
+@using Siteswap.Details.StateDiagram
+
+<SiteswapInput @bind-Siteswap="From"></SiteswapInput>
+<SiteswapInput @bind-Siteswap="To"></SiteswapInput>
+
+
+<ul>
+
+    @foreach (var transition in Transitions)
+    {
+        <li >
+            <div style="padding: 4px">
+                @transition.PrettyPrint()
+            </div>
+        </li>
+    }
+</ul>
+
+@code
+{
+
+    public Siteswap? From
+    {
+        get => _from;
+        set
+        {
+            _from = value;
+            OnChange();
+        }
+    }
+
+    public Siteswap? To
+    {
+        get => _to;
+        set
+        {
+            _to = value;
+            OnChange();
+        }
+    }
+
+    public int Length { get; set; } = 2;
+
+    public List<Transition> Transitions { get; set; } = new();
+
+    private void OnChange()
+    {
+        if (From is not null && To is not null)
+        {
+            var transitions = TransitionGenerator.CreateTransitions(From, To, Length);
+            Transitions = transitions;
+        }
+    }
+
+    private Siteswap? _from;
+    private Siteswap? _to;
+}

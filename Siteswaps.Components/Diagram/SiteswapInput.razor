@@ -1,0 +1,43 @@
+﻿@using Siteswap.Details
+
+<input @bind="SiteswapInputValue" @oninput="OnInput"/>
+@code {
+    [Parameter]
+    public Siteswap? Siteswap { get; set; }
+    
+    [Parameter]
+    public EventCallback<Siteswap?> SiteswapChanged { get; set; }
+
+    private string? _siteswapInputValue;
+    private string? SiteswapInputValue
+    {
+        get => _siteswapInputValue;
+        set
+        {
+            _siteswapInputValue = value;
+
+            if (_siteswapInputValue is null)
+            {
+                return;
+            }
+            
+            if (Siteswap.TryCreate(_siteswapInputValue, out var siteswap))
+            {
+                Siteswap = siteswap;
+                SiteswapChanged.InvokeAsync(siteswap);
+            }
+            else
+            {
+                Siteswap = null;
+            }
+            
+        }
+    }
+    private void OnInput(ChangeEventArgs obj)
+    {
+        if (obj.Value is string s)
+        {
+            SiteswapInputValue = s;
+        }
+    }
+}

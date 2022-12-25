@@ -75,7 +75,7 @@ public record State(uint Value, int Length)
         {
             if (IsBitSet(Value,0))
             {
-                for (var i = 1; i < Length; i++)
+                for (var i = 1; i <= Length; i++)
                 {
                     if (IsBitSet(Value,i) is false)
                     {
