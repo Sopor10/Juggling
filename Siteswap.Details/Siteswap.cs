@@ -5,17 +5,32 @@ using System.Linq;
 
 namespace Siteswap.Details;
 
-public record Siteswap
+public record Siteswap(CyclicArray<int> Items)
 {
-    public CyclicArray<int> Items { get; }
+    public Siteswap(params int[] items) : this(new CyclicArray<int>(items))
+    {
+        IsValid(new CyclicArray<int>(items));
+    }
+    
+    public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap)
+    {
+        return TryCreate(value.Select(ToInt), out siteswap);
+    }
+
+    private static int ToInt(char c)
+    {
+        var tryParse = int.TryParse(c.ToString(), out var value);
+        if (tryParse)
+        {
+            return value;
+        }
+
+        return c - 87;
+    }
 
     public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap)
     {
-        return TryCreate(new(items), out siteswap);
-    }
-    private Siteswap(CyclicArray<int> items)
-    {
-        Items = ToUniqueRepresentation(items);
+        return TryCreate(ToUniqueRepresentation(new(items)), out siteswap);
     }
 
     private static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
@@ -58,7 +73,7 @@ public record Siteswap
     private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
 
     public bool IsExcitedState() => !IsGroundState();
-    public decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
+    private decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
 
     public override string ToString()
     {
@@ -85,4 +100,8 @@ public record Siteswap
     {
         return ToString().GetHashCode();
     }
+
+    public int Max() => Items.EnumerateValues(1).Max();
+    
+    public int this[int i] => Items[i];
 }
