@@ -1,59 +1,91 @@
 ﻿@page "/CalculateTransition"
 @using Siteswap.Details
 @using Siteswap.Details.StateDiagram
+<h3> Calculate transitions</h3>
 
-<SiteswapInput @bind-Siteswap="From"></SiteswapInput>
-<SiteswapInput @bind-Siteswap="To"></SiteswapInput>
+<div style="display: flex">
+    <div >
+        <h5>From</h5>
+        <SiteswapInput @bind-Siteswap="From"></SiteswapInput>
+    </div>
+    <div >
+        <h5>To</h5>
+        <SiteswapInput @bind-Siteswap="To"></SiteswapInput>
+    </div>
+    <div >
+        <h5>Max Length</h5>
+        <InputNumber @bind-Value="Length"></InputNumber>
+    </div>
 
+</div>
 
-<ul>
+<button class="btn btn-primary" type="submit" @onclick="Generate">Generate</button>
 
-    @foreach (var transition in Transitions)
+<div>
+    @if (Error != string.Empty)
     {
-        <li >
-            <div style="padding: 4px">
-                @transition.PrettyPrint()
-            </div>
-        </li>
+        <text>@Error</text>
     }
-</ul>
+
+    @if (Transitions.Any())
+    {
+        <ul>
+            @foreach (var transition in Transitions)
+            {
+                <li >
+                    <div style="padding: 4px">
+                        @transition.PrettyPrint()
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
 
 @code
 {
 
-    public Siteswap? From
+    private Siteswap? From { get; set; }
+
+    private Siteswap? To { get; set; }
+
+    private int Length { get; set; }
+
+    private List<Transition> Transitions { get; set; } = new();
+
+    private string Error { get; set; }
+
+    protected override void OnInitialized()
     {
-        get => _from;
-        set
-        {
-            _from = value;
-            OnChange();
-        }
+        From = new Siteswap(5, 3, 1);
+        To = new Siteswap(4, 1, 4);
+        Length = 2;
+        base.OnInitialized();
     }
 
-    public Siteswap? To
+    private void Generate()
     {
-        get => _to;
-        set
+        Error = "";
+        Transitions = new List<Transition>();
+        if (From is null || To is null)
         {
-            _to = value;
-            OnChange();
+            if (From is null)
+            {
+                Error += "From is not a valid siteswap.\n";
+            }
+
+            if (To is null)
+            {
+                Error += "To is not a valid siteswap.\n";
+            }
+            return;
         }
-    }
-
-    public int Length { get; set; } = 2;
-
-    public List<Transition> Transitions { get; set; } = new();
-
-    private void OnChange()
-    {
-        if (From is not null && To is not null)
+        if (From.NumberOfObjects() != To.NumberOfObjects())
         {
-            var transitions = TransitionGenerator.CreateTransitions(From, To, Length);
-            Transitions = transitions;
+            Error += $"{From} has {From.NumberOfObjects()} objects and {To} has {To.NumberOfObjects()} objects.\n";
         }
-    }
 
-    private Siteswap? _from;
-    private Siteswap? _to;
+        var transitions = TransitionGenerator.CreateTransitions(From, To, Length);
+        Transitions = transitions;
+    }
 }
