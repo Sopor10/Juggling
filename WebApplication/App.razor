@@ -1,6 +1,6 @@
 ﻿<Fluxor.Blazor.Web.StoreInitializer/>
 <RadzenDialog />
-<Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new[]{typeof(Siteswaps.Generator.AssemblyInfo).Assembly}" PreferExactMatches="@true">
+<Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new []{typeof(Siteswaps.Generator.AssemblyInfo).Assembly, typeof(Siteswaps.Components.Assembly).Assembly}" PreferExactMatches="@true">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
     </Found>

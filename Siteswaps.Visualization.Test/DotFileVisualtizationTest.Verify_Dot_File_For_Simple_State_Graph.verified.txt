@@ -1,4 +1,4 @@
-﻿digraph Graph { 
+﻿digraph G { 
 	111000[shape=ellipse,label=111000,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
 	110100[shape=ellipse,label=110100,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
 	110010[shape=ellipse,label=110010,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 

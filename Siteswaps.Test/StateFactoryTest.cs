@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Siteswap.Details.StateDiagram;
+using Siteswap = Siteswap.Details.Siteswap;
 
 namespace Siteswaps.Test;
 
