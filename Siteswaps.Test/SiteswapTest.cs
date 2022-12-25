@@ -62,4 +62,28 @@ public class SiteswapTest
 
         result.Should().BeFalse();
     }
+    
+    [Test]
+    [TestCase("441")]
+    [TestCase("531")]
+    [TestCase("1")]
+    [TestCase("97531")]
+    [TestCase("7566")]
+    public void ValidSiteswaps(string siteswap)
+    {
+        var result = Siteswap.Details.Siteswap.TryCreate(siteswap, out var sut);
+
+        result.Should().BeTrue();
+    }
+        
+    [Test]
+    [TestCase("43")]
+    [TestCase("21")]
+    [TestCase("")]
+    public void InvalidSideswaps(string siteswap)
+    {
+        var result = Siteswap.Details.Siteswap.TryCreate(siteswap, out var sut);
+
+        result.Should().BeFalse();
+    }
 }
