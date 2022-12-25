@@ -14,7 +14,10 @@
         {
             <li style="display: flex">
                 <div style="padding: 4px">
-                    Siteswap: @States.SiteswapInState[state].Single().ToString()
+                    @foreach (var siteswap in States.SiteswapInState[state])
+                    {
+                        <div>Siteswap: @siteswap.ToString()</div>
+                    }
                 </div>
                 <div style="padding: 4px">
                     State: @state.StateRepresentation()
