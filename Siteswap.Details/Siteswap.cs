@@ -12,10 +12,8 @@ public record Siteswap(CyclicArray<int> Items)
         IsValid(new CyclicArray<int>(items));
     }
     
-    public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap)
-    {
-        return TryCreate(value.Select(ToInt), out siteswap);
-    }
+    public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap) => 
+        TryCreate(value.Select(ToInt), out siteswap);
 
     private static int ToInt(char c)
     {
@@ -28,10 +26,8 @@ public record Siteswap(CyclicArray<int> Items)
         return c - 87;
     }
 
-    public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap)
-    {
-        return TryCreate(ToUniqueRepresentation(new(items)), out siteswap);
-    }
+    public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap) => 
+        TryCreate(items.ToCyclicArray(), out siteswap);
 
     private static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
     {
@@ -80,7 +76,7 @@ public record Siteswap(CyclicArray<int> Items)
         return string.Join("", Items.EnumerateValues(1).Select(Transform));
     }
 
-    private string Transform(int i)
+    public static string Transform(int i)
     {
         return i switch
         {
@@ -104,4 +100,6 @@ public record Siteswap(CyclicArray<int> Items)
     public int Max() => Items.EnumerateValues(1).Max();
     
     public int this[int i] => Items[i];
+
+    public static CyclicArray<int> ToUniqueRepresentation(int[] input) => ToUniqueRepresentation(input.ToCyclicArray());
 }

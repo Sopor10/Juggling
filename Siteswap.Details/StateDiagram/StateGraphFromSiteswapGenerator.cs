@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Siteswap.Details.StateDiagram.Graph;
 
@@ -6,7 +7,7 @@ namespace Siteswap.Details.StateDiagram;
 
 public static class StateGraphFromSiteswapGenerator
 {
-    public static StateGraph CalculateGraph(params int[] siteswap)
+    public static StateGraph CalculateGraph(int[] siteswap, int? length = null)
     {
         var cyclicArray = siteswap.ToCyclicArray();
 
@@ -15,7 +16,7 @@ public static class StateGraphFromSiteswapGenerator
         for (var i = 0; i < siteswap.Length; i++)
         {
             var rotate = cyclicArray.Rotate(i);
-            var calculateState = StateGenerator.CalculateState(rotate.EnumerateValues(1).ToArray());
+            var calculateState = StateGenerator.CalculateState(rotate.EnumerateValues(1).ToArray(), length);
             states.Add(calculateState);
             
             if (stateToSiteswap.TryGetValue(calculateState, out var values))
@@ -40,3 +41,5 @@ public static class StateGraphFromSiteswapGenerator
         return new StateGraph(new Graph<State, int>(mappedStates, edges), stateToSiteswap);
     }
 }
+
+
