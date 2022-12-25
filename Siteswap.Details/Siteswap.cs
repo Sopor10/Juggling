@@ -12,8 +12,16 @@ public record Siteswap(CyclicArray<int> Items)
         IsValid(new CyclicArray<int>(items));
     }
     
-    public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap) => 
-        TryCreate(value.Select(ToInt), out siteswap);
+    public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap)
+    {
+        siteswap = null;
+        if (value == string.Empty)
+        {
+            return false;
+        }
+
+        return TryCreate(value.Select(ToInt), out siteswap);
+    }
 
     private static int ToInt(char c)
     {
@@ -69,7 +77,7 @@ public record Siteswap(CyclicArray<int> Items)
     private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
 
     public bool IsExcitedState() => !IsGroundState();
-    private decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
+    public decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
 
     public override string ToString()
     {
