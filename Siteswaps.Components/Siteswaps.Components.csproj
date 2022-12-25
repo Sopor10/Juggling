@@ -19,10 +19,12 @@
         <PackageReference Include="Microsoft.AspNetCore.Components" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="SkiaSharp.Views.Blazor" />
+        <PackageReference Include="Z.Blazor.Diagrams" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+      <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
     </ItemGroup>
 
     <ItemGroup>

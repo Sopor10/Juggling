@@ -19,6 +19,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+        <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
     </ItemGroup>
 
 </Project>

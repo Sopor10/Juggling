@@ -9,21 +9,26 @@ namespace Siteswaps.E2ETests;
 [Category("E2E")]
 public abstract class E2ETestsBase : PageTest
 {
-    protected static string BaseUrl { get; private set; } = "https://siteswaps.netlify.app/";
-    protected static string ExpertUi { get; private set; } = BaseUrl + "generator";
+    protected string? BaseUrl { get; private set; }
+    protected string ExpertUi => BaseUrl + "/generator";
 
-    [ModuleInitializer]
-    public static void ModuleInitialize()
+    [SetUp]
+    public void ModuleInitialize()
     {
-        var baseUrl = Environment.GetEnvironmentVariable("E2E_TEST_BASEURL");
-        if (baseUrl != null)
+        BaseUrl = Environment.GetEnvironmentVariable("E2E_TEST_BASEURL");
+
+        if (BaseUrl is null)
         {
-            BaseUrl = baseUrl;
+            throw new NotSupportedException("E2E_TEST_BASEURL is not set");
         }
-        
+    }
+    
+    [ModuleInitializer]
+    public static void ModuleInitializer()
+    {
         if (Debugger.IsAttached)
         {
             Environment.SetEnvironmentVariable("HEADED","1");
-        }
+        }        
     }
 }

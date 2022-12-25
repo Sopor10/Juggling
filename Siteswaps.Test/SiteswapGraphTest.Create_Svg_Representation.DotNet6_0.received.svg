@@ -1,0 +1,26 @@
+﻿<!--SvgWriter version: 1.0.0.0-->
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="131" height="343.375" id="svg2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(30,858.875)">
+    <svg x="-20" y="-835.875" width="40" height="0">
+      <circle cx="0" cy="0" r="20" />
+      <text fill="white">11001</text>
+    </svg>
+    <svg x="51" y="-675.1875" width="40" height="0">
+      <circle cx="0" cy="0" r="20" />
+      <text fill="white">10110</text>
+    </svg>
+    <svg x="-20" y="-514.5" width="40" height="0">
+      <circle cx="0" cy="0" r="20" />
+      <text fill="white">11100</text>
+    </svg>
+    <path fill="none" stroke="#000000" stroke-opacity="#000000" stroke-width="1" d="M 0 -835.875 L 66.9584307395 -684.33439662741" />
+    <polygon stroke="#000000" stroke-opacity="#000000" stroke-width="1" fill="#000000" fill-opacity="#000000" points="64.93061257266 -683.43840229154 71 -675.1875 68.98624890634 -685.23039096329" />
+    <text x="31.64983604427" y="-759.29638446161">3</text>
+    <path fill="none" stroke="#000000" stroke-opacity="#000000" stroke-width="1" d="M 71 -675.1875 L 4.0415692605 -523.64689662741" />
+    <polygon stroke="#000000" stroke-opacity="#000000" stroke-width="1" fill="#000000" fill-opacity="#000000" points="2.01375109366 -524.54289096329 0 -514.5 6.06938742734 -522.75090229154" />
+    <text x="35.69140530477" y="-600.22551216581">1</text>
+    <path fill="none" stroke="#000000" stroke-opacity="#000000" stroke-width="1" d="M 0 -514.5 L 0 -825.875" />
+    <polygon stroke="#000000" stroke-opacity="#000000" stroke-width="1" fill="#000000" fill-opacity="#000000" points="2.21694663167 -825.875 0 -835.875 -2.21694663167 -825.875" />
+    <text x="4" y="-670.1875">5</text>
+  </g>
+</svg>
