@@ -36,17 +36,6 @@
             ]
         },
         {
-            "matchPackagePatterns": "^TngTech.ArchUnitNET.*",
-            "groupName": ["ArchUnit Packages"],
-            "matchUpdateTypes": [
-                "major",
-                "minor",
-                "patch",
-                "pin",
-                "digest"
-            ] 
-        },        
-        {
             "matchUpdateTypes": [
                 "major",
                 "minor",
