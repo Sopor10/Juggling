@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
+      <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
     </ItemGroup>
 
 </Project>

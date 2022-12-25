@@ -40,5 +40,12 @@
         <PackageVersion Include="DotNetGraph" Version="2.7.0" />
 
         <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.6.0" />
+
+      <PackageVersion Include="System.Drawing.Common" Version="7.0.0" />
+      <PackageVersion Include="TextCopy" Version="4.3.0" />
+      <PackageVersion Include="Z.Blazor.Diagrams" Version="2.1.6" />
+      <PackageVersion Include="Svg" Version="3.4.4" />
+      <PackageVersion Include="AutomaticGraphLayout" Version="1.1.12" />
+      <PackageVersion Include="AutomaticGraphLayout.Drawing" Version="1.1.12" />
     </ItemGroup>
 </Project>
