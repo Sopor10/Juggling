@@ -18,14 +18,14 @@ public class GenerateSiteswapsTests: E2ETestsBase
     }
     
     [Test]
-    public async Task Clicking_On_A_Siteswap_Link_Opens_Passist_In_A_New_Tab()
+    public async Task Generator_UI_Generates_Siteswaps()
     {
         await Page.GotoAsync(ExpertUi);
 
         await Page.ClickAsync("#generate");
 
         await Page.Locator("#passist-link-aa753").WaitForAsync();
-        (await Page.Locator("#passist-link-aaa00").CountAsync()).Should().Be(1);
+        (await Page.Locator("#passist-link-aa753").CountAsync()).Should().Be(1);
     }
         
     [Test]
