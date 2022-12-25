@@ -1,10 +1,10 @@
 ﻿@page "/SiteswapState"
-@using Siteswap.Details.StateDiagram
 @using Siteswap.Details
+@using Siteswap.Details.StateDiagram
 
 
 <h3>State</h3>
-<SiteswapInput @bind-Siteswap="Siteswap" />
+<SiteswapInput @bind-Siteswap="Siteswap"/>
 
 <ul>
     @if (States is not null)
@@ -39,4 +39,5 @@
             return stateGraph;
         }
     }
+
 }
