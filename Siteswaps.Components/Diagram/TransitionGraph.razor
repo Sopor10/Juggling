@@ -1,0 +1,109 @@
+﻿@page "/transition"
+@using VisNetwork.Blazor.Models
+@using Siteswap.Details.StateDiagram
+@using Siteswap.Details
+
+<Network Id="my-id" Data="@Data" style="width: 640px; height: 480px"/>
+
+@code {
+
+    [Parameter]
+    public Transition? Transition { get; set; } = new (new Siteswap(5, 3, 1), new Siteswap(5, 1), new[] { 4 });
+    
+    [Parameter]
+    public EventCallback<Transition?> TransitionChanged { get; set; }
+
+    private NetworkData Data { get; set; }
+
+    public TransitionGraph()
+    {
+        var nodes = new List<Node>();
+        var edges = new List<Edge>();
+        
+        if (Transition is null)
+        {
+            return;
+        }
+
+        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Transition.From.Items.EnumerateValues(1).ToArray());
+        var toGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Transition.To.Items.EnumerateValues(1).ToArray());
+
+        AddNodes(fromGraph, nodes);
+        AddNodes(toGraph, nodes);
+
+        AddEdges(fromGraph, edges);
+        AddEdges(toGraph, edges);
+
+        var state = fromGraph.SiteswapInState.Single(x => x.Value.Contains(Transition.From)).Key;
+
+        foreach (var transitionThrow in Transition.Throws)
+        {
+            var nextState = state.Advance().Throw(transitionThrow);
+            
+            AddState(nodes, state);
+            AddState(nodes, nextState);
+            
+            AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.ToString(), true);
+            state = nextState;
+
+        }
+
+        Data = new NetworkData
+        {
+            Edges = edges,
+            Nodes = nodes
+        };
+    }
+
+    private static void AddEdges(StateGraph fromGraph, List<Edge> edges)
+    {
+        foreach (var edge in fromGraph.Graph.Edges)
+        {
+            AddEdge(edges, edge.N1.StateRepresentation(), edge.N2.StateRepresentation(), edge.Data.ToString());
+        }
+    }
+
+    private static void AddEdge(List<Edge> edges, string from, string to, string data, bool isTransition = false)
+    {
+        if (edges.Any(x => x.From == from && x.To == to))
+        {
+            return;
+        }
+
+        var item = new Edge(from, to, data)
+        {
+            Label = data,
+            Arrows = new Arrows
+            {
+                To = new ArrowsOptions { Enabled = true }
+            },
+            Color = new ColorType()
+            {
+                Color = isTransition ? "orange" : "black"
+            }
+        };
+        edges.Add(item);
+    }
+
+    private static void AddNodes(StateGraph fromGraph, ICollection<Node> nodes)
+    {
+        foreach (var node in fromGraph.Graph.Nodes)
+        {
+            AddState(nodes, node);
+        }
+    }
+
+    private static void AddState(ICollection<Node> nodes, State node)
+    {
+        if (nodes.All(x => x.Id != node.StateRepresentation()))
+        {
+            nodes.Add(CreateNode(node));
+        }
+    }
+
+    private static Node CreateNode(State node)
+    {
+        return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle");
+    }
+
+}

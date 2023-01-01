@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using Siteswap.Details.StateDiagram.Graph;
 using MoreLinq;
 
@@ -13,7 +14,7 @@ namespace Siteswap.Details.StateDiagram;
 /// </summary>
 /// <param name="Value"></param>
 [DebuggerDisplay("{StateRepresentation()}")]
-public record State(uint Value, int Length)
+public record State(uint Value)
     {
         public State(params int[] values):this(values.Select(x => x != 0))
         {
@@ -24,31 +25,26 @@ public record State(uint Value, int Length)
                 (uint)values.Select((b, i) => (b, i))
                     .Where(x => x.b)
                     .Select(x => (int)Math.Pow(2, x.i))
-                    .Sum(), 
-                values.Count())
+                    .Sum())
         {
         }
         
-        public static State Empty(int length)
+        public static State Empty()
         {
-            return new((uint)0, length);
+            return new((uint)0);
         }
 
-        public static State GroundState(int numberOfBalls, int length)
+        public static State GroundState(int numberOfBalls)
         {
-            if (length < numberOfBalls) throw new ArgumentException();
-
             var mask = 0xffffffff;
             mask >>= 32 - numberOfBalls;
             mask <<= 0;
-            return new State(mask, length);
+            return new State(mask);
         }
 
         public string StateRepresentation()
         {
-            var repeat = new string(Enumerable.Repeat('0', Length - Convert.ToString(Value, 2).Length).ToArray());
-            return string.Concat(Convert.ToString(Value, 2).Reverse().ToArray()) +
-                   repeat;
+            return string.Concat(Convert.ToString(Value, 2).Reverse().ToArray());
         }
 
         public override string ToString() => StateRepresentation();
@@ -75,7 +71,8 @@ public record State(uint Value, int Length)
         {
             if (IsBitSet(Value,0))
             {
-                for (var i = 1; i <= Length; i++)
+                int length = 63 - BitOperations.LeadingZeroCount(0x1234L);
+                for (var i = 1; i <= length; i++)
                 {
                     if (IsBitSet(Value,i) is false)
                     {
