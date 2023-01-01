@@ -8,25 +8,31 @@
 @code {
 
     [Parameter]
-    public Transition? Transition { get; set; } = new (new Siteswap(5, 3, 1), new Siteswap(5, 1), new[] { 4 });
-    
-    [Parameter]
-    public EventCallback<Transition?> TransitionChanged { get; set; }
+    public Transition? Transition
+    {
+        get => _transition;
+        set
+        {
+
+            _transition = value;
+            CreateNetworkData(_transition);
+        }
+    }
 
     private NetworkData Data { get; set; }
 
-    public TransitionGraph()
+    private void CreateNetworkData(Transition? transition)
     {
         var nodes = new List<Node>();
         var edges = new List<Edge>();
-        
-        if (Transition is null)
+
+        if (transition is null)
         {
             return;
         }
 
-        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Transition.From.Items.EnumerateValues(1).ToArray());
-        var toGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Transition.To.Items.EnumerateValues(1).ToArray());
+        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.From.Items.EnumerateValues(1).ToArray());
+        var toGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.To.Items.EnumerateValues(1).ToArray());
 
         AddNodes(fromGraph, nodes);
         AddNodes(toGraph, nodes);
@@ -34,18 +40,17 @@
         AddEdges(fromGraph, edges);
         AddEdges(toGraph, edges);
 
-        var state = fromGraph.SiteswapInState.Single(x => x.Value.Contains(Transition.From)).Key;
+        var state = fromGraph.SiteswapInState.Single(x => x.Value.Contains(transition.From)).Key;
 
-        foreach (var transitionThrow in Transition.Throws)
+        foreach (var transitionThrow in transition.Throws)
         {
             var nextState = state.Advance().Throw(transitionThrow);
-            
+
             AddState(nodes, state);
             AddState(nodes, nextState);
-            
+
             AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.ToString(), true);
             state = nextState;
-
         }
 
         Data = new NetworkData
@@ -106,4 +111,5 @@
         return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle");
     }
 
+    private Transition? _transition = new (new Siteswap(5, 3, 1), new Siteswap(5, 1), new[] { 4 });
 }
