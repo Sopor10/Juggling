@@ -34,7 +34,7 @@ jobs:
           npx playwright install
           npx playwright install chromium
       - name: Wait for Netlify Deploy
-        uses: probablyup/wait-for-netlify-action@v3.3.0
+        uses: probablyup/wait-for-netlify-action@v3.4.0
         id: waitForDeployment
         with:
           max_timeout: 60
