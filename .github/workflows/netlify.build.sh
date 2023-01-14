@@ -10,4 +10,4 @@ popd
 
 ## publish project to known location for subsequent deployment by Netlify
 dotnet workload install wasm-tools 
-dotnet publish Webassembly/Webassembly.csproj -o release -c Release
+dotnet publish Webassembly/Webassembly.csproj -o release -c Release   

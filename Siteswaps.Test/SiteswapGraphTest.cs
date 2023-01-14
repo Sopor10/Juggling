@@ -16,31 +16,31 @@ public class SiteswapGraphTest : VerifyBase
     [Test]
     public void Advance_State_Forward()
     {
-        var state = State.GroundState(3, 5);
+        var state = State.GroundState(3);
 
         state.Advance()
             .Should()
-            .Be(State.GroundState(2, 5));
+            .Be(State.GroundState(2));
     }
 
     [Test]
     public void State_Is_Presented_Corrected()
     {
-        var state = State.GroundState(3, 5);
+        var state = State.GroundState(3);
 
         state.StateRepresentation()
             .Should()
-            .Be("11100");
+            .Be("111");
     }
 
     [Test]
     public void Throw_4()
     {
-        var state = State.GroundState(3, 5);
+        var state = State.GroundState(3);
 
         state.Throw(4)
             .Should()
-            .Be(State.GroundState(4, 5));
+            .Be(State.GroundState(4));
     }
 
     [Test]
@@ -49,7 +49,7 @@ public class SiteswapGraphTest : VerifyBase
         var siteswap = new[] { 5, 3, 1 };
         StateGenerator.CalculateState(siteswap)
             .Should()
-            .Be(State.GroundState(3, 5));
+            .Be(State.GroundState(3));
     }
 
 

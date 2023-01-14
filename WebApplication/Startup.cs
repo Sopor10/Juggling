@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Radzen;
 using Siteswaps.Generator;
+using VisNetwork.Blazor;
 
 namespace WebApplication;
 
@@ -23,6 +24,7 @@ public class Startup
         services.InstallGenerator();
         services.AddServerSideBlazor();
         services.AddScoped<DialogService>();
+        services.AddVisNetwork();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
