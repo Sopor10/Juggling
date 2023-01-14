@@ -8,7 +8,7 @@ public abstract class StateGenerator
     {
         var stable = false;
 
-        var state = State.Empty(new[]{siteswap.Max(), length??0}.Max());
+        var state = State.Empty();
 
         while (stable is false)
         {

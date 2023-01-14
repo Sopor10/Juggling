@@ -36,10 +36,15 @@
                     <div style="padding: 4px">
                         @transition.PrettyPrint()
                     </div>
+                    <button @onclick="()=>TransitionClicked(transition)">Show</button>
                 </li>
             }
         </ul>
     }
+</div>
+
+<div>
+    <TransitionGraph Transition="SelectedTransition"></TransitionGraph>
 </div>
 
 @code
@@ -88,4 +93,11 @@
         var transitions = TransitionGenerator.CreateTransitions(From, To, Length);
         Transitions = transitions;
     }
+
+    private void TransitionClicked(Transition transition)
+    {
+        SelectedTransition = transition;
+    }
+
+    public Transition? SelectedTransition { get; set; }
 }

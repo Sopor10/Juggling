@@ -14,14 +14,15 @@ public static class TransitionGenerator
         var fromState = StateGenerator.CalculateState(from, maxHeight);
         var toState = StateGenerator.CalculateState(to, maxHeight);
 
-        result.AddRange(Recurse(fromState, toState, ImmutableList<int>.Empty, length));
+        result.AddRange(Recurse(fromState, toState, ImmutableList<int>.Empty, length, maxHeight));
 
         return result.Select(x => new Transition(from,to, x.ToArray())).ToList();
     }
 
-    private static IEnumerable<ImmutableList<int>> Recurse(State fromState, State toState, ImmutableList<int> transitionSoFar, int length)
+    private static IEnumerable<ImmutableList<int>> Recurse(State fromState, State toState,
+        ImmutableList<int> transitionSoFar, int length, int maxHeight)
     {
-        foreach (var transition in fromState.Transitions())
+        foreach (var transition in fromState.Transitions(maxHeight))
         {
             if (toState == transition.N2)
             {
@@ -30,7 +31,7 @@ public static class TransitionGenerator
 
             if (length == 1) continue;
             
-            foreach (var immutableList in Recurse(transition.N2, toState, transitionSoFar.Add(transition.Data), length - 1))
+            foreach (var immutableList in Recurse(transition.N2, toState, transitionSoFar.Add(transition.Data), length - 1, maxHeight))
             {
                 yield return immutableList;
             }

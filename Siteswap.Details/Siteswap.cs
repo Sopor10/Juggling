@@ -72,7 +72,7 @@ public record Siteswap(CyclicArray<int> Items)
         return biggest.ToCyclicArray();
     }
 
-    public bool IsGroundState() => HasNoRethrow();
+    private bool IsGroundState() => HasNoRethrow();
 
     private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
 
