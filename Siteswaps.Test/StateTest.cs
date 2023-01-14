@@ -10,7 +10,7 @@ public class StateTest
     public void StateTransitionsCanBeCalculated()
     {
         var sut = new State(1, 0, 1, 1, 0);
-        var transitions = sut.Transitions();
+        var transitions = sut.Transitions(5);
         transitions.Should().BeEquivalentTo(new Edge<State, int>[]
         {
             new(sut, new State(1,1,1,0,0), 1),
@@ -22,7 +22,7 @@ public class StateTest
     public void State_Transition_From_Zero_Can_Be_Calculated()
     {
         var sut = new State(0, 0, 1, 1, 0);
-        var transitions = sut.Transitions();
+        var transitions = sut.Transitions(5);
         transitions.Should().BeEquivalentTo(new Edge<State, int>[]
         {
             new(sut, new State(0,1,1,0,0), 0),
@@ -33,7 +33,7 @@ public class StateTest
     public void State_Transition_From_Ground_State()
     {
         var sut = new State(1, 1, 1, 0, 0);
-        var transitions = sut.Transitions();
+        var transitions = sut.Transitions(5);
 
         transitions.Should().HaveCount(3);
         transitions.Should().BeEquivalentTo(new Edge<State, int>[]

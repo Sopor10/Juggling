@@ -67,12 +67,11 @@ public record State(uint Value)
             return state;
         }
         
-        public IEnumerable<Edge<State, int>> Transitions()
+        public IEnumerable<Edge<State, int>> Transitions(int maxHeight)
         {
             if (IsBitSet(Value,0))
             {
-                int length = 63 - BitOperations.LeadingZeroCount(0x1234L);
-                for (var i = 1; i <= length; i++)
+                for (var i = 1; i <= maxHeight; i++)
                 {
                     if (IsBitSet(Value,i) is false)
                     {

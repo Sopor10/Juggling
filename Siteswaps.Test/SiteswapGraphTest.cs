@@ -30,7 +30,7 @@ public class SiteswapGraphTest : VerifyBase
 
         state.StateRepresentation()
             .Should()
-            .Be("11100");
+            .Be("111");
     }
 
     [Test]
