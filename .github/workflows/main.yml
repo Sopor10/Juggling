@@ -34,6 +34,7 @@ jobs:
           npm install
           npx playwright install
           npx playwright install chromium
+          pwsh Siteswaps.E2ETests/bin/Release/net7.0/playwright.ps1 install
 
       - name: Publish Webassembly
         run: dotnet publish Webassembly/Webassembly.csproj -o release -c Release 
