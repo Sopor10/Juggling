@@ -48,7 +48,7 @@ jobs:
           app_location: "release/wwwroot"
           output_location: ''
           skip_app_build: true
-            - name: Test
+      - name: Test
         run: dotnet test -c Release --no-build --filter TestCategory=E2E
         env:
           E2E_TEST_BASEURL: ${{ steps.deployToAzure.outputs.static_web_app_url }}
