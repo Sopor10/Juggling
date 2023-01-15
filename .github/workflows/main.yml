@@ -40,7 +40,7 @@ jobs:
         run: dotnet publish Webassembly/Webassembly.csproj -o release -c Release 
       
       - name: Deploy to Azure
-        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        uses: Azure/static-web-apps-deploy@5c50db0011c6423f073843e7e22c3d0cb6c53920
         id: deployToAzure
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
@@ -88,7 +88,7 @@ jobs:
     name: Close
     steps:
       - name: Close
-        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        uses: Azure/static-web-apps-deploy@5c50db0011c6423f073843e7e22c3d0cb6c53920
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"          
