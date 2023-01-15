@@ -1,6 +1,8 @@
 {
     "labels": ["dependencies"],
     "automerge": true,
+    "automergeType": "pr",
+    "platformAutomerge": true,
     "packageRules": [
         {
             "matchPackagePatterns": "^Verify.*",
