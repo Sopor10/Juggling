@@ -16,6 +16,7 @@ public abstract class E2ETestsBase : PageTest
     public void ModuleInitialize()
     {
         BaseUrl = Environment.GetEnvironmentVariable("E2E_TEST_BASEURL");
+        Console.WriteLine($"Testing against: {BaseUrl}");
 
         if (BaseUrl is null)
         {
