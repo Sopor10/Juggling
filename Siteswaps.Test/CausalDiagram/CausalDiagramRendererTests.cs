@@ -36,7 +36,7 @@ public class CausalDiagramRendererTests
 
         var bitmap = RenderToBitmap(causalDiagram);
         await SaveToFile(_path, bitmap);
-        await VerifyFile(_path).UseExtension("png");
+        await VerifyFile(_path);
     }
 
     private static CyclicArray<Hand> HandsFor4HandedSiteswap()
