@@ -38,8 +38,9 @@ jobs:
       - name: Publish Webassembly
         run: dotnet publish Webassembly/Webassembly.csproj -o release -c Release 
       
-      - name: Build And Deploy
+      - name: Deploy to Azure
         uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        id: deployToAzure
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -47,19 +48,10 @@ jobs:
           app_location: "release/wwwroot"
           output_location: ''
           skip_app_build: true
-      
-      - name: Wait for Netlify Deploy
-        uses: probablyup/wait-for-netlify-action@v3.4.0
-        id: waitForDeployment
-        with:
-          max_timeout: 60
-          site_id: ${{ secrets.NETLIFY_SITE_ID }}
-        env:
-          NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      - name: Test
+            - name: Test
         run: dotnet test -c Release --no-build --filter TestCategory=E2E
         env:
-          E2E_TEST_BASEURL: ${{ steps.waitForDeployment.outputs.url }}
+          E2E_TEST_BASEURL: ${{ steps.deployToAzure.outputs.static_web_app_url }}
           
   publish-docker-image:
     needs: build-and-test
