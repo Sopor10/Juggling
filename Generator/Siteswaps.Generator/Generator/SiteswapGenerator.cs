@@ -45,13 +45,13 @@ public class SiteswapGenerator
                 continue;
             }
              
-            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * min)/ Input.Period > Input.NumberOfObjects)
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition - 1) * min)/ Input.Period > Input.NumberOfObjects)
             {
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
             
-            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition) * Input.MaxHeight)/ Input.Period < Input.NumberOfObjects)
+            if ((PartialSiteswap.PartialSum + (Input.Period - PartialSiteswap.LastFilledPosition - 1) * Input.MaxHeight)/ Input.Period < Input.NumberOfObjects)
             {
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
