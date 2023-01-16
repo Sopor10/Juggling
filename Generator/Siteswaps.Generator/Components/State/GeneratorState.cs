@@ -46,9 +46,9 @@ public record Between : Objects
 
 public record Throw(string Name, int Height)
 {
-    public static Throw AnySelf => new Throw("Any Pass", -3);
-    public static Throw AnyPass => new Throw("Any Self", -2);
-    public static Throw Empty => new Throw("Empty", -1);
+    public static Throw AnySelf => new("Any Pass", -3);
+    public static Throw AnyPass => new("Any Self", -2);
+    public static Throw Empty => new("Empty", -1);
     public static Throw EmptyHand => new("Empty Hand", 0);
     public static Throw Zip => new("Zip", 2);
     public static Throw Hold => new("Hold", 4);
@@ -60,7 +60,7 @@ public record Throw(string Name, int Height)
     public static Throw TripleSelf => new("Triple Self", 10);
     public static Throw TriplePass => new("Triple Pass", 11);
 
-    private bool IsSelf => Height % 2 == 1;
+    private bool IsPass => Height % 2 == 1;
 
     public static IEnumerable<Throw> All => new List<Throw>
     {
@@ -79,7 +79,7 @@ public record Throw(string Name, int Height)
     public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
     {
         var result = new HashSet<int>();
-        if (IsSelf)
+        if (IsPass)
         {
             var min = Height - 1;
             var max = Height + 1;
