@@ -1,4 +1,4 @@
-name: build, test and publish
+name: build and publish
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
           output_location: ''
           skip_app_build: true
 
-  e2e-test:
+  e2e:
     needs: [test, publish]
     runs-on: ubuntu-latest
     steps:
