@@ -58,7 +58,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Build
-        run: dotnet build -c Release Siteswaps.E2ETests\Siteswaps.E2ETests.csproj
+        run: dotnet build -c Release Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
         
       - name: install playwright
         run: |
