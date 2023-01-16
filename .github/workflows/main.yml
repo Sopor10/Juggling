@@ -1,4 +1,4 @@
-name: build-and-push
+name: build and publish
 
 on:
   push:
@@ -7,13 +7,9 @@ on:
   pull_request:
     branches:
       - "**"
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: "juggling"
 
 jobs:
   build-and-test:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')    
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -53,42 +49,3 @@ jobs:
         run: dotnet test -c Release --no-build --filter TestCategory=E2E
         env:
           E2E_TEST_BASEURL: ${{ steps.deployToAzure.outputs.static_web_app_url }}
-          
-  publish-docker-image:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login to GithubRegistry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2.1.0
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.2.1
-      - name: run minver
-        id: version
-        uses: thefringeninja/action-minver@2.0.0-preview1
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v3.3.0
-        with:
-          context: .
-          file: WebApplication/Dockerfile
-          push: true
-          tags: "${{ env.REGISTRY }}/sopor10/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}"
-          
-  close:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close
-    steps:
-      - name: Close
-        uses: Azure/static-web-apps-deploy@5c50db0011c6423f073843e7e22c3d0cb6c53920
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          action: "close"          
