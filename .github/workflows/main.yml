@@ -68,6 +68,6 @@ jobs:
           pwsh Siteswaps.E2ETests/bin/Release/net7.0/playwright.ps1 install
 
       - name: Test
-        run: dotnet test -c Release --no-build --filter TestCategory=E2E --no-build
+        run: dotnet test -c Release --no-build --filter TestCategory=E2E
         env:
           E2E_TEST_BASEURL: ${{needs.publish.outputs.deployUrl}}
