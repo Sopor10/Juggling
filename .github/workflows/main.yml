@@ -21,6 +21,8 @@ jobs:
         run: dotnet test -c Release --filter TestCategory!=E2E
 
   publish:
+    outputs:
+      deployUrl: ${{ steps.deployToAzure.outputs.static_web_app_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -55,6 +57,9 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
+      - name: Test
+        run: dotnet build -c Release --no-build Siteswaps.E2ETests\Siteswaps.E2ETests.csproj
+        
       - name: install playwright
         run: |
           npm install
@@ -63,6 +68,6 @@ jobs:
           pwsh Siteswaps.E2ETests/bin/Release/net7.0/playwright.ps1 install
 
       - name: Test
-        run: dotnet test -c Release --no-build --filter TestCategory=E2E
+        run: dotnet test -c Release --no-build --filter TestCategory=E2E --no-build
         env:
-          E2E_TEST_BASEURL: ${{ steps.deployToAzure.outputs.static_web_app_url }}
+          E2E_TEST_BASEURL: ${{needs.publish.outputs.deployUrl}}
