@@ -6,5 +6,5 @@
   ],
 
 
-  "postCreateCommand": "dotnet dev-certs https --trust && dotnet workload install wasm-tools"
+  "postCreateCommand": "dotnet dev-certs https --trust && sudo dotnet workload install wasm-tools"
 }
