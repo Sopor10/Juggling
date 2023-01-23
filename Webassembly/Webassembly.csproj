@@ -9,28 +9,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
-        <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
+        <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj"/>
+        <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Update="wwwroot\icon-512.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Update="wwwroot\icon-192.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Update="wwwroot\manifest.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+        <Content Include="wwwroot\icon-512.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="wwwroot\icon-192.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="wwwroot\manifest.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>
