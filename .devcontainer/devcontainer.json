@@ -3,10 +3,7 @@
 
   "build": {
     "dockerfile": "./Dockerfile",
-    "context": ".",
-    "args": {
-      "VARIANT": "7.0"
-    }
+    "context": "."
   },
 
   "forwardPorts": [
