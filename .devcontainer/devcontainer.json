@@ -1,11 +1,6 @@
 ﻿{
   "name": "DevContainer for .NET",
 
-  "build": {
-    "dockerfile": "./Dockerfile",
-    "context": "."
-  },
-
   "forwardPorts": [
     5000, 5001
   ],
