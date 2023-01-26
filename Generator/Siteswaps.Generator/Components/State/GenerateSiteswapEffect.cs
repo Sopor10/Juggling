@@ -4,20 +4,25 @@ using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Components.State;
 
+using Microsoft.AspNetCore.Components;
+
 public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 {
-    public GenerateSiteswapEffect()
+    public GenerateSiteswapEffect(NavigationManager navigationManager)
     {
+        NavigationManager = navigationManager;
         SiteswapGeneratorFactory = new SiteswapGeneratorFactory();
     }
 
     private SiteswapGeneratorFactory SiteswapGeneratorFactory { get; }
+    private NavigationManager NavigationManager { get; }
 
     public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
         var siteswaps = await CreateSiteswaps(action);
 
         dispatcher.Dispatch(new SiteswapsGeneratedAction(siteswaps));
+        NavigationManager.NavigateTo("/result");
     }
 
     public async Task<List<Siteswap>> CreateSiteswaps(GenerateSiteswapsAction action)
