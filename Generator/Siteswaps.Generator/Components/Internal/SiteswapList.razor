@@ -6,21 +6,20 @@
     <RadzenDataGrid TItem="SiteswapView"
                     Data="SiteswapViews"
                     AllowColumnResize="true"
-                    AllowAlternatingRows="true"
                     AllowSorting="true"
                     PageSize="15"
                     AllowPaging="true"
                     PagerHorizontalAlign="HorizontalAlign.Center"
                     ShowPagingSummary="true"
-                    Responsive="true"
                     AllowColumnPicking="true"
                     AllowMultiColumnSorting="true"
+                    Responsive="false"
                     AllowPickAllColumns="false">
         <Columns>
             <RadzenDataGridColumn TItem="SiteswapView" Property="DisplayValue" Title="Siteswap" Frozen="true" Width="50px"/>
             <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfJugglers" Title="Jugglers" Frozen="true" Width="25px"/>
             <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="25px"/>
-            <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true" Width="50px">
+            <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true">
                 <Template Context="data">
                     <RadzenLink Text="@data.DisplayValue" Path="@data.PassistLink" Target="_blank"/>
                 </Template>
