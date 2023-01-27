@@ -29,7 +29,7 @@ or it will not be rendered.
     public StateGraph Graph { get; set; } = new StateGraphGenerator().Generate(new StateGraphGeneratorInput(5, 3));
 
     private readonly GraphLayoutFactory GraphLayoutFactory = new();
-    private Diagram Diagram { get; set; }
+    private Diagram Diagram { get; set; } = new();
 
     protected override void OnInitialized()
     {
