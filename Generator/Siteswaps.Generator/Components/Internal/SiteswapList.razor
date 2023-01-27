@@ -17,9 +17,9 @@
                     AllowMultiColumnSorting="true"
                     AllowPickAllColumns="false">
         <Columns>
-            <RadzenDataGridColumn TItem="SiteswapView" Property="DisplayValue" Title="Siteswap" Frozen="true" Width="150px"/>
-            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfJugglers" Title="Jugglers" Frozen="true" Width="50px"/>
-            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="50px"/>
+            <RadzenDataGridColumn TItem="SiteswapView" Property="DisplayValue" Title="Siteswap" Frozen="true" Width="50px"/>
+            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfJugglers" Title="Jugglers" Frozen="true" Width="25px"/>
+            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="25px"/>
             <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true" Width="50px">
                 <Template Context="data">
                     <RadzenLink Text="@data.DisplayValue" Path="@data.PassistLink" Target="_blank"/>
