@@ -4,23 +4,26 @@ using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Components.State;
 
+using Microsoft.AspNetCore.Components;
+
 public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 {
-    public GenerateSiteswapEffect()
+    public GenerateSiteswapEffect(NavigationManager navigationManager)
     {
-        SiteswapGeneratorFactory = new SiteswapGeneratorFactory();
+        NavigationManager = navigationManager;
     }
 
-    private SiteswapGeneratorFactory SiteswapGeneratorFactory { get; }
+    private NavigationManager NavigationManager { get; }
 
     public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
         var siteswaps = await CreateSiteswaps(action);
 
         dispatcher.Dispatch(new SiteswapsGeneratedAction(siteswaps));
+        NavigationManager.NavigateTo("/result");
     }
 
-    public async Task<List<Siteswap>> CreateSiteswaps(GenerateSiteswapsAction action)
+    public static async Task<List<Siteswap>> CreateSiteswaps(GenerateSiteswapsAction action)
     {
         var siteswaps = new List<Siteswap>();
 
@@ -32,7 +35,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         return siteswaps;
     }
 
-    public List<(SiteswapGeneratorInput siteswapGeneratorInput, SiteswapGeneratorFactory factory)>
+    private static List<(SiteswapGeneratorInput siteswapGeneratorInput, SiteswapGeneratorFactory factory)>
         CreateSiteswapGeneratorInputs(GenerateSiteswapsAction action)
     {
         if (action.State.Period is null ||
@@ -71,7 +74,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                     (current, filterInformation) => ToFilter(current, filterInformation,
                         action.State.NumberOfJugglers.Value, action.State.Period.Value));
 
-            var siteswapGeneratorFactory = SiteswapGeneratorFactory
+            var siteswapGeneratorFactory = new SiteswapGeneratorFactory()
                 .ConfigureFilter(filterConfig);
 
             var liste = new List<Func<IFilterBuilder, IFilterBuilder>>();
@@ -92,7 +95,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         return result;
     }
 
-    private IFilterBuilder ToFilter(IFilterBuilder builder, IFilterInformation filterInformation, int numberOfJugglers,
+    private static IFilterBuilder ToFilter(IFilterBuilder builder, IFilterInformation filterInformation, int numberOfJugglers,
         int period)
     {
         switch (filterInformation.FilterType)
@@ -129,7 +132,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         throw new ArgumentOutOfRangeException();
     }
 
-    private IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
+    private static IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
         int numberOfJugglers, int period, IFilterBuilder builder)
     {
         var result = new List<List<int>>();

@@ -58,12 +58,12 @@
 
     private List<Transition> Transitions { get; set; } = new();
 
-    private string Error { get; set; }
+    private string Error { get; set; } = String.Empty;
 
     protected override void OnInitialized()
     {
-        From = new Siteswap(5, 3, 1);
-        To = new Siteswap(4, 1, 4);
+        From = new Siteswap(3);
+        To = new Siteswap(5,1);
         Length = 2;
         base.OnInitialized();
     }

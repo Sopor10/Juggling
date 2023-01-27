@@ -1,35 +1,57 @@
 ﻿<div >
     <h3 class="mt-3">
         Siteswaps
-        <small class="text-muted">(@Siteswaps.Count)</small>
     </h3>
-
-    @foreach (var siteswaps in Siteswaps.Batch(4))
-    {
-        <div class="row">
-            @foreach (var siteswap in siteswaps)
-            {
-                <div class="col-md-3">
-                    <p>
-                        <a id="passist-link-@siteswap.ToString()" href="@GenerateUrl(siteswap)" target="_blank" rel="noopener noreferrer">@siteswap.ToString()</a> 
-                    </p>
-                </div>
-            }
-        </div>
-    }
+    
+    <RadzenDataGrid TItem="SiteswapView"
+                    Data="SiteswapViews"
+                    AllowColumnResize="true"
+                    AllowAlternatingRows="true"
+                    AllowSorting="true"
+                    PageSize="15"
+                    AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Center"
+                    ShowPagingSummary="true"
+                    Responsive="true"
+                    AllowColumnPicking="true"
+                    AllowMultiColumnSorting="true"
+                    AllowPickAllColumns="false">
+        <Columns>
+            <RadzenDataGridColumn TItem="SiteswapView" Property="DisplayValue" Title="Siteswap" Frozen="true" Width="50px"/>
+            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfJugglers" Title="Jugglers" Frozen="true" Width="25px"/>
+            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="25px"/>
+            <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true" Width="50px">
+                <Template Context="data">
+                    <RadzenLink Text="@data.DisplayValue" Path="@data.PassistLink" Target="_blank"/>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 </div>
+
 
 @code {
 
     [Parameter]
     public IReadOnlyCollection<Siteswap> Siteswaps { get; set; } = new List<Siteswap>();
 
+    private IEnumerable<SiteswapView> SiteswapViews => Siteswaps.Select(x => new SiteswapView(x, NumberOfJugglers.GetValueOrDefault(2))).ToList();
+
     [Parameter]
     public int? NumberOfJugglers { get; set; } = 2;
 
     private string GenerateUrl(Siteswap siteswap)
     {
-        return $"https://passist.org/siteswap/{siteswap.ToString()}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
+        return $"https://passist.org/siteswap/{siteswap}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
+    }
+
+    private record SiteswapView(Siteswap Value, int NumberOfJugglers)
+    {
+        public string DisplayValue => Value.ToString();
+
+        public string PassistLink => $"https://passist.org/siteswap/{Value}?jugglers={NumberOfJugglers}";
+
+        public int NumberOfClubs => Value.Average;
     }
 
 }
