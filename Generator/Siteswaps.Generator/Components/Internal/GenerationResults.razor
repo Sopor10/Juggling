@@ -1,4 +1,6 @@
-﻿@inherits FluxorComponent
+﻿@page "/result"
+
+@inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> _state
 
 @if (!_state.Value.IsGenerating)

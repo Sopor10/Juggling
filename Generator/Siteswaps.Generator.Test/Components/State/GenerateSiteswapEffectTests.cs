@@ -13,9 +13,8 @@ public class GenerateSiteswapEffectTests
     [Test]
     public async Task Should_Generate_7566()
     {
-        var siteswapEffect = new GenerateSiteswapEffect();
 
-        var result = await siteswapEffect.CreateSiteswaps(new GenerateSiteswapsAction(new GeneratorState()
+        var result = await GenerateSiteswapEffect.CreateSiteswaps(new GenerateSiteswapsAction(new GeneratorState()
         {
             Objects = new ExactNumber{Number = 6},
             Throws = new List<Throw>{ Throw.Self , Throw.Zap, Throw.SinglePass}.ToImmutableList(),

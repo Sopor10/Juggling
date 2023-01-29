@@ -2,12 +2,12 @@
 @using Blazor.Diagrams.Core.Models
 
 <circle cx="0" cy="0" r="40" stroke="black" stroke-width="2" fill="none"/>
-<text text-anchor="middle">@Node.Name</text>
+<text text-anchor="middle">@(Node?.Name??string.Empty)</text>
 
 @code {
 
     [Parameter]
-    public CircleNode Node { get; set; }
+    public CircleNode? Node { get; set; }
 
 
     public class CircleNode : NodeModel

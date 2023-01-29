@@ -43,4 +43,7 @@ public record Siteswap
     {
         return new Siteswap(partialSiteswapItems.Select(x => (int)x).ToArray());
     }
+
+
+    public int Average => (int)Items.Average();
 }
