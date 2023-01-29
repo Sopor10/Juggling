@@ -5,20 +5,16 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj"/>
-        <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj"/>
+      <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
+      <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
-    </ItemGroup>
 </Project>
