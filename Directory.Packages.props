@@ -17,8 +17,8 @@
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.3.1" />
     <PackageVersion Include="coverlet.collector" Version="3.2.0" />
-    <PackageVersion Include="Verify" Version="19.8.0" />
-    <PackageVersion Include="Verify.Nunit" Version="19.8.0" />
+    <PackageVersion Include="Verify" Version="19.8.1" />
+    <PackageVersion Include="Verify.Nunit" Version="19.8.1" />
     <PackageVersion Include="Verify.ImageMagick" Version="3.1.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
     <PackageVersion Include="SkiaSharp" Version="2.88.3" />
