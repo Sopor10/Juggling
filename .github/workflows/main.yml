@@ -23,13 +23,10 @@ jobs:
         run: dotnet build -c release        
      
       - name: Test
-        run: dotnet test -c Release --filter TestCategory!=E2E
+        run: dotnet test -c Release --filter TestCategory!=E2E --no-build
 
       - name: install playwright
         run: |
-          npm install
-          npx playwright install
-          npx playwright install chromium
           pwsh Siteswaps.E2ETests/bin/Release/net7.0/playwright.ps1 install
 
       - name: Publish Webassembly
