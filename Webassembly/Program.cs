@@ -1,3 +1,4 @@
+using BlazorApplicationInsights;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
@@ -12,7 +13,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder
     .Services
     .InstallGenerator();
-
+builder.Services.AddBlazorApplicationInsights();
 builder
     .Services.AddScoped<DialogService>();
 builder.Services.AddVisNetwork();
