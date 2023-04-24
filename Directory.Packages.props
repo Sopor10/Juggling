@@ -20,7 +20,7 @@
     <PackageVersion Include="coverlet.collector" Version="3.2.0" />
     <PackageVersion Include="Verify" Version="19.13.0" />
     <PackageVersion Include="Verify.Nunit" Version="19.13.0" />
-    <PackageVersion Include="Verify.ImageMagick" Version="3.2.1" />
+    <PackageVersion Include="Verify.ImageMagick" Version="3.2.2" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
     <PackageVersion Include="SkiaSharp" Version="2.88.3" />
     <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
