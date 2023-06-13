@@ -4,11 +4,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="BlazorApplicationInsights" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.7" PrivateAssets="all" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.5" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="7.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="7.0.7" />
     <PackageVersion Include="morelinq" Version="3.4.2" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="5.9.0" />
     <PackageVersion Include="Radzen.Blazor" Version="4.13.1" />
@@ -25,7 +25,7 @@
     <PackageVersion Include="SkiaSharp" Version="2.88.3" />
     <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
     <PackageVersion Include="Fluxor" Version="5.9.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="7.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="7.0.7" />
     <PackageVersion Include="SkiaSharp.Views.Blazor" Version="2.88.3" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.35.0" />
     <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.35.0" />
