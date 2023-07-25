@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,4 +19,9 @@
       <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ServiceWorker Include="wwwroot\service-worker.js"
+                       PublishedContent="wwwroot\service-worker.published.js" />
+    </ItemGroup>
+    
 </Project>
