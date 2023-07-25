@@ -41,7 +41,6 @@ internal class FlexiblePatternFilter : ISiteswapFilter
             var rotate = new Pattern(p.Rotate(i), SelfValues, PassValues);
             Patterns.Add(rotate);
         }
-
     }
 
     public bool CanFulfill(PartialSiteswap value)
