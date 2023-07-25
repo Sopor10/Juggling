@@ -9,19 +9,14 @@ namespace Siteswaps.E2ETests;
 [Category("E2E")]
 public abstract class E2ETestsBase : PageTest
 {
-    protected string? BaseUrl { get; private set; }
+    protected string BaseUrl { get; private set; } = default!;
     protected string ExpertUi => BaseUrl + "/generator";
 
     [SetUp]
     public void ModuleInitialize()
     {
-        BaseUrl = Environment.GetEnvironmentVariable("E2E_TEST_BASEURL");
+        BaseUrl = Environment.GetEnvironmentVariable("E2E_TEST_BASEURL")?? throw new NotSupportedException("E2E_TEST_BASEURL is not set");
         Console.WriteLine($"Testing against: {BaseUrl}");
-
-        if (BaseUrl is null)
-        {
-            throw new NotSupportedException("E2E_TEST_BASEURL is not set");
-        }
     }
     
     [ModuleInitializer]
