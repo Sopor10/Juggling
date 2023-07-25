@@ -16,14 +16,20 @@
                     Responsive="false"
                     AllowPickAllColumns="false">
         <Columns>
-            <RadzenDataGridColumn TItem="SiteswapView" Property="DisplayValue" Title="Siteswap" Frozen="true" Width="100px"/>
-            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfJugglers" Title="Jugglers" Frozen="true" Width="100px"/>
-            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="100px"/>
             <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true" Width="100px">
                 <Template Context="data">
                     <RadzenLink Text="@data.DisplayValue" Path="@data.PassistLink" Target="_blank"/>
                 </Template>
             </RadzenDataGridColumn>
+            @foreach (var juggler in Enumerable.Range(0, NumberOfJugglers ?? 0))
+            {
+                <RadzenDataGridColumn TItem="SiteswapView" Title=@string.Concat("Juggler ", (char)(juggler + 'A')) Frozen="true" Width="100px">
+                    <Template Context="data">
+                        <RadzenText Text="@data.LocalSiteswaps[juggler]" />
+                    </Template>
+                </RadzenDataGridColumn>    
+            }
+            <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="100px"/>
         </Columns>
     </RadzenDataGrid>
 </div>
@@ -50,6 +56,8 @@
         public string PassistLink => $"https://passist.org/siteswap/{Value}?jugglers={NumberOfJugglers}";
 
         public int NumberOfClubs => Value.Average;
+
+        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers)).ToList();
     }
 
 }
