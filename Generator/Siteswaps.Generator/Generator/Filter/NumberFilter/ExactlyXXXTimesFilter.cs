@@ -1,5 +1,8 @@
-﻿namespace Siteswaps.Generator.Generator.Filter.NumberFilter;
+﻿using System.Diagnostics;
 
+namespace Siteswaps.Generator.Generator.Filter.NumberFilter;
+
+[DebuggerDisplay("Exactly {Amount} {Number}s")]
 internal class ExactlyXXXTimesFilter : NumberFilter
 {
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)

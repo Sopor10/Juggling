@@ -1,19 +1,16 @@
-﻿using Shared;
+﻿using System.Diagnostics;
+using Shared;
 
 namespace Siteswaps.Generator.Generator.Filter;
 
 internal class FlexiblePatternFilter : ISiteswapFilter
 {
-    private const int DontCare = -1;
-    private const int Pass = -2;
-    private const int Self = -3;
 
     //each position in a pattern can have multiple possible values
-    private List<List<int>> Pattern { get; }
-    private List<List<List<int>>> Patterns { get; }
+    private Pattern Pattern { get; }
+    private List<Pattern> Patterns { get; }
 
     private int NumberOfJuggler { get; }
-    public bool IsGlobalPattern { get; }
 
     private HashSet<int> PassValues { get; }
 
@@ -21,21 +18,29 @@ internal class FlexiblePatternFilter : ISiteswapFilter
 
     public FlexiblePatternFilter(List<List<int>> pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern)
     {
-        Pattern = pattern;
+
         NumberOfJuggler = numberOfJuggler;
-        IsGlobalPattern = isGlobalPattern;
-        Patterns = new List<List<List<int>>>();
+        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+            .Where(x => x % NumberOfJuggler != 0).ToHashSet();
+        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+            .Where(x => x % NumberOfJuggler == 0).ToHashSet();
+
+        var p = Enumerable.Repeat(new List<int>{-1}, input.Period).ToList();
 
         for (var i = 0; i < pattern.Count; i++)
         {
-            var rotate = pattern.Rotate(i);
+            var pos = isGlobalPattern ? i :i * numberOfJuggler % input.Period;
+            p[pos] = pattern[i];
+        }
+        
+        Pattern = new Pattern(p, SelfValues, PassValues);
+        Patterns = new List<Pattern>();
+
+        for (var i = 0; i < input.Period; i++)
+        {
+            var rotate = new Pattern(p.Rotate(i), SelfValues, PassValues);
             Patterns.Add(rotate);
         }
-
-        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight)
-            .Where(x => x % NumberOfJuggler != 0).ToHashSet();
-        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight)
-            .Where(x => x % NumberOfJuggler == 0).ToHashSet();
 
     }
 
@@ -47,68 +52,51 @@ internal class FlexiblePatternFilter : ISiteswapFilter
         }
 
         var siteswap = value.Items.ToCyclicArray();
-        for (var i = 0; i < value.Items.Length; i++)
-        {
-            if (IsMatch(siteswap, Patterns[i]))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return Patterns.Any(pattern => pattern.Matches(siteswap));
     }
+}
 
-    private bool IsMatch(CyclicArray<sbyte> value, List<List<int>> pattern)
+[DebuggerDisplay("{DebugDisplay}")]
+public record Pattern(List<List<int>> Value, HashSet<int> SelfValues, HashSet<int> PassValues)
+{
+    private string DebugDisplay => string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
+
+    private const int DontCare = -1;
+    private const int Pass = -2;
+    private const int Self = -3;
+
+    public bool Matches(CyclicArray<sbyte> value)
     {
-        for (int i = 0; i < pattern.Count; i++)
+        for (var i = 0; i < Value.Count; i++)
         {
-            var pos = Position(i);
-
-            var singleMatch = false;
-            foreach (var patternValue in pattern[i])
-            {
-                if (IsSingleMatch(value[pos], patternValue) )
-                {
-                    singleMatch = true;
-                }
-            }
-
-            if (singleMatch is false)
-            {
-                return false;
-            }
-            
+            if (!RotationMatches(value, i)) return false;
         }
 
         return true;
     }
 
-    private int Position(int i) => IsGlobalPattern ? i : i * NumberOfJuggler;
-
-    private bool IsSingleMatch(sbyte siteswapValue, int patternValue)
+    private bool RotationMatches(CyclicArray<sbyte> siteswap, int i)
     {
-        if (patternValue == DontCare) return true;
-        if (patternValue == Pass)
-        {
-            if (!PassValues.Contains(siteswapValue))
-            {
-                return false;
-            }
 
-            return true;
+        var singleMatch = false;
+        foreach (var patternValue in Value[i])
+        {
+            if (ValueSatisfiesPattern(siteswap[i], patternValue))
+            {
+                singleMatch = true;
+            }
         }
 
-        if (patternValue == Self)
-        {
-            if (!SelfValues.Contains(siteswapValue))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        if (siteswapValue != patternValue) return false;
-        return true;
+        return singleMatch;
     }
+    
+
+    private bool ValueSatisfiesPattern(sbyte siteswapValue, int patternValue) =>
+        patternValue switch
+        {
+            DontCare => true,
+            Pass => PassValues.Contains(siteswapValue),
+            Self => SelfValues.Contains(siteswapValue),
+            _ => siteswapValue == patternValue
+        };
 }

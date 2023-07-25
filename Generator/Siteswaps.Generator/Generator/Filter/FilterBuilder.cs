@@ -45,7 +45,7 @@ internal record FilterBuilder : IFilterBuilder
         {
             Filter = Filter
                 .Add(Factory.GeneratePatternFilterHeuristics(pattern, numberOfJuggler))
-                .Add(Factory.PatternFilter(pattern, numberOfJuggler))
+                .Add(Factory.FlexiblePatternFilter(pattern.Select(x => new List<int>(){x}).ToList(), numberOfJuggler, true))
         };
     }
 }

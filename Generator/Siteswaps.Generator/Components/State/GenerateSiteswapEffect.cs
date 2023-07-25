@@ -72,7 +72,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
             Func<IFilterBuilder, IFilterBuilder> filterConfig = builder => action.State.Filter
                 .Aggregate(builder,
                     (current, filterInformation) => ToFilter(current, filterInformation,
-                        action.State.NumberOfJugglers.Value, action.State.Period.Value));
+                        action.State.NumberOfJugglers.Value));
 
             var siteswapGeneratorFactory = new SiteswapGeneratorFactory()
                 .ConfigureFilter(filterConfig);
@@ -95,8 +95,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         return result;
     }
 
-    private static IFilterBuilder ToFilter(IFilterBuilder builder, IFilterInformation filterInformation, int numberOfJugglers,
-        int period)
+    private static IFilterBuilder ToFilter(IFilterBuilder builder, IFilterInformation filterInformation, int numberOfJugglers)
     {
         switch (filterInformation.FilterType)
         {
@@ -125,7 +124,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                 break;
             case FilterType.NewPattern:
                 if (filterInformation is NewPatternFilterInformation newPatternFilterInformation)
-                    return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, period, builder);
+                    return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder);
                 break;
         }
 
@@ -133,9 +132,9 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
     }
 
     private static IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
-        int numberOfJugglers, int period, IFilterBuilder builder)
+        int numberOfJugglers, IFilterBuilder builder)
     {
-        var result = new List<List<int>>();
+        var patterns = new List<List<int>>();
         foreach (var t in newPatternFilterInformation.Pattern)
         {
             var heights = t.Height switch
@@ -146,11 +145,9 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 
                 _ => t.GetHeightForJugglers(numberOfJugglers).ToList()
             };
-            result.Add(heights);
+            patterns.Add(heights);
         }
 
-        for (var i = 0; i < newPatternFilterInformation.MissingLength(period); i++) result.Add(new List<int> { -1 });
-
-        return builder.FlexiblePattern(result, numberOfJugglers, newPatternFilterInformation.IsGlobalPattern);
+        return builder.FlexiblePattern(patterns, numberOfJugglers, newPatternFilterInformation.IsGlobalPattern);
     }
 }

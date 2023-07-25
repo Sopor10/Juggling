@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -14,10 +15,8 @@ public partial class FilterTestSuite
     
     [Test]
     [TestCase(new sbyte[]{5,5,DontCare})]
-    [TestCase(new sbyte[]{8,4,2,6,3,DontCare})]
-    [TestCase(new sbyte[]{8,53,21,1,3,DontCare})]
+    [TestCase(new sbyte[]{8,DontCare,DontCare})]
     [TestCase(new sbyte[]{8,3,DontCare})]
-    [TestCase(new sbyte[]{8,3,DontCare,DontCare,DontCare,DontCare})]
     public void Partly_Filled_Siteswaps_Do_Not_Get_Checked(sbyte[] input)
     {
         Input = new SiteswapGeneratorInput(3, 3, 0, 10);
@@ -56,6 +55,16 @@ public partial class FilterTestSuite
     {
         Input = new SiteswapGeneratorInput(3, 3, 0, 8);
         var sut = FilterBuilder.Pattern(filter, 2).Build();
+
+        sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
+    }
+    
+    [Test]
+    [TestCase(new sbyte[]{10,8,5,5,8,6}, new []{6,8,5})]
+    public void Fully_Filled_PartialSiteswap_Can_Be_Filtered_4(sbyte[] input, int[] filter)
+    {
+        Input = new SiteswapGeneratorInput(6, 7, 0, 10);
+        var sut = FilterBuilder.FlexiblePattern(filter.Select(x => new List<int>(){x}).ToList(), 2, false).Build();
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
     }
