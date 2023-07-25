@@ -7,21 +7,12 @@ public class PartialSiteswap
     internal PartialSiteswap(sbyte[] items, sbyte lastFilledPosition = 0)
     {
         LastFilledPosition = lastFilledPosition;
-        Items = items;
-        Interface = new CyclicArray<sbyte>(Enumerable.Repeat((sbyte)-1, Items.Length));
+        Interface = new CyclicArray<sbyte>(Enumerable.Repeat((sbyte)-1, items.Length));
+        Items = new sbyte[items.Length];
 
-        PartialSum = 0;
-        foreach (var item in Items)
+        for (sbyte i = 0; i < items.Length; i++)
         {
-            if (item>0)
-            {
-                PartialSum += item;
-            }
-        }
-        
-        for (sbyte i = 0; i < Items.Length; i++)
-        {
-            Interface[i + this[i]] = this[i];
+            this[i] = items[i];
         }
     }
 

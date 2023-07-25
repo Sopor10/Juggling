@@ -1,4 +1,6 @@
-﻿namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
+﻿using Siteswaps.Generator.Generator.Filter.NumberFilter;
+
+namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
 
 internal class AndFilter : ISiteswapFilter
 {
@@ -7,7 +9,7 @@ internal class AndFilter : ISiteswapFilter
 
     public AndFilter(IEnumerable<ISiteswapFilter> filters)
     {
-        Filters = filters.ToList();
+        Filters = filters.OrderBy(Order).ToList();
     }
 
     public AndFilter(params ISiteswapFilter?[] filter) : this(filter.WhereNotNull().AsEnumerable())
@@ -25,5 +27,24 @@ internal class AndFilter : ISiteswapFilter
         }
         
         return true;
+    }
+
+    private static int Order(ISiteswapFilter filter)
+    {
+        return filter switch
+        {
+            AndFilter _ => 0,
+            NotFilter _ => 0,
+            OrFilter _ => 0,
+            FlexiblePatternFilter _ => 10,
+            NoFilter _ => 0,
+            AtLeastXXXTimesFilter _ => 0,
+            AtMostXXXTimesFilter _ => 0,
+            ExactlyXXXTimesFilter _ => 0,
+            NumberFilter.NumberFilter _ => 0,
+            NumberOfPassesFilter _ => 0,
+            RightAmountOfBallsFilter _ => 0,
+            _ => throw new ArgumentOutOfRangeException(nameof(filter))
+        };
     }
 }
