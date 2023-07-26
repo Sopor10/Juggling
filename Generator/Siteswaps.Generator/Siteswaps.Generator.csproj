@@ -15,7 +15,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="morelinq" />
         <PackageReference Include="Fluxor.Blazor.Web" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="Radzen.Blazor" />
         <PackageReference Include="System.Linq.Async" />        
     </ItemGroup>

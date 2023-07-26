@@ -11,7 +11,7 @@ public class StateNode : Node
         Label = new Label(id);
     }
 
-    private Label Label { get; }
+    private new Label Label { get; }
 
     public void CreateBoundary()
     {

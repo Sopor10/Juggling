@@ -19,15 +19,15 @@
             <div class="p-3">
                 <h4>Jugglers</h4>
                 <div class="row">
-                    <RadzenNumeric TValue="int" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
-                    <RadzenSlider TValue="int" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers.Value" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
+                    <RadzenNumeric TValue="int?" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
+                    <RadzenSlider TValue="int?" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
                 </div>
             </div>
             <div class="p-3">
                 <h4>Period</h4>
                 <div class="row">
-                    <RadzenNumeric id="numeric-input-period" TValue="int" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(new PeriodChangedAction(x)))" ShowUpDown="false"/>
-                    <RadzenSlider TValue="int" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(new PeriodChangedAction(x)))" Style="width: 100%"/>
+                    <RadzenNumeric id="numeric-input-period" TValue="int?" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(CreateAction(x)))" ShowUpDown="false"/>
+                    <RadzenSlider TValue="int?" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(CreateAction(x)))" Style="width: 100%"/>
                 </div>
             </div>
             <div class="p-3">
@@ -95,7 +95,7 @@
 
     private async Task ShowInlineDialog()
     {
-        await DialogService.OpenAsync("New Pattern Filter", ds => @<Filter/>, new DialogOptions()
+        await DialogService.OpenAsync<Filter>("New Pattern Filter", options: new DialogOptions()
                                                                             {
                                                                                 CloseDialogOnOverlayClick = true,
                                                                                 Height = "300px",
@@ -103,4 +103,8 @@
                                                                             });
     }
 
+    private static PeriodChangedAction CreateAction(int? x)
+    {
+        return new PeriodChangedAction(new(x??throw new ArgumentNullException()));
+    }
 }
