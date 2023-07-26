@@ -18,7 +18,7 @@ public class GenerateSiteswapEffectTests
         {
             Objects = new ExactNumber{Number = 6},
             Throws = new List<Throw>{ Throw.Self , Throw.Zap, Throw.SinglePass}.ToImmutableList(),
-            Period = 4,
+            Period = new(4),
             MinThrow = 5,
             MaxThrow = 8,
             NumberOfJugglers = 2,

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 
@@ -7,7 +8,7 @@ public record GeneratorState
     public bool IsExactNumber => Objects is ExactNumber;
     public int? NumberOfJugglers { get; init; } = 2;
     public Objects Objects { get; init; } = new ExactNumber();
-    public int? Period { get; init; } = 5;
+    public Period? Period { get; init; } = new (5);
     public int? MaxThrow { get; init; } = 10;
     public int? MinThrow { get; init; } = 2;
     public bool IsGenerating { get; init; } = false;
@@ -44,21 +45,21 @@ public record Between : Objects
     public int? MaxNumber { get; init; } = 7;
 }
 
-public record Throw(string Name, int Height)
+public record Throw(string Name, int Height, string DisplayValue)
 {
-    public static Throw AnySelf => new("Any Pass", -3);
-    public static Throw AnyPass => new("Any Self", -2);
-    public static Throw Empty => new("Empty", -1);
-    public static Throw EmptyHand => new("Empty Hand", 0);
-    public static Throw Zip => new("Zip", 2);
-    public static Throw Hold => new("Hold", 4);
-    public static Throw Zap => new("Zap", 5);
-    public static Throw Self => new("Self", 6);
-    public static Throw SinglePass => new("Single Pass", 7);
-    public static Throw Heff => new("Heff", 8);
-    public static Throw DoublePass => new("Double Pass", 9);
-    public static Throw TripleSelf => new("Triple Self", 10);
-    public static Throw TriplePass => new("Triple Pass", 11);
+    public static Throw AnySelf => new("Any P", -3, "Any P");
+    public static Throw AnyPass => new("Any S", -2, "Any S");
+    public static Throw Empty => new("Empty", -1, "_");
+    public static Throw EmptyHand => new("0", 0, "0");
+    public static Throw Zip => new("Zip", 2, "Zip");
+    public static Throw Hold => new("Hold", 4, "Hold");
+    public static Throw Zap => new("Zap", 5, "Zap");
+    public static Throw Self => new("Self", 6, "Self");
+    public static Throw SinglePass => new("Single", 7, "Single");
+    public static Throw Heff => new("Heff", 8, "Heff");
+    public static Throw DoublePass => new("Double", 9, "Double");
+    public static Throw TripleSelf => new("Triple S", 10, "Triple S");
+    public static Throw TriplePass => new("Triple", 11, "Triple");
 
     private bool IsPass => Height % 2 == 1;
 
