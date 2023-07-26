@@ -21,7 +21,7 @@
                             <text>@filter.Display()</text>
                         </div>
                         <div class="col-4">
-                            @if (AllowEdit)
+                            @if (AllowEdit is false)
                             {
                                 <button type="button" class="btn btn-outline-secondary " @onclick="@(_ => ShowInlineDialog(i))">
                                     <EditPencil/>
