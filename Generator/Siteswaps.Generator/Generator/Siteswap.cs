@@ -55,10 +55,11 @@ public record Siteswap
 
     public string GetLocalSiteswap(int juggler, int numberOfJugglers)
     {
+        var localPeriod = LocalPeriod(numberOfJugglers);
         var result = new List<int>();
 
         var siteswap = Items.ToCyclicArray();
-        for (var i = 0; i < LocalPeriod(numberOfJugglers).Value; i++)
+        for (var i = 0; i < localPeriod; i++)
         {
             result.Add(siteswap[juggler + i * (numberOfJugglers)]);
         }
@@ -66,7 +67,6 @@ public record Siteswap
         return ToString(result);
     }
 
-    private Period Period => new(Items.Length);
-    private LocalPeriod LocalPeriod(int numberOfJugglers) => Period.GetLocalPeriod(numberOfJugglers);
-    
+    private int Period => Items.Length;
+    private int LocalPeriod(int numberOfJugglers) => Period % numberOfJugglers == 0 ? Period/numberOfJugglers : Period;
 }

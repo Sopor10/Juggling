@@ -25,11 +25,7 @@ public static class Reducer
     {
         return state with
         {
-            State = state.State with
-            {
-                Period = action.Value,
-                Filter = state.State.Filter.Where(x => x is not NewPatternFilterInformation).ToImmutableList(),
-            },
+            State = state.State with { Period = action.Value },
             NewFilter = state.NewFilter switch
             {
                 PatternFilterInformation patternFilterInformation => action.Value switch
@@ -150,21 +146,6 @@ public static class Reducer
             State = state.State with
             {
                 Filter = state.State.Filter.Add(action.Value)
-            },
-            NewFilter = new NumberFilterInformation()
-        };
-    }
-    
-    [ReducerMethod]
-    public static SiteswapGeneratorState ReduceFilterChangedActionAction(
-        SiteswapGeneratorState state,
-        ChangedFilterAction action)
-    {
-        return state with
-        {
-            State = state.State with
-            {
-                Filter = state.State.Filter.RemoveAt(action.FilterNumber).Insert(action.FilterNumber,action.NewPatternFilterInformation)
             },
             NewFilter = new NumberFilterInformation()
         };

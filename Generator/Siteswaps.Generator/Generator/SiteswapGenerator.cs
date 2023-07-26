@@ -8,8 +8,6 @@ public class SiteswapGenerator
     {
         Filter = filter;
         Input = input;
-        PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
-
     }
 
     private ISiteswapFilter Filter { get; }
@@ -30,6 +28,7 @@ public class SiteswapGenerator
     
     private IAsyncEnumerable<Siteswap> GenerateInternalAsync()
     {
+        PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
 
         return BackTrack(0);
     }
