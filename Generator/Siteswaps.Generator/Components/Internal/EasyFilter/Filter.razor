@@ -2,52 +2,99 @@
 @inject IState<SiteswapGeneratorState> State
 
 @inject IDispatcher Dispatcher
+@inject DialogService DialogService
+
 <div style="overflow-x: auto; white-space: nowrap;">
     <div class="row" style="flex-wrap: nowrap; width: 100%;">
         <div>
-            <RadzenCheckBox @bind-Value="IsGlobalPattern" Name="IsGlobal"/>
+            <RadzenCheckBox TValue="bool" Value="IsGlobalPattern" Name="IsGlobal" Change="ChangeAction"/>
             <RadzenLabel Text="Global" Component="IsGlobal" Style="vertical-align: middle;"/>
         </div>
     </div>
 
-    <div class="row" style="flex-wrap: nowrap; width: 100%;">
+    <div class="row" style="flex-wrap: nowrap; width: 100%; padding-left: 4px; padding-right: 4px;">
 
         @for (var i = 0; i < Throws.Count; i++)
         {
             var i1 = i;
 
             var t = Throws[i];
-            <div id="pattern-filter-dropdown-@(i1)" style="width: 150px;">
+            <div class="filter-dropdown" id="pattern-filter-dropdown-@(i1)">
                 <Dropdown 
                     SelectedThrow="@t"
                     SelectedThrowChanged="@(x => ThrowChanged(i1, x))"/>
             </div>
         }
-        <div style="width: 150px;">
-            <RadzenButton id="add-new-filter" ButtonStyle="ButtonStyle.Secondary" Text="Add" Click="Add" Disabled="@(CanAddThrow() is false)"/>
-        </div>
-
     </div>
-    <RadzenButton id="finish-new-filter" Text="Add Filter" Click="AddFilter"/>
+    <RadzenButton id="finish-new-filter" Text=@(IsNewFilter?"Add Filter":"Change") Click="AddFilter"/>
     
 </div>
 @code {
 
     [Parameter]
-    public List<Throw> Throws { get; set; } = new() { Throw.Empty};
+    public int? FilterNumber { get; set; }
 
+    private bool IsNewFilter => FilterNumber is null;
+    
     [Parameter]
-    public int Period { get; set; } = 5;
+    public List<Throw> Throws { get; set; } = new() { };
+
+    private LocalPeriod Period
+    {
+        get
+        {
+            if (IsGlobalPattern)
+            {
+                return State.Value.State.Period?.GetLocalPeriod(1) ?? new(5);
+            }
+            return State.Value.State.Period?.GetLocalPeriod(State.Value.State.NumberOfJugglers ?? 2) ?? new(5);
+        }
+    }
 
     [Parameter]
     public bool IsGlobalPattern { get; set; } = true;
 
-    private void Add() => Throws.Add(Throw.Empty);
 
-    private bool CanAddThrow() => Throws.Count < Period;
+    private void AddFilter()
+    {
+        if (IsNewFilter)
+        {
+            Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, IsGlobalPattern)));
+        }
+        else
+        {
+            Dispatcher.Dispatch(new ChangedFilterAction(new NewPatternFilterInformation(Throws, IsGlobalPattern), FilterNumber!.Value));
+        }
+        
+        DialogService.Close();
+    }
 
-    private void AddFilter() => Dispatcher.Dispatch(new NewFilterCreatedAction(new NewPatternFilterInformation(Throws, IsGlobalPattern)));
+
 
     private void ThrowChanged(int i, Throw t) => Throws[i] = t;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && Throws.Any() is false)
+        {
+            Throws = Enumerable.Repeat(Throw.Empty, Period.Value).ToList();
+            StateHasChanged();
+        }
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void ChangeAction(bool arg)
+    {
+        var currentPeriod = Period;
+
+        IsGlobalPattern = arg;
+
+        if (currentPeriod == Period)
+        {
+            return;
+        }
+        Throws = Enumerable.Repeat(Throw.Empty, Period.Value).ToList();
+        StateHasChanged();
+    }
 
 }
