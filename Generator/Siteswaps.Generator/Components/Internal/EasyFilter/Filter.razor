@@ -1,8 +1,9 @@
 ﻿@inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> State
-@inject DialogService DialogService
 
 @inject IDispatcher Dispatcher
+@inject DialogService DialogService
+
 <div style="overflow-x: auto; white-space: nowrap;">
     <div class="row" style="flex-wrap: nowrap; width: 100%;">
         <div>
@@ -77,8 +78,8 @@
         if (firstRender && Throws.Any() is false)
         {
             Throws = Enumerable.Repeat(Throw.Empty, Period.Value).ToList();
+            StateHasChanged();
         }
-        StateHasChanged();
         return base.OnAfterRenderAsync(firstRender);
     }
 
