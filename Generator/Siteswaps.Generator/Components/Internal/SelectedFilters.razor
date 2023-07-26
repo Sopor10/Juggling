@@ -2,6 +2,7 @@
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
+@inject DialogService DialogService
 
 <div class="container">
 
@@ -9,14 +10,25 @@
     {
         <h5>Your currently selected Filters</h5>
     }
-    
+
     <div style="height: 200px; overflow-y: scroll">
         <ul class="list-group">
             @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
             {
                 <li class="list-group-item">
-                    <text>@filter.Display()</text>
-                    <button type="button" class="btn btn-outline-warning float-end" @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))"> - </button>
+                    <div class="row">
+                        <div class="col-8">
+                            <text>@filter.Display()</text>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-outline-secondary " @onclick="@(_ => ShowInlineDialog(i))">
+                                <EditPencil/>
+                            </button>
+                            <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))">
+                                <Trashcan/>
+                            </button>
+                        </div>
+                    </div>
                 </li>
             }
         </ul>
@@ -29,4 +41,20 @@
     public bool ShowHeading { get; set; } = true;
 
     private GeneratorState Value => State.Value.State;
+
+    private async Task ShowInlineDialog(int i)
+    {
+        await DialogService.OpenAsync<EasyFilter.Filter>("New Pattern Filter", new Dictionary<string, object>
+        {
+            { nameof(EasyFilter.Filter.FilterNumber), i },
+            { nameof(EasyFilter.Filter.Throws), (Value.Filter[i] as NewPatternFilterInformation)?.Pattern ?? new List<Throw>() },
+            { nameof(EasyFilter.Filter.IsGlobalPattern), (Value.Filter[i] as NewPatternFilterInformation)?.IsGlobalPattern ?? true }
+        }, new DialogOptions
+        {
+            CloseDialogOnOverlayClick = true,
+            Height = "300px",
+            Style = "mind-width: 300px"
+        });
+    }
+    
 }

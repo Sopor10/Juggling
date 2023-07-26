@@ -44,7 +44,7 @@
     <div class="d-flex flex-column flex-md-row">
         <div class="d-flex flex-row">
             <div>
-                <NumberInput Label="Period" Value="@Value.Period" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToInt(x))))"/>
+                <NumberInput Label="Period" Value="@Value.Period.Value" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToPeriod(x))))"/>
             </div>
             <div class="ms-2 me-2">
                 <NumberInput Label="Max Throw" Value="@Value.MaxThrow" OnInput="@(x => Dispatcher.Dispatch(new MaxThrowChangedAction(ToInt(x))))"/>
@@ -76,6 +76,15 @@
         if (int.TryParse(eventArgs.Value as string, out var result))
         {
             return result;
+        }
+        return null;
+    }
+    
+    private static Period? ToPeriod(ChangeEventArgs eventArgs)
+    {
+        if (int.TryParse(eventArgs.Value as string, out var result))
+        {
+            return new(result);
         }
         return null;
     }
