@@ -21,9 +21,12 @@
                             <text>@filter.Display()</text>
                         </div>
                         <div class="col-4">
-                            <button type="button" class="btn btn-outline-secondary " @onclick="@(_ => ShowInlineDialog(i))">
-                                <EditPencil/>
-                            </button>
+                            @if (AllowEdit)
+                            {
+                                <button type="button" class="btn btn-outline-secondary " @onclick="@(_ => ShowInlineDialog(i))">
+                                    <EditPencil/>
+                                </button>   
+                            }
                             <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))">
                                 <Trashcan/>
                             </button>
@@ -39,6 +42,9 @@
 {
     [Parameter]
     public bool ShowHeading { get; set; } = true;
+    
+    [Parameter]
+    public bool AllowEdit { get; set; } = true;
 
     private GeneratorState Value => State.Value.State;
 
