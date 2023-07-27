@@ -1,6 +1,6 @@
 {
-  "name": "ComponentsWebAssembly-CSharp",
-  "short_name": "ComponentsWebAssembly-CSharp",
+  "name": "Passing Siteswap Generator",
+  "short_name": "Passing Siteswap Generator",
   "id": "./",
   "start_url": "./",
   "display": "standalone",
