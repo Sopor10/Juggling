@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Immutable;
 using Shared;
 
 namespace Siteswaps.Generator.Generator;
@@ -70,3 +71,4 @@ public record Siteswap
     private LocalPeriod LocalPeriod(int numberOfJugglers) => Period.GetLocalPeriod(numberOfJugglers);
     
 }
+

@@ -1,0 +1,72 @@
+﻿@page "/feeding"
+@using System.Collections.Immutable
+@using Siteswap.Details
+<h3>Feeding Patterns</h3>
+
+<div class="row">
+    @foreach (var timezoneWithJugglers in CurrentPattern.JugglersByTimezone)
+    {
+        <div class="col">
+            <h3>Timezone @timezoneWithJugglers.Key.Value</h3>
+            @foreach (var juggler in timezoneWithJugglers)
+            {
+                <div class="row">
+                    <span>@juggler.Name @(CurrentPattern.LocalSiteswaps.GetValueOrDefault(juggler)?.Value)</span>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+@code {
+
+    private record TimeZone(int Value)
+    {
+        public static TimeZone A => new(0);
+        public static TimeZone B => new(1);
+    }
+
+    private record Juggler(string Name, TimeZone TimeZone)
+    {
+        public static Juggler A => new("A", TimeZone.A);
+        public static Juggler A1 => new("A1", TimeZone.A);
+        public static Juggler A2 => new("A2", TimeZone.A);
+        public static Juggler B => new("B", TimeZone.B);
+        public static Juggler B1 => new("B1", TimeZone.B);
+        public static Juggler B2 => new("B2", TimeZone.B);
+    }
+
+    private record FeedingPattern(ImmutableList<Juggler> Jugglers, Dictionary<Juggler, LocalSiteswap> LocalSiteswaps, ImmutableList<(Juggler, Juggler)> Passing)
+    {
+        public IEnumerable<IGrouping<TimeZone, Juggler>> JugglersByTimezone => Jugglers.GroupBy(x => x.TimeZone);
+    }
+
+    private record LocalSiteswap(string Value, Interface Interface);
+
+    private FeedingPattern CurrentPattern { get; } = new(new[]
+    {
+        Juggler.A, Juggler.B1, Juggler.B2
+    }.ToImmutableList(), new Dictionary<Juggler, LocalSiteswap>
+    {
+        { Juggler.A, new LocalSiteswap("531", Interface.From(new Siteswap(new CyclicArray<int>(5, 3, 1)))) }
+    }, new[] { (Juggler.A, Juggler.B1), (Juggler.A, Juggler.B2) }.ToImmutableList());
+
+    private class Interface
+    {
+        private Interface(ImmutableList<int> value)
+        {
+            Value = value;
+        }
+
+        private ImmutableList<int> Value { get; set; }
+
+        public static Interface From(Siteswap siteswap)
+        {
+            return new Interface(new int[] { }.ToImmutableList());
+        }
+    }
+
+    private record Siteswap(CyclicArray<int> Value);
+
+}
