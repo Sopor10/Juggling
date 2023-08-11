@@ -7,7 +7,7 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Test.Filter;
 
-public partial class FilterTestSuite
+public class PatternFilterTests : FilterTestSuiteBase
 {
     private const int DontCare = -1;
     private const int Pass = -2;

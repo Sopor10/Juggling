@@ -48,4 +48,14 @@ internal record FilterBuilder : IFilterBuilder
                 .Add(Factory.FlexiblePatternFilter(pattern.Select(x => new List<int>(){x}).ToList(), numberOfJuggler, true))
         };
     }
+    
+    public IFilterBuilder Interface(IEnumerable<int> @interface, int numberOfJuggler)
+    {
+        @interface = @interface.ToList();
+        return this with
+        {
+            Filter = Filter
+                .Add(Factory.InterfaceFilter(@interface.Select(x => new List<int>(){x}).ToList(), numberOfJuggler, true))
+        };
+    }
 }

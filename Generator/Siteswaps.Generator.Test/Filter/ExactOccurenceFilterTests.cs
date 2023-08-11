@@ -4,7 +4,7 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Test.Filter;
 
-public partial class FilterTestSuite
+public class ExactOccurenceFilterTests : FilterTestSuiteBase
 {
     [Test]
     [TestCase(new sbyte[]{8,4,-1})]

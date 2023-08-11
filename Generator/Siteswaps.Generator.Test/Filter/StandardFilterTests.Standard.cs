@@ -5,7 +5,7 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Test.Filter;
 
-public partial class FilterTestSuite
+public class StandardFilterTests : FilterTestSuiteBase
 {
     [Test]
     [TestCase(5,5,5)]

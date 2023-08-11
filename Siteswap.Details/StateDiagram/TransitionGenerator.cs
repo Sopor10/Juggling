@@ -44,11 +44,3 @@ public static class TransitionGenerator
         return StateGraphFromSiteswapGenerator.CalculateGraph(siteswap.Items.EnumerateValues(1).ToArray(), length);
     }
 }
-
-public record Transition(Siteswap From, Siteswap To, int[] Throws)
-{
-    public string PrettyPrint()
-    {
-        return $"{From} -> {To} : {Throws.Aggregate("", (s, i) => s + Siteswap.Transform(i))}";
-    }
-}

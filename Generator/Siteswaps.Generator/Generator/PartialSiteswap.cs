@@ -4,11 +4,16 @@ namespace Siteswaps.Generator.Generator;
 
 public class PartialSiteswap
 {
-    internal PartialSiteswap(sbyte[] items, sbyte lastFilledPosition = 0)
+    internal PartialSiteswap(sbyte[] items)
     {
-        LastFilledPosition = lastFilledPosition;
+        var indexOf = (sbyte) Array.IndexOf(items, (sbyte)-1)switch
+        {
+            -1 => (sbyte) (items.Length - 1),
+            var x =>(sbyte) (x - 1)
+        };
+        LastFilledPosition = indexOf;
         Interface = new CyclicArray<sbyte>(Enumerable.Repeat((sbyte)-1, items.Length));
-        Items = new sbyte[items.Length];
+        Items = Enumerable.Repeat((sbyte)-1, items.Length).ToArray();
 
         for (sbyte i = 0; i < items.Length; i++)
         {
@@ -17,7 +22,7 @@ public class PartialSiteswap
     }
 
     public sbyte[] Items { get; }
-    private CyclicArray<sbyte> Interface { get; }
+    public CyclicArray<sbyte> Interface { get; }
 
     public sbyte PartialSum { get; set; }
     

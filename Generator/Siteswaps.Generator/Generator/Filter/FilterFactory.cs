@@ -52,6 +52,11 @@ internal class FilterFactory
     {
         return new FlexiblePatternFilter(pattern, numberOfJuggler, Input, isGlobalPattern);
     }
+    
+    public ISiteswapFilter InterfaceFilter(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern)
+    {
+        return new InterfaceFilter(pattern, numberOfJuggler, Input, isGlobalPattern);
+    }
 
     public ISiteswapFilter GeneratePatternFilterHeuristics(IEnumerable<int> pattern, int numberOfJuggler) => new PatternFilterHeuristicBuilder(this).Build(pattern, numberOfJuggler, Input);
 
