@@ -9,45 +9,38 @@
     <div class="col p-3" style="min-width: 300px;">
         <RadzenCard>
             <h4>Throws</h4>
-            <RadzenListBox TValue="IEnumerable<Throw>" AllowFiltering="false" Value="@Throws" Change="ThrowsChanged" Multiple="true" Data="@(allThrows)"
+            <RadzenListBox TValue="IEnumerable<Throw>"
+                           AllowFiltering="false"
+                           Value="@Throws" 
+                           Change="ThrowsChanged" 
+                           Multiple="true" 
+                           Data="@(allThrows)"
                            TextProperty="@(nameof(Throw.Name))"/>
         </RadzenCard>
     </div>
 
-    <div class="col p-3" style="min-width: 300px;">
-        <RadzenCard>
-            <div class="p-3">
-                <h4>Jugglers</h4>
-                <div class="row">
-                    <RadzenNumeric TValue="int?" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" ShowUpDown="false"/>
-                    <RadzenSlider TValue="int?" Step="1" Min="2" Max="5" Value="State.Value.State.NumberOfJugglers" Change="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))" Style="width: 100%"/>
-                </div>
-            </div>
-            <div class="p-3">
-                <h4>Period</h4>
-                <div class="row">
-                    <RadzenNumeric id="numeric-input-period" TValue="int?" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(CreateAction(x)))" ShowUpDown="false"/>
-                    <RadzenSlider TValue="int?" Step="1" Min="1" Max="30" Value="State.Value.State.Period.Value" Change="@(x => Dispatcher.Dispatch(CreateAction(x)))" Style="width: 100%"/>
-                </div>
-            </div>
-            <div class="p-3">
-                <h4>Number of clubs</h4>
-                <div class="row">
-                    <RangeInput Clubs="Clubs" ClubsChanged="SliderChanged"></RangeInput>
-                </div>
-            </div>
-        </RadzenCard>
-    </div>
+    <SliderInputs
+        Clubs="Clubs"
+        Period="State.Value.State.Period?.Value"
+        NumberOfJugglers="State.Value.State.NumberOfJugglers"
+        ClubsChanged="SliderChanged"
+        PeriodChanged="@(x => Dispatcher.Dispatch(CreateAction(x)))"
+        NumberOfJugglersChanged="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
 
     <div class="col p-3" style="min-width: 300px;">
         <RadzenCard>
             <div class="p-3">
                 <h4>Filter</h4>
                 <div class="row">
-                    <SelectedFilters ShowHeading="false" AllowEdit="false"/>
+                    <SelectedFilters 
+                        ShowHeading="false" 
+                        AllowEdit="false"
+                        Filter="State.Value.State.Filter"
+                        OnEditFilter="EditExistingFilter"
+                        OnRemoveFilter="@(i => Dispatcher.Dispatch(new RemoveFilterNumber(i)))"/>
                 </div>
                 <div class="row">
-                    <RadzenButton id="add-filter" Text="Add Filter" Click="@ShowInlineDialog"/>
+                    <RadzenButton id="add-filter" Text="Add Filter" Click="@CreateNewFilter"/>
                 </div>
             </div>
         </RadzenCard>
@@ -64,7 +57,7 @@
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
     private readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
-    private IEnumerable<int> Clubs => new[] { (State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6 };
+    private IEnumerable<int> Clubs => new[] {(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6};
 
     protected override void OnInitialized()
     {
@@ -93,18 +86,34 @@
         }
     }
 
-    private async Task ShowInlineDialog()
+    private async Task CreateNewFilter()
     {
-        await DialogService.OpenAsync<Filter>("New Pattern Filter", options: new DialogOptions()
-                                                                            {
-                                                                                CloseDialogOnOverlayClick = true,
-                                                                                Height = "300px",
-                                                                                Style = "mind-width: 300px"
-                                                                            });
+        await DialogService.OpenAsync<Filter>("New Pattern Filter", options: GetDialogOptions());
     }
 
     private static PeriodChangedAction CreateAction(int? x)
     {
-        return new PeriodChangedAction(new(x??throw new ArgumentNullException()));
+        return new PeriodChangedAction(new Period(x ?? throw new ArgumentNullException()));
     }
+
+    private static DialogOptions GetDialogOptions()
+    {
+        return new DialogOptions()
+        {
+            CloseDialogOnOverlayClick = true,
+            Height = "300px",
+            Style = "mind-width: 300px"
+        };
+    }
+
+    private async Task EditExistingFilter(int i)
+    {
+        await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object>
+        {
+            { nameof(Filter.FilterNumber), i },
+            { nameof(Filter.Throws), (State.Value.State.Filter[i] as NewPatternFilterInformation)?.Pattern ?? new List<Throw>() },
+            { nameof(Filter.IsGlobalPattern), (State.Value.State.Filter[i] as NewPatternFilterInformation)?.IsGlobalPattern ?? true }
+        }, GetDialogOptions());
+    }
+
 }

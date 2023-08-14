@@ -1,9 +1,4 @@
-﻿@inherits FluxorComponent
-
-@inject IDispatcher Dispatcher
-@inject IState<SiteswapGeneratorState> State
-@inject DialogService DialogService
-
+﻿@using System.Collections.Immutable
 <div class="container">
 
     @if (ShowHeading)
@@ -13,7 +8,7 @@
 
     <div style="height: 200px; overflow-y: scroll">
         <ul class="list-group">
-            @foreach (var (filter,i) in Value.Filter.Select((x, i) => (x,i)))
+            @foreach (var (filter,i) in Filter.Select((x, i) => (x,i)))
             {
                 <li class="list-group-item">
                     <div class="row">
@@ -23,11 +18,11 @@
                         <div class="col-4">
                             @if (AllowEdit is false)
                             {
-                                <button type="button" class="btn btn-outline-secondary " @onclick="@(_ => ShowInlineDialog(i))">
+                                <button type="button" class="btn btn-outline-secondary " @onclick="async () => await OnEditFilter.InvokeAsync(i)">
                                     <EditPencil/>
                                 </button>   
                             }
-                            <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))">
+                            <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="async () => await OnRemoveFilter.InvokeAsync(i)">
                                 <Trashcan/>
                             </button>
                         </div>
@@ -41,26 +36,22 @@
 @code
 {
     [Parameter]
+    [EditorRequired]
     public bool ShowHeading { get; set; } = true;
     
     [Parameter]
+    [EditorRequired]
     public bool AllowEdit { get; set; } = true;
-
-    private GeneratorState Value => State.Value.State;
-
-    private async Task ShowInlineDialog(int i)
-    {
-        await DialogService.OpenAsync<EasyFilter.Filter>("New Pattern Filter", new Dictionary<string, object>
-        {
-            { nameof(EasyFilter.Filter.FilterNumber), i },
-            { nameof(EasyFilter.Filter.Throws), (Value.Filter[i] as NewPatternFilterInformation)?.Pattern ?? new List<Throw>() },
-            { nameof(EasyFilter.Filter.IsGlobalPattern), (Value.Filter[i] as NewPatternFilterInformation)?.IsGlobalPattern ?? true }
-        }, new DialogOptions
-        {
-            CloseDialogOnOverlayClick = true,
-            Height = "300px",
-            Style = "mind-width: 300px"
-        });
-    }
     
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int> OnEditFilter { get; set; } 
+    
+    [Parameter]
+    [EditorRequired]
+    public ImmutableList<IFilterInformation> Filter { get; set; } = ImmutableList<IFilterInformation>.Empty;
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int> OnRemoveFilter { get; set; }
 }
