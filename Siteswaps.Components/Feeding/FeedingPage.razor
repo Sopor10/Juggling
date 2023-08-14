@@ -1,72 +1,166 @@
 ﻿@page "/feeding"
+@using Siteswaps.Generator.Components.State
 @using System.Collections.Immutable
-@using Siteswap.Details
-<h3>Feeding Patterns</h3>
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@using Siteswaps.Generator.Generator
+@inject DialogService DialogService
 
+<h3>Feeding Patterns</h3>
+<RadzenButton Text="Normal Feed" Click="NormalFeed"/>
+<RadzenButton Text="N Feed" Click="N_Feed"/>
+<RadzenButton Text="W Feed" Click="W_Feed"/>
+
+<SliderInputCard
+    ShowClubs="false"
+    ShowNumberOfJuggler="false"
+    @bind-Period="Period"/>
 <div class="row">
-    @foreach (var timezoneWithJugglers in CurrentPattern.JugglersByTimezone)
-    {
-        <div class="col">
-            <h3>Timezone @timezoneWithJugglers.Key.Value</h3>
-            @foreach (var juggler in timezoneWithJugglers)
-            {
-                <div class="row">
-                    <span>@juggler.Name @(CurrentPattern.LocalSiteswaps.GetValueOrDefault(juggler)?.Value)</span>
-                </div>
-            }
-        </div>
-    }
+    <RadzenDataGrid TItem="Juggler"
+                    Data="@Jugglers"
+                    AllowColumnResize="true"
+                    AllowSorting="true"
+                    PageSize="15"
+                    AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Center"
+                    ShowPagingSummary="true"
+                    AllowColumnPicking="true"
+                    AllowMultiColumnSorting="true"
+                    Responsive="false"
+                    AllowPickAllColumns="false"
+                    ExpandMode="DataGridExpandMode.Single">
+        <Template Context="juggler">
+            <SliderInputCard
+                ShowPeriod="false"
+                ShowNumberOfJuggler="false"
+                @bind-Clubs="juggler.Clubs"/>
+            <FilterInputCard
+                Filter="juggler.Filter"
+                OnEditFilter="async i => { await ChangeFilter(juggler, i, false); }"
+                OnRemoveFilter="i => {juggler.Filter = juggler.Filter.RemoveAt(i); }" 
+                OnCreateNewFilter="async () => {await ChangeFilter(juggler,0, true); }"/>
+        </Template>
+        <Columns>
+            <RadzenDataGridColumn TItem="Juggler" Property="@nameof(Juggler.Name)" Title="Juggler" Frozen="true" Width="50px"/>
+            <RadzenDataGridColumn TItem="Juggler" Property="@nameof(Juggler.TimeZone)" Title="TimeZone" Frozen="true" Width="50px"/>
+            <RadzenDataGridColumn TItem="Juggler" Title="Passes with" Frozen="true" Width="100px">
+                <Template Context="juggler">
+                    @string.Concat(string.Join(", ", juggler.PassesWith))
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 </div>
 
+<div> <span>@Period</span></div>
 
 @code {
+    private List<Juggler> Jugglers = new();
 
-    private record TimeZone(int Value)
+    private int? Period { get; set; } = 5;
+    private class Juggler
     {
-        public static TimeZone A => new(0);
-        public static TimeZone B => new(1);
-    }
-
-    private record Juggler(string Name, TimeZone TimeZone)
-    {
-        public static Juggler A => new("A", TimeZone.A);
-        public static Juggler A1 => new("A1", TimeZone.A);
-        public static Juggler A2 => new("A2", TimeZone.A);
-        public static Juggler B => new("B", TimeZone.B);
-        public static Juggler B1 => new("B1", TimeZone.B);
-        public static Juggler B2 => new("B2", TimeZone.B);
-    }
-
-    private record FeedingPattern(ImmutableList<Juggler> Jugglers, Dictionary<Juggler, LocalSiteswap> LocalSiteswaps, ImmutableList<(Juggler, Juggler)> Passing)
-    {
-        public IEnumerable<IGrouping<TimeZone, Juggler>> JugglersByTimezone => Jugglers.GroupBy(x => x.TimeZone);
-    }
-
-    private record LocalSiteswap(string Value, Interface Interface);
-
-    private FeedingPattern CurrentPattern { get; } = new(new[]
-    {
-        Juggler.A, Juggler.B1, Juggler.B2
-    }.ToImmutableList(), new Dictionary<Juggler, LocalSiteswap>
-    {
-        { Juggler.A, new LocalSiteswap("531", Interface.From(new Siteswap(new CyclicArray<int>(5, 3, 1)))) }
-    }, new[] { (Juggler.A, Juggler.B1), (Juggler.A, Juggler.B2) }.ToImmutableList());
-
-    private class Interface
-    {
-        private Interface(ImmutableList<int> value)
+        public Juggler(string name, string timeZone, List<string> passesWith)
         {
-            Value = value;
+            Name = name;
+            TimeZone = timeZone;
+            PassesWith = passesWith;
         }
 
-        private ImmutableList<int> Value { get; set; }
-
-        public static Interface From(Siteswap siteswap)
-        {
-            return new Interface(new int[] { }.ToImmutableList());
-        }
+        public string Name { get; set; }
+        public string TimeZone { get; set; }
+        public List<string> PassesWith { get; set; }
+        public IEnumerable<int> Clubs { get; set; } = new[] {6, 6};
+        public ImmutableList<IFilterInformation> Filter { get; set; } = ImmutableList<IFilterInformation>.Empty;
+        public NewPatternFilterInformation CurrentFilter { get; set; } = new (Enumerable.Empty<Throw>(), true);
     }
 
-    private record Siteswap(CyclicArray<int> Value);
+    private void NormalFeed()
+    {
+        Jugglers = new List<Juggler>()
+        {
+            new("A", "A", new List<string>(){"B1", "B2"}),
+            new("B1", "B", new List<string>(){"A"}),
+            new("B2", "B", new List<string>(){"A"}),
+        };
+    }
+    
+    private void N_Feed()
+    {
+        Jugglers = new List<Juggler>()
+        {
+            new("A1", "A", new List<string>(){"B1","B2"}),
+            new("A2", "A", new List<string>(){"B1"}),
+            new("B1", "B", new List<string>(){"A1","A2"}),
+            new("B2", "B", new List<string>(){"A1"}),
+        };
+    }
+    
+    private void W_Feed()
+    {
+        Jugglers = new List<Juggler>()
+        {
+            new("A1", "A", new List<string>(){"B1","B2"}),
+            new("B1", "B", new List<string>(){"A1","A2"}),
+            new("B2", "B", new List<string>(){"A1","A3"}),
+            new("A2", "A", new List<string>(){"B1"}),
+            new("A3", "A", new List<string>(){"B2"}),
+            
+        };
+    }
+    
+    private static DialogOptions GetDialogOptions()
+    {
+        return new DialogOptions()
+        {
+            CloseDialogOnOverlayClick = true,
+            Height = "300px",
+            Style = "mind-width: 300px"
+        };
+    }
+    
+    private async Task ChangeFilter(Juggler juggler, int i, bool addNewFilter)
+    {
+        await DialogService.OpenAsync<FilterComponent>("New Pattern Filter", new Dictionary<string, object>
+        {
+            {nameof(FilterComponent.FilterNumber), i},
+            {nameof(FilterComponent.Throws), new List<Throw>()},
+            {nameof(FilterComponent.ThrowsChanged), ThrowsChanged(juggler, i)},
+            {nameof(FilterComponent.IsGlobalPattern), true},
+            {nameof(FilterComponent.IsGlobalPatternChanged), GlobalPatternChanged(juggler, i)},
+            {nameof(FilterComponent.Period), new Period(Period??5)},
+            {nameof(FilterComponent.NumberOfJugglers), 2},
+            {nameof(FilterComponent.OnAddFilter), addNewFilter? AddFilter(juggler, i) : EditFilter(juggler, i)},
+        }, GetDialogOptions());
+    }
+
+    private EventCallback<List<Throw>> ThrowsChanged(Juggler juggler, int i)
+    {
+        return EventCallback.Factory.Create<List<Throw>>(this, list => juggler.CurrentFilter = juggler.CurrentFilter with{ Pattern = list});
+    }
+    
+    private EventCallback<bool> GlobalPatternChanged(Juggler juggler, int i)
+    {
+        return EventCallback.Factory.Create<bool>(this, b => juggler.CurrentFilter = juggler.CurrentFilter with{ IsGlobalPattern = b});
+    }
+    
+    private EventCallback EditFilter(Juggler juggler, int i)
+    {
+        return EventCallback.Factory.Create(this, () =>
+        {
+            juggler.Filter = juggler.Filter.SetItem(i, juggler.CurrentFilter);
+            juggler.CurrentFilter = new NewPatternFilterInformation(Enumerable.Empty<Throw>(), true);
+            
+        });
+    }
+    
+    private EventCallback AddFilter(Juggler juggler, int i)
+    {
+        return EventCallback.Factory.Create(this, () =>
+        {
+            juggler.Filter = juggler.Filter.Add(juggler.CurrentFilter);
+            juggler.CurrentFilter = new NewPatternFilterInformation(Enumerable.Empty<Throw>(), true);
+            
+        });
+    }
 
 }

@@ -54,4 +54,16 @@
     }
     
     private List<int> ToClubs(IEnumerable<int> internalValues) => new List<int> { internalValues.First(), internalValues.Last() - 1 };
+    private List<int> FromClubs(IEnumerable<int> internalValues) => new List<int> { internalValues.First(), internalValues.Last() + 1 };
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            InternalValues = FromClubs(Clubs);
+            StateHasChanged();
+        }
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
 }

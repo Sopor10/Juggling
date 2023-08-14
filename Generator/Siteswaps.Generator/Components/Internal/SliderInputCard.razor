@@ -1,47 +1,66 @@
-    <div class="col p-3" style="min-width: 300px;">
-        <RadzenCard>
+<div class="col p-3" style="min-width: 300px;">
+    <RadzenCard>
+        @if (ShowNumberOfJuggler)
+        {
             <div class="p-3">
                 <h4>Jugglers</h4>
                 <div class="row">
                     <NumericSlider Value="NumberOfJugglers" ValueChanged="NumberOfJugglersChanged"/>
                 </div>
             </div>
+        }
+        @if (ShowPeriod)
+        {
             <div class="p-3">
                 <h4>Period</h4>
                 <div class="row">
                     <NumericSlider Value="Period" ValueChanged="PeriodChanged"/>
                 </div>
             </div>
+        }
+
+        @if (ShowClubs)
+        {
+            
             <div class="p-3">
                 <h4>Number of clubs</h4>
                 <div class="row">
                     <RangeInput Clubs="Clubs" ClubsChanged="ClubsChanged"></RangeInput>
                 </div>
             </div>
-        </RadzenCard>
-    </div>
+        }
+
+    </RadzenCard>
+</div>
+
 @code {
+
     [Parameter]
-    [EditorRequired]
+    public bool ShowPeriod { get; set; } = true;
+    
+    
+    [Parameter]
+    public bool ShowClubs { get; set; } = true;
+
+    [Parameter]
+    public bool ShowNumberOfJuggler { get; set; } = true;
+
+    [Parameter]
     public IEnumerable<int> Clubs { get; set; }
-    
+
     [Parameter]
-    [EditorRequired]
     public EventCallback<IEnumerable<int>> ClubsChanged { get; set; }
-    
+
     [Parameter]
-    [EditorRequired]
     public int? Period { get; set; }
-    
+
     [Parameter]
-    [EditorRequired]
     public EventCallback<int?> PeriodChanged { get; set; }
-    
+
     [Parameter]
-    [EditorRequired]
     public int? NumberOfJugglers { get; set; }
-    
+
     [Parameter]
-    [EditorRequired]
     public EventCallback<int?> NumberOfJugglersChanged { get; set; }
+
 }

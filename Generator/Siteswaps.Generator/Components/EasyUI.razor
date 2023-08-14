@@ -5,58 +5,24 @@
 
 @inject IDispatcher Dispatcher
 
-<div class="row px-3">
-    <div class="col p-3" style="min-width: 300px;">
-        <RadzenCard>
-            <h4>Throws</h4>
-            <RadzenListBox TValue="IEnumerable<Throw>"
-                           AllowFiltering="false"
-                           Value="@Throws" 
-                           Change="ThrowsChanged" 
-                           Multiple="true" 
-                           Data="@(allThrows)"
-                           TextProperty="@(nameof(Throw.Name))"/>
-        </RadzenCard>
-    </div>
-
-    <SliderInputs
-        Clubs="Clubs"
-        Period="State.Value.State.Period?.Value"
-        NumberOfJugglers="State.Value.State.NumberOfJugglers"
-        ClubsChanged="SliderChanged"
-        PeriodChanged="@(x => Dispatcher.Dispatch(CreateAction(x)))"
-        NumberOfJugglersChanged="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
-
-    <div class="col p-3" style="min-width: 300px;">
-        <RadzenCard>
-            <div class="p-3">
-                <h4>Filter</h4>
-                <div class="row">
-                    <SelectedFilters 
-                        ShowHeading="false" 
-                        AllowEdit="false"
-                        Filter="State.Value.State.Filter"
-                        OnEditFilter="EditExistingFilter"
-                        OnRemoveFilter="@(i => Dispatcher.Dispatch(new RemoveFilterNumber(i)))"/>
-                </div>
-                <div class="row">
-                    <RadzenButton id="add-filter" Text="Add Filter" Click="@CreateNewFilter"/>
-                </div>
-            </div>
-        </RadzenCard>
-    </div>
-</div>
-
-
-<div class="row px-3">
-    <div class="col p-3">
-        <GenerateButton/>
-    </div>
-</div>
+<EasyUIComponent
+    Clubs="Clubs"
+    NumberOfClubsChanged="NumberOfClubsChanged"
+    Filter="State.Value.State.Filter"
+    Period="State.Value.State.Period?.Value"
+    PeriodChanged="@(x => Dispatcher.Dispatch(CreatePeriodChangedAction(x)))"
+    Throws="Throws"
+    ThrowsChanged="ThrowsChanged"
+    NumberOfJugglers="State.Value.State.NumberOfJugglers"
+    NumberOfJugglersChanged="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"
+    CreateNewFilter="CreateNewFilter"
+    EditExistingFilter="EditExistingFilter"
+    OnRemoveFilter="@(i => Dispatcher.Dispatch(new RemoveFilterNumber(i)))"
+    IsGenerating="State.Value.IsGenerating"
+    Generate="@(() => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State)))"/>
 
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
-    private readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
     private IEnumerable<int> Clubs => new[] {(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6};
 
     protected override void OnInitialized()
@@ -65,25 +31,22 @@
         base.OnInitialized();
     }
 
-    private void SliderChanged(IEnumerable<int> values)
+    private void NumberOfClubsChanged(IEnumerable<int> values)
     {
         Dispatcher.Dispatch(new MinNumberChangedAction(values.First()));
         Dispatcher.Dispatch(new MaxNumberChangedAction(values.Last()));
     }
 
-    private void ThrowsChanged(object obj)
+    private void ThrowsChanged(IEnumerable<Throw> newThrows)
     {
-        if (obj is IEnumerable<Throw> newThrows)
-        {
-            Dispatcher.Dispatch(new ThrowsChangedAction(newThrows));
+        Dispatcher.Dispatch(new ThrowsChangedAction(newThrows));
 
-            if (Throws.Any() is false)
-            {
-                return;
-            }
-            Dispatcher.Dispatch(new MaxThrowChangedAction(Throws.Select(x => x.Height).Max()));
-            Dispatcher.Dispatch(new MinThrowChangedAction(Throws.Select(x => x.Height).Min()));
+        if (Throws.Any() is false)
+        {
+            return;
         }
+        Dispatcher.Dispatch(new MaxThrowChangedAction(Throws.Select(x => x.Height).Max()));
+        Dispatcher.Dispatch(new MinThrowChangedAction(Throws.Select(x => x.Height).Min()));
     }
 
     private async Task CreateNewFilter()
@@ -91,7 +54,7 @@
         await DialogService.OpenAsync<Filter>("New Pattern Filter", options: GetDialogOptions());
     }
 
-    private static PeriodChangedAction CreateAction(int? x)
+    private static PeriodChangedAction CreatePeriodChangedAction(int? x)
     {
         return new PeriodChangedAction(new Period(x ?? throw new ArgumentNullException()));
     }
@@ -110,9 +73,9 @@
     {
         await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object>
         {
-            { nameof(Filter.FilterNumber), i },
-            { nameof(Filter.Throws), (State.Value.State.Filter[i] as NewPatternFilterInformation)?.Pattern ?? new List<Throw>() },
-            { nameof(Filter.IsGlobalPattern), (State.Value.State.Filter[i] as NewPatternFilterInformation)?.IsGlobalPattern ?? true }
+            {nameof(Filter.FilterNumber), i},
+            {nameof(Filter.Throws), (State.Value.State.Filter[i] as NewPatternFilterInformation)?.Pattern ?? new List<Throw>()},
+            {nameof(Filter.IsGlobalPattern), (State.Value.State.Filter[i] as NewPatternFilterInformation)?.IsGlobalPattern ?? true}
         }, GetDialogOptions());
     }
 
