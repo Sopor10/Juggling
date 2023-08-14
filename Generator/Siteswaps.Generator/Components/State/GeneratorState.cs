@@ -5,7 +5,7 @@ namespace Siteswaps.Generator.Components.State;
 
 public record GeneratorState
 {
-    public bool IsExactNumber => Objects is ExactNumber;
+    public bool IsExactNumber => this.Objects is ExactNumber;
     public int? NumberOfJugglers { get; init; } = 2;
     public Objects Objects { get; init; } = new ExactNumber();
     public Period? Period { get; init; } = new (5);
@@ -13,19 +13,7 @@ public record GeneratorState
     public int? MinThrow { get; init; } = 2;
     public bool IsGenerating { get; init; } = false;
 
-    public ImmutableList<Throw> Throws { get; init; } =
-        new[]
-            {
-                Throw.EmptyHand,
-                Throw.Zip, 
-                Throw.Zap, 
-                Throw.Self, 
-                Throw.SinglePass, 
-                Throw.Heff, 
-                Throw.DoublePass,
-                Throw.TripleSelf
-            }
-            .ToImmutableList();
+    public ImmutableList<Throw> Throws { get; init; } =Throw.Defaut.ToImmutableList();
 
 
     public ImmutableList<IFilterInformation> Filter { get; init; } = ImmutableList<IFilterInformation>.Empty;
@@ -61,7 +49,7 @@ public record Throw(string Name, int Height, string DisplayValue)
     public static Throw TripleSelf => new("Triple S", 10, "Triple S");
     public static Throw TriplePass => new("Triple", 11, "Triple");
 
-    private bool IsPass => Height % 2 == 1;
+    private bool IsPass => this.Height % 2 == 1;
 
     public static IEnumerable<Throw> All => new List<Throw>
     {
@@ -77,13 +65,26 @@ public record Throw(string Name, int Height, string DisplayValue)
         TriplePass
     };
 
+    public static IEnumerable<Throw> Defaut =>
+        new[]
+        {
+            EmptyHand,
+            Zip,
+            Zap,
+            Self,
+            SinglePass,
+            Heff,
+            DoublePass,
+            TripleSelf
+        };
+
     public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
     {
         var result = new HashSet<int>();
-        if (IsPass)
+        if (this.IsPass)
         {
-            var min = Height - 1;
-            var max = Height + 1;
+            var min = this.Height - 1;
+            var max = this.Height + 1;
             for (var i = min * amountOfJugglers + 1; i < max * amountOfJugglers; i++)
             {
                 var item = i / 2;
@@ -92,7 +93,7 @@ public record Throw(string Name, int Height, string DisplayValue)
         }
         else
         {
-            result.Add(Height * amountOfJugglers / 2);
+            result.Add(this.Height * amountOfJugglers / 2);
         }
 
         return result;

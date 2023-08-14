@@ -14,6 +14,9 @@
                     AllowColumnPicking="true"
                     AllowMultiColumnSorting="true"
                     Responsive="false"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    RowSelect="SelectSiteswap"
+                    AllowRowSelectOnRowClick="EasySelection"
                     AllowPickAllColumns="false">
         <Columns>
             <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true" Width="100px">
@@ -59,5 +62,16 @@
 
         public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers)).ToList();
     }
+
+    private async Task SelectSiteswap(SiteswapView obj)
+    {
+        await SiteswapSelected.InvokeAsync(obj.Value);
+    }
+    
+    [Parameter]
+    public EventCallback<Siteswap> SiteswapSelected { get; set; }
+    
+    [Parameter]
+    public bool EasySelection { get; set; }
 
 }

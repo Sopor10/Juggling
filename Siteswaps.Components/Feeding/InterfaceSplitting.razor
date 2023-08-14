@@ -1,0 +1,46 @@
+﻿@page "/interfacesplitting"
+
+@foreach (var (i,t) in Throws.Select((x, i) => (i,x)))
+{
+    <span>@t</span>
+
+    <RadzenDropDown
+        AllowClear="false"
+        TValue="string"
+        Data="Fedees"
+        Value="@SelectedThrows[i]"
+        Multiple="false"
+        Disabled="t is PassOrSelf.Self"
+        Style="width: 100px"/>
+}
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public List<string> Fedees { get; set; } = new() {"A1", "A2"};
+
+    [Parameter]
+    [EditorRequired]
+    public List<PassOrSelf> Throws { get; set; } = new() {PassOrSelf.Pass, PassOrSelf.Self, PassOrSelf.Pass};
+
+    [Parameter]
+    [EditorRequired]
+    public List<string> SelectedThrows { get; set; } = new() {"", "", ""};
+
+    public enum PassOrSelf
+    {
+        Pass,
+        Self
+    }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        if (Throws.Count != SelectedThrows.Count)
+        {
+            throw new InvalidOperationException("Throws and SelectedThrows must be the same length");
+        }
+        return base.SetParametersAsync(parameters);
+    }
+
+}
