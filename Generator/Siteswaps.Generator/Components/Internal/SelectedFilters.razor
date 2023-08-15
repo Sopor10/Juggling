@@ -16,15 +16,18 @@
                             <text>@filter.Display()</text>
                         </div>
                         <div class="col-4">
-                            @if (AllowEdit is false)
+                            @if (filter is NewPatternFilterInformation && AllowEdit is false)
                             {
                                 <button type="button" class="btn btn-outline-secondary " @onclick="async () => await OnEditFilter.InvokeAsync(i)">
                                     <EditPencil/>
-                                </button>   
+                                </button>
                             }
-                            <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="async () => await OnRemoveFilter.InvokeAsync(i)">
-                                <Trashcan/>
-                            </button>
+                            @if (filter is NewPatternFilterInformation)
+                            {
+                                <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="async () => await OnRemoveFilter.InvokeAsync(i)">
+                                    <Trashcan/>
+                                </button>
+                            }
                         </div>
                     </div>
                 </li>
@@ -38,19 +41,19 @@
     [Parameter]
     [EditorRequired]
     public bool ShowHeading { get; set; } = true;
-    
+
     [Parameter]
     [EditorRequired]
     public bool AllowEdit { get; set; } = true;
-    
+
     [Parameter]
     [EditorRequired]
-    public EventCallback<int> OnEditFilter { get; set; } 
-    
+    public EventCallback<int> OnEditFilter { get; set; }
+
     [Parameter]
     [EditorRequired]
     public ImmutableList<IFilterInformation> Filter { get; set; } = ImmutableList<IFilterInformation>.Empty;
-    
+
     [Parameter]
     [EditorRequired]
     public EventCallback<int> OnRemoveFilter { get; set; }

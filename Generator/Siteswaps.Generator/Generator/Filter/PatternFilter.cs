@@ -11,33 +11,28 @@ internal abstract class PatternFilter : ISiteswapFilter
 
     private int NumberOfJuggler { get; }
 
-    private HashSet<int> PassValues { get; }
-
-    private HashSet<int> SelfValues { get; }
-
-    public PatternFilter(List<List<int>> pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern)
+    public PatternFilter(Pattern pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern)
     {
 
         this.NumberOfJuggler = numberOfJuggler;
-        this.PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % this.NumberOfJuggler != 0).ToHashSet();
-        this.SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % this.NumberOfJuggler == 0).ToHashSet();
+        var passValues = Throw.PassValues(input.MinHeight, input.MaxHeight, this.NumberOfJuggler).ToHashSet();
+            
+        var selfValues = Throw.SelfValues(input.MinHeight, input.MaxHeight, this.NumberOfJuggler).ToHashSet();;
 
         var p = Enumerable.Repeat(new List<int>{-1}, input.Period).ToList();
 
-        for (var i = 0; i < pattern.Count; i++)
+        for (var i = 0; i < pattern.Value.Count; i++)
         {
             var pos = isGlobalPattern ? i :i * numberOfJuggler % input.Period;
-            p[pos] = pattern[i];
+            p[pos] = pattern.Value[i];
         }
         
-        this.Pattern = new Pattern(p, this.SelfValues, this.PassValues);
+        this.Pattern = new Pattern(p, selfValues, passValues);
         this.Patterns = new List<Pattern>();
 
         for (var i = 0; i < input.Period; i++)
         {
-            var rotate = new Pattern(p.Rotate(i), this.SelfValues, this.PassValues);
+            var rotate = new Pattern(p.Rotate(i), selfValues, passValues);
             this.Patterns.Add(rotate);
         }
     }

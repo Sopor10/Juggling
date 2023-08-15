@@ -1,5 +1,7 @@
 ﻿namespace Siteswaps.Generator.Components.State;
 
+using Generator;
+
 public record NewPatternFilterInformation(IEnumerable<Throw> Pattern, bool IsGlobalPattern) : IFilterInformation
 {
     public FilterType FilterType => FilterType.NewPattern;

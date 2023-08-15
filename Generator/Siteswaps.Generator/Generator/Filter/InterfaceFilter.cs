@@ -5,7 +5,7 @@ namespace Siteswaps.Generator.Generator.Filter;
 internal class InterfaceFilter : PatternFilter
 {
 
-    public InterfaceFilter(List<List<int>> pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern) : base(pattern, numberOfJuggler, input, isGlobalPattern)
+    public InterfaceFilter(Pattern pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern) : base(pattern, numberOfJuggler, input, isGlobalPattern)
     {
     }
 

@@ -8,6 +8,7 @@ using Siteswaps.Generator.Components.State;
 namespace Siteswaps.Generator.Test.Components.State;
 
 using System.Linq;
+using Generator;
 
 [TestFixture]
 public class GenerateSiteswapEffectTests

@@ -27,7 +27,7 @@ internal record FilterBuilder : IFilterBuilder
     public IFilterBuilder And(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
     public IFilterBuilder Or(ISiteswapFilter filter) => this with { Filter = new[]{Factory.OrFilter(Filter, filter)}.ToImmutableList() };
 
-    public IFilterBuilder FlexiblePattern(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern)
+    public IFilterBuilder FlexiblePattern(Pattern pattern, int numberOfJuggler, bool isGlobalPattern)
     {
         return this with
         {
@@ -45,7 +45,7 @@ internal record FilterBuilder : IFilterBuilder
         {
             Filter = Filter
                 .Add(Factory.GeneratePatternFilterHeuristics(pattern, numberOfJuggler))
-                .Add(Factory.FlexiblePatternFilter(pattern.Select(x => new List<int>(){x}).ToList(), numberOfJuggler, true))
+                .Add(Factory.FlexiblePatternFilter(Generator.Pattern.FromThrows(pattern, numberOfJuggler), numberOfJuggler, true))
         };
     }
     
@@ -55,7 +55,7 @@ internal record FilterBuilder : IFilterBuilder
         return this with
         {
             Filter = Filter
-                .Add(Factory.InterfaceFilter(@interface.Select(x => new List<int>(){x}).ToList(), numberOfJuggler, true))
+                .Add(Factory.InterfaceFilter(Generator.Pattern.FromThrows(@interface, numberOfJuggler), numberOfJuggler, true))
         };
     }
 }

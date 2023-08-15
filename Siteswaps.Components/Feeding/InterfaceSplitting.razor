@@ -9,6 +9,7 @@
         TValue="string"
         Data="Fedees"
         Value="@SelectedThrows[i]"
+        Change="args =>OnChange(args, i)"
         Multiple="false"
         Disabled="t is PassOrSelf.Self"
         Style="width: 100px"/>
@@ -28,10 +29,14 @@
     [EditorRequired]
     public List<string> SelectedThrows { get; set; } = new() {"", "", ""};
 
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<List<string>> SelectedThrowsChanged { get; set; }
+
     public enum PassOrSelf
     {
-        Pass,
-        Self
+        Pass = -3,
+        Self = -2
     }
 
     public override Task SetParametersAsync(ParameterView parameters)
@@ -41,6 +46,15 @@
             throw new InvalidOperationException("Throws and SelectedThrows must be the same length");
         }
         return base.SetParametersAsync(parameters);
+    }
+
+    private void OnChange(object args, int i)
+    {
+        if (args is string s)
+        {
+            SelectedThrows[i] = s;
+            SelectedThrowsChanged.InvokeAsync(SelectedThrows);
+        }
     }
 
 }

@@ -5,7 +5,7 @@ using Shared;
 internal class FlexiblePatternFilter : PatternFilter
 {
 
-    public FlexiblePatternFilter(List<List<int>> pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern) : base(pattern, numberOfJuggler, input, isGlobalPattern)
+    public FlexiblePatternFilter(Pattern pattern, int numberOfJuggler, SiteswapGeneratorInput input, bool isGlobalPattern) : base(pattern, numberOfJuggler, input, isGlobalPattern)
     {
     }
 

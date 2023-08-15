@@ -116,6 +116,15 @@ public class MultipleSiteswapGenerator : ISiteswapGenerator
                 if (filterInformation is NewPatternFilterInformation newPatternFilterInformation)
                     return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder);
                 break;
+            case FilterType.Interface:
+            {
+                if (filterInformation is InterfaceFilterInformation interfaceFilterInformation)
+                {
+                    return builder.Interface(interfaceFilterInformation.Pattern.Select(x => x.Height), numberOfJugglers);
+                }
+
+                break;
+            }
         }
 
         throw new ArgumentOutOfRangeException();
@@ -124,20 +133,8 @@ public class MultipleSiteswapGenerator : ISiteswapGenerator
     private static IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
         int numberOfJugglers, IFilterBuilder builder)
     {
-        var patterns = new List<List<int>>();
-        foreach (var t in newPatternFilterInformation.Pattern)
-        {
-            var heights = t.Height switch
-            {
-                -1 => new List<int> { -1 },
-                -2 => new List<int> { -2 },
-                -3 => new List<int> { -3 },
+        var pattern = Pattern.FromThrows(newPatternFilterInformation.Pattern, numberOfJugglers);
 
-                _ => t.GetHeightForJugglers(numberOfJugglers).ToList()
-            };
-            patterns.Add(heights);
-        }
-
-        return builder.FlexiblePattern(patterns, numberOfJugglers, newPatternFilterInformation.IsGlobalPattern);
+        return builder.FlexiblePattern(pattern, numberOfJugglers, newPatternFilterInformation.IsGlobalPattern);
     }
 }

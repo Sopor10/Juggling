@@ -48,12 +48,12 @@ internal class FilterFactory
         return new AndFilter(filter.ToArray());
     }
 
-    public ISiteswapFilter FlexiblePatternFilter(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern)
+    public ISiteswapFilter FlexiblePatternFilter(Pattern pattern, int numberOfJuggler, bool isGlobalPattern)
     {
         return new FlexiblePatternFilter(pattern, numberOfJuggler, Input, isGlobalPattern);
     }
     
-    public ISiteswapFilter InterfaceFilter(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern)
+    public ISiteswapFilter InterfaceFilter(Pattern pattern, int numberOfJuggler, bool isGlobalPattern)
     {
         return new InterfaceFilter(pattern, numberOfJuggler, Input, isGlobalPattern);
     }
