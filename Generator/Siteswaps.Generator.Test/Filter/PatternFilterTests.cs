@@ -64,7 +64,7 @@ public class PatternFilterTests : FilterTestSuiteBase
     public void Fully_Filled_PartialSiteswap_Can_Be_Filtered_4(sbyte[] input, int[] filter)
     {
         Input = new SiteswapGeneratorInput(6, 7, 0, 10);
-        var sut = FilterBuilder.FlexiblePattern(filter.Select(x => new List<int>(){x}).ToList(), 2, false).Build();
+        var sut = FilterBuilder.FlexiblePattern(Pattern.FromThrows(filter, 2), 2, false).Build();
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
     }

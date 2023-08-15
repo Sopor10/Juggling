@@ -9,7 +9,7 @@
         TValue="string"
         Data="Fedees"
         Value="@SelectedThrows[i]"
-        Change="args =>OnChange(args, i)"
+        Change="args => OnChange(args, i)"
         Multiple="false"
         Disabled="t is PassOrSelf.Self"
         Style="width: 100px"/>
@@ -39,13 +39,40 @@
         Self = -2
     }
 
-    public override Task SetParametersAsync(ParameterView parameters)
+    public override async Task SetParametersAsync(ParameterView parameters)
     {
         if (Throws.Count != SelectedThrows.Count)
         {
             throw new InvalidOperationException("Throws and SelectedThrows must be the same length");
         }
-        return base.SetParametersAsync(parameters);
+
+        await base.SetParametersAsync(parameters);
+        await AutoSelectTrivialThings();
+        StateHasChanged();
+    }
+
+    private async Task AutoSelectTrivialThings()
+    {
+        var changed = false;
+        if (Fedees.Count == 1)
+        {
+            for (var i = 0; i < Throws.Count; i++)
+            {
+                if (Throws[i] == PassOrSelf.Pass)
+                {
+                    if (SelectedThrows[i] != Fedees[0])
+                    {
+                        changed = true;
+                    }
+
+                    SelectedThrows[i] = Fedees[0];
+                }
+            }
+        }
+        if (changed)
+        {
+            await SelectedThrowsChanged.InvokeAsync(SelectedThrows);
+        }
     }
 
     private void OnChange(object args, int i)

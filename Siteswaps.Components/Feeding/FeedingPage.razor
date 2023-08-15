@@ -9,6 +9,8 @@
 @inject DialogService DialogService
 
 <h3>Feeding Patterns</h3>
+
+<FeedImage FeedType="@SelectedFeed"></FeedImage>
 <RadzenButton Text="Normal Feed" Click="NormalFeed"/>
 <RadzenButton Text="N Feed" Click="N_Feed"/>
 <RadzenButton Text="W Feed" Click="W_Feed"/>
@@ -75,6 +77,8 @@
 
 @code {
     private List<Juggler> Jugglers = new();
+    
+    private string SelectedFeed { get; set; } = "Normal";
 
     private int? Period { get; set; } = 5;
 
@@ -120,6 +124,7 @@
             new("B1", "B", new List<string>() {"A"}),
             new("B2", "B", new List<string>() {"A"})
         };
+        SelectedFeed = FeedImage.Normal;
     }
 
     private void N_Feed()
@@ -131,6 +136,8 @@
             new("B1", "B", new List<string>() {"A1", "A2"}),
             new("B2", "B", new List<string>() {"A1"})
         };
+        SelectedFeed = FeedImage.NFeed;
+
     }
 
     private void W_Feed()
@@ -143,6 +150,7 @@
             new("A2", "A", new List<string>() {"B1"}),
             new("A3", "A", new List<string>() {"B2"})
         };
+        SelectedFeed = FeedImage.WFeed;
     }
 
     private static DialogOptions GetDialogOptions()

@@ -1,0 +1,29 @@
+﻿<div style="width: 200px; margin: 16px;">
+
+    @switch (FeedType)
+    {
+        case Normal:
+            <NormalFeedSvg/>
+            break;
+        case NFeed:
+            <NFeedSvg/>
+            break;
+        case WFeed:
+            <WFeedSvg/>
+            break;
+        default:
+            <div>Unknown</div>
+            break;
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public string FeedType { get; set; }
+
+        public const string Normal = "Normal";
+        public const string NFeed = "NFeed";
+        public const string WFeed = "WFeed";
+}
