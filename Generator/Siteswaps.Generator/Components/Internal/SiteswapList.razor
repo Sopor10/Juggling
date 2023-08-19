@@ -71,7 +71,7 @@
 
         public int NumberOfClubs => Siteswap.Average;
 
-        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Siteswap.GetLocalSiteswap(i, NumberOfJugglers)).ToList();
+        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Siteswap.GetLocalSiteswap(i, NumberOfJugglers).ToString()).ToList();
     }
 
     private async Task SelectSiteswap(SiteswapView obj)
@@ -90,6 +90,11 @@
 
     private string GetLocalSiteswap(SiteswapView value)
     {
+        if (Filter is null)
+        {
+            return "No rotation found";
+        }
+        
         return value.Siteswap.RotateToMatchInterface(ToPattern(Filter.Pattern))?.GetLocalSiteswap(0, 2).ToString()??"No rotation found";
     }
 

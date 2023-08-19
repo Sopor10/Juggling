@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
-<!--        <WarningsAsErrors>nullable</WarningsAsErrors>-->
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
@@ -37,6 +35,10 @@
       <_ContentIncludedByDefault Remove="Generator\Filter\PatternFilter.razor" />
       <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
       <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="App_Code\" />
     </ItemGroup>
 
 </Project>

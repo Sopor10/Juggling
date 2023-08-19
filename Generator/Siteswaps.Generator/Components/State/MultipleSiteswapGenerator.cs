@@ -36,9 +36,9 @@ public class MultipleSiteswapGenerator : ISiteswapGenerator
 
         var range = state.Objects switch
         {
-            Between between => Enumerable.Range(between.MinNumber.Value,
-                between.MaxNumber.Value - between.MinNumber.Value + 1),
-            ExactNumber exactNumber => new[] { exactNumber.Number.Value },
+            Between between => Enumerable.Range(between.MinNumber ?? 6,
+                between.MaxNumber ?? 6 - between.MinNumber ?? 6 + 1),
+            ExactNumber exactNumber => new[] { exactNumber.Number ?? 6 },
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -49,12 +49,12 @@ public class MultipleSiteswapGenerator : ISiteswapGenerator
             {
                 Period = state.Period.Value,
                 MaxHeight = state.CreateFilterFromThrowList
-                    ? state.Throws.MaxBy(x => x.Height).GetHeightForJugglers(state.NumberOfJugglers.Value)
-                        .Max()
+                    ? state.Throws.MaxBy(x => x.Height)?.GetHeightForJugglers(state.NumberOfJugglers.Value)
+                        .Max()??10
                     : state.MaxThrow.Value,
                 MinHeight = state.CreateFilterFromThrowList
-                    ? state.Throws.MinBy(x => x.Height).GetHeightForJugglers(state.NumberOfJugglers.Value)
-                        .Min()
+                    ? state.Throws.MinBy(x => x.Height)?.GetHeightForJugglers(state.NumberOfJugglers.Value)
+                        .Min()??2
                     : state.MinThrow.Value,
                 NumberOfObjects = number,
             };

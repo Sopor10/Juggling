@@ -9,75 +9,89 @@
 @inject DialogService DialogService
 
 <h3>Feeding Patterns</h3>
-
 <FeedImage FeedType="@SelectedFeed"></FeedImage>
-<RadzenButton Text="Normal Feed" Click="NormalFeed"/>
-<RadzenButton Text="N Feed" Click="N_Feed"/>
-<RadzenButton Text="W Feed" Click="W_Feed"/>
 
-<SliderInputCard
-    ShowClubs="false"
-    ShowNumberOfJuggler="false"
-    @bind-Period="Period"/>
 <div class="row">
-    <RadzenDataGrid TItem="Juggler"
-                    Data="@Jugglers"
-                    AllowColumnResize="true"
-                    AllowSorting="true"
-                    PageSize="15"
-                    AllowPaging="true"
-                    PagerHorizontalAlign="HorizontalAlign.Center"
-                    ShowPagingSummary="true"
-                    AllowColumnPicking="true"
-                    AllowMultiColumnSorting="true"
-                    Responsive="false"
-                    AllowPickAllColumns="false"
-                    ExpandMode="DataGridExpandMode.Single">
-        <Template Context="juggler">
-            @if (juggler.SelectedSiteswap is null)
-            {
+
+    <RadzenSteps @bind-SelectedIndex="selectedStep">
+        <Steps>
+            <RadzenStepsItem>
+                <h3>Select Feeding Pattern</h3>
+                <RadzenButton Text="Normal Feed" Click="NormalFeed"/>
+                <RadzenButton Text="N Feed" Click="N_Feed"/>
+                <RadzenButton Text="W Feed" Click="W_Feed"/>
+            </RadzenStepsItem>
+            <RadzenStepsItem>
+                <h3>Select Period</h3>
                 <SliderInputCard
-                    ShowPeriod="false"
+                    ShowClubs="false"
                     ShowNumberOfJuggler="false"
-                    @bind-Clubs="juggler.Clubs"/>
-                <ThrowInputCard
-                    @bind-Throws="juggler.Throws"/>
-                <FilterInputCard
-                    Filter="juggler.VisibleFilter"
-                    OnEditFilter="async i => { await ChangeFilter(juggler, i, false); }"
-                    OnRemoveFilter="i => { juggler.VisibleFilter = juggler.VisibleFilter.RemoveAt(i); }"
-                    OnCreateNewFilter="async () => { await ChangeFilter(juggler, 0, true); }"/>
-                <GenerateButton
-                    Disabled="false"
-                    OnClick="() => GenerateSiteswaps(juggler)"/>
-            }
-            else
+                    @bind-Period="Period"/>
+            </RadzenStepsItem>
+
+            @foreach (var juggler in Jugglers)
             {
-                <InterfaceSplitting
-                    Fedees="juggler.PassesWith"
-                    Throws="ToPassOrSelf(Interface.FromSiteswap(juggler.SelectedSiteswap).Values)"
-                    SelectedThrows="juggler.PassingSelection"
-                    SelectedThrowsChanged="(x) => { juggler.PassingSelection = x; UpdateFeedingFilter();}"/>
-                <RadzenButton Text="X" Click="() => { juggler.SelectedSiteswap = null; UpdateFeedingFilter(); }"/>
+                <RadzenStepsItem>
+                    <h3>@GenerateSiteswapFor(juggler)</h3>
+
+                    @if (juggler.SelectedSiteswap is null)
+                    {
+                        <SliderInputCard
+                            ShowPeriod="false"
+                            ShowNumberOfJuggler="false"
+                            @bind-Clubs="juggler.Clubs"/>
+                        <ThrowInputCard
+                            @bind-Throws="juggler.Throws"/>
+                        <FilterInputCard
+                            Filter="juggler.VisibleFilter"
+                            OnEditFilter="async i => { await ChangeFilter(juggler, i, false); }"
+                            OnRemoveFilter="i => { juggler.VisibleFilter = juggler.VisibleFilter.RemoveAt(i); }"
+                            OnCreateNewFilter="async () => { await ChangeFilter(juggler, 0, true); }"/>
+                        <GenerateButton
+                            Disabled="false"
+                            OnClick="() => GenerateSiteswaps(juggler)"/>
+                    }
+                    else
+                    {
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <RadzenText>Selected siteswap: @juggler.SelectedSiteswap</RadzenText>
+                                </div>
+                                <div class="col">
+                                    <RadzenButton Text="X" Click="() => { juggler.SelectedSiteswap = null; UpdateFeedingFilter(); }"/>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </RadzenStepsItem>
+                <RadzenStepsItem>
+                    <h3>Distribute Passes</h3>
+
+                    @if (juggler.SelectedSiteswap is not null)
+                    {
+                        <InterfaceSplitting
+                            Fedees="juggler.PassesWith"
+                            Throws="juggler.InterfaceAsPassOrSelf()"
+                            SelectedThrows="juggler.PassingSelection"
+                            SelectedThrowsChanged="(x) => { juggler.PassingSelection = x; UpdateFeedingFilter();}"/>
+                    }
+                    else
+                    {
+                        <RadzenText>Generate a siteswap for @juggler.Name first</RadzenText>
+                    }
+                </RadzenStepsItem>
             }
-        </Template>
-        <Columns>
-            <RadzenDataGridColumn TItem="Juggler" Property="@nameof(Juggler.Name)" Title="Juggler" Frozen="true" Width="50px"/>
-            <RadzenDataGridColumn TItem="Juggler" Property="@nameof(Juggler.TimeZone)" Title="TimeZone" Frozen="true" Width="50px"/>
-            <RadzenDataGridColumn TItem="Juggler" Title="Passes with" Frozen="true" Width="100px">
-                <Template Context="juggler">
-                    @string.Concat(string.Join(", ", juggler.PassesWith))
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="Juggler" Property="@nameof(Juggler.SelectedSiteswap)" Title="SelectedSiteswap" Frozen="true" Width="50px"/>
-        </Columns>
-    </RadzenDataGrid>
+        </Steps>
+    </RadzenSteps>
 </div>
 
 
 @code {
+    private int selectedStep;
+
     private List<Juggler> Jugglers = new();
-    
+
     private string SelectedFeed { get; set; } = "Normal";
 
     private int? Period { get; set; } = 5;
@@ -86,34 +100,6 @@
     {
         NormalFeed();
         base.OnInitialized();
-    }
-
-    [DebuggerDisplay("{Name} in {TimeZone}")]
-    private class Juggler
-    {
-        public Juggler(string name, string timeZone, List<string> passesWith)
-        {
-            Name = name;
-            TimeZone = timeZone;
-            PassesWith = passesWith;
-        }
-
-        public string Name { get; set; }
-        public string TimeZone { get; set; }
-        public List<string> PassesWith { get; set; }
-        public IEnumerable<int> Clubs { get; set; } = new[] {6, 6};
-        public ImmutableList<IFilterInformation> VisibleFilter { get; set; } = ImmutableList<IFilterInformation>.Empty;
-
-        public ImmutableList<IFilterInformation> GenerationFilter => VisibleFilter
-            .Where(x => x is not InterfaceFilterInformation)
-            .ToImmutableList()
-            .Add(Combine(VisibleFilter.OfType<InterfaceFilterInformation>()))
-            .Where(x => x is not null)
-            .ToImmutableList();
-        public NewPatternFilterInformation CurrentFilter { get; set; } = new(Enumerable.Empty<Throw>(), true);
-        public Siteswap? SelectedSiteswap { get; set; }
-        public IEnumerable<Throw> Throws { get; set; } = Throw.Defaut.ToList();
-        public List<string> PassingSelection { get; set; } = new List<string>();
     }
 
     private void NormalFeed()
@@ -137,7 +123,6 @@
             new("B2", "B", new List<string>() {"A1"})
         };
         SelectedFeed = FeedImage.NFeed;
-
     }
 
     private void W_Feed()
@@ -169,41 +154,33 @@
         {
             {nameof(FilterComponent.FilterNumber), i},
             {nameof(FilterComponent.Throws), new List<Throw>()},
-            {nameof(FilterComponent.ThrowsChanged), ThrowsChanged(juggler, i)},
+            {nameof(FilterComponent.ThrowsChanged), ThrowsChanged(juggler)},
             {nameof(FilterComponent.IsGlobalPattern), true},
-            {nameof(FilterComponent.IsGlobalPatternChanged), GlobalPatternChanged(juggler, i)},
+            {nameof(FilterComponent.IsGlobalPatternChanged), GlobalPatternChanged(juggler)},
             {nameof(FilterComponent.Period), new Period(Period ?? 5)},
             {nameof(FilterComponent.NumberOfJugglers), 2},
-            {nameof(FilterComponent.OnAddFilter), addNewFilter ? AddFilter(juggler, i) : EditFilter(juggler, i)}
+            {nameof(FilterComponent.OnAddFilter), addNewFilter ? AddFilter(juggler) : EditFilter(juggler, i)}
         }, GetDialogOptions());
     }
 
-    private EventCallback<List<Throw>> ThrowsChanged(Juggler juggler, int i)
+    private EventCallback<List<Throw>> ThrowsChanged(Juggler juggler)
     {
-        return EventCallback.Factory.Create<List<Throw>>(this, list => juggler.CurrentFilter = juggler.CurrentFilter with{ Pattern = list});
+        return EventCallback.Factory.Create<List<Throw>>(this, juggler.ChangeThrows);
     }
 
-    private EventCallback<bool> GlobalPatternChanged(Juggler juggler, int i)
+    private EventCallback<bool> GlobalPatternChanged(Juggler juggler)
     {
-        return EventCallback.Factory.Create<bool>(this, b => juggler.CurrentFilter = juggler.CurrentFilter with{ IsGlobalPattern = b});
+        return EventCallback.Factory.Create<bool>(this, juggler.SetGlobalPattern);
     }
 
     private EventCallback EditFilter(Juggler juggler, int i)
     {
-        return EventCallback.Factory.Create(this, () =>
-        {
-            juggler.VisibleFilter = juggler.VisibleFilter.SetItem(i, juggler.CurrentFilter);
-            juggler.CurrentFilter = new NewPatternFilterInformation(Enumerable.Empty<Throw>(), true);
-        });
+        return EventCallback.Factory.Create(this, () => juggler.EditFilter(i));
     }
 
-    private EventCallback AddFilter(Juggler juggler, int i)
+    private EventCallback AddFilter(Juggler juggler)
     {
-        return EventCallback.Factory.Create(this, () =>
-        {
-            juggler.VisibleFilter = juggler.VisibleFilter.Add(juggler.CurrentFilter);
-            juggler.CurrentFilter = new NewPatternFilterInformation(Enumerable.Empty<Throw>(), true);
-        });
+        return EventCallback.Factory.Create(this, juggler.AddFilter);
     }
 
     private async Task GenerateSiteswaps(Juggler juggler)
@@ -220,64 +197,35 @@
         }).GenerateAsync()
             .ToListAsync();
 
-        await DialogService.OpenAsync<SiteswapList>("Select a siteswap", new Dictionary<string, object>()
+        await DialogService.OpenAsync<SiteswapList>("Select a siteswap", new Dictionary<string, object?>()
         {
             {nameof(SiteswapList.Siteswaps), siteswaps.AsReadOnly()},
             {nameof(SiteswapList.NumberOfJugglers), 2},
             {nameof(SiteswapList.EasySelection), true},
-            {nameof(SiteswapList.Filter), Combine(juggler.VisibleFilter.OfType<InterfaceFilterInformation>())},
-            {nameof(SiteswapList.SiteswapSelected), EventCallback.Factory.Create<Siteswap>(this, s =>
+            {nameof(SiteswapList.Filter), juggler.CombineInterfaceFilterInformations()},
             {
-                juggler.SelectedSiteswap = s;
-                juggler.PassingSelection = Enumerable.Repeat(string.Empty, juggler.SelectedSiteswap.Values.Length).ToList();
-                DialogService.Close();
-                UpdateFeedingFilter();
-            })},
+                nameof(SiteswapList.SiteswapSelected), EventCallback.Factory.Create<Siteswap>(this, s =>
+                {
+                    juggler.SelectedSiteswap = s;
+                    DialogService.Close();
+                    selectedStep++;
+                    UpdateFeedingFilter();
+                })
+            }
         }, GetDialogOptions());
     }
 
-    private static InterfaceFilterInformation? Combine(IEnumerable<InterfaceFilterInformation> interfaceFilterInformations)
-    {
-        if (interfaceFilterInformations.Any() is false)
-        {
-            return null;
-        }
-        
-        var pattern = new List<Throw>();
-        for (var i = 0; i < interfaceFilterInformations.First().Pattern.Count(); i++)
-        {
-            pattern.Add(interfaceFilterInformations.Any(x => x.Pattern.ToList()[i] == Throw.AnyPass) ? Throw.AnyPass : Throw.AnySelf);
-        }
-
-        return new InterfaceFilterInformation(pattern);
-    }
-
-    private void UpdateFeedingFilter()
+ private void UpdateFeedingFilter()
     {
         foreach (var juggler in Jugglers)
         {
-            juggler.VisibleFilter = CreateFilterFromFeedingKnowledge(juggler).ToImmutableList().AddRange(juggler.VisibleFilter.Where(x => x is not InterfaceFilterInformation));
-        }
-    }
-    
-    private IEnumerable<IFilterInformation> CreateFilterFromFeedingKnowledge(Juggler juggler)
-    {
-        foreach (var passer in Jugglers.Where(x => x.PassesWith.Contains(juggler.Name)))
-        {
-            if (passer.SelectedSiteswap is null || passer.PassingSelection.Contains(juggler.Name) is false)
-            {
-                continue;
-            }
-            var passOrSelf = ToPassOrSelf(Interface.FromSiteswap(passer.SelectedSiteswap).Values);
-            var zippedList = passOrSelf.Zip(passer.PassingSelection);
-
-            var mappedToPattern = zippedList.Select(x => (x.First == InterfaceSplitting.PassOrSelf.Pass && x.Second == juggler.Name) ? Throw.AnyPass : Throw.AnySelf).ToList();
-            yield return new InterfaceFilterInformation(mappedToPattern, passer.Name);
+            juggler.UpdateFeedingFilter(Jugglers);
         }
     }
 
-    private List<InterfaceSplitting.PassOrSelf> ToPassOrSelf(CyclicArray<sbyte> values)
+    private static string GenerateSiteswapFor(Juggler juggler)
     {
-        return values.Enumerate(1).Select(x => x.value % 2 == 0 ? InterfaceSplitting.PassOrSelf.Self : InterfaceSplitting.PassOrSelf.Pass).ToList();
+        return $"Siteswap for {juggler.Name}";
     }
+
 }

@@ -49,9 +49,17 @@ public record Siteswap
 
     public int Average => (int) this.Items.Average();
 
-    public string GetLocalSiteswap(int juggler, int numberOfJugglers)
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
     {
-        return new LocalSiteswap(this, numberOfJugglers, juggler).ToString();
+        return new LocalSiteswap(this, numberOfJugglers, juggler);
+    }
+    
+    public IEnumerable<LocalSiteswap> GetLocalSiteswaps(int numberOfJugglers)
+    {
+        for (int i = 0; i < numberOfJugglers; i++)
+        {
+            yield return GetLocalSiteswap(i, numberOfJugglers);
+        }
     }
 
     public Period Period => new(this.Values.Length);

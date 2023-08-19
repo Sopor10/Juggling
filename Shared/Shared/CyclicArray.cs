@@ -8,7 +8,7 @@ using System.Diagnostics;
 public record CyclicArray<T> : IEnumerable<T>
 {
 
-    private string DebugDisplay => string.Join(" ", this.EnumerateValues(1).Select(x => x.ToString()));
+    private string DebugDisplay => string.Join(" ", this.EnumerateValues(1).Select(x => x?.ToString()));
     public CyclicArray(IEnumerable<T> items, int rotationIndex = 0)
     {
         RotationIndex = rotationIndex;
