@@ -5,6 +5,7 @@ using Shared;
 public record LocalSiteswap
 {
     private readonly string? name;
+    private CyclicArray<Hand> handArray;
 
     public LocalSiteswap(Siteswap Siteswap, int NumberOfJugglers, int Juggler, string? name = null)
     {
@@ -13,6 +14,8 @@ public record LocalSiteswap
         this.NumberOfJugglers = NumberOfJugglers;
         this.Juggler = Juggler;
         this.Values = this.Items().ToCyclicArray();
+        this.handArray = new CyclicArray<Hand>(Enumerable.Repeat(Hand.Right, this.NumberOfJugglers)
+            .Concat(Enumerable.Repeat(Hand.Left, this.NumberOfJugglers)));
     }
     
     public string DisplayName => this.name ?? ((char)('A' + this.Juggler)).ToString();
@@ -41,20 +44,10 @@ public record LocalSiteswap
 
     public (int Juggler, Hand Hand) GetThrowType(int position)
     {
-        var juggler = Values[position] % NumberOfJugglers;
-        var handArray = new CyclicArray<Hand>(Enumerable.Repeat(Hand.Right, NumberOfJugglers)
-            .Concat(Enumerable.Repeat(Hand.Left, NumberOfJugglers)));
+        var juggler = (Values[position] + Juggler) % NumberOfJugglers;
 
-        var hand = handArray[Values[position] + position * NumberOfJugglers + Juggler];
+        var hand = this.handArray[Values[position] + position * NumberOfJugglers + Juggler];
         return (juggler, hand);
-    }
-    
-    
-    public void Deconstruct(out Siteswap Siteswap, out int NumberOfJugglers, out int Juggler)
-    {
-        Siteswap = this.Siteswap;
-        NumberOfJugglers = this.NumberOfJugglers;
-        Juggler = this.Juggler;
     }
 }
 
