@@ -2,55 +2,76 @@
 @using System.Collections.Immutable
 @using Siteswaps.Generator.Generator
 
-@foreach (var (siteswap, siteswapNumber) in Siteswaps.Select((siteswap, i) => (siteswap, i)))
-{
-    <div >
-        <div style=@Offset(siteswap.Juggler)> @siteswap.DisplayName</div>
-        @for (var i = 0; i < siteswap.Values.Length; i++)
-        {
-            <div style="display: inline-block; margin: 1rem;">
-                @siteswap.Values[i].Transform()
-                @if (siteswap.GetThrowType(i).Juggler != siteswapNumber)
+<table>
+    @foreach (var siteswap in Siteswaps.Select(siteswap => siteswap))
+    {
+        <tr >
+            <td > @siteswap.DisplayName</td>
+            @for (var j = 0; j < siteswap.Juggler; j++)
+            {
+                <td />
+            }
+
+            @for (var i = 0; i < siteswap.Values.Length; i++)
+            {
+                <td>
+                    @siteswap.Values[i].Transform()
+                    @if (siteswap.GetThrowType(i).Juggler != siteswap.Juggler)
+                    {
+                        @if (siteswap.GetThrowType(i).Hand != CurrentHand(i))
+                        {
+                            <sub>
+                                @if (Siteswaps.Count > 2)
+                                {
+                                    @GetPassingPartner(siteswap.Juggler, i)
+                                }
+                                ||
+                            </sub>
+                        }
+                        @if (siteswap.GetThrowType(i).Hand == CurrentHand(i))
+                        {
+                            <sub>
+                                @if (Siteswaps.Count > 2)
+                                {
+                                    @GetPassingPartner(siteswap.Juggler, i)
+                                }
+                                x
+                            </sub>
+                        }
+                    }
+                </td>
+                @for (var j = 0; j < NumberOfTimeZones; j++)
                 {
-                    @if (siteswap.GetThrowType(i).Hand != CurrentHand(i))
-                    {
-                        <sub>
-                            @if (Siteswaps.Count > 2)
-                            {
-                                @Siteswaps[siteswap.GetThrowType(i).Juggler].DisplayName
-                            }
-                            ||
-                        </sub>
-                    }
-                    @if (siteswap.GetThrowType(i).Hand == CurrentHand(i))
-                    {
-                        <sub>
-                            @if (Siteswaps.Count > 2)
-                            {
-                                @Siteswaps[siteswap.GetThrowType(i).Juggler].DisplayName
-                            }
-                            x
-                        </sub>
-                    }
+                    <td/>
                 }
-            </div>
-        }
-    </div>
-}
+            }
+        </tr>
+    }
+</table>
 
 @code {
 
     [Parameter]
-    public ImmutableList<LocalSiteswap> Siteswaps { get; set; } = Siteswap.CreateFromCorrect(7, 5, 6).GetLocalSiteswaps(3).ToImmutableList();
+    public ImmutableList<LocalSiteswap> Siteswaps { get; set; } = Siteswap.CreateFromCorrect(7, 5, 6, 6).GetLocalSiteswaps(3).ToImmutableList();
 
-    private string Offset(int i)
-    {
-        return $"display: inline-block; margin-right: {i}rem;";
-    }
+    [Parameter]
+    public ImmutableList<ImmutableList<string>>? PassingPartners { get; set; }
+
+    private int NumberOfTimeZones => Siteswaps.Select(siteswap => siteswap.Juggler).Distinct().Count();
 
     private Hand CurrentHand(int i)
     {
         return i % 2 == 0 ? Hand.Right : Hand.Left;
+    }
+
+    private string GetPassingPartner(int siteswapNumber, int i)
+    {
+        if (PassingPartners == null)
+        {
+            return Siteswaps[Siteswaps[siteswapNumber].GetThrowType(i).Juggler].DisplayName;
+        }
+
+        return PassingPartners[siteswapNumber][i];
     }
 
 }

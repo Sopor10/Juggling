@@ -1,8 +1,10 @@
 ﻿@page "/interfacesplitting"
+@using Siteswaps.Generator.Generator
+@using Microsoft.Msagl.Core.Geometry
 
 @foreach (var (i,t) in Throws.Select((x, i) => (i,x)))
 {
-    <span>@t</span>
+    <span>@(Siteswap.Interface.Values[i].Transform())</span>
 
     <RadzenDropDown
         AllowClear="false"
@@ -23,7 +25,9 @@
 
     [Parameter]
     [EditorRequired]
-    public List<PassOrSelf> Throws { get; set; } = new() {PassOrSelf.Pass, PassOrSelf.Self, PassOrSelf.Pass};
+    public LocalSiteswap Siteswap { get; set; } = Generator.Generator.Siteswap.CreateFromCorrect(5,3,1).GetLocalSiteswap(0,2);
+
+    private List<PassOrSelf> Throws => Siteswap.Interface.Values.ToPassOrSelf();
 
     [Parameter]
     [EditorRequired]

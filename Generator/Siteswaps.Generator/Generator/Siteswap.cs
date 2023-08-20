@@ -17,7 +17,7 @@ public record Siteswap
 
     public override string ToString()
     {
-        return this.Values.EnumerateValues(1).Select(x => (int) x).ToSiteswapString();
+        return this.Values.EnumerateValues(1).ToSiteswapString();
     }
 
     public virtual bool Equals(Siteswap? other)
@@ -49,9 +49,9 @@ public record Siteswap
 
     public int Average => (int) this.Items.Average();
 
-    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers, string? name = null)
     {
-        return new LocalSiteswap(this, numberOfJugglers, juggler);
+        return new LocalSiteswap(this, numberOfJugglers, juggler, name);
     }
     
     public IEnumerable<LocalSiteswap> GetLocalSiteswaps(int numberOfJugglers)
@@ -84,5 +84,5 @@ public record Siteswap
         return null;
     }
     
-    public Interface Interface => Interface.FromSiteswap(this);
+    public Interface Interface => Interface.From(this);
 }

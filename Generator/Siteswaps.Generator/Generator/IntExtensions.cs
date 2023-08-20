@@ -10,8 +10,9 @@ public static class IntExtensions
             _ => Convert.ToChar(i + 87).ToString()
         };
     }
+    public static string Transform(this sbyte i) => Transform((int)i);
 
-    public static string ToSiteswapString(this IEnumerable<int> items)
+    public static string ToSiteswapString(this IEnumerable<sbyte> items)
     {
         return string.Join("", items.Select(Transform));
     }

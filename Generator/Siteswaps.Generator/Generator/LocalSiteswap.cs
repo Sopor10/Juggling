@@ -20,13 +20,13 @@ public record LocalSiteswap
     
     public string DisplayName => this.name ?? ((char)('A' + this.Juggler)).ToString();
 
-    public CyclicArray<int> Values { get; init; }
+    public CyclicArray<sbyte> Values { get; }
 
     public override string ToString() => this.Values.EnumerateValues(1).ToSiteswapString();
 
-    private List<int> Items()
+    private List<sbyte> Items()
     {
-        var result = new List<int>();
+        var result = new List<sbyte>();
 
         var siteswap = this.Siteswap.Values;
         for (var i = 0; i < this.Siteswap.LocalPeriod(this.NumberOfJugglers).Value; i++)
@@ -38,9 +38,10 @@ public record LocalSiteswap
     }
 
     public LocalPeriod Period => this.Siteswap.LocalPeriod(this.NumberOfJugglers);
-    public Siteswap Siteswap { get; init; }
-    public int NumberOfJugglers { get; init; }
-    public int Juggler { get; init; }
+    public Siteswap Siteswap { get; }
+    public int NumberOfJugglers { get; }
+    public int Juggler { get; }
+    public Interface Interface => Interface.From(this);
 
     public (int Juggler, Hand Hand) GetThrowType(int position)
     {

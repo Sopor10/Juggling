@@ -1,8 +1,6 @@
 ﻿@page "/feeding"
 @using Siteswaps.Generator.Components.State
 @using System.Collections.Immutable
-@using System.Diagnostics
-@using Shared
 @using Siteswaps.Generator.Components.Internal.EasyFilter
 @using Siteswaps.Generator.Generator
 @using SiteswapList = Siteswaps.Generator.Components.Internal.SiteswapList
@@ -72,7 +70,7 @@
                     {
                         <InterfaceSplitting
                             Fedees="juggler.PassesWith"
-                            Throws="juggler.InterfaceAsPassOrSelf()"
+                            Siteswap="juggler.SelectedSiteswap.GetLocalSiteswap(juggler.TimeZone, 2, juggler.Name)"
                             SelectedThrows="juggler.PassingSelection"
                             SelectedThrowsChanged="(x) => { juggler.PassingSelection = x; UpdateFeedingFilter();}"/>
                     }
@@ -82,10 +80,14 @@
                     }
                 </RadzenStepsItem>
             }
+            <RadzenStepsItem>
+                <SiteswapDetails
+                    Siteswaps="Jugglers.Select(x => x.SelectedSiteswap?.GetLocalSiteswap(x.TimeZone, 2, x.Name)).OfType<LocalSiteswap>().ToImmutableList()"
+                    PassingPartners="Jugglers.Select(x => x.PassingSelection.ToImmutableList()).ToImmutableList()"/>
+            </RadzenStepsItem>
         </Steps>
     </RadzenSteps>
 </div>
-
 
 @code {
     private int selectedStep;
@@ -104,37 +106,19 @@
 
     private void NormalFeed()
     {
-        Jugglers = new List<Juggler>()
-        {
-            new("A", "A", new List<string>() {"B1", "B2"}),
-            new("B1", "B", new List<string>() {"A"}),
-            new("B2", "B", new List<string>() {"A"})
-        };
+        Jugglers = FeedingPattern.NormalFeed().Jugglers.ToList();
         SelectedFeed = FeedImage.Normal;
     }
 
     private void N_Feed()
     {
-        Jugglers = new List<Juggler>()
-        {
-            new("A1", "A", new List<string>() {"B1", "B2"}),
-            new("A2", "A", new List<string>() {"B1"}),
-            new("B1", "B", new List<string>() {"A1", "A2"}),
-            new("B2", "B", new List<string>() {"A1"})
-        };
+        Jugglers = FeedingPattern.N_Feed().Jugglers.ToList();
         SelectedFeed = FeedImage.NFeed;
     }
 
     private void W_Feed()
     {
-        Jugglers = new List<Juggler>()
-        {
-            new("A1", "A", new List<string>() {"B1", "B2"}),
-            new("B1", "B", new List<string>() {"A1", "A2"}),
-            new("B2", "B", new List<string>() {"A1", "A3"}),
-            new("A2", "A", new List<string>() {"B1"}),
-            new("A3", "A", new List<string>() {"B2"})
-        };
+        Jugglers = FeedingPattern.W_Feed().Jugglers.ToList();
         SelectedFeed = FeedImage.WFeed;
     }
 
@@ -215,7 +199,7 @@
         }, GetDialogOptions());
     }
 
- private void UpdateFeedingFilter()
+    private void UpdateFeedingFilter()
     {
         foreach (var juggler in Jugglers)
         {

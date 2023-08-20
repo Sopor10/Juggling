@@ -6,12 +6,11 @@ using System.Diagnostics;
 using System.Linq;
 using Generator.Components.State;
 using Generator.Generator;
-using Shared;
 
 [DebuggerDisplay("{Name} in {TimeZone}")]
 public class Juggler
 {
-    public Juggler(string name, string timeZone, List<string> passesWith)
+    public Juggler(string name, int timeZone, List<string> passesWith)
     {
         this.Name = name;
         this.TimeZone = timeZone;
@@ -19,7 +18,7 @@ public class Juggler
     }
 
     public string Name { get; set; }
-    public string TimeZone { get; set; }
+    public int TimeZone { get; set; }
     public List<string> PassesWith { get; }
     public IEnumerable<int> Clubs { get; set; } = new[] {6, 6};
     public ImmutableList<IFilterInformation> VisibleFilter { get; set; } = ImmutableList<IFilterInformation>.Empty;
@@ -115,7 +114,7 @@ public class Juggler
             {
                 continue;
             }
-            var passOrSelf = ToPassOrSelf(Interface.FromSiteswap(passer.SelectedSiteswap).Values);
+            var passOrSelf = CyclicArrayExtensions.ToPassOrSelf(Interface.From(passer.SelectedSiteswap).Values);
             var zippedList = passOrSelf.Zip(passer.PassingSelection);
 
             var mappedToPattern = zippedList.Select(x => x.First == InterfaceSplitting.PassOrSelf.Pass && x.Second == this.Name ? Throw.AnyPass : Throw.AnySelf).ToList();
@@ -127,11 +126,6 @@ public class Juggler
     {
         this.VisibleFilter = this.CreateFilterFromFeedingKnowledge(others).ToImmutableList().AddRange(this.VisibleFilter.Where(x => x is not InterfaceFilterInformation));
     }
-    
-    private static List<InterfaceSplitting.PassOrSelf> ToPassOrSelf(CyclicArray<sbyte> values)
-    {
-        return values.Enumerate(1).Select(x => x.value % 2 == 0 ? InterfaceSplitting.PassOrSelf.Self : InterfaceSplitting.PassOrSelf.Pass).ToList();
-    }
 
     public List<InterfaceSplitting.PassOrSelf> InterfaceAsPassOrSelf()
     {
@@ -139,6 +133,6 @@ public class Juggler
         {
             return new List<InterfaceSplitting.PassOrSelf>();
         }
-        return ToPassOrSelf(Interface.FromSiteswap(this.SelectedSiteswap).Values);
+        return CyclicArrayExtensions.ToPassOrSelf(this.SelectedSiteswap.Interface.Values);
     }
 }

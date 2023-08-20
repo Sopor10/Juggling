@@ -4,6 +4,8 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Test;
 
+using Shared;
+
 public class SiteswapTests
 {
     [Test]
@@ -16,5 +18,11 @@ public class SiteswapTests
     public void Local_Siteswaps(sbyte[] siteswap, int juggler, int maxJugglers, string expected)
     {
         Siteswap.CreateFromCorrect(siteswap).GetLocalSiteswap(juggler, maxJugglers).ToString().Should().Be(expected);
+    }
+
+    [Test]
+    public void CanCreateInterface()
+    {
+        Siteswap.CreateFromCorrect(10,7,0,6,7).Interface.Values.EnumerateValues(1).Should().BeEquivalentTo(new[]{10,7,0,7,6});
     }
 }
