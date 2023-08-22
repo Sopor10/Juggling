@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="BlazorApplicationInsights" Version="2.2.0" />
+    <PackageVersion Include="BlazorApplicationInsights" Version="2.2.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.10" PrivateAssets="all" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.7" />
