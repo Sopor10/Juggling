@@ -85,9 +85,8 @@
                 </RadzenStepsItem>
             }
             <RadzenStepsItem>
-                <SiteswapDetails
-                    Siteswaps="Jugglers.Select(x => x.SelectedSiteswap?.GetLocalSiteswap(x.TimeZone, 2, x.Name)).OfType<LocalSiteswap>().ToImmutableList()"
-                    PassingPartners="Jugglers.Select(x => x.PassingSelection.ToImmutableList()).ToImmutableList()"/>
+                <SiteswapDetails Jugglers="Jugglers.ToImmutableList()"/>
+                
             </RadzenStepsItem>
         </Steps>
     </RadzenSteps>

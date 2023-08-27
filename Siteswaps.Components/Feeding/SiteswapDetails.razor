@@ -1,5 +1,6 @@
 ﻿@page "/SiteswapDetails"
 @using System.Collections.Immutable
+@using Shared
 @using Siteswaps.Generator.Generator
 
 <table>
@@ -51,11 +52,18 @@
 
 @code {
 
-    [Parameter]
-    public ImmutableList<LocalSiteswap> Siteswaps { get; set; } = Siteswap.CreateFromCorrect(7, 5, 6, 6).GetLocalSiteswaps(3).ToImmutableList();
+    [Parameter] 
+    public ImmutableList<Juggler> Jugglers { get; set; } = ImmutableList<Juggler>.Empty;
 
-    [Parameter]
-    public ImmutableList<ImmutableList<string>>? PassingPartners { get; set; }
+    private ImmutableList<(LocalSiteswap Siteswap, Juggler Juggler)> Intermediate => Jugglers
+        .Select(x => (x.SelectedSiteswap?.GetLocalSiteswap(x.TimeZone, 2, x.Name), x))
+        .OfType<(LocalSiteswap, Juggler)>()
+        .ToImmutableList();
+
+    private ImmutableList<LocalSiteswap> Siteswaps => Intermediate.Select(x => x.Siteswap).ToImmutableList();
+
+
+    private ImmutableList<ImmutableList<string>> PassingPartners => Intermediate.Select(x => x.Siteswap.RotateToLocal(x.Juggler.PassingSelection.ToCyclicArray()).EnumerateValues(1).ToImmutableList()).ToImmutableList();
 
     private int NumberOfTimeZones => Siteswaps.Select(siteswap => siteswap.Juggler).Distinct().Count();
 
@@ -66,7 +74,7 @@
 
     private string GetPassingPartner(int siteswapNumber, int i)
     {
-        if (PassingPartners == null)
+        if (PassingPartners.Count <= siteswapNumber)
         {
             return Siteswaps[Siteswaps[siteswapNumber].GetThrowType(i).Juggler].DisplayName;
         }

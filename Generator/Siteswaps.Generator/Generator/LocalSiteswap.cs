@@ -36,6 +36,18 @@ public record LocalSiteswap
 
         return result;
     }
+    public CyclicArray<T> RotateToLocal<T>(CyclicArray<T> array)
+    {
+        
+        var result = new List<T>();
+
+        for (var i = 0; i < this.Siteswap.LocalPeriod(this.NumberOfJugglers).Value; i++)
+        {
+            result.Add(array[this.Juggler + i * (this.NumberOfJugglers)]);
+        }
+
+        return result.ToCyclicArray();
+    }
 
     public LocalPeriod Period => this.Siteswap.LocalPeriod(this.NumberOfJugglers);
     public Siteswap Siteswap { get; }
