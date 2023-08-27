@@ -2,6 +2,8 @@
 
 namespace Siteswaps.Generator.Generator;
 
+using System.Diagnostics.CodeAnalysis;
+
 public record Siteswap
 {
     public CyclicArray<sbyte> Values => this.Items.Select(x => (sbyte) x).ToCyclicArray().Rotate(this.Rotation);
@@ -85,4 +87,36 @@ public record Siteswap
     }
     
     public Interface Interface => Interface.From(this);
+
+    public IEnumerable<Throw> ToPassOrSelf(int i) => 
+        this.Values.Enumerate(1).Select(x => x.value % i == 0 ? Throw.AnySelf : Throw.AnyPass).ToList();
+
+    public IEnumerable<T> RotateWithInterface<T>(List<T> other) => 
+        this.Interface.RotateWith(this, other);
+
+    public static bool TryParse(string s, [NotNullWhen(true)] out Siteswap? siteswap)
+    {
+        siteswap = null;
+        var values = s.ToCharArray();
+        var result = s.Select(t => t switch
+            {
+                >= '0' and <= '9' => t - '0',
+                >= 'a' => t - 'a' + 10,
+            })
+            .ToList();
+
+        if (IsValid(result))
+        {
+            siteswap = new Siteswap(result.ToArray());
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsValid(List<int> result)
+    {
+        return result.Select((x, i) => (x + i) % result.Count).Distinct().Count() == result.Count;
+
+    }
 }

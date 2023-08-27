@@ -1,5 +1,6 @@
 ﻿namespace Siteswaps.Components.Feeding;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -89,6 +90,15 @@ public class Juggler
         return this.CombineInterfaceFilterInformations(this.VisibleFilter.OfType<InterfaceFilterInformation>());
     }
 
+    public List<InterfaceSplitting.PassOrSelf> InterfaceAsPassOrSelf()
+    {
+        if (this.SelectedSiteswap is null)
+        {
+            return new List<InterfaceSplitting.PassOrSelf>();
+        }
+        return CyclicArrayExtensions.ToPassOrSelf(this.SelectedSiteswap.Interface.Values);
+    }
+
     private InterfaceFilterInformation? CombineInterfaceFilterInformations(IEnumerable<InterfaceFilterInformation> interfaceFilterInformations)
     {
         interfaceFilterInformations = interfaceFilterInformations.ToList();
@@ -106,6 +116,11 @@ public class Juggler
         return new InterfaceFilterInformation(pattern);
     }
 
+    public void UpdateFeedingFilter(IEnumerable<Juggler> others)
+    {
+        this.VisibleFilter = this.CreateFilterFromFeedingKnowledge(others).ToImmutableList().AddRange(this.VisibleFilter.Where(x => x is not InterfaceFilterInformation));
+    }
+
     private IEnumerable<IFilterInformation> CreateFilterFromFeedingKnowledge(IEnumerable<Juggler> others)
     {
         foreach (var passer in others.Where(x => x.PassesWith.Contains(this.Name)))
@@ -114,25 +129,18 @@ public class Juggler
             {
                 continue;
             }
-            var passOrSelf = CyclicArrayExtensions.ToPassOrSelf(Interface.From(passer.SelectedSiteswap).Values);
-            var zippedList = passOrSelf.Zip(passer.PassingSelection);
-
-            var mappedToPattern = zippedList.Select(x => x.First == InterfaceSplitting.PassOrSelf.Pass && x.Second == this.Name ? Throw.AnyPass : Throw.AnySelf).ToList();
-            yield return new InterfaceFilterInformation(mappedToPattern, passer.Name);
+            
+            yield return InterfaceFilterInformation.CreateFrom(passer.SelectedSiteswap, passer.PassingSelection,this.Name, passer.Name );
         }
     }
 
-    public void UpdateFeedingFilter(IEnumerable<Juggler> others)
+    public Siteswap RotateCorrectly(Siteswap siteswap)
     {
-        this.VisibleFilter = this.CreateFilterFromFeedingKnowledge(others).ToImmutableList().AddRange(this.VisibleFilter.Where(x => x is not InterfaceFilterInformation));
-    }
-
-    public List<InterfaceSplitting.PassOrSelf> InterfaceAsPassOrSelf()
-    {
-        if (this.SelectedSiteswap is null)
+        var pattern = this.VisibleFilter.OfType<InterfaceFilterInformation>().FirstOrDefault()?.Pattern;
+        if (pattern is not null)
         {
-            return new List<InterfaceSplitting.PassOrSelf>();
+            siteswap = siteswap.RotateToMatchInterface(Pattern.FromThrows(pattern, 2))?? throw new ArgumentException("Siteswap is not valid at this point!");
         }
-        return CyclicArrayExtensions.ToPassOrSelf(this.SelectedSiteswap.Interface.Values);
+        return siteswap;
     }
 }

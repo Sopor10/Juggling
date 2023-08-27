@@ -48,6 +48,10 @@
                         <GenerateButton
                             Disabled="false"
                             OnClick="() => GenerateSiteswaps(juggler)"/>
+                        
+                        <RadzenText>Input Siteswap Directly:</RadzenText>
+                        <SiteswapInput @bind-Value="juggler.SelectedSiteswap"></SiteswapInput>
+                        
                     }
                     else
                     {
@@ -70,7 +74,7 @@
                     {
                         <InterfaceSplitting
                             Fedees="juggler.PassesWith"
-                            Siteswap="juggler.SelectedSiteswap.GetLocalSiteswap(juggler.TimeZone, 2, juggler.Name)"
+                            Siteswap="juggler.SelectedSiteswap"
                             SelectedThrows="juggler.PassingSelection"
                             SelectedThrowsChanged="(x) => { juggler.PassingSelection = x; UpdateFeedingFilter();}"/>
                     }
@@ -190,7 +194,7 @@
             {
                 nameof(SiteswapList.SiteswapSelected), EventCallback.Factory.Create<Siteswap>(this, s =>
                 {
-                    juggler.SelectedSiteswap = s;
+                    juggler.SelectedSiteswap = juggler.RotateCorrectly(s);
                     DialogService.Close();
                     selectedStep++;
                     UpdateFeedingFilter();

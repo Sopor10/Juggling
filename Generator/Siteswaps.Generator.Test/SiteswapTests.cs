@@ -25,4 +25,13 @@ public class SiteswapTests
     {
         Siteswap.CreateFromCorrect(10,7,0,6,7).Interface.Values.EnumerateValues(1).Should().BeEquivalentTo(new[]{10,7,0,7,6});
     }
+
+    [Test]
+    public void TestName()
+    {
+        Siteswap.TryParse("0123456789abc", out var result);
+        result.Should().NotBeNull();
+        result!.ToString().Should().Be("0123456789abc");
+        
+    }
 }

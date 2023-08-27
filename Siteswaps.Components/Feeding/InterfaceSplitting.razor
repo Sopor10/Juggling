@@ -4,7 +4,7 @@
 
 @foreach (var (i,t) in Throws.Select((x, i) => (i,x)))
 {
-    <span>@(Siteswap.Interface.Values[i].Transform())</span>
+    <span>@(Siteswap.Values[i].Transform())</span>
 
     <RadzenDropDown
         AllowClear="false"
@@ -25,9 +25,9 @@
 
     [Parameter]
     [EditorRequired]
-    public LocalSiteswap Siteswap { get; set; } = Generator.Generator.Siteswap.CreateFromCorrect(5,3,1).GetLocalSiteswap(0,2);
+    public Siteswap Siteswap { get; set; } = Siteswap.CreateFromCorrect(5,3,1);
 
-    private List<PassOrSelf> Throws => Siteswap.Interface.Values.ToPassOrSelf();
+    private List<PassOrSelf> Throws => Siteswap.Values.ToPassOrSelf();
 
     [Parameter]
     [EditorRequired]
