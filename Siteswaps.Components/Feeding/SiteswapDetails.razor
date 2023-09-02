@@ -24,7 +24,7 @@
                             <sub>
                                 @if (Siteswaps.Count > 2)
                                 {
-                                    @GetPassingPartner(siteswap.Juggler, i)
+                                    @GetPassingPartner(siteswap.GetThrowType(i).Juggler)
                                 }
                                 ||
                             </sub>
@@ -34,7 +34,7 @@
                             <sub>
                                 @if (Siteswaps.Count > 2)
                                 {
-                                    @GetPassingPartner(siteswap.Juggler, i)
+                                    @GetPassingPartner(siteswap.GetThrowType(i).Juggler)
                                 }
                                 x
                             </sub>
@@ -72,14 +72,9 @@
         return i % 2 == 0 ? Hand.Right : Hand.Left;
     }
 
-    private string GetPassingPartner(int siteswapNumber, int i)
+    private string GetPassingPartner(int siteswapNumber)
     {
-        if (PassingPartners.Count <= siteswapNumber)
-        {
-            return Siteswaps[Siteswaps[siteswapNumber].GetThrowType(i).Juggler].DisplayName;
-        }
-
-        return PassingPartners[siteswapNumber][i];
+        return Siteswaps[siteswapNumber].DisplayName;
     }
 
 }
