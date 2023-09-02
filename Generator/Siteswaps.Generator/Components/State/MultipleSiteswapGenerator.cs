@@ -37,7 +37,7 @@ public class MultipleSiteswapGenerator : ISiteswapGenerator
         var range = state.Objects switch
         {
             Between between => Enumerable.Range(between.MinNumber ?? 6,
-                between.MaxNumber ?? 6 - between.MinNumber ?? 6 + 1),
+                (between.MaxNumber ?? 6) - (between.MinNumber ?? 6) + 1),
             ExactNumber exactNumber => new[] { exactNumber.Number ?? 6 },
             _ => throw new ArgumentOutOfRangeException()
         };
