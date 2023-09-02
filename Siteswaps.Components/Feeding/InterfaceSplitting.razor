@@ -40,7 +40,7 @@
     public enum PassOrSelf
     {
         Pass = -3,
-        Self = -2
+        Self = -2,
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
@@ -87,5 +87,4 @@
             SelectedThrowsChanged.InvokeAsync(SelectedThrows);
         }
     }
-
 }

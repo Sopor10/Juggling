@@ -1,4 +1,7 @@
-﻿namespace Siteswaps.Components.Feeding;
+﻿using System.Linq;
+using Siteswaps.Generator.Components.State;
+
+namespace Siteswaps.Components.Feeding;
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -9,7 +12,7 @@ public record FeedingPattern(ImmutableList<Juggler> Jugglers)
     {
         foreach (var juggler in Jugglers)
         {
-            juggler.UpdateFeedingFilter(Jugglers);
+            juggler.UpdateFeedingFilter(this);
         }
     }
     
@@ -28,8 +31,8 @@ public record FeedingPattern(ImmutableList<Juggler> Jugglers)
         return new (new List<Juggler>()
         {
             new("A1", 0, new List<string>() {"B1", "B2"}),
-            new("A2", 0, new List<string>() {"B1"}),
             new("B1", 1, new List<string>() {"A1", "A2"}),
+            new("A2", 0, new List<string>() {"B1"}),
             new("B2", 1, new List<string>() {"A1"})
         }.ToImmutableList());
     }
@@ -44,5 +47,17 @@ public record FeedingPattern(ImmutableList<Juggler> Jugglers)
             new("A2", 0, new List<string>() {"B1"}),
             new("A3", 0, new List<string>() {"B2"})
         }.ToImmutableList());
+    }
+
+    public bool PassingPartnerHaveSiteswapSelected(Juggler juggler)
+    {
+        return this.Jugglers
+            .Where(x => x.PassesWith.Contains(juggler.Name))
+            .All(x => x.SelectedSiteswap is not null);
+    }
+
+    public ImmutableList<IFilterInformation> GetGenerationFilter(Juggler juggler)
+    {
+        return juggler.GetGenerationFilter(PassingPartnerHaveSiteswapSelected(juggler));
     }
 }

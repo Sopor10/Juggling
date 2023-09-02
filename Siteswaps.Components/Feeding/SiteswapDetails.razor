@@ -65,7 +65,7 @@
 
     private ImmutableList<ImmutableList<string>> PassingPartners => Intermediate.Select(x => x.Siteswap.RotateToLocal(x.Juggler.PassingSelection.ToCyclicArray()).EnumerateValues(1).ToImmutableList()).ToImmutableList();
 
-    private int NumberOfTimeZones => Siteswaps.Select(siteswap => siteswap.Juggler).Distinct().Count();
+    private int NumberOfTimeZones => Siteswaps.Select(siteswap => siteswap?.Juggler).Where(x => x is not null).Distinct().Count();
 
     private Hand CurrentHand(int i)
     {

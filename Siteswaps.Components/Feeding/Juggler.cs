@@ -24,21 +24,19 @@ public class Juggler
     public IEnumerable<int> Clubs { get; set; } = new[] {6, 6};
     public ImmutableList<IFilterInformation> VisibleFilter { get; set; } = ImmutableList<IFilterInformation>.Empty;
 
-    public ImmutableList<IFilterInformation> GenerationFilter
+    public ImmutableList<IFilterInformation> GetGenerationFilter(bool allPassingPartnersHaveSiteswapSelected)
     {
-        get
+        var filterInformations = this.VisibleFilter
+            .Where(x => x is not InterfaceFilterInformation)
+            .ToImmutableList();
+        var interfaceFilterInformation = this.CombineInterfaceFilterInformations(allPassingPartnersHaveSiteswapSelected);
+        if (interfaceFilterInformation is null)
         {
-            var filterInformations = this.VisibleFilter
-                .Where(x => x is not InterfaceFilterInformation)
-                .ToImmutableList();
-            var interfaceFilterInformation = this.CombineInterfaceFilterInformations();
-            if (interfaceFilterInformation is null)
-            {
-                return filterInformations;
-            }
-            return filterInformations
-                .Add(interfaceFilterInformation);
+            return filterInformations;
         }
+
+        return filterInformations
+            .Add(interfaceFilterInformation);
     }
 
     public NewPatternFilterInformation CurrentFilter { get; set; } = new(Enumerable.Empty<Throw>(), true);
@@ -85,9 +83,9 @@ public class Juggler
     }
 
 
-    public InterfaceFilterInformation? CombineInterfaceFilterInformations()
+    public InterfaceFilterInformation? CombineInterfaceFilterInformations(bool allPassingPartnersHaveSiteswapSelected)
     {
-        return this.CombineInterfaceFilterInformations(this.VisibleFilter.OfType<InterfaceFilterInformation>());
+        return this.CombineInterfaceFilterInformations(this.VisibleFilter.OfType<InterfaceFilterInformation>(), allPassingPartnersHaveSiteswapSelected);
     }
 
     public List<InterfaceSplitting.PassOrSelf> InterfaceAsPassOrSelf()
@@ -96,11 +94,14 @@ public class Juggler
         {
             return new List<InterfaceSplitting.PassOrSelf>();
         }
-        return CyclicArrayExtensions.ToPassOrSelf(this.SelectedSiteswap.Interface.Values);
+        return this.SelectedSiteswap.Interface.Values.ToPassOrSelf();
     }
 
-    private InterfaceFilterInformation? CombineInterfaceFilterInformations(IEnumerable<InterfaceFilterInformation> interfaceFilterInformations)
+    private InterfaceFilterInformation? CombineInterfaceFilterInformations(
+        IEnumerable<InterfaceFilterInformation> interfaceFilterInformations,
+        bool allPassingPartnersHaveSiteswapSelected)
     {
+        var fillerThrow = allPassingPartnersHaveSiteswapSelected ? Throw.AnySelf : Throw.Empty;
         interfaceFilterInformations = interfaceFilterInformations.ToList();
         if (interfaceFilterInformations.Any() is false)
         {
@@ -110,27 +111,27 @@ public class Juggler
         var pattern = new List<Throw>();
         for (var i = 0; i < interfaceFilterInformations.First().Pattern.Count(); i++)
         {
-            pattern.Add(interfaceFilterInformations.Any(x => x.Pattern.ToList()[i] == Throw.AnyPass) ? Throw.AnyPass : Throw.AnySelf);
+            pattern.Add(interfaceFilterInformations.Any(x => x.Pattern.ToList()[i] == Throw.AnyPass) ? Throw.AnyPass : fillerThrow);
         }
 
         return new InterfaceFilterInformation(pattern);
     }
 
-    public void UpdateFeedingFilter(IEnumerable<Juggler> others)
+    public void UpdateFeedingFilter(FeedingPattern pattern)
     {
-        this.VisibleFilter = this.CreateFilterFromFeedingKnowledge(others).ToImmutableList().AddRange(this.VisibleFilter.Where(x => x is not InterfaceFilterInformation));
+        this.VisibleFilter = this.CreateFilterFromFeedingKnowledge(pattern).ToImmutableList().AddRange(this.VisibleFilter.Where(x => x is not InterfaceFilterInformation));
     }
 
-    private IEnumerable<IFilterInformation> CreateFilterFromFeedingKnowledge(IEnumerable<Juggler> others)
+    private IEnumerable<IFilterInformation> CreateFilterFromFeedingKnowledge(FeedingPattern pattern)
     {
-        foreach (var passer in others.Where(x => x.PassesWith.Contains(this.Name)))
+        foreach (var passer in pattern.Jugglers.Where(x => x.PassesWith.Contains(this.Name)))
         {
             if (passer.SelectedSiteswap is null || passer.PassingSelection.Contains(this.Name) is false)
             {
                 continue;
             }
             
-            yield return InterfaceFilterInformation.CreateFrom(passer.SelectedSiteswap, passer.PassingSelection,this.Name, passer.Name );
+            yield return InterfaceFilterInformation.CreateFrom(passer.SelectedSiteswap, passer.PassingSelection,this.Name, passer.Name, pattern.PassingPartnerHaveSiteswapSelected(this));
         }
     }
 

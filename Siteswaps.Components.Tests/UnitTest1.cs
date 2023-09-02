@@ -43,4 +43,19 @@ public class Tests
         var jugglerB = feedingPattern.Jugglers[1];
         jugglerB.VisibleFilter.Count.Should().Be(1);
     }
+    
+    [Test]
+    public void Test4()
+    {
+        var feedingPattern = FeedingPattern.N_Feed();
+
+        var jugglerA1 = feedingPattern.Jugglers[0];
+
+        jugglerA1.SelectedSiteswap = Siteswap.CreateFromCorrect(7,5,6);
+        jugglerA1.PassingSelection = new List<string>() {"B1", "B2", ""};
+        feedingPattern.UpdateFeedingFilter();
+
+        var jugglerB1= feedingPattern.Jugglers[1];
+        jugglerB1.VisibleFilter.Count.Should().Be(1);
+    }
 }

@@ -30,7 +30,7 @@
             @foreach (var juggler in Jugglers)
             {
                 <RadzenStepsItem>
-                    <h3>@GenerateSiteswapFor(juggler)</h3>
+                    <h3>@GenerateSiteswapFor(juggler.Name)</h3>
 
                     @if (juggler.SelectedSiteswap is null)
                     {
@@ -48,9 +48,9 @@
                         <GenerateButton
                             Disabled="false"
                             OnClick="() => GenerateSiteswaps(juggler)"/>
-                        
-                        <RadzenText>Input Siteswap Directly:</RadzenText>
-                        <SiteswapInput @bind-Value="juggler.SelectedSiteswap"></SiteswapInput>
+                        @* *@
+                        @* <RadzenText>Input Siteswap Directly:</RadzenText> *@
+                        @* <SiteswapInput @bind-Value="juggler.SelectedSiteswap"></SiteswapInput> *@
                         
                     }
                     else
@@ -95,7 +95,8 @@
 @code {
     private int selectedStep;
 
-    private List<Juggler> Jugglers = new();
+    private ImmutableList<Juggler> Jugglers => Pattern.Jugglers;
+    private FeedingPattern Pattern { get; set; } = FeedingPattern.NormalFeed();
 
     private string SelectedFeed { get; set; } = "Normal";
 
@@ -109,19 +110,19 @@
 
     private void NormalFeed()
     {
-        Jugglers = FeedingPattern.NormalFeed().Jugglers.ToList();
+        Pattern = FeedingPattern.NormalFeed();
         SelectedFeed = FeedImage.Normal;
     }
 
     private void N_Feed()
     {
-        Jugglers = FeedingPattern.N_Feed().Jugglers.ToList();
+        Pattern = FeedingPattern.N_Feed();
         SelectedFeed = FeedImage.NFeed;
     }
 
     private void W_Feed()
     {
-        Jugglers = FeedingPattern.W_Feed().Jugglers.ToList();
+        Pattern = FeedingPattern.W_Feed();
         SelectedFeed = FeedImage.WFeed;
     }
 
@@ -174,7 +175,7 @@
     {
         var siteswaps = await new MultipleSiteswapGenerator(new GeneratorState()
         {
-            Filter = juggler.GenerationFilter,
+            Filter = Pattern.GetGenerationFilter(juggler),
             Period = new Period(Period ?? 5),
             NumberOfJugglers = 2,
             CreateFilterFromThrowList = true,
@@ -189,7 +190,7 @@
             {nameof(SiteswapList.Siteswaps), siteswaps.AsReadOnly()},
             {nameof(SiteswapList.NumberOfJugglers), 2},
             {nameof(SiteswapList.EasySelection), true},
-            {nameof(SiteswapList.Filter), juggler.CombineInterfaceFilterInformations()},
+            {nameof(SiteswapList.Filter), juggler.CombineInterfaceFilterInformations(Pattern.PassingPartnerHaveSiteswapSelected(juggler))},
             {
                 nameof(SiteswapList.SiteswapSelected), EventCallback.Factory.Create<Siteswap>(this, s =>
                 {
@@ -204,15 +205,9 @@
 
     private void UpdateFeedingFilter()
     {
-        foreach (var juggler in Jugglers)
-        {
-            juggler.UpdateFeedingFilter(Jugglers);
-        }
+        Pattern.UpdateFeedingFilter();
     }
 
-    private static string GenerateSiteswapFor(Juggler juggler)
-    {
-        return $"Siteswap for {juggler.Name}";
-    }
+    private static string GenerateSiteswapFor(string name) => $"Siteswap for {name}";
 
 }
