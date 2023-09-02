@@ -8,15 +8,23 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="bunit" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="NUnit"/>
         <PackageReference Include="NUnit3TestAdapter"/>
         <PackageReference Include="coverlet.collector"/>
+        <PackageReference Include="Verify.AngleSharp" />
+        <PackageReference Include="Verify.Bunit" />
+        <PackageReference Include="Verify.NUnit" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Feeding\" />
     </ItemGroup>
 
 </Project>
