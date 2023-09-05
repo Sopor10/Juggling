@@ -31,7 +31,7 @@
     <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.37.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="DotNetGraph" Version="2.7.0" />
-    <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.0" />
+    <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
     <PackageVersion Include="System.Drawing.Common" Version="7.0.0" />
     <PackageVersion Include="TextCopy" Version="6.2.1" />
     <PackageVersion Include="Z.Blazor.Diagrams" Version="2.1.6" />
