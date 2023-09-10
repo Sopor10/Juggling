@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using Generator.Components.State;
 using Generator.Generator;
+using Generator.Generator.Filter;
 
 [DebuggerDisplay("{Name} in {TimeZone}")]
 public class Juggler
@@ -143,5 +144,11 @@ public class Juggler
             siteswap = siteswap.RotateToMatchInterface(Pattern.FromThrows(pattern, 2))?? throw new ArgumentException("Siteswap is not valid at this point!");
         }
         return siteswap;
+    }
+
+    public void Rotate(int i)
+    {
+        this.SelectedSiteswap = this.SelectedSiteswap?.Rotate(i);
+        this.PassingTargets.Rotate(i);
     }
 }

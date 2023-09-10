@@ -54,7 +54,8 @@
         </tr>
     }
 </table>
-
+<RadzenButton Text="<" Click="() =>Rotate(-1)"></RadzenButton>
+<RadzenButton Text=">" Click="() =>Rotate(1)"></RadzenButton>
 @code {
 
     [Parameter] 
@@ -82,6 +83,16 @@
         var localJugglerNames = localSiteswap.RotateToLocal(juggler.PassingTargets.ToCyclicArray());
         return localJugglerNames[i];
 
+    }
+
+    private void Rotate(int i)
+    {
+        // Todo rotate all lists i times
+        foreach (var juggler in Jugglers)
+        {
+            juggler.Rotate(i);
+        }
+        StateHasChanged();
     }
 
 }

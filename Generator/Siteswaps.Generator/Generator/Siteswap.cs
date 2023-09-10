@@ -120,4 +120,9 @@ public record Siteswap
         return result.Select((x, i) => (x + i) % result.Count).Distinct().Count() == result.Count;
 
     }
+
+    public Siteswap Rotate(int i)
+    {
+        return this with {Rotation = this.Rotation + i};
+    }
 }
