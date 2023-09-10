@@ -73,10 +73,10 @@
                     @if (juggler.SelectedSiteswap is not null)
                     {
                         <InterfaceSplitting
-                            Fedees="juggler.PassesWith"
+                            Fedees="juggler.PassingPartners"
                             Siteswap="juggler.SelectedSiteswap"
-                            SelectedThrows="juggler.PassingSelection"
-                            SelectedThrowsChanged="(x) => { juggler.PassingSelection = x; UpdateFeedingFilter();}"/>
+                            SelectedThrows="juggler.PassingTargets"
+                            SelectedThrowsChanged="(x) => { juggler.PassingTargets = x; UpdateFeedingFilter();}"/>
                     }
                     else
                     {

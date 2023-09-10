@@ -85,4 +85,19 @@ public class LocalSiteswapTests
 
         localSiteswap.GetThrowType(0).Juggler.Should().Be(juggler);
     }
+
+    [Test]
+    [TestCase("86277", 0, 2, 1)]
+    [TestCase("7566", 0, 1, 2)]
+    [TestCase("7566", 1, 1, 2)]
+    [TestCase("62778", 0, 1, 2)]
+    [TestCase("62778", 1, 1, 2)]
+    [TestCase("78627", 0, 2, 2)]
+    [TestCase("78627", 1, 1, 1)]
+    public void GetClubDistributionWorks(string siteswap, int juggler, int left, int right)
+    {
+        Siteswap.TryParse(siteswap, out var localSiteswap);
+        
+        localSiteswap!.GetLocalSiteswap(juggler,2).ClubDistribution.Should().Be((left, right));
+    } 
 }

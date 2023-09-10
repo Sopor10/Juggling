@@ -37,7 +37,7 @@ public class Tests
         var jugglerA = feedingPattern.Jugglers[0];
 
         jugglerA.SelectedSiteswap = Siteswap.CreateFromCorrect(7,5,6);
-        jugglerA.PassingSelection = new List<string>() {"B1", "B2", ""};
+        jugglerA.PassingTargets = new List<string>() {"B1", "B2", ""};
         feedingPattern.UpdateFeedingFilter();
 
         var jugglerB = feedingPattern.Jugglers[1];
@@ -52,7 +52,7 @@ public class Tests
         var jugglerA1 = feedingPattern.Jugglers[0];
 
         jugglerA1.SelectedSiteswap = Siteswap.CreateFromCorrect(7,5,6);
-        jugglerA1.PassingSelection = new List<string>() {"B1", "B2", ""};
+        jugglerA1.PassingTargets = new List<string>() {"B1", "B2", ""};
         feedingPattern.UpdateFeedingFilter();
 
         var jugglerB1= feedingPattern.Jugglers[1];

@@ -16,7 +16,7 @@ public static class StateGraphFromSiteswapGenerator
         for (var i = 0; i < siteswap.Length; i++)
         {
             var rotate = cyclicArray.Rotate(i);
-            var calculateState = StateGenerator.CalculateState(rotate.EnumerateValues(1).ToArray(), length);
+            var calculateState = StateGenerator.CalculateState(rotate.EnumerateValues(1).ToArray());
             states.Add(calculateState);
             
             if (stateToSiteswap.TryGetValue(calculateState, out var values))

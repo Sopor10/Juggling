@@ -11,16 +11,16 @@ using Generator.Generator;
 [DebuggerDisplay("{Name} in {TimeZone}")]
 public class Juggler
 {
-    public Juggler(string name, int timeZone, List<string> passesWith)
+    public Juggler(string name, int timeZone, List<string> passingPartners)
     {
         this.Name = name;
         this.TimeZone = timeZone;
-        this.PassesWith = passesWith;
+        this.PassingPartners = passingPartners;
     }
 
     public string Name { get; set; }
     public int TimeZone { get; set; }
-    public List<string> PassesWith { get; }
+    public List<string> PassingPartners { get; }
     public IEnumerable<int> Clubs { get; set; } = new[] {6, 6};
     public ImmutableList<IFilterInformation> VisibleFilter { get; set; } = ImmutableList<IFilterInformation>.Empty;
 
@@ -51,14 +51,14 @@ public class Juggler
             this.selectedSiteswap = value;
             if (value is not null)
             {
-                this.PassingSelection = Enumerable.Repeat(string.Empty, value.Values.Length).ToList();
+                this.PassingTargets = Enumerable.Repeat(string.Empty, value.Values.Length).ToList();
             }
  
         }
     }
 
     public IEnumerable<Throw> Throws { get; set; } = Throw.Defaut.ToList();
-    public List<string> PassingSelection { get; set; } = new();
+    public List<string> PassingTargets { get; set; } = new();
 
     public void EditFilter(int i)
     {
@@ -124,14 +124,14 @@ public class Juggler
 
     private IEnumerable<IFilterInformation> CreateFilterFromFeedingKnowledge(FeedingPattern pattern)
     {
-        foreach (var passer in pattern.Jugglers.Where(x => x.PassesWith.Contains(this.Name)))
+        foreach (var passer in pattern.Jugglers.Where(x => x.PassingPartners.Contains(this.Name)))
         {
-            if (passer.SelectedSiteswap is null || passer.PassingSelection.Contains(this.Name) is false)
+            if (passer.SelectedSiteswap is null || passer.PassingTargets.Contains(this.Name) is false)
             {
                 continue;
             }
             
-            yield return InterfaceFilterInformation.CreateFrom(passer.SelectedSiteswap, passer.PassingSelection,this.Name, passer.Name, pattern.PassingPartnerHaveSiteswapSelected(this));
+            yield return InterfaceFilterInformation.CreateFrom(passer.SelectedSiteswap, passer.PassingTargets,this.Name, passer.Name, pattern.PassingPartnerHaveSiteswapSelected(this));
         }
     }
 

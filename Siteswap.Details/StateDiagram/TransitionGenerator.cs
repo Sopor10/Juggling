@@ -11,8 +11,8 @@ public static class TransitionGenerator
         var maxHeight = new[] { from.Items.EnumerateValues(1).Max(), to.Items.EnumerateValues(1).Max()}.Max();
         var result = new List<ImmutableList<int>>();
 
-        var fromState = StateGenerator.CalculateState(from, maxHeight);
-        var toState = StateGenerator.CalculateState(to, maxHeight);
+        var fromState = StateGenerator.CalculateState(from);
+        var toState = StateGenerator.CalculateState(to);
 
         result.AddRange(Recurse(fromState, toState, ImmutableList<int>.Empty, length, maxHeight));
 

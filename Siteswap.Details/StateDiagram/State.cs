@@ -8,6 +8,8 @@ using MoreLinq;
 
 namespace Siteswap.Details.StateDiagram;
 
+using System.Collections;
+
 /// <summary>
 /// true indicates an object is scheduled to land on this timeslot.
 /// false is therefore a free slot.
@@ -28,7 +30,28 @@ public record State(uint Value)
                     .Sum())
         {
         }
-        
+
+        public IEnumerable<bool> Positions
+        {
+            get
+            {
+                var mask = new BitArray(BitConverter.GetBytes(this.Value));
+                var foundTrue = false;
+                for (var index = mask.Count - 1; index >= 0; index--)
+                {
+                    if (mask[index])
+                    {
+                        foundTrue = true;
+                    }
+
+                    if (foundTrue)
+                    {
+                        yield return mask[index];
+                    }
+                }
+            }
+        }
+
         public static State Empty()
         {
             return new((uint)0);

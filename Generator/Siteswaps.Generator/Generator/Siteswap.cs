@@ -16,6 +16,7 @@ public record Siteswap
         this.Items = items;
     }
 
+    public int Max => this.Values.EnumerateValues(1).Max();
 
     public override string ToString()
     {

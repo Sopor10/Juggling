@@ -1,5 +1,6 @@
 ﻿namespace Siteswaps.Generator.Generator;
 
+using global::Siteswap.Details.StateDiagram;
 using Shared;
 
 public record LocalSiteswap
@@ -18,7 +19,7 @@ public record LocalSiteswap
             .Concat(Enumerable.Repeat(Hand.Left, this.NumberOfJugglers)));
     }
     
-    public string DisplayName => this.name ?? ((char)('A' + this.Juggler)).ToString();
+    public string JugglerName => this.name ?? ((char)('A' + this.Juggler)).ToString();
 
     public CyclicArray<sbyte> Values { get; }
 
@@ -55,11 +56,23 @@ public record LocalSiteswap
     public int Juggler { get; }
     public Interface Interface => Interface.From(this);
 
+    public (int Left, int Right) ClubDistribution
+    {
+        get
+        {
+            var state = StateGenerator.CalculateState(new global::Siteswap.Details.Siteswap(this.Siteswap.Values.EnumerateValues(1).Select(x => (int)x).ToArray()));
+            var positions = state.Positions.Reverse();
+            var countRight = positions.Where((_, i) => (i - this.Juggler) % 4 == 0).Count(x => x);
+            var countLeft = positions.Where((_, i) => (i + 2 - this.Juggler) % 4 == 0).Count(x => x);
+            return (countLeft, countRight);
+        }
+    }
+
     public (int Juggler, Hand Hand) GetThrowType(int position)
     {
-        var juggler = (Values[position] + Juggler) % NumberOfJugglers;
+        var juggler = (this.Values[position] + this.Juggler) % this.NumberOfJugglers;
 
-        var hand = this.handArray[Values[position] + position * NumberOfJugglers + Juggler];
+        var hand = this.handArray[this.Values[position] + position * this.NumberOfJugglers + this.Juggler];
         return (juggler, hand);
     }
 }

@@ -25,7 +25,7 @@ public class FeedingPatternTest
 
         var jugglerA = sut.Jugglers[0];
         jugglerA.SelectedSiteswap = Siteswap.CreateFromCorrect(7, 8, 6, 2, 7);
-        jugglerA.PassingSelection = new List<string> {"B1", "", "", "", "B2"};
+        jugglerA.PassingTargets = new List<string> {"B1", "", "", "", "B2"};
         sut.UpdateFeedingFilter();
 
         sut.Jugglers[1].VisibleFilter.Should().HaveCount(1);

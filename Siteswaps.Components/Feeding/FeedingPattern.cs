@@ -52,7 +52,7 @@ public record FeedingPattern(ImmutableList<Juggler> Jugglers)
     public bool PassingPartnerHaveSiteswapSelected(Juggler juggler)
     {
         return this.Jugglers
-            .Where(x => x.PassesWith.Contains(juggler.Name))
+            .Where(x => x.PassingPartners.Contains(juggler.Name))
             .All(x => x.SelectedSiteswap is not null);
     }
 

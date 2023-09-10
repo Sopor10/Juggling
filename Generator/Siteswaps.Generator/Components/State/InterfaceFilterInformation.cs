@@ -2,6 +2,8 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 
+using Siteswap = Generator.Siteswap;
+
 public record InterfaceFilterInformation(IEnumerable<Throw> Pattern, string From = "") : IFilterInformation
 {
     public FilterType FilterType => FilterType.Interface;

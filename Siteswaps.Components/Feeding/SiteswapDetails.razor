@@ -4,10 +4,15 @@
 @using Siteswaps.Generator.Generator
 
 <table>
-    @foreach (var siteswap in Siteswaps.Select(siteswap => siteswap))
+    @foreach (var (siteswap, juggler) in Intermediate)
     {
         <tr >
-            <td > @siteswap.DisplayName</td>
+            <td >
+                 @siteswap.JugglerName
+                 <sub>
+                @siteswap.ClubDistribution.Left|@siteswap.ClubDistribution.Right
+                </sub>
+            </td>
             @for (var j = 0; j < siteswap.Juggler; j++)
             {
                 <td />
@@ -24,7 +29,7 @@
                             <sub>
                                 @if (Siteswaps.Count > 2)
                                 {
-                                    @GetPassingPartner(siteswap.GetThrowType(i).Juggler)
+                                    @GetPassingPartner(juggler,siteswap, i)
                                 }
                                 ||
                             </sub>
@@ -34,7 +39,7 @@
                             <sub>
                                 @if (Siteswaps.Count > 2)
                                 {
-                                    @GetPassingPartner(siteswap.GetThrowType(i).Juggler)
+                                    @GetPassingPartner(juggler, siteswap, i)
                                 }
                                 x
                             </sub>
@@ -63,7 +68,7 @@
     private ImmutableList<LocalSiteswap> Siteswaps => Intermediate.Select(x => x.Siteswap).ToImmutableList();
 
 
-    private ImmutableList<ImmutableList<string>> PassingPartners => Intermediate.Select(x => x.Siteswap.RotateToLocal(x.Juggler.PassingSelection.ToCyclicArray()).EnumerateValues(1).ToImmutableList()).ToImmutableList();
+    private ImmutableList<ImmutableList<string>> PassingPartners => Intermediate.Select(x => x.Siteswap.RotateToLocal(x.Juggler.PassingTargets.ToCyclicArray()).EnumerateValues(1).ToImmutableList()).ToImmutableList();
 
     private int NumberOfTimeZones => Siteswaps.Select(siteswap => siteswap?.Juggler).Where(x => x is not null).Distinct().Count();
 
@@ -72,9 +77,11 @@
         return i % 2 == 0 ? Hand.Right : Hand.Left;
     }
 
-    private string GetPassingPartner(int siteswapNumber)
+    private string GetPassingPartner(Juggler juggler, LocalSiteswap localSiteswap, int i)
     {
-        return Siteswaps[siteswapNumber].DisplayName;
+        var localJugglerNames = localSiteswap.RotateToLocal(juggler.PassingTargets.ToCyclicArray());
+        return localJugglerNames[i];
+
     }
 
 }

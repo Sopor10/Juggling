@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
+      <ProjectReference Include="..\..\Siteswap.Details\Siteswap.Details.csproj" />
     </ItemGroup>
 
 </Project>
