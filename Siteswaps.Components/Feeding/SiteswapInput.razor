@@ -1,0 +1,26 @@
+﻿@page "/SiteswapInput"
+@using Siteswaps.Generator.Generator
+<RadzenTextBox Value="@(Input)" ValueChanged="ValueChangedInternal"></RadzenTextBox>
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public Siteswap? Value { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<Siteswap?> ValueChanged { get; set; }
+
+    private string Input { get; set; } = "";
+
+    
+    private void ValueChangedInternal(string obj)
+    {
+        Input = obj;
+        if (Siteswap.TryParse(Input, out var siteswap))
+        {
+            Value = siteswap;
+            ValueChanged.InvokeAsync(Value);
+        }
+    }
+}

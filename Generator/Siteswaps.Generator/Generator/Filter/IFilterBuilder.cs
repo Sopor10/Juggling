@@ -10,7 +10,8 @@ public interface IFilterBuilder
     IFilterBuilder And(ISiteswapFilter filter);
     IFilterBuilder Or(ISiteswapFilter filter);
     IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler);
-    IFilterBuilder FlexiblePattern(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern);
+    IFilterBuilder Interface(IEnumerable<int> pattern, int numberOfJuggler);
+    IFilterBuilder FlexiblePattern(Pattern pattern, int numberOfJuggler, bool isGlobalPattern);
     IFilterBuilder WithDefault();
     ISiteswapFilter Build();
 }

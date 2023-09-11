@@ -1,0 +1,213 @@
+﻿@page "/feeding"
+@using Siteswaps.Generator.Components.State
+@using System.Collections.Immutable
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@using Siteswaps.Generator.Generator
+@using SiteswapList = Siteswaps.Generator.Components.Internal.SiteswapList
+@inject DialogService DialogService
+
+<h3>Feeding Patterns</h3>
+<FeedImage FeedType="@SelectedFeed"></FeedImage>
+
+<div class="row">
+
+    <RadzenSteps @bind-SelectedIndex="selectedStep">
+        <Steps>
+            <RadzenStepsItem>
+                <h3>Select Feeding Pattern</h3>
+                <RadzenButton Text="Normal Feed" Click="NormalFeed"/>
+                <RadzenButton Text="N Feed" Click="N_Feed"/>
+                <RadzenButton Text="W Feed" Click="W_Feed"/>
+            </RadzenStepsItem>
+            <RadzenStepsItem>
+                <h3>Select Period</h3>
+                <SliderInputCard
+                    ShowClubs="false"
+                    ShowNumberOfJuggler="false"
+                    @bind-Period="Period"/>
+            </RadzenStepsItem>
+
+            @foreach (var juggler in Jugglers)
+            {
+                <RadzenStepsItem>
+                    <h3>@GenerateSiteswapFor(juggler.Name)</h3>
+
+                    @if (juggler.SelectedSiteswap is null)
+                    {
+                        <SliderInputCard
+                            ShowPeriod="false"
+                            ShowNumberOfJuggler="false"
+                            @bind-Clubs="juggler.Clubs"/>
+                        <ThrowInputCard
+                            @bind-Throws="juggler.Throws"/>
+                        <FilterInputCard
+                            Filter="juggler.VisibleFilter"
+                            OnEditFilter="async i => { await ChangeFilter(juggler, i, false); }"
+                            OnRemoveFilter="i => { juggler.VisibleFilter = juggler.VisibleFilter.RemoveAt(i); }"
+                            OnCreateNewFilter="async () => { await ChangeFilter(juggler, 0, true); }"/>
+                        <GenerateButton
+                            Disabled="false"
+                            OnClick="() => GenerateSiteswaps(juggler)"/>
+                        @* *@
+                        @* <RadzenText>Input Siteswap Directly:</RadzenText> *@
+                        @* <SiteswapInput @bind-Value="juggler.SelectedSiteswap"></SiteswapInput> *@
+                        
+                    }
+                    else
+                    {
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <RadzenText>Selected siteswap: @juggler.SelectedSiteswap</RadzenText>
+                                </div>
+                                <div class="col">
+                                    <RadzenButton Text="X" Click="() => { juggler.SelectedSiteswap = null; UpdateFeedingFilter(); }"/>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </RadzenStepsItem>
+                <RadzenStepsItem>
+                    <h3>Distribute Passes</h3>
+
+                    @if (juggler.SelectedSiteswap is not null)
+                    {
+                        <InterfaceSplitting
+                            Fedees="juggler.PassingPartners"
+                            Siteswap="juggler.SelectedSiteswap"
+                            SelectedThrows="juggler.PassingTargets"
+                            SelectedThrowsChanged="(x) => { juggler.PassingTargets = x; UpdateFeedingFilter();}"/>
+                    }
+                    else
+                    {
+                        <RadzenText>Generate a siteswap for @juggler.Name first</RadzenText>
+                    }
+                </RadzenStepsItem>
+            }
+            <RadzenStepsItem>
+                <SiteswapDetails Jugglers="Jugglers.ToImmutableList()"/>
+                
+            </RadzenStepsItem>
+        </Steps>
+    </RadzenSteps>
+</div>
+
+@code {
+    private int selectedStep;
+
+    private ImmutableList<Juggler> Jugglers => Pattern.Jugglers;
+    private FeedingPattern Pattern { get; set; } = FeedingPattern.NormalFeed();
+
+    private string SelectedFeed { get; set; } = "Normal";
+
+    private int? Period { get; set; } = 5;
+
+    protected override void OnInitialized()
+    {
+        NormalFeed();
+        base.OnInitialized();
+    }
+
+    private void NormalFeed()
+    {
+        Pattern = FeedingPattern.NormalFeed();
+        SelectedFeed = FeedImage.Normal;
+    }
+
+    private void N_Feed()
+    {
+        Pattern = FeedingPattern.N_Feed();
+        SelectedFeed = FeedImage.NFeed;
+    }
+
+    private void W_Feed()
+    {
+        Pattern = FeedingPattern.W_Feed();
+        SelectedFeed = FeedImage.WFeed;
+    }
+
+    private static DialogOptions GetDialogOptions()
+    {
+        return new DialogOptions()
+        {
+            CloseDialogOnOverlayClick = true,
+            Height = "700px",
+            Style = "mind-width: 300px"
+        };
+    }
+
+    private async Task ChangeFilter(Juggler juggler, int i, bool addNewFilter)
+    {
+        await DialogService.OpenAsync<FilterComponent>("New Pattern Filter", new Dictionary<string, object>
+        {
+            {nameof(FilterComponent.FilterNumber), i},
+            {nameof(FilterComponent.Throws), new List<Throw>()},
+            {nameof(FilterComponent.ThrowsChanged), ThrowsChanged(juggler)},
+            {nameof(FilterComponent.IsGlobalPattern), true},
+            {nameof(FilterComponent.IsGlobalPatternChanged), GlobalPatternChanged(juggler)},
+            {nameof(FilterComponent.Period), new Period(Period ?? 5)},
+            {nameof(FilterComponent.NumberOfJugglers), 2},
+            {nameof(FilterComponent.OnAddFilter), addNewFilter ? AddFilter(juggler) : EditFilter(juggler, i)}
+        }, GetDialogOptions());
+    }
+
+    private EventCallback<List<Throw>> ThrowsChanged(Juggler juggler)
+    {
+        return EventCallback.Factory.Create<List<Throw>>(this, juggler.ChangeThrows);
+    }
+
+    private EventCallback<bool> GlobalPatternChanged(Juggler juggler)
+    {
+        return EventCallback.Factory.Create<bool>(this, juggler.SetGlobalPattern);
+    }
+
+    private EventCallback EditFilter(Juggler juggler, int i)
+    {
+        return EventCallback.Factory.Create(this, () => juggler.EditFilter(i));
+    }
+
+    private EventCallback AddFilter(Juggler juggler)
+    {
+        return EventCallback.Factory.Create(this, juggler.AddFilter);
+    }
+
+    private async Task GenerateSiteswaps(Juggler juggler)
+    {
+        var siteswaps = await new MultipleSiteswapGenerator(new GeneratorState()
+        {
+            Filter = Pattern.GetGenerationFilter(juggler),
+            Period = new Period(Period ?? 5),
+            NumberOfJugglers = 2,
+            CreateFilterFromThrowList = true,
+            Objects = new Between {MinNumber = juggler.Clubs.Min(), MaxNumber = juggler.Clubs.Max()},
+            Throws = juggler.Throws.ToImmutableList(),
+            IsGenerating = false
+        }).GenerateAsync()
+            .ToListAsync();
+
+        await DialogService.OpenAsync<SiteswapList>("Select a siteswap", new Dictionary<string, object?>()
+        {
+            {nameof(SiteswapList.Siteswaps), siteswaps.AsReadOnly()},
+            {nameof(SiteswapList.NumberOfJugglers), 2},
+            {nameof(SiteswapList.EasySelection), true},
+            {nameof(SiteswapList.Filter), juggler.CombineInterfaceFilterInformations(Pattern.PassingPartnerHaveSiteswapSelected(juggler))},
+            {
+                nameof(SiteswapList.SiteswapSelected), EventCallback.Factory.Create<Siteswap>(this, s =>
+                {
+                    juggler.SelectedSiteswap = juggler.RotateCorrectly(s);
+                    DialogService.Close();
+                    selectedStep++;
+                    UpdateFeedingFilter();
+                })
+            }
+        }, GetDialogOptions());
+    }
+
+    private void UpdateFeedingFilter()
+    {
+        Pattern.UpdateFeedingFilter();
+    }
+
+    private static string GenerateSiteswapFor(string name) => $"Siteswap for {name}";
+
+}

@@ -2,13 +2,18 @@
 
 namespace Shared;
 
+using System.Diagnostics;
+
+[DebuggerDisplay("{DebugDisplay}")]
 public record CyclicArray<T> : IEnumerable<T>
 {
 
+    private string DebugDisplay => string.Join(" ", this.EnumerateValues(1).Select(x => x?.ToString()));
     public CyclicArray(IEnumerable<T> items, int rotationIndex = 0)
     {
         RotationIndex = rotationIndex;
-        Items = items.ToArray();
+        Items = new T[items.Count()];
+        Array.Copy(items.ToArray(), Items, items.Count());
     }
 
     private int RotationIndex { get; set; }
@@ -57,6 +62,6 @@ public static class CyclicArrayExtensions
 {
     public static CyclicArray<T> ToCyclicArray<T>(this IEnumerable<T> source)
     {
-        return new CyclicArray<T>(source);
+        return new CyclicArray<T>(source.ToList());
     }
 }

@@ -62,6 +62,15 @@ public class SiteswapGraphTest : VerifyBase
             .Should()
             .Be("1101");
     }
+    [Test]
+    public void Siteswap_aa550_State_Is_Correct()
+    {
+        var siteswap = new[] { 10,10,5,5,0 };
+        StateGenerator.CalculateState(siteswap)
+            .StateRepresentation()
+            .Should()
+            .Be("1111011");
+    }
 
     [Test]
     public async Task Create_Graph_For_Siteswap_531()

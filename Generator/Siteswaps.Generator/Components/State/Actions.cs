@@ -3,6 +3,8 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 
+using Siteswap = Generator.Siteswap;
+
 public record GenerateSiteswapsAction(GeneratorState State);
 public record PeriodChangedAction(Period? Value);
 public record ExactNumberChangedAction(int? Value);

@@ -11,8 +11,8 @@ public static class TransitionGenerator
         var maxHeight = new[] { from.Items.EnumerateValues(1).Max(), to.Items.EnumerateValues(1).Max()}.Max();
         var result = new List<ImmutableList<int>>();
 
-        var fromState = StateGenerator.CalculateState(from, maxHeight);
-        var toState = StateGenerator.CalculateState(to, maxHeight);
+        var fromState = StateGenerator.CalculateState(from);
+        var toState = StateGenerator.CalculateState(to);
 
         result.AddRange(Recurse(fromState, toState, ImmutableList<int>.Empty, length, maxHeight));
 
@@ -42,13 +42,5 @@ public static class TransitionGenerator
     private static StateGraph CalculateGraph(Siteswap siteswap, int? length)
     {
         return StateGraphFromSiteswapGenerator.CalculateGraph(siteswap.Items.EnumerateValues(1).ToArray(), length);
-    }
-}
-
-public record Transition(Siteswap From, Siteswap To, int[] Throws)
-{
-    public string PrettyPrint()
-    {
-        return $"{From} -> {To} : {Throws.Aggregate("", (s, i) => s + Siteswap.Transform(i))}";
     }
 }

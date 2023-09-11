@@ -14,6 +14,9 @@
                     AllowColumnPicking="true"
                     AllowMultiColumnSorting="true"
                     Responsive="false"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    RowSelect="SelectSiteswap"
+                    AllowRowSelectOnRowClick="EasySelection"
                     AllowPickAllColumns="false">
         <Columns>
             <RadzenDataGridColumn TItem="SiteswapView" Title="Passist Link" Frozen="true" Width="100px">
@@ -21,13 +24,24 @@
                     <RadzenLink Text="@data.DisplayValue" Path="@data.PassistLink" Target="_blank"/>
                 </Template>
             </RadzenDataGridColumn>
-            @foreach (var juggler in Enumerable.Range(0, NumberOfJugglers ?? 0))
+            @if (Filter is null)
             {
-                <RadzenDataGridColumn TItem="SiteswapView" Title=@string.Concat("Juggler ", (char)(juggler + 'A')) Frozen="true" Width="100px">
+                @foreach (var juggler in Enumerable.Range(0, NumberOfJugglers ?? 0))
+                {
+                    <RadzenDataGridColumn TItem="SiteswapView" Title=@string.Concat("Juggler ", (char) (juggler + 'A')) Frozen="true" Width="100px">
+                        <Template Context="data">
+                            <RadzenText Text="@data.LocalSiteswaps[juggler]"/>
+                        </Template>
+                    </RadzenDataGridColumn>
+                }
+            }
+            else
+            {
+                <RadzenDataGridColumn TItem="SiteswapView" Title="Local Siteswap" Frozen="true" Width="100px">
                     <Template Context="data">
-                        <RadzenText Text="@data.LocalSiteswaps[juggler]" />
+                        <RadzenText Text="@GetLocalSiteswap(data)"/>
                     </Template>
-                </RadzenDataGridColumn>    
+                </RadzenDataGridColumn>
             }
             <RadzenDataGridColumn TItem="SiteswapView" Property="NumberOfClubs" Title="Clubs" Frozen="true" Width="100px"/>
         </Columns>
@@ -49,15 +63,44 @@
         return $"https://passist.org/siteswap/{siteswap}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
     }
 
-    private record SiteswapView(Siteswap Value, int NumberOfJugglers)
+    private record SiteswapView(Siteswap Siteswap, int NumberOfJugglers)
     {
-        public string DisplayValue => Value.ToString();
+        public string DisplayValue => Siteswap.ToString();
 
-        public string PassistLink => $"https://passist.org/siteswap/{Value}?jugglers={NumberOfJugglers}";
+        public string PassistLink => $"https://passist.org/siteswap/{Siteswap}?jugglers={NumberOfJugglers}";
 
-        public int NumberOfClubs => Value.Average;
+        public int NumberOfClubs => Siteswap.Average;
 
-        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers)).ToList();
+        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Siteswap.GetLocalSiteswap(i, NumberOfJugglers).ToString()).ToList();
+    }
+
+    private async Task SelectSiteswap(SiteswapView obj)
+    {
+        await SiteswapSelected.InvokeAsync(obj.Siteswap);
+    }
+    
+    [Parameter]
+    public EventCallback<Siteswap> SiteswapSelected { get; set; }
+    
+    [Parameter]
+    public bool EasySelection { get; set; }
+
+    [Parameter]
+    public InterfaceFilterInformation? Filter { get; set; }
+
+    private string GetLocalSiteswap(SiteswapView value)
+    {
+        if (Filter is null)
+        {
+            return "No rotation found";
+        }
+        
+        return value.Siteswap.RotateToMatchInterface(ToPattern(Filter.Pattern))?.GetLocalSiteswap(0, 2).ToString()??"No rotation found";
+    }
+
+    private Pattern ToPattern(IEnumerable<Throw> enumerable)
+    {
+        return Pattern.FromThrows(enumerable, NumberOfJugglers ?? 2);
     }
 
 }

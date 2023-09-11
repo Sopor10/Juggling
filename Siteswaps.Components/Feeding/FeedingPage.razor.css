@@ -1,0 +1,11 @@
+﻿.row{
+    margin: 1rem;
+}
+.col{
+    margin: 1rem;
+    justify-content: center;
+}
+
+::deep ul[role=tablist]{
+    display:none;
+}

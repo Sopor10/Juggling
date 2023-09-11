@@ -1,0 +1,97 @@
+﻿@page "/SiteswapDetails"
+@using System.Collections.Immutable
+@using Shared
+@using Siteswaps.Generator.Generator
+
+<table>
+    @foreach (var (siteswap, juggler) in Intermediate)
+    {
+        <tr >
+            <td >
+                 @siteswap.JugglerName
+                 <sub>
+                @siteswap.ClubDistribution.Left|@siteswap.ClubDistribution.Right
+                </sub>
+            </td>
+            @for (var j = 0; j < siteswap.Juggler; j++)
+            {
+                <td />
+            }
+
+            @for (var i = 0; i < siteswap.Values.Length; i++)
+            {
+                <td>
+                    @siteswap.Values[i].Transform()
+                    @if (siteswap.GetThrowType(i).Juggler != siteswap.Juggler)
+                    {
+                        @if (siteswap.GetThrowType(i).Hand != CurrentHand(i))
+                        {
+                            <sub>
+                                @if (Siteswaps.Count > 2)
+                                {
+                                    @GetPassingPartner(juggler,siteswap, i)
+                                }
+                                ||
+                            </sub>
+                        }
+                        @if (siteswap.GetThrowType(i).Hand == CurrentHand(i))
+                        {
+                            <sub>
+                                @if (Siteswaps.Count > 2)
+                                {
+                                    @GetPassingPartner(juggler, siteswap, i)
+                                }
+                                x
+                            </sub>
+                        }
+                    }
+                </td>
+                @for (var j = 0; j < NumberOfTimeZones; j++)
+                {
+                    <td/>
+                }
+            }
+        </tr>
+    }
+</table>
+<RadzenButton Text="<" Click="() =>Rotate(-1)"></RadzenButton>
+<RadzenButton Text=">" Click="() =>Rotate(1)"></RadzenButton>
+@code {
+
+    [Parameter] 
+    public ImmutableList<Juggler> Jugglers { get; set; } = ImmutableList<Juggler>.Empty;
+
+    private ImmutableList<(LocalSiteswap Siteswap, Juggler Juggler)> Intermediate => Jugglers
+        .Select(x => (x.SelectedSiteswap?.GetLocalSiteswap(x.TimeZone, 2, x.Name), x))
+        .OfType<(LocalSiteswap, Juggler)>()
+        .ToImmutableList();
+
+    private ImmutableList<LocalSiteswap> Siteswaps => Intermediate.Select(x => x.Siteswap).ToImmutableList();
+
+
+    private ImmutableList<ImmutableList<string>> PassingPartners => Intermediate.Select(x => x.Siteswap.RotateToLocal(x.Juggler.PassingTargets.ToCyclicArray()).EnumerateValues(1).ToImmutableList()).ToImmutableList();
+
+    private int NumberOfTimeZones => Siteswaps.Select(siteswap => siteswap?.Juggler).Where(x => x is not null).Distinct().Count();
+
+    private Hand CurrentHand(int i)
+    {
+        return i % 2 == 0 ? Hand.Right : Hand.Left;
+    }
+
+    private string GetPassingPartner(Juggler juggler, LocalSiteswap localSiteswap, int i)
+    {
+        var localJugglerNames = localSiteswap.RotateToLocal(juggler.PassingTargets.ToCyclicArray());
+        return localJugglerNames[i];
+
+    }
+
+    private void Rotate(int i)
+    {
+        foreach (var juggler in Jugglers)
+        {
+            juggler.Rotate(i);
+        }
+        StateHasChanged();
+    }
+
+}

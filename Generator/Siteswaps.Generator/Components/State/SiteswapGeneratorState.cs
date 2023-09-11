@@ -3,6 +3,8 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 
+using Siteswap = Generator.Siteswap;
+
 [FeatureState]
 public record SiteswapGeneratorState(GeneratorState State, IReadOnlyCollection<Siteswap> Siteswaps)
 {

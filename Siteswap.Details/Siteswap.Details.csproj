@@ -2,10 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <WarningsAsErrors>nullable</WarningsAsErrors>
         <WarningLevel>9999</WarningLevel>
-        <TreatWarningsAsErrors></TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

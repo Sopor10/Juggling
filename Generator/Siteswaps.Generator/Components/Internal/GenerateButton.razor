@@ -1,15 +1,17 @@
-﻿@inherits FluxorComponent
-
-@inject IDispatcher Dispatcher
-@inject IState<SiteswapGeneratorState> State
-
-<div class="row">
+﻿<div class="row">
     <div class="col-3">
-        <button class="btn btn-primary" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(Value))">Generate</button>
+        <button class="btn btn-primary" id="generate" type="submit" disabled="@Disabled" @onclick="OnClick">Generate</button>
     </div>
 </div>
 
 @code
 {
-    private GeneratorState Value => State.Value.State;
+    [Parameter]
+    [EditorRequired]
+    public bool Disabled { get; set; }
+    
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnClick { get; set; }
 }

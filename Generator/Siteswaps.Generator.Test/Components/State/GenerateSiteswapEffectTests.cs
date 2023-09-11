@@ -7,6 +7,9 @@ using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Test.Components.State;
 
+using System.Linq;
+using Generator;
+
 [TestFixture]
 public class GenerateSiteswapEffectTests
 {
@@ -14,7 +17,7 @@ public class GenerateSiteswapEffectTests
     public async Task Should_Generate_7566()
     {
 
-        var result = await GenerateSiteswapEffect.CreateSiteswaps(new GenerateSiteswapsAction(new GeneratorState()
+        var result = await new MultipleSiteswapGenerator(new GeneratorState()
         {
             Objects = new ExactNumber{Number = 6},
             Throws = new List<Throw>{ Throw.Self , Throw.Zap, Throw.SinglePass}.ToImmutableList(),
@@ -24,7 +27,9 @@ public class GenerateSiteswapEffectTests
             NumberOfJugglers = 2,
             CreateFilterFromThrowList = true
             
-        }));
+        })
+            .GenerateAsync()
+            .ToListAsync();
         result.Should().HaveCount(1);
     }
 }

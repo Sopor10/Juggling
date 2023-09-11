@@ -44,6 +44,7 @@ internal class AndFilter : ISiteswapFilter
             NumberFilter.NumberFilter _ => 0,
             NumberOfPassesFilter _ => 0,
             RightAmountOfBallsFilter _ => 0,
+            InterfaceFilter _ => 0,
             _ => throw new ArgumentOutOfRangeException(nameof(filter))
         };
     }

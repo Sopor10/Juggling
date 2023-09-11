@@ -7,6 +7,8 @@ var summary = BenchmarkRunner.Run<GeneratorBenchmarks>();
 
 namespace Benchmark
 {
+    using Siteswap = Siteswaps.Generator.Generator.Siteswap;
+
     [HtmlExporter]
     [MemoryDiagnoser]
     public class GeneratorBenchmarks

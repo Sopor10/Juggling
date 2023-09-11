@@ -44,7 +44,7 @@
     <div class="d-flex flex-column flex-md-row">
         <div class="d-flex flex-row">
             <div>
-                <NumberInput Label="Period" Value="@Value.Period.Value" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToPeriod(x))))"/>
+                <NumberInput Label="Period" Value="@Value.Period?.Value" OnInput="@(x => Dispatcher.Dispatch(new PeriodChangedAction(ToPeriod(x))))"/>
             </div>
             <div class="ms-2 me-2">
                 <NumberInput Label="Max Throw" Value="@Value.MaxThrow" OnInput="@(x => Dispatcher.Dispatch(new MaxThrowChangedAction(ToInt(x))))"/>

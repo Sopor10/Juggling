@@ -1,0 +1,95 @@
+﻿<div style="overflow-x: auto; white-space: nowrap;">
+    <div class="row" style="flex-wrap: nowrap; width: 100%;">
+        <div>
+            <RadzenCheckBox TValue="bool" Value="IsGlobalPattern" Name="IsGlobal" Change="ChangeAction"/>
+            <RadzenLabel Text="Global" Component="IsGlobal" Style="vertical-align: middle;"/>
+        </div>
+    </div>
+
+    <div class="row" style="flex-wrap: nowrap; width: 100%; padding-left: 4px; padding-right: 4px;">
+
+        @for (var i = 0; i < Throws.Count; i++)
+        {
+            var i1 = i;
+
+            var t = Throws[i];
+            <div class="filter-dropdown" id="pattern-filter-dropdown-@(i1)">
+                <DropdownComponent
+                    SelectedThrow="@t"
+                    SelectedThrowChanged="@(x => ThrowChanged(i1, x))"/>
+            </div>
+        }
+    </div>
+    <RadzenButton id="finish-new-filter" Text=@(IsNewFilter ? "Add Filter" : "Change") Click="OnAddFilter"/>
+
+</div>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && Throws.Any() is false)
+        {
+            Throws = Enumerable.Repeat(Throw.Empty, Period.Value).ToList();
+            await ThrowsChanged.InvokeAsync(Throws);
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [Parameter]
+    public int? FilterNumber { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public List<Throw> Throws { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<Throw>> ThrowsChanged { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public Period Period { get; set; } = new Period(5);
+
+    [Parameter]
+    [EditorRequired]
+    public int NumberOfJugglers { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public bool IsGlobalPattern { get; set; } = true;
+    
+    [Parameter]
+    public EventCallback<bool> IsGlobalPatternChanged { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnAddFilter { get; set; }
+
+
+    private async Task ThrowChanged(int i, Throw t)
+    {
+        Throws[i] = t;
+        await ThrowsChanged.InvokeAsync(Throws);
+    }
+
+    private async Task ChangeAction(bool arg)
+    {
+        var currentPeriod = LocalPeriod;
+
+        IsGlobalPattern = arg;
+        await IsGlobalPatternChanged.InvokeAsync(IsGlobalPattern);
+
+        if (currentPeriod == LocalPeriod)
+        {
+            return;
+        }
+        Throws = Enumerable.Repeat(Throw.Empty, LocalPeriod.Value).ToList();
+        await ThrowsChanged.InvokeAsync(Throws);
+        StateHasChanged();
+    }
+
+    private LocalPeriod LocalPeriod => Period.GetLocalPeriod(IsGlobalPattern ? 1 : NumberOfJugglers);
+
+    private bool IsNewFilter => FilterNumber is null;
+}

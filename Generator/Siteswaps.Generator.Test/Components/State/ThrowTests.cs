@@ -5,6 +5,8 @@ using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Test.Components.State;
 
+using Generator;
+
 [TestFixture]
 public class ThrowTests
 {

@@ -1,0 +1,9 @@
+﻿{
+  Instance: {
+    Clubs: [
+      6,
+      6
+    ]
+  },
+  NodeCount: 11
+}

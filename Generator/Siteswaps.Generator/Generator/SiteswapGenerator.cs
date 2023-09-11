@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Generator;
 
-public class SiteswapGenerator
+public class SiteswapGenerator : ISiteswapGenerator
 {
     public SiteswapGenerator(ISiteswapFilter filter, SiteswapGeneratorInput input)
     {

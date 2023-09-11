@@ -1,0 +1,90 @@
+﻿@page "/interfacesplitting"
+@using Siteswaps.Generator.Generator
+@using Microsoft.Msagl.Core.Geometry
+
+@foreach (var (i,t) in Throws.Select((x, i) => (i,x)))
+{
+    <span>@(Siteswap.Values[i].Transform())</span>
+
+    <RadzenDropDown
+        AllowClear="false"
+        TValue="string"
+        Data="Fedees"
+        Value="@SelectedThrows[i]"
+        Change="args => OnChange(args, i)"
+        Multiple="false"
+        Disabled="t is PassOrSelf.Self"
+        Style="width: 100px"/>
+}
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public List<string> Fedees { get; set; } = new() {"A1", "A2"};
+
+    [Parameter]
+    [EditorRequired]
+    public Siteswap Siteswap { get; set; } = Siteswap.CreateFromCorrect(5,3,1);
+
+    private List<PassOrSelf> Throws => Siteswap.Values.ToPassOrSelf();
+
+    [Parameter]
+    [EditorRequired]
+    public List<string> SelectedThrows { get; set; } = new() {"", "", ""};
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<List<string>> SelectedThrowsChanged { get; set; }
+
+    public enum PassOrSelf
+    {
+        Pass = -3,
+        Self = -2,
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (Throws.Count != SelectedThrows.Count)
+        {
+            throw new InvalidOperationException("Throws and SelectedThrows must be the same length");
+        }
+
+        await base.SetParametersAsync(parameters);
+        await AutoSelectTrivialThings();
+        StateHasChanged();
+    }
+
+    private async Task AutoSelectTrivialThings()
+    {
+        var changed = false;
+        if (Fedees.Count == 1)
+        {
+            for (var i = 0; i < Throws.Count; i++)
+            {
+                if (Throws[i] == PassOrSelf.Pass)
+                {
+                    if (SelectedThrows[i] != Fedees[0])
+                    {
+                        changed = true;
+                    }
+
+                    SelectedThrows[i] = Fedees[0];
+                }
+            }
+        }
+        if (changed)
+        {
+            await SelectedThrowsChanged.InvokeAsync(SelectedThrows);
+        }
+    }
+
+    private void OnChange(object args, int i)
+    {
+        if (args is string s)
+        {
+            SelectedThrows[i] = s;
+            SelectedThrowsChanged.InvokeAsync(SelectedThrows);
+        }
+    }
+}

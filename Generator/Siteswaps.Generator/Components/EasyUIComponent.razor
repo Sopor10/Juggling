@@ -1,0 +1,90 @@
+﻿@using System.Collections.Immutable
+<div class="row px-3">
+
+    <ThrowInputCard
+        Throws="Throws"
+        ThrowsChanged="ThrowsChanged"/>
+
+    <SliderInputCard
+        Clubs="Clubs"
+        Period="Period"
+        NumberOfJugglers="NumberOfJugglers"
+        ClubsChanged="NumberOfClubsChanged"
+        PeriodChanged="PeriodChanged"
+        NumberOfJugglersChanged="NumberOfJugglersChanged"/>
+
+    <FilterInputCard
+        Filter="Filter"
+        OnEditFilter="EditExistingFilter"
+        OnRemoveFilter="OnRemoveFilter"
+        OnCreateNewFilter="CreateNewFilter"/>
+</div>
+
+
+<div class="row px-3">
+    <div class="col p-3">
+        <GenerateButton
+            Disabled="IsGenerating"
+            OnClick="Generate"/>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public IEnumerable<Throw> Throws { get; set; } = new List<Throw>();
+
+    [Parameter]
+    [EditorRequired]
+    public int? Period { get; set; }
+    
+    [Parameter]
+    [EditorRequired]
+    public int? NumberOfJugglers { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public ImmutableList<IFilterInformation> Filter { get; set; } = ImmutableList<IFilterInformation>.Empty;
+
+    [Parameter]
+    [EditorRequired]
+    public IEnumerable<int> Clubs { get; set; } = new[] {6, 6};
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int?> PeriodChanged { get; set; }
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int?> NumberOfJugglersChanged { get; set; }
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int> OnRemoveFilter { get; set; }
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<IEnumerable<int>> NumberOfClubsChanged { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<IEnumerable<Throw>> ThrowsChanged { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback CreateNewFilter { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int> EditExistingFilter { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public bool IsGenerating { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback Generate { get; set; }
+
+}

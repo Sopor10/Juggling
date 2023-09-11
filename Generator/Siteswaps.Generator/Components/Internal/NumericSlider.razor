@@ -1,0 +1,12 @@
+﻿<RadzenNumeric id="numeric-input-period" TValue="int?" Step="1" Min="1" Max="30" Value="Value" Change="ValueChanged" ShowUpDown="false"/>
+<RadzenSlider TValue="int?" Step="1" Min="1" Max="30" Value="Value" Change="ValueChanged" Style="width: 100%"/>
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public int? Value { get; set; }
+    
+    [Parameter]
+    public EventCallback<int?> ValueChanged { get; set; }
+}

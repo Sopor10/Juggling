@@ -4,6 +4,8 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Test;
 
+using Shared;
+
 public class SiteswapTests
 {
     [Test]
@@ -15,6 +17,21 @@ public class SiteswapTests
     [TestCase(new sbyte[]{10,10,7,5,2,2}, 1, 2, "a52")]
     public void Local_Siteswaps(sbyte[] siteswap, int juggler, int maxJugglers, string expected)
     {
-        Siteswap.CreateFromCorrect(siteswap).GetLocalSiteswap(juggler, maxJugglers).Should().Be(expected);
+        Generator.Siteswap.CreateFromCorrect(siteswap).GetLocalSiteswap(juggler, maxJugglers).ToString().Should().Be(expected);
+    }
+
+    [Test]
+    public void CanCreateInterface()
+    {
+        Generator.Siteswap.CreateFromCorrect(10,7,0,6,7).Interface.Values.EnumerateValues(1).Should().BeEquivalentTo(new[]{10,7,0,7,6});
+    }
+
+    [Test]
+    public void TestName()
+    {
+        Generator.Siteswap.TryParse("0123456789abc", out var result);
+        result.Should().NotBeNull();
+        result!.ToString().Should().Be("0123456789abc");
+        
     }
 }

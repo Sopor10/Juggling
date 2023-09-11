@@ -53,5 +53,17 @@
         await ClubsChanged.InvokeAsync(Clubs);
     }
     
-    private List<int> ToClubs(IEnumerable<int> internalValues) => new List<int> { internalValues.First(), internalValues.Last() - 1 };
+    private List<int> ToClubs(IEnumerable<int> input) => new List<int> { input.First(), input.Last() - 1 };
+    private List<int> FromClubs(IEnumerable<int> input) => new List<int> { input.First(), input.Last() + 1 };
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            InternalValues = FromClubs(Clubs);
+            StateHasChanged();
+        }
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
 }

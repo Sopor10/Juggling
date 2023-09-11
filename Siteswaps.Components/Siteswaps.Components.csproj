@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
-<!--        <WarningsAsErrors>nullable</WarningsAsErrors>-->
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
@@ -21,9 +19,12 @@
         <PackageReference Include="SkiaSharp.Views.Blazor" />
         <PackageReference Include="VisNetwork.Blazor" />
         <PackageReference Include="Z.Blazor.Diagrams" />
+        <PackageReference Include="Radzen.Blazor" />
+        
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
       <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
       <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
     </ItemGroup>
@@ -34,6 +35,10 @@
       <_ContentIncludedByDefault Remove="Generator\Filter\PatternFilter.razor" />
       <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
       <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="App_Code\" />
     </ItemGroup>
 
 </Project>

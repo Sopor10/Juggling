@@ -1,0 +1,36 @@
+﻿<div class="col p-3" style="min-width: 300px;">
+    <RadzenCard>
+        <h4>Throws</h4>
+        <RadzenListBox TValue="IEnumerable<Throw>"
+                       AllowFiltering="false"
+                       Value="@Throws"
+                       Change="ThrowsChangedInternal"
+                       Multiple="true"
+                       Data="@(AllThrows)"
+                       TextProperty="@(nameof(Throw.Name))"/>
+    </RadzenCard>
+</div>
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public IEnumerable<Throw> Throws { get; set; } = new List<Throw>();
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<IEnumerable<Throw>> ThrowsChanged { get; set; }
+
+    [Parameter]
+    public IEnumerable<Throw> AllThrows { get; set; } = Throw.All.ToList();
+
+    private void ThrowsChangedInternal(object obj)
+    {
+        if (obj is IEnumerable<Throw> newThrows)
+        {
+            Throws = newThrows;
+            ThrowsChanged.InvokeAsync(Throws);
+        }
+    }
+
+}

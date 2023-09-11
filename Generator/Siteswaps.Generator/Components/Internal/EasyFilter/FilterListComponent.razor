@@ -1,0 +1,41 @@
+@using System.Collections.Immutable
+    <div class="col p-3" style="min-width: 300px;">
+        <RadzenCard>
+            <div class="p-3">
+                <h4>Filter</h4>
+                <div class="row">
+                    <SelectedFilters 
+                        ShowHeading="false" 
+                        AllowEdit="false"
+                        Filter="Filter"
+                        OnEditFilter="OnEditFilter"
+                        OnRemoveFilter="OnRemoveFilter"
+                        />
+                </div>
+                <div class="row">
+                    <RadzenButton id="add-filter" Text="Add Filter" Click="@OnAddFilter"/>
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnAddFilter { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public ImmutableList<IFilterInformation> Filter { get; set; } = ImmutableList<IFilterInformation>.Empty;
+    
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int> OnEditFilter { get; set; }
+    
+    
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<int> OnRemoveFilter { get; set; }
+
+}

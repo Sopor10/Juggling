@@ -19,5 +19,5 @@ public class StateGraphGenerator
         return state.Transitions(maxHeight);
     }
         
-    private HashSet<State> GenerateStates(StateGraphGeneratorInput input) => new StateFactory().Create(input.NumberOfObjects, input.Period).ToHashSet();
+    private HashSet<State> GenerateStates(StateGraphGeneratorInput input) => StateGenerator.Create(input.NumberOfObjects, input.Period).ToHashSet();
 }
