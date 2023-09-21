@@ -21,7 +21,7 @@
     <PackageVersion Include="Verify" Version="21.1.5" />
     <PackageVersion Include="Verify.Nunit" Version="21.1.5" />
     <PackageVersion Include="Verify.ImageMagick" Version="3.2.2" />
-    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.5" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.6" />
     <PackageVersion Include="SkiaSharp" Version="2.88.6" />
     <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
     <PackageVersion Include="Fluxor" Version="5.9.1" />
