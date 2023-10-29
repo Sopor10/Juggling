@@ -9,7 +9,7 @@
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.9" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="7.0.13" />
-    <PackageVersion Include="morelinq" Version="3.4.2" />
+    <PackageVersion Include="morelinq" Version="4.0.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="5.9.1" />
     <PackageVersion Include="Radzen.Blazor" Version="4.19.0" />
     <PackageVersion Include="Bogus" Version="34.0.2" />
