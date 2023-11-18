@@ -38,6 +38,6 @@
     <PackageVersion Include="Svg" Version="3.4.6" />
     <PackageVersion Include="AutomaticGraphLayout" Version="1.1.12" />
     <PackageVersion Include="AutomaticGraphLayout.Drawing" Version="1.1.12" />
-    <PackageVersion Include="VisNetwork.Blazor" Version="2.0.3" />
+    <PackageVersion Include="VisNetwork.Blazor" Version="2.1.0" />
   </ItemGroup>
 </Project>
