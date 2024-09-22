@@ -51,9 +51,16 @@ public record Siteswap
     }
 
 
-    public int Average => (int)Items.Average();
+    public double Average => Items.Average();
 
     public string GetLocalSiteswap(int juggler, int numberOfJugglers)
+    {
+        List<int> result = GetLocalSiteswapReal(juggler, numberOfJugglers);
+
+        return ToString(result);
+    }
+
+    public List<int> GetLocalSiteswapReal(int juggler, int numberOfJugglers)
     {
         var result = new List<int>();
 
@@ -63,10 +70,10 @@ public record Siteswap
             result.Add(siteswap[juggler + i * (numberOfJugglers)]);
         }
 
-        return ToString(result);
+        return result;
     }
 
-    private Period Period => new(Items.Length);
+    public Period Period => new(Items.Length);
     private LocalPeriod LocalPeriod(int numberOfJugglers) => Period.GetLocalPeriod(numberOfJugglers);
     
 }
