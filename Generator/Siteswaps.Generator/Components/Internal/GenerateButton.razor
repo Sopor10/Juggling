@@ -3,11 +3,7 @@
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
 
-<div class="row">
-    <div class="col-3">
-        <button class="btn btn-primary" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(Value))">Generate</button>
-    </div>
-</div>
+<button class="btn btn-primary" id="generate" type="submit" disabled="@Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(Value))">Generate</button>
 
 @code
 {

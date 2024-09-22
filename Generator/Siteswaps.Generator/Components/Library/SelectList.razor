@@ -1,0 +1,40 @@
+﻿@typeparam TItem
+
+<!-- CustomListBox.razor -->
+<div class="custom-checkbox-list">
+    <div class="row">
+        @foreach (var item in Items)
+        {
+            <div class="col-6">
+                <div class="custom-checkbox-item">
+                    <input type="checkbox" 
+                           @onchange="@(e => OnCheckboxChange(e, item))" 
+                           checked="@SelectedItems.Contains(item)" />
+                    <label>@GetDisplayText(item)</label>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public IEnumerable<TItem> Items { get; set; } // Liste der Elemente
+    [Parameter] public IEnumerable<TItem> SelectedItems { get; set; } // Ausgewählte Elemente (ohne lokale Änderung)
+    [Parameter] public EventCallback<IEnumerable<TItem>> OnChange { get; set; } // Rückmeldung der Checkbox-Änderung
+    [Parameter] public Func<TItem, string> TextField { get; set; } // Funktion zum Abrufen des anzuzeigenden Texts
+
+    private string GetDisplayText(TItem item) => TextField?.Invoke(item) ?? item.ToString();
+
+    private void OnCheckboxChange(ChangeEventArgs e, TItem item)
+    {
+        if ((bool)e.Value == true)
+        {
+            OnChange.InvokeAsync(SelectedItems.Append(item));
+        }
+        else
+        {
+            OnChange.InvokeAsync(SelectedItems.Where(i => !i.Equals(item)).ToList());
+        }
+    }
+}
