@@ -1,0 +1,8 @@
+﻿<!-- CustomRadzenButton.razor -->
+<RadzenButton Text="@ButtonText" Click="@OnClick" id="@Id" />
+
+@code {
+    [Parameter] public string ButtonText { get; set; } = "Click";
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public string Id { get; set; } // Hier wird das id-Attribut unterstützt
+}
