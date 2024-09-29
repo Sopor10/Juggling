@@ -1,0 +1,11 @@
+﻿<RadzenNumeric id="@Id" TValue="int?" Step="@Step.ToString()" Min="@Min" Max="@Max" Value="@Value" Change="@(args => OnChange.InvokeAsync(args))" ShowUpDown="false" />
+
+@code {
+    [Parameter] public int? Value { get; set; }
+    [Parameter] public EventCallback<int?> OnChange { get; set; }
+    [Parameter] public int Step { get; set; } = 1;
+    [Parameter] public int Min { get; set; } = 0;
+    [Parameter] public int Max { get; set; } = 100;
+    [Parameter] public string Id { get; set; } = "";
+
+}

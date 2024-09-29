@@ -1,11 +1,17 @@
 ﻿@page "/RangeInput"
 <div class="col">
     <div class="row">
-        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" Style="width: 50%"/>
-        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" Style="width: 50%"/>
+        <div class="col-6 p-0">
+            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.First())" Change="MinClubsChanged" ShowUpDown="false" />
+        </div>
+        <div class="col-6 p-0">
+        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" Value="@(Clubs.Last())" Change="MaxClubsChanged" ShowUpDown="false" />
+        </div>
     </div>
-    <div class="row">
-        <RadzenSlider Range="true" Value="@InternalValues" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%"/>
+    <div class="row p-0 m-0 w-100">
+        <div class="col p-0">
+            <RadzenSlider class="p-0" Range="true" Value="@InternalValues" Change="SliderChanged" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%; padding: 0; margin: 0;"/>
+        </div>
     </div>
 </div>
 

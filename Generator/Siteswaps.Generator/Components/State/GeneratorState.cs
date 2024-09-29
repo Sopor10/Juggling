@@ -8,7 +8,7 @@ public record GeneratorState
     public bool IsExactNumber => Objects is ExactNumber;
     public int? NumberOfJugglers { get; init; } = 2;
     public Objects Objects { get; init; } = new ExactNumber();
-    public Period? Period { get; init; } = new (5);
+    public Period Period { get; init; } = new (5);
     public int? MaxThrow { get; init; } = 10;
     public int? MinThrow { get; init; } = 2;
     public bool IsGenerating { get; init; } = false;
@@ -47,8 +47,8 @@ public record Between : Objects
 
 public record Throw(string Name, int Height, string DisplayValue)
 {
-    public static Throw AnyPass => new("Any S", -3, "Any S");
-    public static Throw AnySelf => new("Any P", -2, "Any P");
+    public static Throw AnyPass => new("Any Self", -3, "S");
+    public static Throw AnySelf => new("Any Pass", -2, "P");
     public static Throw Empty => new("Empty", -1, "_");
     public static Throw EmptyHand => new("0", 0, "0");
     public static Throw Zip => new("Zip", 2, "Zip");

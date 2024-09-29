@@ -41,15 +41,15 @@ public class GenerateSiteswapsTests: E2ETestsBase
 
         await Page.Locator(".rz-chkbox-icon").First.ClickAsync();
 
-        await Page.Locator("#pattern-filter-dropdown-0 label").ClickAsync();
+        await Page.Locator("#pattern-filter-dropdown-0").ClickAsync();
 
-        await Page.GetByRole(AriaRole.Option, new() { Name = "Self" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Option, new() { Name = "Self", Exact = true}).ClickAsync();
 
-        await Page.Locator("#pattern-filter-dropdown-1 label").ClickAsync();
+        await Page.Locator("#pattern-filter-dropdown-1").ClickAsync();
 
         await Page.GetByRole(AriaRole.Option, new() { Name = "Heff" }).ClickAsync();
 
-        await Page.Locator("#pattern-filter-dropdown-2 label").ClickAsync();
+        await Page.Locator("#pattern-filter-dropdown-2").ClickAsync();
 
 
         await Page.GetByRole(AriaRole.Option, new() { Name = "Zap" }).ClickAsync();
