@@ -1,0 +1,26 @@
+﻿@page "/OrbitView"
+@using Radzen
+@using Siteswap.Details
+<h3>OrbitView</h3>
+
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenLabel Text="Siteswap"></RadzenLabel>
+    <RadzenTextBox id="test" @bind-Value="Siteswap" Name="Siteswap"></RadzenTextBox>
+</RadzenStack>
+
+<RadzenListBox TValue="Orbit">
+    <Template>
+        <span>
+            @(string.Join("", (context as Orbit).Items))
+        </span>
+    </Template>
+    
+</RadzenListBox>
+
+
+
+@code {
+    [EditorRequired, Parameter, SupplyParameterFromQuery]
+    public required string? Siteswap { get; set; }
+}
