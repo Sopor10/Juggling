@@ -21,10 +21,7 @@ public record CyclicArray<T> : IEnumerable<T>
     private ImmutableArray<T> Items { get; }
     public int Length => Items.Length;
 
-    public T this[int i]
-    {
-        get => Items[i % Items.Length];
-    }
+    public T this[int i] => Items[i % Items.Length];
 
     public IEnumerator<T> GetEnumerator()
     {

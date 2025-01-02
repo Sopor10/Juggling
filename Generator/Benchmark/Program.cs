@@ -12,7 +12,7 @@ namespace Benchmark
     public class GeneratorBenchmarks
     {
         [Benchmark]
-        public static async Task<List<Siteswap>> Generate()
+        public async Task<List<Siteswap>> Generate()
         {
             var generator = new SiteswapGeneratorFactory().Create(Input());
             return await generator.GenerateAsync().ToListAsync();

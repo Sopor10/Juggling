@@ -6,7 +6,7 @@ namespace Siteswap.Details;
 
 public class CyclicArrayEnumerator<T> : IEnumerator<T>
 {
-    public CyclicArray<T> Array { get; }
+    private CyclicArray<T> Array { get; }
     private int _position = -1;
     public CyclicArrayEnumerator(CyclicArray<T> array)
     {
@@ -15,6 +15,10 @@ public class CyclicArrayEnumerator<T> : IEnumerator<T>
     public bool MoveNext()
     {
         _position++;
+        if (_position >= 10000)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -30,6 +34,4 @@ public class CyclicArrayEnumerator<T> : IEnumerator<T>
     public void Dispose()
     {
     }
-
-    public int Length => Array.Length;
 }

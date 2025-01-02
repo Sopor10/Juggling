@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -110,4 +111,52 @@ public record Siteswap(CyclicArray<int> Items)
     public int this[int i] => Items[i];
 
     public static CyclicArray<int> ToUniqueRepresentation(int[] input) => ToUniqueRepresentation(input.ToCyclicArray());
+
+
+    public List<Orbit> GetOrbits() => GetOrbitsInternal().ToList();
+    
+    private IEnumerable<Orbit> GetOrbitsInternal()
+    {
+        var visited = new bool[Items.Length];
+        
+        for (int i = 0; i < Items.Length; i++)
+        {
+            if (visited[i])
+            {
+                continue;
+            }
+
+            var orbitIndices = new List<int>();
+            var current = i;
+            
+            // Sammle alle Indizes im aktuellen Orbit
+            do
+            {
+                visited[current] = true;
+                orbitIndices.Add(current);
+                current = (current + Items[current]) % Items.Length;
+            } while (current != i);
+
+            // Erstelle eine Orbit-Liste mit 0 als Standardwert
+            var orbitValues = new int[Items.Length];
+            for (int j = 0; j < orbitValues.Length; j++)
+            {
+                orbitValues[j] = 0;
+            }
+
+            // Setze die Werte an den Orbit-Positionen
+            foreach (var index in orbitIndices)
+            {
+                orbitValues[index] = Items[index];
+            }
+
+            yield return new Orbit(orbitValues.ToList());
+        }
+    }
+    
+}
+
+public class Orbit(List<int> items)
+{
+    public List<int> Items => items;
 }

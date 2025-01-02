@@ -21,6 +21,7 @@
         <PackageReference Include="SkiaSharp.Views.Blazor" />
         <PackageReference Include="VisNetwork.Blazor" />
         <PackageReference Include="Z.Blazor.Diagrams" />
+        <PackageReference Include="Radzen.Blazor" />
     </ItemGroup>
 
     <ItemGroup>
