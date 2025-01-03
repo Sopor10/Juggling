@@ -1,34 +1,204 @@
-﻿digraph G { 
-	111[shape=ellipse,label=111,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	1101[shape=ellipse,label=1101,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	11001[shape=ellipse,label=11001,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	1011[shape=ellipse,label=1011,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	10101[shape=ellipse,label=10101,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	10011[shape=ellipse,label=10011,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	0111[shape=ellipse,label=0111,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	01101[shape=ellipse,label=01101,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	01011[shape=ellipse,label=01011,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	00111[shape=ellipse,label=00111,fillcolor="#ADD8E6",fontcolor="#000000",style=filled]; 
-	111 -> 111[color="#000000",fontcolor="#000000",label=3,style=solid]; 
-	111 -> 1101[color="#000000",fontcolor="#000000",label=4,style=solid]; 
-	111 -> 11001[color="#000000",fontcolor="#000000",label=5,style=solid]; 
-	1101 -> 111[color="#000000",fontcolor="#000000",label=2,style=solid]; 
-	1101 -> 1011[color="#000000",fontcolor="#000000",label=4,style=solid]; 
-	1101 -> 10101[color="#000000",fontcolor="#000000",label=5,style=solid]; 
-	11001 -> 1101[color="#000000",fontcolor="#000000",label=2,style=solid]; 
-	11001 -> 1011[color="#000000",fontcolor="#000000",label=3,style=solid]; 
-	11001 -> 10011[color="#000000",fontcolor="#000000",label=5,style=solid]; 
-	1011 -> 111[color="#000000",fontcolor="#000000",label=1,style=solid]; 
-	1011 -> 0111[color="#000000",fontcolor="#000000",label=4,style=solid]; 
-	1011 -> 01101[color="#000000",fontcolor="#000000",label=5,style=solid]; 
-	10101 -> 1101[color="#000000",fontcolor="#000000",label=1,style=solid]; 
-	10101 -> 0111[color="#000000",fontcolor="#000000",label=3,style=solid]; 
-	10101 -> 01011[color="#000000",fontcolor="#000000",label=5,style=solid]; 
-	10011 -> 1011[color="#000000",fontcolor="#000000",label=1,style=solid]; 
-	10011 -> 0111[color="#000000",fontcolor="#000000",label=2,style=solid]; 
-	10011 -> 00111[color="#000000",fontcolor="#000000",label=5,style=solid]; 
-	0111 -> 111[color="#000000",fontcolor="#000000",label=0,style=solid]; 
-	01101 -> 1101[color="#000000",fontcolor="#000000",label=0,style=solid]; 
-	01011 -> 1011[color="#000000",fontcolor="#000000",label=0,style=solid]; 
-	00111 -> 0111[color="#000000",fontcolor="#000000",label=0,style=solid]; 
+﻿strict graph G {
+	111 [
+		"shape"="ellipse"
+		"label"="111"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	1101 [
+		"shape"="ellipse"
+		"label"="1101"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	11001 [
+		"shape"="ellipse"
+		"label"="11001"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	1011 [
+		"shape"="ellipse"
+		"label"="1011"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	10101 [
+		"shape"="ellipse"
+		"label"="10101"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	10011 [
+		"shape"="ellipse"
+		"label"="10011"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	0111 [
+		"shape"="ellipse"
+		"label"="0111"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	01101 [
+		"shape"="ellipse"
+		"label"="01101"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	01011 [
+		"shape"="ellipse"
+		"label"="01011"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	00111 [
+		"shape"="ellipse"
+		"label"="00111"
+		"fillcolor"="#ADD8E6"
+		"fontcolor"="#000000"
+		"style"="filled"
+	]
+	111 -- 111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="3"
+		"style"="solid"
+	]
+	111 -- 1101 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="4"
+		"style"="solid"
+	]
+	111 -- 11001 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="5"
+		"style"="solid"
+	]
+	1101 -- 111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="2"
+		"style"="solid"
+	]
+	1101 -- 1011 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="4"
+		"style"="solid"
+	]
+	1101 -- 10101 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="5"
+		"style"="solid"
+	]
+	11001 -- 1101 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="2"
+		"style"="solid"
+	]
+	11001 -- 1011 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="3"
+		"style"="solid"
+	]
+	11001 -- 10011 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="5"
+		"style"="solid"
+	]
+	1011 -- 111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="1"
+		"style"="solid"
+	]
+	1011 -- 0111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="4"
+		"style"="solid"
+	]
+	1011 -- 01101 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="5"
+		"style"="solid"
+	]
+	10101 -- 1101 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="1"
+		"style"="solid"
+	]
+	10101 -- 0111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="3"
+		"style"="solid"
+	]
+	10101 -- 01011 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="5"
+		"style"="solid"
+	]
+	10011 -- 1011 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="1"
+		"style"="solid"
+	]
+	10011 -- 0111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="2"
+		"style"="solid"
+	]
+	10011 -- 00111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="5"
+		"style"="solid"
+	]
+	0111 -- 111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="0"
+		"style"="solid"
+	]
+	01101 -- 1101 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="0"
+		"style"="solid"
+	]
+	01011 -- 1011 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="0"
+		"style"="solid"
+	]
+	00111 -- 0111 [
+		"color"="#000000"
+		"fontcolor"="#000000"
+		"label"="0"
+		"style"="solid"
+	]
 }

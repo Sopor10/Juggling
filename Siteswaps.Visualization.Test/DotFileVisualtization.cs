@@ -31,7 +31,10 @@ public static class DotgraphExtensions
     public static async Task<string> Compile(this DotGraph graph)
     {
         await using var writer = new StringWriter();
-        var context = new CompilationContext(writer, new CompilationOptions());
+        var context = new CompilationContext(writer, new CompilationOptions()
+        {
+            Indented = true,
+        });
         await graph.CompileAsync(context);
 
         var result = writer.GetStringBuilder().ToString();
