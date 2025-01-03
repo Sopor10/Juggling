@@ -1,0 +1,70 @@
+/* _content/Siteswaps.Generator/Components/EasyUI.razor.rz.scp.css */
+.input-container[b-4qcww11n0j]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 640px ;
+    min-width: 320px;
+    margin: 0 auto;
+    width: 100%;
+}
+.input-column[b-4qcww11n0j]{
+    min-width: 128px;
+}
+/* _content/Siteswaps.Generator/Components/Internal/EasyFilter/Dropdown.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Internal/EasyFilter/Filter.razor.rz.scp.css */
+.filter-dropdown[b-qfyono3jd8]{
+    padding: 2px;
+    margin-left: 8px;
+    max-width: 100px;
+}
+/* _content/Siteswaps.Generator/Components/Internal/Filter/NumberFilter.razor.rz.scp.css */
+h1[b-vxquvgd8zb] {text-align: center;}
+/* _content/Siteswaps.Generator/Components/Internal/Filter/PatternFilter.razor.rz.scp.css */
+.form-select[b-z57v01hdwe]{
+    min-width: 75px;
+}
+/* _content/Siteswaps.Generator/Components/Library/CustomButton.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Library/CustomNumeric.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Library/CustomSlider.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Library/SelectList.razor.rz.scp.css */
+.custom-checkbox-list .row[b-jgju484yht] {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.custom-checkbox-list .col-6[b-jgju484yht] {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding-bottom: 0.5rem;
+}
+
+.custom-checkbox-item[b-jgju484yht] {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.custom-checkbox-item input[type="checkbox"][b-jgju484yht] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-base-500);
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--color-base-100);
+}
+
+.custom-checkbox-item input[type="checkbox"]:checked[b-jgju484yht] {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary-dark);
+}
+
+.custom-checkbox-item label[b-jgju484yht] {
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
