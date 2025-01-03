@@ -1,9 +1,6 @@
 name: build and publish
 
 on:
-  push:
-    branches:
-      - "main"
   pull_request:
     branches:
       - "**"
@@ -24,25 +21,3 @@ jobs:
      
       - name: Test
         run: dotnet test -c Release --filter TestCategory!=E2E --no-build
-
-      - name: install playwright
-        run: |
-          pwsh Siteswaps.E2ETests/bin/Release/net9.0/playwright.ps1 install
-
-      - name: Publish Webassembly
-        run: dotnet publish Webassembly/Webassembly.csproj -o release -c Release 
-      
-      - name: Deploy to Azure
-        uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1
-        id: deployToAzure
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "release/wwwroot"
-          output_location: ''
-          skip_app_build: true
-      - name: Test
-        run: dotnet test -c Release --no-build --filter TestCategory=E2E
-        env:
-          E2E_TEST_BASEURL: ${{ steps.deployToAzure.outputs.static_web_app_url }}
