@@ -16,11 +16,11 @@
 
                     <!-- Display each juggler's siteswap values -->
                     <div class="mb-3">
-                        @foreach (var juggler in Enumerable.Range(0, NumberOfJugglers ?? 0))
+                        @foreach (var juggler in Enumerable.Range(0, NumberOfJugglers))
                         {
                         <p class="card-text">
-                            @((char)(juggler + 'A')): @data.LocalSiteswaps[juggler] 
-                                @(data.Value.Period.Value % (NumberOfJugglers * 2) != 0  ? $"({data.Value.GetLocalSiteswapReal(juggler, NumberOfJugglers.GetValueOrDefault(2)).Average():N2})" : "")
+                            @((char)(juggler + 'A')): @data.Value.GetLocalSiteswap(juggler, NumberOfJugglers).LocalNotation
+                                @(data.Value.Period.Value % NumberOfJugglers == 0  ? $"({data.Value.GetLocalSiteswap(juggler, NumberOfJugglers).Average():0.##})" : "")
                         </p>
                         }
                     </div>
@@ -43,14 +43,14 @@
     [Parameter]
     public IReadOnlyCollection<Siteswap> Siteswaps { get; set; } = new List<Siteswap>();
 
-    private IEnumerable<SiteswapView> SiteswapViews => Siteswaps.Select(x => new SiteswapView(x, NumberOfJugglers.GetValueOrDefault(2))).ToList();
+    private IEnumerable<SiteswapView> SiteswapViews => Siteswaps.Select(x => new SiteswapView(x, NumberOfJugglers)).ToList();
 
     [Parameter]
-    public int? NumberOfJugglers { get; set; } = 2;
+    public int NumberOfJugglers { get; set; } = 2;
 
     private string GenerateUrl(Siteswap siteswap)
     {
-        return $"https://passist.org/siteswap/{siteswap}?jugglers={NumberOfJugglers.GetValueOrDefault(2)}";
+        return $"https://passist.org/siteswap/{siteswap}?jugglers={NumberOfJugglers}";
     }
 
     private record SiteswapView(Siteswap Value, int NumberOfJugglers)
@@ -61,7 +61,8 @@
 
         public int NumberOfClubs => (int)Value.Average;
 
-        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers)).ToList();
+        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers).GlobalNotation).ToList();
+        
     }
 
 }
