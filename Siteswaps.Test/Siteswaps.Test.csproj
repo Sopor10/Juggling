@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -20,6 +20,10 @@
     <ItemGroup>
         <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
         <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageVersion Update="Verify.NUnit" Version="28.7.0" />
     </ItemGroup>
 
 </Project>

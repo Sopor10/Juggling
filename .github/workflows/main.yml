@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
       - name: Install workload
         run: dotnet workload install wasm-tools
       - name: Build Solution
@@ -27,7 +27,7 @@ jobs:
 
       - name: install playwright
         run: |
-          pwsh Siteswaps.E2ETests/bin/Release/net8.0/playwright.ps1 install
+          pwsh Siteswaps.E2ETests/bin/Release/net9.0/playwright.ps1 install
 
       - name: Publish Webassembly
         run: dotnet publish Webassembly/Webassembly.csproj -o release -c Release 

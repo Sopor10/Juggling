@@ -1,8 +1,5 @@
-﻿using System.Drawing;
-using DotNetGraph;
+﻿
 using DotNetGraph.Core;
-using DotNetGraph.Edge;
-using DotNetGraph.Node;
 using Siteswap.Details.StateDiagram;
 using Siteswap.Details.StateDiagram.Graph;
 
@@ -12,7 +9,11 @@ public class GraphFactory
 {
     public DotGraph Create(StateGraph graph)
     {
-        var directedGraph = new DotGraph("G", true);
+        var directedGraph = new DotGraph
+        {
+            Identifier = new("G"),
+            Strict = true
+        };
 
         foreach (var node in graph.Graph.Nodes)
         {
@@ -29,22 +30,25 @@ public class GraphFactory
 
     private IDotElement ToEdge(Edge<State,int> edge)
     {
-        return new DotEdge(ToNode(edge.N1), ToNode(edge.N2))
+        return new DotEdge
         {
-            Color = Color.Black,
-            FontColor = Color.Black,
+            From = new (edge.N1.ToString()),
+            To = new (edge.N2.ToString()),
+            Color = DotColor.Black,
+            FontColor = DotColor.Black,
             Label = edge.Data.ToString(),
             Style = DotEdgeStyle.Solid,
         };
     }
 
     private IDotElement ToNode(State node) =>
-        new DotNode(node.ToString())
+        new DotNode
         {
+            Identifier = new(node.ToString()),
             Shape = DotNodeShape.Ellipse,
             Label = node.ToString(),
-            FillColor = Color.LightBlue,
-            FontColor = Color.Black,
+            FillColor = DotColor.LightBlue,
+            FontColor = DotColor.Black,
             Style = DotNodeStyle.Filled,
         };
 }

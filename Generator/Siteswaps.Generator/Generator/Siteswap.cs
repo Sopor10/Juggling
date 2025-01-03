@@ -5,7 +5,7 @@ namespace Siteswaps.Generator.Generator;
 
 public record Siteswap
 {
-    private int[] Items { get; }
+    public int[] Items { get; }
 
     private Siteswap(int[] items)
     {
@@ -53,27 +53,58 @@ public record Siteswap
 
     public double Average => Items.Average();
 
-    public string GetLocalSiteswap(int juggler, int numberOfJugglers)
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
     {
-        List<int> result = GetLocalSiteswapReal(juggler, numberOfJugglers);
-
-        return ToString(result);
+        return new LocalSiteswap(this, juggler, numberOfJugglers);
     }
 
-    public List<int> GetLocalSiteswapReal(int juggler, int numberOfJugglers)
+    public Period Period => new(Items.Length);
+    
+}
+
+public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
+{
+    public string GlobalNotation => ToString();
+    public string LocalNotation => string.Join(" ", GetLocalSiteswapReal()
+        .Select(x => x * 1.0 / NumberOfJugglers)
+        .Select(x => x.ToString("0.##")));
+    
+    private List<int> GetLocalSiteswapReal()
     {
         var result = new List<int>();
 
-        var siteswap = Items.ToCyclicArray();
-        for (var i = 0; i < LocalPeriod(numberOfJugglers).Value; i++)
+        var siteswap = Siteswap.Items.ToCyclicArray();
+        for (var i = 0; i < Siteswap.Period.GetLocalPeriod(NumberOfJugglers).Value; i++)
         {
-            result.Add(siteswap[juggler + i * (numberOfJugglers)]);
+            result.Add(siteswap[Juggler + i * NumberOfJugglers]);
         }
 
         return result;
     }
-
-    public Period Period => new(Items.Length);
-    private LocalPeriod LocalPeriod(int numberOfJugglers) => Period.GetLocalPeriod(numberOfJugglers);
     
+    
+
+    public override string ToString()
+    {
+        return ToString(GetLocalSiteswapReal());
+    }
+
+    private string ToString(IEnumerable<int> items)
+    {
+        return string.Join("", items.Select(Transform));
+    }
+    
+    private string Transform(int i)
+    {
+        return i switch
+        {
+            < 10 => $"{i}",
+            _ => Convert.ToChar(i + 87).ToString()
+        };
+    }
+
+    public double Average()
+    {
+        return GetLocalSiteswapReal().Average() * 1.0 / NumberOfJugglers;
+    }
 }

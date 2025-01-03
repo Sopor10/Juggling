@@ -5,7 +5,7 @@
 
 @if (!_state.Value.IsGenerating)
 {
-    <SiteswapList Siteswaps="@_state.Value.Siteswaps" NumberOfJugglers="_state.Value.State.NumberOfJugglers"></SiteswapList>
+    <SiteswapList Siteswaps="@_state.Value.Siteswaps" NumberOfJugglers="@(_state.Value.State.NumberOfJugglers ?? 0)"></SiteswapList>
 }
 else
 {
