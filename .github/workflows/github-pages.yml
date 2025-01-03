@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - main
+  pull_request: 
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -34,3 +37,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: publish/wwwroot
           force_orphan: true
+          destination_dir: ${{ github.ref == 'refs/heads/main' && '/' || '/pr/' + github.ref_name }}
