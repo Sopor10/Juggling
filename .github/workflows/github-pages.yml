@@ -25,7 +25,7 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true
+        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone
 
       # Deploy the site
       - name: Deploy
