@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageVersion Update="Verify.NUnit" Version="28.7.0" />
+      <PackageVersion Update="Verify.NUnit" Version="28.7.1" />
     </ItemGroup>
 
 </Project>
