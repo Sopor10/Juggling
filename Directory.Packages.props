@@ -10,7 +10,7 @@
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
     <PackageVersion Include="morelinq" Version="4.4.0" />
-    <PackageVersion Include="Fluxor.Blazor.Web" Version="6.5.0" />
+    <PackageVersion Include="Fluxor.Blazor.Web" Version="6.5.2" />
     <PackageVersion Include="Radzen.Blazor" Version="5.7.3" />
     <PackageVersion Include="Bogus" Version="35.6.1" />
     <PackageVersion Include="FluentAssertions" Version="7.0.0" />
