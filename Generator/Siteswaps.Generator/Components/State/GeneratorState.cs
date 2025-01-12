@@ -8,7 +8,7 @@ public record GeneratorState
     public bool IsExactNumber => Objects is ExactNumber;
     public int? NumberOfJugglers { get; init; } = 2;
     public Objects Objects { get; init; } = new ExactNumber();
-    public Period Period { get; init; } = new (5);
+    public Period Period { get; init; } = new(5);
     public int? MaxThrow { get; init; } = 10;
     public int? MinThrow { get; init; } = 2;
     public bool IsGenerating { get; init; } = false;
@@ -17,11 +17,11 @@ public record GeneratorState
         new[]
             {
                 Throw.EmptyHand,
-                Throw.Zip, 
-                Throw.Zap, 
-                Throw.Self, 
-                Throw.SinglePass, 
-                Throw.Heff, 
+                Throw.Zip,
+                Throw.Zap,
+                Throw.Self,
+                Throw.SinglePass,
+                Throw.Heff,
                 Throw.DoublePass,
                 Throw.TripleSelf
             }
@@ -77,6 +77,13 @@ public record Throw(string Name, int Height, string DisplayValue)
         TriplePass
     };
 
+    public static IEnumerable<Throw> Everything => All.Concat(new List<Throw>
+    {
+        AnyPass,
+        AnySelf,
+        Empty
+    });
+
     public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
     {
         var result = new HashSet<int>();
@@ -87,7 +94,10 @@ public record Throw(string Name, int Height, string DisplayValue)
             for (var i = min * amountOfJugglers + 1; i < max * amountOfJugglers; i++)
             {
                 var item = i / 2;
-                if (item % amountOfJugglers != 0) result.Add(item);
+                if (item % amountOfJugglers != 0)
+                {
+                    result.Add(item);
+                }
             }
         }
         else
@@ -96,5 +106,10 @@ public record Throw(string Name, int Height, string DisplayValue)
         }
 
         return result;
+    }
+
+    public static Throw Parse(string s)
+    {
+        return Everything.FirstOrDefault(x => x.DisplayValue == s) ?? throw new ArgumentException("Invalid throw");
     }
 }

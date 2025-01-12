@@ -1,0 +1,54 @@
+﻿<div >
+    @foreach (var row in KeyRows)
+    {
+        <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+            @foreach (var key in row)
+            {
+                <RadzenButton Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => OnKeyPress(key)" Text="@key" Style="width: 80px;margin-top: 0.5rem;"/>
+            }
+        </RadzenRow>
+    }
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+        <RadzenButton Variant="Variant.Outlined" Size="ButtonSize.Small" Click=@(() => OnKeyPress("ArrowLeft")) Style="width: 80px;margin-top: 0.5rem;">
+            <i class="bi bi-arrow-left"></i>
+        </RadzenButton>
+        <RadzenButton Variant="Variant.Outlined" Size="ButtonSize.Small" Click=@(() => OnKeyPress("ArrowRight")) Style="width: 80px;margin-top: 0.5rem;">
+            <i class="bi bi-arrow-right"></i>
+        </RadzenButton>
+        <RadzenButton Variant="Variant.Outlined" Size="ButtonSize.Small" Click=@(() => OnKeyPress("Backspace")) Style="width: 80px;margin-top: 0.5rem;">
+            <i class="bi bi-backspace"></i>
+        </RadzenButton>
+    </RadzenRow>
+</div>
+
+@code {
+    [Parameter] public List<string> Keys { get; set; } = [];
+
+    [Parameter] public EventCallback<string> KeyPressed { get; set; }
+
+    private List<List<string>> KeyRows { get; set; } = [];
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (Keys == null || !Keys.Any())
+        {
+            KeyRows.Clear();
+            return;
+        }
+
+        var numberOfRows = 3; // Number of keys per row for responsive layout.
+        KeyRows = Keys
+            .Select((key, index) => new {key, index})
+            .GroupBy(x => x.index / numberOfRows)
+            .Select(g => g.Select(x => x.key).ToList())
+            .ToList();
+    }
+
+    private async Task OnKeyPress(string key)
+    {
+        await KeyPressed.InvokeAsync(key);
+    }
+
+}
