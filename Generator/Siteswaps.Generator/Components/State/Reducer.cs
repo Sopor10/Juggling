@@ -1,5 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Fluxor;
+using MoreLinq.Extensions;
+using Siteswaps.Generator.Components.Internal.EasyFilter;
 
 namespace Siteswaps.Generator.Components.State;
 
@@ -28,20 +30,10 @@ public static class Reducer
             State = state.State with
             {
                 Period = action.Value,
-                Filter = state.State.Filter.Where(x => x is not NewPatternFilterInformation).ToImmutableList(),
+                Filter = state.State.Filter
+                    .Where(x => x is not NewPatternFilterInformation)
+                    .ToImmutableList(),
             },
-            NewFilter = state.NewFilter switch
-            {
-                PatternFilterInformation patternFilterInformation => action.Value switch
-                {
-                    null => new NumberFilterInformation(),
-                    _ => patternFilterInformation with
-                    {
-                        Pattern = patternFilterInformation.Pattern.Take(action.Value.Value).ToImmutableArray()
-                    }
-                },
-                _ => state.NewFilter
-            }
         };
     }
 
@@ -151,7 +143,7 @@ public static class Reducer
             {
                 Filter = state.State.Filter.Add(action.Value)
             },
-            NewFilter = new NumberFilterInformation()
+            NewFilter = new NewPatternFilterInformation(Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(), true, true)
         };
     }
     
@@ -166,7 +158,8 @@ public static class Reducer
             {
                 Filter = state.State.Filter.RemoveAt(action.FilterNumber).Insert(action.FilterNumber,action.NewPatternFilterInformation)
             },
-            NewFilter = new NumberFilterInformation()
+            NewFilter = new NewPatternFilterInformation(Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(), true, true)
+
         };
     }
 
@@ -185,42 +178,6 @@ public static class Reducer
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceFilterTypeSelectionChangedAction(
-        SiteswapGeneratorState state,
-        FilterTypeSelectionChangedAction action)
-    {
-        if (state.State.Period is null) return state;
-
-        return state with
-        {
-            NewFilter = action.FilterType switch
-            {
-                FilterType.Number => new NumberFilterInformation(),
-                FilterType.Pattern => new PatternFilterInformation(Enumerable.Repeat(-1, state.State.Period.Value)
-                    .ToImmutableArray()),
-                _ => throw new ArgumentOutOfRangeException()
-            }
-        };
-    }
-
-    [ReducerMethod]
-    public static SiteswapGeneratorState ReducePatternFilterValueChangedAction(
-        SiteswapGeneratorState state,
-        PatternFilterValueChangedAction action)
-    {
-        if (state.NewFilter is PatternFilterInformation patternFilterInformation)
-            return state with
-            {
-                NewFilter = patternFilterInformation with
-                {
-                    Pattern = patternFilterInformation.Pattern.SetItem(action.Pos, action.Value)
-                }
-            };
-
-        throw new InvalidOperationException("This action should only be dispatch if we have a PatternInformation");
-    }
-
-    [ReducerMethod]
     public static SiteswapGeneratorState ReduceSetState(SiteswapGeneratorState state, SetState action)
     {
         return state with
@@ -236,7 +193,11 @@ public static class Reducer
         {
             State = state.State with
             {
-                Throws = action.Throws.ToImmutableList()
+                Throws = action.Throws.ToImmutableList(),
+                Filter = state.State.Filter
+                    .Where(x => !(x is EasyNumberFilter.NumberFilter numberFilter && (action.Throws.ToImmutableList().AddRange(Throw.AllWildCards).Contains(numberFilter.Throw) is false)))
+                    .Where(x => !(x is NewPatternFilterInformation newPatternFilterInformation && (newPatternFilterInformation.Pattern.Any(x => action.Throws.Contains(x) is false))))  
+                    .ToImmutableList(),
             }
         };
     }

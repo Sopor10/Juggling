@@ -21,4 +21,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Components\Internal\Filter\" />
+    </ItemGroup>
 </Project>

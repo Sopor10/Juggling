@@ -2,7 +2,7 @@
 
 internal abstract class NumberFilter : ISiteswapFilter
 {
-    protected NumberFilter(int number, int amount)
+    protected NumberFilter(IEnumerable<int> number, int amount)
     {
         Number = number;
         Amount = amount;
@@ -13,6 +13,6 @@ internal abstract class NumberFilter : ISiteswapFilter
     }
 
     private protected abstract bool CanFulfillNumberFilter(PartialSiteswap value);
-    protected int Number { get; }
+    protected IEnumerable<int> Number { get; }
     protected int Amount { get; }
 }

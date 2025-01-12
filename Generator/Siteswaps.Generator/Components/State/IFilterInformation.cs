@@ -2,7 +2,5 @@
 
 public interface IFilterInformation
 {
-    public FilterType FilterType { get; }
-
     string Display();
 }

@@ -7,14 +7,14 @@ internal class ExactlyXXXTimesFilter : NumberFilter
 {
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)
     {
-        if (value.Items.Count(x => x == Number) > Amount)
+        if (value.Items.Count(x => Number.Contains(x)) > Amount)
         {
             return false;
         }
-        return value.Items.Count(x => x == Number || x == -1) >= Amount;
+        return value.Items.Count(x => Number.Contains(x) || x == -1) >= Amount;
     }
 
-    public ExactlyXXXTimesFilter(int number, int amount) : base(number, amount)
+    public ExactlyXXXTimesFilter(IEnumerable<int> number, int amount) : base(number, amount)
     {
     }
 }

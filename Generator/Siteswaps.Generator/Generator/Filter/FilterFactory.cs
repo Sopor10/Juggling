@@ -18,17 +18,17 @@ internal class FilterFactory
         return new RightAmountOfBallsFilter(Input);
     }
 
-    public ISiteswapFilter MinimumOccurenceFilter(int number, int amount)
+    public ISiteswapFilter MinimumOccurenceFilter(IEnumerable<int> number, int amount)
     {
         return new AtLeastXXXTimesFilter(number, amount);
     }
 
-    public ISiteswapFilter MaximumOccurenceFilter(int number, int amount)
+    public ISiteswapFilter MaximumOccurenceFilter(IEnumerable<int> number, int amount)
     {
         return new AtMostXXXTimesFilter(number, amount);
     }
 
-    public ISiteswapFilter ExactOccurenceFilter(int number, int amount)
+    public ISiteswapFilter ExactOccurenceFilter(IEnumerable<int> number, int amount)
     {
         return new ExactlyXXXTimesFilter(number, amount);
     }

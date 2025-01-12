@@ -1,0 +1,89 @@
+﻿@page "/addFilter"
+@using System.Collections.Immutable
+<RadzenTabs @ref="tabs" TabPosition="TabPosition.Top" Change="UpdateFilter">
+    <Tabs>
+        <RadzenTabsItem Text="Pattern Filter">
+            @if (FilterInformation is NewPatternFilterInformation patternFilter)
+            {
+                <EasyPatternFilter
+                    PossibleThrows="@State.Throws.Append(Throw.Empty).Append(Throw.AnyPass).Append(Throw.AnySelf).ToImmutableList()"
+                    GlobalLength="State.Period.Value"
+                    LocalLength="State.Period.GetLocalPeriod(State.NumberOfJugglers??2).Value"
+                    @bind-Throws="patternFilter.Pattern"
+                    @bind-IsGlobalPattern="patternFilter.IsGlobalPattern"
+                    @bind-IsIncludePattern="patternFilter.IsIncludePattern"
+                    AddButtonText=@(Filter is null ? "Add Filter" : "Change")
+                    AddFilter="async x => await EditFilterFinished.InvokeAsync(x)">
+                </EasyPatternFilter>
+            }
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Number Filter">
+            <EasyNumberFilter
+                PossibleThrows="@State.Throws"
+                AddButtonText=@(Filter is null ? "Add Filter" : "Change")
+                AddFilter="async x => await EditFilterFinished.InvokeAsync(x)"
+            />
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+@code {
+
+    RadzenTabs tabs;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine($"Filter: {Filter}, vom Typ: {Filter?.GetType()}");
+            FilterInformation = Filter switch
+            {
+                NewPatternFilterInformation patternFilter => patternFilter,
+                EasyNumberFilter.NumberFilter numberFilter => numberFilter,
+                _ => new NewPatternFilterInformation(State.Throws.ToList(), true, true)
+            };
+
+            tabs.SelectedIndex = FilterInformation switch
+            {
+                NewPatternFilterInformation _ => 0,
+                EasyNumberFilter.NumberFilter _ => 1,
+                _ => 0
+            };
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    [Parameter] public EventCallback<IFilterInformation> EditFilterFinished { get; set; }
+
+    [Parameter] public GeneratorState State { get; set; }
+
+    [Parameter] public IFilterInformation? Filter { get; set; }
+
+    private IFilterInformation FilterInformation { get; set; }
+
+    private void UpdateFilter(int obj)
+    {
+        FilterInformation = obj switch
+        {
+            0 => Filter switch
+            {
+                NewPatternFilterInformation patternFilter => patternFilter,
+                _ => new NewPatternFilterInformation(State.Throws.ToList(), true, true)
+            },
+            1 => Filter switch
+            {
+                EasyNumberFilter.NumberFilter numberFilter => numberFilter,
+                _ => new EasyNumberFilter.NumberFilter
+                {
+                    Throw = Throw.Empty,
+                    Amount = 0,
+                    Type = EasyNumberFilter.NumberFilterType.Exactly
+                        
+                }
+            }
+        };
+    }
+
+}

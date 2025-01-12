@@ -1,4 +1,5 @@
 ﻿using Fluxor;
+using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
@@ -12,8 +13,6 @@ public record SiteswapGeneratorState(GeneratorState State, IReadOnlyCollection<S
     {
     }
 
-    public KnownFilterTypes KnownFilters => new();
-
-    public IFilterInformation NewFilter { get; init; } = new NumberFilterInformation();
+    public IFilterInformation? NewFilter { get; init; }
 
 }

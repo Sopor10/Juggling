@@ -25,7 +25,7 @@ public record ExactNumberOrRangeOfBallsSwitchedAction(bool Value);
 
 public record NewFilterCreatedAction(IFilterInformation Value);
 
-public record ChangedFilterAction(NewPatternFilterInformation NewPatternFilterInformation, int FilterNumber);
+public record ChangedFilterAction(IFilterInformation NewPatternFilterInformation, int FilterNumber);
 
 public record SiteswapsGeneratedAction(IReadOnlyCollection<Siteswap> Siteswaps);
 

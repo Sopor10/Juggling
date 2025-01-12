@@ -2,10 +2,10 @@
 
 internal class AtMostXXXTimesFilter : NumberFilter
 {
-    public AtMostXXXTimesFilter(int number, int amount): base(number, amount)
+    public AtMostXXXTimesFilter(IEnumerable<int> number, int amount): base(number, amount)
     {
     }
 
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value) 
-        => value.Items.Count(x => x == Number) <= Amount;
+        => value.Items.Count(x => Number.Contains(x)) <= Amount;
 }

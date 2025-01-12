@@ -2,9 +2,25 @@
 
 public interface IFilterBuilder
 {
-    IFilterBuilder MinimumOccurence(int number, int amount);
-    IFilterBuilder MaximumOccurence(int number, int amount);
-    IFilterBuilder ExactOccurence(int number, int amount);
+    IFilterBuilder MinimumOccurence(int number, int amount)
+    {
+        return MinimumOccurence([number], amount);
+    }
+
+    IFilterBuilder MaximumOccurence(int number, int amount)
+    {
+        return MaximumOccurence([number], amount);
+    }
+
+    IFilterBuilder ExactOccurence(int number, int amount)
+    {
+        return ExactOccurence([number], amount);
+    }
+    IFilterBuilder MinimumOccurence(IEnumerable<int> number, int amount);
+    IFilterBuilder MaximumOccurence(IEnumerable<int> number, int amount);
+    IFilterBuilder ExactOccurence(IEnumerable<int> number, int amount);
+
+    
     IFilterBuilder No();
     IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers);
     IFilterBuilder And(ISiteswapFilter filter);

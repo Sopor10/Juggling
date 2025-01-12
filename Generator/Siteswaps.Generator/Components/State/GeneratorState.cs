@@ -77,12 +77,14 @@ public record Throw(string Name, int Height, string DisplayValue)
         TriplePass
     };
 
-    public static IEnumerable<Throw> Everything => All.Concat(new List<Throw>
+    public static IEnumerable<Throw> Everything => All.Concat(AllWildCards);
+    
+    public static IEnumerable<Throw> AllWildCards => new List<Throw>
     {
+        Empty,
         AnyPass,
-        AnySelf,
-        Empty
-    });
+        AnySelf
+    };
 
     public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
     {

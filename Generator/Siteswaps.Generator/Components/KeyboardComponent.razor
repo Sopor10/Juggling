@@ -4,7 +4,7 @@
         <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
             @foreach (var key in row)
             {
-                <RadzenButton Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => OnKeyPress(key)" Text="@key" Style="width: 80px;margin-top: 0.5rem;"/>
+                <RadzenButton Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => OnKeyPress(key)" Text="@key" Disabled="@(EnabledKeys.Contains(key) is false)" Style="width: 80px;margin-top: 0.5rem;"/>
             }
         </RadzenRow>
     }
@@ -23,6 +23,7 @@
 
 @code {
     [Parameter] public List<string> Keys { get; set; } = [];
+    [Parameter] public List<string> EnabledKeys { get; set; } = [];
 
     [Parameter] public EventCallback<string> KeyPressed { get; set; }
 
