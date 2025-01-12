@@ -1,0 +1,75 @@
+﻿@using System.Collections.Immutable
+<div class="row">
+    <div class="col">
+        <div class="input-group">
+            <label for="numberFilterType" class="input-group-text">Type</label>
+            <select id="numberFilterType" class="form-select" @bind="@Value.Type">
+                <option value="@NumberFilterType.Exactly">Exactly</option>
+                <option value="@NumberFilterType.Maximum">Maximal</option>
+                <option value="@NumberFilterType.AtLeast">Minimal</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col">
+        <div class="input-group">
+            <span class="input-group-text" style="width: 100px">Amount</span>
+            <input type="number" id="numberFilterAmount" class="form-control" style="max-width: 75px" min="0"
+                   max="Period" @bind="@Value.Amount"/>
+        </div>
+    </div>
+    <div class="col">
+        <div class="input-group">
+            <RadzenDropDown TValue="Throw" @bind-Value="@Value.Throw" Data="PossibleThrows"
+                            TextProperty="@nameof(Throw.DisplayValue)"></RadzenDropDown>
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col"> 
+        <RadzenButton id="finish-new-filter" Text="@AddButtonText"Click="async _ => await AddFilter.InvokeAsync(Value)"/>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public ImmutableList<Throw> PossibleThrows { get; set; } = ImmutableList<Throw>.Empty;
+    
+    [Parameter]
+    public string AddButtonText { get; set; } = "Add Filter";
+    
+    [Parameter]
+    public EventCallback<NumberFilter> AddFilter { get; set; }
+    
+    private NumberFilter Value { get; } = new()
+    {
+        Amount = 0,
+        Type = NumberFilterType.Exactly,
+        Throw = Throw.Empty
+    };
+
+    public record NumberFilter : IFilterInformation
+    {
+        public required int Amount { get; set; }
+        public required NumberFilterType Type { get; set; }
+        public required Throw Throw { get; set; }
+
+        public string Display()
+        {
+            return $"{Type} {Amount} {Throw.DisplayValue}";
+        }
+    }
+
+    public enum NumberFilterType
+    {
+        Exactly,
+        Maximum,
+        AtLeast
+    }
+
+
+}

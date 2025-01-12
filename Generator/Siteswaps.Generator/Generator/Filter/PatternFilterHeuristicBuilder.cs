@@ -21,7 +21,7 @@ internal class PatternFilterHeuristicBuilder
         var result = new List<ISiteswapFilter>();
         foreach (var (key, count) in pattern.GroupBy(x => x).Where(x => x.Key >= 0).Select(x => (x.Key, x.Count())))
         {
-            result.Add(Factory.MinimumOccurenceFilter(key, count));
+            result.Add(Factory.MinimumOccurenceFilter([key], count));
         }
 
         return Factory.Combine(result);

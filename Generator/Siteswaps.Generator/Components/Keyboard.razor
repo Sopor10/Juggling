@@ -1,4 +1,5 @@
 ﻿@page "/keyboard"
+@using System.Collections.Immutable
 
 <div class="keyboard-container">
     <div class="form-control" contenteditable="true">
@@ -9,13 +10,20 @@
         }
     </div>
     <div class="flex-row justify-content-center">
-        <KeyboardComponent Keys="ThrowsAsString" KeyPressed="HandleInput"/>
+        <KeyboardComponent Keys="ThrowsAsString" KeyPressed="HandleInput" EnabledKeys="@PossibleThrows.Select(x => x.DisplayValue).ToList()" />
     </div>
 </div>
 
 @code
 {
+    
+    [Parameter]
+    public ImmutableList<Throw> PossibleThrows { get; set; } = ImmutableList<Throw>.Empty;
+    
     [Parameter] public List<Throw> Filter { get; set; } = Enumerable.Repeat(Throw.Empty, 5).ToList();
+    [Parameter]
+    public EventCallback<List<Throw>> FilterChanged { get; set; } 
+    
     private int cursorPosition { get; set; }
 
     private List<Throw> Throws { get; } = Throw.Everything.ToList();

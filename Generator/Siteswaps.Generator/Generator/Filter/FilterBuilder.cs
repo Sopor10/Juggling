@@ -14,11 +14,11 @@ internal record FilterBuilder : IFilterBuilder
             Factory = new FilterFactory(input)
         };
 
-    public IFilterBuilder MinimumOccurence(int number, int amount) => this with { Filter = Filter.Add(Factory.MinimumOccurenceFilter(number, amount)) };
+    public IFilterBuilder MinimumOccurence(IEnumerable<int> number, int amount) => this with { Filter = Filter.Add(Factory.MinimumOccurenceFilter(number, amount)) };
 
-    public IFilterBuilder MaximumOccurence(int number, int amount) => this with { Filter = Filter.Add(Factory.MaximumOccurenceFilter(number, amount)) };
+    public IFilterBuilder MaximumOccurence(IEnumerable<int> number, int amount) => this with { Filter = Filter.Add(Factory.MaximumOccurenceFilter(number, amount)) };
 
-    public IFilterBuilder ExactOccurence(int number, int amount) => this with { Filter = Filter.Add(Factory.ExactOccurenceFilter(number, amount)) };
+    public IFilterBuilder ExactOccurence(IEnumerable<int> number, int amount) => this with { Filter = Filter.Add(Factory.ExactOccurenceFilter(number, amount)) };
 
     public IFilterBuilder No() => this with { Filter = Filter.Add(Factory.NoFilter()) };
 

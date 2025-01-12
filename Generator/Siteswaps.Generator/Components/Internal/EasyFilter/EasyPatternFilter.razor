@@ -1,0 +1,80 @@
+﻿@using System.Collections.Immutable
+<div>
+    <div class="d-flex flex-row">
+        <div class="me-2">
+            <RadzenCheckBox TValue="bool" @bind-Value:get="IsGlobalPattern" Name="IsGlobal" @bind-Value:set="IsGlobalPatternChangedPrivate"/>
+            <RadzenLabel Text="Global" Component="IsGlobal" Style="vertical-align: middle;"/>
+        </div>
+        <div class="me-2">
+            <RadzenCheckBox TValue="bool" @bind-Value:get="IsIncludePattern" Name="Include" @bind-Value:set="IsIncludePatternChangedPrivate" Disabled="true" />
+            <RadzenLabel Text="Include" Component="Include" Style="vertical-align: middle;"/>
+        </div>
+    </div>
+
+    <div>
+        <Keyboard PossibleThrows="@PossibleThrows" @bind-Filter="Throws"></Keyboard>
+    </div>
+    <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, IsGlobalPattern, IsIncludePattern))"/>
+    
+</div>
+@code {
+    
+    [Parameter]
+    public ImmutableList<Throw> PossibleThrows { get; set; } = ImmutableList<Throw>.Empty;
+
+    [Parameter]
+    public List<Throw> Throws { get; set; } = Enumerable.Repeat(Throw.Empty, 5).ToList(); 
+    
+    [Parameter]
+    public EventCallback<List<Throw>> ThrowsChanged { get; set; } 
+
+    [Parameter]
+    public int GlobalLength { get; set; } = 5;
+
+    [Parameter]
+    public int LocalLength { get; set; } = 5;
+
+    private int Length => IsGlobalPattern ? GlobalLength : LocalLength;
+    
+    [Parameter]
+    public bool IsGlobalPattern { get; set; } = true;
+    
+    [Parameter]
+    public bool IsIncludePattern { get; set; } = true;
+   
+    [Parameter]
+    public EventCallback<bool> IsIncludePatternChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsGlobalPatternChanged { get; set; }
+
+    private void IsIncludePatternChangedPrivate(bool arg)
+    {
+        IsIncludePattern = arg;
+        IsIncludePatternChanged.InvokeAsync(arg);
+    }
+    
+
+    private void IsGlobalPatternChangedPrivate(bool arg)
+    {
+        IsGlobalPattern = arg;
+        IsGlobalPatternChanged.InvokeAsync(arg);
+    }
+
+    [Parameter]
+    public EventCallback<NewPatternFilterInformation> AddFilter { get; set; }
+    
+    [Parameter]
+    public string AddButtonText { get; set; } = "Add Filter";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Length != Throws.Count)
+        {
+            Throws = Enumerable.Repeat(Throw.Empty, Length).ToList();
+            await ThrowsChanged.InvokeAsync(Throws);
+        }
+        await base.OnParametersSetAsync();
+    }
+
+}

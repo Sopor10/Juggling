@@ -4,5 +4,6 @@ public enum FilterType
 {
     Number,
     Pattern,
-    NewPattern
+    NewPattern,
+    EasyNumber
 }
