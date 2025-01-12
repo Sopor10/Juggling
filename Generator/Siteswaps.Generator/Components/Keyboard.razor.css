@@ -1,0 +1,10 @@
+﻿.highlight-cursor-position{
+    border: 1px solid #fa011e;
+}
+
+.keyboard-container{
+    justify-content: center;
+    max-width: 500px;
+    padding: 0px;
+    margin: 0px;
+}

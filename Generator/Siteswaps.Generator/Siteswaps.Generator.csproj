@@ -6,7 +6,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
-
     <ItemGroup>
         <SupportedPlatform Include="browser" />
     </ItemGroup>
@@ -22,5 +21,4 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
     </ItemGroup>
-
 </Project>

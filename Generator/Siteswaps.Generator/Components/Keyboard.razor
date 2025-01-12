@@ -1,0 +1,59 @@
+﻿@page "/keyboard"
+
+<div class="keyboard-container">
+    <div class="form-control" contenteditable="true">
+        @for (var index = 0; index < Filter.Count; index++)
+        {
+            var t = Filter[index];
+            <span class="@(index == cursorPosition ? "highlight-cursor-position" : "")">@t.DisplayValue&nbsp;</span>
+        }
+    </div>
+    <div class="flex-row justify-content-center">
+        <KeyboardComponent Keys="ThrowsAsString" KeyPressed="HandleInput"/>
+    </div>
+</div>
+
+@code
+{
+    [Parameter] public List<Throw> Filter { get; set; } = Enumerable.Repeat(Throw.Empty, 5).ToList();
+    private int cursorPosition { get; set; }
+
+    private List<Throw> Throws { get; } = Throw.Everything.ToList();
+    private List<string> ThrowsAsString => Throws.Select(x => x.DisplayValue).ToList();
+
+    private void HandleInput(string obj)
+    {
+        switch (obj)
+        {
+            case "Backspace":
+                Filter[cursorPosition] = Throw.Empty;
+                break;
+            case "ArrowLeft":
+                cursorPosition = Math.Max(0, cursorPosition - 1);
+                break;
+            case "ArrowRight":
+                cursorPosition = Math.Min(Filter.Count - 1, cursorPosition + 1);
+                break;
+            default:
+                AddThrow(obj);
+                break;
+        }
+    }
+
+    private void AddThrow(string s)
+    {
+        Filter[cursorPosition] = Throw.Parse(s);
+        cursorPosition = Math.Min(Filter.Count - 1, cursorPosition + 1);
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if (cursorPosition >= Filter.Count)
+        {
+            cursorPosition = 0;
+        }
+        
+        return base.OnParametersSetAsync();
+    }
+    
+}

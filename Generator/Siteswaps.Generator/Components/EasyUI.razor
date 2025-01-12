@@ -35,8 +35,8 @@
     <div class="row mb-5 w-100">
         <div class="col">
             <h4 class="mb-3">Filter</h4>
-            <SelectedFilters ShowHeading="false" AllowEdit="false"/>
             <button class="btn btn-secondary float-end" id="add-filter" type="button"  @onclick="ShowInlineDialog">Add Filter</button>
+            <SelectedFilters ShowHeading="false" AllowEdit="false"/>
             
         </div>
     </div>
@@ -84,7 +84,7 @@
         await DialogService.OpenAsync<Filter>("New Pattern Filter", options: new DialogOptions
         {
             CloseDialogOnOverlayClick = true,
-            Height = "300px",
+            Height = "500px",
             Style = "mind-width: 300px"
         });
     }

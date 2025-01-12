@@ -13,18 +13,7 @@
     </div>
 
     <div class="row" style="flex-wrap: nowrap; width: 100%; padding-left: 4px; padding-right: 4px;">
-
-        @for (var i = 0; i < Throws.Count; i++)
-        {
-            var i1 = i;
-
-            var t = Throws[i];
-            <div class="filter-dropdown" id="pattern-filter-dropdown-@(i1)">
-                <Dropdown 
-                    SelectedThrow="@t"
-                    SelectedThrowChanged="@(x => ThrowChanged(i1, x))"/>
-            </div>
-        }
+        <Keyboard Filter="Throws"></Keyboard>
     </div>
     <RadzenButton id="finish-new-filter" Text=@(IsNewFilter?"Add Filter":"Change") Click="AddFilter"/>
     
