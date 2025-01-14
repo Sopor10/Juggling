@@ -15,7 +15,7 @@ public record SiteswapGeneratorFactory
     public SiteswapGenerator Create(SiteswapGeneratorInput input) =>
         new(
             Config
-                .Aggregate(new FilterBuilder().WithInput(input), (current, func) => func(current))
+                .Aggregate((IFilterBuilder) new FilterBuilder(input), (current, func) => func(current))
                 .WithDefault()
                 .Build(),
             input
