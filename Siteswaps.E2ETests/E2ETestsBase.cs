@@ -15,16 +15,18 @@ public abstract class E2ETestsBase : PageTest
     [SetUp]
     public void ModuleInitialize()
     {
-        BaseUrl = Environment.GetEnvironmentVariable("E2E_TEST_BASEURL")?? throw new NotSupportedException("E2E_TEST_BASEURL is not set");
+        BaseUrl =
+            Environment.GetEnvironmentVariable("E2E_TEST_BASEURL")
+            ?? throw new NotSupportedException("E2E_TEST_BASEURL is not set");
         Console.WriteLine($"Testing against: {BaseUrl}");
     }
-    
+
     [ModuleInitializer]
     public static void ModuleInitializer()
     {
         if (Debugger.IsAttached)
         {
-            Environment.SetEnvironmentVariable("HEADED","1");
-        }        
+            Environment.SetEnvironmentVariable("HEADED", "1");
+        }
     }
 }

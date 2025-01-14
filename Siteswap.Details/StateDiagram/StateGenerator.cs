@@ -15,7 +15,8 @@ public abstract class StateGenerator
             var previousState = state;
             state = siteswap.Aggregate(state, (current, value) => current.Advance().Throw(value));
 
-            if (state == previousState) stable = true;
+            if (state == previousState)
+                stable = true;
         }
 
         return state;

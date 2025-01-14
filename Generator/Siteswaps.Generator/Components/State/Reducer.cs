@@ -8,59 +8,77 @@ namespace Siteswaps.Generator.Components.State;
 public static class Reducer
 {
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(SiteswapGeneratorState state,
-        SiteswapsGeneratedAction action)
+    public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(
+        SiteswapGeneratorState state,
+        SiteswapsGeneratedAction action
+    )
     {
-        return state with { Siteswaps = action.Siteswaps, State = state.State with { IsGenerating = false } };
+        return state with
+        {
+            Siteswaps = action.Siteswaps,
+            State = state.State with { IsGenerating = false },
+        };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIsGeneratingAction(SiteswapGeneratorState state,
-        GenerateSiteswapsAction _)
+    public static SiteswapGeneratorState ReduceIsGeneratingAction(
+        SiteswapGeneratorState state,
+        GenerateSiteswapsAction _
+    )
     {
         return state with { State = state.State with { IsGenerating = true } };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIncrementPeriodChangedAction(SiteswapGeneratorState state,
-        PeriodChangedAction action)
+    public static SiteswapGeneratorState ReduceIncrementPeriodChangedAction(
+        SiteswapGeneratorState state,
+        PeriodChangedAction action
+    )
     {
         return state with
         {
             State = state.State with
             {
                 Period = action.Value,
-                Filter = state.State.Filter
-                    .Where(x => x is not NewPatternFilterInformation)
+                Filter = state
+                    .State.Filter.Where(x => x is not NewPatternFilterInformation)
                     .ToImmutableList(),
             },
         };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIncrementMinThrowChangedAction(SiteswapGeneratorState state,
-        MinThrowChangedAction action)
+    public static SiteswapGeneratorState ReduceIncrementMinThrowChangedAction(
+        SiteswapGeneratorState state,
+        MinThrowChangedAction action
+    )
     {
         return state with { State = state.State with { MinThrow = action.Value } };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIncrementMaxThrowChangedAction(SiteswapGeneratorState state,
-        MaxThrowChangedAction action)
+    public static SiteswapGeneratorState ReduceIncrementMaxThrowChangedAction(
+        SiteswapGeneratorState state,
+        MaxThrowChangedAction action
+    )
     {
         return state with { State = state.State with { MaxThrow = action.Value } };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIncrementNumberOfJugglersChangedAction(SiteswapGeneratorState state,
-        NumberOfJugglersChangedAction action)
+    public static SiteswapGeneratorState ReduceIncrementNumberOfJugglersChangedAction(
+        SiteswapGeneratorState state,
+        NumberOfJugglersChangedAction action
+    )
     {
         return state with { State = state.State with { NumberOfJugglers = action.Value } };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIncrementExactNumberChangedAction(SiteswapGeneratorState state,
-        ExactNumberChangedAction action)
+    public static SiteswapGeneratorState ReduceIncrementExactNumberChangedAction(
+        SiteswapGeneratorState state,
+        ExactNumberChangedAction action
+    )
     {
         return state with
         {
@@ -70,16 +88,17 @@ public static class Reducer
                 {
                     Between _ => new ExactNumber { Number = action.Value },
                     ExactNumber _ => new ExactNumber { Number = action.Value },
-                    _ => throw new ArgumentOutOfRangeException()
-                }
-            }
+                    _ => throw new ArgumentOutOfRangeException(),
+                },
+            },
         };
     }
 
-
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceIncrementMinNumberOfObjectsChangedAction(SiteswapGeneratorState state,
-        MinNumberChangedAction action)
+    public static SiteswapGeneratorState ReduceIncrementMinNumberOfObjectsChangedAction(
+        SiteswapGeneratorState state,
+        MinNumberChangedAction action
+    )
     {
         return state with
         {
@@ -89,16 +108,17 @@ public static class Reducer
                 {
                     Between between => between with { MinNumber = action.Value },
                     ExactNumber _ => new Between { MinNumber = action.Value },
-                    _ => throw new ArgumentOutOfRangeException()
-                }
-            }
+                    _ => throw new ArgumentOutOfRangeException(),
+                },
+            },
         };
     }
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIncrementMaxNumberOfObjectsChangedAction(
         SiteswapGeneratorState state,
-        MaxNumberChangedAction action)
+        MaxNumberChangedAction action
+    )
     {
         return state with
         {
@@ -108,16 +128,17 @@ public static class Reducer
                 {
                     Between between => between with { MaxNumber = action.Value },
                     ExactNumber _ => new Between { MaxNumber = action.Value },
-                    _ => throw new ArgumentOutOfRangeException()
-                }
-            }
+                    _ => throw new ArgumentOutOfRangeException(),
+                },
+            },
         };
     }
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIncrementExactNumberOrRangeOfBallsSwitchedAction(
         SiteswapGeneratorState state,
-        ExactNumberOrRangeOfBallsSwitchedAction action)
+        ExactNumberOrRangeOfBallsSwitchedAction action
+    )
     {
         return state with
         {
@@ -126,84 +147,116 @@ public static class Reducer
                 Objects = action.Value switch
                 {
                     true => new ExactNumber(),
-                    false => new Between()
-                }
-            }
+                    false => new Between(),
+                },
+            },
         };
     }
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceNewFilterCreatedActionAction(
         SiteswapGeneratorState state,
-        NewFilterCreatedAction action)
+        NewFilterCreatedAction action
+    )
     {
         return state with
         {
-            State = state.State with
-            {
-                Filter = state.State.Filter.Add(action.Value)
-            },
-            NewFilter = new NewPatternFilterInformation(Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(), true, true)
+            State = state.State with { Filter = state.State.Filter.Add(action.Value) },
+            NewFilter = new NewPatternFilterInformation(
+                Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(),
+                true,
+                true
+            ),
         };
     }
-    
+
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceFilterChangedActionAction(
         SiteswapGeneratorState state,
-        ChangedFilterAction action)
+        ChangedFilterAction action
+    )
     {
         return state with
         {
             State = state.State with
             {
-                Filter = state.State.Filter.RemoveAt(action.FilterNumber).Insert(action.FilterNumber,action.NewPatternFilterInformation)
+                Filter = state
+                    .State.Filter.RemoveAt(action.FilterNumber)
+                    .Insert(action.FilterNumber, action.NewPatternFilterInformation),
             },
-            NewFilter = new NewPatternFilterInformation(Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(), true, true)
-
+            NewFilter = new NewPatternFilterInformation(
+                Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(),
+                true,
+                true
+            ),
         };
     }
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceNewFilterCreatedAction(
         SiteswapGeneratorState state,
-        RemoveFilterNumber action)
+        RemoveFilterNumber action
+    )
     {
         return state with
         {
-            State = state.State with
-            {
-                Filter = state.State.Filter.RemoveAt(action.Value)
-            }
+            State = state.State with { Filter = state.State.Filter.RemoveAt(action.Value) },
         };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceSetState(SiteswapGeneratorState state, SetState action)
+    public static SiteswapGeneratorState ReduceSetState(
+        SiteswapGeneratorState state,
+        SetState action
+    )
     {
-        return state with
-        {
-            State = action.State
-        };
+        return state with { State = action.State };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceThrowsChangedAction(SiteswapGeneratorState state, ThrowsChangedAction action)
+    public static SiteswapGeneratorState ReduceThrowsChangedAction(
+        SiteswapGeneratorState state,
+        ThrowsChangedAction action
+    )
     {
         return state with
         {
             State = state.State with
             {
                 Throws = action.Throws.ToImmutableList(),
-                Filter = state.State.Filter
-                    .Where(x => !(x is EasyNumberFilter.NumberFilter numberFilter && (action.Throws.ToImmutableList().AddRange(Throw.AllWildCards).Contains(numberFilter.Throw) is false)))
-                    .Where(x => !(x is NewPatternFilterInformation newPatternFilterInformation && (newPatternFilterInformation.Pattern.Any(x => action.Throws.Contains(x) is false))))  
+                Filter = state
+                    .State.Filter.Where(x =>
+                        !(
+                            x is EasyNumberFilter.NumberFilter numberFilter
+                            && (
+                                action
+                                    .Throws.ToImmutableList()
+                                    .AddRange(Throw.AllWildCards)
+                                    .Contains(numberFilter.Throw)
+                                is false
+                            )
+                        )
+                    )
+                    .Where(x =>
+                        !(
+                            x is NewPatternFilterInformation newPatternFilterInformation
+                            && (
+                                newPatternFilterInformation.Pattern.Any(x =>
+                                    action.Throws.Contains(x) is false
+                                )
+                            )
+                        )
+                    )
                     .ToImmutableList(),
-            }
+            },
         };
     }
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceCreateFilterFromThrowList(SiteswapGeneratorState state, CreateFilterFromThrowList action)
+    public static SiteswapGeneratorState ReduceCreateFilterFromThrowList(
+        SiteswapGeneratorState state,
+        CreateFilterFromThrowList action
+    )
     {
         return state with
         {
@@ -212,11 +265,11 @@ public static class Reducer
                 CreateFilterFromThrowList = action.Value,
                 Objects = (action.Value, state.State.CreateFilterFromThrowList) switch
                 {
-                    (true, false) => new Between(){MinNumber = 6, MaxNumber = 6},
+                    (true, false) => new Between() { MinNumber = 6, MaxNumber = 6 },
                     (false, true) => new ExactNumber(),
-                    _ => state.State.Objects
-                }
-            }
+                    _ => state.State.Objects,
+                },
+            },
         };
     }
 }

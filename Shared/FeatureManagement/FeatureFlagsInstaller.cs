@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 
-
 namespace FeatureManagement;
 
 public static class FeatureFlagsInstaller

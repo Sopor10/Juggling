@@ -6,7 +6,11 @@ internal class NumberOfPassesFilter : ISiteswapFilter
     private int NumberOfJugglers { get; }
     private SiteswapGeneratorInput GeneratorInput { get; }
 
-    public NumberOfPassesFilter(int numberOfPasses, int numberOfJugglers, SiteswapGeneratorInput generatorInput)
+    public NumberOfPassesFilter(
+        int numberOfPasses,
+        int numberOfJugglers,
+        SiteswapGeneratorInput generatorInput
+    )
     {
         NumberOfPasses = numberOfPasses;
         NumberOfJugglers = numberOfJugglers;
@@ -15,7 +19,9 @@ internal class NumberOfPassesFilter : ISiteswapFilter
 
     public bool CanFulfill(PartialSiteswap value)
     {
-        var passValues = Enumerable.Range(0, GeneratorInput.MaxHeight).Where(x => x % NumberOfJugglers != 0)
+        var passValues = Enumerable
+            .Range(0, GeneratorInput.MaxHeight)
+            .Where(x => x % NumberOfJugglers != 0)
             .ToHashSet();
         var numberOfPassesSoFar = value.Items.Count(x => passValues.Contains(x));
 
@@ -26,4 +32,3 @@ internal class NumberOfPassesFilter : ISiteswapFilter
         return numberOfPassesSoFar <= NumberOfPasses;
     }
 }
-

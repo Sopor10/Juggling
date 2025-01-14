@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using Siteswap.Details.StateDiagram.Graph;
 using MoreLinq;
+using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswap.Details.StateDiagram;
 
@@ -15,78 +15,72 @@ namespace Siteswap.Details.StateDiagram;
 /// <param name="Value"></param>
 [DebuggerDisplay("{StateRepresentation()}")]
 public record State(uint Value)
-    {
-        public State(params int[] values):this(values.Select(x => x != 0))
-        {
-        }
+{
+    public State(params int[] values)
+        : this(values.Select(x => x != 0)) { }
 
-        public State(IEnumerable<bool> values) : 
-            this(
-                (uint)values.Select((b, i) => (b, i))
+    public State(IEnumerable<bool> values)
+        : this(
+            (uint)
+                values
+                    .Select((b, i) => (b, i))
                     .Where(x => x.b)
                     .Select(x => (int)Math.Pow(2, x.i))
-                    .Sum())
-        {
-        }
-        
-        public static State Empty()
-        {
-            return new((uint)0);
-        }
+                    .Sum()
+        ) { }
 
-        public static State GroundState(int numberOfBalls)
-        {
-            var mask = 0xffffffff;
-            mask >>= 32 - numberOfBalls;
-            mask <<= 0;
-            return new State(mask);
-        }
+    public static State Empty()
+    {
+        return new((uint)0);
+    }
 
-        public string StateRepresentation()
-        {
-            return string.Concat(Convert.ToString(Value, 2).Reverse().ToArray());
-        }
+    public static State GroundState(int numberOfBalls)
+    {
+        var mask = 0xffffffff;
+        mask >>= 32 - numberOfBalls;
+        mask <<= 0;
+        return new State(mask);
+    }
 
-        public override string ToString() => StateRepresentation();
+    public string StateRepresentation()
+    {
+        return string.Concat(Convert.ToString(Value, 2).Reverse().ToArray());
+    }
 
-        public State Advance()
+    public override string ToString() => StateRepresentation();
+
+    public State Advance()
+    {
+        var advance = this with { Value = Value >> 1 };
+        return advance;
+    }
+
+    public State Throw(int i)
+    {
+        var state = this with { Value = Value | (uint)(1 << (i - 1)) };
+        return state;
+    }
+
+    public IEnumerable<Edge<State, int>> Transitions(int maxHeight)
+    {
+        if (IsBitSet(Value, 0))
         {
-            var advance = this with
+            for (var i = 1; i <= maxHeight; i++)
             {
-                Value = Value >> 1
-            };
-            return advance;
-        }
-
-        public State Throw(int i)
-        {
-            var state = this with
-            {
-                Value = Value | (uint)(1 << (i - 1))
-            };
-            return state;
-        }
-        
-        public IEnumerable<Edge<State, int>> Transitions(int maxHeight)
-        {
-            if (IsBitSet(Value,0))
-            {
-                for (var i = 1; i <= maxHeight; i++)
+                if (IsBitSet(Value, i) is false)
                 {
-                    if (IsBitSet(Value,i) is false)
-                    {
-                        yield return new (this, Advance().Throw(i), i);
-                    }
+                    yield return new(this, Advance().Throw(i), i);
                 }
             }
-            else
-            {
-                yield return new (this, Advance(), 0);
-            }
         }
-        
-        private bool IsBitSet(uint b, int pos)
+        else
         {
-           return (b & (1 << pos)) != 0;
+            yield return new(this, Advance(), 0);
         }
     }
+
+    private bool IsBitSet(uint b, int pos)
+    {
+        return (b & (1 << pos)) != 0;
+    }
+}

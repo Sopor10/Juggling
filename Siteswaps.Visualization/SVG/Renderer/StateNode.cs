@@ -6,7 +6,8 @@ namespace Siteswaps.Visualization.SVG.Renderer;
 
 public class StateNode : Node
 {
-    public StateNode(string id) : base(id)
+    public StateNode(string id)
+        : base(id)
     {
         Label = new Label(id);
     }

@@ -25,7 +25,7 @@ namespace Benchmark
                 MaxHeight = 10,
                 MinHeight = 2,
                 NumberOfObjects = 5,
-                StopCriteria = new StopCriteria(TimeSpan.FromDays(5), Int32.MaxValue)
+                StopCriteria = new StopCriteria(TimeSpan.FromDays(5), Int32.MaxValue),
             };
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
 
-internal class NotFilter : ISiteswapFilter{
+internal class NotFilter : ISiteswapFilter
+{
     public NotFilter(ISiteswapFilter filter)
     {
         Filter = filter;

@@ -1,5 +1,4 @@
-﻿
-using Siteswaps.Generator.Generator;
+﻿using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 

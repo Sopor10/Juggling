@@ -16,12 +16,14 @@ public class CausalDiagramGeneratorTest
             new("R", new Person("A")),
             new("L", new Person("A")),
         }.ToImmutableList();
-        var result = sut.Generate(new Siteswap.Details.CausalDiagram.Siteswap(new[] { 4,2,3 }.ToCyclicArray()), hands.ToCyclicArray());
+        var result = sut.Generate(
+            new Siteswap.Details.CausalDiagram.Siteswap(new[] { 4, 2, 3 }.ToCyclicArray()),
+            hands.ToCyclicArray()
+        );
 
         result.Nodes.Should().HaveCount(6);
-            
     }
-    
+
     [Test]
     public void Diagram531()
     {
@@ -33,12 +35,13 @@ public class CausalDiagramGeneratorTest
             new("L", new Person("A")),
             new("L", new Person("B")),
         }.ToImmutableList();
-        var result = sut.Generate(new Siteswap.Details.CausalDiagram.Siteswap(new[] { 5,3,1 }.ToCyclicArray()), hands.ToCyclicArray());
+        var result = sut.Generate(
+            new Siteswap.Details.CausalDiagram.Siteswap(new[] { 5, 3, 1 }.ToCyclicArray()),
+            hands.ToCyclicArray()
+        );
 
         result.Nodes.Should().HaveCount(12);
 
         result.Transitions.Should().HaveCount(11);
-
     }
-
 }

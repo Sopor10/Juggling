@@ -4,7 +4,6 @@ namespace Shared;
 
 public record CyclicArray<T> : IEnumerable<T>
 {
-
     public CyclicArray(IEnumerable<T> items, int rotationIndex = 0)
     {
         RotationIndex = rotationIndex;
@@ -35,9 +34,7 @@ public record CyclicArray<T> : IEnumerable<T>
             for (var k = 0; k < Items.Length; k++)
             {
                 yield return (j * Items.Length + k, this[k]);
-
             }
-
         }
     }
 

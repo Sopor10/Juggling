@@ -5,10 +5,8 @@ namespace Siteswap.Details.StateDiagram;
 
 public class StateFactory
 {
-
     public IEnumerable<State> Create(int numberOfObjects, int maxHeight)
     {
-
         return GenerateSelections(Enumerable.Range(0, maxHeight).ToList(), numberOfObjects)
             .Select(x => FromSelection(x, maxHeight));
     }
@@ -23,8 +21,7 @@ public class StateFactory
 
         return new State(state);
     }
-        
-       
+
     private static List<List<T>> GenerateSelections<T>(IReadOnlyCollection<T> items, int n)
     {
         var inSelection = new bool[items.Count];
@@ -36,8 +33,13 @@ public class StateFactory
         return results;
     }
 
-    private static void SelectItems<T>(IReadOnlyCollection<T> items, IList<bool> inSelection,
-        ICollection<List<T>> results, int n, int firstItem)
+    private static void SelectItems<T>(
+        IReadOnlyCollection<T> items,
+        IList<bool> inSelection,
+        ICollection<List<T>> results,
+        int n,
+        int firstItem
+    )
     {
         if (n == 0)
         {
