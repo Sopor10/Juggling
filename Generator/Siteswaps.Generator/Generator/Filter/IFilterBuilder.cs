@@ -20,13 +20,16 @@ public interface IFilterBuilder
     IFilterBuilder MaximumOccurence(IEnumerable<int> number, int amount);
     IFilterBuilder ExactOccurence(IEnumerable<int> number, int amount);
 
-    
     IFilterBuilder No();
     IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers);
     IFilterBuilder And(ISiteswapFilter filter);
     IFilterBuilder Or(ISiteswapFilter filter);
     IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler);
-    IFilterBuilder FlexiblePattern(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern);
+    IFilterBuilder FlexiblePattern(
+        List<List<int>> pattern,
+        int numberOfJuggler,
+        bool isGlobalPattern
+    );
     IFilterBuilder WithDefault();
     ISiteswapFilter Build();
 }

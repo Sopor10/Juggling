@@ -4,25 +4,24 @@ namespace Siteswaps.Generator.Generator;
 
 public class PartialSiteswap
 {
-    internal PartialSiteswap(sbyte[] items, sbyte lastFilledPosition = 0)
+    internal PartialSiteswap(int[] items, int lastFilledPosition = 0)
     {
         LastFilledPosition = lastFilledPosition;
-        Interface = new CyclicArray<sbyte>(Enumerable.Repeat((sbyte)-1, items.Length));
-        Items = new sbyte[items.Length];
+        Interface = new CyclicArray<int>(Enumerable.Repeat((int)-1, items.Length));
+        Items = new int[items.Length];
 
-        for (sbyte i = 0; i < items.Length; i++)
+        for (int i = 0; i < items.Length; i++)
         {
             this[i] = items[i];
         }
     }
 
-    public sbyte[] Items { get; }
-    private CyclicArray<sbyte> Interface { get; }
+    public int[] Items { get; }
+    private CyclicArray<int> Interface { get; }
 
-    public sbyte PartialSum { get; set; }
-    
+    public int PartialSum { get; set; }
 
-    private sbyte this[sbyte i]
+    private int this[int i]
     {
         get => Items[i];
         set
@@ -32,14 +31,13 @@ public class PartialSiteswap
             {
                 return;
             }
-            
+
             if (oldValue != -1)
             {
                 Interface[i + oldValue] = -1;
                 PartialSum -= oldValue;
-
             }
-            
+
             Items[i] = value;
             if (value == -1)
             {
@@ -51,21 +49,21 @@ public class PartialSiteswap
         }
     }
 
-    public sbyte LastFilledPosition { get; private set; }
+    public int LastFilledPosition { get; private set; }
 
     public bool IsFilled() => Items[^1] != -1;
 
-    public static PartialSiteswap Standard(sbyte period, sbyte maxHeight) => new(Enumerable.Repeat((sbyte)-1, period - 1).Prepend(maxHeight).ToArray());
+    public static PartialSiteswap Standard(int period, int maxHeight) =>
+        new(Enumerable.Repeat((int)-1, period - 1).Prepend(maxHeight).ToArray());
 
-
-    public bool FillCurrentPosition(sbyte throwHeight)
+    public bool FillCurrentPosition(int throwHeight)
     {
         var oldHeight = this[LastFilledPosition];
         if (oldHeight == throwHeight)
         {
             return true;
         }
-        
+
         ResetCurrentPosition();
 
         if (Interface[LastFilledPosition + throwHeight] == -1)

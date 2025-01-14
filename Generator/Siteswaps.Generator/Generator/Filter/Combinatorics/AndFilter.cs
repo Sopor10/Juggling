@@ -4,7 +4,6 @@ namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
 
 internal class AndFilter : ISiteswapFilter
 {
-
     private List<ISiteswapFilter> Filters { get; }
 
     public AndFilter(IEnumerable<ISiteswapFilter> filters)
@@ -12,10 +11,9 @@ internal class AndFilter : ISiteswapFilter
         Filters = filters.OrderBy(Order).ToList();
     }
 
-    public AndFilter(params ISiteswapFilter?[] filter) : this(filter.WhereNotNull().AsEnumerable())
-    {
-            
-    }
+    public AndFilter(params ISiteswapFilter?[] filter)
+        : this(filter.WhereNotNull().AsEnumerable()) { }
+
     public bool CanFulfill(PartialSiteswap value)
     {
         foreach (var filter in Filters)
@@ -25,7 +23,7 @@ internal class AndFilter : ISiteswapFilter
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -44,7 +42,7 @@ internal class AndFilter : ISiteswapFilter
             NumberFilter.NumberFilter _ => 0,
             NumberOfPassesFilter _ => 0,
             RightAmountOfBallsFilter _ => 0,
-            _ => throw new ArgumentOutOfRangeException(nameof(filter))
+            _ => throw new ArgumentOutOfRangeException(nameof(filter)),
         };
     }
 }

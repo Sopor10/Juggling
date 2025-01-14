@@ -2,6 +2,7 @@
 using Siteswap.Details;
 using Siteswap.Details.CausalDiagram;
 using SkiaSharp;
+
 namespace Siteswaps.Test.CausalDiagram;
 
 public static class ModuleInitializer
@@ -15,8 +16,6 @@ public static class ModuleInitializer
     }
 }
 
-
-
 [TestFixture]
 public class CausalDiagramRendererTests
 {
@@ -27,12 +26,14 @@ public class CausalDiagramRendererTests
     {
         File.Delete(_path);
     }
-    
+
     [Test]
     public async Task Render_531_CausalDiagram()
     {
-        var causalDiagram = new CausalDiagramGenerator()
-            .Generate(new Siteswap.Details.CausalDiagram.Siteswap(5, 3, 1), HandsFor4HandedSiteswap());
+        var causalDiagram = new CausalDiagramGenerator().Generate(
+            new Siteswap.Details.CausalDiagram.Siteswap(5, 3, 1),
+            HandsFor4HandedSiteswap()
+        );
 
         var bitmap = RenderToBitmap(causalDiagram);
         await SaveToFile(_path, bitmap);
@@ -45,10 +46,13 @@ public class CausalDiagramRendererTests
             new Hand("R", new Person("A")),
             new Hand("R", new Person("B")),
             new Hand("L", new Person("A")),
-            new Hand("L", new Person("B")));
+            new Hand("L", new Person("B"))
+        );
     }
 
-    private static SKBitmap RenderToBitmap(Siteswap.Details.CausalDiagram.CausalDiagram causalDiagram)
+    private static SKBitmap RenderToBitmap(
+        Siteswap.Details.CausalDiagram.CausalDiagram causalDiagram
+    )
     {
         var bitmap = new SKBitmap(500, 500);
         using var canvas = new SKCanvas(bitmap);

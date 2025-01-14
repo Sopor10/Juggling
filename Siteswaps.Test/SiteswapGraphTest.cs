@@ -9,18 +9,15 @@ namespace Siteswaps.Test;
 
 public class SiteswapGraphTest : VerifyBase
 {
-    public SiteswapGraphTest() : base()
-    {
-    }
+    public SiteswapGraphTest()
+        : base() { }
 
     [Test]
     public void Advance_State_Forward()
     {
         var state = State.GroundState(3);
 
-        state.Advance()
-            .Should()
-            .Be(State.GroundState(2));
+        state.Advance().Should().Be(State.GroundState(2));
     }
 
     [Test]
@@ -28,9 +25,7 @@ public class SiteswapGraphTest : VerifyBase
     {
         var state = State.GroundState(3);
 
-        state.StateRepresentation()
-            .Should()
-            .Be("111");
+        state.StateRepresentation().Should().Be("111");
     }
 
     [Test]
@@ -38,47 +33,37 @@ public class SiteswapGraphTest : VerifyBase
     {
         var state = State.GroundState(3);
 
-        state.Throw(4)
-            .Should()
-            .Be(State.GroundState(4));
+        state.Throw(4).Should().Be(State.GroundState(4));
     }
 
     [Test]
     public void Siteswap_531_Is_Ground_State()
     {
         var siteswap = new[] { 5, 3, 1 };
-        StateGenerator.CalculateState(siteswap)
-            .Should()
-            .Be(State.GroundState(3));
+        StateGenerator.CalculateState(siteswap).Should().Be(State.GroundState(3));
     }
-
 
     [Test]
     public void Siteswap_414_State_Is_Correct()
     {
         var siteswap = new[] { 4, 1, 4 };
-        StateGenerator.CalculateState(siteswap)
-            .StateRepresentation()
-            .Should()
-            .Be("1101");
+        StateGenerator.CalculateState(siteswap).StateRepresentation().Should().Be("1101");
     }
 
     [Test]
     public async Task Create_Graph_For_Siteswap_531()
     {
         var siteswap = new[] { 5, 3, 1 };
-        await Verify(StateGraphFromSiteswapGenerator.CalculateGraph(siteswap).Graph).AddExtraSettings(_ =>
+        await Verify(StateGraphFromSiteswapGenerator.CalculateGraph(siteswap).Graph)
+            .AddExtraSettings(_ =>
             {
                 _.Converters.Add(new StateConverter());
                 _.Converters.Add(new EdgeConverter());
-            }
-        );
+            });
     }
-
 }
 
-public class StateConverter :
-    WriteOnlyJsonConverter<State>
+public class StateConverter : WriteOnlyJsonConverter<State>
 {
     public override void Write(VerifyJsonWriter writer, State state)
     {
@@ -86,11 +71,12 @@ public class StateConverter :
     }
 }
 
-public class EdgeConverter :
-    WriteOnlyJsonConverter<Edge<State, int>>
+public class EdgeConverter : WriteOnlyJsonConverter<Edge<State, int>>
 {
     public override void Write(VerifyJsonWriter writer, Edge<State, int> edge)
     {
-        writer.WriteValue(edge.N1.StateRepresentation() + " -" + edge.Data + "-> " + edge.N2.StateRepresentation());
+        writer.WriteValue(
+            edge.N1.StateRepresentation() + " -" + edge.Data + "-> " + edge.N2.StateRepresentation()
+        );
     }
 }

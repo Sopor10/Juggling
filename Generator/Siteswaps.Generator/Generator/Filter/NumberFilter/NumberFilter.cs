@@ -7,6 +7,7 @@ internal abstract class NumberFilter : ISiteswapFilter
         Number = number;
         Amount = amount;
     }
+
     public bool CanFulfill(PartialSiteswap value)
     {
         return CanFulfillNumberFilter(value);

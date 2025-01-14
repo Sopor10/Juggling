@@ -11,7 +11,7 @@ public class StateGraph
         Graph = graph;
         SiteswapInState = new();
     }
-    
+
     public StateGraph(Graph<State, int> graph, Dictionary<State, List<Siteswap>> siteswapInState)
     {
         Graph = graph;
@@ -22,7 +22,9 @@ public class StateGraph
 
     public Dictionary<State, List<Siteswap>> SiteswapInState { get; }
 
-    public StateGraph Combine(StateGraph other) => new(Graph.Combine(other.Graph), SiteswapInState.Union(other.SiteswapInState).ToDictionary(x => x.Key, x => x.Value));
-    
-    
+    public StateGraph Combine(StateGraph other) =>
+        new(
+            Graph.Combine(other.Graph),
+            SiteswapInState.Union(other.SiteswapInState).ToDictionary(x => x.Key, x => x.Value)
+        );
 }

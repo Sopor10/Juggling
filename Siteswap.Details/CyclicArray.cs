@@ -7,7 +7,6 @@ namespace Siteswap.Details;
 
 public record CyclicArray<T> : IEnumerable<T>
 {
-
     public CyclicArray(IEnumerable<T> items)
     {
         Items = items.ToImmutableArray();
@@ -37,9 +36,7 @@ public record CyclicArray<T> : IEnumerable<T>
             for (var k = 0; k < Items.Length; k++)
             {
                 yield return (j * Items.Length + k, Items[k]);
-
             }
-
         }
     }
 
@@ -50,7 +47,7 @@ public record CyclicArray<T> : IEnumerable<T>
 
     public CyclicArray<T> Rotate(int i)
     {
-        return new (this.Skip(i).Take(Length).ToImmutableArray());
+        return new(this.Skip(i).Take(Length).ToImmutableArray());
     }
 }
 

@@ -1,5 +1,4 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using IFeatureManager = FeatureManagement.Abstractions.IFeatureManager;
 
 namespace FeatureManagement;

@@ -15,20 +15,19 @@ public record GeneratorState
 
     public ImmutableList<Throw> Throws { get; init; } =
         new[]
-            {
-                Throw.EmptyHand,
-                Throw.Zip,
-                Throw.Zap,
-                Throw.Self,
-                Throw.SinglePass,
-                Throw.Heff,
-                Throw.DoublePass,
-                Throw.TripleSelf
-            }
-            .ToImmutableList();
+        {
+            Throw.EmptyHand,
+            Throw.Zip,
+            Throw.Zap,
+            Throw.Self,
+            Throw.SinglePass,
+            Throw.Heff,
+            Throw.DoublePass,
+            Throw.TripleSelf,
+        }.ToImmutableList();
 
-
-    public ImmutableList<IFilterInformation> Filter { get; init; } = ImmutableList<IFilterInformation>.Empty;
+    public ImmutableList<IFilterInformation> Filter { get; init; } =
+        ImmutableList<IFilterInformation>.Empty;
     public bool CreateFilterFromThrowList { get; init; } = false;
 }
 
@@ -63,28 +62,24 @@ public record Throw(string Name, int Height, string DisplayValue)
 
     private bool IsPass => Height % 2 == 1;
 
-    public static IEnumerable<Throw> All => new List<Throw>
-    {
-        EmptyHand,
-        Zip,
-        Hold,
-        Zap,
-        Self,
-        SinglePass,
-        Heff,
-        DoublePass,
-        TripleSelf,
-        TriplePass
-    };
+    public static IEnumerable<Throw> All =>
+        new List<Throw>
+        {
+            EmptyHand,
+            Zip,
+            Hold,
+            Zap,
+            Self,
+            SinglePass,
+            Heff,
+            DoublePass,
+            TripleSelf,
+            TriplePass,
+        };
 
     public static IEnumerable<Throw> Everything => All.Concat(AllWildCards);
-    
-    public static IEnumerable<Throw> AllWildCards => new List<Throw>
-    {
-        Empty,
-        AnyPass,
-        AnySelf
-    };
+
+    public static IEnumerable<Throw> AllWildCards => new List<Throw> { Empty, AnyPass, AnySelf };
 
     public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
     {
@@ -112,6 +107,7 @@ public record Throw(string Name, int Height, string DisplayValue)
 
     public static Throw Parse(string s)
     {
-        return Everything.FirstOrDefault(x => x.DisplayValue == s) ?? throw new ArgumentException("Invalid throw");
+        return Everything.FirstOrDefault(x => x.DisplayValue == s)
+            ?? throw new ArgumentException("Invalid throw");
     }
 }

@@ -1,4 +1,4 @@
 ﻿namespace CausalDiagramComponents
 {
-    public class Assembly{}
+    public class Assembly { }
 }

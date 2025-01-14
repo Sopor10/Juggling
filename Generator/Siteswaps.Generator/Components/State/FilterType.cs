@@ -5,5 +5,5 @@ public enum FilterType
     Number,
     Pattern,
     NewPattern,
-    EasyNumber
+    EasyNumber,
 }
