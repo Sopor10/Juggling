@@ -1,15 +1,18 @@
-﻿namespace Siteswaps.Generator.Generator.Filter;
+﻿using Siteswaps.Generator.Generator.Filter.Combinatorics;
+using Siteswaps.Generator.Generator.Filter.NumberFilter;
+
+namespace Siteswaps.Generator.Generator.Filter;
 
 internal class PatternFilterHeuristicBuilder
 {
-    private FilterFactory Factory { get; }
+    private IFilterBuilder Builder { get; }
 
-    public PatternFilterHeuristicBuilder(FilterFactory filterFactory)
+    public PatternFilterHeuristicBuilder(IFilterBuilder filterBuilder)
     {
-        Factory = filterFactory;
+        Builder = filterBuilder;
     }
 
-    public ISiteswapFilter Build(IEnumerable<int> pattern, int numberOfJuggler, SiteswapGeneratorInput input)
+    public ISiteswapFilter Build(IEnumerable<int> pattern)
     {
         var filter = GenerateAtLeastNumberFilter(pattern);
 
@@ -21,9 +24,9 @@ internal class PatternFilterHeuristicBuilder
         var result = new List<ISiteswapFilter>();
         foreach (var (key, count) in pattern.GroupBy(x => x).Where(x => x.Key >= 0).Select(x => (x.Key, x.Count())))
         {
-            result.Add(Factory.MinimumOccurenceFilter([key], count));
+            result.Add(new AtLeastXXXTimesFilter([key], count));
         }
 
-        return Factory.Combine(result);
+        return new AndFilter(result.ToArray());
     }
 }
