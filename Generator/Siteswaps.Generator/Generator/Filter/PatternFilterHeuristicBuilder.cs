@@ -22,7 +22,12 @@ internal class PatternFilterHeuristicBuilder
     private ISiteswapFilter GenerateAtLeastNumberFilter(IEnumerable<int> pattern)
     {
         var result = new List<ISiteswapFilter>();
-        foreach (var (key, count) in pattern.GroupBy(x => x).Where(x => x.Key >= 0).Select(x => (x.Key, x.Count())))
+        foreach (
+            var (key, count) in pattern
+                .GroupBy(x => x)
+                .Where(x => x.Key >= 0)
+                .Select(x => (x.Key, x.Count()))
+        )
         {
             result.Add(new AtLeastXXXTimesFilter([key], count));
         }

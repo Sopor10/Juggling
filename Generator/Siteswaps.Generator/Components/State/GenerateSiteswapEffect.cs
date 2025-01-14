@@ -7,7 +7,8 @@ using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Components.State;
 
-public class CloseDialogAfterAddingFilterEffect(DialogService dialogService) : Effect<NewFilterCreatedAction>
+public class CloseDialogAfterAddingFilterEffect(DialogService dialogService)
+    : Effect<NewFilterCreatedAction>
 {
     public override Task HandleAsync(NewFilterCreatedAction action, IDispatcher dispatcher)
     {
@@ -16,9 +17,10 @@ public class CloseDialogAfterAddingFilterEffect(DialogService dialogService) : E
     }
 }
 
-public class CloseDialogAfterChangingFilterEffect(DialogService dialogService) : Effect<ChangedFilterAction>
+public class CloseDialogAfterChangingFilterEffect(DialogService dialogService)
+    : Effect<ChangedFilterAction>
 {
-    public override Task HandleAsync(ChangedFilterAction action, IDispatcher dispatcher) 
+    public override Task HandleAsync(ChangedFilterAction action, IDispatcher dispatcher)
     {
         dialogService.Close();
         return Task.CompletedTask;
@@ -48,66 +50,94 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 
         foreach (var (siteswapGeneratorInput, factory) in CreateSiteswapGeneratorInputs(action))
         {
-            siteswaps.AddRange(await factory
-                .Create(siteswapGeneratorInput)
-                .GenerateAsync()
-                .ToListAsync());
+            siteswaps.AddRange(
+                await factory.Create(siteswapGeneratorInput).GenerateAsync().ToListAsync()
+            );
         }
 
         return siteswaps;
     }
 
-    private static List<(SiteswapGeneratorInput siteswapGeneratorInput, SiteswapGeneratorFactory factory)>
-        CreateSiteswapGeneratorInputs(GenerateSiteswapsAction action)
+    private static List<(
+        SiteswapGeneratorInput siteswapGeneratorInput,
+        SiteswapGeneratorFactory factory
+    )> CreateSiteswapGeneratorInputs(GenerateSiteswapsAction action)
     {
-        if (action.State.Period is null ||
-            action.State.MinThrow is null ||
-            action.State.MaxThrow is null ||
-            action.State.NumberOfJugglers is null)
+        if (
+            action.State.Period is null
+            || action.State.MinThrow is null
+            || action.State.MaxThrow is null
+            || action.State.NumberOfJugglers is null
+        )
         {
-            return new List<(SiteswapGeneratorInput siteswapGeneratorInput, SiteswapGeneratorFactory factory)>();
+            return new List<(
+                SiteswapGeneratorInput siteswapGeneratorInput,
+                SiteswapGeneratorFactory factory
+            )>();
         }
 
         var range = action.State.Objects switch
         {
-            Between between => Enumerable.Range(between.MinNumber.Value,
-                between.MaxNumber.Value - between.MinNumber.Value + 1),
-            ExactNumber exactNumber => new[] {exactNumber.Number.Value},
-            _ => throw new ArgumentOutOfRangeException()
+            Between between => Enumerable.Range(
+                between.MinNumber.Value,
+                between.MaxNumber.Value - between.MinNumber.Value + 1
+            ),
+            ExactNumber exactNumber => new[] { exactNumber.Number.Value },
+            _ => throw new ArgumentOutOfRangeException(),
         };
 
-        var result = new List<(SiteswapGeneratorInput siteswapGeneratorInput, SiteswapGeneratorFactory factory)>();
+        var result =
+            new List<(
+                SiteswapGeneratorInput siteswapGeneratorInput,
+                SiteswapGeneratorFactory factory
+            )>();
         foreach (var number in range)
         {
             var siteswapGeneratorInput = new SiteswapGeneratorInput
             {
                 Period = action.State.Period.Value,
                 MaxHeight = action.State.CreateFilterFromThrowList
-                    ? action.State.Throws.MaxBy(x => x.Height).GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                    ? action
+                        .State.Throws.MaxBy(x => x.Height)
+                        .GetHeightForJugglers(action.State.NumberOfJugglers.Value)
                         .Max()
                     : action.State.MaxThrow.Value,
                 MinHeight = action.State.CreateFilterFromThrowList
-                    ? action.State.Throws.MinBy(x => x.Height).GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                    ? action
+                        .State.Throws.MinBy(x => x.Height)
+                        .GetHeightForJugglers(action.State.NumberOfJugglers.Value)
                         .Min()
                     : action.State.MinThrow.Value,
-                NumberOfObjects = number
+                NumberOfObjects = number,
             };
 
-            Func<IFilterBuilder, IFilterBuilder> filterConfig = builder => action.State.Filter
-                .Aggregate(builder,
-                    (current, filterInformation) => ToFilter(current, filterInformation,
-                        action.State.NumberOfJugglers.Value));
+            Func<IFilterBuilder, IFilterBuilder> filterConfig = builder =>
+                action.State.Filter.Aggregate(
+                    builder,
+                    (current, filterInformation) =>
+                        ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value)
+                );
 
-            var siteswapGeneratorFactory = new SiteswapGeneratorFactory()
-                .ConfigureFilter(filterConfig);
+            var siteswapGeneratorFactory = new SiteswapGeneratorFactory().ConfigureFilter(
+                filterConfig
+            );
 
             var liste = new List<Func<IFilterBuilder, IFilterBuilder>>();
             if (action.State.CreateFilterFromThrowList)
             {
-                for (var i = siteswapGeneratorInput.MinHeight; i <= siteswapGeneratorInput.MaxHeight; i++)
+                for (
+                    var i = siteswapGeneratorInput.MinHeight;
+                    i <= siteswapGeneratorInput.MaxHeight;
+                    i++
+                )
                 {
-                    if (action.State.Throws.SelectMany(x => x.GetHeightForJugglers(action.State.NumberOfJugglers.Value))
-                        .Contains(i))
+                    if (
+                        action
+                            .State.Throws.SelectMany(x =>
+                                x.GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                            )
+                            .Contains(i)
+                    )
                     {
                         continue;
                     }
@@ -128,44 +158,62 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         return result;
     }
 
-    private static IFilterBuilder ToFilter(IFilterBuilder builder, IFilterInformation filterInformation,
-        int numberOfJugglers)
+    private static IFilterBuilder ToFilter(
+        IFilterBuilder builder,
+        IFilterInformation filterInformation,
+        int numberOfJugglers
+    )
     {
         switch (filterInformation)
         {
-
             case NewPatternFilterInformation newPatternFilterInformation:
                 return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder);
             case EasyNumberFilter.NumberFilter numberFilter:
                 return numberFilter.Type switch
                 {
-                    EasyNumberFilter.NumberFilterType.Exactly => builder.ExactOccurence(numberFilter.Throw.GetHeightForJugglers(numberOfJugglers), numberFilter.Amount),
-                    EasyNumberFilter.NumberFilterType.AtLeast => builder.MinimumOccurence(numberFilter.Throw.GetHeightForJugglers(numberOfJugglers), numberFilter.Amount),
-                    EasyNumberFilter.NumberFilterType.Maximum => builder.MaximumOccurence(numberFilter.Throw.GetHeightForJugglers(numberOfJugglers), numberFilter.Amount),
-                    _ => throw new ArgumentOutOfRangeException()
+                    EasyNumberFilter.NumberFilterType.Exactly => builder.ExactOccurence(
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers),
+                        numberFilter.Amount
+                    ),
+                    EasyNumberFilter.NumberFilterType.AtLeast => builder.MinimumOccurence(
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers),
+                        numberFilter.Amount
+                    ),
+                    EasyNumberFilter.NumberFilterType.Maximum => builder.MaximumOccurence(
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers),
+                        numberFilter.Amount
+                    ),
+                    _ => throw new ArgumentOutOfRangeException(),
                 };
         }
 
         throw new ArgumentOutOfRangeException();
     }
 
-    private static IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
-        int numberOfJugglers, IFilterBuilder builder)
+    private static IFilterBuilder BuildPatternFilter(
+        NewPatternFilterInformation newPatternFilterInformation,
+        int numberOfJugglers,
+        IFilterBuilder builder
+    )
     {
         var patterns = new List<List<int>>();
         foreach (var t in newPatternFilterInformation.Pattern)
         {
             var heights = t.Height switch
             {
-                -1 => new List<int> {-1},
-                -2 => new List<int> {-2},
-                -3 => new List<int> {-3},
+                -1 => new List<int> { -1 },
+                -2 => new List<int> { -2 },
+                -3 => new List<int> { -3 },
 
-                _ => t.GetHeightForJugglers(numberOfJugglers).ToList()
+                _ => t.GetHeightForJugglers(numberOfJugglers).ToList(),
             };
             patterns.Add(heights);
         }
 
-        return builder.FlexiblePattern(patterns, numberOfJugglers, newPatternFilterInformation.IsGlobalPattern);
+        return builder.FlexiblePattern(
+            patterns,
+            numberOfJugglers,
+            newPatternFilterInformation.IsGlobalPattern
+        );
     }
 }

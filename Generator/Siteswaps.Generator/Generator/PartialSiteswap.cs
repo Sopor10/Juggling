@@ -20,7 +20,6 @@ public class PartialSiteswap
     private CyclicArray<int> Interface { get; }
 
     public int PartialSum { get; set; }
-    
 
     private int this[int i]
     {
@@ -32,14 +31,13 @@ public class PartialSiteswap
             {
                 return;
             }
-            
+
             if (oldValue != -1)
             {
                 Interface[i + oldValue] = -1;
                 PartialSum -= oldValue;
-
             }
-            
+
             Items[i] = value;
             if (value == -1)
             {
@@ -55,8 +53,8 @@ public class PartialSiteswap
 
     public bool IsFilled() => Items[^1] != -1;
 
-    public static PartialSiteswap Standard(int period, int maxHeight) => new(Enumerable.Repeat((int)-1, period - 1).Prepend(maxHeight).ToArray());
-
+    public static PartialSiteswap Standard(int period, int maxHeight) =>
+        new(Enumerable.Repeat((int)-1, period - 1).Prepend(maxHeight).ToArray());
 
     public bool FillCurrentPosition(int throwHeight)
     {
@@ -65,7 +63,7 @@ public class PartialSiteswap
         {
             return true;
         }
-        
+
         ResetCurrentPosition();
 
         if (Interface[LastFilledPosition + throwHeight] == -1)

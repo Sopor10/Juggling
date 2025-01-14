@@ -6,7 +6,6 @@ namespace Siteswaps.Generator.Test.Filter;
 
 public partial class FilterTestSuite
 {
-
     [Test]
     [TestCase(new[] { 4, 2, 3 }, 2)]
     [TestCase(new[] { 4, 4, 1 }, 2)]

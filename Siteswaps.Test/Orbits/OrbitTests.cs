@@ -2,7 +2,6 @@
 
 namespace Siteswaps.Test.Orbits;
 
-
 public class OrbitTests
 {
     [Test]
@@ -16,12 +15,10 @@ public class OrbitTests
         var result = siteswap.GetOrbits();
 
         await Verify(new OrbitPrinter(siteswap).Print(result));
-
     }
 
     private class OrbitPrinter(Siteswap.Details.Siteswap siteswap)
     {
-        
         public string Print(List<Orbit> orbits)
         {
             return $"Siteswap: {siteswap}\nOrbits:\n" + string.Join("\n", orbits.Select(Print));

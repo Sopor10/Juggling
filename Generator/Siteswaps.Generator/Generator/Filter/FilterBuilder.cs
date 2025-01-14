@@ -6,36 +6,67 @@ namespace Siteswaps.Generator.Generator.Filter;
 
 internal record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
 {
-    private ImmutableList<ISiteswapFilter> Filter { get; init; } = ImmutableList<ISiteswapFilter>.Empty;
+    private ImmutableList<ISiteswapFilter> Filter { get; init; } =
+        ImmutableList<ISiteswapFilter>.Empty;
 
     public SiteswapGeneratorInput Input => Input;
 
-    public IFilterBuilder MinimumOccurence(IEnumerable<int> number, int amount) => this with { Filter = Filter.Add(new AtLeastXXXTimesFilter(number, amount)) };
+    public IFilterBuilder MinimumOccurence(IEnumerable<int> number, int amount) =>
+        this with
+        {
+            Filter = Filter.Add(new AtLeastXXXTimesFilter(number, amount)),
+        };
 
-    public IFilterBuilder MaximumOccurence(IEnumerable<int> number, int amount) => this with { Filter = Filter.Add(new AtMostXXXTimesFilter(number, amount)) };
+    public IFilterBuilder MaximumOccurence(IEnumerable<int> number, int amount) =>
+        this with
+        {
+            Filter = Filter.Add(new AtMostXXXTimesFilter(number, amount)),
+        };
 
-    public IFilterBuilder ExactOccurence(IEnumerable<int> number, int amount) => this with { Filter = Filter.Add(new ExactlyXXXTimesFilter(number, amount)) };
+    public IFilterBuilder ExactOccurence(IEnumerable<int> number, int amount) =>
+        this with
+        {
+            Filter = Filter.Add(new ExactlyXXXTimesFilter(number, amount)),
+        };
 
     public IFilterBuilder No() => this with { Filter = Filter.Add(new NoFilter()) };
 
-    public IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers) => this with { Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers, Input)) };
+    public IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers) =>
+        this with
+        {
+            Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers, Input)),
+        };
 
     public IFilterBuilder And(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
 
     public IFilterBuilder Or(ISiteswapFilter filter) =>
-        this with {Filter = [new OrFilter(new AndFilter(Filter.ToArray()), filter)]};
+        this with
+        {
+            Filter = [new OrFilter(new AndFilter(Filter.ToArray()), filter)],
+        };
 
-    public IFilterBuilder FlexiblePattern(List<List<int>> pattern, int numberOfJuggler, bool isGlobalPattern)
+    public IFilterBuilder FlexiblePattern(
+        List<List<int>> pattern,
+        int numberOfJuggler,
+        bool isGlobalPattern
+    )
     {
         return this with
         {
-            Filter = Filter.Add(new FlexiblePatternFilter(pattern, numberOfJuggler, Input, isGlobalPattern))
+            Filter = Filter.Add(
+                new FlexiblePatternFilter(pattern, numberOfJuggler, Input, isGlobalPattern)
+            ),
         };
     }
 
-    public IFilterBuilder WithDefault() => this with { Filter = Filter.Add(new RightAmountOfBallsFilter(Input)) };
+    public IFilterBuilder WithDefault() =>
+        this with
+        {
+            Filter = Filter.Add(new RightAmountOfBallsFilter(Input)),
+        };
 
     public ISiteswapFilter Build() => new AndFilter(Filter);
+
     public IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler)
     {
         pattern = pattern.ToList();
@@ -43,7 +74,14 @@ internal record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
         {
             Filter = Filter
                 .Add(new PatternFilterHeuristicBuilder(this).Build(pattern))
-                .Add(new FlexiblePatternFilter(pattern.Select(x => new List<int>(){x}).ToList(), numberOfJuggler, Input, true))
+                .Add(
+                    new FlexiblePatternFilter(
+                        pattern.Select(x => new List<int>() { x }).ToList(),
+                        numberOfJuggler,
+                        Input,
+                        true
+                    )
+                ),
         };
     }
 }

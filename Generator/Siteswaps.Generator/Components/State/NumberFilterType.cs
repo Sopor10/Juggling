@@ -4,5 +4,5 @@ public enum NumberFilterType
 {
     Exactly,
     AtLeast,
-    Maximum
+    Maximum,
 }

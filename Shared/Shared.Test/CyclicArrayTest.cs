@@ -7,16 +7,16 @@ namespace Shared.Test;
 public class CyclicArrayTest
 {
     [Test]
-    [TestCase(0,0)]
-    [TestCase(6,1)]
-    [TestCase(5,0)]
+    [TestCase(0, 0)]
+    [TestCase(6, 1)]
+    [TestCase(5, 0)]
     public void Indexer_Access_Test(int place, int expected)
     {
-        var sut = new CyclicArray<int>(Enumerable.Range(0,5));
+        var sut = new CyclicArray<int>(Enumerable.Range(0, 5));
 
         sut[place].Should().Be(expected);
     }
-        
+
     [Test]
     [TestCase(0)]
     [TestCase(1)]
@@ -24,7 +24,7 @@ public class CyclicArrayTest
     [TestCase(3)]
     public void Rotate_By(int i)
     {
-        var sut = new CyclicArray<int>(Enumerable.Range(0,5));
+        var sut = new CyclicArray<int>(Enumerable.Range(0, 5));
 
         sut.Rotate(i);
         sut[0].Should().Be(i);

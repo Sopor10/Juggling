@@ -7,9 +7,7 @@ internal class RightAmountOfBallsFilter : ISiteswapFilter
     public RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput)
     {
         _generatorInputNumberOfObjects = (int)generatorInput.NumberOfObjects;
-
     }
-
 
     public bool CanFulfill(PartialSiteswap value)
     {
@@ -17,7 +15,6 @@ internal class RightAmountOfBallsFilter : ISiteswapFilter
         {
             return true;
         }
-        
 
         return value.PartialSum == _generatorInputNumberOfObjects * value.Items.Length;
     }

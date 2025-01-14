@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Siteswaps.E2ETests;
 
-public class GenerateSiteswapsTests: E2ETestsBase
+public class GenerateSiteswapsTests : E2ETestsBase
 {
     [Test]
     public async Task Fill_Out_Easy_Filter()
@@ -22,7 +22,7 @@ public class GenerateSiteswapsTests: E2ETestsBase
 
         await Page.Locator("#pattern-filter-dropdown-0").ClickAsync();
 
-        await Page.GetByRole(AriaRole.Option, new() { Name = "Self", Exact = true}).ClickAsync();
+        await Page.GetByRole(AriaRole.Option, new() { Name = "Self", Exact = true }).ClickAsync();
 
         await Page.Locator("#pattern-filter-dropdown-1").ClickAsync();
 
@@ -30,15 +30,14 @@ public class GenerateSiteswapsTests: E2ETestsBase
 
         await Page.Locator("#pattern-filter-dropdown-2").ClickAsync();
 
-
         await Page.GetByRole(AriaRole.Option, new() { Name = "Zap" }).ClickAsync();
 
-        await Page.GetByLabel("New Pattern Filter").GetByRole(AriaRole.Button, new() { Name = "Add Filter" }).ClickAsync();
+        await Page.GetByLabel("New Pattern Filter")
+            .GetByRole(AriaRole.Button, new() { Name = "Add Filter" })
+            .ClickAsync();
 
         await Page.GetByRole(AriaRole.Button, new() { Name = "Generate" }).ClickAsync();
-        
+
         await Page.Locator("//h3[normalize-space()='Siteswaps']").WaitForAsync();
-
-
     }
 }

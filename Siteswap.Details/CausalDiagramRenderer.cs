@@ -7,43 +7,45 @@ namespace Siteswap.Details;
 
 public class CausalDiagramRenderer
 {
-    private readonly SKPaint circlePaint = new()
-    {
-        Color = new SKColor(255, 255, 255, 255),
-        StrokeWidth = 1,
-        IsAntialias = true,
-        Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center
-    };
+    private readonly SKPaint circlePaint =
+        new()
+        {
+            Color = new SKColor(255, 255, 255, 255),
+            StrokeWidth = 1,
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke,
+            TextAlign = SKTextAlign.Center,
+        };
 
-    
-    private readonly SKPaint namePaint = new()
-    {
-        Color = new SKColor(255, 0, 0, 255),
-        StrokeWidth = 1,
-        IsAntialias = true,
-        Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center
-    };
-    
-    private readonly SKPaint handPaint = new()
-    {
-        Color = new SKColor(255, 100, 175, 255),
-        StrokeWidth = 1,
-        IsAntialias = true,
-        Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center
-    };
+    private readonly SKPaint namePaint =
+        new()
+        {
+            Color = new SKColor(255, 0, 0, 255),
+            StrokeWidth = 1,
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke,
+            TextAlign = SKTextAlign.Center,
+        };
 
-    private readonly SKPaint transitionPaint = new()
-    {
-        Color = new SKColor(100, 255, 100, 255),
-        StrokeWidth = 2,
-        IsAntialias = true,
-        Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center
-    };
+    private readonly SKPaint handPaint =
+        new()
+        {
+            Color = new SKColor(255, 100, 175, 255),
+            StrokeWidth = 1,
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke,
+            TextAlign = SKTextAlign.Center,
+        };
 
+    private readonly SKPaint transitionPaint =
+        new()
+        {
+            Color = new SKColor(100, 255, 100, 255),
+            StrokeWidth = 2,
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke,
+            TextAlign = SKTextAlign.Center,
+        };
 
     public void Render(SKCanvas canvas, CausalDiagram.CausalDiagram diagram)
     {
@@ -54,7 +56,11 @@ public class CausalDiagramRenderer
         DrawTransitions(canvas, diagram, persons);
     }
 
-    private void DrawTransitions(SKCanvas canvas, CausalDiagram.CausalDiagram diagram, List<IGrouping<Person, Node>> persons)
+    private void DrawTransitions(
+        SKCanvas canvas,
+        CausalDiagram.CausalDiagram diagram,
+        List<IGrouping<Person, Node>> persons
+    )
     {
         var positions = CalculateNodePositions(diagram, persons);
         foreach (var (start, end) in diagram.Transitions)
@@ -75,19 +81,25 @@ public class CausalDiagramRenderer
         }
     }
 
-    private void DrawNodes(SKCanvas canvas, CausalDiagram.CausalDiagram diagram,
-        IEnumerable<IGrouping<Person, Node>> persons)
+    private void DrawNodes(
+        SKCanvas canvas,
+        CausalDiagram.CausalDiagram diagram,
+        IEnumerable<IGrouping<Person, Node>> persons
+    )
     {
         var points = CalculateNodePositions(diagram, persons);
 
         foreach (var (node, skPoint) in points)
         {
-                canvas.DrawCircle(skPoint, 10, circlePaint);
-                canvas.DrawText(node.Height.ToString(), skPoint, circlePaint);
+            canvas.DrawCircle(skPoint, 10, circlePaint);
+            canvas.DrawText(node.Height.ToString(), skPoint, circlePaint);
         }
     }
 
-    private Dictionary<Node,SKPoint> CalculateNodePositions(CausalDiagram.CausalDiagram diagram, IEnumerable<IGrouping<Person, Node>> persons)
+    private Dictionary<Node, SKPoint> CalculateNodePositions(
+        CausalDiagram.CausalDiagram diagram,
+        IEnumerable<IGrouping<Person, Node>> persons
+    )
     {
         var points = new Dictionary<Node, SKPoint>();
 
@@ -106,8 +118,11 @@ public class CausalDiagramRenderer
         return points;
     }
 
-    private void DrawHandNames(SKCanvas canvas, CausalDiagram.CausalDiagram diagram,
-        IEnumerable<IGrouping<Person, Node>> persons)
+    private void DrawHandNames(
+        SKCanvas canvas,
+        CausalDiagram.CausalDiagram diagram,
+        IEnumerable<IGrouping<Person, Node>> persons
+    )
     {
         var points = new List<(Node, SKPoint)>();
         var height = 100;
@@ -116,20 +131,23 @@ public class CausalDiagramRenderer
             foreach (var node in person)
             {
                 var point = new SKPoint(ToSkPoint(node, diagram, height).X, 50);
-                points.Add((node,point));
+                points.Add((node, point));
             }
 
             height += 50;
         }
-        
+
         foreach (var (node, point) in points)
         {
             canvas.DrawText(node.Hand.Name, point, handPaint);
         }
-
     }
 
-    private static SKPoint ToSkPoint(Node node, CausalDiagram.CausalDiagram causalDiagram, int height)
+    private static SKPoint ToSkPoint(
+        Node node,
+        CausalDiagram.CausalDiagram causalDiagram,
+        int height
+    )
     {
         return new SKPoint((float)(node.Time / causalDiagram.MaxTime * 300 + 100), height);
     }

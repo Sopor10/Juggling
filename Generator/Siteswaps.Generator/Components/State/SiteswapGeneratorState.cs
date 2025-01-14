@@ -9,10 +9,8 @@ public record SiteswapGeneratorState(GeneratorState State, IReadOnlyCollection<S
 {
     public bool IsGenerating => State.IsGenerating;
 
-    public SiteswapGeneratorState() : this(new GeneratorState(), new List<Siteswap>())
-    {
-    }
+    public SiteswapGeneratorState()
+        : this(new GeneratorState(), new List<Siteswap>()) { }
 
     public IFilterInformation? NewFilter { get; init; }
-
 }

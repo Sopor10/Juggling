@@ -6,10 +6,12 @@ public class CyclicArrayEnumerator<T> : IEnumerator<T>
 {
     public CyclicArray<T> Array { get; }
     private int _position = -1;
+
     public CyclicArrayEnumerator(CyclicArray<T> array)
     {
         Array = array;
     }
+
     public bool MoveNext()
     {
         _position++;
@@ -25,9 +27,7 @@ public class CyclicArrayEnumerator<T> : IEnumerator<T>
 
     object IEnumerator.Current => Current ?? throw new ArgumentNullException();
 
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
 
     public int Length => Array.Length;
 }

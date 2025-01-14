@@ -14,7 +14,6 @@ internal class ExactlyXXXTimesFilter : NumberFilter
         return value.Items.Count(x => Number.Contains(x) || x == -1) >= Amount;
     }
 
-    public ExactlyXXXTimesFilter(IEnumerable<int> number, int amount) : base(number, amount)
-    {
-    }
+    public ExactlyXXXTimesFilter(IEnumerable<int> number, int amount)
+        : base(number, amount) { }
 }

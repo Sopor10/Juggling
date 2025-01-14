@@ -8,11 +8,12 @@ namespace Siteswap.Details;
 
 public record Siteswap(CyclicArray<int> Items)
 {
-    public Siteswap(params int[] items) : this(new CyclicArray<int>(items))
+    public Siteswap(params int[] items)
+        : this(new CyclicArray<int>(items))
     {
         IsValid(new CyclicArray<int>(items));
     }
-    
+
     public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap)
     {
         siteswap = null;
@@ -35,10 +36,15 @@ public record Siteswap(CyclicArray<int> Items)
         return c - 87;
     }
 
-    public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap) => 
-        TryCreate(items.ToCyclicArray(), out siteswap);
+    public static bool TryCreate(
+        IEnumerable<int> items,
+        [NotNullWhen(true)] out Siteswap? siteswap
+    ) => TryCreate(items.ToCyclicArray(), out siteswap);
 
-    private static bool TryCreate(CyclicArray<int> items, [NotNullWhen(true)]out Siteswap? siteswap)
+    private static bool TryCreate(
+        CyclicArray<int> items,
+        [NotNullWhen(true)] out Siteswap? siteswap
+    )
     {
         if (IsValid(items))
         {
@@ -62,7 +68,12 @@ public record Siteswap(CyclicArray<int> Items)
     {
         var biggest = input.EnumerateValues(1).ToList();
 
-        foreach (var list in Enumerable.Range(0,input.Length).Select(input.Rotate).Select(x => x.EnumerateValues(1).ToList()))
+        foreach (
+            var list in Enumerable
+                .Range(0, input.Length)
+                .Select(input.Rotate)
+                .Select(x => x.EnumerateValues(1).ToList())
+        )
         {
             if (biggest.CompareSequences(list) < 0)
             {
@@ -75,9 +86,11 @@ public record Siteswap(CyclicArray<int> Items)
 
     private bool IsGroundState() => HasNoRethrow();
 
-    private bool HasNoRethrow() => !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
+    private bool HasNoRethrow() =>
+        !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
 
     public bool IsExcitedState() => !IsGroundState();
+
     public decimal NumberOfObjects() => (decimal)Items.Enumerate(1).Average(x => x.value);
 
     public override string ToString()
@@ -90,14 +103,16 @@ public record Siteswap(CyclicArray<int> Items)
         return i switch
         {
             < 10 => $"{i}",
-            _ => Convert.ToChar(i + 87).ToString()
+            _ => Convert.ToChar(i + 87).ToString(),
         };
     }
 
     public virtual bool Equals(Siteswap? other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
         return ToString().Equals(other.ToString());
     }
 
@@ -107,18 +122,18 @@ public record Siteswap(CyclicArray<int> Items)
     }
 
     public int Max() => Items.EnumerateValues(1).Max();
-    
+
     public int this[int i] => Items[i];
 
-    public static CyclicArray<int> ToUniqueRepresentation(int[] input) => ToUniqueRepresentation(input.ToCyclicArray());
-
+    public static CyclicArray<int> ToUniqueRepresentation(int[] input) =>
+        ToUniqueRepresentation(input.ToCyclicArray());
 
     public List<Orbit> GetOrbits() => GetOrbitsInternal().ToList();
-    
+
     private IEnumerable<Orbit> GetOrbitsInternal()
     {
         var visited = new bool[Items.Length];
-        
+
         for (int i = 0; i < Items.Length; i++)
         {
             if (visited[i])
@@ -128,7 +143,7 @@ public record Siteswap(CyclicArray<int> Items)
 
             var orbitIndices = new List<int>();
             var current = i;
-            
+
             // Sammle alle Indizes im aktuellen Orbit
             do
             {
@@ -153,7 +168,6 @@ public record Siteswap(CyclicArray<int> Items)
             yield return new Orbit(orbitValues.ToList());
         }
     }
-    
 }
 
 public class Orbit(List<int> items)
