@@ -7,45 +7,41 @@ namespace Siteswap.Details;
 
 public class CausalDiagramRenderer
 {
-    private readonly SKPaint circlePaint =
-        new()
-        {
-            Color = new SKColor(255, 255, 255, 255),
-            StrokeWidth = 1,
-            IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            TextAlign = SKTextAlign.Center,
-        };
+    private readonly SKPaint circlePaint = new()
+    {
+        Color = new SKColor(255, 255, 255, 255),
+        StrokeWidth = 1,
+        IsAntialias = true,
+        Style = SKPaintStyle.Stroke,
+        TextAlign = SKTextAlign.Center,
+    };
 
-    private readonly SKPaint namePaint =
-        new()
-        {
-            Color = new SKColor(255, 0, 0, 255),
-            StrokeWidth = 1,
-            IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            TextAlign = SKTextAlign.Center,
-        };
+    private readonly SKPaint namePaint = new()
+    {
+        Color = new SKColor(255, 0, 0, 255),
+        StrokeWidth = 1,
+        IsAntialias = true,
+        Style = SKPaintStyle.Stroke,
+        TextAlign = SKTextAlign.Center,
+    };
 
-    private readonly SKPaint handPaint =
-        new()
-        {
-            Color = new SKColor(255, 100, 175, 255),
-            StrokeWidth = 1,
-            IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            TextAlign = SKTextAlign.Center,
-        };
+    private readonly SKPaint handPaint = new()
+    {
+        Color = new SKColor(255, 100, 175, 255),
+        StrokeWidth = 1,
+        IsAntialias = true,
+        Style = SKPaintStyle.Stroke,
+        TextAlign = SKTextAlign.Center,
+    };
 
-    private readonly SKPaint transitionPaint =
-        new()
-        {
-            Color = new SKColor(100, 255, 100, 255),
-            StrokeWidth = 2,
-            IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            TextAlign = SKTextAlign.Center,
-        };
+    private readonly SKPaint transitionPaint = new()
+    {
+        Color = new SKColor(100, 255, 100, 255),
+        StrokeWidth = 2,
+        IsAntialias = true,
+        Style = SKPaintStyle.Stroke,
+        TextAlign = SKTextAlign.Center,
+    };
 
     public void Render(SKCanvas canvas, CausalDiagram.CausalDiagram diagram)
     {
