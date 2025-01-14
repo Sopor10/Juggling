@@ -9,7 +9,6 @@ internal record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
     private ImmutableList<ISiteswapFilter> Filter { get; init; } =
         ImmutableList<ISiteswapFilter>.Empty;
 
-    public SiteswapGeneratorInput Input => Input;
 
     public IFilterBuilder MinimumOccurence(IEnumerable<int> number, int amount) =>
         this with
