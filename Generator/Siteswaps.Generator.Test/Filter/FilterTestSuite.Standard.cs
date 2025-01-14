@@ -14,7 +14,7 @@ public partial class FilterTestSuite
     {
         var sut = FilterBuilder.WithDefault().Build();
 
-        sut.CanFulfill(new PartialSiteswap(input.Select(x => (sbyte)x).ToArray())).Should().BeFalse();
+        sut.CanFulfill(new PartialSiteswap(input.Select(x => (int)x).ToArray())).Should().BeFalse();
     }
         
     [Test]
@@ -28,6 +28,6 @@ public partial class FilterTestSuite
     {
         var sut = FilterBuilder.WithDefault().Build();
 
-        sut.CanFulfill(new PartialSiteswap(input.Select(x => (sbyte)x).ToArray())).Should().BeTrue();
+        sut.CanFulfill(new PartialSiteswap(input.Select(x => (int)x).ToArray())).Should().BeTrue();
     }
 } 

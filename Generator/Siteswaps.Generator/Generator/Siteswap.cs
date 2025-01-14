@@ -45,7 +45,7 @@ public record Siteswap
     }
 
 
-    public static Siteswap CreateFromCorrect(params sbyte[] partialSiteswapItems)
+    public static Siteswap CreateFromCorrect(params int[] partialSiteswapItems)
     {
         return new Siteswap(partialSiteswapItems.Select(x => (int)x).ToArray());
     }

@@ -2,11 +2,11 @@
 
 internal class RightAmountOfBallsFilter : ISiteswapFilter
 {
-    private readonly sbyte _generatorInputNumberOfObjects;
+    private readonly int _generatorInputNumberOfObjects;
 
     public RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput)
     {
-        _generatorInputNumberOfObjects = (sbyte)generatorInput.NumberOfObjects;
+        _generatorInputNumberOfObjects = (int)generatorInput.NumberOfObjects;
 
     }
 

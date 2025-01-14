@@ -8,12 +8,12 @@ public partial class FilterTestSuite
 {
 
     [Test]
-    [TestCase(new sbyte[] { 4, 2, 3 }, 2)]
-    [TestCase(new sbyte[] { 4, 4, 1 }, 2)]
-    [TestCase(new sbyte[] { 6, 0, 3 }, 2)]
-    [TestCase(new sbyte[] { 5, 0, 4 }, 4)]
-    [TestCase(new sbyte[] { 4, 4, 1 }, 4)]
-    public void There_Is_One_Pass(sbyte[] siteswap, int numberOfJugglers)
+    [TestCase(new[] { 4, 2, 3 }, 2)]
+    [TestCase(new[] { 4, 4, 1 }, 2)]
+    [TestCase(new[] { 6, 0, 3 }, 2)]
+    [TestCase(new[] { 5, 0, 4 }, 4)]
+    [TestCase(new[] { 4, 4, 1 }, 4)]
+    public void There_Is_One_Pass(int[] siteswap, int numberOfJugglers)
     {
         var sut = FilterBuilder.ExactNumberOfPasses(1, numberOfJugglers).Build();
 
@@ -21,9 +21,9 @@ public partial class FilterTestSuite
     }
 
     [Test]
-    [TestCase(new sbyte[] { 6, 0, 3 }, 3)]
-    [TestCase(new sbyte[] { 9, 0, 0 }, 3)]
-    public void There_Is_No_Pass(sbyte[] input, int numberOfJugglers)
+    [TestCase(new[] { 6, 0, 3 }, 3)]
+    [TestCase(new[] { 9, 0, 0 }, 3)]
+    public void There_Is_No_Pass(int[] input, int numberOfJugglers)
     {
         var sut = FilterBuilder.ExactNumberOfPasses(1, numberOfJugglers).Build();
 

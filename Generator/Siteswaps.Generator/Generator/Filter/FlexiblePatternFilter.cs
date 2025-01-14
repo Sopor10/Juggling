@@ -64,7 +64,7 @@ public record Pattern(List<List<int>> Value, HashSet<int> SelfValues, HashSet<in
     private const int Pass = -2;
     private const int Self = -3;
 
-    public bool Matches(CyclicArray<sbyte> value)
+    public bool Matches(CyclicArray<int> value)
     {
         for (var i = 0; i < Value.Count; i++)
         {
@@ -74,7 +74,7 @@ public record Pattern(List<List<int>> Value, HashSet<int> SelfValues, HashSet<in
         return true;
     }
 
-    private bool RotationMatches(CyclicArray<sbyte> siteswap, int i)
+    private bool RotationMatches(CyclicArray<int> siteswap, int i)
     {
 
         var singleMatch = false;
@@ -90,7 +90,7 @@ public record Pattern(List<List<int>> Value, HashSet<int> SelfValues, HashSet<in
     }
     
 
-    private bool ValueSatisfiesPattern(sbyte siteswapValue, int patternValue) =>
+    private bool ValueSatisfiesPattern(int siteswapValue, int patternValue) =>
         patternValue switch
         {
             DontCare => true,

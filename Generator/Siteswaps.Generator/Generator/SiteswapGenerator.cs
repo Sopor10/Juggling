@@ -8,7 +8,7 @@ public class SiteswapGenerator
     {
         Filter = filter;
         Input = input;
-        PartialSiteswap = PartialSiteswap.Standard((sbyte)Input.Period, (sbyte)Input.MaxHeight);
+        PartialSiteswap = PartialSiteswap.Standard((int)Input.Period, (int)Input.MaxHeight);
 
     }
 
