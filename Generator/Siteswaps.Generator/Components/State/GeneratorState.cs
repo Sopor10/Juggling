@@ -11,7 +11,7 @@ public record GeneratorState
     public Period Period { get; init; } = new(5);
     public int? MaxThrow { get; init; } = 10;
     public int? MinThrow { get; init; } = 2;
-    public bool IsGenerating { get; init; } = false;
+    public bool IsGenerating { get; init; }
 
     public ImmutableList<Throw> Throws { get; init; } =
         new[]
@@ -28,7 +28,7 @@ public record GeneratorState
 
     public ImmutableList<IFilterInformation> Filter { get; init; } =
         ImmutableList<IFilterInformation>.Empty;
-    public bool CreateFilterFromThrowList { get; init; } = false;
+    public bool CreateFilterFromThrowList { get; init; }
 }
 
 public abstract record Objects;
@@ -51,6 +51,7 @@ public record Throw(string Name, int Height, string DisplayValue)
     public static Throw Empty => new("Empty", -1, "_");
     public static Throw EmptyHand => new("0", 0, "0");
     public static Throw Zip => new("Zip", 2, "Zip");
+    public static Throw Three => new("3", 3, "3");
     public static Throw Hold => new("Hold", 4, "Hold");
     public static Throw Zap => new("Zap", 5, "Zap");
     public static Throw Self => new("Self", 6, "Self");
@@ -59,14 +60,17 @@ public record Throw(string Name, int Height, string DisplayValue)
     public static Throw DoublePass => new("Double", 9, "Double");
     public static Throw TripleSelf => new("Triple S", 10, "Triple S");
     public static Throw TriplePass => new("Triple", 11, "Triple");
+    public static Throw Quad => new("Quad", 12, "Quad");
+    public static Throw QuadPass => new("Quad Pass", 13, "Quad Pass");
 
     private bool IsPass => Height % 2 == 1;
 
-    public static IEnumerable<Throw> All =>
+    private static IEnumerable<Throw> NamedThrows =>
         new List<Throw>
         {
             EmptyHand,
             Zip,
+            Three,
             Hold,
             Zap,
             Self,
@@ -75,9 +79,27 @@ public record Throw(string Name, int Height, string DisplayValue)
             DoublePass,
             TripleSelf,
             TriplePass,
+            Quad,
+            QuadPass,
         };
 
-    public static IEnumerable<Throw> Everything => All.Concat(AllWildCards);
+    public static IEnumerable<Throw> All(int height = 13)
+    {
+        foreach (var i in Enumerable.Range(0, height + 1))
+        {
+            if (NamedThrows.FirstOrDefault(x => x.Height == i) is { } throwItem)
+            {
+                yield return throwItem;
+            }
+            else
+            {
+                yield return new Throw(i.ToString(), i, i.ToString());
+            }
+        }
+    }
+
+    public static IEnumerable<Throw> Everything(int height = 13) =>
+        All(height).Concat(AllWildCards);
 
     public static IEnumerable<Throw> AllWildCards => new List<Throw> { Empty, AnyPass, AnySelf };
 
@@ -107,7 +129,7 @@ public record Throw(string Name, int Height, string DisplayValue)
 
     public static Throw Parse(string s)
     {
-        return Everything.FirstOrDefault(x => x.DisplayValue == s)
+        return Everything().FirstOrDefault(x => x.DisplayValue == s)
             ?? throw new ArgumentException("Invalid throw");
     }
 }

@@ -1,31 +1,11 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
-using Radzen;
 using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Generator;
 using Siteswaps.Generator.Generator.Filter;
+using Dispatcher = Microsoft.AspNetCore.Components.Dispatcher;
 
 namespace Siteswaps.Generator.Components.State;
-
-public class CloseDialogAfterAddingFilterEffect(DialogService dialogService)
-    : Effect<NewFilterCreatedAction>
-{
-    public override Task HandleAsync(NewFilterCreatedAction action, IDispatcher dispatcher)
-    {
-        dialogService.Close();
-        return Task.CompletedTask;
-    }
-}
-
-public class CloseDialogAfterChangingFilterEffect(DialogService dialogService)
-    : Effect<ChangedFilterAction>
-{
-    public override Task HandleAsync(ChangedFilterAction action, IDispatcher dispatcher)
-    {
-        dialogService.Close();
-        return Task.CompletedTask;
-    }
-}
 
 public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 {
@@ -38,24 +18,28 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
 
     public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
-        var siteswaps = await CreateSiteswaps(action);
-
-        dispatcher.Dispatch(new SiteswapsGeneratedAction(siteswaps));
         NavigationManager.NavigateTo("/result");
+        await Task.Delay(1);
+
+        await CreateSiteswaps(action, dispatcher);
     }
 
-    public static async Task<List<Siteswap>> CreateSiteswaps(GenerateSiteswapsAction action)
+    public static async Task CreateSiteswaps(
+        GenerateSiteswapsAction action,
+        IDispatcher? dispatcher = null
+    )
     {
-        var siteswaps = new List<Siteswap>();
-
         foreach (var (siteswapGeneratorInput, factory) in CreateSiteswapGeneratorInputs(action))
         {
-            siteswaps.AddRange(
-                await factory.Create(siteswapGeneratorInput).GenerateAsync().ToListAsync()
-            );
+            await foreach (var s in factory.Create(siteswapGeneratorInput).GenerateAsync())
+            {
+                if (dispatcher is not null)
+                {
+                    dispatcher.Dispatch(new SingleSiteswapsGeneratedAction(s));
+                    await Task.Delay(1);
+                }
+            }
         }
-
-        return siteswaps;
     }
 
     private static List<(
@@ -64,8 +48,7 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
     )> CreateSiteswapGeneratorInputs(GenerateSiteswapsAction action)
     {
         if (
-            action.State.Period is null
-            || action.State.MinThrow is null
+            action.State.MinThrow is null
             || action.State.MaxThrow is null
             || action.State.NumberOfJugglers is null
         )
@@ -79,10 +62,14 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
         var range = action.State.Objects switch
         {
             Between between => Enumerable.Range(
-                between.MinNumber.Value,
-                between.MaxNumber.Value - between.MinNumber.Value + 1
+                between.MinNumber ?? throw new InvalidOperationException(),
+                between.MaxNumber - between.MinNumber.Value + 1
+                    ?? throw new InvalidOperationException()
             ),
-            ExactNumber exactNumber => new[] { exactNumber.Number.Value },
+            ExactNumber exactNumber => new[]
+            {
+                exactNumber.Number ?? throw new InvalidOperationException(),
+            },
             _ => throw new ArgumentOutOfRangeException(),
         };
 
@@ -99,14 +86,14 @@ public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
                 MaxHeight = action.State.CreateFilterFromThrowList
                     ? action
                         .State.Throws.MaxBy(x => x.Height)
-                        .GetHeightForJugglers(action.State.NumberOfJugglers.Value)
-                        .Max()
+                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                        .Max() ?? throw new InvalidOperationException()
                     : action.State.MaxThrow.Value,
                 MinHeight = action.State.CreateFilterFromThrowList
                     ? action
                         .State.Throws.MinBy(x => x.Height)
-                        .GetHeightForJugglers(action.State.NumberOfJugglers.Value)
-                        .Min()
+                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                        .Min() ?? throw new InvalidOperationException()
                     : action.State.MinThrow.Value,
                 NumberOfObjects = number,
             };

@@ -50,7 +50,7 @@
 
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
-    private readonly IEnumerable<Throw> allThrows = Throw.All.ToList();
+    private readonly IEnumerable<Throw> allThrows = Throw.All().ToList();
     private IEnumerable<int> Clubs => new[] {(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6};
 
     protected override void OnInitialized()

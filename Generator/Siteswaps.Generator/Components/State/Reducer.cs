@@ -7,15 +7,28 @@ namespace Siteswaps.Generator.Components.State;
 
 public static class Reducer
 {
+    // [ReducerMethod]
+    // public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(
+    //     SiteswapGeneratorState state,
+    //     SiteswapsGeneratedAction action
+    // )
+    // {
+    //     return state with
+    //     {
+    //         Siteswaps = action.Siteswaps,
+    //         State = state.State with { IsGenerating = false },
+    //     };
+    // }
+
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(
+    public static SiteswapGeneratorState ReduceSingleSiteswapsGeneratedChangedAction(
         SiteswapGeneratorState state,
-        SiteswapsGeneratedAction action
+        SingleSiteswapsGeneratedAction action
     )
     {
         return state with
         {
-            Siteswaps = action.Siteswaps,
+            Siteswaps = state.Siteswaps.Add(action.Siteswap),
             State = state.State with { IsGenerating = false },
         };
     }
