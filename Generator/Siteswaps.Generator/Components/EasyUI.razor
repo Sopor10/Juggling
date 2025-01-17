@@ -21,7 +21,7 @@
         </div>
         <div class="col input-column">
             <h4 class="mb-3">Clubs</h4>
-            <RangeInput Clubs="Clubs" ClubsChanged="SliderChanged"></RangeInput>
+            <RangeInput @bind-Clubs:get="Clubs" @bind-Clubs:set="SliderChanged"></RangeInput>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
     private readonly IEnumerable<Throw> allThrows = Throw.All().ToList();
-    private IEnumerable<int> Clubs => new[] {(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6};
+    private IEnumerable<int> Clubs => [(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6];
 
     protected override void OnInitialized()
     {
@@ -84,7 +84,7 @@
         {
             CloseDialogOnOverlayClick = true,
             Height = "500px",
-            Style = "mind-width: 300px"
+            Style = "min-width: 300px"
         });
     }
 
