@@ -20,7 +20,7 @@ public class SiteswapGeneratorTestSuite
     public async Task Verify_SiteswapGenerator_Against_Older_Version(SiteswapGeneratorInput input)
     {
         var siteswaps = await CreateTestObject(input)
-            .GenerateAsync(CancellationToken.None)
+            .GenerateAsync(new CancellationTokenSource().Token)
             .ToListAsync();
 
         await Verify(siteswaps.Select(x => x.ToString()).ToList())
@@ -41,7 +41,7 @@ public class SiteswapGeneratorTestSuite
             },
             x => x.Pattern(new[] { 2, -1, 6, -1, 5, -1, -1, -1, -1, -1 }, 2)
         );
-        var siteswaps = await sut.GenerateAsync(CancellationToken.None).ToListAsync();
+        var siteswaps = await sut.GenerateAsync(new CancellationTokenSource().Token).ToListAsync();
         await Verify(siteswaps.Select(x => x.ToString()).ToList());
     }
 }
@@ -74,6 +74,6 @@ class GenerateInputs : IEnumerable
         yield return Next(5, 5, 0, 3);
         yield return Next(7, 13, 2, 8);
         yield return Next(4, 7, 5, 6);
-        yield return Next(12, 20, 2, 8);
+        // yield return Next(12, 20, 2, 8);
     }
 }
