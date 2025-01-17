@@ -1,6 +1,8 @@
 ﻿using Fluxor;
-using Fluxor.Blazor.Web.ReduxDevTools;
 using Microsoft.Extensions.DependencyInjection;
+#if DEBUG
+using Fluxor.Blazor.Web.ReduxDevTools;
+#endif
 
 namespace Siteswaps.Generator;
 
