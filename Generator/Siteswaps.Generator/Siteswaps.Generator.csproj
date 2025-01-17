@@ -4,6 +4,9 @@
         <SupportedPlatform Include="browser" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(Configuration)=='Debug'">
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="morelinq" />

@@ -3,41 +3,43 @@ using Microsoft.AspNetCore.Components;
 using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Generator;
 using Siteswaps.Generator.Generator.Filter;
-using Dispatcher = Microsoft.AspNetCore.Components.Dispatcher;
 
 namespace Siteswaps.Generator.Components.State;
 
-public class GenerateSiteswapEffect : Effect<GenerateSiteswapsAction>
+public class GenerateSiteswapEffect(NavigationManager navigationManager)
+    : Effect<GenerateSiteswapsAction>
 {
-    public GenerateSiteswapEffect(NavigationManager navigationManager)
-    {
-        NavigationManager = navigationManager;
-    }
-
-    private NavigationManager NavigationManager { get; }
-
     public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
-        NavigationManager.NavigateTo("/result");
+        navigationManager.NavigateTo("/result");
         await Task.Delay(1);
 
         await CreateSiteswaps(action, dispatcher);
     }
 
-    public static async Task CreateSiteswaps(
-        GenerateSiteswapsAction action,
-        IDispatcher? dispatcher = null
-    )
+    private async Task CreateSiteswaps(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
+        if (action.CancellationTokenSource.IsCancellationRequested)
+        {
+            throw new InvalidOperationException("This is probably an old cancellation token");
+        }
+
         foreach (var (siteswapGeneratorInput, factory) in CreateSiteswapGeneratorInputs(action))
         {
-            await foreach (var s in factory.Create(siteswapGeneratorInput).GenerateAsync())
+            await foreach (
+                var s in factory
+                    .Create(siteswapGeneratorInput)
+                    .GenerateAsync(action.CancellationTokenSource.Token)
+            )
             {
-                if (dispatcher is not null)
+                if (action.CancellationTokenSource.IsCancellationRequested)
                 {
-                    dispatcher.Dispatch(new SingleSiteswapsGeneratedAction(s));
-                    await Task.Delay(1);
+                    Console.WriteLine("Cancelled siteswap generation");
+                    return;
                 }
+
+                dispatcher.Dispatch(new SiteswapGeneratedAction(s));
+                await Task.Delay(1);
             }
         }
     }

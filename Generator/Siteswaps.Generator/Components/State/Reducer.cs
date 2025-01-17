@@ -7,48 +7,24 @@ namespace Siteswaps.Generator.Components.State;
 
 public static class Reducer
 {
-    // [ReducerMethod]
-    // public static SiteswapGeneratorState ReduceSiteswapsGeneratedChangedAction(
-    //     SiteswapGeneratorState state,
-    //     SiteswapsGeneratedAction action
-    // )
-    // {
-    //     return state with
-    //     {
-    //         Siteswaps = action.Siteswaps,
-    //         State = state.State with { IsGenerating = false },
-    //     };
-    // }
-
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceSingleSiteswapsGeneratedChangedAction(
         SiteswapGeneratorState state,
-        SingleSiteswapsGeneratedAction action
-    )
-    {
-        return state with
-        {
-            Siteswaps = state.Siteswaps.Add(action.Siteswap),
-            State = state.State with { IsGenerating = false },
-        };
-    }
+        SiteswapGeneratedAction action
+    ) => state with { Siteswaps = state.Siteswaps.Add(action.Siteswap) };
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIsGeneratingAction(
         SiteswapGeneratorState state,
-        GenerateSiteswapsAction _
-    )
-    {
-        return state with { State = state.State with { IsGenerating = true } };
-    }
+        GenerateSiteswapsAction action
+    ) => state with { Siteswaps = [], CancellationTokenSource = action.CancellationTokenSource };
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIncrementPeriodChangedAction(
         SiteswapGeneratorState state,
         PeriodChangedAction action
-    )
-    {
-        return state with
+    ) =>
+        state with
         {
             State = state.State with
             {
@@ -58,7 +34,6 @@ public static class Reducer
                     .ToImmutableList(),
             },
         };
-    }
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIncrementMinThrowChangedAction(
@@ -175,11 +150,6 @@ public static class Reducer
         return state with
         {
             State = state.State with { Filter = state.State.Filter.Add(action.Value) },
-            NewFilter = new NewPatternFilterInformation(
-                Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(),
-                true,
-                true
-            ),
         };
     }
 
@@ -197,11 +167,6 @@ public static class Reducer
                     .State.Filter.RemoveAt(action.FilterNumber)
                     .Insert(action.FilterNumber, action.NewPatternFilterInformation),
             },
-            NewFilter = new NewPatternFilterInformation(
-                Enumerable.Repeat(Throw.Empty, state.State.Period.Value).ToList(),
-                true,
-                true
-            ),
         };
     }
 

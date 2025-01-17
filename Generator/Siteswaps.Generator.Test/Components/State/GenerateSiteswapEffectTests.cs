@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
+﻿using System.Collections.Immutable;
 using FluentAssertions;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Moq;
-using NUnit.Framework;
 using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Test.Components.State;
@@ -16,23 +13,17 @@ public class GenerateSiteswapEffectTests
     [Test]
     public async Task Should_Generate_7566()
     {
-        var action = new GenerateSiteswapsAction(
-            new GeneratorState()
-            {
-                Objects = new ExactNumber { Number = 6 },
-                Throws = new List<Throw>
-                {
-                    Throw.Self,
-                    Throw.Zap,
-                    Throw.SinglePass,
-                }.ToImmutableList(),
-                Period = new(4),
-                MinThrow = 5,
-                MaxThrow = 8,
-                NumberOfJugglers = 2,
-                CreateFilterFromThrowList = true,
-            }
-        );
+        var generatorState = new GeneratorState()
+        {
+            Objects = new ExactNumber { Number = 6 },
+            Throws = new List<Throw> { Throw.Self, Throw.Zap, Throw.SinglePass }.ToImmutableList(),
+            Period = new(4),
+            MinThrow = 5,
+            MaxThrow = 8,
+            NumberOfJugglers = 2,
+            CreateFilterFromThrowList = true,
+        };
+        var action = new GenerateSiteswapsAction(generatorState, new CancellationTokenSource());
 
         var sut = new GenerateSiteswapEffect(Mock.Of<NavigationManager>());
 
@@ -40,7 +31,7 @@ public class GenerateSiteswapEffectTests
         await sut.HandleAsync(action, dispatcherMock);
 
         dispatcherMock
-            .Actions.OfType<SingleSiteswapsGeneratedAction>()
+            .Actions.OfType<SiteswapGeneratedAction>()
             .Should()
             .ContainSingle()
             .Which.Siteswap.Items.Should()

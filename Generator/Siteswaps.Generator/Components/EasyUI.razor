@@ -42,7 +42,7 @@
 
     <div class="row mt-5 w-100">
         <div class="col">
-            <button class="btn btn-primary float-end" id="generate" type="submit" disabled="@State.Value.IsGenerating" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State))">Generate</button>
+            <button class="btn btn-primary float-end" id="generate" type="submit" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State, new CancellationTokenSource()))">Generate</button>
         </div>
     </div>
 </div>

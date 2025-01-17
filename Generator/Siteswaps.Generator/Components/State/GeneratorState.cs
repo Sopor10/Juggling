@@ -11,7 +11,6 @@ public record GeneratorState
     public Period Period { get; init; } = new(5);
     public int? MaxThrow { get; init; } = 10;
     public int? MinThrow { get; init; } = 2;
-    public bool IsGenerating { get; init; }
 
     public ImmutableList<Throw> Throws { get; init; } =
         new[]

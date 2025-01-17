@@ -7,10 +7,8 @@ namespace Siteswaps.Generator.Components.State;
 [FeatureState]
 public record SiteswapGeneratorState(GeneratorState State, ImmutableArray<Siteswap> Siteswaps)
 {
-    public bool IsGenerating => State.IsGenerating;
-
     public SiteswapGeneratorState()
         : this(new GeneratorState(), []) { }
 
-    public IFilterInformation? NewFilter { get; init; }
+    public CancellationTokenSource? CancellationTokenSource { get; init; }
 }
