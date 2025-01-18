@@ -6,12 +6,24 @@ using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Components.State;
 
-public class GenerateSiteswapEffect(NavigationManager navigationManager)
-    : Effect<GenerateSiteswapsAction>
+public interface INavigation
+{
+    void NavigateTo(string uri);
+}
+
+public class NavigationManagerAdapter(NavigationManager navigationManager) : INavigation
+{
+    public void NavigateTo(string uri)
+    {
+        navigationManager.NavigateTo(uri);
+    }
+}
+
+public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSiteswapsAction>
 {
     public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
-        navigationManager.NavigateTo("/result");
+        navigation.NavigateTo("/result");
         await Task.Delay(1);
 
         await CreateSiteswaps(action, dispatcher);

@@ -1,5 +1,6 @@
 ﻿using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using Siteswaps.Generator.Components.State;
 #if DEBUG
 using Fluxor.Blazor.Web.ReduxDevTools;
 #endif
@@ -17,5 +18,6 @@ public static class DependencyInjectionExtensions
             options.UseReduxDevTools();
 #endif
         });
+        services.AddScoped<INavigation, NavigationManagerAdapter>();
     }
 }

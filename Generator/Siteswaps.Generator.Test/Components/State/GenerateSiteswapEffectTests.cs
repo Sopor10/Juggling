@@ -25,7 +25,7 @@ public class GenerateSiteswapEffectTests
         };
         var action = new GenerateSiteswapsAction(generatorState, new CancellationTokenSource());
 
-        var sut = new GenerateSiteswapEffect(Mock.Of<NavigationManager>());
+        var sut = new GenerateSiteswapEffect(Mock.Of<INavigation>());
 
         var dispatcherMock = new DispatcherMock();
         await sut.HandleAsync(action, dispatcherMock);
