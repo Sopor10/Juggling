@@ -1,13 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <WarningsAsErrors>nullable</WarningsAsErrors>
-        <WarningLevel>9999</WarningLevel>
-        <TreatWarningsAsErrors></TreatWarningsAsErrors>
-    </PropertyGroup>
-
     <ItemGroup>
       <PackageReference Include="morelinq" />
       <PackageReference Include="SkiaSharp" />

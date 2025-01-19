@@ -80,12 +80,12 @@
         return null;
     }
     
-    private static Period? ToPeriod(ChangeEventArgs eventArgs)
+    private static Period ToPeriod(ChangeEventArgs eventArgs)
     {
         if (int.TryParse(eventArgs.Value as string, out var result))
         {
             return new(result);
         }
-        return null;
+        throw new ArgumentException("Period must be an integer");
     }
 }

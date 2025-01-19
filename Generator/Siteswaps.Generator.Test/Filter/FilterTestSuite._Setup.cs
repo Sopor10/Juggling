@@ -7,7 +7,7 @@ namespace Siteswaps.Generator.Test.Filter;
 public partial class FilterTestSuite
 {
     protected IFilterBuilder FilterBuilder =>
-        new FilterBuilderFactory().Create(
+        new FilterBuilder(
             Input
                 ?? throw new InvalidOperationException(
                     "Please set a Input via ConfigureSiteswapGeneratorInput"

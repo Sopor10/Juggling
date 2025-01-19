@@ -6,8 +6,8 @@ namespace Siteswaps.Generator.Generator.Filter;
 internal class FlexiblePatternFilter : ISiteswapFilter
 {
     //each position in a pattern can have multiple possible values
-    private Pattern Pattern { get; }
-    private List<Pattern> Patterns { get; }
+    private PatternRecord Pattern { get; }
+    private List<PatternRecord> Patterns { get; }
 
     private int NumberOfJuggler { get; }
 
@@ -40,12 +40,12 @@ internal class FlexiblePatternFilter : ISiteswapFilter
             p[pos] = pattern[i];
         }
 
-        Pattern = new Pattern(p, SelfValues, PassValues);
-        Patterns = new List<Pattern>();
+        Pattern = new PatternRecord(p, SelfValues, PassValues);
+        Patterns = new List<PatternRecord>();
 
         for (var i = 0; i < input.Period; i++)
         {
-            var rotate = new Pattern(p.Rotate(i), SelfValues, PassValues);
+            var rotate = new PatternRecord(p.Rotate(i), SelfValues, PassValues);
             Patterns.Add(rotate);
         }
     }
@@ -60,49 +60,53 @@ internal class FlexiblePatternFilter : ISiteswapFilter
         var siteswap = value.Items.ToCyclicArray();
         return Patterns.Any(pattern => pattern.Matches(siteswap));
     }
-}
 
-[DebuggerDisplay("{DebugDisplay}")]
-public record Pattern(List<List<int>> Value, HashSet<int> SelfValues, HashSet<int> PassValues)
-{
-    private string DebugDisplay =>
-        string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
-
-    private const int DontCare = -1;
-    private const int Pass = -2;
-    private const int Self = -3;
-
-    public bool Matches(CyclicArray<int> value)
+    [DebuggerDisplay("{DebugDisplay}")]
+    private record PatternRecord(
+        List<List<int>> Value,
+        HashSet<int> SelfValues,
+        HashSet<int> PassValues
+    )
     {
-        for (var i = 0; i < Value.Count; i++)
-        {
-            if (!RotationMatches(value, i))
-                return false;
-        }
+        private string DebugDisplay =>
+            string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
 
-        return true;
-    }
+        private const int DontCare = -1;
+        private const int Pass = -2;
+        private const int Self = -3;
 
-    private bool RotationMatches(CyclicArray<int> siteswap, int i)
-    {
-        var singleMatch = false;
-        foreach (var patternValue in Value[i])
+        public bool Matches(CyclicArray<int> value)
         {
-            if (ValueSatisfiesPattern(siteswap[i], patternValue))
+            for (var i = 0; i < Value.Count; i++)
             {
-                singleMatch = true;
+                if (!RotationMatches(value, i))
+                    return false;
             }
+
+            return true;
         }
 
-        return singleMatch;
-    }
-
-    private bool ValueSatisfiesPattern(int siteswapValue, int patternValue) =>
-        patternValue switch
+        private bool RotationMatches(CyclicArray<int> siteswap, int i)
         {
-            DontCare => true,
-            Pass => PassValues.Contains(siteswapValue),
-            Self => SelfValues.Contains(siteswapValue),
-            _ => siteswapValue == patternValue,
-        };
+            var singleMatch = false;
+            foreach (var patternValue in Value[i])
+            {
+                if (ValueSatisfiesPattern(siteswap[i], patternValue))
+                {
+                    singleMatch = true;
+                }
+            }
+
+            return singleMatch;
+        }
+
+        private bool ValueSatisfiesPattern(int siteswapValue, int patternValue) =>
+            patternValue switch
+            {
+                DontCare => true,
+                Pass => PassValues.Contains(siteswapValue),
+                Self => SelfValues.Contains(siteswapValue),
+                _ => siteswapValue == patternValue,
+            };
+    }
 }

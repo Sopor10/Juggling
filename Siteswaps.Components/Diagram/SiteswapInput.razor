@@ -4,24 +4,21 @@
 @code {
 
     [Parameter]
-    public Siteswap? Siteswap
+    public Siteswap? Siteswap { get; set; }
+
+    protected override void OnParametersSet()
     {
-        get => _siteswap;
-        set
+        if (Siteswap is not null)
         {
-            if (value is not null)
-            {
-                _siteswapInputValue = value.ToString();
-            }
-            _siteswap = value;
+            _siteswapInputValue = Siteswap.ToString();
         }
+        base.OnParametersSet();
     }
 
     [Parameter]
     public EventCallback<Siteswap?> SiteswapChanged { get; set; }
 
     private string? _siteswapInputValue;
-    private Siteswap? _siteswap;
 
     private string? SiteswapInputValue
     {

@@ -12,7 +12,7 @@
 <RadzenListBox TValue="Orbit">
     <Template>
         <span>
-            @(string.Join("", (context as Orbit).Items))
+            @(string.Join("", (context as Orbit)?.Items??new List<int>()))
         </span>
     </Template>
     

@@ -1,13 +1,59 @@
-﻿@page "/result"
+﻿
+@page "/result"
 
 @inherits FluxorComponent
-@inject IState<SiteswapGeneratorState> _state
+@implements IDisposable
 
-@if (!_state.Value.IsGenerating)
+@inject IState<SiteswapGeneratorState> _state
+@inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
+
+@if (_state.Value.Siteswaps.Any())
 {
     <SiteswapList Siteswaps="@_state.Value.Siteswaps" NumberOfJugglers="@(_state.Value.State.NumberOfJugglers ?? 0)"></SiteswapList>
 }
 else
 {
     <text>Generating...</text>
+}
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += HandleLocationChange2;
+        base.OnInitialized();
+    }
+
+    private void HandleLocationChange2(object? sender, LocationChangedEventArgs e)
+    {
+        HandleLocationChange(e);
+    }
+
+    private void HandleLocationChange(LocationChangedEventArgs locationChangedEventArgs)
+    {
+        if (locationChangedEventArgs.Location.Contains("result"))
+        {
+            Console.WriteLine("Navigated to result list");
+            return;
+        }
+        Console.WriteLine("Navigated away from result list");
+        Dispatcher.Dispatch(new NavigatedAwayFromSiteswapResultListAction());
+            
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            NavigationManager.LocationChanged -= HandleLocationChange2;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
 }

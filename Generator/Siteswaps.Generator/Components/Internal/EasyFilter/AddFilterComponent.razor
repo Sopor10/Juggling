@@ -1,6 +1,6 @@
 ﻿@page "/addFilter"
 @using System.Collections.Immutable
-<RadzenTabs @ref="tabs" TabPosition="TabPosition.Top" Change="UpdateFilter">
+<RadzenTabs TabPosition="TabPosition.Top" Change="UpdateFilter" @bind-SelectedIndex="SelectedIndex">
     <Tabs>
         <RadzenTabsItem Text="Pattern Filter">
             @if (FilterInformation is NewPatternFilterInformation patternFilter)
@@ -30,38 +30,35 @@
 
 @code {
 
-    RadzenTabs tabs;
+    private int SelectedIndex { get; set; }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override Task OnInitializedAsync()
     {
-        if (firstRender)
+        Console.WriteLine($"Filter: {Filter}, vom Typ: {Filter?.GetType()}");
+        FilterInformation = Filter switch
         {
-            Console.WriteLine($"Filter: {Filter}, vom Typ: {Filter?.GetType()}");
-            FilterInformation = Filter switch
-            {
-                NewPatternFilterInformation patternFilter => patternFilter,
-                EasyNumberFilter.NumberFilter numberFilter => numberFilter,
-                _ => new NewPatternFilterInformation(State.Throws.ToList(), true, true)
-            };
+            NewPatternFilterInformation patternFilter => patternFilter,
+            EasyNumberFilter.NumberFilter numberFilter => numberFilter,
+            _ => new NewPatternFilterInformation(State.Throws.ToList(), true, true)
+        };
 
-            tabs.SelectedIndex = FilterInformation switch
-            {
-                NewPatternFilterInformation _ => 0,
-                EasyNumberFilter.NumberFilter _ => 1,
-                _ => 0
-            };
-        }
-
-        return base.OnAfterRenderAsync(firstRender);
+        SelectedIndex = FilterInformation switch
+        {
+            NewPatternFilterInformation _ => 0,
+            EasyNumberFilter.NumberFilter _ => 1,
+            _ => 0
+        };
+        
+        return base.OnInitializedAsync();
     }
 
     [Parameter] public EventCallback<IFilterInformation> EditFilterFinished { get; set; }
 
-    [Parameter] public GeneratorState State { get; set; }
+    [Parameter, EditorRequired] public required GeneratorState State { get; set; }
 
     [Parameter] public IFilterInformation? Filter { get; set; }
 
-    private IFilterInformation FilterInformation { get; set; }
+    private IFilterInformation? FilterInformation { get; set; }
 
     private void UpdateFilter(int obj)
     {
@@ -82,7 +79,8 @@
                     Type = EasyNumberFilter.NumberFilterType.Exactly
                         
                 }
-            }
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(obj), obj, null)
         };
     }
 

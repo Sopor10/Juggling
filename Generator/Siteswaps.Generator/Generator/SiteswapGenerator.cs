@@ -1,4 +1,6 @@
-﻿using Siteswaps.Generator.Generator.Filter;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Generator;
 
@@ -8,20 +10,22 @@ public class SiteswapGenerator
     {
         Filter = filter;
         Input = input;
-        PartialSiteswap = PartialSiteswap.Standard((int)Input.Period, (int)Input.MaxHeight);
+        PartialSiteswap = PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
     }
 
     private ISiteswapFilter Filter { get; }
     private SiteswapGeneratorInput Input { get; }
-    private PartialSiteswap PartialSiteswap { get; set; }
+    private PartialSiteswap PartialSiteswap { get; }
 
-    public async IAsyncEnumerable<Siteswap> GenerateAsync()
+    public async IAsyncEnumerable<Siteswap> GenerateAsync(
+        [EnumeratorCancellation] CancellationToken token
+    )
     {
-        var cancellationTokenSource = new CancellationTokenSource();
+        var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
         cancellationTokenSource.CancelAfter(Input.StopCriteria.TimeOut);
 
         await foreach (
-            var siteswap in GenerateInternalAsync()
+            var siteswap in GenerateInternalAsync(cancellationTokenSource.Token)
                 .Take(Input.StopCriteria.MaxNumberOfResults)
                 .WithCancellation(cancellationTokenSource.Token)
         )
@@ -30,13 +34,22 @@ public class SiteswapGenerator
         }
     }
 
-    private IAsyncEnumerable<Siteswap> GenerateInternalAsync()
+    private IAsyncEnumerable<Siteswap> GenerateInternalAsync(CancellationToken token)
     {
-        return BackTrack(0);
+        return BackTrack(0, token);
     }
 
-    private async IAsyncEnumerable<Siteswap> BackTrack(int uniqueMaxIndex)
+    private async IAsyncEnumerable<Siteswap> BackTrack(
+        int uniqueMaxIndex,
+        [EnumeratorCancellation] CancellationToken token
+    )
     {
+        if (token.IsCancellationRequested)
+        {
+            Console.WriteLine("Cancellation requested");
+            yield break;
+        }
+
         var min = Input.MinHeight;
         var max =
             PartialSiteswap.Items[uniqueMaxIndex] != -1
@@ -91,7 +104,9 @@ public class SiteswapGenerator
             }
 
             PartialSiteswap.MoveForward();
-            await foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0))
+            await Task.Delay(1, token);
+
+            await foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0, token))
             {
                 yield return siteswap;
             }

@@ -7,7 +7,7 @@ public class PartialSiteswap
     internal PartialSiteswap(int[] items, int lastFilledPosition = 0)
     {
         LastFilledPosition = lastFilledPosition;
-        Interface = new CyclicArray<int>(Enumerable.Repeat((int)-1, items.Length));
+        Interface = new CyclicArray<int>(Enumerable.Repeat(-1, items.Length));
         Items = new int[items.Length];
 
         for (int i = 0; i < items.Length; i++)
@@ -19,7 +19,7 @@ public class PartialSiteswap
     public int[] Items { get; }
     private CyclicArray<int> Interface { get; }
 
-    public int PartialSum { get; set; }
+    public int PartialSum { get; private set; }
 
     private int this[int i]
     {
@@ -54,7 +54,7 @@ public class PartialSiteswap
     public bool IsFilled() => Items[^1] != -1;
 
     public static PartialSiteswap Standard(int period, int maxHeight) =>
-        new(Enumerable.Repeat((int)-1, period - 1).Prepend(maxHeight).ToArray());
+        new(Enumerable.Repeat(-1, period - 1).Prepend(maxHeight).ToArray());
 
     public bool FillCurrentPosition(int throwHeight)
     {
