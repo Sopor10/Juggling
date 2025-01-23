@@ -1,13 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
-<!--        <WarningsAsErrors>nullable</WarningsAsErrors>-->
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-
-
     <ItemGroup>
         <SupportedPlatform Include="browser" />
     </ItemGroup>
@@ -19,6 +11,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="SkiaSharp.Views.Blazor" />
+        <PackageReference Include="System.Linq.Dynamic.Core" />
         <PackageReference Include="VisNetwork.Blazor" />
         <PackageReference Include="Z.Blazor.Diagrams" />
         <PackageReference Include="Radzen.Blazor" />

@@ -26,7 +26,7 @@
     
     private int cursorPosition { get; set; }
 
-    private List<Throw> Throws { get; } = Throw.Everything.ToList();
+    private List<Throw> Throws { get; } = Throw.Everything().ToList();
     private List<string> ThrowsAsString => Throws.Select(x => x.DisplayValue).ToList();
 
     private void HandleInput(string obj)

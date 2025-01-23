@@ -1,4 +1,4 @@
-﻿@typeparam TItem
+﻿@typeparam TItem where TItem: notnull
 
 <!-- CustomListBox.razor -->
 <div class="custom-checkbox-list">
@@ -19,16 +19,16 @@
 
 
 @code {
-    [Parameter] public IEnumerable<TItem> Items { get; set; } // Liste der Elemente
-    [Parameter] public IEnumerable<TItem> SelectedItems { get; set; } // Ausgewählte Elemente (ohne lokale Änderung)
-    [Parameter] public EventCallback<IEnumerable<TItem>> OnChange { get; set; } // Rückmeldung der Checkbox-Änderung
-    [Parameter] public Func<TItem, string> TextField { get; set; } // Funktion zum Abrufen des anzuzeigenden Texts
+    [Parameter, EditorRequired] public required IEnumerable<TItem> Items { get; set; } // Liste der Elemente
+    [Parameter, EditorRequired] public required IEnumerable<TItem> SelectedItems { get; set; } // Ausgewählte Elemente (ohne lokale Änderung)
+    [Parameter, EditorRequired] public required EventCallback<IEnumerable<TItem>> OnChange { get; set; } // Rückmeldung der Checkbox-Änderung
+    [Parameter, EditorRequired] public required Func<TItem, string> TextField { get; set; } // Funktion zum Abrufen des anzuzeigenden Texts
 
-    private string GetDisplayText(TItem item) => TextField?.Invoke(item) ?? item.ToString();
+    private string GetDisplayText(TItem item) => TextField.Invoke(item);
 
     private void OnCheckboxChange(ChangeEventArgs e, TItem item)
     {
-        if ((bool)e.Value == true)
+        if ((bool)(e.Value ?? false))
         {
             OnChange.InvokeAsync(SelectedItems.Append(item));
         }
