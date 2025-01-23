@@ -20,12 +20,19 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-      - name: Install .NET WebAssembly Tools
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Csharpier
+        run: dotnet dotnet-csharpier . --check
+      - name: Install workload
         run: dotnet workload install wasm-tools
-
+      - name: Build Solution
+        run: dotnet build -c release
+      - name: Test
+        run: dotnet test -c Release --filter TestCategory!=E2E --no-build
       # Publish the site
       - name: Publish
-        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone
+        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone --no-build
 
       # Deploy the site
       - name: Deploy
