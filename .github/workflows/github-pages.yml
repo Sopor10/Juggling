@@ -26,13 +26,12 @@ jobs:
         run: dotnet dotnet-csharpier . --check
       - name: Install workload
         run: dotnet workload install wasm-tools
-      - name: Build Solution
-        run: dotnet build -c release
       - name: Test
-        run: dotnet test -c Release --filter TestCategory!=E2E --no-build
+        run: dotnet test --filter TestCategory!=E2E
+        
       # Publish the site
       - name: Publish
-        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone --no-build
+        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone
 
       # Deploy the site
       - name: Deploy
