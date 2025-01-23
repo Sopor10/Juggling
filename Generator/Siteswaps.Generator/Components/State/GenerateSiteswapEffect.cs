@@ -64,6 +64,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 await Task.Delay(1);
             }
         }
+        dispatcher.Dispatch(new SiteswapGeneratedAction(results.ToList()));
     }
 
     private static List<(

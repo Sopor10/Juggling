@@ -104,7 +104,6 @@ public class SiteswapGenerator
             }
 
             PartialSiteswap.MoveForward();
-            await Task.Delay(1, token);
 
             await foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0, token))
             {
