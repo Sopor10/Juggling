@@ -1,8 +1,10 @@
 ﻿<Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.0-preview-01" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.1" PrivateAssets="all" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />

@@ -27,6 +27,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
         await Task.Delay(1);
 
         await CreateSiteswaps(action, dispatcher);
+        Console.WriteLine("Finished");
     }
 
     private async Task CreateSiteswaps(GenerateSiteswapsAction action, IDispatcher dispatcher)
@@ -36,6 +37,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
             throw new InvalidOperationException("This is probably an old cancellation token");
         }
 
+        var results = new List<Siteswap>();
         foreach (var (siteswapGeneratorInput, factory) in CreateSiteswapGeneratorInputs(action))
         {
             await foreach (
@@ -50,7 +52,15 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                     return;
                 }
 
-                dispatcher.Dispatch(new SiteswapGeneratedAction(s));
+                if (results.Count < 10)
+                {
+                    results.Add(s);
+                }
+                else
+                {
+                    dispatcher.Dispatch(new SiteswapGeneratedAction(results.ToList()));
+                    results.Clear();
+                }
                 await Task.Delay(1);
             }
         }

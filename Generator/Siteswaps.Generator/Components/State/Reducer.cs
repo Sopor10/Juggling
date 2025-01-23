@@ -11,7 +11,7 @@ public static class Reducer
     public static SiteswapGeneratorState ReduceSingleSiteswapsGeneratedChangedAction(
         SiteswapGeneratorState state,
         SiteswapGeneratedAction action
-    ) => state with { Siteswaps = state.Siteswaps.Add(action.Siteswap) };
+    ) => state with { Siteswaps = state.Siteswaps.AddRange(action.Siteswaps) };
 
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIsGeneratingAction(

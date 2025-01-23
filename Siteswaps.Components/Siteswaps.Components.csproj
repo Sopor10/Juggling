@@ -11,6 +11,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="SkiaSharp.Views.Blazor" />
+        <PackageReference Include="System.Linq.Dynamic.Core" />
         <PackageReference Include="VisNetwork.Blazor" />
         <PackageReference Include="Z.Blazor.Diagrams" />
         <PackageReference Include="Radzen.Blazor" />

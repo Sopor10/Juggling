@@ -29,7 +29,7 @@ public record NewFilterCreatedAction(IFilterInformation Value);
 
 public record ChangedFilterAction(IFilterInformation NewPatternFilterInformation, int FilterNumber);
 
-public record SiteswapGeneratedAction(Siteswap Siteswap);
+public record SiteswapGeneratedAction(params IEnumerable<Siteswap> Siteswaps);
 
 public record NavigatedAwayFromSiteswapResultListAction;
 

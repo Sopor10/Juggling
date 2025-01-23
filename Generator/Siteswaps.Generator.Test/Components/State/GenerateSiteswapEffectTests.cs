@@ -34,7 +34,8 @@ public class GenerateSiteswapEffectTests
             .Actions.OfType<SiteswapGeneratedAction>()
             .Should()
             .ContainSingle()
-            .Which.Siteswap.Items.Should()
+            .Which.Siteswaps.Single()
+            .Items.Should()
             .BeSameAs([7, 5, 6, 6]);
     }
 }
