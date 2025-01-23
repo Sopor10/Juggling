@@ -13,7 +13,6 @@ public class CausalDiagramRenderer
         StrokeWidth = 1,
         IsAntialias = true,
         Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center,
     };
 
     private readonly SKPaint namePaint = new()
@@ -22,7 +21,6 @@ public class CausalDiagramRenderer
         StrokeWidth = 1,
         IsAntialias = true,
         Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center,
     };
 
     private readonly SKPaint handPaint = new()
@@ -31,7 +29,6 @@ public class CausalDiagramRenderer
         StrokeWidth = 1,
         IsAntialias = true,
         Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center,
     };
 
     private readonly SKPaint transitionPaint = new()
@@ -40,7 +37,6 @@ public class CausalDiagramRenderer
         StrokeWidth = 2,
         IsAntialias = true,
         Style = SKPaintStyle.Stroke,
-        TextAlign = SKTextAlign.Center,
     };
 
     public void Render(SKCanvas canvas, CausalDiagram.CausalDiagram diagram)
@@ -72,7 +68,13 @@ public class CausalDiagramRenderer
         var height = 100;
         foreach (var person in persons)
         {
-            canvas.DrawText(person.Key.Name, new SKPoint(50, height), namePaint);
+            canvas.DrawText(
+                person.Key.Name,
+                new SKPoint(50, height),
+                SKTextAlign.Center,
+                new SKFont(),
+                namePaint
+            );
             height += 50;
         }
     }
@@ -88,7 +90,13 @@ public class CausalDiagramRenderer
         foreach (var (node, skPoint) in points)
         {
             canvas.DrawCircle(skPoint, 10, circlePaint);
-            canvas.DrawText(node.Height.ToString(), skPoint, circlePaint);
+            canvas.DrawText(
+                node.Height.ToString(),
+                skPoint,
+                SKTextAlign.Center,
+                new SKFont(),
+                circlePaint
+            );
         }
     }
 
@@ -135,7 +143,7 @@ public class CausalDiagramRenderer
 
         foreach (var (node, point) in points)
         {
-            canvas.DrawText(node.Hand.Name, point, handPaint);
+            canvas.DrawText(node.Hand.Name, point, SKTextAlign.Center, new SKFont(), handPaint);
         }
     }
 

@@ -1,17 +1,20 @@
 ﻿<Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.0-preview-01" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.1" PrivateAssets="all" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="PublishSPAforGitHubPages.Build" Version="3.0.0" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.1" />
     <PackageVersion Include="morelinq" Version="4.4.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.5.2" />
-    <PackageVersion Include="Radzen.Blazor" Version="5.7.10" />
+    <PackageVersion Include="Radzen.Blazor" Version="5.8.0" />
     <PackageVersion Include="Bogus" Version="35.6.1" />
     <PackageVersion Include="FluentAssertions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

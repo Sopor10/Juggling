@@ -8,15 +8,23 @@
 @code {
 
     [Parameter]
-    public Transition? Transition
-    {
-        get => _transition;
-        set
-        {
+    public Transition? Transition { get; set; }
 
-            _transition = value;
-            CreateNetworkData(_transition);
+    private Transition? oldTransition;
+    protected override void OnInitialized()
+    {
+        oldTransition = Transition;
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (oldTransition?.PrettyPrint() != Transition?.PrettyPrint())
+        {
+            oldTransition = Transition;
+            CreateNetworkData(Transition);
         }
+        base.OnParametersSet();
     }
 
     private NetworkData Data { get; set; } = new();

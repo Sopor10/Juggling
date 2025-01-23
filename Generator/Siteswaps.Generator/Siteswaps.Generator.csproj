@@ -1,21 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
-
     <ItemGroup>
         <SupportedPlatform Include="browser" />
     </ItemGroup>
 
+    <ItemGroup Condition="$(Configuration)=='Debug'">
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
         <PackageReference Include="morelinq" />
         <PackageReference Include="Fluxor.Blazor.Web" />
         <PackageReference Include="Radzen.Blazor" />
         <PackageReference Include="System.Linq.Async" />        
+        <PackageReference Include="System.Linq.Dynamic.Core" />        
     </ItemGroup>
 
     <ItemGroup>

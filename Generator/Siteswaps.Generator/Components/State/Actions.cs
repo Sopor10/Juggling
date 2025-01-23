@@ -2,9 +2,12 @@
 
 namespace Siteswaps.Generator.Components.State;
 
-public record GenerateSiteswapsAction(GeneratorState State);
+public record GenerateSiteswapsAction(
+    GeneratorState State,
+    CancellationTokenSource CancellationTokenSource
+);
 
-public record PeriodChangedAction(Period? Value);
+public record PeriodChangedAction(Period Value);
 
 public record ExactNumberChangedAction(int? Value);
 
@@ -26,11 +29,9 @@ public record NewFilterCreatedAction(IFilterInformation Value);
 
 public record ChangedFilterAction(IFilterInformation NewPatternFilterInformation, int FilterNumber);
 
-public record SiteswapsGeneratedAction(IReadOnlyCollection<Siteswap> Siteswaps);
+public record SiteswapGeneratedAction(params IEnumerable<Siteswap> Siteswaps);
 
-public record FilterTypeSelectionChangedAction(FilterType FilterType);
-
-public record PatternFilterValueChangedAction(int Pos, int Value);
+public record NavigatedAwayFromSiteswapResultListAction;
 
 public record SetState(GeneratorState State);
 
