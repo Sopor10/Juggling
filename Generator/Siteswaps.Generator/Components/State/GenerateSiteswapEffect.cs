@@ -97,13 +97,19 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 MaxHeight = action.State.CreateFilterFromThrowList
                     ? action
                         .State.Throws.MaxBy(x => x.Height)
-                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
+                        ?.GetHeightForJugglers(
+                            action.State.NumberOfJugglers.Value,
+                            action.State.Settings.ShowThrowNames is false
+                        )
                         .Max() ?? throw new InvalidOperationException()
                     : action.State.MaxThrow.Value,
                 MinHeight = action.State.CreateFilterFromThrowList
                     ? action
                         .State.Throws.MinBy(x => x.Height)
-                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
+                        ?.GetHeightForJugglers(
+                            action.State.NumberOfJugglers.Value,
+                            action.State.Settings.ShowThrowNames is false
+                        )
                         .Min() ?? throw new InvalidOperationException()
                     : action.State.MinThrow.Value,
                 NumberOfObjects = number,
@@ -113,7 +119,12 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 action.State.Filter.Aggregate(
                     builder,
                     (current, filterInformation) =>
-                        ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
+                        ToFilter(
+                            current,
+                            filterInformation,
+                            action.State.NumberOfJugglers.Value,
+                            action.State.Settings.ShowThrowNames is false
+                        )
                 );
 
             var siteswapGeneratorFactory = new SiteswapGeneratorFactory().ConfigureFilter(
@@ -132,7 +143,10 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                     if (
                         action
                             .State.Throws.SelectMany(x =>
-                                x.GetHeightForJugglers(action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
+                                x.GetHeightForJugglers(
+                                    action.State.NumberOfJugglers.Value,
+                                    action.State.Settings.ShowThrowNames is false
+                                )
                             )
                             .Contains(i)
                     )
@@ -156,15 +170,22 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
         return result;
     }
 
-    private static IFilterBuilder ToFilter(IFilterBuilder builder,
+    private static IFilterBuilder ToFilter(
+        IFilterBuilder builder,
         IFilterInformation filterInformation,
-        int numberOfJugglers, 
-        bool showName)
+        int numberOfJugglers,
+        bool showName
+    )
     {
         switch (filterInformation)
         {
             case NewPatternFilterInformation newPatternFilterInformation:
-                return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder, showName);
+                return BuildPatternFilter(
+                    newPatternFilterInformation,
+                    numberOfJugglers,
+                    builder,
+                    showName
+                );
             case EasyNumberFilter.NumberFilter numberFilter:
                 return numberFilter.Type switch
                 {
@@ -187,9 +208,12 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
         throw new ArgumentOutOfRangeException();
     }
 
-    private static IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
+    private static IFilterBuilder BuildPatternFilter(
+        NewPatternFilterInformation newPatternFilterInformation,
         int numberOfJugglers,
-        IFilterBuilder builder, bool showName)
+        IFilterBuilder builder,
+        bool showName
+    )
     {
         var patterns = new List<List<int>>();
         foreach (var t in newPatternFilterInformation.Pattern)

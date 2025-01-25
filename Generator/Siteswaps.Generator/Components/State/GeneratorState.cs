@@ -109,7 +109,7 @@ public record Throw(string Name, int Height, string DisplayValue)
         {
             return [Height];
         }
-        
+
         var result = new HashSet<int>();
         if (IsPass)
         {
@@ -130,7 +130,6 @@ public record Throw(string Name, int Height, string DisplayValue)
         }
 
         return result;
-        
     }
 
     public string GetDisplayValue(bool showName)
