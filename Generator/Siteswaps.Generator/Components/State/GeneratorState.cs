@@ -3,6 +3,7 @@ using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 
+
 public record GeneratorState
 {
     public int? NumberOfJugglers { get; init; } = 2;
@@ -24,8 +25,7 @@ public record GeneratorState
             Throw.TripleSelf,
         }.ToImmutableList();
 
-    public ImmutableList<IFilterInformation> Filter { get; init; } =
-        ImmutableList<IFilterInformation>.Empty;
+    public ImmutableList<IFilterInformation> Filter { get; init; } = ImmutableList<IFilterInformation>.Empty;
 
     public bool CreateFilterFromThrowList => true;
     public Settings.SettingsDto Settings { get; set; } = new();

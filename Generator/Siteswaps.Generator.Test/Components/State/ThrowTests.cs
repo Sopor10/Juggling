@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator.Components.State;

@@ -35,14 +35,14 @@ internal record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
             Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers, Input)),
         };
 
-    public IFilterBuilder And(ISiteswapFilter filter) => this with { Filter = Filter.Add(filter) };
+    public IFilterBuilder And(params IEnumerable<ISiteswapFilter> filter) => this with { Filter = Filter.AddRange(filter) };
 
     public IFilterBuilder Or(ISiteswapFilter filter) =>
         this with
         {
             Filter = [new OrFilter(new AndFilter(Filter.ToArray()), filter)],
         };
-
+    
     public IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
         int numberOfJuggler,

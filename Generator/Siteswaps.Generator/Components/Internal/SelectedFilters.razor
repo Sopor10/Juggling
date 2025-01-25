@@ -1,65 +1,80 @@
-﻿@inherits FluxorComponent
+﻿@using System.Collections.Immutable
+@inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
 @inject DialogService DialogService
 
-<div class="row">
-    @if (ShowHeading)
-    {
-        <div class="col"><h5>Your currently selected Filters</h5></div>
-    }
 
-    @foreach (var (filter, i) in Value.Filter.Select((x, i) => (x, i)))
-    {
-        <div class="col-12 mb-4">
-            <div class="card w-100 h-100 flex-grow-1">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <text class="text-break">@filter.Display()</text>
-                        <div class="d-flex">
-                            @if (AllowEdit is false)
-                            {
-                                <button type="button" class="btn btn-outline-secondary ms-2 me-2"
-                                        @onclick="@(_ => ShowInlineDialog(i))">
-                                    <EditPencil/>
-                                </button>
-                            }
-                            <button type="button" class="bi bi-trash btn btn-outline-danger"
-                                    @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(i)))">
-                                <Trashcan/>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+<RadzenDropZoneContainer 
+    TItem="FilterPosition" Data="Value.Filter.Select((x, i) => new FilterPosition(i, x)).ToList()"
+    ItemSelector="Selector"
+    CanDrop="CanDrop"
+    Drop="OnDrop">
+    <ChildContent>
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenDropZone Value="@typeof(NewPatternFilterInformation)">
+            </RadzenDropZone>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenDropZone Value="0">
+                <RadzenCard>
+                    <RadzenText Text="And"></RadzenText>
+                </RadzenCard>
+            </RadzenDropZone>
+        </RadzenStack>
+    </ChildContent>
+    <Template>
+        @if(context.Filter is AndFilterInformation andFilter)
+        {
+            
+        }
+        else
+        {
+            @RenderFilter(context)
+        }
+    </Template>
+</RadzenDropZoneContainer>
 
 
 @code
 {
-    [Parameter] public bool ShowHeading { get; set; } = true;
 
-    [Parameter] public bool AllowEdit { get; set; } = true;
-
+    public record FilterPosition(int Position, IFilterInformation Filter);
+    private RenderFragment<FilterPosition> RenderFilter => f => @<div class="card w-100 h-100 flex-grow-1">
+                                                                        <div class="card-body d-flex flex-column justify-content-center">
+                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                <text class="text-break">@f.Filter.Display()</text>
+                                                                                <div class="d-flex">
+                                                                                    <button type="button" class="btn btn-outline-secondary ms-2 me-2"
+                                                                                            @onclick="@(_ => ShowInlineDialog(f.Position))">
+                                                                                        <EditPencil/>
+                                                                                    </button>
+                                                                                    <button type="button" class="bi bi-trash btn btn-outline-danger"
+                                                                                            @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(f.Filter)))">
+                                                                                        <Trashcan/>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>;
     private GeneratorState Value => State.Value.State;
 
     private async Task ShowInlineDialog(int i)
     {
         await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object>
         {
-            {nameof(Filter.FilterNumber), i},
+            { nameof(Filter.FilterNumber), i }
         }, new DialogOptions
         {
-            CloseDialogOnOverlayClick = true, 
+            CloseDialogOnOverlayClick = true,
             Height = "500px",
             Style = "mind-width: 300px"
         });
     }
-    public record RemoveFilterNumber(int Value);
-    
+
+    public record RemoveFilterNumber(IFilterInformation Value);
+
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceNewFilterCreatedAction(
         SiteswapGeneratorState state,
@@ -68,8 +83,36 @@
     {
         return state with
         {
-            State = state.State with { Filter = state.State.Filter.RemoveAt(action.Value) },
+            State = state.State with { Filter = state.State.Filter.Remove(action.Value) }
         };
     }
 
+    private bool Selector(FilterPosition item, RadzenDropZone<FilterPosition> dropZone)
+    {
+        return item.Filter.GetType().Equals(dropZone.Value);
+    }
+
+    private void OnRender(RadzenDropZoneItemRenderEventArgs<FilterPosition> obj)
+    {
+    }
+
+    private bool CanDrop(RadzenDropZoneItemEventArgs<FilterPosition> arg)
+    {
+        return true;
+    }
+
+    private void OnDrop(RadzenDropZoneItemEventArgs<FilterPosition> obj)
+    {
+        
+    }
+    
+    public class AndFilterInformation(ImmutableList<IFilterInformation> filters) : IFilterInformation
+    {
+        public ImmutableList<IFilterInformation> Filters => filters;
+        
+        public string Display()
+        {
+            return string.Join(" AND ", filters.Select(x => x.Display()));
+        }
+    }
 }

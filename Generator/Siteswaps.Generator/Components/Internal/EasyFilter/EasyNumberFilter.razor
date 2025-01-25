@@ -22,8 +22,7 @@
     </div>
     <div class="col">
         <div class="input-group">
-            <RadzenDropDown TValue="Throw" @bind-Value="@Value.Throw" Data="PossibleThrows"
-                            TextProperty="@nameof(Throw.DisplayValue)"></RadzenDropDown>
+            <RadzenDropDown TValue="Throw" @bind-Value="@Value.Throw" Data="PossibleThrows" TextProperty="@nameof(Throw.DisplayValue)" Style="min-width: 75px;"/>
         </div>
     </div>
 </div>
@@ -32,7 +31,6 @@
         <RadzenButton id="finish-new-filter" Text="@AddButtonText"Click="async _ => await AddFilter.InvokeAsync(Value)"/>
     </div>
 </div>
-
 
 @code {
 
@@ -70,6 +68,4 @@
         Maximum,
         AtLeast
     }
-
-
 }

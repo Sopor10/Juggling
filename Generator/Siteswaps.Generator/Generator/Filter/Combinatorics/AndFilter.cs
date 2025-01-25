@@ -32,7 +32,6 @@ internal class AndFilter : ISiteswapFilter
         return filter switch
         {
             AndFilter _ => 0,
-            NotFilter _ => 0,
             OrFilter _ => 0,
             FlexiblePatternFilter _ => 10,
             NoFilter _ => 0,

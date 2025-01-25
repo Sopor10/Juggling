@@ -22,9 +22,10 @@ public interface IFilterBuilder
 
     IFilterBuilder No();
     IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers);
-    IFilterBuilder And(ISiteswapFilter filter);
+    IFilterBuilder And(params IEnumerable<ISiteswapFilter> filter);
     IFilterBuilder Or(ISiteswapFilter filter);
-    IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler);
+    public IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler);
+
     IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
         int numberOfJuggler,
