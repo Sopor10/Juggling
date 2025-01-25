@@ -6,7 +6,6 @@ public record NewPatternFilterInformation(
     bool IsIncludePattern
 ) : IFilterInformation
 {
-    
     public List<Throw> Pattern { get; set; } = Pattern;
     public bool IsGlobalPattern { get; set; } = IsGlobalPattern;
     public bool IsIncludePattern { get; set; } = IsIncludePattern;

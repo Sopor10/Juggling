@@ -16,14 +16,17 @@ public class GenerateSiteswapEffectTests
     {
         var generatorState = new GeneratorState()
         {
-            Clubs = new Between() { MaxNumber = 6, MinNumber = 6},
+            Clubs = new Between() { MaxNumber = 6, MinNumber = 6 },
             Throws = new List<Throw> { Throw.Self, Throw.Zap, Throw.SinglePass }.ToImmutableList(),
             Period = new(4),
             MinThrow = 5,
             MaxThrow = 8,
             NumberOfJugglers = 2,
         };
-        var action = new GenerateButton.GenerateSiteswapsAction(generatorState, new CancellationTokenSource());
+        var action = new GenerateButton.GenerateSiteswapsAction(
+            generatorState,
+            new CancellationTokenSource()
+        );
 
         var sut = new GenerateSiteswapEffect(Mock.Of<INavigation>());
 

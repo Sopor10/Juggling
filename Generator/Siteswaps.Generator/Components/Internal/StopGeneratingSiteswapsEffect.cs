@@ -2,6 +2,7 @@
 using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Components.Internal;
+
 public record NavigatedAwayFromSiteswapResultListAction;
 
 public class StopGeneratingSiteswapsEffect(IState<SiteswapGeneratorState> state)

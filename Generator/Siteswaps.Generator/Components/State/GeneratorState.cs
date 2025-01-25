@@ -31,7 +31,7 @@ public record GeneratorState
     public Settings.SettingsDto Settings { get; set; } = new();
 }
 
-public record Between 
+public record Between
 {
     public int MinNumber { get; init; } = 6;
     public int MaxNumber { get; init; } = 6;

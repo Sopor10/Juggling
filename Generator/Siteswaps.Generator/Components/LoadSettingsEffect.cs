@@ -6,8 +6,6 @@ namespace Siteswaps.Generator.Components;
 
 public record LoadSettings;
 
-
-
 public record SettingsLoadedAction(Settings.SettingsDto Settings);
 
 public class LoadSettingsEffect(ILocalStorageService localStorageService) : Effect<LoadSettings>
@@ -18,13 +16,10 @@ public class LoadSettingsEffect(ILocalStorageService localStorageService) : Effe
 
         dispatcher.Dispatch(new SettingsLoadedAction(settings ?? new()));
     }
-    
-    
 }
 
 public static class Reducer
 {
-
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceLoadedSettings(
         SiteswapGeneratorState state,
