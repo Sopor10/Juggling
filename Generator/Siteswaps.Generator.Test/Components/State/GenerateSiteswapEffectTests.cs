@@ -3,6 +3,7 @@ using FluentAssertions;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Moq;
+using Siteswaps.Generator.Components.Internal.Generate;
 using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Test.Components.State;
@@ -21,9 +22,8 @@ public class GenerateSiteswapEffectTests
             MinThrow = 5,
             MaxThrow = 8,
             NumberOfJugglers = 2,
-            CreateFilterFromThrowList = true,
         };
-        var action = new GenerateSiteswapsAction(generatorState, new CancellationTokenSource());
+        var action = new GenerateButton.GenerateSiteswapsAction(generatorState, new CancellationTokenSource());
 
         var sut = new GenerateSiteswapEffect(Mock.Of<INavigation>());
 

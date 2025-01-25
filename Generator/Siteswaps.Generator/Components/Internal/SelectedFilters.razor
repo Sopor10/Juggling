@@ -48,15 +48,28 @@
 
     private async Task ShowInlineDialog(int i)
     {
-        await DialogService.OpenAsync<EasyFilter.Filter>("New Pattern Filter", new Dictionary<string, object>
+        await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object>
         {
-            {nameof(EasyFilter.Filter.FilterNumber), i},
+            {nameof(Filter.FilterNumber), i},
         }, new DialogOptions
         {
             CloseDialogOnOverlayClick = true, 
             Height = "500px",
             Style = "mind-width: 300px"
         });
+    }
+    public record RemoveFilterNumber(int Value);
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceNewFilterCreatedAction(
+        SiteswapGeneratorState state,
+        RemoveFilterNumber action
+    )
+    {
+        return state with
+        {
+            State = state.State with { Filter = state.State.Filter.RemoveAt(action.Value) },
+        };
     }
 
 }

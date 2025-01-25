@@ -1,4 +1,5 @@
 ﻿@page "/easyUI"
+@using System.Collections.Immutable
 @inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> State
 @inject DialogService DialogService
@@ -31,7 +32,8 @@
 
     <div class="row mb-5 w-100">
         <h4 class="mb-3">Throws</h4>
-        <SelectList TItem="Throw" Items="@(AllThrows)" SelectedItems="@Throws" TextField="x => x.GetDisplayValue(ShowNames)" OnChange="ThrowsChanged"/>
+        <SelectList TItem="Throw" Items="@(AllThrows)" SelectedItems="@Throws"
+                    TextField="x => x.GetDisplayValue(ShowNames)" OnChange="ThrowsChanged"/>
     </div>
 
 
@@ -39,16 +41,14 @@
         <div class="col">
             <h4 class="mb-3">Filter</h4>
             <SelectedFilters ShowHeading="false" AllowEdit="false"/>
-            <button class="btn btn-secondary float-end" id="add-filter" type="button" @onclick="ShowInlineDialog"> + </button>
+            <button class="btn btn-secondary float-end" id="add-filter" type="button" @onclick="ShowInlineDialog"> +
+            </button>
         </div>
     </div>
 
     <div class="row mt-5 w-100">
         <div class="col">
-            <button class="btn btn-primary float-end" id="generate" type="submit"
-                    @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State, new CancellationTokenSource()))">
-                Generate
-            </button>
+            <GenerateButton/>
         </div>
     </div>
 </div>
@@ -59,12 +59,10 @@
     private IEnumerable<Throw> AllThrows => Throw.All(State.Value.State.Settings.MaxHeight);
     private IEnumerable<int> Clubs => [(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6];
     private bool ShowNames => State.Value.State.Settings.ShowThrowNames;
-    
+
     protected override async Task OnInitializedAsync()
     {
-        Dispatcher.Dispatch(new CreateFilterFromThrowList(true));
         Dispatcher.Dispatch(new LoadSettings());
-        
         await base.OnInitializedAsync();
     }
 
@@ -100,6 +98,121 @@
     private static PeriodChangedAction CreateAction(int? x)
     {
         return new PeriodChangedAction(new Period(x ?? throw new ArgumentNullException()));
+    }
+
+    public record MinNumberChangedAction(int? Value);
+    public record MaxNumberChangedAction(int? Value);
+    public record ThrowsChangedAction(IEnumerable<Throw> Throws);
+    public record MinThrowChangedAction(int? Value);
+    public record MaxThrowChangedAction(int? Value);
+    public record PeriodChangedAction(Period Value);
+    public record NumberOfJugglersChangedAction(int? Value);
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMinNumberOfObjectsChangedAction(
+        SiteswapGeneratorState state,
+        MinNumberChangedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Objects = state.State.Objects switch
+                {
+                    Between between => between with { MinNumber = action.Value },
+                    ExactNumber _ => new Between { MinNumber = action.Value },
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMaxNumberOfObjectsChangedAction(
+        SiteswapGeneratorState state,
+        MaxNumberChangedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Objects = state.State.Objects switch
+                {
+                    Between between => between with { MaxNumber = action.Value },
+                    ExactNumber _ => new Between { MaxNumber = action.Value },
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceThrowsChangedAction(
+        SiteswapGeneratorState state,
+        ThrowsChangedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Throws = action.Throws.ToImmutableList(),
+                Filter = state
+                    .State.Filter.Where(x =>
+                        !(
+                            x is EasyNumberFilter.NumberFilter numberFilter
+                            && action
+                                    .Throws.ToImmutableList()
+                                    .AddRange(Throw.AllWildCards)
+                                    .Contains(numberFilter.Throw)
+                                is false
+                        )
+                    )
+                    .Where(x =>
+                        !(
+                            x is NewPatternFilterInformation newPatternFilterInformation
+                            && newPatternFilterInformation.Pattern.Any(x =>
+                                action.Throws.Contains(x) is false
+                            )
+                        )
+                    )
+                    .ToImmutableList()
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMinThrowChangedAction(SiteswapGeneratorState state, MinThrowChangedAction action) => state with { State = state.State with { MinThrow = action.Value } };
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMaxThrowChangedAction(SiteswapGeneratorState state, MaxThrowChangedAction action) =>
+        state with { State = state.State with { MaxThrow = action.Value } };
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementPeriodChangedAction(
+        SiteswapGeneratorState state,
+        PeriodChangedAction action
+    ) =>
+        state with
+        {
+            State = state.State with
+            {
+                Period = action.Value,
+                Filter = state
+                    .State.Filter.Where(x => x is not NewPatternFilterInformation)
+                    .ToImmutableList(),
+            },
+        };
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementNumberOfJugglersChangedAction(
+        SiteswapGeneratorState state,
+        NumberOfJugglersChangedAction action
+    )
+    {
+        return state with { State = state.State with { NumberOfJugglers = action.Value } };
     }
 
 }

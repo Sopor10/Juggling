@@ -1,13 +1,14 @@
 ﻿using Fluxor;
 using Siteswaps.Generator.Components.Internal.EasyFilter;
+using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Generator;
 using Siteswaps.Generator.Generator.Filter;
 
-namespace Siteswaps.Generator.Components.State;
+namespace Siteswaps.Generator.Components.Internal.Generate;
 
-public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSiteswapsAction>
+public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateButton.GenerateSiteswapsAction>
 {
-    public override async Task HandleAsync(GenerateSiteswapsAction action, IDispatcher dispatcher)
+    public override async Task HandleAsync(GenerateButton.GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
         navigation.NavigateTo("/result");
         await Task.Delay(1);
@@ -16,79 +17,75 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
         Console.WriteLine("Finished");
     }
 
-    private async Task CreateSiteswaps(GenerateSiteswapsAction action, IDispatcher dispatcher)
+    private async Task CreateSiteswaps(GenerateButton.GenerateSiteswapsAction action, IDispatcher dispatcher)
     {
         if (action.CancellationTokenSource.IsCancellationRequested)
-        {
             throw new InvalidOperationException("This is probably an old cancellation token");
-        }
 
         var results = new List<Siteswap>();
         foreach (var (siteswapGeneratorInput, factory) in CreateSiteswapGeneratorInputs(action))
+        await foreach (
+            var s in factory
+                .Create(siteswapGeneratorInput)
+                .GenerateAsync(action.CancellationTokenSource.Token)
+        )
         {
-            await foreach (
-                var s in factory
-                    .Create(siteswapGeneratorInput)
-                    .GenerateAsync(action.CancellationTokenSource.Token)
-            )
+            if (action.CancellationTokenSource.IsCancellationRequested)
             {
-                if (action.CancellationTokenSource.IsCancellationRequested)
-                {
-                    Console.WriteLine("Cancelled siteswap generation");
-                    return;
-                }
-
-                if (results.Count < 10)
-                {
-                    results.Add(s);
-                }
-                else
-                {
-                    dispatcher.Dispatch(new SiteswapGeneratedAction(results.ToList()));
-                    results.Clear();
-                }
-                await Task.Delay(1);
+                Console.WriteLine("Cancelled siteswap generation");
+                return;
             }
+
+            if (results.Count < 10)
+            {
+                results.Add(s);
+            }
+            else
+            {
+                dispatcher.Dispatch(new SiteswapGeneratedAction(results.ToList()));
+                results.Clear();
+            }
+
+            await Task.Delay(1);
         }
+
         dispatcher.Dispatch(new SiteswapGeneratedAction(results.ToList()));
     }
 
     private static List<(
         SiteswapGeneratorInput siteswapGeneratorInput,
         SiteswapGeneratorFactory factory
-    )> CreateSiteswapGeneratorInputs(GenerateSiteswapsAction action)
+        )> CreateSiteswapGeneratorInputs(GenerateButton.GenerateSiteswapsAction action)
     {
         if (
             action.State.MinThrow is null
             || action.State.MaxThrow is null
             || action.State.NumberOfJugglers is null
         )
-        {
             return new List<(
                 SiteswapGeneratorInput siteswapGeneratorInput,
                 SiteswapGeneratorFactory factory
-            )>();
-        }
+                )>();
 
         var range = action.State.Objects switch
         {
             Between between => Enumerable.Range(
                 between.MinNumber ?? throw new InvalidOperationException(),
                 between.MaxNumber - between.MinNumber.Value + 1
-                    ?? throw new InvalidOperationException()
+                ?? throw new InvalidOperationException()
             ),
             ExactNumber exactNumber => new[]
             {
-                exactNumber.Number ?? throw new InvalidOperationException(),
+                exactNumber.Number ?? throw new InvalidOperationException()
             },
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException()
         };
 
         var result =
             new List<(
                 SiteswapGeneratorInput siteswapGeneratorInput,
                 SiteswapGeneratorFactory factory
-            )>();
+                )>();
         foreach (var number in range)
         {
             var siteswapGeneratorInput = new SiteswapGeneratorInput
@@ -112,7 +109,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                         )
                         .Min() ?? throw new InvalidOperationException()
                     : action.State.MinThrow.Value,
-                NumberOfObjects = number,
+                NumberOfObjects = number
             };
 
             Func<IFilterBuilder, IFilterBuilder> filterConfig = builder =>
@@ -133,7 +130,6 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
 
             var liste = new List<Func<IFilterBuilder, IFilterBuilder>>();
             if (action.State.CreateFilterFromThrowList)
-            {
                 for (
                     var i = siteswapGeneratorInput.MinHeight;
                     i <= siteswapGeneratorInput.MaxHeight;
@@ -142,27 +138,21 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 {
                     if (
                         action
-                            .State.Throws.SelectMany(x =>
-                                x.GetHeightForJugglers(
-                                    action.State.NumberOfJugglers.Value,
-                                    action.State.Settings.ShowThrowNames is false
-                                )
+                        .State.Throws.SelectMany(x =>
+                            x.GetHeightForJugglers(
+                                action.State.NumberOfJugglers.Value,
+                                action.State.Settings.ShowThrowNames is false
                             )
-                            .Contains(i)
+                        )
+                        .Contains(i)
                     )
-                    {
                         continue;
-                    }
 
                     var n = i;
                     liste.Add(x => x.ExactOccurence(n, 0));
                 }
-            }
 
-            foreach (var func in liste)
-            {
-                siteswapGeneratorFactory = siteswapGeneratorFactory.ConfigureFilter(func);
-            }
+            foreach (var func in liste) siteswapGeneratorFactory = siteswapGeneratorFactory.ConfigureFilter(func);
 
             result.Add((siteswapGeneratorInput, siteswapGeneratorFactory));
         }
@@ -201,7 +191,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                         numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
                         numberFilter.Amount
                     ),
-                    _ => throw new ArgumentOutOfRangeException(),
+                    _ => throw new ArgumentOutOfRangeException()
                 };
         }
 
@@ -224,7 +214,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 -2 => new List<int> { -2 },
                 -3 => new List<int> { -3 },
 
-                _ => t.GetHeightForJugglers(numberOfJugglers, showName).ToList(),
+                _ => t.GetHeightForJugglers(numberOfJugglers, showName).ToList()
             };
             patterns.Add(heights);
         }
@@ -234,5 +224,19 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
             numberOfJugglers,
             newPatternFilterInformation.IsGlobalPattern
         );
+    }
+}
+
+public record SiteswapGeneratedAction(params IEnumerable<Siteswap> Siteswaps);
+
+public static class Reducer
+{
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceSingleSiteswapsGeneratedChangedAction(
+        SiteswapGeneratorState state,
+        SiteswapGeneratedAction action
+    )
+    {
+        return state with { Siteswaps = state.Siteswaps.AddRange(action.Siteswaps) };
     }
 }

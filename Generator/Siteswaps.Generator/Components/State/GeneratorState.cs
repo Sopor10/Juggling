@@ -27,7 +27,8 @@ public record GeneratorState
 
     public ImmutableList<IFilterInformation> Filter { get; init; } =
         ImmutableList<IFilterInformation>.Empty;
-    public bool CreateFilterFromThrowList { get; init; }
+
+    public bool CreateFilterFromThrowList => true;
     public Settings.SettingsDto Settings { get; set; } = new();
 }
 

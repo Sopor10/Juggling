@@ -25,4 +25,37 @@
         }
         Dispatcher.Dispatch(new ChangedFilterAction(filterInformation, FilterNumber.Value));
     }
+    
+    public record NewFilterCreatedAction(IFilterInformation Value);
+
+    public record ChangedFilterAction(IFilterInformation NewPatternFilterInformation, int FilterNumber);
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceNewFilterCreatedActionAction(
+        SiteswapGeneratorState state,
+        NewFilterCreatedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with { Filter = state.State.Filter.Add(action.Value) },
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceFilterChangedActionAction(
+        SiteswapGeneratorState state,
+        ChangedFilterAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Filter = state
+                    .State.Filter.RemoveAt(action.FilterNumber)
+                    .Insert(action.FilterNumber, action.NewPatternFilterInformation),
+            },
+        };
+    }
 }

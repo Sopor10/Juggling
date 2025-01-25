@@ -1,0 +1,19 @@
+﻿@inherits FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<SiteswapGeneratorState> State
+
+<button class="btn btn-primary float-end" id="generate" type="submit" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(Value, new CancellationTokenSource()))">Generate</button>
+
+@code
+{
+    private GeneratorState Value => State.Value.State;
+    
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIsGeneratingAction(SiteswapGeneratorState state, GenerateSiteswapsAction action) => 
+        state with { Siteswaps = [], CancellationTokenSource = action.CancellationTokenSource };
+
+    
+    public record GenerateSiteswapsAction(GeneratorState State, CancellationTokenSource CancellationTokenSource);
+}
