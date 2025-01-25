@@ -10,6 +10,10 @@
         .then(registration => {
             console.info(`Service worker registration successful (scope: ${registration.scope})`);
 
+            setInterval(() => {
+                registration.update();
+            }, 30 * 1000);
+            
             registration.onupdatefound = () => {
                 const installingServiceWorker = registration.installing;
                 installingServiceWorker.onstatechange = () => {
