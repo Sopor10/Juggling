@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Blazored.LocalStorage;
+using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using Siteswaps.Generator.Components.State;
 #if DEBUG
@@ -19,5 +20,6 @@ public static class DependencyInjectionExtensions
 #endif
         });
         services.AddScoped<INavigation, NavigationManagerAdapter>();
+        services.AddBlazoredLocalStorage();
     }
 }

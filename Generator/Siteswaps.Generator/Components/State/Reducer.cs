@@ -250,4 +250,16 @@ public static class Reducer
             },
         };
     }
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceLoadedSettings(
+        SiteswapGeneratorState state,
+        SettingsLoadedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with{ Settings = action.Settings}
+        };
+    }
 }

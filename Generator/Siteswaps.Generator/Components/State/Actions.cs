@@ -38,3 +38,5 @@ public record SetState(GeneratorState State);
 public record ThrowsChangedAction(IEnumerable<Throw> Throws);
 
 public record CreateFilterFromThrowList(bool Value);
+public record LoadSettings;
+public record SettingsLoadedAction(Settings.SettingsDto Settings);

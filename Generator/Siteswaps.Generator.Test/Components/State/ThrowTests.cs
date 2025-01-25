@@ -11,7 +11,7 @@ public class ThrowTests
     [TestCaseSource(typeof(GenerateInputs))]
     public void Should_Calculate_Height_Correctly(Throw @throw, int jugglers, int[] heights)
     {
-        @throw.GetHeightForJugglers(jugglers).Should().BeEquivalentTo(heights);
+        @throw.GetHeightForJugglers(jugglers, false).Should().BeEquivalentTo(heights);
     }
 }
 

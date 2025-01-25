@@ -1,23 +1,9 @@
 ﻿using Fluxor;
-using Microsoft.AspNetCore.Components;
 using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Generator;
 using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Components.State;
-
-public interface INavigation
-{
-    void NavigateTo(string uri);
-}
-
-public class NavigationManagerAdapter(NavigationManager navigationManager) : INavigation
-{
-    public void NavigateTo(string uri)
-    {
-        navigationManager.NavigateTo(uri);
-    }
-}
 
 public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSiteswapsAction>
 {
@@ -111,13 +97,13 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 MaxHeight = action.State.CreateFilterFromThrowList
                     ? action
                         .State.Throws.MaxBy(x => x.Height)
-                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
                         .Max() ?? throw new InvalidOperationException()
                     : action.State.MaxThrow.Value,
                 MinHeight = action.State.CreateFilterFromThrowList
                     ? action
                         .State.Throws.MinBy(x => x.Height)
-                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                        ?.GetHeightForJugglers(action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
                         .Min() ?? throw new InvalidOperationException()
                     : action.State.MinThrow.Value,
                 NumberOfObjects = number,
@@ -127,7 +113,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 action.State.Filter.Aggregate(
                     builder,
                     (current, filterInformation) =>
-                        ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value)
+                        ToFilter(current, filterInformation, action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
                 );
 
             var siteswapGeneratorFactory = new SiteswapGeneratorFactory().ConfigureFilter(
@@ -146,7 +132,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                     if (
                         action
                             .State.Throws.SelectMany(x =>
-                                x.GetHeightForJugglers(action.State.NumberOfJugglers.Value)
+                                x.GetHeightForJugglers(action.State.NumberOfJugglers.Value, action.State.Settings.ShowThrowNames is false)
                             )
                             .Contains(i)
                     )
@@ -170,29 +156,28 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
         return result;
     }
 
-    private static IFilterBuilder ToFilter(
-        IFilterBuilder builder,
+    private static IFilterBuilder ToFilter(IFilterBuilder builder,
         IFilterInformation filterInformation,
-        int numberOfJugglers
-    )
+        int numberOfJugglers, 
+        bool showName)
     {
         switch (filterInformation)
         {
             case NewPatternFilterInformation newPatternFilterInformation:
-                return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder);
+                return BuildPatternFilter(newPatternFilterInformation, numberOfJugglers, builder, showName);
             case EasyNumberFilter.NumberFilter numberFilter:
                 return numberFilter.Type switch
                 {
                     EasyNumberFilter.NumberFilterType.Exactly => builder.ExactOccurence(
-                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers),
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
                         numberFilter.Amount
                     ),
                     EasyNumberFilter.NumberFilterType.AtLeast => builder.MinimumOccurence(
-                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers),
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
                         numberFilter.Amount
                     ),
                     EasyNumberFilter.NumberFilterType.Maximum => builder.MaximumOccurence(
-                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers),
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
                         numberFilter.Amount
                     ),
                     _ => throw new ArgumentOutOfRangeException(),
@@ -202,11 +187,9 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
         throw new ArgumentOutOfRangeException();
     }
 
-    private static IFilterBuilder BuildPatternFilter(
-        NewPatternFilterInformation newPatternFilterInformation,
+    private static IFilterBuilder BuildPatternFilter(NewPatternFilterInformation newPatternFilterInformation,
         int numberOfJugglers,
-        IFilterBuilder builder
-    )
+        IFilterBuilder builder, bool showName)
     {
         var patterns = new List<List<int>>();
         foreach (var t in newPatternFilterInformation.Pattern)
@@ -217,7 +200,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateSit
                 -2 => new List<int> { -2 },
                 -3 => new List<int> { -3 },
 
-                _ => t.GetHeightForJugglers(numberOfJugglers).ToList(),
+                _ => t.GetHeightForJugglers(numberOfJugglers, showName).ToList(),
             };
             patterns.Add(heights);
         }

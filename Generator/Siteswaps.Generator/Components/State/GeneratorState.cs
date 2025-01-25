@@ -28,6 +28,7 @@ public record GeneratorState
     public ImmutableList<IFilterInformation> Filter { get; init; } =
         ImmutableList<IFilterInformation>.Empty;
     public bool CreateFilterFromThrowList { get; init; }
+    public Settings.SettingsDto Settings { get; set; } = new();
 }
 
 public abstract record Objects;
@@ -102,8 +103,13 @@ public record Throw(string Name, int Height, string DisplayValue)
 
     public static IEnumerable<Throw> AllWildCards => new List<Throw> { Empty, AnyPass, AnySelf };
 
-    public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers)
+    public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers, bool useLiteralValue)
     {
+        if (useLiteralValue)
+        {
+            return [Height];
+        }
+        
         var result = new HashSet<int>();
         if (IsPass)
         {
@@ -124,6 +130,16 @@ public record Throw(string Name, int Height, string DisplayValue)
         }
 
         return result;
+        
+    }
+
+    public string GetDisplayValue(bool showName)
+    {
+        if (showName)
+        {
+            return DisplayValue;
+        }
+        return Height.ToString();
     }
 
     public static Throw Parse(string s)

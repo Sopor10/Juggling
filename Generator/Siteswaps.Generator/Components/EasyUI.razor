@@ -11,13 +11,17 @@
     <div class="row mt-5 mb-5 w-100" style="min-width: 300px;">
         <div class="col input-column">
             <h4 class="mb-3">Jugglers</h4>
-            <CustomNumeric Id="numeric-input-numberOfJugglers" Value="State.Value.State.NumberOfJugglers" Min="2" Max="5" OnChange="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
-            <CustomSlider Min="2" Max="5" Value="State.Value.State.NumberOfJugglers" OnChange="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
+            <CustomNumeric Id="numeric-input-numberOfJugglers" Value="State.Value.State.NumberOfJugglers" Min="2"
+                           Max="5" OnChange="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
+            <CustomSlider Min="2" Max="5" Value="State.Value.State.NumberOfJugglers"
+                          OnChange="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
         </div>
         <div class="col input-column">
             <h4 class="mb-3">Period</h4>
-            <CustomNumeric Id="numeric-input-period" Value="State.Value.State.Period.Value" Min="1" Max="30" OnChange="@(x => Dispatcher.Dispatch(CreateAction(x)))"/>
-            <CustomSlider Min="1" Max="30" Value="State.Value.State.Period.Value" OnChange="@(x => Dispatcher.Dispatch(CreateAction(x)))"/>
+            <CustomNumeric Id="numeric-input-period" Value="State.Value.State.Period.Value" Min="1" Max="30"
+                           OnChange="@(x => Dispatcher.Dispatch(CreateAction(x)))"/>
+            <CustomSlider Min="1" Max="30" Value="State.Value.State.Period.Value"
+                          OnChange="@(x => Dispatcher.Dispatch(CreateAction(x)))"/>
         </div>
         <div class="col input-column">
             <h4 class="mb-3">Clubs</h4>
@@ -25,10 +29,9 @@
         </div>
     </div>
 
-
     <div class="row mb-5 w-100">
         <h4 class="mb-3">Throws</h4>
-        <SelectList TItem="Throw" Items="@(allThrows)" SelectedItems="@Throws" TextField="x => x.Name" OnChange="ThrowsChanged"></SelectList>
+        <SelectList TItem="Throw" Items="@(AllThrows)" SelectedItems="@Throws" TextField="x => x.GetDisplayValue(ShowNames)" OnChange="ThrowsChanged"/>
     </div>
 
 
@@ -36,13 +39,16 @@
         <div class="col">
             <h4 class="mb-3">Filter</h4>
             <SelectedFilters ShowHeading="false" AllowEdit="false"/>
-            <button class="btn btn-secondary float-end" id="add-filter" type="button"  @onclick="ShowInlineDialog">+</button>
-        </div> 
+            <button class="btn btn-secondary float-end" id="add-filter" type="button" @onclick="ShowInlineDialog"> + </button>
+        </div>
     </div>
 
     <div class="row mt-5 w-100">
         <div class="col">
-            <button class="btn btn-primary float-end" id="generate" type="submit" @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State, new CancellationTokenSource()))">Generate</button>
+            <button class="btn btn-primary float-end" id="generate" type="submit"
+                    @onclick="_ => Dispatcher.Dispatch(new GenerateSiteswapsAction(State.Value.State, new CancellationTokenSource()))">
+                Generate
+            </button>
         </div>
     </div>
 </div>
@@ -50,13 +56,16 @@
 
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
-    private readonly IEnumerable<Throw> allThrows = Throw.All().ToList();
+    private IEnumerable<Throw> AllThrows => Throw.All(State.Value.State.Settings.MaxHeight);
     private IEnumerable<int> Clubs => [(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6];
-
-    protected override void OnInitialized()
+    private bool ShowNames => State.Value.State.Settings.ShowThrowNames;
+    
+    protected override async Task OnInitializedAsync()
     {
         Dispatcher.Dispatch(new CreateFilterFromThrowList(true));
-        base.OnInitialized();
+        Dispatcher.Dispatch(new LoadSettings());
+        
+        await base.OnInitializedAsync();
     }
 
     private void SliderChanged(IEnumerable<int> values)
