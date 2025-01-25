@@ -1,0 +1,6 @@
+﻿Or
+  And
+    Or
+      And
+        exclude local Single
+        exclude local Single,Single,Single
