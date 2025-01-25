@@ -16,7 +16,7 @@ public class GenerateSiteswapEffectTests
     {
         var generatorState = new GeneratorState()
         {
-            Objects = new ExactNumber { Number = 6 },
+            Clubs = new Between() { MaxNumber = 6, MinNumber = 6},
             Throws = new List<Throw> { Throw.Self, Throw.Zap, Throw.SinglePass }.ToImmutableList(),
             Period = new(4),
             MinThrow = 5,

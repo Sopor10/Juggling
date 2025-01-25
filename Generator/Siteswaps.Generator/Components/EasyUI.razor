@@ -26,7 +26,12 @@
         </div>
         <div class="col input-column">
             <h4 class="mb-3">Clubs</h4>
-            <RangeInput @bind-Clubs:get="Clubs" @bind-Clubs:set="SliderChanged"></RangeInput>
+            <CustomRange
+                @bind-Min:get="State.Value.State.Clubs.MinNumber"
+                @bind-Min:set="x => Dispatcher.Dispatch(new MinNumberChangedAction(x))"
+                @bind-Max:get="State.Value.State.Clubs.MaxNumber"
+                @bind-Max:set="x => Dispatcher.Dispatch(new MaxNumberChangedAction(x))"
+            />
         </div>
     </div>
 
@@ -57,19 +62,13 @@
 @code {
     IEnumerable<Throw> Throws => State.Value.State.Throws;
     private IEnumerable<Throw> AllThrows => Throw.All(State.Value.State.Settings.MaxHeight);
-    private IEnumerable<int> Clubs => [(State.Value.State.Objects as Between)?.MinNumber ?? 6, (State.Value.State.Objects as Between)?.MaxNumber ?? 6];
+    private IEnumerable<int> Clubs => [(State.Value.State.Clubs as Between)?.MinNumber ?? 6, (State.Value.State.Clubs as Between)?.MaxNumber ?? 6];
     private bool ShowNames => State.Value.State.Settings.ShowThrowNames;
 
     protected override async Task OnInitializedAsync()
     {
         Dispatcher.Dispatch(new LoadSettings());
         await base.OnInitializedAsync();
-    }
-
-    private void SliderChanged(IEnumerable<int> values)
-    {
-        Dispatcher.Dispatch(new MinNumberChangedAction(values.First()));
-        Dispatcher.Dispatch(new MaxNumberChangedAction(values.Last()));
     }
 
     private void ThrowsChanged(IEnumerable<Throw> throws)
@@ -100,8 +99,8 @@
         return new PeriodChangedAction(new Period(x ?? throw new ArgumentNullException()));
     }
 
-    public record MinNumberChangedAction(int? Value);
-    public record MaxNumberChangedAction(int? Value);
+    public record MinNumberChangedAction(int Value);
+    public record MaxNumberChangedAction(int Value);
     public record ThrowsChangedAction(IEnumerable<Throw> Throws);
     public record MinThrowChangedAction(int? Value);
     public record MaxThrowChangedAction(int? Value);
@@ -118,12 +117,7 @@
         {
             State = state.State with
             {
-                Objects = state.State.Objects switch
-                {
-                    Between between => between with { MinNumber = action.Value },
-                    ExactNumber _ => new Between { MinNumber = action.Value },
-                    _ => throw new ArgumentOutOfRangeException()
-                }
+                Clubs = state.State.Clubs with { MinNumber = action.Value },
             }
         };
     }
@@ -138,12 +132,7 @@
         {
             State = state.State with
             {
-                Objects = state.State.Objects switch
-                {
-                    Between between => between with { MaxNumber = action.Value },
-                    ExactNumber _ => new Between { MaxNumber = action.Value },
-                    _ => throw new ArgumentOutOfRangeException()
-                }
+                Clubs = state.State.Clubs with { MaxNumber = action.Value },
             }
         };
     }

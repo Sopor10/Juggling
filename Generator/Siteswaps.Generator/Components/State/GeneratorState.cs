@@ -5,9 +5,8 @@ namespace Siteswaps.Generator.Components.State;
 
 public record GeneratorState
 {
-    public bool IsExactNumber => Objects is ExactNumber;
     public int? NumberOfJugglers { get; init; } = 2;
-    public Objects Objects { get; init; } = new ExactNumber();
+    public Between Clubs { get; init; } = new();
     public Period Period { get; init; } = new(5);
     public int? MaxThrow { get; init; } = 10;
     public int? MinThrow { get; init; } = 2;
@@ -32,17 +31,10 @@ public record GeneratorState
     public Settings.SettingsDto Settings { get; set; } = new();
 }
 
-public abstract record Objects;
-
-public record ExactNumber : Objects
+public record Between 
 {
-    public int? Number { get; init; } = 7;
-}
-
-public record Between : Objects
-{
-    public int? MinNumber { get; init; } = 6;
-    public int? MaxNumber { get; init; } = 7;
+    public int MinNumber { get; init; } = 6;
+    public int MaxNumber { get; init; } = 6;
 }
 
 public record Throw(string Name, int Height, string DisplayValue)

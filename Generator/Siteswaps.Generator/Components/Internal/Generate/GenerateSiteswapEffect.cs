@@ -67,19 +67,7 @@ public class GenerateSiteswapEffect(INavigation navigation) : Effect<GenerateBut
                 SiteswapGeneratorFactory factory
                 )>();
 
-        var range = action.State.Objects switch
-        {
-            Between between => Enumerable.Range(
-                between.MinNumber ?? throw new InvalidOperationException(),
-                between.MaxNumber - between.MinNumber.Value + 1
-                ?? throw new InvalidOperationException()
-            ),
-            ExactNumber exactNumber => new[]
-            {
-                exactNumber.Number ?? throw new InvalidOperationException()
-            },
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        var range = Enumerable.Range(action.State.Clubs.MinNumber, action.State.Clubs.MaxNumber - action.State.Clubs.MinNumber + 1);
 
         var result =
             new List<(
