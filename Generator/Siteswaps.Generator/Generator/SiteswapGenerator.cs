@@ -6,6 +6,9 @@ namespace Siteswaps.Generator.Generator;
 
 public class SiteswapGenerator
 {
+    public SiteswapGenerator(SiteswapGeneratorInput input)
+        : this(new NoFilter(), input) { }
+
     public SiteswapGenerator(ISiteswapFilter filter, SiteswapGeneratorInput input)
     {
         Filter = filter;

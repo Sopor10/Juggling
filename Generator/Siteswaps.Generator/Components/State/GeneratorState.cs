@@ -25,8 +25,6 @@ public record GeneratorState
             Throw.TripleSelf,
         }.ToImmutableList();
 
-    public ImmutableList<IFilterInformation> Filter { get; init; } =
-        ImmutableList<IFilterInformation>.Empty;
     public FilterTree FilterTree { get; init; } = new(new AndNode());
 
     public bool CreateFilterFromThrowList => true;

@@ -1,8 +1,11 @@
 ﻿using Fluxor;
 using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Components.State;
+using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Generator;
 using Siteswaps.Generator.Generator.Filter;
+using Siteswaps.Generator.Generator.Filter.Combinatorics;
+using Siteswaps.Generator.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Components.Internal.Generate;
 
@@ -30,12 +33,8 @@ public class GenerateSiteswapEffect(INavigation navigation)
             throw new InvalidOperationException("This is probably an old cancellation token");
 
         var results = new List<Siteswap>();
-        foreach (var (siteswapGeneratorInput, factory) in CreateSiteswapGeneratorInputs(action))
-        await foreach (
-            var s in factory
-                .Create(siteswapGeneratorInput)
-                .GenerateAsync(action.CancellationTokenSource.Token)
-        )
+        foreach (var generator in CreateSiteswapGeneratorInputs(action))
+        await foreach (var s in generator.GenerateAsync(action.CancellationTokenSource.Token))
         {
             if (action.CancellationTokenSource.IsCancellationRequested)
             {
@@ -59,31 +58,23 @@ public class GenerateSiteswapEffect(INavigation navigation)
         dispatcher.Dispatch(new SiteswapGeneratedAction(results.ToList()));
     }
 
-    private static List<(
-        SiteswapGeneratorInput siteswapGeneratorInput,
-        SiteswapGeneratorFactory factory
-    )> CreateSiteswapGeneratorInputs(GenerateButton.GenerateSiteswapsAction action)
+    private static List<SiteswapGenerator> CreateSiteswapGeneratorInputs(
+        GenerateButton.GenerateSiteswapsAction action
+    )
     {
         if (
             action.State.MinThrow is null
             || action.State.MaxThrow is null
             || action.State.NumberOfJugglers is null
         )
-            return new List<(
-                SiteswapGeneratorInput siteswapGeneratorInput,
-                SiteswapGeneratorFactory factory
-            )>();
+            return new();
 
         var range = Enumerable.Range(
             action.State.Clubs.MinNumber,
             action.State.Clubs.MaxNumber - action.State.Clubs.MinNumber + 1
         );
 
-        var result =
-            new List<(
-                SiteswapGeneratorInput siteswapGeneratorInput,
-                SiteswapGeneratorFactory factory
-            )>();
+        var result = new List<SiteswapGenerator>();
         foreach (var number in range)
         {
             var siteswapGeneratorInput = new SiteswapGeneratorInput
@@ -110,23 +101,16 @@ public class GenerateSiteswapEffect(INavigation navigation)
                 NumberOfObjects = number,
             };
 
-            Func<IFilterBuilder, IFilterBuilder> filterConfig = builder =>
-                action.State.Filter.Aggregate(
-                    builder,
-                    (current, filterInformation) =>
-                        ToFilter(
-                            current,
-                            filterInformation,
-                            action.State.NumberOfJugglers.Value,
-                            action.State.Settings.ShowThrowNames is false
-                        )
-                );
+            var liste = new List<ISiteswapFilter>();
 
-            var siteswapGeneratorFactory = new SiteswapGeneratorFactory().ConfigureFilter(
-                filterConfig
+            var filter = action.State.FilterTree.Root?.Visit(
+                new FilterBuilderVisitor(siteswapGeneratorInput, action)
             );
 
-            var liste = new List<Func<IFilterBuilder, IFilterBuilder>>();
+            if (filter is not null)
+            {
+                liste.Add(filter);
+            }
             if (action.State.CreateFilterFromThrowList)
                 for (
                     var i = siteswapGeneratorInput.MinHeight;
@@ -146,14 +130,10 @@ public class GenerateSiteswapEffect(INavigation navigation)
                     )
                         continue;
 
-                    var n = i;
-                    liste.Add(x => x.ExactOccurence(n, 0));
+                    liste.Add(new ExactlyXXXTimesFilter([i], 0));
                 }
 
-            foreach (var func in liste)
-                siteswapGeneratorFactory = siteswapGeneratorFactory.ConfigureFilter(func);
-
-            result.Add((siteswapGeneratorInput, siteswapGeneratorFactory));
+            result.Add(new SiteswapGenerator(new AndFilter(liste), siteswapGeneratorInput));
         }
 
         return result;
@@ -190,6 +170,109 @@ public class GenerateSiteswapEffect(INavigation navigation)
                         numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
                         numberFilter.Amount
                     ),
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
+        }
+
+        throw new ArgumentOutOfRangeException();
+    }
+
+    private static IFilterBuilder BuildPatternFilter(
+        NewPatternFilterInformation newPatternFilterInformation,
+        int numberOfJugglers,
+        IFilterBuilder builder,
+        bool showName
+    )
+    {
+        var patterns = new List<List<int>>();
+        foreach (var t in newPatternFilterInformation.Pattern)
+        {
+            var heights = t.Height switch
+            {
+                -1 => new List<int> { -1 },
+                -2 => new List<int> { -2 },
+                -3 => new List<int> { -3 },
+
+                _ => t.GetHeightForJugglers(numberOfJugglers, showName).ToList(),
+            };
+            patterns.Add(heights);
+        }
+
+        return builder.FlexiblePattern(
+            patterns,
+            numberOfJugglers,
+            newPatternFilterInformation.IsGlobalPattern
+        );
+    }
+}
+
+internal class FilterBuilderVisitor(
+    SiteswapGeneratorInput siteswapGeneratorInput,
+    GenerateButton.GenerateSiteswapsAction action
+) : IFilterVisitor<ISiteswapFilter>
+{
+    public ISiteswapFilter Visit(AndNode node)
+    {
+        return new AndFilter(node.Children.Select(y => y.Visit(this)));
+    }
+
+    public ISiteswapFilter Visit(OrNode node)
+    {
+        return new OrFilter(node.Children.Select(y => y.Visit(this)));
+    }
+
+    public ISiteswapFilter Visit(FilterLeaf node)
+    {
+        if (action.State.NumberOfJugglers is null)
+        {
+            return new NoFilter();
+        }
+
+        return ToFilter(
+            node.Filter,
+            action.State.NumberOfJugglers.Value,
+            action.State.Settings.ShowThrowNames is false
+        );
+    }
+
+    private ISiteswapFilter ToFilter(
+        IFilterInformation filterInformation,
+        int numberOfJugglers,
+        bool showName
+    )
+    {
+        var builder = new FilterBuilder(siteswapGeneratorInput);
+        switch (filterInformation)
+        {
+            case NewPatternFilterInformation newPatternFilterInformation:
+                return BuildPatternFilter(
+                        newPatternFilterInformation,
+                        numberOfJugglers,
+                        builder,
+                        showName
+                    )
+                    .Build();
+            case EasyNumberFilter.NumberFilter numberFilter:
+                return numberFilter.Type switch
+                {
+                    EasyNumberFilter.NumberFilterType.Exactly => builder
+                        .ExactOccurence(
+                            numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
+                            numberFilter.Amount
+                        )
+                        .Build(),
+                    EasyNumberFilter.NumberFilterType.AtLeast => builder
+                        .MinimumOccurence(
+                            numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
+                            numberFilter.Amount
+                        )
+                        .Build(),
+                    EasyNumberFilter.NumberFilterType.Maximum => builder
+                        .MaximumOccurence(
+                            numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
+                            numberFilter.Amount
+                        )
+                        .Build(),
                     _ => throw new ArgumentOutOfRangeException(),
                 };
         }

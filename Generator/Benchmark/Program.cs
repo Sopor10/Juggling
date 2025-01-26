@@ -14,7 +14,7 @@ namespace Benchmark
         [Benchmark]
         public async Task<List<Siteswap>> Generate()
         {
-            var generator = new SiteswapGeneratorFactory().Create(Input());
+            var generator = new SiteswapGenerator(Input());
             return await generator.GenerateAsync(new CancellationTokenSource().Token).ToListAsync();
         }
 

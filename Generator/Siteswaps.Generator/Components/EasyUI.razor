@@ -1,5 +1,6 @@
 ﻿@page "/easyUI"
 @using System.Collections.Immutable
+@using Siteswaps.Generator.Components.State.FilterTrees
 @inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> State
 @inject DialogService DialogService
@@ -136,28 +137,34 @@
             State = state.State with
             {
                 Throws = action.Throws.ToImmutableList(),
-                Filter = state
-                    .State.Filter.Where(x =>
-                        !(
-                            x is EasyNumberFilter.NumberFilter numberFilter
-                            && action
-                                    .Throws.ToImmutableList()
-                                    .AddRange(Throw.AllWildCards)
-                                    .Contains(numberFilter.Throw)
-                                is false
-                        )
-                    )
-                    .Where(x =>
-                        !(
-                            x is NewPatternFilterInformation newPatternFilterInformation
-                            && newPatternFilterInformation.Pattern.Any(x =>
-                                action.Throws.Contains(x) is false
-                            )
-                        )
-                    )
-                    .ToImmutableList()
+                FilterTree = state.State.FilterTree
+                    .RemoveAll(x => 
+                        x is FilterLeaf leaf && 
+                        !(Predicate(leaf.Filter, action) && B(leaf.Filter, action))),
             }
         };
+    }
+
+    private static bool B(IFilterInformation x, ThrowsChangedAction action)
+    {
+        return !(
+            x is NewPatternFilterInformation newPatternFilterInformation
+            && newPatternFilterInformation.Pattern.Any(x =>
+                action.Throws.Contains(x) is false
+            )
+        );
+    }
+
+    private static bool Predicate(IFilterInformation filter, ThrowsChangedAction action)
+    {
+        return
+            (filter is EasyNumberFilter.NumberFilter numberFilter
+            && action
+                    .Throws.ToImmutableList()
+                    .AddRange(Throw.AllWildCards)
+                    .Contains(numberFilter.Throw)
+                is false) is false;
+
     }
 
     [ReducerMethod]
@@ -177,9 +184,8 @@
             State = state.State with
             {
                 Period = action.Value,
-                Filter = state
-                    .State.Filter.Where(x => x is not NewPatternFilterInformation)
-                    .ToImmutableList(),
+                FilterTree = state.State.FilterTree
+                    .RemoveAll(x => x is FilterLeaf leaf && leaf.Filter is NewPatternFilterInformation)
             },
         };
     

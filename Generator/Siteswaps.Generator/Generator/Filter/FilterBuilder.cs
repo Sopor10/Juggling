@@ -41,10 +41,12 @@ internal record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
             Filter = Filter.AddRange(filter),
         };
 
-    public IFilterBuilder Or(ISiteswapFilter filter) =>
+    public IFilterBuilder Or(ISiteswapFilter filter) => Or([filter]);
+
+    public IFilterBuilder Or(params IEnumerable<ISiteswapFilter> filter) =>
         this with
         {
-            Filter = [new OrFilter(new AndFilter(Filter.ToArray()), filter)],
+            Filter = [new OrFilter(filter)],
         };
 
     public IFilterBuilder FlexiblePattern(

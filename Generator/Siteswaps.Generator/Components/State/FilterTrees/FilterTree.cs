@@ -13,6 +13,12 @@ public class FilterTree(FilterNode? root)
         return new FilterTree(result);
     }
 
+    public FilterTree RemoveAll(Func<FilterNode, bool> predicate)
+    {
+        return All.Where(x => !predicate(x))
+            .Aggregate(this, (current, node) => current.Remove(node));
+    }
+
     public FilterTree Add(FilterNode parent, FilterNode node)
     {
         var visitor = new AddFilterVisitor(parent, node);

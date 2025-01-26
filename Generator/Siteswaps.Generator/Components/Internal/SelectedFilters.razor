@@ -66,7 +66,7 @@
         };
     }
 
-    RenderFragment<RadzenTreeItem> Template = (context) => @<div>
+    RenderFragment<RadzenTreeItem> Template => (context) => @<div>
                                                                @switch (context.Value)
                                                                {
                                                                    case AndNode andNode: <RadzenText Text="And"/>break;
@@ -77,10 +77,10 @@
                                                                                <div class="d-flex justify-content-between align-items-center">
                                                                                    <text class="text-break">@(leaf.Filter.Display())</text>
                                                                                    <div class="d-flex">
-                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2">
+                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2" @onclick="() => ShowInlineDialog(leaf)">
                                                                                            <EditPencil/>
                                                                                        </button>
-                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger">
+                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))">
                                                                                            <Trashcan/>
                                                                                        </button>
                                                                                    </div>

@@ -6,11 +6,6 @@ namespace Siteswaps.Generator.Api.Test;
 
 public class SiteswapGeneratorTestSuite
 {
-    private SiteswapGenerator CreateTestObject(
-        SiteswapGeneratorInput input,
-        Func<IFilterBuilder, IFilterBuilder>? builder = null
-    ) => new SiteswapGeneratorFactory().ConfigureFilter(builder).Create(input);
-
     static SiteswapGeneratorTestSuite()
     {
         VerifierSettings.DisableRequireUniquePrefix();
@@ -19,7 +14,7 @@ public class SiteswapGeneratorTestSuite
     [TestCaseSource(typeof(GenerateInputs))]
     public async Task Verify_SiteswapGenerator_Against_Older_Version(SiteswapGeneratorInput input)
     {
-        var siteswaps = await CreateTestObject(input)
+        var siteswaps = await new SiteswapGenerator(new NoFilter(), input)
             .GenerateAsync(new CancellationTokenSource().Token)
             .ToListAsync();
 
@@ -34,12 +29,13 @@ public class SiteswapGeneratorTestSuite
     [Test]
     public async Task PatternFilterTest()
     {
-        var sut = CreateTestObject(
-            new SiteswapGeneratorInput(10, 6, 2, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
-            },
-            x => x.Pattern(new[] { 2, -1, 6, -1, 5, -1, -1, -1, -1, -1 }, 2)
+        SiteswapGeneratorInput input = new SiteswapGeneratorInput(10, 6, 2, 10)
+        {
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
+        };
+        var sut = new SiteswapGenerator(
+            new FilterBuilder(input).Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2).Build(),
+            input
         );
         var siteswaps = await sut.GenerateAsync(new CancellationTokenSource().Token).ToListAsync();
         await Verify(siteswaps.Select(x => x.ToString()).ToList());
