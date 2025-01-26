@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Siteswaps.Generator.Generator.Filter;
+using Siteswaps.Generator.Generator.Filter.Combinatorics;
 
 namespace Siteswaps.Generator.Generator;
 
@@ -11,7 +12,7 @@ public class SiteswapGenerator
 
     public SiteswapGenerator(ISiteswapFilter filter, SiteswapGeneratorInput input)
     {
-        Filter = filter;
+        Filter = new AndFilter(filter, new RightAmountOfBallsFilter(input));
         Input = input;
         PartialSiteswap = PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
     }
