@@ -1,66 +1,100 @@
-﻿@using System.Collections.Immutable
+﻿@using System.Diagnostics
+@using Siteswaps.Generator.Components.State.FilterTrees
+@using Siteswaps.Generator.Generator.Filter.Combinatorics
 @inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
 @inject DialogService DialogService
+@inject ContextMenuService ContextMenuService
 
+<RadzenRow class="rz-p-0 rz-p-lg-12">
+    <RadzenColumn Size="12" SizeLG="6" OffsetLG="3">
+        <RadzenTree 
+            AllowCheckParents="false" 
+            AllowCheckBoxes="false" 
+            AllowCheckChildren="false" 
+            Data="@entries" 
+            Expand="@Load" 
+            ItemContextMenu="GetContextMenu"
+            Style="width: 100%; height: 300px" >
+            <RadzenTreeLevel
+                Text="@GetTextForNode"
+                Template="@Template"
+                Expanded="@(_ => true)"
+                Checkable="_ => false"/>
+        </RadzenTree>
+    </RadzenColumn>
+</RadzenRow>
 
-<RadzenDropZoneContainer 
-    TItem="FilterPosition" Data="Value.Filter.Select((x, i) => new FilterPosition(i, x)).ToList()"
-    ItemSelector="Selector"
-    CanDrop="CanDrop"
-    Drop="OnDrop">
-    <ChildContent>
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenDropZone Value="@typeof(NewPatternFilterInformation)">
-            </RadzenDropZone>
-        </RadzenStack>
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenDropZone Value="0">
-                <RadzenCard>
-                    <RadzenText Text="And"></RadzenText>
-                </RadzenCard>
-            </RadzenDropZone>
-        </RadzenStack>
-    </ChildContent>
-    <Template>
-        @if(context.Filter is AndFilterInformation andFilter)
+@code {
+    IEnumerable<FilterNode> entries => new[]{Tree.Root }.OfType<FilterNode>();
+    private FilterTree Tree => State.Value.State.FilterTree;
+        
+    void Load(TreeExpandEventArgs args)
+    {
+        var node = args.Value as FilterNode;
+
+        args.Children.Data = node switch
         {
-            
-        }
-        else
+            AndNode andNode => andNode.Children,
+            FilterLeaf filterLeaf => [],
+            OrNode orNode => orNode.Children,
+            _ => throw new ArgumentOutOfRangeException(nameof(node))
+        };
+        args.Children.Text = x => x switch
         {
-            @RenderFilter(context)
-        }
-    </Template>
-</RadzenDropZoneContainer>
+            FilterLeaf leaf => leaf.Filter.Display(),
+            AndNode => "And",
+            OrNode => "Or",
+            _ => throw new ArgumentOutOfRangeException(nameof(x))
+        };
+        args.Children.HasChildren = x => x is FilterLeaf is false;
+        args.Children.Template = Template;
+        args.Children.Checkable = o => false;
+        args.Children.Expanded = x => true;
+    }
 
+    string GetTextForNode(object data)
+    {
+        return data switch
+        {
+            FilterLeaf leaf => leaf.Filter.Display(),
+            AndNode => "And",
+            OrNode => "Or",
+            _ => throw new ArgumentOutOfRangeException(nameof(data))
+        };
+    }
 
-@code
-{
+    RenderFragment<RadzenTreeItem> Template = (context) => @<div>
+                                                               @switch (context.Value)
+                                                               {
+                                                                   case AndNode andNode: <RadzenText Text="And"/>break;
+                                                                   case OrNode orNode: <RadzenText Text="Or"/> break;
+                                                                   case FilterLeaf leaf:
+                                                                       <div class="card w-100 h-100 flex-grow-1">
+                                                                           <div class="card-body d-flex flex-column justify-content-center">
+                                                                               <div class="d-flex justify-content-between align-items-center">
+                                                                                   <text class="text-break">@(leaf.Filter.Display())</text>
+                                                                                   <div class="d-flex">
+                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2">
+                                                                                           <EditPencil/>
+                                                                                       </button>
+                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger">
+                                                                                           <Trashcan/>
+                                                                                       </button>
+                                                                                   </div>
+                                                                               </div>
+                                                                           </div>
+                                                                       </div>
+                                                                       ;
+                                                                       break;
 
-    public record FilterPosition(int Position, IFilterInformation Filter);
-    private RenderFragment<FilterPosition> RenderFilter => f => @<div class="card w-100 h-100 flex-grow-1">
-                                                                        <div class="card-body d-flex flex-column justify-content-center">
-                                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                                <text class="text-break">@f.Filter.Display()</text>
-                                                                                <div class="d-flex">
-                                                                                    <button type="button" class="btn btn-outline-secondary ms-2 me-2"
-                                                                                            @onclick="@(_ => ShowInlineDialog(f.Position))">
-                                                                                        <EditPencil/>
-                                                                                    </button>
-                                                                                    <button type="button" class="bi bi-trash btn btn-outline-danger"
-                                                                                            @onclick="@(_ => Dispatcher.Dispatch(new RemoveFilterNumber(f.Filter)))">
-                                                                                        <Trashcan/>
-                                                                                    </button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>;
-    private GeneratorState Value => State.Value.State;
-
-    private async Task ShowInlineDialog(int i)
+                                                               }
+                                                           </div>;
+    
+    
+    private async Task ShowInlineDialog(FilterLeaf i)
     {
         await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object>
         {
@@ -73,46 +107,162 @@
         });
     }
 
-    public record RemoveFilterNumber(IFilterInformation Value);
+    public record RemoveFilter(FilterNode Value);
 
     [ReducerMethod]
-    public static SiteswapGeneratorState ReduceNewFilterCreatedAction(
+    public static SiteswapGeneratorState ReduceRemoveFilterAction(
         SiteswapGeneratorState state,
-        RemoveFilterNumber action
+        RemoveFilter action
     )
     {
         return state with
         {
-            State = state.State with { Filter = state.State.Filter.Remove(action.Value) }
+            State = state.State with { FilterTree = state.State.FilterTree.Remove(action.Value) }
         };
     }
 
-    private bool Selector(FilterPosition item, RadzenDropZone<FilterPosition> dropZone)
-    {
-        return item.Filter.GetType().Equals(dropZone.Value);
-    }
 
-    private void OnRender(RadzenDropZoneItemRenderEventArgs<FilterPosition> obj)
+    private void GetContextMenu(TreeItemContextMenuEventArgs args)
     {
-    }
-
-    private bool CanDrop(RadzenDropZoneItemEventArgs<FilterPosition> arg)
-    {
-        return true;
-    }
-
-    private void OnDrop(RadzenDropZoneItemEventArgs<FilterPosition> obj)
-    {
+        if (args.Value is FilterNode filterNode is false)
+        {
+            return;
+        }
         
+        switch(filterNode)
+        {
+            case AndNode andNode:
+                ContextMenuService.Open(args,
+                    new List<ContextMenuItem> {
+                        new(){ Text = "Add And", Value = 1, Disabled = true},
+                        new(){ Text = "Add Or", Value = 2, Disabled = !andNode.Children.Any(x => x is OrNode or FilterLeaf)} ,
+                        new(){ Text = "Add Filter", Value = 3, Disabled = false} ,
+                        new(){ Text = "Remove", Value = 4, Disabled = Tree.Root == andNode} ,
+                    }, async (e) =>
+                    {
+                        switch(e.Value)
+                        {
+                            case 1:
+                                throw new InvalidOperationException("Cannot add an And to an And");
+                            case 2:
+                                Dispatcher.Dispatch(new AddOrFilterAction(Tree.GetKey(andNode)));
+                                break;
+                            case 3:
+                                var key = Tree.GetKey(andNode);
+                                if (key is null)
+                                {
+                                    return;
+                                }
+                                await AddNewFilter(key);
+                                break;
+                            case 4:
+                                Dispatcher.Dispatch(new RemoveFilter(andNode));
+                                break;
+                        }
+                        ContextMenuService.Close();
+                    }
+                );
+                break;
+            case OrNode orNode:
+                ContextMenuService.Open(args,
+                    new List<ContextMenuItem> {
+                        new(){ Text = "Add And", Value = 1, Disabled = !orNode.Children.Any(x => x is AndNode or FilterLeaf)},
+                        new(){ Text = "Add Or", Value = 2, Disabled = true} ,
+                        new(){ Text = "Add Filter", Value = 3, Disabled = false} ,
+                        new(){ Text = "Remove", Value = 4, Disabled = false} ,
+                    }, async (e) =>
+                    {
+                        switch(e.Value)
+                        {
+                            case 1:
+                                Dispatcher.Dispatch(new AddAndFilterAction(Tree.GetKey(orNode)));
+                                break;
+                            case 2:
+                                throw new InvalidOperationException("Cannot add an And to an Or");
+                            case 3:
+                                var key = Tree.GetKey(orNode);
+                                if (key is null)
+                                {
+                                    return;
+                                }
+                                await AddNewFilter(key);
+                                break;
+                            case 4:
+                                Dispatcher.Dispatch(new RemoveFilter(orNode));
+                                break;
+                        }
+                        ContextMenuService.Close();
+                    }
+                );
+                break;
+            case FilterLeaf filterLeaf:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(filterNode));
+        }
+
+
+    }
+
+    public record AddOrFilterAction(string? Key);
+    public record AddAndFilterAction(string? Key);
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceOrFilterAction(
+        SiteswapGeneratorState state,
+        AddOrFilterAction action
+    )
+    {
+        if (action.Key is null)
+        {
+            return state;
+        }
+
+        var filterNode = state.State.FilterTree.FindNode(action.Key);
+        if (filterNode is null)
+        {
+            return state;
+        }
+        return state with
+        {
+            State = state.State with { FilterTree = state.State.FilterTree.Add(filterNode, new OrNode()) }
+        };
+    }
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceAddFilterAction(
+        SiteswapGeneratorState state,
+        AddAndFilterAction action
+    )
+    {
+        if (action.Key is null)
+        {
+            return state;
+        }
+        var filterNode = state.State.FilterTree.FindNode(action.Key);
+        if (filterNode is null)
+        {
+            return state;
+        }
+        return state with
+        {
+            State = state.State with { FilterTree = state.State.FilterTree.Add(filterNode, new AndNode()) }
+        };
     }
     
-    public class AndFilterInformation(ImmutableList<IFilterInformation> filters) : IFilterInformation
+    private async Task AddNewFilter(string key)
     {
-        public ImmutableList<IFilterInformation> Filters => filters;
-        
-        public string Display()
-        {
-            return string.Join(" AND ", filters.Select(x => x.Display()));
-        }
+        await DialogService.OpenAsync<Filter>("New Pattern Filter", 
+            parameters: new ()
+            {
+                { nameof(Filter.Key), key }
+            },
+            options: new DialogOptions
+                {
+                    CloseDialogOnOverlayClick = true,
+                    Height = "500px",
+                    Style = "min-width: 300px"
+                }
+        );
     }
 }

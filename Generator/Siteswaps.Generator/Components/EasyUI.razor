@@ -42,16 +42,14 @@
     </div>
 
 
-    <div class="row mb-5 w-100">
+    <div class="row mb-3 w-100">
         <div class="col">
             <h4 class="mb-3">Filter</h4>
             <SelectedFilters/>
-            <button class="btn btn-secondary float-end" id="add-filter" type="button" @onclick="ShowInlineDialog"> +
-            </button>
         </div>
     </div>
 
-    <div class="row mt-5 w-100">
+    <div class="row mt-2 w-100">
         <div class="col">
             <GenerateButton/>
         </div>
@@ -82,16 +80,6 @@
 
         Dispatcher.Dispatch(new MaxThrowChangedAction(Throws.Select(x => x.Height).Max()));
         Dispatcher.Dispatch(new MinThrowChangedAction(Throws.Select(x => x.Height).Min()));
-    }
-
-    private async Task ShowInlineDialog()
-    {
-        await DialogService.OpenAsync<Filter>("New Pattern Filter", options: new DialogOptions
-        {
-            CloseDialogOnOverlayClick = true,
-            Height = "500px",
-            Style = "min-width: 300px"
-        });
     }
 
     private static PeriodChangedAction CreateAction(int? x)

@@ -9,9 +9,16 @@ namespace Siteswaps.Generator.Test.Components.State;
 [TestFixture]
 public class FilterTreeTests
 {
-    private IFilterInformation PatternFilter(int numberOfPasses = 0) => new PatternFilterInformationFaker().RuleFor(x => x.Pattern, () => Enumerable
-        .Repeat(Throw.SinglePass, numberOfPasses).ToList()).Generate();
-    
+    private static IFilterInformation PatternFilter(int numberOfPasses = 0)
+    {
+        return new PatternFilterInformationFaker()
+            .RuleFor(
+                x => x.Pattern,
+                () => Enumerable.Repeat(Throw.SinglePass, numberOfPasses).ToList()
+            )
+            .Generate();
+    }
+
     [Test]
     public async Task FilterTree_Can_Remove_Leaf()
     {
@@ -19,61 +26,139 @@ public class FilterTreeTests
         var sut = new FilterTree(leaf);
         var result = sut.Remove(leaf);
         await Verify(new FilterTreePrinter().Print(result));
-    }    
-    
+    }
+
     [Test]
     public async Task FilterTree_Can_Remove_From_And_Node()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
-        var and = new AndNode(new FilterLeaf(PatternFilter(1)),leaf,new FilterLeaf(PatternFilter(3)));
+        var and = new AndNode(
+            new FilterLeaf(PatternFilter(1)),
+            leaf,
+            new FilterLeaf(PatternFilter(3))
+        );
         var sut = new FilterTree(and);
         var result = sut.Remove(leaf);
         await Verify(new FilterTreePrinter().Print(result));
-    }  
-    
+    }
+
     [Test]
     public async Task FilterTree_Can_Remove_From_And_Node_Deeply_Nested()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
-        var and = new OrNode(new AndNode(new OrNode(new AndNode(new FilterLeaf(PatternFilter(1)),leaf,new FilterLeaf(PatternFilter(3))))));
+        var and = new OrNode(
+            new AndNode(
+                new OrNode(
+                    new AndNode(
+                        new FilterLeaf(PatternFilter(1)),
+                        leaf,
+                        new FilterLeaf(PatternFilter(3))
+                    )
+                )
+            )
+        );
         var sut = new FilterTree(and);
         var result = sut.Remove(leaf);
         await Verify(new FilterTreePrinter().Print(result));
-    }  
-    
+    }
+
     [Test]
     public async Task FilterTree_Can_Remove_From_Or_Node()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
-        var and = new OrNode(new FilterLeaf(PatternFilter(1)),leaf,new FilterLeaf(PatternFilter(3)));
+        var and = new OrNode(
+            new FilterLeaf(PatternFilter(1)),
+            leaf,
+            new FilterLeaf(PatternFilter(3))
+        );
         var sut = new FilterTree(and);
         var result = sut.Remove(leaf);
         await Verify(new FilterTreePrinter().Print(result));
-    }  
-    
+    }
+
     [Test]
     public async Task FilterTree_Can_Add_To_And_Node_Deeply_Nested()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
-        var nestedAnd = new AndNode(new FilterLeaf(PatternFilter(1)),new FilterLeaf(PatternFilter(3)));
+        var nestedAnd = new AndNode(
+            new FilterLeaf(PatternFilter(1)),
+            new FilterLeaf(PatternFilter(3))
+        );
         var and = new OrNode(new AndNode(new OrNode(nestedAnd)));
         var sut = new FilterTree(and);
-        var result = sut.Add(nestedAnd,leaf);
+        var result = sut.Add(nestedAnd, leaf);
         await Verify(new FilterTreePrinter().Print(result));
-    }  
+    }
 
-    
+    [Test]
+    public async Task FilterTree_Can_Add_To_Or_Node()
+    {
+        var orNode = new OrNode(
+            new AndNode(new FilterLeaf(PatternFilter(1)), new FilterLeaf(PatternFilter(3)))
+        );
+        var sut = new FilterTree(new OrNode(new AndNode(orNode)));
+        var result = sut.Add(sut.FindNode(sut.GetKey(orNode))!, new FilterLeaf(PatternFilter(2)));
+        await Verify(new FilterTreePrinter().Print(result));
+    }
+
     [Test]
     public void Generate_Unique_Key_For_Leaf_With_Nesting()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
-        var nestedAnd = new AndNode(new FilterLeaf(PatternFilter(1)),leaf,new FilterLeaf(PatternFilter(3)));
+        var nestedAnd = new AndNode(
+            new FilterLeaf(PatternFilter(1)),
+            leaf,
+            new FilterLeaf(PatternFilter(3))
+        );
         var and = new OrNode(new AndNode(new OrNode(nestedAnd)));
         var sut = new FilterTree(and);
         var result = sut.GetKey(leaf);
         result.Should().Contain("OR_AND_OR_AND_");
-    }  
+    }
 
+    [Test]
+    public void Find_Node_Corresponding_To_Key()
+    {
+        var leaf = new FilterLeaf(PatternFilter(2));
+        var nestedAnd = new AndNode(
+            new FilterLeaf(PatternFilter(1)),
+            leaf,
+            new FilterLeaf(PatternFilter(3))
+        );
+        var and = new OrNode(new AndNode(new OrNode(nestedAnd)));
+        var sut = new FilterTree(and);
+        var result = sut.FindNode("OR_AND_OR_AND");
+        result.Should().Be(nestedAnd);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(Generate_Tree))]
+    public void Find_Node_Corresponding_To_Key_In_Tree(FilterTree tree, FilterNode node)
+    {
+        var result = tree.FindNode(tree.GetKey(node));
+        result.Should().Be(node);
+    }
+
+    public static IEnumerable<TestCaseData> Generate_Tree()
+    {
+        var sut = new FilterTree(
+            new OrNode(
+                new AndNode(
+                    new OrNode(
+                        new AndNode(
+                            new FilterLeaf(PatternFilter(1)),
+                            new FilterLeaf(PatternFilter(2)),
+                            new FilterLeaf(PatternFilter(3))
+                        )
+                    ),
+                    new FilterLeaf(PatternFilter(6))
+                )
+            )
+        );
+
+        foreach (var node in sut.All)
+            yield return new TestCaseData(sut, node);
+    }
 
     private class FilterTreePrinter
     {
@@ -100,9 +185,7 @@ public class FilterTreeTests
             writer.WriteLine("And");
             writer.Indent++;
             foreach (var child in node.Children)
-            {
                 ((IFilterVisitor<Unit>)this).Visit(child);
-            }
             writer.Indent--;
             return Unit.Value;
         }
@@ -112,9 +195,7 @@ public class FilterTreeTests
             writer.WriteLine("Or");
             writer.Indent++;
             foreach (var child in node.Children)
-            {
                 ((IFilterVisitor<Unit>)this).Visit(child);
-            }
             writer.Indent--;
             return Unit.Value;
         }
@@ -130,7 +211,11 @@ public class FilterTreeTests
     {
         public PatternFilterInformationFaker()
         {
-            CustomInstantiator(f => new (new List<Throw>(), false, false));
+            CustomInstantiator(f => new NewPatternFilterInformation(
+                new List<Throw>(),
+                false,
+                false
+            ));
         }
     }
 }

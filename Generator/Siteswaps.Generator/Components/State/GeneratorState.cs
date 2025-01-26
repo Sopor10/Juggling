@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
+using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Components.State;
-
 
 public record GeneratorState
 {
@@ -25,7 +25,9 @@ public record GeneratorState
             Throw.TripleSelf,
         }.ToImmutableList();
 
-    public ImmutableList<IFilterInformation> Filter { get; init; } = ImmutableList<IFilterInformation>.Empty;
+    public ImmutableList<IFilterInformation> Filter { get; init; } =
+        ImmutableList<IFilterInformation>.Empty;
+    public FilterTree FilterTree { get; init; } = new(new AndNode());
 
     public bool CreateFilterFromThrowList => true;
     public Settings.SettingsDto Settings { get; set; } = new();

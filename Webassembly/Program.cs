@@ -10,7 +10,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.InstallGenerator();
-builder.Services.AddScoped<DialogService>();
+builder.Services.AddRadzenComponents();
 builder.Services.AddVisNetwork();
 
 await builder.Build().RunAsync();

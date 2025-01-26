@@ -8,7 +8,7 @@ public interface IFilterVisitor<T>
             AndNode andNode => Visit(andNode),
             OrNode orNode => Visit(orNode),
             FilterLeaf filterLeaf => Visit(filterLeaf),
-            _ => throw new ArgumentOutOfRangeException(nameof(node), node, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(node), node, null),
         };
 
     public T Visit(AndNode node);

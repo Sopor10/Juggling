@@ -1,111 +1,102 @@
 ﻿@page "/DragDrop"
-<RadzenDropZoneContainer TItem="MyTask" Data="data"
-                         ItemSelector="@ItemSelector"
-                         ItemRender="@OnItemRender"
-                         CanDrop="@CanDrop"
-                         Drop="@OnDrop">
-    <ChildContent>
-        <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
-            <RadzenDropZone Value="Status.NotStarted" class="rz-display-flex rz-flex-column rz-background-color-warning-lighter rz-border-warning-light rz-border-radius-2 rz-p-4" Style="flex: 1; gap: 1rem;">
-                <RadzenText Text="Not started" TextStyle="TextStyle.Subtitle2" />
-            </RadzenDropZone>
+@using Siteswaps.Generator.Components.State.FilterTrees
 
-            <RadzenDropZone Value="Status.Started" class="rz-display-flex rz-flex-column rz-background-color-info-lighter rz-border-info-light rz-border-radius-2 rz-p-4" Style="flex: 1; gap: 1rem;">
-                <RadzenText Text="Started" TextStyle="TextStyle.Subtitle2" />
-            </RadzenDropZone>
-
-            <RadzenDropZone Value="Status.Completed" class="rz-display-flex rz-flex-column rz-background-color-success-lighter rz-border-success-light rz-border-radius-2 rz-p-4" Style="flex: 1; gap: 1rem;">
-                <RadzenText Text="Completed" TextStyle="TextStyle.Subtitle2" />
-            </RadzenDropZone>
-
-            <RadzenDropZone Value="Status.Deleted" class="rz-display-flex rz-flex-column rz-background-color-danger-lighter rz-border-danger-light rz-border-radius-2 rz-p-4" Style="flex: 1; gap: 1rem;">
-                <RadzenText Text="Drop here to delete" TextStyle="TextStyle.Subtitle2" />
-            </RadzenDropZone>
-        </RadzenStack>
-    </ChildContent>
-    <Template>
-        <strong>@context.Name</strong>
-    </Template>
-</RadzenDropZoneContainer>
-
-<style>
-    .rz-can-drop {
-        background-color: var(--rz-background-color-primary);
-    }
-</style>
+<RadzenRow class="rz-p-0 rz-p-lg-12">
+    <RadzenColumn Size="12" SizeLG="6" OffsetLG="3">
+        <RadzenTree AllowCheckParents="false" AllowCheckBoxes="false" AllowCheckChildren="false" Data=@entries Expand=@Load C Style="width: 100%; height: 300px" >
+            <RadzenTreeLevel 
+                Text=@GetTextForNode 
+                Template=@Template 
+                Expanded=@(_ => true) 
+                Checkable="_ => false"/>
+        </RadzenTree>
+    </RadzenColumn>
+</RadzenRow>
 
 @code {
-    // Filter items by zone value
-    Func<MyTask, RadzenDropZone<MyTask>, bool> ItemSelector = (item, zone) => item.Status == (Status)zone.Value && item.Status != Status.Deleted;
-
-    Func<RadzenDropZoneItemEventArgs<MyTask>, bool> CanDrop = request =>
-    {
-        // Allow item drop only in the same zone, in "Deleted" zone or in the next/previous zone.
-        return request.FromZone == request.ToZone || (Status)request.ToZone.Value == Status.Deleted ||
-               Math.Abs((int)request.Item.Status - (int)request.ToZone.Value) == 1;
-    };
-
-    void OnItemRender(RadzenDropZoneItemRenderEventArgs<MyTask> args)
-    {
-        // Customize item appearance
-        if (args.Item.Name == "Task2")
-        {
-            args.Attributes["draggable"] = "false";
-            args.Attributes["style"] = "cursor:not-allowed";
-            args.Attributes["class"] = "rz-card rz-variant-flat rz-background-color-primary-lighter rz-color-on-primary-lighter";
-        }
-        else
-        {
-            args.Attributes["class"] = "rz-card rz-variant-filled rz-background-color-primary-light rz-color-on-primary-light";
-        }
-
-        // Do not render item if deleted
-        args.Visible = args.Item.Status != Status.Deleted;
-    }
-
-    void OnDrop(RadzenDropZoneItemEventArgs<MyTask> args)
-    {
-        if (args.FromZone != args.ToZone)
-        {
-            // update item zone
-            args.Item.Status = (Status)args.ToZone.Value;
-        }
-
-        if (args.ToItem != null && args.ToItem != args.Item)
-        {
-            // reorder items in same zone or place the item at specific index in new zone
-            data.Remove(args.Item);
-            data.Insert(data.IndexOf(args.ToItem), args.Item);
-        }
-    }
-
-    IList<MyTask> data = [];
-
+    IEnumerable<FilterNode> entries = [];
+    FilterTree tree = new FilterTree(
+        new AndNode(
+            new OrNode(
+                new FilterLeaf(new NewPatternFilterInformation([], true,true))), 
+            new FilterLeaf(new EasyNumberFilter.NumberFilter()
+                {
+                    Amount = 5,
+                    Throw = Throw.Heff,
+                    Type = EasyNumberFilter.NumberFilterType.Exactly
+                })
+            ));
     protected override void OnInitialized()
     {
-        data = Enumerable.Range(0, 5)
-            .Select(i =>
-                new MyTask()
-                {
-                    Id = i,
-                    Name = $"Task{i}",
-                    Status = i < 3 ? Status.NotStarted : Status.Started
-                })
-            .ToList();
+        if (tree.Root is not null)
+        {
+            entries = [tree.Root];
+        }
+
     }
 
-    public class MyTask
+    void Load(TreeExpandEventArgs args)
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public Status Status { get; set; } = Status.NotStarted;
+        var node = args.Value as FilterNode;
+
+        args.Children.Data = node switch
+        {
+            AndNode andNode => andNode.Children,
+            FilterLeaf filterLeaf => [],
+            OrNode orNode => orNode.Children,
+            _ => throw new ArgumentOutOfRangeException(nameof(node))
+        };
+        args.Children.Text = x => x switch
+        {
+            FilterLeaf leaf => leaf.Filter.Display(),
+            AndNode => "And",
+            OrNode => "Or",
+            _ => throw new ArgumentOutOfRangeException(nameof(x))
+        };
+        args.Children.HasChildren = x => x is FilterLeaf is false;
+        args.Children.Template = Template;
+        args.Children.Checkable = o => false;
+        args.Children.Expanded = x => true;
     }
 
-    public enum Status
+    string GetTextForNode(object data)
     {
-        NotStarted,
-        Started,
-        Completed,
-        Deleted
+        return data switch
+        {
+            FilterLeaf leaf => leaf.Filter.Display(),
+            AndNode => "And",
+            OrNode => "Or",
+            _ => throw new ArgumentOutOfRangeException(nameof(data))
+        };
     }
+
+    RenderFragment<RadzenTreeItem> Template = (context) => @<div>
+                                                               @switch (context.Value)
+                                                               {
+                                                                   case AndNode andNode: <RadzenText Text="And"/>break;
+                                                                   case OrNode orNode: <RadzenText Text="Or"/> break;
+                                                                   case FilterLeaf leaf:
+                                                                       <div class="card w-100 h-100 flex-grow-1">
+                                                                           <div class="card-body d-flex flex-column justify-content-center">
+                                                                               <div class="d-flex justify-content-between align-items-center">
+                                                                                   <text class="text-break">@(leaf.Filter.Display())</text>
+                                                                                   <div class="d-flex">
+                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2">
+                                                                                           <EditPencil/>
+                                                                                       </button>
+                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger">
+                                                                                           <Trashcan/>
+                                                                                       </button>
+                                                                                   </div>
+                                                                               </div>
+                                                                           </div>
+                                                                       </div>
+                                                                       ;
+                                                                       break;
+
+                                                               }
+                                                           </div>;
+
+
+
 }

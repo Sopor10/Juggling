@@ -5,8 +5,10 @@ namespace Siteswaps.Generator.Components.State.FilterTrees;
 public record Unit
 {
     public static Unit Value { get; } = new Unit();
+
     private Unit() { }
 };
+
 public class RemoveFilterVisitor(FilterNode nodeToRemove) : IFilterVisitor<FilterNode?>
 {
     public FilterNode? Visit(AndNode node)
@@ -15,7 +17,10 @@ public class RemoveFilterVisitor(FilterNode nodeToRemove) : IFilterVisitor<Filte
         {
             return null;
         }
-        var newChildren = node.Children.Select(x => ((IFilterVisitor<FilterNode?>)this).Visit(x)).OfType<FilterNode>().ToImmutableList();
+        var newChildren = node
+            .Children.Select(x => ((IFilterVisitor<FilterNode?>)this).Visit(x))
+            .OfType<FilterNode>()
+            .ToImmutableList();
         return new AndNode(newChildren);
     }
 
@@ -25,7 +30,10 @@ public class RemoveFilterVisitor(FilterNode nodeToRemove) : IFilterVisitor<Filte
         {
             return null;
         }
-        var newChildren = node.Children.Select(x => ((IFilterVisitor<FilterNode?>)this).Visit(x)).OfType<FilterNode>().ToImmutableList();
+        var newChildren = node
+            .Children.Select(x => ((IFilterVisitor<FilterNode?>)this).Visit(x))
+            .OfType<FilterNode>()
+            .ToImmutableList();
         return new OrNode(newChildren);
     }
 

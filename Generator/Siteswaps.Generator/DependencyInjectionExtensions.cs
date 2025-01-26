@@ -20,6 +20,7 @@ public static class DependencyInjectionExtensions
 #endif
         });
         services.AddScoped<INavigation, NavigationManagerAdapter>();
+
         services.AddBlazoredLocalStorage();
     }
 }
