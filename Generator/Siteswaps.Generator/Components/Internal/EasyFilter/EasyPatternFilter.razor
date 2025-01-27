@@ -2,7 +2,12 @@
 <div>
     <div class="d-flex flex-row">
         <div class="me-2">
-            <RadzenCheckBox TValue="bool" @bind-Value:get="IsGlobalPattern" Name="IsGlobal" @bind-Value:set="IsGlobalPatternChangedPrivate"/>
+            <RadzenDropDown 
+                TValue="PatternRotation" 
+                @bind-Value:get="PatternRotation" 
+                Name="IsGlobal" 
+                @bind-Value:set="PatternRotationChangedPrivate"
+                Data="new List<PatternRotation>() { PatternRotation.Global, PatternRotation.Local, PatternRotation.A, PatternRotation.B}"/>
             <RadzenLabel Text="Global" Component="IsGlobal" Style="vertical-align: middle;"/>
         </div>
         <div class="me-2">
@@ -14,7 +19,7 @@
     <div>
         <Keyboard PossibleThrows="@PossibleThrows" @bind-Filter="Throws"></Keyboard>
     </div>
-    <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, IsGlobalPattern, IsIncludePattern))"/>
+    <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, PatternRotation, IsIncludePattern))"/>
     
 </div>
 @code {
@@ -34,10 +39,10 @@
     [Parameter]
     public int LocalLength { get; set; } = 5;
 
-    private int Length => IsGlobalPattern ? GlobalLength : LocalLength;
+    private int Length => PatternRotation.Value < 0 ? GlobalLength : LocalLength;
     
     [Parameter]
-    public bool IsGlobalPattern { get; set; } = true;
+    public PatternRotation PatternRotation { get; set; } = PatternRotation.Global;
     
     [Parameter]
     public bool IsIncludePattern { get; set; } = true;
@@ -46,7 +51,7 @@
     public EventCallback<bool> IsIncludePatternChanged { get; set; }
 
     [Parameter]
-    public EventCallback<bool> IsGlobalPatternChanged { get; set; }
+    public EventCallback<PatternRotation> PatternRotationChanged { get; set; }
 
     private void IsIncludePatternChangedPrivate(bool arg)
     {
@@ -55,10 +60,10 @@
     }
     
 
-    private void IsGlobalPatternChangedPrivate(bool arg)
+    private void PatternRotationChangedPrivate(PatternRotation arg)
     {
-        IsGlobalPattern = arg;
-        IsGlobalPatternChanged.InvokeAsync(arg);
+        PatternRotation = arg;
+        PatternRotationChanged.InvokeAsync(arg);
     }
 
     [Parameter]

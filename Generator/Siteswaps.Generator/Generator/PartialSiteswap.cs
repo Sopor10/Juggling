@@ -31,7 +31,6 @@ public class PartialSiteswap
             {
                 return;
             }
-
             if (oldValue != -1)
             {
                 Interface[i + oldValue] = -1;
@@ -50,6 +49,7 @@ public class PartialSiteswap
     }
 
     public int LastFilledPosition { get; private set; }
+    public int RotationIndex { get; set; }
 
     public bool IsFilled() => Items[^1] != -1;
 
@@ -79,11 +79,6 @@ public class PartialSiteswap
 
     public void ResetCurrentPosition()
     {
-        var oldHeight = this[LastFilledPosition];
-        if (oldHeight == -1)
-        {
-            return;
-        }
         this[LastFilledPosition] = -1;
     }
 

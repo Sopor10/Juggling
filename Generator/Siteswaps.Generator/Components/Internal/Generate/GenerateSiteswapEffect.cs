@@ -138,72 +138,6 @@ public class GenerateSiteswapEffect(INavigation navigation)
 
         return result;
     }
-
-    private static IFilterBuilder ToFilter(
-        IFilterBuilder builder,
-        IFilterInformation filterInformation,
-        int numberOfJugglers,
-        bool showName
-    )
-    {
-        switch (filterInformation)
-        {
-            case NewPatternFilterInformation newPatternFilterInformation:
-                return BuildPatternFilter(
-                    newPatternFilterInformation,
-                    numberOfJugglers,
-                    builder,
-                    showName
-                );
-            case EasyNumberFilter.NumberFilter numberFilter:
-                return numberFilter.Type switch
-                {
-                    EasyNumberFilter.NumberFilterType.Exactly => builder.ExactOccurence(
-                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
-                        numberFilter.Amount
-                    ),
-                    EasyNumberFilter.NumberFilterType.AtLeast => builder.MinimumOccurence(
-                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
-                        numberFilter.Amount
-                    ),
-                    EasyNumberFilter.NumberFilterType.Maximum => builder.MaximumOccurence(
-                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
-                        numberFilter.Amount
-                    ),
-                    _ => throw new ArgumentOutOfRangeException(),
-                };
-        }
-
-        throw new ArgumentOutOfRangeException();
-    }
-
-    private static IFilterBuilder BuildPatternFilter(
-        NewPatternFilterInformation newPatternFilterInformation,
-        int numberOfJugglers,
-        IFilterBuilder builder,
-        bool showName
-    )
-    {
-        var patterns = new List<List<int>>();
-        foreach (var t in newPatternFilterInformation.Pattern)
-        {
-            var heights = t.Height switch
-            {
-                -1 => new List<int> { -1 },
-                -2 => new List<int> { -2 },
-                -3 => new List<int> { -3 },
-
-                _ => t.GetHeightForJugglers(numberOfJugglers, showName).ToList(),
-            };
-            patterns.Add(heights);
-        }
-
-        return builder.FlexiblePattern(
-            patterns,
-            numberOfJugglers,
-            newPatternFilterInformation.IsGlobalPattern
-        );
-    }
 }
 
 internal class FilterBuilderVisitor(
@@ -250,8 +184,7 @@ internal class FilterBuilderVisitor(
                         numberOfJugglers,
                         builder,
                         showName
-                    )
-                    .Build();
+                    );
             case EasyNumberFilter.NumberFilter numberFilter:
                 return numberFilter.Type switch
                 {
@@ -280,7 +213,7 @@ internal class FilterBuilderVisitor(
         throw new ArgumentOutOfRangeException();
     }
 
-    private static IFilterBuilder BuildPatternFilter(
+    private ISiteswapFilter BuildPatternFilter(
         NewPatternFilterInformation newPatternFilterInformation,
         int numberOfJugglers,
         IFilterBuilder builder,
@@ -301,11 +234,19 @@ internal class FilterBuilderVisitor(
             patterns.Add(heights);
         }
 
-        return builder.FlexiblePattern(
+        if (newPatternFilterInformation.PatternRotation.Value < 0)
+        {
+            return builder.FlexiblePattern(
+                patterns,
+                numberOfJugglers,
+                newPatternFilterInformation.PatternRotation == PatternRotation.Global
+            ).Build();
+        }
+        return new RotationAwareFlexiblePatternFilter(
             patterns,
             numberOfJugglers,
-            newPatternFilterInformation.IsGlobalPattern
-        );
+            siteswapGeneratorInput,
+        newPatternFilterInformation.PatternRotation.Value);
     }
 }
 

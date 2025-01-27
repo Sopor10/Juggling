@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswaps.Generator.Generator;
+using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Test.Filter;
 
@@ -107,5 +108,22 @@ public partial class FilterTestSuite
         var sut = FilterBuilder.Pattern(filter, 2).Build();
 
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
+    }
+
+    [Test]
+    [TestCase(new[] { 4, 4, 1, 3 }, new[] { 4, 1}, 0)]
+    [TestCase(new[] { 4, 4, 1, 3 }, new[] { 4, 3}, 1)]
+    [TestCase(new[] { 4, 4, 1, 3 }, new[] { 1, 4}, 2)]
+    [TestCase(new[] { 4, 4, 1, 3 }, new[] { 3, 4}, 3)]
+    public void Rotation_Aware_Filter_Works(int[] input, int[] filter, int rotation)
+    {
+        Input = new SiteswapGeneratorInput(4, 3, 0, 8);
+        var sut = new RotationAwareFlexiblePatternFilter(filter.Select(x => new List<int> { x }).ToList(), 2, Input, 0);
+
+        var partialSiteswap = new PartialSiteswap(input)
+        {
+            RotationIndex = rotation
+        };
+        sut.CanFulfill(partialSiteswap).Should().BeTrue();
     }
 }

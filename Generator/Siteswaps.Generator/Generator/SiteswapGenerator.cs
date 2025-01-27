@@ -91,7 +91,16 @@ public class SiteswapGenerator
                 continue;
             }
 
-            if (Filter.CanFulfill(PartialSiteswap) is false)
+            var canFulfill = Enumerable
+                .Range(0, PartialSiteswap.LastFilledPosition + 1)
+                .Any(x =>
+                {
+                    PartialSiteswap.RotationIndex = x;
+                    return Filter.CanFulfill(PartialSiteswap);
+                });
+
+            PartialSiteswap.RotationIndex = 0;
+            if (canFulfill is false)
             {
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
