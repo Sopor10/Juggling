@@ -26,10 +26,10 @@
 @code {
     
     [Parameter]
-    public ImmutableList<Throw> PossibleThrows { get; set; } = ImmutableList<Throw>.Empty;
+    public ImmutableList<Throw> PossibleThrows { get; set; } = [];
 
     [Parameter]
-    public List<Throw> Throws { get; set; } = Enumerable.Repeat(Throw.Empty, 5).ToList(); 
+    public List<Throw> Throws { get; set; } = []; 
     
     [Parameter]
     public EventCallback<List<Throw>> ThrowsChanged { get; set; } 

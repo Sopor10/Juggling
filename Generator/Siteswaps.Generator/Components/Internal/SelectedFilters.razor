@@ -1,6 +1,4 @@
-﻿@using System.Diagnostics
-@using Siteswaps.Generator.Components.State.FilterTrees
-@using Siteswaps.Generator.Generator.Filter.Combinatorics
+﻿@using Siteswaps.Generator.Components.State.FilterTrees
 @inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
@@ -69,8 +67,8 @@
     RenderFragment<RadzenTreeItem> Template => (context) => @<div>
                                                                @switch (context.Value)
                                                                {
-                                                                   case AndNode andNode: <RadzenText Text="And"/>break;
-                                                                   case OrNode orNode: <RadzenText Text="Or"/> break;
+                                                                   case AndNode andNode: <RadzenText Text="And" @onclick="x =>GetContextMenu(x, andNode)"/>break;
+                                                                   case OrNode orNode: <RadzenText Text="Or" @onclick="x =>GetContextMenu(x, orNode)"/> break;
                                                                    case FilterLeaf leaf:
                                                                        <div class="card w-100 h-100 flex-grow-1">
                                                                            <div class="card-body d-flex flex-column justify-content-center">
@@ -128,7 +126,17 @@
         {
             return;
         }
-        
+
+        OpenContextMenu(args, filterNode);
+    }
+    
+    private void GetContextMenu(MouseEventArgs args, FilterNode filterNode)
+    {
+        OpenContextMenu(args, filterNode);
+    }
+
+    private void OpenContextMenu(MouseEventArgs args, FilterNode filterNode)
+    {
         switch(filterNode)
         {
             case AndNode andNode:
@@ -201,8 +209,6 @@
             default:
                 throw new ArgumentOutOfRangeException(nameof(filterNode));
         }
-
-
     }
 
     public record AddOrFilterAction(string? Key);
@@ -266,3 +272,5 @@
         );
     }
 }
+
+

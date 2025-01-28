@@ -17,15 +17,10 @@ public record NewPatternFilterInformation(
         (IsIncludePattern ? "include " : "exclude ")
         + PatternRotation.Display
         + " "
-        + string.Join(
-            ",",
-            Enumerable
-                .Reverse(Pattern)
-                .SkipWhile(x => x == Throw.Empty)
-                .Reverse()
-                .Select(Display)
-                .ToList()
-        );
+        + string.Join(",", FilledPattern.Select(Display).ToList());
+
+    public IEnumerable<Throw> FilledPattern =>
+        Enumerable.Reverse(Pattern).SkipWhile(x => x == Throw.Empty).Reverse();
 
     private static string Display(Throw i) => i.DisplayValue;
 }
@@ -33,10 +28,10 @@ public record NewPatternFilterInformation(
 [DebuggerDisplay("{Display}")]
 public record PatternRotation(int Value)
 {
-    public static PatternRotation Global => new PatternRotation(-2);
-    public static PatternRotation Local => new PatternRotation(-1);
-    public static PatternRotation A => new PatternRotation(0);
-    public static PatternRotation B => new PatternRotation(1);
+    public static PatternRotation Global => new(-2);
+    public static PatternRotation Local => new(-1);
+    public static PatternRotation A => new(0);
+    public static PatternRotation B => new(1);
 
     public string Display =>
         Value switch

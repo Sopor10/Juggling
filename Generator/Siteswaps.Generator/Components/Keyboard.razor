@@ -6,7 +6,7 @@
         @for (var index = 0; index < Filter.Count; index++)
         {
             var t = Filter[index];
-            <span class="@(index == cursorPosition ? "highlight-cursor-position" : "")">@t.DisplayValue&nbsp;</span>
+            <span class="@(index == CursorPosition ? "highlight-cursor-position" : "")">@t.DisplayValue&nbsp;</span>
         }
     </div>
     <div class="flex-row justify-content-center">
@@ -18,13 +18,13 @@
 {
     
     [Parameter]
-    public ImmutableList<Throw> PossibleThrows { get; set; } = ImmutableList<Throw>.Empty;
+    public ImmutableList<Throw> PossibleThrows { get; set; } = [];
     
-    [Parameter] public List<Throw> Filter { get; set; } = Enumerable.Repeat(Throw.Empty, 5).ToList();
+    [Parameter] public List<Throw> Filter { get; set; } = [];
     [Parameter]
     public EventCallback<List<Throw>> FilterChanged { get; set; } 
     
-    private int cursorPosition { get; set; }
+    private int CursorPosition { get; set; }
 
     private List<Throw> Throws { get; } = Throw.Everything().ToList();
     private List<string> ThrowsAsString => Throws.Select(x => x.DisplayValue).ToList();
@@ -34,13 +34,13 @@
         switch (obj)
         {
             case "Backspace":
-                Filter[cursorPosition] = Throw.Empty;
+                Filter[CursorPosition] = Throw.Empty;
                 break;
             case "ArrowLeft":
-                cursorPosition = Math.Max(0, cursorPosition - 1);
+                CursorPosition = Math.Max(0, CursorPosition - 1);
                 break;
             case "ArrowRight":
-                cursorPosition = Math.Min(Filter.Count - 1, cursorPosition + 1);
+                CursorPosition = Math.Min(Filter.Count - 1, CursorPosition + 1);
                 break;
             default:
                 AddThrow(obj);
@@ -50,15 +50,15 @@
 
     private void AddThrow(string s)
     {
-        Filter[cursorPosition] = Throw.Parse(s);
-        cursorPosition = Math.Min(Filter.Count - 1, cursorPosition + 1);
+        Filter[CursorPosition] = Throw.Parse(s);
+        CursorPosition = Math.Min(Filter.Count - 1, CursorPosition + 1);
     }
 
     protected override Task OnParametersSetAsync()
     {
-        if (cursorPosition >= Filter.Count)
+        if (CursorPosition >= Filter.Count)
         {
-            cursorPosition = 0;
+            CursorPosition = 0;
         }
         
         return base.OnParametersSetAsync();

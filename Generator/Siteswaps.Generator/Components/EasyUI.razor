@@ -85,7 +85,12 @@
 
     private static PeriodChangedAction CreateAction(int? x)
     {
-        return new PeriodChangedAction(new Period(x ?? throw new ArgumentNullException()));
+        if(x is null)
+        {
+            throw new ArgumentNullException();
+        }
+        
+        return new PeriodChangedAction(new Period(x.Value));
     }
 
     public record MinNumberChangedAction(int Value);
@@ -185,10 +190,37 @@
             {
                 Period = action.Value,
                 FilterTree = state.State.FilterTree
-                    .RemoveAll(x => x is FilterLeaf leaf && leaf.Filter is NewPatternFilterInformation)
+                    .RemoveAll(x => x is FilterLeaf { Filter: { } filter } && 
+                                    RemoveFilter(state.State, filter, action))
             },
         };
     
+    private static bool RemoveFilter(GeneratorState state, IFilterInformation filter, PeriodChangedAction action)
+    {
+        if (filter is NewPatternFilterInformation newPatternFilterInformation)
+        {
+            if (newPatternFilterInformation.PatternRotation == PatternRotation.Global)
+            {
+                return action.Value.Value < newPatternFilterInformation.FilledPattern.Count();
+            }
+
+            if (state.NumberOfJugglers is null)
+            {
+                return false;
+            }
+            
+            return action.Value.GetLocalPeriod(state.NumberOfJugglers.Value).Value < newPatternFilterInformation.FilledPattern.Count();
+            
+        }
+
+        if (filter is EasyNumberFilter.NumberFilter numberFilter)
+        {
+            return action.Value.Value < numberFilter.Amount;
+        }
+
+        return false;
+    }
+
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIncrementNumberOfJugglersChangedAction(
         SiteswapGeneratorState state,

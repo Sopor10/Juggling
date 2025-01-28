@@ -1,4 +1,5 @@
-﻿using Siteswaps.Generator.Generator.Filter.NumberFilter;
+﻿using Radzen;
+using Siteswaps.Generator.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
 
@@ -27,6 +28,12 @@ internal class AndFilter : ISiteswapFilter
         return true;
     }
 
+    /// <summary>
+    /// lower is more restricitive and will therefore be checked first
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private static int Order(ISiteswapFilter filter)
     {
         return filter switch
@@ -42,7 +49,21 @@ internal class AndFilter : ISiteswapFilter
             NumberFilter.NumberFilter _ => 0,
             NumberOfPassesFilter _ => 0,
             RightAmountOfBallsFilter _ => 0,
+            NotFilter _ => 0,
             _ => throw new ArgumentOutOfRangeException(nameof(filter)),
         };
+    }
+}
+
+public class NotFilter(ISiteswapFilter filter) : ISiteswapFilter
+{
+    public bool CanFulfill(PartialSiteswap value)
+    {
+        if (value.IsFilled() is false)
+        {
+            return true;
+        }
+
+        return filter.CanFulfill(value) is false;
     }
 }
