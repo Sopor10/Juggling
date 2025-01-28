@@ -12,6 +12,7 @@
                     @bind-Throws="patternFilter.Pattern"
                     @bind-PatternRotation="patternFilter.Rotation"
                     @bind-IsIncludePattern="patternFilter.IsIncludePattern"
+                    NumberOfJugglers="State.NumberOfJugglers ?? 2"
                     AddButtonText=@(Filter is null ? "Add Filter" : "Change")
                     AddFilter="async x => await EditFilterFinished.InvokeAsync(x)">
                 </EasyPatternFilter>

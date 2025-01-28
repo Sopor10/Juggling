@@ -34,6 +34,7 @@ internal class AndFilter : ISiteswapFilter
             AndFilter _ => 0,
             OrFilter _ => 0,
             FlexiblePatternFilter _ => 10,
+            RotationAwareFlexiblePatternFilter _ => 10,
             NoFilter _ => 0,
             AtLeastXXXTimesFilter _ => 0,
             AtMostXXXTimesFilter _ => 0,

@@ -1,4 +1,5 @@
-﻿@using System.Collections.Immutable
+﻿@using System.Collections
+@using System.Collections.Immutable
 <div>
     <div class="d-flex flex-row">
         <div class="me-2">
@@ -7,8 +8,8 @@
                 @bind-Value:get="PatternRotation" 
                 Name="IsGlobal" 
                 @bind-Value:set="PatternRotationChangedPrivate"
-                Data="new List<PatternRotation>() { PatternRotation.Global, PatternRotation.Local, PatternRotation.A, PatternRotation.B}"/>
-            <RadzenLabel Text="Global" Component="IsGlobal" Style="vertical-align: middle;"/>
+                TextProperty="Display"
+                Data="Jugglers"/>
         </div>
         <div class="me-2">
             <RadzenCheckBox TValue="bool" @bind-Value:get="IsIncludePattern" Name="Include" @bind-Value:set="IsIncludePatternChangedPrivate" Disabled="true" />
@@ -38,6 +39,9 @@
 
     [Parameter]
     public int LocalLength { get; set; } = 5;
+    
+    [Parameter]
+    public int NumberOfJugglers { get; set; } = 2;
 
     private int Length => PatternRotation.Value < 0 ? GlobalLength : LocalLength;
     
@@ -71,6 +75,12 @@
     
     [Parameter]
     public string AddButtonText { get; set; } = "Add Filter";
+
+    public IEnumerable<PatternRotation> Jugglers => Enumerable
+        .Range(0, NumberOfJugglers)
+        .Select(x => new PatternRotation(x))
+        .Prepend(PatternRotation.Local)
+        .Prepend(PatternRotation.Global) ;
 
     protected override async Task OnParametersSetAsync()
     {
