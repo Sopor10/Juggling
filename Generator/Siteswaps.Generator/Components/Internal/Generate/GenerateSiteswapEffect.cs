@@ -180,11 +180,11 @@ internal class FilterBuilderVisitor(
         {
             case NewPatternFilterInformation newPatternFilterInformation:
                 return BuildPatternFilter(
-                        newPatternFilterInformation,
-                        numberOfJugglers,
-                        builder,
-                        showName
-                    );
+                    newPatternFilterInformation,
+                    numberOfJugglers,
+                    builder,
+                    showName
+                );
             case EasyNumberFilter.NumberFilter numberFilter:
                 return numberFilter.Type switch
                 {
@@ -236,17 +236,20 @@ internal class FilterBuilderVisitor(
 
         if (newPatternFilterInformation.PatternRotation.Value < 0)
         {
-            return builder.FlexiblePattern(
-                patterns,
-                numberOfJugglers,
-                newPatternFilterInformation.PatternRotation == PatternRotation.Global
-            ).Build();
+            return builder
+                .FlexiblePattern(
+                    patterns,
+                    numberOfJugglers,
+                    newPatternFilterInformation.PatternRotation == PatternRotation.Global
+                )
+                .Build();
         }
         return new RotationAwareFlexiblePatternFilter(
             patterns,
             numberOfJugglers,
             siteswapGeneratorInput,
-        newPatternFilterInformation.PatternRotation.Value);
+            newPatternFilterInformation.PatternRotation.Value
+        );
     }
 }
 

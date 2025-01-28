@@ -15,7 +15,8 @@ public record NewPatternFilterInformation(
 
     public string Display() =>
         (IsIncludePattern ? "include " : "exclude ")
-        + PatternRotation.Display + " "
+        + PatternRotation.Display
+        + " "
         + string.Join(
             ",",
             Enumerable
@@ -36,12 +37,12 @@ public record PatternRotation(int Value)
     public static PatternRotation Local => new PatternRotation(-1);
     public static PatternRotation A => new PatternRotation(0);
     public static PatternRotation B => new PatternRotation(1);
-    
-    public string Display => Value switch
-    {
-        -2 => "global",
-        -1 => "local",
-        _ => ((char)('A' + Value)).ToString()
-    };
-    
+
+    public string Display =>
+        Value switch
+        {
+            -2 => "global",
+            -1 => "local",
+            _ => ((char)('A' + Value)).ToString(),
+        };
 }

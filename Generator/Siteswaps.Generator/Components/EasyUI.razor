@@ -1,6 +1,7 @@
 ﻿@page "/easyUI"
 @using System.Collections.Immutable
 @using Siteswaps.Generator.Components.State.FilterTrees
+@using Siteswaps.Generator.Generator.Filter
 @inherits FluxorComponent
 @inject IState<SiteswapGeneratorState> State
 @inject DialogService DialogService
@@ -195,7 +196,14 @@
         NumberOfJugglersChangedAction action
     )
     {
-        return state with { State = state.State with { NumberOfJugglers = action.Value } };
+        return state with { State = state.State with
+        {
+            NumberOfJugglers = action.Value,
+            FilterTree = state.State.FilterTree
+                .RemoveAll(x => 
+                    x is FilterLeaf { Filter: NewPatternFilterInformation newPatternFilterInformation } && 
+                    newPatternFilterInformation.Rotation.Value >= action.Value)
+        } };
     }
 
 }

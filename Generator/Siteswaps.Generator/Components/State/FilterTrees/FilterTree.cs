@@ -15,8 +15,7 @@ public class FilterTree(FilterNode? root)
 
     public FilterTree RemoveAll(Func<FilterNode, bool> predicate)
     {
-        return All.Where(predicate)
-            .Aggregate(this, (current, node) => current.Remove(node));
+        return All.Where(predicate).Aggregate(this, (current, node) => current.Remove(node));
     }
 
     public FilterTree Add(FilterNode parent, FilterNode node)

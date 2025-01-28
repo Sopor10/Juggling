@@ -35,8 +35,6 @@ internal class RotationAwareFlexiblePatternFilter : ISiteswapFilter
             .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
             .Where(x => x % NumberOfJugglers == 0)
             .ToHashSet();
-
-
     }
 
     public bool CanFulfill(PartialSiteswap value)
