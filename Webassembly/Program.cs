@@ -4,13 +4,19 @@ using Radzen;
 using Siteswaps.Generator;
 using VisNetwork.Blazor;
 using Webassembly;
+namespace Webassembly;
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
+        builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
+        builder.Services.InstallGenerator();
+        builder.Services.AddRadzenComponents();
+        builder.Services.AddVisNetwork();
 
-builder.Services.InstallGenerator();
-builder.Services.AddRadzenComponents();
-builder.Services.AddVisNetwork();
-
-await builder.Build().RunAsync();
+        await builder.Build().RunAsync();
+    }
+}

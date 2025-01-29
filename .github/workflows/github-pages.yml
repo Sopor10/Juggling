@@ -27,7 +27,7 @@ jobs:
       - name: Install workload
         run: dotnet workload install wasm-tools
       - name: Test
-        run: dotnet test --filter TestCategory!=E2E
+        run: dotnet test
         
       # Publish the site
       - name: Publish
