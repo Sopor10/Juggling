@@ -1,0 +1,31 @@
+﻿# This is ".github/workflows/gh-pages.yml" file.
+# This is an EXAMPLE of "GitHub Actions Workflow file".
+
+name: build-and-test
+
+on:
+  pull_request: 
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v4
+
+      # Install .NET SDK
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Csharpier
+        run: dotnet dotnet-csharpier . --check
+      - name: Install workload
+        run: dotnet workload install wasm-tools
+      - name: Test
+        run: dotnet test --filter TestCategory!=E2E
+      
