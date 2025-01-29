@@ -234,9 +234,10 @@ internal class FilterBuilderVisitor(
             patterns.Add(heights);
         }
 
+        ISiteswapFilter filter = new NoFilter();
         if (newPatternFilterInformation.PatternRotation.Value < 0)
         {
-            return builder
+            filter = builder
                 .FlexiblePattern(
                     patterns,
                     numberOfJugglers,
@@ -244,12 +245,17 @@ internal class FilterBuilderVisitor(
                 )
                 .Build();
         }
-        return new RotationAwareFlexiblePatternFilter(
-            patterns,
-            numberOfJugglers,
-            siteswapGeneratorInput,
-            newPatternFilterInformation.PatternRotation.Value
-        );
+        else
+        {
+            filter = new RotationAwareFlexiblePatternFilter(
+                patterns,
+                numberOfJugglers,
+                siteswapGeneratorInput,
+                newPatternFilterInformation.PatternRotation.Value
+            );
+        }
+        
+        return newPatternFilterInformation.IsIncludePattern ? filter : new NotFilter(filter);
     }
 }
 

@@ -36,7 +36,7 @@
         args.Children.Data = node switch
         {
             AndNode andNode => andNode.Children,
-            FilterLeaf filterLeaf => [],
+            FilterLeaf _ => [],
             OrNode orNode => orNode.Children,
             _ => throw new ArgumentOutOfRangeException(nameof(node))
         };
