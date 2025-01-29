@@ -254,7 +254,7 @@ internal class FilterBuilderVisitor(
                 newPatternFilterInformation.PatternRotation.Value
             );
         }
-        
+
         return newPatternFilterInformation.IsIncludePattern ? filter : new NotFilter(filter);
     }
 }
