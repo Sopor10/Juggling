@@ -34,7 +34,6 @@ public static class PageExtensions
         return new GeneratorPageObject(page);
     }
 }
-    
 
 public class GeneratorPageObject(IPage page)
 {
