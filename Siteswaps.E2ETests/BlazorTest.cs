@@ -10,10 +10,10 @@ public class BlazorTest : IAsyncLifetime
     private PlaywrightFixture Fixture { get; } = new();
 
     public readonly Uri RootUri = new("http://127.0.0.1");
-    private readonly WebApplicationFactory<Siteswaps.E2ETests.Server.Program> _webApplicationFactory = new();
+    private readonly WebApplicationFactory<Siteswaps.E2ETests.Server.Program> _webApplicationFactory =
+        new();
     private HttpClient? _httpClient;
     public IBrowserContext? Context { get; private set; }
-    
 
     public async Task InitializeAsync()
     {
@@ -21,7 +21,8 @@ public class BlazorTest : IAsyncLifetime
         _httpClient = _webApplicationFactory.CreateClient();
         Context = await Fixture.Browser.NewContextAsync();
         await Context.RouteAsync(
-            $"{RootUri.AbsoluteUri}**", async route =>
+            $"{RootUri.AbsoluteUri}**",
+            async route =>
             {
                 var request = route.Request;
                 var content = request.PostDataBuffer is { } postDataBuffer
@@ -37,8 +38,9 @@ public class BlazorTest : IAsyncLifetime
                 }
                 var response = await _httpClient.SendAsync(requestMessage);
                 var responseBody = await response.Content.ReadAsByteArrayAsync();
-                var responseHeaders =
-                    response.Content.Headers.Select(h => KeyValuePair.Create(h.Key, string.Join(",", h.Value)));
+                var responseHeaders = response.Content.Headers.Select(h =>
+                    KeyValuePair.Create(h.Key, string.Join(",", h.Value))
+                );
                 await route.FulfillAsync(
                     new()
                     {

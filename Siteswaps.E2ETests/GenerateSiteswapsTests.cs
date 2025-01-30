@@ -17,7 +17,7 @@ public class GenerateSiteswapsTests : IClassFixture<BlazorTest>
     public async Task Generate_Siteswaps_In_Default_Conditions()
     {
         var page = await Fixture.Context!.NewPageAsync();
-        
+
         await page.GotoAsync(Fixture.RootUri.AbsoluteUri);
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Generate" }).ClickAsync();
