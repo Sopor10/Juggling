@@ -1,14 +1,16 @@
 ﻿using CliWrap;
 using Microsoft.Playwright;
+using PlaywrightTesting.Infrastructure;
 using Xunit;
+using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests;
 
-public class GenerateSiteswapsTests : IClassFixture<BlazorTest>
+public class GenerateSiteswapsTests : IClassFixture<BlazorWebassemblyFixture<Program>>
 {
-    public BlazorTest Fixture { get; }
+    public BlazorWebassemblyFixture<Program> Fixture { get; }
 
-    public GenerateSiteswapsTests(BlazorTest fixture)
+    public GenerateSiteswapsTests(BlazorWebassemblyFixture<Program> fixture)
     {
         Fixture = fixture;
     }
@@ -18,10 +20,35 @@ public class GenerateSiteswapsTests : IClassFixture<BlazorTest>
     {
         var page = await Fixture.Context!.NewPageAsync();
 
-        await page.GotoAsync(Fixture.RootUri.AbsoluteUri);
+        var generator = await page.OpenGenerator(Fixture.RootUri.AbsoluteUri);
+        var result = await generator.GenerateSiteswaps();
+        await result.WaitForSiteswap("aaa00");
+    }
+}
 
-        await page.GetByRole(AriaRole.Button, new() { Name = "Generate" }).ClickAsync();
+public static class PageExtensions
+{
+    public static async Task<GeneratorPageObject> OpenGenerator(this IPage page, string uri)
+    {
+        await page.GotoAsync(uri);
+        return new GeneratorPageObject(page);
+    }
+}
+    
 
-        await page.Locator("//h3[normalize-space()='Siteswaps']").WaitForAsync();
+public class GeneratorPageObject(IPage page)
+{
+    public async Task<GeneratedSiteswapsResultPageObject> GenerateSiteswaps()
+    {
+        await page.GetByTestId("generate-button").ClickAsync();
+        return new GeneratedSiteswapsResultPageObject(page);
+    }
+}
+
+public class GeneratedSiteswapsResultPageObject(IPage page)
+{
+    public async Task WaitForSiteswap(string siteswap)
+    {
+        await page.GetByTestId($"generated-siteswap-{siteswap}").WaitForAsync();
     }
 }
