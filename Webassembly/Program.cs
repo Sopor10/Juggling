@@ -4,7 +4,9 @@ using Radzen;
 using Siteswaps.Generator;
 using VisNetwork.Blazor;
 using Webassembly;
+
 namespace Webassembly;
+
 public class Program
 {
     public static async Task Main(string[] args)
