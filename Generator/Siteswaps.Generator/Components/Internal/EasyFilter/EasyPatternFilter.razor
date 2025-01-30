@@ -20,7 +20,7 @@
     <div>
         <Keyboard PossibleThrows="@PossibleThrows" @bind-Filter="Throws"></Keyboard>
     </div>
-    <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, PatternRotation, IsIncludePattern))"/>
+    <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, PatternRotation, IsIncludePattern))" data-testid="add-pattern-filter"/>
     
 </div>
 @code {

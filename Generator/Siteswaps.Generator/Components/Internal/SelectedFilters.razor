@@ -67,18 +67,18 @@
     RenderFragment<RadzenTreeItem> Template => (context) => @<div>
                                                                @switch (context.Value)
                                                                {
-                                                                   case AndNode andNode: <RadzenText Text="And" @onclick="x =>GetContextMenu(x, andNode)"/>break;
-                                                                   case OrNode orNode: <RadzenText Text="Or" @onclick="x =>GetContextMenu(x, orNode)"/> break;
+                                                                   case AndNode andNode: <RadzenText Text="And" @onclick="x =>GetContextMenu(x, andNode)" data-testid="@TreeTestId(andNode)"/>break;
+                                                                   case OrNode orNode: <RadzenText Text="Or" @onclick="x =>GetContextMenu(x, orNode)" data-testid="@TreeTestId(orNode)"/> break;
                                                                    case FilterLeaf leaf:
-                                                                       <div class="card w-100 h-100 flex-grow-1">
+                                                                       <div class="card w-100 h-100 flex-grow-1"  data-testid="@TreeTestId(leaf)">
                                                                            <div class="card-body d-flex flex-column justify-content-center">
                                                                                <div class="d-flex justify-content-between align-items-center">
                                                                                    <text class="text-break">@(leaf.Filter.Display())</text>
                                                                                    <div class="d-flex">
-                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2" @onclick="() => ShowInlineDialog(leaf)">
+                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2" @onclick="() => ShowInlineDialog(leaf)" data-testid="@EditFilterTestId(leaf)">
                                                                                            <EditPencil/>
                                                                                        </button>
-                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))">
+                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))" data-testid="@DeleteFilterTestId(leaf)">
                                                                                            <Trashcan/>
                                                                                        </button>
                                                                                    </div>
@@ -271,6 +271,14 @@
                 }
         );
     }
+    
+    private string TreeTestId(FilterNode node) => $"filter-node-{State.Value.State.FilterTree.GetKey(node)}";
+    private string EditFilterTestId(FilterLeaf leaf) => $"edit-filter-{State.Value.State.FilterTree.GetKey(leaf)}";
+
+    private string DeleteFilterTestId(FilterLeaf leaf) => $"delete-filter-{State.Value.State.FilterTree.GetKey(leaf)}";
 }
+
+
+
 
 
