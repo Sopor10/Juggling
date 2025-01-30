@@ -32,9 +32,12 @@ public class GenerateSiteswapsTests : IClassFixture<BlazorWebassemblyFixture<Pro
         var page = await Fixture.Context!.NewPageAsync();
 
         var generator = await page.OpenGeneratorAsync(Fixture.RootUri.AbsoluteUri);
-        var dialog = await generator.AddPatternFilterAsync();
-        await dialog.AddThrowAsync("Self");
-        await dialog.AddFilterAsync();
+        await generator.AddPatternFilterAsync(async x =>
+        {
+            await x.AddThrowAsync("Self");
+            await x.AddFilterAsync();
+        });
+
         var result = await generator.GenerateSiteswapsAsync();
         await result.WaitForSiteswapAsync("a7562");
         await result.ShoulNotGenerateAsync("aaa00");
@@ -58,11 +61,20 @@ public class GeneratorPageObject(IPage page)
         return new(page);
     }
 
-    public async Task<PatternFilterDialogObject> AddPatternFilterAsync()
+    public async Task<PatternFilterDialogObject> AddPatternFilterAsync(
+        Func<PatternFilterDialogObject, Task>? configure = null
+    )
     {
         await page.GetByTestId("filter-node-AND").ClickAsync();
         await page.GetByText("Add Filter").ClickAsync();
-        return new(page);
+
+        var patternFilterDialogObject = new PatternFilterDialogObject(page);
+        if (configure != null)
+        {
+            await configure(patternFilterDialogObject);
+        }
+
+        return patternFilterDialogObject;
     }
 }
 
