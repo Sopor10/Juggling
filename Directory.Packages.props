@@ -51,6 +51,6 @@
     <PackageVersion Include="AutomaticGraphLayout.Drawing" Version="1.1.12" />
     <PackageVersion Include="VisNetwork.Blazor" Version="2.2.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
   </ItemGroup>
 </Project>
