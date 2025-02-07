@@ -42,7 +42,7 @@
     <PackageVersion Include="Microsoft.Playwright" Version="1.50.0" />
     <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.50.0" />
     <PackageVersion Include="DotNetGraph" Version="3.2.0" />
-    <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.5.2" />
+    <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.6.0" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.1" />
     <PackageVersion Include="TextCopy" Version="6.2.1" />
     <PackageVersion Include="Z.Blazor.Diagrams" Version="3.0.3" />
