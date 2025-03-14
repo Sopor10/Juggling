@@ -22,7 +22,7 @@
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.6.0" />
     <PackageVersion Include="Radzen.Blazor" Version="6.2.7" />
     <PackageVersion Include="Bogus" Version="35.6.2" />
-    <PackageVersion Include="FluentAssertions" Version="8.1.1" />
+    <PackageVersion Include="FluentAssertions" Version="8.2.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="NUnit" Version="4.3.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
