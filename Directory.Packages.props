@@ -30,9 +30,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="Verify" Version="29.3.1" />
-    <PackageVersion Include="Verify.Nunit" Version="29.3.1" />
-    <PackageVersion Include="Verify.ImageMagick" Version="3.6.0" />
+    <PackageVersion Include="Verify" Version="29.4.0" />
+    <PackageVersion Include="Verify.Nunit" Version="29.4.0" />
+    <PackageVersion Include="Verify.ImageMagick" Version="3.7.0" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
     <PackageVersion Include="SkiaSharp" Version="3.116.1" />
     <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
