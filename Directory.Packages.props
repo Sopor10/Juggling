@@ -23,7 +23,7 @@
     <PackageVersion Include="Radzen.Blazor" Version="7.0.6" />
     <PackageVersion Include="Bogus" Version="35.6.3" />
     <PackageVersion Include="FluentAssertions" Version="8.2.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageVersion Include="NUnit" Version="4.3.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4">
