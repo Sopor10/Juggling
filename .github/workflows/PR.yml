@@ -23,7 +23,7 @@ jobs:
       - name: Restore tools
         run: dotnet tool restore
       - name: Csharpier
-        run: dotnet dotnet-csharpier . --check
+        run: dotnet csharpier . --check
       - name: Install workload
         run: dotnet workload install wasm-tools
       - name: Test
