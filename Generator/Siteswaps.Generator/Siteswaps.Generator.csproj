@@ -1,23 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
-    <ItemGroup>
-        <SupportedPlatform Include="browser" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$(Configuration)=='Debug'">
-        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Blazored.LocalStorage" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
-        <PackageReference Include="morelinq" />
-        <PackageReference Include="Fluxor.Blazor.Web" />
-        <PackageReference Include="Radzen.Blazor" />
-        <PackageReference Include="System.Linq.Async" />        
-        <PackageReference Include="System.Linq.Dynamic.Core" />        
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+  <ItemGroup Condition="$(Configuration)=='Debug'">
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="morelinq" />
+    <PackageReference Include="Fluxor.Blazor.Web" />
+    <PackageReference Include="Radzen.Blazor" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="System.Linq.Dynamic.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,17 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <ItemGroup>
-        <PackageReference Include="DotNetGraph" />
-        <PackageReference Include="NUnit" />
-        <PackageReference Include="NUnit3TestAdapter" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="Verify" />
-        <PackageReference Include="Verify.Nunit" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
-      <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="DotNetGraph" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Verify" />
+    <PackageReference Include="Verify.Nunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
+    <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+  </ItemGroup>
 </Project>

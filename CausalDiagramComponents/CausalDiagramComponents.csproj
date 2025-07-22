@@ -1,20 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-    </PropertyGroup>
-
-
-    <ItemGroup>
-        <SupportedPlatform Include="browser" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.7" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps\Siteswaps.csproj" />
+  </ItemGroup>
 </Project>

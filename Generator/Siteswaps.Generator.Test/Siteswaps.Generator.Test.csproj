@@ -1,19 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <ItemGroup>
-        <PackageReference Include="Bogus" />
-        <PackageReference Include="FluentAssertions" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="Moq" />
-        <PackageReference Include="NUnit" />
-        <PackageReference Include="NUnit3TestAdapter" />
-        <PackageReference Include="coverlet.collector" />
-        <PackageReference Include="System.Linq.Async" />
-        <PackageReference Include="Verify" />
-        <PackageReference Include="Verify.Nunit" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\Siteswaps.Generator\Siteswaps.Generator.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="Verify" />
+    <PackageReference Include="Verify.Nunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.Generator\Siteswaps.Generator.csproj" />
+  </ItemGroup>
 </Project>

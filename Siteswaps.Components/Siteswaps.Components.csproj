@@ -1,33 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
-    <ItemGroup>
-        <SupportedPlatform Include="browser" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="ExhaustiveMatching.Analyzer" />
-        <PackageReference Include="Fluxor" />
-        <PackageReference Include="Fluxor.Blazor.Web" />
-        <PackageReference Include="Microsoft.AspNetCore.Components" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
-        <PackageReference Include="SkiaSharp.Views.Blazor" />
-        <PackageReference Include="System.Linq.Dynamic.Core" />
-        <PackageReference Include="VisNetwork.Blazor" />
-        <PackageReference Include="Z.Blazor.Diagrams" />
-        <PackageReference Include="Radzen.Blazor" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
-      <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Generator\Filter\FilterSelection.razor" />
-      <_ContentIncludedByDefault Remove="Generator\Filter\NumberFilter.razor" />
-      <_ContentIncludedByDefault Remove="Generator\Filter\PatternFilter.razor" />
-      <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
-      <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ExhaustiveMatching.Analyzer" />
+    <PackageReference Include="Fluxor" />
+    <PackageReference Include="Fluxor.Blazor.Web" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" />
+    <PackageReference Include="System.Linq.Dynamic.Core" />
+    <PackageReference Include="VisNetwork.Blazor" />
+    <PackageReference Include="Z.Blazor.Diagrams" />
+    <PackageReference Include="Radzen.Blazor" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+    <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Generator\Filter\FilterSelection.razor" />
+    <_ContentIncludedByDefault Remove="Generator\Filter\NumberFilter.razor" />
+    <_ContentIncludedByDefault Remove="Generator\Filter\PatternFilter.razor" />
+    <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
+    <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
+  </ItemGroup>
 </Project>

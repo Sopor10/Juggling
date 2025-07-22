@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <ItemGroup>
-      <PackageReference Include="morelinq" />
-      <PackageReference Include="SkiaSharp" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="morelinq" />
+    <PackageReference Include="SkiaSharp" />
+  </ItemGroup>
 </Project>

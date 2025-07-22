@@ -1,16 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <ItemGroup>
-        <PackageReference Include="AutomaticGraphLayout" />
-        <PackageReference Include="AutomaticGraphLayout.Drawing" />
-        <PackageReference Include="DotNetGraph" />
-        <PackageReference Include="Svg" />
-        <PackageReference Include="System.Drawing.Common" />
-        <PackageReference Include="TextCopy" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="AutomaticGraphLayout" />
+    <PackageReference Include="AutomaticGraphLayout.Drawing" />
+    <PackageReference Include="DotNetGraph" />
+    <PackageReference Include="Svg" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="TextCopy" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+  </ItemGroup>
 </Project>
