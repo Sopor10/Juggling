@@ -3,14 +3,14 @@
   "isRoot": true,
   "tools": {
     "diffenginetray": {
-      "version": "15.9.0",
+      "version": "16.2.3",
       "commands": [
         "DiffEngineTray"
       ],
       "rollForward": false
     },
     "csharpier": {
-      "version": "0.30.6",
+      "version": "1.0.3",
       "commands": [
         "dotnet-csharpier"
       ],
