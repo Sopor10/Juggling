@@ -12,7 +12,7 @@
     
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceIsGeneratingAction(SiteswapGeneratorState state, GenerateSiteswapsAction action) => 
-        state with { Siteswaps = [], CancellationTokenSource = action.CancellationTokenSource };
+        state with { Siteswaps = [], IsFinished = false, CancellationTokenSource = action.CancellationTokenSource };
 
     
     public record GenerateSiteswapsAction(GeneratorState State, CancellationTokenSource CancellationTokenSource);

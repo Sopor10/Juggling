@@ -11,4 +11,5 @@ public record SiteswapGeneratorState(GeneratorState State, ImmutableArray<Sitesw
         : this(new GeneratorState(), []) { }
 
     public CancellationTokenSource? CancellationTokenSource { get; init; }
+    public bool IsFinished { get; set; }
 }

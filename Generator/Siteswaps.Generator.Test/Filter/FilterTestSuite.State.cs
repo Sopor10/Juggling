@@ -25,4 +25,12 @@ public partial class FilterTestSuite
         var sut = FilterBuilder.WithState(State.GroundState(3)).Build();
         sut.CanFulfill(new PartialSiteswap(input)).Should().BeFalse();
     }
+
+    [Test]
+    [TestCase(9, 3, 4, 5, 6, 7, 8)]
+    public void Bla(params int[] input)
+    {
+        var sut = FilterBuilder.WithState(new State(1, 1, 1, 1, 0, 1, 0, 1)).Build();
+        sut.CanFulfill(new PartialSiteswap(input)).Should().BeTrue();
+    }
 }

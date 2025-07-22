@@ -12,9 +12,13 @@
 {
     <SiteswapList Siteswaps="@_state.Value.Siteswaps" NumberOfJugglers="@(_state.Value.State.NumberOfJugglers ?? 0)"></SiteswapList>
 }
-else
+else if (_state.Value.IsFinished is false)
 {
     <text>Generating...</text>
+}
+else
+{
+    <text>Finished...</text>
 }
 
 

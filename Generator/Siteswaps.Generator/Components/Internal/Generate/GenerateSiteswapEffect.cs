@@ -21,6 +21,9 @@ public class GenerateSiteswapEffect(INavigation navigation)
         await Task.Delay(1);
 
         await CreateSiteswaps(action, dispatcher);
+
+        dispatcher.Dispatch(new FinishedGeneratingSiteswaps());
+        await Task.Delay(1);
         Console.WriteLine("Finished");
     }
 
@@ -261,8 +264,16 @@ internal class FilterBuilderVisitor(
 
 public record SiteswapGeneratedAction(params IEnumerable<Siteswap> Siteswaps);
 
+public record FinishedGeneratingSiteswaps();
+
 public static class Reducer
 {
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceFinishedGeneratingSiteswapsAction(
+        SiteswapGeneratorState state,
+        FinishedGeneratingSiteswaps action
+    ) => state with { IsFinished = true };
+
     [ReducerMethod]
     public static SiteswapGeneratorState ReduceSingleSiteswapsGeneratedChangedAction(
         SiteswapGeneratorState state,

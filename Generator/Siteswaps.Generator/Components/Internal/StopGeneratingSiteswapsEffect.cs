@@ -1,4 +1,5 @@
 ﻿using Fluxor;
+using Siteswaps.Generator.Components.Internal.Generate;
 using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Components.Internal;
@@ -21,5 +22,6 @@ public class StopGeneratingSiteswapsEffect(IState<SiteswapGeneratorState> state)
             return;
         }
         await state.Value.CancellationTokenSource.CancelAsync();
+        dispatcher.Dispatch(new FinishedGeneratingSiteswaps());
     }
 }
