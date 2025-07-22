@@ -176,41 +176,41 @@ internal class FilterBuilderVisitor(
     )
     {
         var builder = new FilterBuilder(siteswapGeneratorInput);
-        switch (filterInformation)
+        return filterInformation switch
         {
-            case NewPatternFilterInformation newPatternFilterInformation:
-                return BuildPatternFilter(
-                    newPatternFilterInformation,
-                    numberOfJugglers,
-                    builder,
-                    showName
-                );
-            case EasyNumberFilter.NumberFilter numberFilter:
-                return numberFilter.Type switch
-                {
-                    EasyNumberFilter.NumberFilterType.Exactly => builder
-                        .ExactOccurence(
-                            numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
-                            numberFilter.Amount
-                        )
-                        .Build(),
-                    EasyNumberFilter.NumberFilterType.AtLeast => builder
-                        .MinimumOccurence(
-                            numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
-                            numberFilter.Amount
-                        )
-                        .Build(),
-                    EasyNumberFilter.NumberFilterType.Maximum => builder
-                        .MaximumOccurence(
-                            numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
-                            numberFilter.Amount
-                        )
-                        .Build(),
-                    _ => throw new ArgumentOutOfRangeException(),
-                };
-        }
-
-        throw new ArgumentOutOfRangeException();
+            NewPatternFilterInformation newPatternFilterInformation => BuildPatternFilter(
+                newPatternFilterInformation,
+                numberOfJugglers,
+                builder,
+                showName
+            ),
+            EasyNumberFilter.NumberFilter numberFilter => numberFilter.Type switch
+            {
+                EasyNumberFilter.NumberFilterType.Exactly => builder
+                    .ExactOccurence(
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
+                        numberFilter.Amount
+                    )
+                    .Build(),
+                EasyNumberFilter.NumberFilterType.AtLeast => builder
+                    .MinimumOccurence(
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
+                        numberFilter.Amount
+                    )
+                    .Build(),
+                EasyNumberFilter.NumberFilterType.Maximum => builder
+                    .MaximumOccurence(
+                        numberFilter.Throw.GetHeightForJugglers(numberOfJugglers, showName),
+                        numberFilter.Amount
+                    )
+                    .Build(),
+                _ => throw new ArgumentOutOfRangeException(),
+            },
+            EasyStateFilter.StateFilter stateFilter => builder
+                .WithState(new Generator.Filter.State(stateFilter.Items))
+                .Build(),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
     }
 
     private ISiteswapFilter BuildPatternFilter(

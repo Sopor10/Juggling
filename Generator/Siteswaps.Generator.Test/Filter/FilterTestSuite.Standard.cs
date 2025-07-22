@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using Siteswaps.Generator.Generator;
 
 namespace Siteswaps.Generator.Test.Filter;

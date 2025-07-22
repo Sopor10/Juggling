@@ -26,6 +26,15 @@
                 AddFilter="async x => await EditFilterFinished.InvokeAsync(x)"
             />
         </RadzenTabsItem>
+        
+        <RadzenTabsItem Text="State Filter">
+            
+            <EasyStateFilter
+                MaxHeight="@(State.MaxThrow ?? 5)"
+                NumberOfClubs="State.Clubs.MinNumber"
+                AddButtonText=@(Filter is null ? "Add Filter" : "Change")
+                AddFilter="async x => await EditFilterFinished.InvokeAsync(x)"/>
+        </RadzenTabsItem>
     </Tabs>
 </RadzenTabs>
 
@@ -40,6 +49,7 @@
         {
             NewPatternFilterInformation patternFilter => patternFilter,
             EasyNumberFilter.NumberFilter numberFilter => numberFilter,
+            EasyStateFilter.StateFilter stateFilter => stateFilter,
             _ => new NewPatternFilterInformation(State.Throws.ToList(), PatternRotation.Global, true)
         };
 
@@ -47,6 +57,7 @@
         {
             NewPatternFilterInformation _ => 0,
             EasyNumberFilter.NumberFilter _ => 1,
+            EasyStateFilter.StateFilter _ => 2,
             _ => 0
         };
         
@@ -80,6 +91,11 @@
                     Type = EasyNumberFilter.NumberFilterType.Exactly
                         
                 }
+            },            
+            2 => Filter switch
+            {
+                EasyStateFilter.StateFilter numberFilter => numberFilter,
+                _ => new EasyStateFilter.StateFilter([..new bool[State.MaxThrow??5]])
             },
             _ => throw new ArgumentOutOfRangeException(nameof(obj), obj, null)
         };

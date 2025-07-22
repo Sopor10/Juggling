@@ -49,6 +49,11 @@ internal record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
             Filter = [new OrFilter(filter)],
         };
 
+    public IFilterBuilder WithState(State state)
+    {
+        return this with { Filter = Filter.Add(new StateFilter(Input, state)) };
+    }
+
     public IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
         int numberOfJuggler,

@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
 using Siteswaps.Generator.Generator;
-using Siteswaps.Generator.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Test.Filter;
 

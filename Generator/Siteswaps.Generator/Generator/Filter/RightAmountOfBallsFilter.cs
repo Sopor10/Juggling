@@ -1,4 +1,6 @@
-﻿namespace Siteswaps.Generator.Generator.Filter;
+﻿using System.Diagnostics;
+
+namespace Siteswaps.Generator.Generator.Filter;
 
 internal class RightAmountOfBallsFilter : ISiteswapFilter
 {

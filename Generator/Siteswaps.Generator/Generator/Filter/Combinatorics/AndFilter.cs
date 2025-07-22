@@ -50,6 +50,7 @@ internal class AndFilter : ISiteswapFilter
             NumberOfPassesFilter _ => 0,
             RightAmountOfBallsFilter _ => 0,
             NotFilter _ => 0,
+            StateFilter _ => 5,
             _ => throw new ArgumentOutOfRangeException(nameof(filter)),
         };
     }

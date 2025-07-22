@@ -20,9 +20,7 @@ public class SiteswapGeneratorTestSuite
 
         await Verify(siteswaps.Select(x => x.ToString()).ToList())
             .UseTypeName(nameof(SiteswapGeneratorTestSuite))
-            .UseMethodName(
-                nameof(SiteswapGeneratorTestSuite.Verify_SiteswapGenerator_Against_Older_Version)
-            )
+            .UseMethodName(nameof(Verify_SiteswapGenerator_Against_Older_Version))
             .UseTextForParameters(GenerateInputs.ToName(input));
     }
 

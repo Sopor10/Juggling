@@ -1,0 +1,54 @@
+﻿@using System.Collections.Immutable
+<div class="row">
+    <div class="col">
+        @for (int i = 0; i< MaxHeight; i++)
+        {
+            
+            var i1 = i;
+            <RadzenCheckBox TValue="bool" @bind-Value="Items[i1]">
+                
+            </RadzenCheckBox>
+        }
+        
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col"> 
+        <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(Value)"/>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int MaxHeight { get; set; }
+    
+    [Parameter]
+    public int NumberOfClubs { get; set; }
+    
+    [Parameter]
+    public string AddButtonText { get; set; } = "Add Filter";
+    
+    [Parameter]
+    public EventCallback<StateFilter> AddFilter { get; set; }
+
+    private bool[] Items { get; set; } = [];
+
+    private StateFilter Value => new([..Items]);
+    protected override void OnParametersSet()
+    {
+        if (Items.Length != MaxHeight)
+        {
+            Items = new bool[MaxHeight];
+            Items = Items.Select((x, i) => i < NumberOfClubs).ToArray();
+        }
+        base.OnParametersSet();
+    }
+
+    public record StateFilter(ImmutableArray<bool> Items) : IFilterInformation
+    {
+        
+        public string Display() => "State: " + string.Join(", ", Items.Select(x => x ? "1" : "0"));
+    }
+}

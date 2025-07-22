@@ -26,6 +26,8 @@ public interface IFilterBuilder
     IFilterBuilder Or(ISiteswapFilter filter);
     public IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler);
 
+    public IFilterBuilder WithState(State state);
+
     IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
         int numberOfJuggler,

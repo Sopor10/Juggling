@@ -1,13 +1,13 @@
 ﻿{
   "name": "DevContainer for .NET",
   "portsAttributes": {
-    "5001": {
+    "7021": {
       "label": "WebApplication",
       "protocol": "https"
     }
   },
 
-   "forwardPorts": [5001],
+   "forwardPorts": [7021],
   
   
   "postCreateCommand": "dotnet dev-certs https --trust && sudo dotnet workload install wasm-tools"
