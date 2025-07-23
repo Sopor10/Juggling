@@ -38,6 +38,38 @@ public class SiteswapGeneratorTestSuite
         var siteswaps = await sut.GenerateAsync(new CancellationTokenSource().Token).ToListAsync();
         await Verify(siteswaps.Select(x => x.ToString()).ToList());
     }
+
+    [Test]
+    public async Task WrongThings()
+    {
+        SiteswapGeneratorInput input = new SiteswapGeneratorInput(14, 7, 2, 9)
+        {
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
+        };
+        var sut = new SiteswapGenerator(
+            new FilterBuilder(input)
+                .FlexiblePattern(
+                    [
+                        [9],
+                        [6],
+                        [9],
+                        [6],
+                        [9],
+                        [8],
+                        [2],
+                    ],
+                    2,
+                    false
+                )
+                .ExactOccurence(3, 0)
+                .ExactOccurence(1, 0)
+                .ExactOccurence(0, 0)
+                .Build(),
+            input
+        );
+        var siteswaps = await sut.GenerateAsync(new CancellationTokenSource().Token).ToListAsync();
+        // await Verify(siteswaps.Select(x => x.ToString()).ToList());
+    }
 }
 
 class GenerateInputs : IEnumerable

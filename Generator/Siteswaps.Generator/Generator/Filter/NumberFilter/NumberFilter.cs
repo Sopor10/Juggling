@@ -4,16 +4,21 @@ internal abstract class NumberFilter : ISiteswapFilter
 {
     protected NumberFilter(IEnumerable<int> number, int amount)
     {
-        Number = number;
+        Number = number.ToHashSet();
         Amount = amount;
     }
 
     public bool CanFulfill(PartialSiteswap value)
     {
+        if (value.RotationIndex != 0)
+        {
+            return true;
+        }
+
         return CanFulfillNumberFilter(value);
     }
 
     private protected abstract bool CanFulfillNumberFilter(PartialSiteswap value);
-    protected IEnumerable<int> Number { get; }
+    protected HashSet<int> Number { get; }
     protected int Amount { get; }
 }

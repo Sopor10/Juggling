@@ -44,9 +44,33 @@ public record Siteswap
         return ToString(Items).GetHashCode();
     }
 
-    public static Siteswap CreateFromCorrect(params int[] partialSiteswapItems)
+    public static Siteswap CreateFromCorrect(params int[] partialSiteswapItems) =>
+        new(partialSiteswapItems.Select(x => (int)x).ToArray());
+
+    public static Siteswap CreateFromCorrect(string s)
     {
-        return new Siteswap(partialSiteswapItems.Select(x => (int)x).ToArray());
+        var result = new List<int>(s.Length);
+        foreach (var i in s)
+        {
+            result.Add(
+                i switch
+                {
+                    '0' => 0,
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,
+                    '7' => 7,
+                    '8' => 8,
+                    '9' => 9,
+                    var x => x - 87,
+                }
+            );
+        }
+        Console.WriteLine(string.Join(',', result));
+        return new(result.ToArray());
     }
 
     public double Average => Items.Average();
