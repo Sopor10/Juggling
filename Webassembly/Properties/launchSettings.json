@@ -3,7 +3,7 @@
     "Webassembly": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+      "launchBrowser": false,
       "applicationUrl": "http://*:7021",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
