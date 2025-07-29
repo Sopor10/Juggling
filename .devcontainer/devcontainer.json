@@ -1,14 +1,41 @@
-﻿{
-  "name": "DevContainer for .NET",
-  "portsAttributes": {
-    "7021": {
-      "label": "WebApplication",
-      "protocol": "https"
-    }
+{
+  "name": "Siteswaps",
+  // 👇🏼 Use .NET 9 Debian image
+  "image": "mcr.microsoft.com/devcontainers/dotnet:9.0-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/powershell:1": {},
   },
+  // 👇🏼 This is not supported by Rider but it is supported by VS Code 
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "20gb"
+  },
+  // 👇🏼 Install .NET Aspire project templates, run inside the container 
+  // immediately after it has started for the first time
+  "onCreateCommand": "dotnet workload restore",
+  // 👇🏼 Restore NuGet packages when the container is created
+  "postCreateCommand": "dotnet restore",
+  // 👇🏼 Trust the development certificates, run each time the
+  // container is successfully started
+  "postStartCommand": "dotnet dev-certs https --trust",
+  "customizations": {
+    // 👇🏼 Settings and Plugins for Rider
+    "jetbrains": {
+      "settings": {
+        "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+      }
+    , "plugins" : [
 
-   "forwardPorts": [7021],
-  
-  
-  "postCreateCommand": "dotnet dev-certs https --trust && sudo dotnet workload install wasm-tools"
+      ],
+    },
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "GitHub.copilot-chat",
+        "GitHub.copilot"
+      ]
+    }
+  }
 }
