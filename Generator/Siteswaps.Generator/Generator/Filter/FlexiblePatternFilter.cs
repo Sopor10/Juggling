@@ -109,4 +109,6 @@ internal class FlexiblePatternFilter : ISiteswapFilter
                 _ => siteswapValue == patternValue,
             };
     }
+
+    public int Order => 10;
 }

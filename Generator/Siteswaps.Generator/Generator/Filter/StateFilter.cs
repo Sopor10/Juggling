@@ -16,6 +16,8 @@ internal class StateFilter(SiteswapGeneratorInput generatorInput, State state) :
 
         return state == State.CalculateState(value, maxHeight);
     }
+
+    public int Order => 5;
 }
 
 /// <summary>

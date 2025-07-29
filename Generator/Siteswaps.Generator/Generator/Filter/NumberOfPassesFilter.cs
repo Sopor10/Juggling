@@ -31,4 +31,6 @@ internal class NumberOfPassesFilter : ISiteswapFilter
         }
         return numberOfPassesSoFar <= NumberOfPasses;
     }
+
+    public int Order => 0;
 }

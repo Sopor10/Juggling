@@ -12,6 +12,7 @@
                     @bind-Throws="patternFilter.Pattern"
                     @bind-PatternRotation="patternFilter.Rotation"
                     @bind-IsIncludePattern="patternFilter.IsIncludePattern"
+                    @bind-ShouldBeValidLocally="patternFilter.IsValidLocally"
                     NumberOfJugglers="State.NumberOfJugglers ?? 2"
                     AddButtonText=@(Filter is null ? "Add Filter" : "Change")
                     AddFilter="async x => await EditFilterFinished.InvokeAsync(x)">
@@ -50,7 +51,7 @@
             NewPatternFilterInformation patternFilter => patternFilter,
             EasyNumberFilter.NumberFilter numberFilter => numberFilter,
             EasyStateFilter.StateFilter stateFilter => stateFilter,
-            _ => new NewPatternFilterInformation(State.Throws.ToList(), PatternRotation.Global, true)
+            _ => new NewPatternFilterInformation(State.Throws.ToList(), PatternRotation.Global, true, false)
         };
 
         SelectedIndex = FilterInformation switch
@@ -79,7 +80,7 @@
             0 => Filter switch
             {
                 NewPatternFilterInformation patternFilter => patternFilter,
-                _ => new NewPatternFilterInformation(State.Throws.ToList(), PatternRotation.Global, true)
+                _ => new NewPatternFilterInformation(State.Throws.ToList(), PatternRotation.Global, true, false)
             },
             1 => Filter switch
             {

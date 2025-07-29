@@ -214,6 +214,7 @@ public class FilterTreeTests
             CustomInstantiator(f => new NewPatternFilterInformation(
                 new List<Throw>(),
                 PatternRotation.Local,
+                false,
                 false
             ));
         }

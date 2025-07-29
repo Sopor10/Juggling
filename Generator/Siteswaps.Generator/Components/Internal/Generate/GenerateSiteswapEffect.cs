@@ -258,7 +258,24 @@ internal class FilterBuilderVisitor(
             );
         }
 
-        return newPatternFilterInformation.IsIncludePattern ? filter : new NotFilter(filter);
+        var buildPatternFilter = newPatternFilterInformation.IsIncludePattern
+            ? filter
+            : new NotFilter(filter);
+
+        if (newPatternFilterInformation.IsValidLocally)
+        {
+            return builder
+                .And(
+                    buildPatternFilter,
+                    new LocallyValidFilter(
+                        numberOfJugglers,
+                        newPatternFilterInformation.PatternRotation.Value
+                    )
+                )
+                .Build();
+        }
+
+        return buildPatternFilter;
     }
 }
 

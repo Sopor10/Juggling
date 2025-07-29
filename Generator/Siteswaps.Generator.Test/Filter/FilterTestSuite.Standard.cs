@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Siteswaps.Generator.Generator;
+using Siteswaps.Generator.Generator.Filter;
 
 namespace Siteswaps.Generator.Test.Filter;
 
@@ -27,5 +28,36 @@ public partial class FilterTestSuite
         var sut = FilterBuilder.WithDefault().Build();
 
         sut.CanFulfill(new PartialSiteswap(input.Select(x => (int)x).ToArray())).Should().BeTrue();
+    }
+
+    [Test]
+    [TestCase(10, 10, 10, 0, 4, 2)]
+    [TestCase(9, 7, 2)]
+    [TestCase(9, 7, 2, 9, 7, 2)]
+    public void LocallyValidFilterWorksTrue(params int[] input)
+    {
+        var sut = new LocallyValidFilter(2, 0);
+
+        sut.CanFulfill(new PartialSiteswap(input.Select(x => (int)x).ToArray())).Should().BeTrue();
+    }
+
+    [Test]
+    [TestCase(10, 10, 10, 0, 3, 3)]
+    [TestCase(10, 10, 7, 5, 3, 1)]
+    public void LocallyValidFilterWorksFalse(params int[] input)
+    {
+        var sut = new LocallyValidFilter(2, 0);
+
+        sut.CanFulfill(new PartialSiteswap(input.Select(x => (int)x).ToArray())).Should().BeFalse();
+    }
+
+    [Test]
+    [TestCase(10, 10, 10, 0, 3, 3)]
+    [TestCase(10, 10, 7, 5, 3, 1)]
+    public void LocallyValidFilterWorksFalseJugglerB(params int[] input)
+    {
+        var sut = new LocallyValidFilter(2, 1);
+
+        sut.CanFulfill(new PartialSiteswap(input.Select(x => (int)x).ToArray())).Should().BeFalse();
     }
 }

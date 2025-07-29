@@ -6,15 +6,18 @@ namespace Siteswaps.Generator.Components.State;
 public record NewPatternFilterInformation(
     List<Throw> Pattern,
     PatternRotation PatternRotation,
-    bool IsIncludePattern
+    bool IsIncludePattern,
+    bool IsValidLocally
 ) : IFilterInformation
 {
     public List<Throw> Pattern { get; set; } = Pattern;
     public PatternRotation Rotation { get; set; } = PatternRotation;
     public bool IsIncludePattern { get; set; } = IsIncludePattern;
+    public bool IsValidLocally { get; set; } = IsValidLocally;
 
     public string Display() =>
         (IsIncludePattern ? "include " : "exclude ")
+        + (IsValidLocally ? "valid " : "")
         + PatternRotation.Display
         + " "
         + string.Join(",", FilledPattern.Select(Display).ToList());
@@ -23,21 +26,4 @@ public record NewPatternFilterInformation(
         Enumerable.Reverse(Pattern).SkipWhile(x => x == Throw.Empty).Reverse();
 
     private static string Display(Throw i) => i.DisplayValue;
-}
-
-[DebuggerDisplay("{Display}")]
-public record PatternRotation(int Value)
-{
-    public static PatternRotation Global => new(-2);
-    public static PatternRotation Local => new(-1);
-    public static PatternRotation A => new(0);
-    public static PatternRotation B => new(1);
-
-    public string Display =>
-        Value switch
-        {
-            -2 => "global",
-            -1 => "local",
-            _ => ((char)('A' + Value)).ToString(),
-        };
 }

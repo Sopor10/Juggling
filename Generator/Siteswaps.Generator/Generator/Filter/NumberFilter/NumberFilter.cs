@@ -21,4 +21,5 @@ internal abstract class NumberFilter : ISiteswapFilter
     private protected abstract bool CanFulfillNumberFilter(PartialSiteswap value);
     protected HashSet<int> Number { get; }
     protected int Amount { get; }
+    public int Order => 0;
 }

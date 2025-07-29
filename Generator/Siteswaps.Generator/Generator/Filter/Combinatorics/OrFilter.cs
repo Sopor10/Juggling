@@ -10,4 +10,6 @@ internal class OrFilter : ISiteswapFilter
     }
 
     public bool CanFulfill(PartialSiteswap value) => Filters.Any(x => x.CanFulfill(value));
+
+    public int Order => 0;
 }

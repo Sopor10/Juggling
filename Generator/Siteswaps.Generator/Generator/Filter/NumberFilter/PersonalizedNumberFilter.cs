@@ -45,4 +45,6 @@ public class PersonalizedNumberFilter(
         AtLeast,
         AtMost,
     }
+
+    public int Order => 0;
 }

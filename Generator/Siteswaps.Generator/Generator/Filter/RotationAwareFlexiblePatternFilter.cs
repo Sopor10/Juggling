@@ -103,4 +103,6 @@ internal class RotationAwareFlexiblePatternFilter : ISiteswapFilter
                 _ => siteswapValue == patternValue,
             };
     }
+
+    public int Order => 10;
 }

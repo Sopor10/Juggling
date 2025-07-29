@@ -20,4 +20,6 @@ internal class RightAmountOfBallsFilter : ISiteswapFilter
 
         return value.PartialSum == _generatorInputNumberOfObjects * value.Items.Length;
     }
+
+    public int Order => 0;
 }

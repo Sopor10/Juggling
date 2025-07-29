@@ -2,7 +2,7 @@
 
 <text>@Siteswap</text>
 
-<SiteswapCard Siteswap="@Siteswap" NumberOfJugglers="@NumberOfJugglers"></SiteswapCard>
+<SiteswapCard Siteswap="@Generator.Siteswap.CreateFromCorrect(Siteswap)" NumberOfJugglers="@NumberOfJugglers"></SiteswapCard>
 
 @code {
     [Parameter] public string Siteswap { get; set; } = "";

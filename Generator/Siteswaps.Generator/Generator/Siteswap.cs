@@ -81,6 +81,9 @@ public record Siteswap
     }
 
     public Period Period => new(Items.Length);
+
+    public bool IsValid() =>
+        Items.Select((x, i) => (x + i) % Items.Length).ToHashSet().Count == Items.Length;
 }
 
 public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
@@ -129,5 +132,12 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
     public double Average()
     {
         return GetLocalSiteswapReal().Average() * 1.0 / NumberOfJugglers;
+    }
+
+    public bool IsValidAsGlobalSiteswap()
+    {
+        var items = GetLocalSiteswapReal();
+
+        return items.Select((x, i) => (x + i) % items.Count).ToHashSet().Count == items.Count;
     }
 }
