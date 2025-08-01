@@ -2,6 +2,7 @@
   <ItemGroup>
     <PackageReference Include="Bogus" />
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Meziantou.Framework.InlineSnapshotTesting" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

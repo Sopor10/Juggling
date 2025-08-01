@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Meziantou.Framework.InlineSnapshotTesting;
 using Siteswap.Details.StateDiagram;
 
 namespace Siteswaps.Test;
@@ -107,13 +108,7 @@ public class SiteswapTest
 
         var transitions = from.PossibleTransitions(to, length);
 
-        transitions
-            .Should()
-            .ContainSingle()
-            .Which.Throws.Should()
-            .ContainSingle()
-            .Which.Should()
-            .Be(4);
+        InlineSnapshot.Validate(transitions.Single().PrettyPrint(), "531 -4-> 414");
     }
 
     [Test]

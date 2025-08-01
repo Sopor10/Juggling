@@ -7,6 +7,6 @@ public record Transition(Siteswap From, Siteswap To, Throw[] Throws)
 {
     public string PrettyPrint()
     {
-        return $"{From} -> {To} : {Throws.Aggregate("", (s, i) => s + Siteswap.Transform(i.Value))}";
+        return $"{From} -{Throws.Aggregate("", (s, i) => s + Siteswap.Transform(i.Value))}-> {To}";
     }
 }
