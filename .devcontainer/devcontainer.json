@@ -6,6 +6,7 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/powershell:1": {},
   },
+  "forwardPorts": [7021],
   // 👇🏼 This is not supported by Rider but it is supported by VS Code 
   "hostRequirements": {
     "cpus": 4,
@@ -14,7 +15,7 @@
   },
   // 👇🏼 Install .NET Aspire project templates, run inside the container 
   // immediately after it has started for the first time
-  "onCreateCommand": "dotnet workload restore",
+  "onCreateCommand": " sudo chown -R vscode:vscode /IdeaProjects/Juggling && dotnet workload restore",
   // 👇🏼 Restore NuGet packages when the container is created
   "postCreateCommand": "dotnet restore",
   // 👇🏼 Trust the development certificates, run each time the
