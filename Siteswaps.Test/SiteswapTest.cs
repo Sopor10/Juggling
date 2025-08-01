@@ -69,6 +69,7 @@ public class SiteswapTest
     [TestCase("1")]
     [TestCase("97531")]
     [TestCase("7566")]
+    [TestCase("aaa00")]
     public void ValidSiteswaps(string siteswap)
     {
         var result = Siteswap.Details.Siteswap.TryCreate(siteswap, out var sut);
