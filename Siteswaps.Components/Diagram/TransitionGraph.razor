@@ -1,7 +1,6 @@
 ﻿@page "/transition"
 @using VisNetwork.Blazor.Models
 @using Siteswap.Details.StateDiagram
-@using Siteswap.Details
 
 <Network Id="my-id" Data="@Data" style="width: 640px; height: 480px"/>
 
@@ -10,18 +9,19 @@
     [Parameter]
     public Transition? Transition { get; set; }
 
-    private Transition? oldTransition;
+    private Transition? OldTransition { get; set; }
+
     protected override void OnInitialized()
     {
-        oldTransition = Transition;
+        OldTransition = Transition;
         base.OnInitialized();
     }
 
     protected override void OnParametersSet()
     {
-        if (oldTransition?.PrettyPrint() != Transition?.PrettyPrint())
+        if (OldTransition?.PrettyPrint() != Transition?.PrettyPrint())
         {
-            oldTransition = Transition;
+            OldTransition = Transition;
             CreateNetworkData(Transition);
         }
         base.OnParametersSet();
@@ -48,11 +48,11 @@
         AddEdges(fromGraph, edges);
         AddEdges(toGraph, edges);
 
-        var state = fromGraph.SiteswapInState.Single(x => x.Value.Contains(transition.From)).Key;
+        var state = transition.From.AllStates().Single(x => x.Value.Contains(transition.From)).Key;
 
         foreach (var transitionThrow in transition.Throws)
         {
-            var nextState = state.Advance().Throw(transitionThrow);
+            var nextState = state.Advance().Throw(transitionThrow.Value);
 
             AddState(nodes, state);
             AddState(nodes, nextState);
@@ -118,6 +118,4 @@
     {
         return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle");
     }
-
-    private Transition? _transition = new (new Siteswap(5, 3, 1), new Siteswap(5, 1), new[] { 4 });
 }

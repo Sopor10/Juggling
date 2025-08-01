@@ -1,0 +1,22 @@
+﻿@page "/siteswap/{StringValue}"
+@using Siteswap.Details
+@using Siteswaps.Components.Diagram
+
+<text>@StringValue</text>
+
+<SiteswapCard Value="Value" NumberOfJugglers="@NumberOfJugglers"></SiteswapCard>
+<SiteswapStateDiagram Value="Value"></SiteswapStateDiagram>
+@code {
+    [Parameter] public string StringValue { get; set; } = "";
+    [Parameter, SupplyParameterFromQuery] public int NumberOfJugglers { get; set; } = 2;
+
+    private Siteswap? Value { get; set; }
+    
+    protected override void OnParametersSet()
+    {
+        Siteswap.TryCreate(StringValue, out var value);
+        Value = value;
+        base.OnParametersSet();
+    }
+
+}

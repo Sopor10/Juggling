@@ -1,0 +1,67 @@
+﻿@using Siteswap.Details
+@if (Data is null)
+{
+    return;
+}
+
+<div @key="Data.DisplayValue" data-testid="generated-siteswap-@Data.DisplayValue" class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 m-1 d-flex m-0">
+    <div class="card d-flex flex-grow-1">
+        <div class="card-body d-flex flex-column justify-content-center text-center p-3">
+            <!-- Display the 'Passist Link' as a clickable link -->
+            <h5 class="card-title">
+                <a href="@Data.PassistLink" target="_blank">@Data.DisplayValue</a>
+            </h5>
+
+            <!-- Display each juggler's siteswap values -->
+            <div class="mb-3">
+                @foreach (var juggler in Enumerable.Range(0, Data.NumberOfJugglers))
+                {
+                    <p class="card-text">
+                        @((char)(juggler + 'A')): @Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).LocalNotation
+                        @(Data.Value.Period.Value % Data.NumberOfJugglers == 0 ? $"({Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).Average():0.##})" : "")
+                    </p>
+                    <p class="card-text">
+                        ( @(Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).IsValidAsGlobalSiteswap() ? "valid":"invalid" ) )
+                    </p>
+                }
+            </div>
+
+            <!-- Display the number of clubs -->
+            <div class="mt-auto">
+                <p class="card-text">
+                    <strong>Clubs:</strong> @Data.NumberOfClubs
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+
+    [Parameter] public Siteswap? Value { get; set; }
+    [Parameter] public int NumberOfJugglers { get; set; }
+
+    private SiteswapView? Data { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (Value is null)
+        {
+            return;
+        }
+        Data = new SiteswapView(Value, NumberOfJugglers);
+        base.OnParametersSet();
+    }
+
+    public record SiteswapView(Siteswap Value, int NumberOfJugglers)
+    {
+        public string DisplayValue => Value.ToString();
+
+        public string PassistLink => $"https://passist.org/siteswap/{Value}?jugglers={NumberOfJugglers}";
+
+        public int NumberOfClubs => (int)Value.NumberOfObjects();
+
+        public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers).GlobalNotation).ToList();
+        
+    }
+    
+}

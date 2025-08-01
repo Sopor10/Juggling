@@ -4,15 +4,15 @@
 <h3> Calculate transitions</h3>
 
 <div style="display: flex">
-    <div >
+    <div>
         <h5>From</h5>
         <SiteswapInput @bind-Siteswap="From"></SiteswapInput>
     </div>
-    <div >
+    <div>
         <h5>To</h5>
         <SiteswapInput @bind-Siteswap="To"></SiteswapInput>
     </div>
-    <div >
+    <div>
         <h5>Max Length</h5>
         <InputNumber @bind-Value="Length"></InputNumber>
     </div>
@@ -32,7 +32,7 @@
         <ul>
             @foreach (var transition in Transitions)
             {
-                <li >
+                <li>
                     <div style="padding: 4px">
                         @transition.PrettyPrint()
                     </div>
@@ -58,12 +58,12 @@
 
     private List<Transition> Transitions { get; set; } = new();
 
-    private string Error { get; set; } = String.Empty;
+    private string Error { get; set; } = string.Empty;
 
     protected override void OnInitialized()
     {
         From = new Siteswap(3);
-        To = new Siteswap(5,1);
+        To = new Siteswap(5, 1);
         Length = 2;
         base.OnInitialized();
     }
@@ -83,14 +83,21 @@
             {
                 Error += "To is not a valid siteswap.\n";
             }
+
             return;
         }
+
         if (From.NumberOfObjects() != To.NumberOfObjects())
         {
             Error += $"{From} has {From.NumberOfObjects()} objects and {To} has {To.NumberOfObjects()} objects.\n";
         }
 
-        var transitions = TransitionGenerator.CreateTransitions(From, To, Length);
+        var transitions = new List<Transition>();
+        for (var i = 1; i <= Length; i++)
+        {
+            transitions.AddRange(From.PossibleTransitions(To, i));
+        }
+
         Transitions = transitions;
     }
 

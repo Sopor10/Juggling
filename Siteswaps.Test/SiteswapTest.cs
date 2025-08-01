@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Siteswap.Details.StateDiagram;
 
 namespace Siteswaps.Test;
 
@@ -84,5 +85,57 @@ public class SiteswapTest
         var result = Siteswap.Details.Siteswap.TryCreate(siteswap, out var sut);
 
         result.Should().BeFalse();
+    }
+
+    [Test]
+    public void Calculate_Transitions()
+    {
+        var sut = new Siteswap.Details.Siteswap(3);
+        var to = new Siteswap.Details.Siteswap(5, 3, 1);
+        var transitions = sut.PossibleTransitions(to, 3, 5);
+
+        transitions.Should().HaveCount(9);
+    }
+
+    [Test]
+    public void Create_Specific_Transition_Length_1()
+    {
+        var from = new Siteswap.Details.Siteswap(5, 3, 1);
+        var to = new Siteswap.Details.Siteswap(4, 1, 4);
+        var length = 1;
+
+        var transitions = from.PossibleTransitions(to, length);
+
+        transitions
+            .Should()
+            .ContainSingle()
+            .Which.Throws.Should()
+            .ContainSingle()
+            .Which.Should()
+            .Be(4);
+    }
+
+    [Test]
+    public void Create_Specific_Transition_Length_2()
+    {
+        var from = new Siteswap.Details.Siteswap(5, 3, 1);
+        var to = new Siteswap.Details.Siteswap(4, 1, 4);
+        var length = 2;
+
+        var transitions = from.PossibleTransitions(to, length);
+
+        transitions.Where(x => x.Throws.Length == 2).Should().HaveCount(2);
+    }
+
+    [Test]
+    public void Create_Specific_Transition__Should_Find_All()
+    {
+        var from = new Siteswap.Details.Siteswap(5, 3, 1);
+        var to = new Siteswap.Details.Siteswap(4, 1, 4);
+        var length = 3;
+
+        var transitions = from.PossibleTransitions(to, length);
+
+        transitions.Should().HaveCount(7);
     }
 }

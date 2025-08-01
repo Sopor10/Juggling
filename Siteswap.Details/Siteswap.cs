@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using Siteswap.Details.StateDiagram;
 
 namespace Siteswap.Details;
 
@@ -168,9 +167,185 @@ public record Siteswap(CyclicArray<int> Items)
             yield return new Orbit(orbitValues.ToList());
         }
     }
+
+    public Throw[] PossibleThrows(int? height = null)
+    {
+        height ??= Items.EnumerateValues(1).Max();
+
+        var transitions = State.Transitions(height.Value);
+        return transitions.Select(x => new Throw(x.N1, x.N2, x.Data)).ToArray();
+    }
+
+    public List<Transition> PossibleTransitions(Siteswap to, int length, int? height = null) =>
+        CreateTransitions(to, length, height);
+
+    private State State => StateGenerator.CalculateState(Items.EnumerateValues(1).ToArray());
+
+    private List<Transition> CreateTransitions(Siteswap to, int length, int? maxHeight = null)
+    {
+        maxHeight ??= new[]
+        {
+            Items.EnumerateValues(1).Max(),
+            to.Items.EnumerateValues(1).Max(),
+        }.Max();
+        var result = new List<ImmutableList<Throw>>();
+
+        var fromState = State;
+        var toState = to.State;
+
+        result.AddRange(
+            Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
+        );
+
+        return result.Select(x => new Transition(this, to, x.ToArray())).ToList();
+    }
+
+    private static IEnumerable<ImmutableList<Throw>> Recurse(
+        State fromState,
+        State toState,
+        ImmutableList<Throw> transitionSoFar,
+        int length,
+        int maxHeight
+    )
+    {
+        foreach (var transition in fromState.Transitions(maxHeight))
+        {
+            if (toState == transition.N2)
+            {
+                yield return transitionSoFar.Add(
+                    new Throw(transition.N1, transition.N2, transition.Data)
+                );
+            }
+
+            if (length == 1)
+                continue;
+
+            foreach (
+                var immutableList in Recurse(
+                    transition.N2,
+                    toState,
+                    transitionSoFar.Add(new Throw(transition.N1, transition.N2, transition.Data)),
+                    length - 1,
+                    maxHeight
+                )
+            )
+            {
+                yield return immutableList;
+            }
+        }
+    }
+
+    public Dictionary<State, List<Siteswap>> AllStates()
+    {
+        var siteswaps = Enumerable.Range(0, Period.Value).Select(Rotate).ToList();
+        var dictionary = new Dictionary<State, List<Siteswap>>();
+        foreach (var siteswap in siteswaps)
+        {
+            if (dictionary.ContainsKey(siteswap.State))
+            {
+                dictionary[siteswap.State].Add(siteswap);
+            }
+            else
+            {
+                dictionary[siteswap.State] = [siteswap];
+            }
+        }
+        return dictionary;
+    }
+
+    private Siteswap Rotate(int i)
+    {
+        return new Siteswap(Items.Rotate(i));
+    }
+
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
+    {
+        return new LocalSiteswap(this, juggler, numberOfJugglers);
+    }
+
+    public Period Period => new(Items.Length);
+
+    public (Siteswap nSiteswap, Throw nThrow) Throw()
+    {
+        var nSiteswap = new Siteswap(Items.Rotate(1));
+        return (nSiteswap, new Throw(State, nSiteswap.State, Items[0]));
+    }
 }
+
+public record Period(int Value)
+{
+    public LocalPeriod GetLocalPeriod(int numberOfJugglers) =>
+        Value % numberOfJugglers == 0 ? new(Value / numberOfJugglers) : new(Value);
+}
+
+public record LocalPeriod(int Value);
 
 public class Orbit(List<int> items)
 {
     public List<int> Items => items;
+}
+
+[DebuggerDisplay("{PrettyPrint()}")]
+public record Throw(State StartingState, State EndingState, int Value)
+{
+    public string PrettyPrint()
+    {
+        return $"{StartingState} -> {EndingState} : {Value}";
+    }
+}
+
+public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
+{
+    public string GlobalNotation => ToString();
+    public string LocalNotation =>
+        string.Join(
+            " ",
+            GetLocalSiteswapReal()
+                .Select(x => x * 1.0 / NumberOfJugglers)
+                .Select(x => x.ToString("0.##"))
+        );
+
+    private List<int> GetLocalSiteswapReal()
+    {
+        var result = new List<int>();
+
+        var siteswap = Siteswap.Items.ToCyclicArray();
+        for (var i = 0; i < Siteswap.Period.GetLocalPeriod(NumberOfJugglers).Value; i++)
+        {
+            result.Add(siteswap[Juggler + i * NumberOfJugglers]);
+        }
+
+        return result;
+    }
+
+    public override string ToString()
+    {
+        return ToString(GetLocalSiteswapReal());
+    }
+
+    private string ToString(IEnumerable<int> items)
+    {
+        return string.Join("", items.Select(Transform));
+    }
+
+    private string Transform(int i)
+    {
+        return i switch
+        {
+            < 10 => $"{i}",
+            _ => Convert.ToChar(i + 87).ToString(),
+        };
+    }
+
+    public double Average()
+    {
+        return GetLocalSiteswapReal().Average() * 1.0 / NumberOfJugglers;
+    }
+
+    public bool IsValidAsGlobalSiteswap()
+    {
+        var items = GetLocalSiteswapReal();
+
+        return items.Select((x, i) => (x + i) % items.Count).ToHashSet().Count == items.Count;
+    }
 }

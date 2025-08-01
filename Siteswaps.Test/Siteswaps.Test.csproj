@@ -17,4 +17,7 @@
   <ItemGroup>
     <PackageVersion Update="Verify.NUnit" Version="30.5.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="StateDiagram\" />
+  </ItemGroup>
 </Project>

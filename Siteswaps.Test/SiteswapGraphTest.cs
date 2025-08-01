@@ -61,6 +61,18 @@ public class SiteswapGraphTest : VerifyBase
                 _.Converters.Add(new EdgeConverter());
             });
     }
+
+    [Test]
+    public async Task Create_Graph_For_Siteswap_531441423()
+    {
+        var siteswap = new Siteswap.Details.Siteswap(5, 3, 1, 4, 4, 1, 4, 2, 3);
+        await Verify(StateGraphFromSiteswapGenerator.CalculateGraph(siteswap).Graph)
+            .AddExtraSettings(_ =>
+            {
+                _.Converters.Add(new StateConverter());
+                _.Converters.Add(new EdgeConverter());
+            });
+    }
 }
 
 public class StateConverter : WriteOnlyJsonConverter<State>

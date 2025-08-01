@@ -7,13 +7,13 @@
 <SiteswapInput @bind-Siteswap="Siteswap"/>
 
 <ul>
-    @if (States is not null)
+    @if (Siteswap is not null)
     {
-        @foreach (var state in States.Graph.Nodes)
+        @foreach (var (state, siteswaps) in Siteswap.AllStates())
         {
             <li style="display: flex">
                 <div style="padding: 4px">
-                    @foreach (var siteswap in States.SiteswapInState[state])
+                    @foreach (var siteswap in siteswaps)
                     {
                         <div>Siteswap: @siteswap.ToString()</div>
                     }
