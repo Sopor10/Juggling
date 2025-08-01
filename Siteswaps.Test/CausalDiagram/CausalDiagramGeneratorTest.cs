@@ -17,7 +17,7 @@ public class CausalDiagramGeneratorTest
             new("L", new Person("A")),
         }.ToImmutableList();
         var result = sut.Generate(
-            new Siteswap.Details.CausalDiagram.Siteswap(new[] { 4, 2, 3 }.ToCyclicArray()),
+            new Siteswap.Details.Siteswap(new[] { 4, 2, 3 }.ToCyclicArray()),
             hands.ToCyclicArray()
         );
 
@@ -36,7 +36,7 @@ public class CausalDiagramGeneratorTest
             new("L", new Person("B")),
         }.ToImmutableList();
         var result = sut.Generate(
-            new Siteswap.Details.CausalDiagram.Siteswap(new[] { 5, 3, 1 }.ToCyclicArray()),
+            new Siteswap.Details.Siteswap(new[] { 5, 3, 1 }.ToCyclicArray()),
             hands.ToCyclicArray()
         );
 

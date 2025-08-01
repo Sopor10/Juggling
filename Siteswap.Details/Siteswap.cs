@@ -16,12 +16,7 @@ public record Siteswap(CyclicArray<int> Items)
     public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap)
     {
         siteswap = null;
-        if (value == string.Empty)
-        {
-            return false;
-        }
-
-        return TryCreate(value.Select(ToInt), out siteswap);
+        return value != string.Empty && TryCreate(value.Select(ToInt), out siteswap);
     }
 
     private static int ToInt(char c)
@@ -127,7 +122,7 @@ public record Siteswap(CyclicArray<int> Items)
     public static CyclicArray<int> ToUniqueRepresentation(int[] input) =>
         ToUniqueRepresentation(input.ToCyclicArray());
 
-    public List<Orbit> GetOrbits() => GetOrbitsInternal().ToList();
+    public List<Orbit> GetOrbits() => GetOrbitsInternal().Where(x => x.HasBalls).ToList();
 
     private IEnumerable<Orbit> GetOrbitsInternal()
     {
@@ -179,7 +174,7 @@ public record Siteswap(CyclicArray<int> Items)
     public List<Transition> PossibleTransitions(Siteswap to, int length, int? height = null) =>
         CreateTransitions(to, length, height);
 
-    private State State => StateGenerator.CalculateState(Items.EnumerateValues(1).ToArray());
+    public State State => StateGenerator.CalculateState(Items.EnumerateValues(1).ToArray());
 
     private List<Transition> CreateTransitions(Siteswap to, int length, int? maxHeight = null)
     {
@@ -283,6 +278,8 @@ public record LocalPeriod(int Value);
 public class Orbit(List<int> items)
 {
     public List<int> Items => items;
+    public string DisplayValue => string.Join("", Items);
+    public bool HasBalls => new Siteswap(Items.ToArray()).NumberOfObjects() > 0;
 }
 
 [DebuggerDisplay("{PrettyPrint()}")]

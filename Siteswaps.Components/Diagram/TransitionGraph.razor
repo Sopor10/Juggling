@@ -39,8 +39,8 @@
             return;
         }
 
-        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.From.Items.EnumerateValues(1).ToArray());
-        var toGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.To.Items.EnumerateValues(1).ToArray());
+        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.From);
+        var toGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.To);
 
         AddNodes(fromGraph, nodes);
         AddNodes(toGraph, nodes);

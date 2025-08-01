@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Siteswap.Details.StateDiagram;
+﻿namespace Siteswap.Details.StateDiagram;
 
 public class StateFactory
 {

@@ -35,7 +35,7 @@
         get
         {
             if (Siteswap is null) return null;
-            var stateGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Siteswap.Items.EnumerateValues(1).ToArray());
+            var stateGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Siteswap);
             return stateGraph;
         }
     }

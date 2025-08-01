@@ -1,18 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿namespace Siteswap.Details.StateDiagram.Graph;
 
-namespace Siteswap.Details.StateDiagram.Graph;
-
-public class Graph<TNode, TData>
+public class Graph<TNode, TData>(HashSet<TNode> nodes, HashSet<Edge<TNode, TData>> edges)
 {
-    public Graph(HashSet<TNode> nodes, HashSet<Edge<TNode, TData>> edges)
-    {
-        Nodes = nodes;
-        Edges = edges;
-    }
-
-    public HashSet<TNode> Nodes { get; }
-    public HashSet<Edge<TNode, TData>> Edges { get; }
+    public HashSet<TNode> Nodes { get; } = nodes;
+    public HashSet<Edge<TNode, TData>> Edges { get; } = edges;
 
     public Graph<TNode, TData> Combine(Graph<TNode, TData> other) =>
         new(Nodes.Union(other.Nodes).ToHashSet(), Edges.Union(other.Edges).ToHashSet());

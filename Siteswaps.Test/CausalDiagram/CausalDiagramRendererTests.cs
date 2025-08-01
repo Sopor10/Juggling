@@ -31,7 +31,7 @@ public class CausalDiagramRendererTests
     public async Task Render_531_CausalDiagram()
     {
         var causalDiagram = new CausalDiagramGenerator().Generate(
-            new Siteswap.Details.CausalDiagram.Siteswap(5, 3, 1),
+            new Siteswap.Details.Siteswap(5, 3, 1),
             HandsFor4HandedSiteswap()
         );
 

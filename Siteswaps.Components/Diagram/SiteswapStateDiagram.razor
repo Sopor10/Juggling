@@ -3,8 +3,8 @@
 @using VisNetwork.Blazor.Models
 @if (Value is not null)
 {
-    <div>
-        <Network Id="@Value?.ToString()" Data="@Data" style="width: 640px; height: 480px"/>
+    <div class="border-1">
+        <Network Id="siteswap-detail-diagram" Data="@Data" style="width: 640px; height: 480px"/>
     </div>
 }
 
@@ -31,7 +31,7 @@
             return;
         }
 
-        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Value.Items.EnumerateValues(1).ToArray());
+        var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Value);
 
         AddNodes(fromGraph, nodes);
 

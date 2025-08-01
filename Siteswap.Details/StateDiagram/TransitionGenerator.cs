@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
 namespace Siteswap.Details.StateDiagram;
 

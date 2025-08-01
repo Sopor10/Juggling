@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Siteswap.Details.CausalDiagram;
+﻿using Siteswap.Details.CausalDiagram;
 using SkiaSharp;
 
 namespace Siteswap.Details;

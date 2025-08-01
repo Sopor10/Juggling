@@ -138,4 +138,20 @@ public class SiteswapTest
 
         transitions.Should().HaveCount(7);
     }
+
+    [Test]
+    public void State_Works()
+    {
+        var sut = new Siteswap.Details.Siteswap(0, 3, 0).State;
+        sut.Should().Be(new State(0, 1));
+    }
+
+    [Test]
+    public void State_Should_Be_Able_To_Throw_A_0()
+    {
+        var sut = new Siteswap.Details.Siteswap(0, 3, 0).State;
+
+        var state = sut.Advance().Throw(0);
+        state.Should().Be(new State(1));
+    }
 }

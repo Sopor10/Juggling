@@ -1,26 +1,20 @@
-﻿@page "/OrbitView"
-@using Radzen
-@using Siteswap.Details
-<h3>OrbitView</h3>
+﻿@using Siteswap.Details
+@inject NavigationManager NavigationManager
+<h3>Orbits</h3>
+
+@if (Value is null)
+{
+    return;
+}
 
 
-<RadzenStack Orientation="Orientation.Vertical">
-    <RadzenLabel Text="Siteswap"></RadzenLabel>
-    <RadzenTextBox id="test" @bind-Value="Siteswap" Name="Siteswap"></RadzenTextBox>
-</RadzenStack>
+    <RadzenDataList TItem="Orbit" Data="Value.GetOrbits()">
+        <Template>
+            <a href="@NavigationManager.GetUriWithQueryParameter("s", context.DisplayValue)"> @context.DisplayValue</a>
+        </Template>
+    </RadzenDataList>
 
-<RadzenListBox TValue="Orbit">
-    <Template>
-        <span>
-            @(string.Join("", (context as Orbit)?.Items??new List<int>()))
-        </span>
-    </Template>
-    
-</RadzenListBox>
-
-
-
-@code {
-    [EditorRequired, Parameter, SupplyParameterFromQuery]
-    public required string? Siteswap { get; set; }
+@code
+{
+    [Parameter] public Siteswap? Value { get; set; }
 }

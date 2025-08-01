@@ -1,9 +1,6 @@
-﻿using System.Xml;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Siteswap.Details.StateDiagram;
 using Siteswap.Details.StateDiagram.Graph;
-using Siteswaps.Visualization.SVG;
-using Siteswaps.Visualization.SVG.Renderer;
 
 namespace Siteswaps.Test;
 
@@ -53,7 +50,7 @@ public class SiteswapGraphTest : VerifyBase
     [Test]
     public async Task Create_Graph_For_Siteswap_531()
     {
-        var siteswap = new[] { 5, 3, 1 };
+        var siteswap = new Siteswap.Details.Siteswap(5, 3, 1);
         await Verify(StateGraphFromSiteswapGenerator.CalculateGraph(siteswap).Graph)
             .AddExtraSettings(_ =>
             {

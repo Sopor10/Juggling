@@ -1,15 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Siteswap.Details.StateDiagram.Graph;
+﻿using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswap.Details.StateDiagram;
 
-public class StateGraph
+public class StateGraph(Graph<State, int> graph)
 {
-    public StateGraph(Graph<State, int> graph)
-    {
-        Graph = graph;
-    }
-
-    public Graph<State, int> Graph { get; }
+    public Graph<State, int> Graph { get; } = graph;
 }

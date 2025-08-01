@@ -1,14 +1,14 @@
-﻿@page "/siteswap/{StringValue}"
+﻿@page "/details"
 @using Siteswap.Details
 @using Siteswaps.Components.Diagram
-
-<text>@StringValue</text>
+@using Siteswaps.Components.Orbits
 
 <SiteswapCard Value="Value" NumberOfJugglers="@NumberOfJugglers"></SiteswapCard>
 <SiteswapStateDiagram Value="Value"></SiteswapStateDiagram>
+<OrbitView Value="Value"></OrbitView>
 @code {
-    [Parameter] public string StringValue { get; set; } = "";
-    [Parameter, SupplyParameterFromQuery] public int NumberOfJugglers { get; set; } = 2;
+    [Parameter,SupplyParameterFromQuery(Name = "s")] public string StringValue { get; set; } = "";
+    [Parameter, SupplyParameterFromQuery(Name = "n")] public int NumberOfJugglers { get; set; } = 2;
 
     private Siteswap? Value { get; set; }
     

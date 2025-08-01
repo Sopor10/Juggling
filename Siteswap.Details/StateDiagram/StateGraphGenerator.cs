@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Siteswap.Details.StateDiagram.Graph;
+﻿using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswap.Details.StateDiagram;
 

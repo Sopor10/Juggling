@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Siteswap.Details.StateDiagram;
+﻿namespace Siteswap.Details.StateDiagram;
 
 public static class StateGenerator
 {

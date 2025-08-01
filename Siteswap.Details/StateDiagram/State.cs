@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using MoreLinq;
+﻿using System.Diagnostics;
 using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswap.Details.StateDiagram;
@@ -57,7 +52,11 @@ public record State(uint Value)
 
     public State Throw(int i)
     {
-        var state = this with { Value = Value | (uint)(1 << (i - 1)) };
+        if (i == 0)
+        {
+            return this;
+        }
+        var state = new State(Value: Value | (uint)(1 << (i - 1)));
         return state;
     }
 

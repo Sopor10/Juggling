@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Siteswap.Details.CausalDiagram;
+﻿using Siteswap.Details.CausalDiagram;
 using SkiaSharp;
 
 namespace Siteswap.Details;
@@ -9,7 +8,7 @@ public class SkiasharpExample
     public void Test(SKCanvas canvas)
     {
         var causalDiagram = new CausalDiagramGenerator().Generate(
-            new CausalDiagram.Siteswap(5, 3, 1),
+            new Siteswap(5, 3, 1),
             new CyclicArray<Hand>(
                 new List<Hand>
                 {
