@@ -16,7 +16,7 @@
     <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Update="Verify.NUnit" Version="30.5.0" />
+    <PackageVersion Update="Verify.NUnit" Version="30.6.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="StateDiagram\" />
