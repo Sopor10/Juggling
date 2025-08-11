@@ -7,12 +7,12 @@ public record CyclicArray<T> : IEnumerable<T>
 {
     public CyclicArray(IEnumerable<T> items)
     {
-        Items = items.ToImmutableArray();
+        Items = [.. items];
     }
 
     public CyclicArray(params T[] items)
     {
-        Items = items.ToImmutableArray();
+        Items = [.. items];
     }
 
     private ImmutableArray<T> Items { get; }

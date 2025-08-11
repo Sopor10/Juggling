@@ -57,7 +57,7 @@
             AddState(nodes, state);
             AddState(nodes, nextState);
 
-            AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.ToString(), true);
+            AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.ThrowAsString, true);
             state = nextState;
         }
 

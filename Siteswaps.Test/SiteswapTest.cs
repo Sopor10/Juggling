@@ -1,6 +1,9 @@
-﻿using FluentAssertions;
+﻿using System.Text;
+using FluentAssertions;
 using Meziantou.Framework.InlineSnapshotTesting;
+using Siteswap.Details;
 using Siteswap.Details.StateDiagram;
+using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswaps.Test;
 
@@ -149,5 +152,53 @@ public class SiteswapTest
 
         var state = sut.Advance().Throw(0);
         state.Should().Be(new State(1));
+    }
+
+    [Test]
+    public async Task SiteswapList_Can_Create_Graph()
+    {
+        var sut = new SiteswapList(
+            new Siteswap.Details.Siteswap(5, 3, 1),
+            new Siteswap.Details.Siteswap(4, 4, 1),
+            new Siteswap.Details.Siteswap(5, 1),
+            new Siteswap.Details.Siteswap(5, 2, 2),
+            new Siteswap.Details.Siteswap(6, 1, 1, 2, 5),
+            new Siteswap.Details.Siteswap(5, 3, 0, 0, 2)
+        );
+
+        var result = sut.TransitionGraph(2);
+
+        var s = PrettyPrint(result);
+        await Verify(s);
+    }
+
+    [Test]
+    public async Task SiteswapList_Can_Create_Graph_2()
+    {
+        var sut = new SiteswapList(
+            new Siteswap.Details.Siteswap(5, 3, 1),
+            new Siteswap.Details.Siteswap(5, 1)
+        );
+
+        var result = sut.TransitionGraph(2);
+
+        var s = PrettyPrint(result);
+        await Verify(s);
+    }
+
+    private string PrettyPrint(Graph<Siteswap.Details.Siteswap, Transition> result)
+    {
+        var builder = new StringBuilder();
+
+        foreach (var s in result.Nodes)
+        {
+            builder.AppendLine(s.ToString());
+        }
+
+        foreach (var edge in result.Edges)
+        {
+            builder.AppendLine(edge.Data.PrettyPrint());
+        }
+        return builder.ToString();
     }
 }

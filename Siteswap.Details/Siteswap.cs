@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Siteswap.Details.StateDiagram;
+using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswap.Details;
 
@@ -96,6 +97,7 @@ public record Siteswap(CyclicArray<int> Items)
     {
         return i switch
         {
+            < 0 => throw new ArgumentException("Negative values are not allowed"),
             < 10 => $"{i}",
             _ => Convert.ToChar(i + 87).ToString(),
         };
@@ -103,16 +105,16 @@ public record Siteswap(CyclicArray<int> Items)
 
     public virtual bool Equals(Siteswap? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return ToString().Equals(other.ToString());
+        return this.ToString().Equals(other.ToString());
     }
 
     public override int GetHashCode()
     {
-        return ToString().GetHashCode();
+        return this.ToString().GetHashCode();
     }
 
     public int Max() => Items.EnumerateValues(1).Max();
@@ -163,14 +165,6 @@ public record Siteswap(CyclicArray<int> Items)
         }
     }
 
-    public Throw[] PossibleThrows(int? height = null)
-    {
-        height ??= Items.EnumerateValues(1).Max();
-
-        var transitions = State.Transitions(height.Value);
-        return transitions.Select(x => new Throw(x.N1, x.N2, x.Data)).ToArray();
-    }
-
     public List<Transition> PossibleTransitions(Siteswap to, int length, int? height = null) =>
         CreateTransitions(to, length, height);
 
@@ -192,7 +186,10 @@ public record Siteswap(CyclicArray<int> Items)
             Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
         );
 
-        return result.Select(x => new Transition(this, to, x.ToArray())).ToList();
+        return result
+            .Select(x => new Transition(this, to, x.ToArray()))
+            .Where(x => x.IsValid)
+            .ToList();
     }
 
     private static IEnumerable<ImmutableList<Throw>> Recurse(
@@ -278,8 +275,17 @@ public record LocalPeriod(int Value);
 public class Orbit(List<int> items)
 {
     public List<int> Items => items;
-    public string DisplayValue => string.Join("", Items);
+    public string DisplayValue => string.Join("", Items.Select(Transform));
     public bool HasBalls => new Siteswap(Items.ToArray()).NumberOfObjects() > 0;
+
+    private static string Transform(int i)
+    {
+        return i switch
+        {
+            < 10 => $"{i}",
+            _ => Convert.ToChar(i + 87).ToString(),
+        };
+    }
 }
 
 [DebuggerDisplay("{PrettyPrint()}")]
@@ -287,7 +293,19 @@ public record Throw(State StartingState, State EndingState, int Value)
 {
     public string PrettyPrint()
     {
-        return $"{StartingState} -> {EndingState} : {Value}";
+        return $"{StartingState} -{Transform(Value)}> {EndingState} : {EndingStateCalc}";
+    }
+
+    private State EndingStateCalc => StartingState.Advance().Throw(Value);
+    public string ThrowAsString => Transform(Value);
+
+    private static string Transform(int i)
+    {
+        return i switch
+        {
+            < 10 => $"{i}",
+            _ => Convert.ToChar(i + 87).ToString(),
+        };
     }
 }
 
@@ -344,5 +362,53 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
         var items = GetLocalSiteswapReal();
 
         return items.Select((x, i) => (x + i) % items.Count).ToHashSet().Count == items.Count;
+    }
+}
+
+public class SiteswapList(ImmutableHashSet<Siteswap> items)
+{
+    public SiteswapList(params Siteswap[] s)
+        : this(s.ToImmutableHashSet()) { }
+
+    public Graph<Siteswap, Transition> TransitionGraph(int length)
+    {
+        HashSet<Siteswap> nodes = [];
+        HashSet<Edge<Siteswap, Transition>> edges = [];
+
+        for (int i = 1; i <= length; i++)
+        {
+            Console.WriteLine($"[INFO] Starte Iteration mit Länge i={i}");
+
+            foreach (var from in items)
+            {
+                Console.WriteLine($"[INFO] Betrachte Startknoten: {from}");
+
+                foreach (var to in items.Except([from]))
+                {
+                    Console.WriteLine($"[INFO]   Betrachte Zielknoten-Kandidat: {to}");
+
+                    Console.WriteLine($"[ACTION]   Füge Knoten hinzu: from = {from}");
+                    nodes.Add(from);
+
+                    Console.WriteLine($"[ACTION]   Füge Knoten hinzu: to = {to}");
+                    nodes.Add(to);
+
+                    Console.WriteLine(
+                        $"[INFO]   Ermittle mögliche Transitionen von {from} nach {to} für Länge {i}"
+                    );
+                    foreach (var possibleTransition in from.PossibleTransitions(to, i))
+                    {
+                        Console.WriteLine(
+                            $"[ACTION]     Füge Kante hinzu: {possibleTransition.PrettyPrint()}"
+                        );
+                        edges.Add(new Edge<Siteswap, Transition>(from, to, possibleTransition));
+                    }
+                }
+            }
+
+            Console.WriteLine($"[INFO] Beende Iteration mit Länge i={i}");
+        }
+
+        return new Graph<Siteswap, Transition>(nodes, edges);
     }
 }

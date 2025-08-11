@@ -1,24 +1,17 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 
 namespace Siteswap.Details;
 
-public class CyclicArrayEnumerator<T> : IEnumerator<T>
+public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 {
-    private CyclicArray<T> Array { get; }
+    private CyclicArray<T> Array { get; } = array;
     private int _position = -1;
-
-    public CyclicArrayEnumerator(CyclicArray<T> array)
-    {
-        Array = array;
-    }
 
     public bool MoveNext()
     {
         _position++;
-        if (_position >= 10000)
-        {
-            return false;
-        }
+        Debug.Assert(_position < 10000, "Probably infinite loop");
         return true;
     }
 
