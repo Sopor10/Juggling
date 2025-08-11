@@ -1,0 +1,366 @@
+﻿{
+  Nodes: [
+    {
+      Hand: {
+        Name: R,
+        Person: {
+          Name: A
+        }
+      },
+      Height: 5
+    },
+    {
+      Hand: {
+        Name: R,
+        Person: {
+          Name: B
+        }
+      },
+      Height: 3,
+      Time: 0.25
+    },
+    {
+      Hand: {
+        Name: L,
+        Person: {
+          Name: A
+        }
+      },
+      Height: 1,
+      Time: 0.5
+    },
+    {
+      Hand: {
+        Name: L,
+        Person: {
+          Name: B
+        }
+      },
+      Height: 5,
+      Time: 0.75
+    },
+    {
+      Hand: {
+        Name: R,
+        Person: {
+          Name: A
+        }
+      },
+      Height: 3,
+      Time: 1.0
+    },
+    {
+      Hand: {
+        Name: R,
+        Person: {
+          Name: B
+        }
+      },
+      Height: 1,
+      Time: 1.25
+    },
+    {
+      Hand: {
+        Name: L,
+        Person: {
+          Name: A
+        }
+      },
+      Height: 5,
+      Time: 1.5
+    },
+    {
+      Hand: {
+        Name: L,
+        Person: {
+          Name: B
+        }
+      },
+      Height: 3,
+      Time: 1.75
+    },
+    {
+      Hand: {
+        Name: R,
+        Person: {
+          Name: A
+        }
+      },
+      Height: 1,
+      Time: 2.0
+    },
+    {
+      Hand: {
+        Name: R,
+        Person: {
+          Name: B
+        }
+      },
+      Height: 5,
+      Time: 2.25
+    },
+    {
+      Hand: {
+        Name: L,
+        Person: {
+          Name: A
+        }
+      },
+      Height: 3,
+      Time: 2.5
+    },
+    {
+      Hand: {
+        Name: L,
+        Person: {
+          Name: B
+        }
+      },
+      Height: 1,
+      Time: 2.75
+    }
+  ],
+  Transitions: [
+    {
+      Start: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 5
+      },
+      End: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 3,
+        Time: 0.25
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 3,
+        Time: 0.25
+      },
+      End: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 5
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 5,
+        Time: 0.75
+      },
+      End: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 3,
+        Time: 1.0
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 3,
+        Time: 1.0
+      },
+      End: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 5,
+        Time: 0.75
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 1,
+        Time: 1.25
+      },
+      End: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 1,
+        Time: 0.5
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 5,
+        Time: 1.5
+      },
+      End: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 3,
+        Time: 1.75
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 3,
+        Time: 1.75
+      },
+      End: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 5,
+        Time: 1.5
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 1,
+        Time: 2.0
+      },
+      End: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 1,
+        Time: 1.25
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 5,
+        Time: 2.25
+      },
+      End: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 3,
+        Time: 2.5
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 3,
+        Time: 2.5
+      },
+      End: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 5,
+        Time: 2.25
+      }
+    },
+    {
+      Start: {
+        Hand: {
+          Name: L,
+          Person: {
+            Name: B
+          }
+        },
+        Height: 1,
+        Time: 2.75
+      },
+      End: {
+        Hand: {
+          Name: R,
+          Person: {
+            Name: A
+          }
+        },
+        Height: 1,
+        Time: 2.0
+      }
+    }
+  ],
+  MaxTime: 2.75
+}

@@ -19,14 +19,6 @@ public static class ModuleInitializer
 [TestFixture]
 public class CausalDiagramRendererTests
 {
-    private readonly string _path = $"{Guid.NewGuid()}.png";
-
-    [TearDown]
-    public void Teardown()
-    {
-        File.Delete(_path);
-    }
-
     [Test]
     public async Task Render_531_CausalDiagram()
     {
@@ -35,9 +27,7 @@ public class CausalDiagramRendererTests
             HandsFor4HandedSiteswap()
         );
 
-        var bitmap = RenderToBitmap(causalDiagram);
-        await SaveToFile(_path, bitmap);
-        await VerifyFile(_path);
+        await Verify(causalDiagram);
     }
 
     private static CyclicArray<Hand> HandsFor4HandedSiteswap()
@@ -48,22 +38,5 @@ public class CausalDiagramRendererTests
             new Hand("L", new Person("A")),
             new Hand("L", new Person("B"))
         );
-    }
-
-    private static SKBitmap RenderToBitmap(
-        Siteswap.Details.CausalDiagram.CausalDiagram causalDiagram
-    )
-    {
-        var bitmap = new SKBitmap(500, 500);
-        using var canvas = new SKCanvas(bitmap);
-        new CausalDiagramRenderer().Render(canvas, causalDiagram);
-        return bitmap;
-    }
-
-    private static async Task SaveToFile(string path, SKBitmap bitmap)
-    {
-        await using Stream s = File.OpenWrite(path);
-        var data = SKImage.FromBitmap(bitmap).Encode(SKEncodedImageFormat.Png, 100);
-        data.SaveTo(s);
     }
 }
