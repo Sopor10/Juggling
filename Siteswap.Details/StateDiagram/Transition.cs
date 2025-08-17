@@ -34,11 +34,8 @@ public record Transition(Siteswap From, Siteswap To, Throw[] Throws)
                 .Append(Throws.Last().EndingState)
                 .ToHashSet();
             var noLoopsInTheTransition = transitionStates.Count == Throws.Length + 1;
-            var notPartOfStartingSiteswap =
-                transitionStates.Except(From.AllStates().Keys).Count() == Throws.Length;
-            var notPartOfEndingSiteswap =
-                transitionStates.Except(To.AllStates().Keys).Count() == Throws.Length;
-            return noLoopsInTheTransition && notPartOfStartingSiteswap && notPartOfEndingSiteswap;
+
+            return noLoopsInTheTransition;
         }
     }
 }

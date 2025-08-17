@@ -99,7 +99,7 @@ public class SiteswapTest
         var to = new Siteswap.Details.Siteswap(5, 3, 1);
         var transitions = sut.PossibleTransitions(to, 3, 5);
 
-        transitions.Should().HaveCount(9);
+        InlineSnapshot.Validate(PrettyPrint(transitions), "3 --> 531");
     }
 
     [Test]
@@ -114,16 +114,13 @@ public class SiteswapTest
         InlineSnapshot.Validate(transitions.Single().PrettyPrint(), "531 -4-> 414");
     }
 
-    [Test]
-    public void Create_Specific_Transition_Length_2()
+    private static string PrettyPrint(List<Transition> transitions)
     {
-        var from = new Siteswap.Details.Siteswap(5, 3, 1);
-        var to = new Siteswap.Details.Siteswap(4, 1, 4);
-        var length = 2;
-
-        var transitions = from.PossibleTransitions(to, length);
-
-        transitions.Where(x => x.Throws.Length == 2).Should().HaveCount(2);
+        var result = string.Join(
+            Environment.NewLine,
+            transitions.Select(x => x.PrettyPrint()).Order()
+        );
+        return result;
     }
 
     [Test]
@@ -135,14 +132,20 @@ public class SiteswapTest
 
         var transitions = from.PossibleTransitions(to, length);
 
-        transitions.Should().HaveCount(7);
+        InlineSnapshot.Validate(
+            PrettyPrint(transitions),
+            """
+            531 -4-> 414
+            531 -52-> 414
+            """
+        );
     }
 
     [Test]
     public void State_Works()
     {
         var sut = new Siteswap.Details.Siteswap(0, 3, 0).State;
-        sut.Should().Be(new State(0, 1));
+        InlineSnapshot.Validate(sut.ToString(), "01");
     }
 
     [Test]
@@ -151,7 +154,26 @@ public class SiteswapTest
         var sut = new Siteswap.Details.Siteswap(0, 3, 0).State;
 
         var state = sut.Advance().Throw(0);
-        state.Should().Be(new State(1));
+        InlineSnapshot.Validate(state.ToString(), "1");
+    }
+
+    [Test]
+    public void Transitions_Are_Real_Transitions()
+    {
+        var sut = new Siteswap.Details.Siteswap(4, 4, 1);
+        var to = new Siteswap.Details.Siteswap(5, 1);
+        var transitions = sut.PossibleTransitions(to, 3, 5);
+        var result = string.Join(
+            Environment.NewLine,
+            transitions.Select(x => x.PrettyPrint()).Order()
+        );
+        InlineSnapshot.Validate(
+            result,
+            """
+            441 -4-> 51
+            441 -52-> 51
+            """
+        );
     }
 
     [Test]
@@ -190,14 +212,14 @@ public class SiteswapTest
     {
         var builder = new StringBuilder();
 
-        foreach (var s in result.Nodes)
+        foreach (var s in result.Nodes.Select(x => x.ToString()).Order())
         {
-            builder.AppendLine(s.ToString());
+            builder.AppendLine(s);
         }
 
-        foreach (var edge in result.Edges)
+        foreach (var edge in result.Edges.Select(x => x.Data.PrettyPrint()).Order())
         {
-            builder.AppendLine(edge.Data.PrettyPrint());
+            builder.AppendLine(edge);
         }
         return builder.ToString();
     }

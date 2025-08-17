@@ -182,6 +182,11 @@ public record Siteswap(CyclicArray<int> Items)
         var fromState = State;
         var toState = to.State;
 
+        if (fromState == toState)
+        {
+            return [new Transition(this, to, [])];
+        }
+
         result.AddRange(
             Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
         );
