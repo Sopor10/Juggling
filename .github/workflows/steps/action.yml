@@ -9,9 +9,13 @@ runs:
         dotnet-version: 9.0.x
     - name: Restore tools
       run: dotnet tool restore
+      shell: bash
     - name: Csharpier
       run: dotnet csharpier check .
+      shell: bash
     - name: Install workload
       run: dotnet workload install wasm-tools
+      shell: bash
     - name: Test
       run: dotnet test
+      shell: bash
