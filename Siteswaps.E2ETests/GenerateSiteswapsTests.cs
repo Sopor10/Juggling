@@ -18,6 +18,7 @@ public class GenerateSiteswapsTests(BlazorWebassemblyFixture<Program> fixture)
         var generator = await page.OpenGeneratorAsync(Fixture.RootUri.AbsoluteUri);
         var result = await generator.GenerateSiteswapsAsync();
         await result.WaitForSiteswapAsync("aaa00");
+        await result.ShoulNotGenerateAsync("aa613");
     }
 
     [Fact]
