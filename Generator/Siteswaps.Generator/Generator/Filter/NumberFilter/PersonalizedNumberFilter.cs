@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace Siteswaps.Generator.Generator.Filter.NumberFilter;
+﻿namespace Siteswaps.Generator.Generator.Filter.NumberFilter;
 
 public class PersonalizedNumberFilter(
     int numberOfJugglers,

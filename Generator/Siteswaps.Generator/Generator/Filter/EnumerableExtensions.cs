@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace Siteswaps.Generator.Generator.Filter;
+﻿namespace Siteswaps.Generator.Generator.Filter;
 
 public static class EnumerableExtensions
 {

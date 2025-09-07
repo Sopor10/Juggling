@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace Siteswaps.Generator.Generator;
+﻿namespace Siteswaps.Generator.Generator;
 
 public class PartialSiteswap
 {

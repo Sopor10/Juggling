@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Shared;
 
 namespace Siteswaps.Generator.Generator.Filter;
 
