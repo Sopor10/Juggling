@@ -1,6 +1,7 @@
 ﻿using System.CodeDom.Compiler;
 using Bogus;
 using FluentAssertions;
+using Meziantou.Framework.InlineSnapshotTesting;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.State.FilterTrees;
 
@@ -20,16 +21,16 @@ public class FilterTreeTests
     }
 
     [Test]
-    public async Task FilterTree_Can_Remove_Leaf()
+    public void FilterTree_Can_Remove_Leaf()
     {
         var leaf = new FilterLeaf(PatternFilter());
         var sut = new FilterTree(leaf);
         var result = sut.Remove(leaf);
-        await Verify(new FilterTreePrinter().Print(result));
+        InlineSnapshot.Validate(new FilterTreePrinter().Print(result), "");
     }
 
     [Test]
-    public async Task FilterTree_Can_Remove_From_And_Node()
+    public void FilterTree_Can_Remove_From_And_Node()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
         var and = new AndNode(
@@ -39,11 +40,19 @@ public class FilterTreeTests
         );
         var sut = new FilterTree(and);
         var result = sut.Remove(leaf);
-        await Verify(new FilterTreePrinter().Print(result));
+        InlineSnapshot.Validate(
+            new FilterTreePrinter().Print(result),
+            """
+            And
+              exclude local Single
+              exclude local Single,Single,Single
+
+            """
+        );
     }
 
     [Test]
-    public async Task FilterTree_Can_Remove_From_And_Node_Deeply_Nested()
+    public void FilterTree_Can_Remove_From_And_Node_Deeply_Nested()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
         var and = new OrNode(
@@ -59,11 +68,22 @@ public class FilterTreeTests
         );
         var sut = new FilterTree(and);
         var result = sut.Remove(leaf);
-        await Verify(new FilterTreePrinter().Print(result));
+        InlineSnapshot.Validate(
+            new FilterTreePrinter().Print(result),
+            """
+            Or
+              And
+                Or
+                  And
+                    exclude local Single
+                    exclude local Single,Single,Single
+
+            """
+        );
     }
 
     [Test]
-    public async Task FilterTree_Can_Remove_From_Or_Node()
+    public void FilterTree_Can_Remove_From_Or_Node()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
         var and = new OrNode(
@@ -73,11 +93,19 @@ public class FilterTreeTests
         );
         var sut = new FilterTree(and);
         var result = sut.Remove(leaf);
-        await Verify(new FilterTreePrinter().Print(result));
+        InlineSnapshot.Validate(
+            new FilterTreePrinter().Print(result),
+            """
+            Or
+              exclude local Single
+              exclude local Single,Single,Single
+
+            """
+        );
     }
 
     [Test]
-    public async Task FilterTree_Can_Add_To_And_Node_Deeply_Nested()
+    public void FilterTree_Can_Add_To_And_Node_Deeply_Nested()
     {
         var leaf = new FilterLeaf(PatternFilter(2));
         var nestedAnd = new AndNode(
@@ -87,18 +115,42 @@ public class FilterTreeTests
         var and = new OrNode(new AndNode(new OrNode(nestedAnd)));
         var sut = new FilterTree(and);
         var result = sut.Add(nestedAnd, leaf);
-        await Verify(new FilterTreePrinter().Print(result));
+        InlineSnapshot.Validate(
+            new FilterTreePrinter().Print(result),
+            """
+            Or
+              And
+                Or
+                  And
+                    exclude local Single
+                    exclude local Single,Single,Single
+                    exclude local Single,Single
+
+            """
+        );
     }
 
     [Test]
-    public async Task FilterTree_Can_Add_To_Or_Node()
+    public void FilterTree_Can_Add_To_Or_Node()
     {
         var orNode = new OrNode(
             new AndNode(new FilterLeaf(PatternFilter(1)), new FilterLeaf(PatternFilter(3)))
         );
         var sut = new FilterTree(new OrNode(new AndNode(orNode)));
         var result = sut.Add(sut.FindNode(sut.GetKey(orNode))!, new FilterLeaf(PatternFilter(2)));
-        await Verify(new FilterTreePrinter().Print(result));
+        InlineSnapshot.Validate(
+            new FilterTreePrinter().Print(result),
+            """
+            Or
+              And
+                Or
+                  And
+                    exclude local Single
+                    exclude local Single,Single,Single
+                  exclude local Single,Single
+
+            """
+        );
     }
 
     [Test]

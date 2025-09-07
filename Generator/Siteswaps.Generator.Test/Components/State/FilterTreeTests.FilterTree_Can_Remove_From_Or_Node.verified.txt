@@ -1,3 +1,0 @@
-﻿Or
-  exclude local Single
-  exclude local Single,Single,Single
