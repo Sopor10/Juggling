@@ -1,7 +1,7 @@
 ﻿# This is ".github/workflows/gh-pages.yml" file.
 # This is an EXAMPLE of "GitHub Actions Workflow file".
 
-name: build-and-test
+name: PR Validation
 
 on:
   pull_request: 
