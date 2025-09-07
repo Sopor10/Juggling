@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Generator/">
+    <Project Path="Generator/Siteswaps.Generator.Test/Siteswaps.Generator.Test.csproj" />
+    <Project Path="Generator/Siteswaps.Generator/Siteswaps.Generator.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="Shared/Shared.Test/Shared.Test.csproj" />
+    <Project Path="Shared/Shared/Shared.csproj" />
+  </Folder>
+  <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
+  <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />
+  <Project Path="Siteswaps.Domain/Siteswaps.Domain.csproj" />
+  <Project Path="Siteswaps.E2ETests.Server/Siteswaps.E2ETests.Server.csproj" />
+  <Project Path="Siteswaps.E2ETests/Siteswaps.E2ETests.csproj" />
+  <Project Path="Siteswaps.Test/Siteswaps.Test.csproj" />
+  <Project Path="Siteswaps.Visualization.Test/Siteswaps.Visualization.Test.csproj" />
+  <Project Path="Siteswaps.Visualization/Siteswaps.Visualization.csproj" />
+  <Project Path="Webassembly/Webassembly.csproj" />
+</Solution>
