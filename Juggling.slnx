@@ -8,7 +8,5 @@
   <Project Path="Siteswaps.E2ETests.Server/Siteswaps.E2ETests.Server.csproj" />
   <Project Path="Siteswaps.E2ETests/Siteswaps.E2ETests.csproj" />
   <Project Path="Siteswaps.Test/Siteswaps.Test.csproj" />
-  <Project Path="Siteswaps.Visualization.Test/Siteswaps.Visualization.Test.csproj" />
-  <Project Path="Siteswaps.Visualization/Siteswaps.Visualization.csproj" />
   <Project Path="Webassembly/Webassembly.csproj" />
 </Solution>

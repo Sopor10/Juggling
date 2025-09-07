@@ -13,7 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
-    <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Update="Verify.NUnit" Version="30.11.0" />

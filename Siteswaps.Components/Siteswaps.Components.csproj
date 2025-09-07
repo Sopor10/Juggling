@@ -16,7 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
-    <ProjectReference Include="..\Siteswaps.Visualization\Siteswaps.Visualization.csproj" />
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Generator\Filter\FilterSelection.razor" />
