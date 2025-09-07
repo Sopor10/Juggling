@@ -93,6 +93,9 @@
 
     private static Node CreateNode(State node)
     {
-        return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle");
+        return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle")
+        {
+            Mass = 1
+        };
     }
 }

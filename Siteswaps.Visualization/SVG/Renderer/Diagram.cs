@@ -14,14 +14,9 @@ using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswaps.Visualization.SVG.Renderer;
 
-public class Diagram
+public class Diagram(Graph drawingGraph)
 {
-    private Graph DrawingGraph { get; }
-
-    public Diagram(Graph drawingGraph)
-    {
-        DrawingGraph = drawingGraph;
-    }
+    private Graph DrawingGraph { get; } = drawingGraph;
 
     // Abstract the creation of the GeometryGraph and the node.CreateBoundary calls away in
     // a single call on the Diagram.

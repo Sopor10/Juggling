@@ -10,14 +10,9 @@
     public CircleNode? Node { get; set; }
 
 
-    public class CircleNode : NodeModel
+    public class CircleNode(string name, Blazor.Diagrams.Core.Geometry.Point? position = null) : NodeModel(position)
     {
-        public CircleNode(string name, Blazor.Diagrams.Core.Geometry.Point? position = null) : base(position)
-        {
-            Name = name;
-        }
-
-        public string Name { get; }
+        public string Name { get; } = name;
     }
 
 }

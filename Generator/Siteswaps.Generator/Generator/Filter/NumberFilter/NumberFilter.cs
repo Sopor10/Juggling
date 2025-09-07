@@ -1,13 +1,7 @@
 ﻿namespace Siteswaps.Generator.Generator.Filter.NumberFilter;
 
-internal abstract class NumberFilter : ISiteswapFilter
+internal abstract class NumberFilter(IEnumerable<int> number, int amount) : ISiteswapFilter
 {
-    protected NumberFilter(IEnumerable<int> number, int amount)
-    {
-        Number = number.ToHashSet();
-        Amount = amount;
-    }
-
     public bool CanFulfill(PartialSiteswap value)
     {
         if (value.RotationIndex != 0)
@@ -19,7 +13,7 @@ internal abstract class NumberFilter : ISiteswapFilter
     }
 
     private protected abstract bool CanFulfillNumberFilter(PartialSiteswap value);
-    protected HashSet<int> Number { get; }
-    protected int Amount { get; }
+    protected HashSet<int> Number { get; } = number.ToHashSet();
+    protected int Amount { get; } = amount;
     public int Order => 0;
 }

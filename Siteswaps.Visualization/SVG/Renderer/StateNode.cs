@@ -4,15 +4,9 @@ using Microsoft.Msagl.Drawing;
 
 namespace Siteswaps.Visualization.SVG.Renderer;
 
-public class StateNode : Node
+public class StateNode(string id) : Node(id)
 {
-    public StateNode(string id)
-        : base(id)
-    {
-        Label = new Label(id);
-    }
-
-    private new Label Label { get; }
+    private new Label Label { get; } = new(id);
 
     public void CreateBoundary()
     {

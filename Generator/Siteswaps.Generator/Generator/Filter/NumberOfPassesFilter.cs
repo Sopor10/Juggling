@@ -1,21 +1,14 @@
 ﻿namespace Siteswaps.Generator.Generator.Filter;
 
-internal class NumberOfPassesFilter : ISiteswapFilter
+internal class NumberOfPassesFilter(
+    int numberOfPasses,
+    int numberOfJugglers,
+    SiteswapGeneratorInput generatorInput
+) : ISiteswapFilter
 {
-    private int NumberOfPasses { get; }
-    private int NumberOfJugglers { get; }
-    private SiteswapGeneratorInput GeneratorInput { get; }
-
-    public NumberOfPassesFilter(
-        int numberOfPasses,
-        int numberOfJugglers,
-        SiteswapGeneratorInput generatorInput
-    )
-    {
-        NumberOfPasses = numberOfPasses;
-        NumberOfJugglers = numberOfJugglers;
-        GeneratorInput = generatorInput;
-    }
+    private int NumberOfPasses { get; } = numberOfPasses;
+    private int NumberOfJugglers { get; } = numberOfJugglers;
+    private SiteswapGeneratorInput GeneratorInput { get; } = generatorInput;
 
     public bool CanFulfill(PartialSiteswap value)
     {

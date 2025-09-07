@@ -1,10 +1,8 @@
 ﻿namespace Siteswaps.Generator.Generator.Filter.NumberFilter;
 
-internal class AtLeastXXXTimesFilter : NumberFilter
+internal class AtLeastXXXTimesFilter(IEnumerable<int> number, int amount)
+    : NumberFilter(number, amount)
 {
-    public AtLeastXXXTimesFilter(IEnumerable<int> number, int amount)
-        : base(number, amount) { }
-
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)
     {
         int matches = 0;

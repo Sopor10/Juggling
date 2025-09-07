@@ -3,14 +3,9 @@ using Siteswaps.Generator.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Generator.Filter;
 
-internal class PatternFilterHeuristicBuilder
+internal class PatternFilterHeuristicBuilder(IFilterBuilder filterBuilder)
 {
-    private IFilterBuilder Builder { get; }
-
-    public PatternFilterHeuristicBuilder(IFilterBuilder filterBuilder)
-    {
-        Builder = filterBuilder;
-    }
+    private IFilterBuilder Builder { get; } = filterBuilder;
 
     public ISiteswapFilter Build(IEnumerable<int> pattern)
     {

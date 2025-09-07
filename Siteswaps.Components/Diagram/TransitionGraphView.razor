@@ -5,15 +5,21 @@
 @using Siteswap.Details.StateDiagram.Graph
 @using SiteswapList = Siteswap.Details.SiteswapList
 
-<Network Id="my-id" Data="@Data" style="width: 640px; height: 480px"/>
+<Network Id="my-id" Data="@Data" Options="Options" style="width: 640px; height: 480px"/>
 
 @code {
 
     [Parameter] public SiteswapList? Siteswaps { get; set; } = new(new(4,4,1), new (5,1), new(7,0,7,0,1));
     [Parameter,SupplyParameterFromQuery] public int Length { get; set; } = 2;
+    [Parameter,SupplyParameterFromQuery(Name = "siteswaps")] public string? SiteswapsString { get; set; }
 
     protected override void OnParametersSet()
     {
+        if (!string.IsNullOrWhiteSpace(SiteswapsString))
+        {
+            Siteswaps = SiteswapList.FromString(SiteswapsString);
+        }
+        
         CreateNetworkData(Siteswaps);
         base.OnParametersSet();
     }
@@ -42,7 +48,8 @@
         Data = new NetworkData
         {
             Edges = edges,
-            Nodes = nodes
+            Nodes = nodes,
+            
         };
     }
 
@@ -83,6 +90,33 @@
         {
             nodes.Add(new Node(node.ToString(), node.ToString(), 1, "circle"));
         }
+    }
+
+    private NetworkOptions Options(Network arg)
+    {
+        return new NetworkOptions
+        {
+            Interaction = new InteractionOptions
+            {
+                DragNodes = true,
+                DragView = false,
+                ZoomView = true
+                
+                
+            },
+            Physics = new PhysicsOptions()
+            {
+                Enabled = false
+            }
+            ,
+            Edges = new EdgeOption()
+            {
+                Smooth = new EdgeSmoothOptions()
+                {
+                    Roundness = 2
+                }
+            }
+        };
     }
 
 }

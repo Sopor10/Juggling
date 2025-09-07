@@ -5,14 +5,10 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests;
 
-public class GenerateSiteswapsTests : IClassFixture<BlazorWebassemblyFixture<Program>>
+public class GenerateSiteswapsTests(BlazorWebassemblyFixture<Program> fixture)
+    : IClassFixture<BlazorWebassemblyFixture<Program>>
 {
-    public BlazorWebassemblyFixture<Program> Fixture { get; }
-
-    public GenerateSiteswapsTests(BlazorWebassemblyFixture<Program> fixture)
-    {
-        Fixture = fixture;
-    }
+    public BlazorWebassemblyFixture<Program> Fixture { get; } = fixture;
 
     [Fact]
     public async Task Generate_Siteswaps_In_Default_Conditions()

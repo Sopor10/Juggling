@@ -2,14 +2,9 @@
 
 namespace Siteswaps.Generator.Generator.Filter;
 
-internal class RightAmountOfBallsFilter : ISiteswapFilter
+internal class RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput) : ISiteswapFilter
 {
-    private readonly int _generatorInputNumberOfObjects;
-
-    public RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput)
-    {
-        _generatorInputNumberOfObjects = (int)generatorInput.NumberOfObjects;
-    }
+    private readonly int _generatorInputNumberOfObjects = (int)generatorInput.NumberOfObjects;
 
     public bool CanFulfill(PartialSiteswap value)
     {

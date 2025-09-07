@@ -2,15 +2,10 @@
 
 namespace Shared;
 
-public class CyclicArrayEnumerator<T> : IEnumerator<T>
+public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 {
-    public CyclicArray<T> Array { get; }
+    public CyclicArray<T> Array { get; } = array;
     private int _position = -1;
-
-    public CyclicArrayEnumerator(CyclicArray<T> array)
-    {
-        Array = array;
-    }
 
     public bool MoveNext()
     {

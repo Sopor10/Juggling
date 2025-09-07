@@ -416,4 +416,22 @@ public class SiteswapList(ImmutableHashSet<Siteswap> items)
 
         return new Graph<Siteswap, Transition>(nodes, edges);
     }
+
+    public static SiteswapList FromString(string siteswapsString)
+    {
+        return new SiteswapList(
+            siteswapsString
+                .Split(",")
+                .Select(x =>
+                {
+                    if (Siteswap.TryCreate(x, out var s) is false)
+                    {
+                        throw new ArgumentException($"Invalid siteswap: {x}");
+                    }
+
+                    return s;
+                })
+                .ToArray()
+        );
+    }
 }

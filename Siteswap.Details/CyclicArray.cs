@@ -53,6 +53,10 @@ public static class CyclicArrayExtensions
 {
     public static CyclicArray<T> ToCyclicArray<T>(this IEnumerable<T> source)
     {
+        if (source is CyclicArray<T> cyclic)
+        {
+            return cyclic;
+        }
         return new CyclicArray<T>(source);
     }
 }
