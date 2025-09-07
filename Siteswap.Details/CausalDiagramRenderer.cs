@@ -39,7 +39,7 @@ public class CausalDiagramRenderer
 
     public void Render(SKCanvas canvas, CausalDiagram.CausalDiagram diagram)
     {
-        var persons = diagram.Nodes.GroupBy(x => x.Hand.Person).ToList();
+        var persons = diagram.Throws.GroupBy(x => x.Hand.Person).ToList();
         DrawNodes(canvas, diagram, persons);
         DrawHandNames(canvas, diagram, persons);
         DrawPersonNames(canvas, persons);
@@ -49,7 +49,7 @@ public class CausalDiagramRenderer
     private void DrawTransitions(
         SKCanvas canvas,
         CausalDiagram.CausalDiagram diagram,
-        List<IGrouping<Person, Node>> persons
+        List<IGrouping<Person, CausalDiagram.Throw>> persons
     )
     {
         var positions = CalculateNodePositions(diagram, persons);
@@ -61,7 +61,10 @@ public class CausalDiagramRenderer
         }
     }
 
-    private void DrawPersonNames(SKCanvas canvas, IEnumerable<IGrouping<Person, Node>> persons)
+    private void DrawPersonNames(
+        SKCanvas canvas,
+        IEnumerable<IGrouping<Person, CausalDiagram.Throw>> persons
+    )
     {
         var height = 100;
         foreach (var person in persons)
@@ -80,7 +83,7 @@ public class CausalDiagramRenderer
     private void DrawNodes(
         SKCanvas canvas,
         CausalDiagram.CausalDiagram diagram,
-        IEnumerable<IGrouping<Person, Node>> persons
+        IEnumerable<IGrouping<Person, CausalDiagram.Throw>> persons
     )
     {
         var points = CalculateNodePositions(diagram, persons);
@@ -98,12 +101,12 @@ public class CausalDiagramRenderer
         }
     }
 
-    private Dictionary<Node, SKPoint> CalculateNodePositions(
+    private Dictionary<CausalDiagram.Throw, SKPoint> CalculateNodePositions(
         CausalDiagram.CausalDiagram diagram,
-        IEnumerable<IGrouping<Person, Node>> persons
+        IEnumerable<IGrouping<Person, CausalDiagram.Throw>> persons
     )
     {
-        var points = new Dictionary<Node, SKPoint>();
+        var points = new Dictionary<CausalDiagram.Throw, SKPoint>();
 
         var height = 100;
         foreach (var person in persons)
@@ -123,10 +126,10 @@ public class CausalDiagramRenderer
     private void DrawHandNames(
         SKCanvas canvas,
         CausalDiagram.CausalDiagram diagram,
-        IEnumerable<IGrouping<Person, Node>> persons
+        IEnumerable<IGrouping<Person, CausalDiagram.Throw>> persons
     )
     {
-        var points = new List<(Node, SKPoint)>();
+        var points = new List<(CausalDiagram.Throw, SKPoint)>();
         var height = 100;
         foreach (var person in persons)
         {
@@ -146,11 +149,11 @@ public class CausalDiagramRenderer
     }
 
     private static SKPoint ToSkPoint(
-        Node node,
+        CausalDiagram.Throw @throw,
         CausalDiagram.CausalDiagram causalDiagram,
         int height
     )
     {
-        return new SKPoint((float)(node.Time / causalDiagram.MaxTime * 300 + 100), height);
+        return new SKPoint((float)(@throw.Time / causalDiagram.MaxTime * 300 + 100), height);
     }
 }

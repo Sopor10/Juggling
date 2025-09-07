@@ -21,7 +21,7 @@ public class CausalDiagramGeneratorTest
             hands.ToCyclicArray()
         );
 
-        result.Nodes.Should().HaveCount(6);
+        result.Throws.Should().HaveCount(6);
     }
 
     [Test]
@@ -40,7 +40,7 @@ public class CausalDiagramGeneratorTest
             hands.ToCyclicArray()
         );
 
-        result.Nodes.Should().HaveCount(12);
+        result.Throws.Should().HaveCount(12);
 
         result.Transitions.Should().HaveCount(11);
     }
