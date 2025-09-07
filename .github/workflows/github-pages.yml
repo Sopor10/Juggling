@@ -12,28 +12,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code
-      - uses: actions/checkout@v5
+      - uses: ./.github/workflows/steps.yml
 
-      # Install .NET SDK
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 9.0.x
-      - name: Restore tools
-        run: dotnet tool restore
-      - name: Csharpier
-        run: dotnet csharpier check .
-      - name: Install workload
-        run: dotnet workload install wasm-tools
-      - name: Test
-        run: dotnet test
-        
-      # Publish the site
       - name: Publish
         run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone
 
-      # Deploy the site
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:

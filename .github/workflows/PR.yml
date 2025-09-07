@@ -12,20 +12,4 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code
-      - uses: actions/checkout@v5
-
-      # Install .NET SDK
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 9.0.x
-      - name: Restore tools
-        run: dotnet tool restore
-      - name: Csharpier
-        run: dotnet csharpier check .
-      - name: Install workload
-        run: dotnet workload install wasm-tools
-      - name: Test
-        run: dotnet test
-      
+      - uses: ./.github/workflows/steps.yml
