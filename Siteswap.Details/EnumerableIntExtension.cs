@@ -41,12 +41,3 @@ public static class EnumerableIntExtension
         return arr1.Count() < arr2.Count() ? -1 : 1;
     }
 }
-
-
-
-
-
-
-
-
-
