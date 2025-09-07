@@ -6,7 +6,8 @@ internal abstract class NumberFilter(IEnumerable<int> number, int amount) : ISit
     {
         if (value.RotationIndex != 0)
         {
-            return true;
+            // we check every rotatition and succeed if one matches
+            return false;
         }
 
         return CanFulfillNumberFilter(value);

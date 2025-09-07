@@ -1,7 +1,9 @@
-﻿using Shared;
+﻿using System.Diagnostics;
+using Shared;
 
 namespace Siteswaps.Generator.Generator;
 
+[DebuggerDisplay("{ToString()}}")]
 public record Siteswap
 {
     public int[] Items { get; }

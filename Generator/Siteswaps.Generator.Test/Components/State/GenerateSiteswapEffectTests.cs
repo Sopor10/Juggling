@@ -42,6 +42,27 @@ public class GenerateSiteswapEffectTests
             .Should()
             .Be("7566");
     }
+
+    [Test]
+    public async Task Default_Generator_State()
+    {
+        var generatorState = new GeneratorState();
+        var action = new GenerateButton.GenerateSiteswapsAction(
+            generatorState,
+            new CancellationTokenSource()
+        );
+
+        var sut = new GenerateSiteswapEffect(Mock.Of<INavigation>());
+
+        var dispatcherMock = new DispatcherMock();
+        await sut.HandleAsync(action, dispatcherMock);
+
+        var siteswaps = dispatcherMock
+            .Actions.OfType<SiteswapGeneratedAction>()
+            .SelectMany(x => x.Siteswaps)
+            .ToList();
+        siteswaps.Should().NotContain(x => x.Items.Contains(3));
+    }
 }
 
 public class DispatcherMock : IDispatcher
