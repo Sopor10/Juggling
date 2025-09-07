@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: ./.github/workflows/steps.yml
+      - uses: ./.github/workflows/steps
 
       - name: Publish
         run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone
