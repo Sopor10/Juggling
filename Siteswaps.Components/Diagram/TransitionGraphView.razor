@@ -58,7 +58,7 @@
     {
         foreach (var edge in fromGraph.Edges)
         {
-            AddEdge(edges, edge.N1.ToString(), edge.N2.ToString(), string.Join("", edge.Data.Throws.Select(x => x.ThrowAsString)).ToString());
+            AddEdge(edges, edge.N1.ToString(), edge.N2.ToString(), string.Join("", edge.Data.Throws.Select(x => x.Value.ToSiteswapString())).ToString());
         }
     }
 

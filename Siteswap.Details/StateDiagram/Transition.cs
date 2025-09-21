@@ -29,6 +29,11 @@ public record Transition(Siteswap From, Siteswap To, Throw[] Throws)
     {
         get
         {
+            if (Throws.Length == 0)
+            {
+                return true;
+            }
+
             var transitionStates = Throws
                 .Select(x => x.StartingState)
                 .Append(Throws.Last().EndingState)

@@ -1,4 +1,5 @@
 ﻿@page "/transition"
+@using Siteswap.Details
 @using VisNetwork.Blazor.Models
 @using Siteswap.Details.StateDiagram
 
@@ -57,7 +58,7 @@
             AddState(nodes, state);
             AddState(nodes, nextState);
 
-            AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.ThrowAsString, true);
+            AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.Value.ToSiteswapString(), true);
             state = nextState;
         }
 

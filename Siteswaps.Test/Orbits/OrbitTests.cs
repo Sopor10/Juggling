@@ -26,7 +26,7 @@ public class OrbitTests
 
         private string Print(Orbit orbit)
         {
-            return string.Join("", orbit.Items);
+            return orbit.Items.ToSiteswapString();
         }
     }
 }

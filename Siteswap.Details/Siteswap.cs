@@ -1,8 +1,5 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Siteswap.Details.StateDiagram;
-using Siteswap.Details.StateDiagram.Graph;
 
 namespace Siteswap.Details;
 
@@ -35,6 +32,8 @@ public record Siteswap(CyclicArray<int> Items)
         IEnumerable<int> items,
         [NotNullWhen(true)] out Siteswap? siteswap
     ) => TryCreate(items.ToCyclicArray(), out siteswap);
+
+    public int Length => Items.Length;
 
     private static bool TryCreate(
         CyclicArray<int> items,
@@ -109,13 +108,10 @@ public record Siteswap(CyclicArray<int> Items)
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return this.ToString().Equals(other.ToString());
+        return ToString().Equals(other.ToString());
     }
 
-    public override int GetHashCode()
-    {
-        return this.ToString().GetHashCode();
-    }
+    public override int GetHashCode() => ToString().GetHashCode();
 
     public int Max() => Items.EnumerateValues(1).Max();
 
@@ -124,113 +120,12 @@ public record Siteswap(CyclicArray<int> Items)
     public static CyclicArray<int> ToUniqueRepresentation(int[] input) =>
         ToUniqueRepresentation(input.ToCyclicArray());
 
-    public List<Orbit> GetOrbits() => GetOrbitsInternal().Where(x => x.HasBalls).ToList();
-
-    private IEnumerable<Orbit> GetOrbitsInternal()
-    {
-        var visited = new bool[Items.Length];
-
-        for (int i = 0; i < Items.Length; i++)
-        {
-            if (visited[i])
-            {
-                continue;
-            }
-
-            var orbitIndices = new List<int>();
-            var current = i;
-
-            // Sammle alle Indizes im aktuellen Orbit
-            do
-            {
-                visited[current] = true;
-                orbitIndices.Add(current);
-                current = (current + Items[current]) % Items.Length;
-            } while (current != i);
-
-            // Erstelle eine Orbit-Liste mit 0 als Standardwert
-            var orbitValues = new int[Items.Length];
-            for (int j = 0; j < orbitValues.Length; j++)
-            {
-                orbitValues[j] = 0;
-            }
-
-            // Setze die Werte an den Orbit-Positionen
-            foreach (var index in orbitIndices)
-            {
-                orbitValues[index] = Items[index];
-            }
-
-            yield return new Orbit(orbitValues.ToList());
-        }
-    }
+    public List<Orbit> GetOrbits() => Orbit.CreateFrom(this).Where(x => x.HasBalls).ToList();
 
     public List<Transition> PossibleTransitions(Siteswap to, int length, int? height = null) =>
-        CreateTransitions(to, length, height);
+        TransitionCalculator.CreateTransitions(this, to, length, height);
 
     public State State => StateGenerator.CalculateState(Items.EnumerateValues(1).ToArray());
-
-    private List<Transition> CreateTransitions(Siteswap to, int length, int? maxHeight = null)
-    {
-        maxHeight ??= new[]
-        {
-            Items.EnumerateValues(1).Max(),
-            to.Items.EnumerateValues(1).Max(),
-        }.Max();
-        var result = new List<ImmutableList<Throw>>();
-
-        var fromState = State;
-        var toState = to.State;
-
-        if (fromState == toState)
-        {
-            return [new Transition(this, to, [])];
-        }
-
-        result.AddRange(
-            Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
-        );
-
-        return result
-            .Select(x => new Transition(this, to, x.ToArray()))
-            .Where(x => x.IsValid)
-            .ToList();
-    }
-
-    private static IEnumerable<ImmutableList<Throw>> Recurse(
-        State fromState,
-        State toState,
-        ImmutableList<Throw> transitionSoFar,
-        int length,
-        int maxHeight
-    )
-    {
-        foreach (var transition in fromState.Transitions(maxHeight))
-        {
-            if (toState == transition.N2)
-            {
-                yield return transitionSoFar.Add(
-                    new Throw(transition.N1, transition.N2, transition.Data)
-                );
-            }
-
-            if (length == 1)
-                continue;
-
-            foreach (
-                var immutableList in Recurse(
-                    transition.N2,
-                    toState,
-                    transitionSoFar.Add(new Throw(transition.N1, transition.N2, transition.Data)),
-                    length - 1,
-                    maxHeight
-                )
-            )
-            {
-                yield return immutableList;
-            }
-        }
-    }
 
     public Dictionary<State, List<Siteswap>> AllStates()
     {
@@ -250,15 +145,10 @@ public record Siteswap(CyclicArray<int> Items)
         return dictionary;
     }
 
-    private Siteswap Rotate(int i)
-    {
-        return new Siteswap(Items.Rotate(i));
-    }
+    private Siteswap Rotate(int i) => new(Items.Rotate(i));
 
-    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
-    {
-        return new LocalSiteswap(this, juggler, numberOfJugglers);
-    }
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers) =>
+        new(this, juggler, numberOfJugglers);
 
     public Period Period => new(Items.Length);
 
@@ -267,171 +157,43 @@ public record Siteswap(CyclicArray<int> Items)
         var nSiteswap = new Siteswap(Items.Rotate(1));
         return (nSiteswap, new Throw(State, nSiteswap.State, Items[0]));
     }
-}
 
-public record Period(int Value)
-{
-    public LocalPeriod GetLocalPeriod(int numberOfJugglers) =>
-        Value % numberOfJugglers == 0 ? new(Value / numberOfJugglers) : new(Value);
-}
-
-public record LocalPeriod(int Value);
-
-public class Orbit(List<int> items)
-{
-    public List<int> Items => items;
-    public string DisplayValue => string.Join("", Items.Select(Transform));
-    public bool HasBalls => new Siteswap(Items.ToArray()).NumberOfObjects() > 0;
-
-    private static string Transform(int i)
+    public IEnumerable<Siteswap> GetHighJacks()
     {
-        return i switch
+        var numberOfJugglers = 2;
+        if (Period.GetLocalPeriod(numberOfJugglers).Value % 2 == 0)
         {
-            < 10 => $"{i}",
-            _ => Convert.ToChar(i + 87).ToString(),
-        };
-    }
-}
-
-[DebuggerDisplay("{PrettyPrint()}")]
-public record Throw(State StartingState, State EndingState, int Value)
-{
-    public string PrettyPrint()
-    {
-        return $"{StartingState} -{Transform(Value)}> {EndingState} : {EndingStateCalc}";
-    }
-
-    private State EndingStateCalc => StartingState.Advance().Throw(Value);
-    public string ThrowAsString => Transform(Value);
-
-    private static string Transform(int i)
-    {
-        return i switch
-        {
-            < 10 => $"{i}",
-            _ => Convert.ToChar(i + 87).ToString(),
-        };
-    }
-}
-
-public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
-{
-    public string GlobalNotation => ToString();
-    public string LocalNotation =>
-        string.Join(
-            " ",
-            GetLocalSiteswapReal()
-                .Select(x => x * 1.0 / NumberOfJugglers)
-                .Select(x => x.ToString("0.##"))
-        );
-
-    private List<int> GetLocalSiteswapReal()
-    {
-        var result = new List<int>();
-
-        var siteswap = Siteswap.Items.ToCyclicArray();
-        for (var i = 0; i < Siteswap.Period.GetLocalPeriod(NumberOfJugglers).Value; i++)
-        {
-            result.Add(siteswap[Juggler + i * NumberOfJugglers]);
+            yield break;
         }
 
-        return result;
-    }
+        var highJackPassingValue = this.Period.GetLocalPeriod(numberOfJugglers).Value + 2;
 
-    public override string ToString()
-    {
-        return ToString(GetLocalSiteswapReal());
-    }
+        var highJackablePassPositions = Items
+            .Enumerate(1)
+            .Where((_, value) => value == highJackPassingValue)
+            .Select((i, _) => i)
+            .ToList();
 
-    private string ToString(IEnumerable<int> items)
-    {
-        return string.Join("", items.Select(Transform));
-    }
-
-    private string Transform(int i)
-    {
-        return i switch
+        foreach (var highJackablePassPosition in highJackablePassPositions)
         {
-            < 10 => $"{i}",
-            _ => Convert.ToChar(i + 87).ToString(),
-        };
-    }
-
-    public double Average()
-    {
-        return GetLocalSiteswapReal().Average() * 1.0 / NumberOfJugglers;
-    }
-
-    public bool IsValidAsGlobalSiteswap()
-    {
-        var items = GetLocalSiteswapReal();
-
-        return items.Select((x, i) => (x + i) % items.Count).ToHashSet().Count == items.Count;
-    }
-}
-
-public class SiteswapList(ImmutableHashSet<Siteswap> items)
-{
-    public SiteswapList(params Siteswap[] s)
-        : this(s.ToImmutableHashSet()) { }
-
-    public Graph<Siteswap, Transition> TransitionGraph(int length)
-    {
-        HashSet<Siteswap> nodes = [];
-        HashSet<Edge<Siteswap, Transition>> edges = [];
-
-        for (int i = 1; i <= length; i++)
-        {
-            Console.WriteLine($"[INFO] Starte Iteration mit Länge i={i}");
-
-            foreach (var from in items)
+            foreach (var i in Enumerable.Range(0, Period.GetLocalPeriod(numberOfJugglers).Value))
             {
-                Console.WriteLine($"[INFO] Betrachte Startknoten: {from}");
-
-                foreach (var to in items.Except([from]))
-                {
-                    Console.WriteLine($"[INFO]   Betrachte Zielknoten-Kandidat: {to}");
-
-                    Console.WriteLine($"[ACTION]   Füge Knoten hinzu: from = {from}");
-                    nodes.Add(from);
-
-                    Console.WriteLine($"[ACTION]   Füge Knoten hinzu: to = {to}");
-                    nodes.Add(to);
-
-                    Console.WriteLine(
-                        $"[INFO]   Ermittle mögliche Transitionen von {from} nach {to} für Länge {i}"
-                    );
-                    foreach (var possibleTransition in from.PossibleTransitions(to, i))
-                    {
-                        Console.WriteLine(
-                            $"[ACTION]     Füge Kante hinzu: {possibleTransition.PrettyPrint()}"
-                        );
-                        edges.Add(new Edge<Siteswap, Transition>(from, to, possibleTransition));
-                    }
-                }
+                yield return this.Swap(
+                    highJackablePassPosition.position,
+                    highJackablePassPosition.position + i * numberOfJugglers + 1 // 1 should be 0...numberOfJugglers - 1 instead
+                );
             }
-
-            Console.WriteLine($"[INFO] Beende Iteration mit Länge i={i}");
         }
-
-        return new Graph<Siteswap, Transition>(nodes, edges);
+        yield return new Siteswap(5, 8, 8, 8, 2, 5);
     }
 
-    public static SiteswapList FromString(string siteswapsString)
+    public Siteswap Swap(int x, int y)
     {
-        return new SiteswapList(
-            siteswapsString
-                .Split(",")
-                .Select(x =>
-                {
-                    if (Siteswap.TryCreate(x, out var s) is false)
-                    {
-                        throw new ArgumentException($"Invalid siteswap: {x}");
-                    }
+        x = x % Period.Value;
+        y = y % Period.Value;
 
-                    return s;
-                })
-                .ToArray()
-        );
+        var items = Items.EnumerateValues(1).ToArray();
+        (items[x], items[y]) = (items[y] + y - x, items[x] - (y - x));
+        return new Siteswap(items);
     }
 }
