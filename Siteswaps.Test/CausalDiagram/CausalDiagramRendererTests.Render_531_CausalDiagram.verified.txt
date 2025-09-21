@@ -1,5 +1,5 @@
 ﻿{
-  Nodes: [
+  Throws: [
     {
       Hand: {
         Name: R,

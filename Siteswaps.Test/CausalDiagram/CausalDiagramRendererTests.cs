@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Siteswap.Details;
 using Siteswap.Details.CausalDiagram;
-using SkiaSharp;
 
 namespace Siteswaps.Test.CausalDiagram;
 
