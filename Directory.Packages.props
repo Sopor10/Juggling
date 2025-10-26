@@ -27,7 +27,7 @@
     <PackageVersion Include="morelinq" Version="4.4.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.8.0" />
     <PackageVersion Include="Radzen.Blazor" Version="8.1.5" />
-    <PackageVersion Include="Bogus" Version="35.6.4" />
+    <PackageVersion Include="Bogus" Version="35.6.5" />
     <PackageVersion Include="FluentAssertions" Version="8.8.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
