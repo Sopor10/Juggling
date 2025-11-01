@@ -14,6 +14,6 @@
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Update="Verify.NUnit" Version="31.3.0" />
+    <PackageVersion Update="Verify.NUnit" Version="31.4.0" />
   </ItemGroup>
 </Project>
