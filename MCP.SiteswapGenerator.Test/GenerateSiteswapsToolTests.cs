@@ -20,6 +20,11 @@ public class GenerateSiteswapsToolTests
             maxHeight: 5,
             maxResults: 10,
             timeoutSeconds: 5,
+            minOccurrence: null,
+            maxOccurrence: null,
+            numberOfPasses: null,
+            numberOfJugglers: null,
+            pattern: null,
             cancellationToken);
 
         // Assert
