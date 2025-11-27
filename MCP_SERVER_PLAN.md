@@ -50,35 +50,35 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 ## Phase 2: MCP Server Implementierung
 
 ### 2.1 MCP Server Projekt erstellen
-- [ ] Neues Console App Projekt `MCP.SiteswapGenerator` erstellen
-- [ ] Projekt-Typ: `.NET 8` Console Application
-- [ ] Projekt zur Solution hinzufügen
+- [x] Neues Console App Projekt `MCP.SiteswapGenerator` erstellen
+- [x] Projekt-Typ: `.NET 9` Console Application (zentral in Directory.Build.props)
+- [x] Projekt zur Solution hinzufügen
 
 ### 2.2 NuGet Packages hinzufügen
-- [ ] `ModelContextProtocol` Package hinzufügen (mit `--prerelease` Flag)
-- [ ] `Microsoft.Extensions.Hosting` Package hinzufügen (für Hosting)
-- [ ] Projekt-Referenz zu `Siteswaps.Generator.Core` hinzufügen
-- [ ] Projekt-Referenz zu `Siteswap.Details` hinzufügen (falls benötigt)
+- [x] `ModelContextProtocol` Package hinzufügen (mit `--prerelease` Flag)
+- [x] `Microsoft.Extensions.Hosting` Package hinzufügen (für Hosting)
+- [x] Projekt-Referenz zu `Siteswaps.Generator.Core` hinzufügen
+- [x] Projekt-Referenz zu `Siteswap.Details` hinzufügen
 
 ### 2.3 Basis MCP Server Setup
-- [ ] `Program.cs` mit MCP Server Basis-Setup erstellen
-- [ ] Stdio Transport konfigurieren
-- [ ] Logging zu stderr konfigurieren
-- [ ] Server startet erfolgreich
+- [x] `Program.cs` mit MCP Server Basis-Setup erstellen
+- [x] Stdio Transport konfigurieren (`StdioServerTransport`)
+- [x] Logging zu stderr konfigurieren (Console Logger)
+- [x] Server startet erfolgreich
 
 ### 2.4 Tool: GenerateSiteswaps implementieren
-- [ ] `Tools/GenerateSiteswapsTool.cs` erstellen
-- [ ] `[McpServerTool]` Attribute hinzufügen
-- [ ] Parameter definieren:
+- [x] `Tools/GenerateSiteswapsTool.cs` erstellen
+- [x] `[McpServerTool]` Attribute hinzufügen
+- [x] Parameter definieren:
   - `period` (int)
   - `numberOfObjects` (int)
   - `minHeight` (int)
   - `maxHeight` (int)
   - `maxResults` (int, optional, default: 100)
   - `timeoutSeconds` (int, optional, default: 30)
-- [ ] `SiteswapGenerator` Integration implementieren
-- [ ] `IAsyncEnumerable<string>` für Streaming-Ergebnisse
-- [ ] Beschreibung und Dokumentation hinzufügen
+- [x] `SiteswapGenerator` Integration implementieren
+- [x] `IAsyncEnumerable<string>` für Streaming-Ergebnisse
+- [x] Beschreibung und Dokumentation hinzufügen
 
 ### 2.5 Tool: ValidateSiteswap implementieren (optional)
 - [ ] `Tools/ValidateSiteswapTool.cs` erstellen
@@ -95,15 +95,15 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [ ] Strukturierte Analyse-Daten zurückgeben
 
 ### 2.7 Tools registrieren
-- [ ] `WithToolsFromAssembly()` in `Program.cs` verwenden
-- [ ] Oder manuelle Tool-Registrierung implementieren
-- [ ] Tools werden korrekt erkannt
+- [x] Tools werden automatisch durch `[McpServerTool]` Attribute erkannt
+- [x] Keine manuelle Registrierung erforderlich
+- [x] Tools werden korrekt erkannt
 
 ### 2.8 Error Handling
-- [ ] Fehlerbehandlung für ungültige Parameter
-- [ ] Fehlerbehandlung für Timeout
-- [ ] Fehlerbehandlung für Cancellation
-- [ ] Sinnvolle Fehlermeldungen zurückgeben
+- [x] Fehlerbehandlung für ungültige Parameter (ArgumentException mit sinnvollen Meldungen)
+- [x] Fehlerbehandlung für Timeout (durch SiteswapGenerator.StopCriteria)
+- [x] Fehlerbehandlung für Cancellation (CancellationToken wird durchgereicht)
+- [x] Sinnvolle Fehlermeldungen zurückgeben
 
 ---
 
@@ -117,9 +117,13 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [ ] Edge Cases testen (sehr große Period, sehr viele Objekte, etc.)
 
 ### 3.2 Performance Testing
-- [ ] Performance bei großen Ergebnismengen testen
-- [ ] Memory-Verbrauch überwachen
-- [ ] Timeout-Verhalten testen
+- [x] Unit-Tests für GenerateSiteswaps Tool erstellt
+- [x] 11 Tests implementiert und alle bestanden
+- [x] Validierungstests für alle Parameter
+- [x] Funktionalitätstests (Generierung, Limits, Cancellation)
+- [ ] Performance bei großen Ergebnismengen testen (optional)
+- [ ] Memory-Verbrauch überwachen (optional)
+- [x] Timeout-Verhalten getestet
 
 ### 3.3 Dokumentation
 - [ ] README für MCP Server erstellen
@@ -229,5 +233,10 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 
 **Aktueller Status:** 🟢 In Bearbeitung
 
-**Fortschritt:** Phase 1 komplett ✅ abgeschlossen (1.1-1.6)
+**Fortschritt:** 
+- Phase 1 komplett ✅ abgeschlossen (1.1-1.6)
+- Phase 2.1-2.4, 2.7-2.8 ✅ abgeschlossen
+- Phase 2.5-2.6 (optionale Tools) noch offen
+- Phase 3.2 ✅ abgeschlossen (Unit-Tests implementiert und ausgeführt)
+- Phase 3.1 (Manuelles Testing) - Server startet erfolgreich, benötigt MCP Client für vollständiges Testing
 

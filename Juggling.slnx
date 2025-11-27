@@ -4,6 +4,7 @@
     <Project Path="Generator/Siteswaps.Generator.Test/Siteswaps.Generator.Test.csproj" />
     <Project Path="Generator/Siteswaps.Generator/Siteswaps.Generator.csproj" />
   </Folder>
+  <Project Path="MCP.SiteswapGenerator.Test/MCP.SiteswapGenerator.Test.csproj" />
   <Project Path="MCP.SiteswapGenerator/MCP.SiteswapGenerator.csproj" />
   <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
   <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />
