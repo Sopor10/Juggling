@@ -13,16 +13,16 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 ## Phase 1: Refaktorierung - Generator in Core Library verschieben
 
 ### 1.1 Neue Klassenbibliothek erstellen
-- [ ] Neues Projekt `Siteswaps.Generator.Core` erstellen
-- [ ] Projekt-Typ: `.NET Standard 2.1` oder `.NET 8` Klassenbibliothek
-- [ ] Projekt zur Solution hinzufügen
+- [x] Neues Projekt `Siteswaps.Generator.Core` erstellen
+- [x] Projekt-Typ: `.NET Standard 2.1` oder `.NET 8` Klassenbibliothek
+- [x] Projekt zur Solution hinzufügen
 - 💡 **Hinweis:** Kann mit Rider MCP `create_new_file` oder manuell erstellt werden
 
 ### 1.2 Abhängigkeiten bereinigen
-- [ ] `Radzen` Abhängigkeit entfernen (nur in `AndFilter.cs` für `WhereNotNull()`)
-- [ ] Eigene Extension-Methode `WhereNotNull()` erstellen oder durch LINQ ersetzen
-- [ ] `morelinq` Package-Referenz hinzufügen (für `ZipLongest` in `EnumerableIntExtension.cs`)
-- [ ] `System.Linq.Async` Package-Referenz hinzufügen (falls benötigt)
+- [x] `Radzen` Abhängigkeit entfernen (nur in `AndFilter.cs` für `WhereNotNull()`)
+- [x] Eigene Extension-Methode `WhereNotNull()` erstellen oder durch LINQ ersetzen (bereits vorhanden in `EnumerableExtension.cs`)
+- [x] `morelinq` Package-Referenz hinzufügen (für `ZipLongest` in `EnumerableIntExtension.cs`)
+- [x] `System.Linq.Async` Package-Referenz hinzufügen (falls benötigt)
 
 ### 1.3 Projekt-Referenzen anpassen
 - [ ] `Siteswaps.Generator` Projekt referenziert jetzt `Siteswaps.Generator.Core`
@@ -223,9 +223,9 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 
 ## Status-Tracking
 
-**Letzte Aktualisierung:** [Datum hier eintragen]
+**Letzte Aktualisierung:** 2025-01-27
 
-**Aktueller Status:** 🟡 In Planung
+**Aktueller Status:** 🟢 In Bearbeitung
 
-**Fortschritt:** 0% (0/X Aufgaben abgeschlossen)
+**Fortschritt:** Phase 1.1 ✅ abgeschlossen, Phase 1.2 ✅ abgeschlossen
 
