@@ -26,6 +26,13 @@ public class GenerateSiteswapsToolTests
                 numberOfPasses: null,
                 numberOfJugglers: null,
                 pattern: null,
+                state: null,
+                flexiblePattern: null,
+                useDefaultFilter: true,
+                useNoFilter: false,
+                jugglerIndex: null,
+                rotationAwarePattern: null,
+                personalizedNumberFilter: null,
                 cancellationToken);
 
         // Assert

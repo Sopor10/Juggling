@@ -24,6 +24,13 @@ public class GenerateSiteswapsTool
         [Description("Exact number of passes (requires numberOfJugglers)")] int? numberOfPasses = null,
         [Description("Number of jugglers (required for numberOfPasses/pattern)")] int? numberOfJugglers = null,
         [Description("Pattern to match (comma-separated numbers, e.g., '3,3,1')")] string? pattern = null,
+        [Description("State filter (comma-separated 0/1 values, e.g., '1,1,0,0' for state with first two slots occupied)")] string? state = null,
+        [Description("Flexible pattern (semicolon-separated groups, e.g., '3,4;5,6' for two groups)")] string? flexiblePattern = null,
+        [Description("Use default filter (right amount of balls)")] bool useDefaultFilter = true,
+        [Description("Use no filter (accepts all siteswaps)")] bool useNoFilter = false,
+        [Description("Locally valid filter for specific juggler (requires numberOfJugglers and jugglerIndex)")] int? jugglerIndex = null,
+        [Description("Rotation-aware flexible pattern for specific juggler (semicolon-separated groups, requires numberOfJugglers and jugglerIndex)")] string? rotationAwarePattern = null,
+        [Description("Personalized number filter for specific juggler. Format: 'number:amount:type:from' where type is 'exact', 'atleast', or 'atmost' (requires numberOfJugglers)")] string? personalizedNumberFilter = null,
         CancellationToken cancellationToken = default)
     {
         // SiteswapGeneratorInput erstellen
@@ -118,6 +125,113 @@ public class GenerateSiteswapsTool
             {
                 filterBuilder = filterBuilder.Pattern(patternNumbers, numberOfJugglers.Value);
             }
+        }
+        
+        // State Filter
+        if (!string.IsNullOrWhiteSpace(state))
+        {
+            var stateValues = state.Split(',')
+                .Select(s => s.Trim())
+                .Select(s => s == "1" || s.ToLower() == "true")
+                .ToList();
+            
+            if (stateValues.Any())
+            {
+                var stateObj = new State(stateValues);
+                filterBuilder = filterBuilder.WithState(stateObj);
+            }
+        }
+        
+        // Flexible Pattern Filter
+        if (!string.IsNullOrWhiteSpace(flexiblePattern) && numberOfJugglers.HasValue)
+        {
+            var groups = flexiblePattern.Split(';')
+                .Select(group => group.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => int.TryParse(s, out _))
+                    .Select(int.Parse)
+                    .ToList())
+                .Where(g => g.Any())
+                .ToList();
+            
+            if (groups.Any())
+            {
+                filterBuilder = filterBuilder.FlexiblePattern(groups, numberOfJugglers.Value, isGlobalPattern: true);
+            }
+        }
+        
+        // NoFilter (akzeptiert alles)
+        if (useNoFilter)
+        {
+            filterBuilder = filterBuilder.No();
+        }
+        
+        // LocallyValidFilter (für spezifischen Jongleur)
+        if (jugglerIndex.HasValue && numberOfJugglers.HasValue)
+        {
+            var locallyValidFilter = new LocallyValidFilter(numberOfJugglers.Value, jugglerIndex.Value);
+            filterBuilder = filterBuilder.And([locallyValidFilter]);
+        }
+        
+        // RotationAwareFlexiblePatternFilter (für spezifischen Jongleur)
+        if (!string.IsNullOrWhiteSpace(rotationAwarePattern) && numberOfJugglers.HasValue && jugglerIndex.HasValue)
+        {
+            var groups = rotationAwarePattern.Split(';')
+                .Select(group => group.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => int.TryParse(s, out _))
+                    .Select(int.Parse)
+                    .ToList())
+                .Where(g => g.Any())
+                .ToList();
+            
+            if (groups.Any())
+            {
+                var rotationAwareFilter = new RotationAwareFlexiblePatternFilter(
+                    groups,
+                    numberOfJugglers.Value,
+                    input,
+                    jugglerIndex.Value
+                );
+                filterBuilder = filterBuilder.And([rotationAwareFilter]);
+            }
+        }
+        
+        // PersonalizedNumberFilter (für spezifischen Jongleur)
+        if (!string.IsNullOrWhiteSpace(personalizedNumberFilter) && numberOfJugglers.HasValue)
+        {
+            var parts = personalizedNumberFilter.Split(':');
+            if (parts.Length == 4)
+            {
+                var numberParts = parts[0].Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => int.TryParse(s, out _))
+                    .Select(int.Parse)
+                    .ToList();
+                
+                if (numberParts.Any() && 
+                    int.TryParse(parts[1], out var amount) &&
+                    Enum.TryParse<PersonalizedNumberFilter.Type>(parts[2], true, out var type) &&
+                    int.TryParse(parts[3], out var from))
+                {
+                    var personalizedFilter = new PersonalizedNumberFilter(
+                        numberOfJugglers.Value,
+                        minHeight,
+                        maxHeight,
+                        numberParts,
+                        amount,
+                        type,
+                        from
+                    );
+                    filterBuilder = filterBuilder.And([personalizedFilter]);
+                }
+            }
+        }
+        
+        // Default Filter (RightAmountOfBallsFilter)
+        if (useDefaultFilter)
+        {
+            filterBuilder = filterBuilder.WithDefault();
         }
         
         var filter = filterBuilder.Build();
