@@ -25,9 +25,9 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [x] `System.Linq.Async` Package-Referenz hinzufügen (falls benötigt)
 
 ### 1.3 Projekt-Referenzen anpassen
-- [ ] `Siteswaps.Generator` Projekt referenziert jetzt `Siteswaps.Generator.Core`
-- [ ] `Siteswap.Details` Projekt referenziert ggf. `Siteswaps.Generator.Core` (falls nötig)
-- [ ] Alle Tests aktualisieren und Referenzen anpassen
+- [x] `Siteswaps.Generator` Projekt referenziert jetzt `Siteswaps.Generator.Core`
+- [x] `Siteswap.Details` Projekt referenziert ggf. `Siteswaps.Generator.Core` (falls nötig) - nicht nötig
+- [x] Alle Tests aktualisieren und Referenzen anpassen
 
 ### 1.4 Generator-Dateien verschieben
 - [ ] Kompletten `Generator/` Ordner inkl. aller Unterordner (`Filter/`, etc.) nach `Siteswaps.Generator.Core/Generator/` verschieben
@@ -227,5 +227,5 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 
 **Aktueller Status:** 🟢 In Bearbeitung
 
-**Fortschritt:** Phase 1.1 ✅ abgeschlossen, Phase 1.2 ✅ abgeschlossen
+**Fortschritt:** Phase 1.1 ✅ abgeschlossen, Phase 1.2 ✅ abgeschlossen, Phase 1.3 ✅ abgeschlossen
 
