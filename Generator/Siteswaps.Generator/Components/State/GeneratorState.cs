@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Siteswaps.Generator.Components.State.FilterTrees;
-using Siteswaps.Generator.Generator;
+using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Components.State;
 

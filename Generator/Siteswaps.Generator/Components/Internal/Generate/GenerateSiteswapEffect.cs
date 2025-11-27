@@ -2,10 +2,10 @@
 using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.State.FilterTrees;
-using Siteswaps.Generator.Generator;
-using Siteswaps.Generator.Generator.Filter;
-using Siteswaps.Generator.Generator.Filter.Combinatorics;
-using Siteswaps.Generator.Generator.Filter.NumberFilter;
+using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
+using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
+using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Components.Internal.Generate;
 
@@ -212,7 +212,7 @@ internal class FilterBuilderVisitor(
                 _ => throw new ArgumentOutOfRangeException(),
             },
             EasyStateFilter.StateFilter stateFilter => builder
-                .WithState(new Generator.Filter.State(stateFilter.Items))
+                .WithState(new Siteswaps.Generator.Core.Generator.Filter.State(stateFilter.Items))
                 .Build(),
             _ => throw new ArgumentOutOfRangeException(),
         };

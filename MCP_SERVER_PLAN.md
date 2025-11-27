@@ -30,18 +30,20 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [x] Alle Tests aktualisieren und Referenzen anpassen
 
 ### 1.4 Generator-Dateien verschieben
-- [ ] Kompletten `Generator/` Ordner inkl. aller Unterordner (`Filter/`, etc.) nach `Siteswaps.Generator.Core/Generator/` verschieben
+- [x] Kompletten `Generator/` Ordner inkl. aller Unterordner (`Filter/`, etc.) nach `Siteswaps.Generator.Core/Generator/` verschieben
 - 💡 **Hinweis:** Dateien können manuell verschoben werden oder mit Rider's "Move File" Refactoring (hält Referenzen aktuell)
 
 ### 1.5 Namespaces anpassen
-- [ ] Namespace von `Siteswaps.Generator.Generator` zu `Siteswaps.Generator.Core.Generator` ändern
-- [ ] Alle using-Statements in abhängigen Projekten aktualisieren
+- [x] Namespace von `Siteswaps.Generator.Generator` zu `Siteswaps.Generator.Core.Generator` ändern
+- [x] Alle using-Statements in abhängigen Projekten aktualisieren
+- [x] Sichtbarkeit von Klassen anpassen (`internal` → `public` für benötigte Klassen)
+- [x] Architektur-Test angepasst
 - 💡 **Hinweis:** Kann mit Rider MCP `rename_refactoring` für Namespace-Refactoring verwendet werden, oder manuell mit "Rename" Refactoring in Rider (aktualisiert automatisch alle Referenzen)
 
 ### 1.6 Tests durchführen
-- [ ] Alle bestehenden Tests ausführen
-- [ ] Sicherstellen, dass keine Regressionen eingeführt wurden
-- [ ] Build erfolgreich
+- [x] Alle bestehenden Tests ausführen
+- [x] Sicherstellen, dass keine Regressionen eingeführt wurden
+- [x] Build erfolgreich
 
 ---
 
@@ -227,5 +229,5 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 
 **Aktueller Status:** 🟢 In Bearbeitung
 
-**Fortschritt:** Phase 1.1 ✅ abgeschlossen, Phase 1.2 ✅ abgeschlossen, Phase 1.3 ✅ abgeschlossen
+**Fortschritt:** Phase 1 komplett ✅ abgeschlossen (1.1-1.6)
 
