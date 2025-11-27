@@ -1,40 +1,23 @@
-﻿using Microsoft.Extensions.Logging;
-using ModelContextProtocol.Protocol;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
+using MCP.SiteswapGenerator.Tools;
 
-namespace MCP.SiteswapGenerator;
+// MCP Server mit Dependency Injection erstellen
+var builder = Host.CreateApplicationBuilder(args);
 
-public class Program
+// Logging auf stderr umleiten (stdout wird für JSON-RPC benötigt)
+builder.Logging.AddConsole(options =>
 {
-    public static async Task Main(string[] args)
-    {
-        // Logging zu stderr konfigurieren
-        using var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder
-                .AddConsole()
-                .SetMinimumLevel(LogLevel.Information);
-        });
+    options.LogToStandardErrorThreshold = LogLevel.Trace;
+});
 
-        var logger = loggerFactory.CreateLogger<Program>();
-        logger.LogInformation("Starting MCP Siteswap Generator Server...");
+// MCP Server konfigurieren
+builder.Services
+    .AddMcpServer()
+    .WithStdioServerTransport()
+    .WithTools<GenerateSiteswapsTool>(); // Tool explizit registrieren
 
-        try
-        {
-            // MCP Server mit Stdio Transport erstellen
-            var options = new McpServerOptions();
-            ITransport transport = new StdioServerTransport(options, loggerFactory);
-            
-            // Tools werden automatisch durch [McpServerTool] Attribute erkannt
-            var server = McpServer.Create(transport, options);
-
-            logger.LogInformation("MCP Server started successfully");
-            await server.RunAsync();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error running MCP server");
-            Environment.Exit(1);
-        }
-    }
-}
+var host = builder.Build();
+await host.RunAsync();
