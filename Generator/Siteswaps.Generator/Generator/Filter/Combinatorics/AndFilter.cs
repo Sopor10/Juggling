@@ -1,7 +1,4 @@
-﻿using Radzen;
-using Siteswaps.Generator.Generator.Filter.NumberFilter;
-
-namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
+﻿namespace Siteswaps.Generator.Generator.Filter.Combinatorics;
 
 internal class AndFilter : ISiteswapFilter
 {
