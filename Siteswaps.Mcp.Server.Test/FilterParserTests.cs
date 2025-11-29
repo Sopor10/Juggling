@@ -2,7 +2,7 @@ using FluentAssertions;
 using MCP.SiteswapGenerator.Tools;
 using Siteswaps.Generator.Core.Generator;
 
-namespace MCP.SiteswapGenerator.Test;
+namespace Siteswaps.Mcp.Server.Test;
 
 public class FilterParserTests
 {

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
-    <ProjectReference Include="..\MCP.SiteswapGenerator\MCP.SiteswapGenerator.csproj" />
+    <ProjectReference Include="..\Siteswaps.Mcp.Server\Siteswaps.Mcp.Server.csproj" />
   </ItemGroup>
 
 </Project>

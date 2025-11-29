@@ -1,7 +1,7 @@
 using FluentAssertions;
 using MCP.SiteswapGenerator.Tools;
 
-namespace MCP.SiteswapGenerator.Test;
+namespace Siteswaps.Mcp.Server.Test;
 
 public class ValidateSiteswapToolTests
 {
