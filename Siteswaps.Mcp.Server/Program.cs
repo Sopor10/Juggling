@@ -1,4 +1,4 @@
-﻿using MCP.SiteswapGenerator.Tools;
+﻿using Siteswaps.Mcp.Server.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
 

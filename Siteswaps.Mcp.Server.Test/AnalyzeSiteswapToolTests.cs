@@ -1,5 +1,5 @@
 using FluentAssertions;
-using MCP.SiteswapGenerator.Tools;
+using Siteswaps.Mcp.Server.Tools;
 
 namespace Siteswaps.Mcp.Server.Test;
 

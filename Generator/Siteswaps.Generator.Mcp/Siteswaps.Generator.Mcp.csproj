@@ -3,7 +3,6 @@
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>MCP.SiteswapGenerator</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

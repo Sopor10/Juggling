@@ -2,7 +2,7 @@ using System.ComponentModel;
 using ModelContextProtocol.Server;
 using Siteswaps.Generator.Core.Generator;
 
-namespace MCP.SiteswapGenerator.Tools;
+namespace Siteswaps.Mcp.Server.Tools;
 
 public class GenerateSiteswapsTool
 {

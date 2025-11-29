@@ -2,7 +2,7 @@ using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
-namespace MCP.SiteswapGenerator.Tools;
+namespace Siteswaps.Mcp.Server.Tools;
 
 public class FilterParser
 {
