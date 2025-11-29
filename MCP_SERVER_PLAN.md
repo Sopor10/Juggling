@@ -90,11 +90,13 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [x] Tests erstellt und erfolgreich
 
 ### 2.6 Tool: AnalyzeSiteswap implementieren (optional)
-- [ ] `Tools/AnalyzeSiteswapTool.cs` erstellen
-- [ ] `[McpServerTool]` Attribute hinzufügen
-- [ ] Parameter: `siteswap` (string)
-- [ ] Analyse-Funktionen nutzen (Orbits, States, etc.)
-- [ ] Strukturierte Analyse-Daten zurückgeben
+- [x] `Tools/AnalyzeSiteswapTool.cs` erstellen
+- [x] `[McpServerTool]` Attribute hinzufügen
+- [x] Parameter: `siteswap` (string)
+- [x] Analyse-Funktionen nutzen (Orbits, States, Period, NumberOfObjects, MaxHeight, etc.)
+- [x] Strukturierte Analyse-Daten zurückgeben (SiteswapAnalysis mit Orbits, States, etc.)
+- [x] Tool in `Program.cs` registriert
+- [x] Tests erstellt und erfolgreich
 
 ### 2.7 Tools registrieren
 - [x] Tools werden automatisch durch `[McpServerTool]` Attribute erkannt
@@ -219,7 +221,7 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 
 ## Status-Tracking
 
-**Letzte Aktualisierung:** 2025-01-27 (Phase 2.5 abgeschlossen)
+**Letzte Aktualisierung:** 2025-01-27 (Phase 2.5 und 2.6 abgeschlossen)
 
 **Aktueller Status:** 🟢 In Bearbeitung
 
@@ -227,7 +229,7 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 - Phase 1 komplett ✅ abgeschlossen (1.1-1.6)
 - Phase 2.1-2.4, 2.7-2.8 ✅ abgeschlossen
 - Phase 2.5 ✅ abgeschlossen (ValidateSiteswap Tool implementiert, Tests erstellt, Build erfolgreich)
-- Phase 2.6 (AnalyzeSiteswap Tool) noch offen
+- Phase 2.6 ✅ abgeschlossen (AnalyzeSiteswap Tool implementiert mit strukturierten Analyse-Daten, Tests erstellt, Build erfolgreich)
 - Phase 3.2 ✅ abgeschlossen (Unit-Tests implementiert und ausgeführt)
 - Phase 3.3 ✅ abgeschlossen (README erstellt mit Installation, Tool-Beschreibungen und Claude Desktop Konfiguration)
 - Phase 3.4 ✅ abgeschlossen (Release-Build getestet, Deployment-Strategie dokumentiert)

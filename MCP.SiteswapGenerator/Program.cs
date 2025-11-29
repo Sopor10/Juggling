@@ -6,7 +6,8 @@ builder.Services
     .AddMcpServer()
     .WithHttpTransport()
     .WithTools<GenerateSiteswapsTool>()
-    .WithTools<ValidateSiteswapTool>();
+    .WithTools<ValidateSiteswapTool>()
+    .WithTools<AnalyzeSiteswapTool>();
 
 var app = builder.Build();
 
