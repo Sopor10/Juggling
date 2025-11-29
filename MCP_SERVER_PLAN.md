@@ -113,12 +113,6 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 
 ## Phase 3: Testing & Dokumentation
 
-### 3.1 Manuelles Testing
-- [ ] MCP Server lokal starten
-- [ ] Mit MCP Client verbinden (z.B. Claude Desktop)
-- [ ] `GenerateSiteswaps` Tool testen
-- [ ] Verschiedene Parameter-Kombinationen testen
-
 ### 3.2 Performance Testing
 - [x] Unit-Tests für GenerateSiteswaps Tool erstellt
 - [x] 11 Tests implementiert und alle bestanden
@@ -137,101 +131,21 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 ## Phase 4: Erweiterte Features (Optional)
 
 ### 4.1 Filter-Parameter
-- [ ] Filter-Parameter zu `GenerateSiteswaps` hinzufügen
-- [ ] Pattern-Filter unterstützen
-- [ ] Number-Filter unterstützen
-- [ ] State-Filter unterstützen
-
-### 4.2 Streaming-Optimierung
-- [ ] Streaming-Response für große Ergebnisse optimieren
-- [ ] Chunking implementieren
-
----
-
-## Technische Details
-
-### Projektstruktur (nach Refaktorierung)
-```
-Siteswaps.Generator.Core/          (Neue Klassenbibliothek)
-  - Generator/
-    - SiteswapGenerator.cs
-    - SiteswapGeneratorInput.cs
-    - Siteswap.cs
-    - PartialSiteswap.cs
-    - Filter/
-      - ...
-
-Siteswaps.Generator/               (Bestehend - Blazor Components)
-  - Components/
-  - DependencyInjectionExtensions.cs
-
-MCP.SiteswapGenerator/            (Neues Console App Projekt)
-  - Tools/
-    - GenerateSiteswapsTool.cs
-    - ValidateSiteswapTool.cs (optional)
-    - AnalyzeSiteswapTool.cs (optional)
-  - Program.cs
-```
-
-### Abhängigkeiten
-
-**Siteswaps.Generator.Core:**
-- `morelinq` (für `ZipLongest`)
-- `System.Linq.Async` (falls benötigt)
-
-**MCP.SiteswapGenerator:**
-- `ModelContextProtocol` (--prerelease)
-- `Microsoft.Extensions.Hosting`
-- Referenz zu `Siteswaps.Generator.Core`
-- Referenz zu `Siteswap.Details` (optional)
-
-### MCP Server Konfiguration
-
-**Stdio Transport:**
-- Kommunikation über stdin/stdout
-- Logging über stderr
-
-**Tool-Definition Beispiel:**
-```csharp
-[McpServerTool, Description("Generates siteswaps based on parameters")]
-public static async IAsyncEnumerable<string> GenerateSiteswaps(
-    [Description("Period of the siteswap")] int period,
-    [Description("Number of objects (balls)")] int numberOfObjects,
-    [Description("Minimum throw height")] int minHeight,
-    [Description("Maximum throw height")] int maxHeight,
-    [Description("Maximum number of results")] int maxResults = 100,
-    [Description("Timeout in seconds")] int timeoutSeconds = 30,
-    CancellationToken cancellationToken = default)
-```
-
----
-
-## Notizen
-
-- Das offizielle C# SDK für MCP ist verfügbar: https://github.com/modelcontextprotocol/csharp-sdk
-- NuGet Package: `ModelContextProtocol` (mit --prerelease Flag)
-- Die Generator-Logik ist bereits gut getrennt, nur kleine Refaktorierung nötig
-- Radzen-Abhängigkeit muss entfernt werden (nur `WhereNotNull()`)
-- **Rider MCP Tools:** Für Refactorings können JetBrains Rider MCP Tools verwendet werden:
-  - `rename_refactoring` für Namespace-Änderungen (aktualisiert automatisch alle Referenzen)
-  - Rider's "Move File" Refactoring für Dateiverschiebungen (hält Referenzen aktuell)
-  - `replace_text_in_file` für gezielte Text-Ersetzungen
-
----
-
-## Status-Tracking
-
-**Letzte Aktualisierung:** 2025-01-27 (Phase 2.5 und 2.6 abgeschlossen)
-
-**Aktueller Status:** 🟢 In Bearbeitung
-
-**Fortschritt:** 
-- Phase 1 komplett ✅ abgeschlossen (1.1-1.6)
-- Phase 2.1-2.4, 2.7-2.8 ✅ abgeschlossen
-- Phase 2.5 ✅ abgeschlossen (ValidateSiteswap Tool implementiert, Tests erstellt, Build erfolgreich)
-- Phase 2.6 ✅ abgeschlossen (AnalyzeSiteswap Tool implementiert mit strukturierten Analyse-Daten, Tests erstellt, Build erfolgreich)
-- Phase 3.2 ✅ abgeschlossen (Unit-Tests implementiert und ausgeführt)
-- Phase 3.3 ✅ abgeschlossen (README erstellt mit Installation, Tool-Beschreibungen und Claude Desktop Konfiguration)
-- Phase 3.4 ✅ abgeschlossen (Release-Build getestet, Deployment-Strategie dokumentiert)
-- Phase 3.1 (Manuelles Testing) - Server startet erfolgreich, benötigt MCP Client für vollständiges Testing
+- [x] Filter-Parameter zu `GenerateSiteswaps` hinzufügen
+- [x] Pattern-Filter (pattern Parameter, benötigt numberOfJugglers)
+- [x] Number-Filter (minOccurrence, maxOccurrence, exactOccurrence Parameter)
+  - [x] Unterstützung für OR-Logik mit `|` in minOccurrence
+  - [x] Unterstützung für mehrere Zahlen mit Komma (z.B. "3,4:2")
+- [x] State-Filter (state Parameter)
+- [x] NumberOfPasses-Filter (numberOfPasses Parameter, benötigt numberOfJugglers)
+- [x] Flexible Pattern-Filter (flexiblePattern Parameter, benötigt numberOfJugglers)
+- [x] Rotation-Aware Pattern-Filter (rotationAwarePattern Parameter, benötigt numberOfJugglers und jugglerIndex)
+- [x] Personalized Number-Filter (personalizedNumberFilter Parameter, benötigt numberOfJugglers)
+- [x] Locally Valid Filter (jugglerIndex Parameter, benötigt numberOfJugglers)
+- [x] Default Filter Option (useDefaultFilter Parameter, Standard: true)
+- [x] No Filter Option (useNoFilter Parameter, Standard: false)
+- [x] Anzahl Jongleure Parameter (numberOfJugglers Parameter, für Multi-Juggler Filter)
+- [ ] Not-Filter (Negation von Filtern)
+- [ ] Erweiterte OR-Logik für alle Filter-Typen (nicht nur minOccurrence)
+- [ ] Filter-Kombinationen über komplexe AND/OR-Bäume
 
