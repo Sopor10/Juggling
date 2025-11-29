@@ -7,7 +7,7 @@ namespace MCP.SiteswapGenerator.Tools;
 public class GenerateSiteswapsTool
 {
     [McpServerTool]
-    [Description("Generates siteswaps based on the specified parameters. Returns a list of siteswap patterns.")]
+    [Description("Generates siteswaps based on the specified parameters. Returns a list of siteswap patterns. Ask the user for missing information.")]
     public async Task<List<string>> GenerateSiteswaps(
         [Description("Period of the siteswap")] int period,
         [Description("Number of objects (balls)")] int numberOfObjects,
