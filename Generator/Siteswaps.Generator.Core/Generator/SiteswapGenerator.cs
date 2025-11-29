@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 

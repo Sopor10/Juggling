@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using Siteswaps.Generator;
 using VisNetwork.Blazor;
-using Webassembly;
 
 namespace Webassembly;
 

@@ -1,5 +1,4 @@
-﻿using CliWrap;
-using PlaywrightTesting.Infrastructure;
+﻿using PlaywrightTesting.Infrastructure;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
 

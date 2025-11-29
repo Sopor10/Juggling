@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
 using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Test;

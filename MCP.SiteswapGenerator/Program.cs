@@ -1,5 +1,4 @@
 ﻿using MCP.SiteswapGenerator.Tools;
-using ModelContextProtocol.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
