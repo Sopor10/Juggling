@@ -7,7 +7,8 @@ builder.Services
     .WithHttpTransport()
     .WithTools<GenerateSiteswapsTool>()
     .WithTools<ValidateSiteswapTool>()
-    .WithTools<AnalyzeSiteswapTool>();
+    .WithTools<AnalyzeSiteswapTool>()
+    .WithTools<CalculateTransitionsTool>();
 
 var app = builder.Build();
 
