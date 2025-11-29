@@ -81,11 +81,13 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [x] Beschreibung und Dokumentation hinzufügen
 
 ### 2.5 Tool: ValidateSiteswap implementieren (optional)
-- [ ] `Tools/ValidateSiteswapTool.cs` erstellen
-- [ ] `[McpServerTool]` Attribute hinzufügen
-- [ ] Parameter: `siteswap` (string)
-- [ ] Validierung mit `Siteswap.Details.Siteswap.TryCreate()`
-- [ ] Ergebnis zurückgeben
+- [x] `Tools/ValidateSiteswapTool.cs` erstellen
+- [x] `[McpServerTool]` Attribute hinzufügen
+- [x] Parameter: `siteswap` (string)
+- [x] Validierung mit `Siteswap.Details.Siteswap.TryCreate()` (mit Namespace-Alias behoben)
+- [x] Ergebnis zurückgeben
+- [x] Tool in `Program.cs` registriert
+- [x] Tests erstellt und erfolgreich
 
 ### 2.6 Tool: AnalyzeSiteswap implementieren (optional)
 - [ ] `Tools/AnalyzeSiteswapTool.cs` erstellen
@@ -217,14 +219,15 @@ public static async IAsyncEnumerable<string> GenerateSiteswaps(
 
 ## Status-Tracking
 
-**Letzte Aktualisierung:** 2025-01-27
+**Letzte Aktualisierung:** 2025-01-27 (Phase 2.5 abgeschlossen)
 
 **Aktueller Status:** 🟢 In Bearbeitung
 
 **Fortschritt:** 
 - Phase 1 komplett ✅ abgeschlossen (1.1-1.6)
 - Phase 2.1-2.4, 2.7-2.8 ✅ abgeschlossen
-- Phase 2.5-2.6 (optionale Tools) noch offen
+- Phase 2.5 ✅ abgeschlossen (ValidateSiteswap Tool implementiert, Tests erstellt, Build erfolgreich)
+- Phase 2.6 (AnalyzeSiteswap Tool) noch offen
 - Phase 3.2 ✅ abgeschlossen (Unit-Tests implementiert und ausgeführt)
 - Phase 3.3 ✅ abgeschlossen (README erstellt mit Installation, Tool-Beschreibungen und Claude Desktop Konfiguration)
 - Phase 3.4 ✅ abgeschlossen (Release-Build getestet, Deployment-Strategie dokumentiert)
