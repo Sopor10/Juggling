@@ -8,7 +8,8 @@ builder.Services
     .WithTools<GenerateSiteswapsTool>()
     .WithTools<ValidateSiteswapTool>()
     .WithTools<AnalyzeSiteswapTool>()
-    .WithTools<CalculateTransitionsTool>();
+    .WithTools<CalculateTransitionsTool>()
+    .WithTools<GetLocalSiteswapTool>();
 
 var app = builder.Build();
 

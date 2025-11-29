@@ -18,10 +18,11 @@
 - **Use Case**: Finden von Wegen zwischen Siteswap-Patterns, Analyse von Routinen
 - **Status**: ✅ Implementiert als `CalculateTransitionsTool`
 
-##### B. **LocalSiteswap (Multi-Juggler Support)**
+##### B. **LocalSiteswap (Multi-Juggler Support)** ✅ IMPLEMENTIERT
 - **Funktion**: `GetLocalSiteswap(int juggler, int numberOfJugglers)`
 - **Beschreibung**: Konvertiert globales Siteswap in lokale Notation für einen spezifischen Juggler
 - **Use Case**: Passing-Patterns analysieren, lokale vs. globale Notation vergleichen
+- **Status**: ✅ Implementiert als `GetLocalSiteswapTool`
 
 ##### C. **Swap-Operation**
 - **Funktion**: `Swap(int x, int y)`
@@ -64,24 +65,10 @@
 - **Datei**: `Siteswaps.Mcp.Server/Tools/CalculateTransitionsTool.cs`
 - **Tests**: `Siteswaps.Mcp.Server.Test/CalculateTransitionsToolTests.cs`
 
-#### 2. **GetLocalSiteswap Tool**
-```csharp
-public class GetLocalSiteswapTool
-{
-    [McpServerTool]
-    [Description("Converts a global siteswap to local notation for a specific juggler in a passing pattern.")]
-    public LocalSiteswapInfo GetLocalSiteswap(
-        [Description("Global siteswap string")] string siteswap,
-        [Description("Juggler index (0-based)")] int juggler,
-        [Description("Number of jugglers")] int numberOfJugglers
-    )
-}
-```
-
-**Vorteile:**
-- Essentiell für Passing-Pattern-Analyse
-- Zeigt lokale vs. globale Notation
-- Berechnet Durchschnitt pro Juggler
+#### 2. **GetLocalSiteswap Tool** ✅ IMPLEMENTIERT
+- **Status**: ✅ Implementiert und getestet
+- **Datei**: `Siteswaps.Mcp.Server/Tools/GetLocalSiteswapTool.cs`
+- **Tests**: `Siteswaps.Mcp.Server.Test/GetLocalSiteswapToolTests.cs`
 
 #### 3. **GenerateStateGraph Tool**
 ```csharp
@@ -217,7 +204,7 @@ public class GenerateTransitionGraphTool
 
 ### Phase 1: Kern-Erweiterungen (Priorität 1)
 1. ✅ `CalculateTransitionsTool` - Sehr nützlich für Routinen (IMPLEMENTIERT)
-2. `GetLocalSiteswapTool` - Essentiell für Passing-Patterns
+2. ✅ `GetLocalSiteswapTool` - Essentiell für Passing-Patterns (IMPLEMENTIERT)
 3. `GenerateStateGraphTool` - Wichtig für Visualisierung
 
 ### Phase 2: Praktische Tools (Priorität 2)
