@@ -3,7 +3,6 @@ using ModelContextProtocol.Server;
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
-using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 
 namespace MCP.SiteswapGenerator.Tools;
 
