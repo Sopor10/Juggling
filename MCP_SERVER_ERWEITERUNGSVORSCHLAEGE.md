@@ -12,10 +12,11 @@
 
 #### 2. **Fehlende Funktionalitäten im MCP Server**
 
-##### A. **Transition-Berechnung**
+##### A. **Transition-Berechnung** ✅ IMPLEMENTIERT
 - **Funktion**: `PossibleTransitions(Siteswap to, int length, int? height = null)`
 - **Beschreibung**: Berechnet alle möglichen Übergänge zwischen zwei Siteswaps
 - **Use Case**: Finden von Wegen zwischen Siteswap-Patterns, Analyse von Routinen
+- **Status**: ✅ Implementiert als `CalculateTransitionsTool`
 
 ##### B. **LocalSiteswap (Multi-Juggler Support)**
 - **Funktion**: `GetLocalSiteswap(int juggler, int numberOfJugglers)`
@@ -58,25 +59,10 @@
 
 ### Priorität 1: Hochwertige Erweiterungen
 
-#### 1. **CalculateTransitions Tool**
-```csharp
-public class CalculateTransitionsTool
-{
-    [McpServerTool]
-    [Description("Calculates all possible transitions between two siteswaps.")]
-    public List<TransitionInfo> CalculateTransitions(
-        [Description("Source siteswap")] string fromSiteswap,
-        [Description("Target siteswap")] string toSiteswap,
-        [Description("Maximum transition length")] int maxLength,
-        [Description("Maximum throw height (optional)")] int? maxHeight = null
-    )
-}
-```
-
-**Vorteile:**
-- Ermöglicht Routinen-Planung zwischen Siteswaps
-- Wichtig für fortgeschrittene Juggler
-- Nutzt bereits vorhandene `TransitionCalculator`-Logik
+#### 1. **CalculateTransitions Tool** ✅ IMPLEMENTIERT
+- **Status**: ✅ Implementiert und getestet
+- **Datei**: `Siteswaps.Mcp.Server/Tools/CalculateTransitionsTool.cs`
+- **Tests**: `Siteswaps.Mcp.Server.Test/CalculateTransitionsToolTests.cs`
 
 #### 2. **GetLocalSiteswap Tool**
 ```csharp
@@ -230,7 +216,7 @@ public class GenerateTransitionGraphTool
 ## Implementierungsempfehlungen
 
 ### Phase 1: Kern-Erweiterungen (Priorität 1)
-1. `CalculateTransitionsTool` - Sehr nützlich für Routinen
+1. ✅ `CalculateTransitionsTool` - Sehr nützlich für Routinen (IMPLEMENTIERT)
 2. `GetLocalSiteswapTool` - Essentiell für Passing-Patterns
 3. `GenerateStateGraphTool` - Wichtig für Visualisierung
 
