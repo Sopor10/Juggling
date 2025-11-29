@@ -29,6 +29,12 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
 
     public IFilterBuilder No() => this with { Filter = Filter.Add(new NoFilter()) };
 
+    public IFilterBuilder Not(ISiteswapFilter filter) =>
+        this with
+        {
+            Filter = Filter.Add(new Combinatorics.NotFilter(filter)),
+        };
+
     public IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers) =>
         this with
         {

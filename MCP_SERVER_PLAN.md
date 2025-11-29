@@ -145,7 +145,7 @@ Dieser Plan beschreibt die Implementierung eines MCP (Model Context Protocol) Se
 - [x] Default Filter Option (useDefaultFilter Parameter, Standard: true)
 - [x] No Filter Option (useNoFilter Parameter, Standard: false)
 - [x] Anzahl Jongleure Parameter (numberOfJugglers Parameter, für Multi-Juggler Filter)
-- [ ] Not-Filter (Negation von Filtern)
-- [ ] Erweiterte OR-Logik für alle Filter-Typen (nicht nur minOccurrence)
-- [ ] Filter-Kombinationen über komplexe AND/OR-Bäume
+- [x] Not-Filter (Negation von Filtern)
+- [x] Erweiterte OR-Logik für alle Filter-Typen (nicht nur minOccurrence)
+- [ ] Filter-Kombinationen über komplexe AND/OR-Bäume (teilweise durch OR-Logik und Not-Filter abgedeckt)
 

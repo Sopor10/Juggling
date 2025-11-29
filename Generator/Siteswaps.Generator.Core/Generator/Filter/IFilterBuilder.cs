@@ -21,6 +21,7 @@ public interface IFilterBuilder
     IFilterBuilder ExactOccurence(IEnumerable<int> number, int amount);
 
     IFilterBuilder No();
+    IFilterBuilder Not(ISiteswapFilter filter);
     IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers);
     IFilterBuilder And(params IEnumerable<ISiteswapFilter> filter);
     IFilterBuilder Or(ISiteswapFilter filter);
