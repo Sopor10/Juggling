@@ -5,11 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddMcpServer()
     .WithHttpTransport()
-    .WithTools<GenerateSiteswapsTool>()
-    .WithTools<ValidateSiteswapTool>()
-    .WithTools<AnalyzeSiteswapTool>()
-    .WithTools<CalculateTransitionsTool>()
-    .WithTools<GetLocalSiteswapTool>();
+    .WithToolsFromAssembly();
 
 var app = builder.Build();
 

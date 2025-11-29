@@ -5,6 +5,7 @@ using SiteswapDetails = Siteswap.Details.Siteswap;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
+[McpServerToolType]
 public class CalculateTransitionsTool
 {
     [McpServerTool]

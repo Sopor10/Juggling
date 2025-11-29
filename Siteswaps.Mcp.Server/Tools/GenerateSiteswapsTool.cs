@@ -4,6 +4,7 @@ using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
+[McpServerToolType]
 public class GenerateSiteswapsTool
 {
     [McpServerTool]
