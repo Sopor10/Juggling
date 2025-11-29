@@ -1,19 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using MCP.SiteswapGenerator.Tools;
+﻿using MCP.SiteswapGenerator.Tools;
+using ModelContextProtocol.AspNetCore;
 
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Logging.AddConsole(options =>
-{
-    options.LogToStandardErrorThreshold = LogLevel.Trace;
-});
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddMcpServer()
-    .WithStdioServerTransport()
+    .WithHttpTransport()
     .WithTools<GenerateSiteswapsTool>();
 
-var host = builder.Build();
-await host.RunAsync();
+var app = builder.Build();
+
+app.MapMcp();
+
+app.Run();
