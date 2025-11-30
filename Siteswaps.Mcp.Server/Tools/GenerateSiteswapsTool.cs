@@ -21,9 +21,13 @@ public class GenerateSiteswapsTool
         [Description("Numbers that must occur exactly this many times. Format: '5:2' for single, '5:2,6:1' for multiple, '3,4:2' for multiple numbers")] string? exactOccurrence = null,
         [Description("Exact number of passes (requires numberOfJugglers)")] int? numberOfPasses = null,
         [Description("Number of jugglers (required for numberOfPasses/pattern)")] int? numberOfJugglers = null,
-        [Description("Pattern to match (comma-separated numbers, e.g., '3,3,1')")] string? pattern = null,
+        [Description("Pattern to match (comma-separated numbers, e.g., '3,3,1'). " +
+                    "Special values: -1 (any value), -2 (any pass), -3 (any self). " +
+                    "Example: '9,-1,6,-1' matches patterns where position 0=9 and position 2=6.")] string? pattern = null,
         [Description("State filter (comma-separated 0/1 values, e.g., '1,1,0,0' for state with first two slots occupied)")] string? state = null,
-        [Description("Flexible pattern (semicolon-separated groups, e.g., '3,4;5,6' for two groups)")] string? flexiblePattern = null,
+        [Description("Flexible pattern (semicolon-separated groups, e.g., '3,4;5,6' for two groups). " +
+                    "Special values: -1 (any value), -2 (any pass), -3 (any self). " +
+                    "Example: '-2,-3;-3,-2' for alternating pass/self pattern.")] string? flexiblePattern = null,
         [Description("Use default filter (right amount of balls)")] bool useDefaultFilter = true,
         [Description("Use no filter (accepts all siteswaps)")] bool useNoFilter = false,
         [Description("Locally valid filter for specific juggler (requires numberOfJugglers and jugglerIndex)")] int? jugglerIndex = null,
