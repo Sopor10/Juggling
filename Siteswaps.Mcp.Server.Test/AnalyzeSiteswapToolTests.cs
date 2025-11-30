@@ -52,7 +52,8 @@ public class AnalyzeSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.AnalyzeSiteswap(string.Empty);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -64,7 +65,8 @@ public class AnalyzeSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.AnalyzeSiteswap(null!);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -77,7 +79,8 @@ public class AnalyzeSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.AnalyzeSiteswap(invalidSiteswap);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage($"Invalid siteswap: {invalidSiteswap}*");
     }
 
@@ -145,4 +148,3 @@ public class AnalyzeSiteswapToolTests
         result.MaxHeight.Should().Be(9);
     }
 }
-

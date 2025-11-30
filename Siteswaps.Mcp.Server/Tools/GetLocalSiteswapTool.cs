@@ -9,19 +9,28 @@ namespace Siteswaps.Mcp.Server.Tools;
 public class GetLocalSiteswapTool
 {
     [McpServerTool]
-    [Description("Converts a global siteswap to local notation for all jugglers in a passing pattern. Returns the local siteswap notation, global notation, average objects per juggler, and validation information for each juggler.")]
+    [Description(
+        "Converts a global siteswap to local notation for all jugglers in a passing pattern. Returns the local siteswap notation, global notation, average objects per juggler, and validation information for each juggler."
+    )]
     public LocalSiteswapResult GetLocalSiteswap(
         [Description("Global siteswap string (e.g., '531', 'a7242')")] string siteswap,
-        [Description("Number of jugglers in the passing pattern")] int numberOfJugglers)
+        [Description("Number of jugglers in the passing pattern")] int numberOfJugglers
+    )
     {
         if (string.IsNullOrWhiteSpace(siteswap))
         {
-            throw new ArgumentException("Siteswap string cannot be null or empty.", nameof(siteswap));
+            throw new ArgumentException(
+                "Siteswap string cannot be null or empty.",
+                nameof(siteswap)
+            );
         }
 
         if (numberOfJugglers < 1)
         {
-            throw new ArgumentException("Number of jugglers must be at least 1.", nameof(numberOfJugglers));
+            throw new ArgumentException(
+                "Number of jugglers must be at least 1.",
+                nameof(numberOfJugglers)
+            );
         }
 
         if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
@@ -33,21 +42,23 @@ public class GetLocalSiteswapTool
         {
             GlobalSiteswap = siteswap,
             NumberOfJugglers = numberOfJugglers,
-            Jugglers = new List<JugglerLocalSiteswap>()
+            Jugglers = new List<JugglerLocalSiteswap>(),
         };
 
         for (int juggler = 0; juggler < numberOfJugglers; juggler++)
         {
             var localSiteswap = siteswapObj.GetLocalSiteswap(juggler, numberOfJugglers);
-            
-            result.Jugglers.Add(new JugglerLocalSiteswap
-            {
-                Juggler = juggler,
-                LocalNotation = localSiteswap.LocalNotation,
-                GlobalNotation = localSiteswap.GlobalNotation,
-                AverageObjects = localSiteswap.Average(),
-                IsValidAsGlobalSiteswap = localSiteswap.IsValidAsGlobalSiteswap()
-            });
+
+            result.Jugglers.Add(
+                new JugglerLocalSiteswap
+                {
+                    Juggler = juggler,
+                    LocalNotation = localSiteswap.LocalNotation,
+                    GlobalNotation = localSiteswap.GlobalNotation,
+                    AverageObjects = localSiteswap.Average(),
+                    IsValidAsGlobalSiteswap = localSiteswap.IsValidAsGlobalSiteswap(),
+                }
+            );
         }
 
         return result;
@@ -69,4 +80,3 @@ public class JugglerLocalSiteswap
     public double AverageObjects { get; init; }
     public bool IsValidAsGlobalSiteswap { get; init; }
 }
-

@@ -30,7 +30,12 @@ public class GetLocalSiteswapToolTests
     [TestCase("531", 1, 2, "351")]
     [TestCase("51", 0, 2, "5")]
     [TestCase("51", 1, 2, "1")]
-    public void GetLocalSiteswap_Returns_Correct_GlobalNotation(string siteswap, int juggler, int numberOfJugglers, string expectedGlobalNotation)
+    public void GetLocalSiteswap_Returns_Correct_GlobalNotation(
+        string siteswap,
+        int juggler,
+        int numberOfJugglers,
+        string expectedGlobalNotation
+    )
     {
         // Arrange
         var tool = new GetLocalSiteswapTool();
@@ -50,7 +55,8 @@ public class GetLocalSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.GetLocalSiteswap(string.Empty, 2);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -62,7 +68,8 @@ public class GetLocalSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.GetLocalSiteswap(null!, 2);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -74,8 +81,7 @@ public class GetLocalSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.GetLocalSiteswap("43", 2);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
     }
 
     [Test]
@@ -86,7 +92,8 @@ public class GetLocalSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.GetLocalSiteswap("531", 0);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Number of jugglers must be at least 1.*");
     }
 
@@ -98,7 +105,8 @@ public class GetLocalSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.GetLocalSiteswap("531", -1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Number of jugglers must be at least 1.*");
     }
 

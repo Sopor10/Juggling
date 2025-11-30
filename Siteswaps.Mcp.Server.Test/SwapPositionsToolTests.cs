@@ -30,7 +30,8 @@ public class SwapPositionsToolTests
 
         // Act & Assert
         var act = () => tool.SwapPositions(string.Empty, 0, 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -42,8 +43,7 @@ public class SwapPositionsToolTests
 
         // Act & Assert
         var act = () => tool.SwapPositions("43", 0, 1);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
     }
 
     [Test]
@@ -54,8 +54,8 @@ public class SwapPositionsToolTests
 
         // Act & Assert
         var act = () => tool.SwapPositions("531", -1, 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Position indices must be non-negative.*");
     }
 }
-

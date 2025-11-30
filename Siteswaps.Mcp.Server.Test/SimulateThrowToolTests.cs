@@ -32,7 +32,8 @@ public class SimulateThrowToolTests
 
         // Act & Assert
         var act = () => tool.SimulateThrow(string.Empty);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -44,8 +45,6 @@ public class SimulateThrowToolTests
 
         // Act & Assert
         var act = () => tool.SimulateThrow("43");
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
     }
 }
-

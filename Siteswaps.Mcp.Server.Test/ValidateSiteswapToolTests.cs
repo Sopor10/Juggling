@@ -16,7 +16,10 @@ public class ValidateSiteswapToolTests
     [TestCase("21", false)]
     [TestCase("", false)]
     [TestCase("   ", false)]
-    public void ValidateSiteswap_With_Valid_And_Invalid_Inputs_Returns_Correct_Result(string siteswap, bool expectedResult)
+    public void ValidateSiteswap_With_Valid_And_Invalid_Inputs_Returns_Correct_Result(
+        string siteswap,
+        bool expectedResult
+    )
     {
         // Arrange
         var tool = new ValidateSiteswapTool();
@@ -27,7 +30,7 @@ public class ValidateSiteswapToolTests
         // Assert
         result.Should().Be(expectedResult);
     }
-    
+
     [Test]
     public void ValidateSiteswap_With_Null_Input_Returns_False()
     {
@@ -95,4 +98,3 @@ public class ValidateSiteswapToolTests
         result.Should().BeFalse();
     }
 }
-

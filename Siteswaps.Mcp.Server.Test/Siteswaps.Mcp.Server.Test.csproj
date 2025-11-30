@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -16,5 +15,4 @@
     <Using Include="NUnit.Framework" />
     <ProjectReference Include="..\Siteswaps.Mcp.Server\Siteswaps.Mcp.Server.csproj" />
   </ItemGroup>
-
 </Project>
