@@ -4,29 +4,6 @@ Basierend auf den Erkenntnissen aus `docs/passing-siteswap-learnings.md`.
 
 ---
 
-## Dokumentation verbessern
-
-- [x] **Wildcards in Tool-Beschreibungen dokumentieren** ✅
-  - In `GenerateSiteswapsTool.cs` die Description für `pattern` und `flexiblePattern` erweitern
-  - Spezialwerte: `-1` (beliebig), `-2` (nur Pässe), `-3` (nur Selfs)
-  - Beispiel hinzufügen: `"9,-1,6,-1"` für Patterns mit festen Positionen 0 und 2
-
-- [x] **Passing-Mathematik dokumentieren** ✅
-  - Wie berechnet man lokale Siteswaps aus dem globalen?
-  - Welche Positionen gehören zu welchem Jongleur?
-  - Beispiele mit Ballverteilung zwischen Jongleuren
-
----
-
-## Neue Tools hinzufügen
-
-- [x] **`GetLocalSiteswapsBatch`** - Batch-Abfrage für lokale Siteswaps ✅
-  - Input: Liste von Siteswaps + numberOfJugglers
-  - Output: Alle lokalen Siteswaps für alle Jongleure auf einmal
-  - Spart viele API-Calls bei der Analyse mehrerer Patterns
-
----
-
 ## Visualisierung verbessern
 
 - [ ] **`GenerateTransitionGraph` erweitern für Passing**
