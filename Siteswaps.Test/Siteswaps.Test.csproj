@@ -8,12 +8,10 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Verify" />
     <PackageReference Include="Verify.ImageMagick" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" NoWarn="NU1902" />
     <PackageReference Include="Verify.NUnit" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageVersion Update="Verify.NUnit" Version="31.8.0" />
   </ItemGroup>
 </Project>

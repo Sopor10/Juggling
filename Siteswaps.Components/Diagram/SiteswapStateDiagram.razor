@@ -13,7 +13,7 @@
 
     [Parameter] public Siteswap? Value { get; set; } = new(3);
 
-    private NetworkData Data { get; set; } = new();
+    private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
     protected override void OnParametersSet()
     {
