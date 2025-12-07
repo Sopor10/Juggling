@@ -56,7 +56,7 @@
     <PackageVersion Include="Svg" Version="3.4.7" />
     <PackageVersion Include="AutomaticGraphLayout" Version="1.1.12" />
     <PackageVersion Include="AutomaticGraphLayout.Drawing" Version="1.1.12" />
-    <PackageVersion Include="VisNetwork.Blazor" Version="2.2.0" />
+    <PackageVersion Include="VisNetwork.Blazor" Version="3.0.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
