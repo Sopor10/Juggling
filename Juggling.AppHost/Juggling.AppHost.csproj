@@ -1,0 +1,14 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.0.2">
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.Mcp.Server\Siteswaps.Mcp.Server.csproj" />
+    <ProjectReference Include="..\Webassembly\Webassembly.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>2f659e02-6283-45f1-b01c-746bfeadd186</UserSecretsId>
+  </PropertyGroup>
+</Project>

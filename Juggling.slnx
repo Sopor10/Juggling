@@ -5,6 +5,7 @@
     <Project Path="Generator/Siteswaps.Generator/Siteswaps.Generator.csproj" />
   </Folder>
   <Project Path="docs/docs.csproj" />
+  <Project Path="Juggling.AppHost/Juggling.AppHost.csproj" />
   <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
   <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />
   <Project Path="Siteswaps.E2ETests.Server/Siteswaps.E2ETests.Server.csproj" />
