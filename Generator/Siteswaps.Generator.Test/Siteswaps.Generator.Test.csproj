@@ -12,7 +12,7 @@
     <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="TngTech.ArchUnitNET.NUnit" />
     <PackageReference Include="Verify" />
-    <PackageReference Include="Verify.Nunit" />
+    <PackageReference Include="Verify.NUnit" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswaps.Generator\Siteswaps.Generator.csproj" />
