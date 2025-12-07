@@ -108,3 +108,5 @@ sequenceDiagram
 5. Valid transitions collected and sorted
 6. UI displays clickable transition sequences
 
+
+
