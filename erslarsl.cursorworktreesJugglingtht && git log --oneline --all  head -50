@@ -1,0 +1,30 @@
+[33m1c081b7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32madd-mcp-server[m[33m, [m[1;31morigin/add-mcp-server[m[33m)[m add documentation for Passing Siteswaps and introduce global.json configuration
+[33m90f8f20[m update resources
+[33mf4e58b7[m add resources
+[33m92af197[m add Docker commands for MCP server management
+[33m2600cd6[m reformat files
+[33m57dda36[m change docu
+[33m43aae5d[m add more tools
+[33mf61d0b6[m add state graph tool and use attribute based registration
+[33mc2c562a[m add local siteswap tool
+[33m33104c8[m update project plan
+[33m53cf08f[m add CalculateTransitionsTool with corresponding tests and integrate into server configuration
+[33m79ebf90[m change port
+[33m085eef1[m add just file for common tasks
+[33m55f7b7d[m add new project plan
+[33m93de494[m add container repository name
+[33me138c30[m remove project plan
+[33m9b742ab[m fix namespaces
+[33m27bb7f1[m rename projects
+[33m97a8d11[m add description to generate siteswaps tool
+[33md003652[m refactor filter parsing
+[33m6c995a7[m add missing filters
+[33mf4970fa[m update plan
+[33mefdb430[m add analyze siteswap tool
+[33mc13a477[m add ValidateSiteswap tool with validation logic, tests, and registration in Program.cs
+[33m8d1993a[m remove unused imports across projects
+[33meb72350[m use http transport instead of stdio for MCP
+[33m5097bb7[m remove unused import and clean up registration of GenerateSiteswapsTool
+[33mc623917[m add more filter options
+[33m2b1d276[m add exact occurrence filter to GenerateSiteswaps tool, enhance min/max occurrence logic, and update tests and documentation
+[33m23d7788[m add filtering options to GenerateSiteswaps tool and update tests and documentation

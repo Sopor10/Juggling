@@ -2,13 +2,6 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "diffenginetray": {
-      "version": "17.0.1",
-      "commands": [
-        "DiffEngineTray"
-      ],
-      "rollForward": false
-    },
     "csharpier": {
       "version": "1.2.1",
       "commands": [

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using FluentAssertions;
 using Fluxor;
-using Microsoft.AspNetCore.Components;
 using Moq;
 using Siteswaps.Generator.Components.Internal.Generate;
 using Siteswaps.Generator.Components.State;

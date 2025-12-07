@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using Siteswaps.Generator.Generator;
-using Siteswaps.Generator.Generator.Filter;
+using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Api.Test;
 

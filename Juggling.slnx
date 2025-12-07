@@ -1,12 +1,16 @@
 <Solution>
   <Folder Name="/Generator/">
+    <Project Path="Generator/Siteswaps.Generator.Core/Siteswaps.Generator.Core.csproj" />
     <Project Path="Generator/Siteswaps.Generator.Test/Siteswaps.Generator.Test.csproj" />
     <Project Path="Generator/Siteswaps.Generator/Siteswaps.Generator.csproj" />
   </Folder>
+  <Project Path="docs/docs.csproj" />
   <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
   <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />
   <Project Path="Siteswaps.E2ETests.Server/Siteswaps.E2ETests.Server.csproj" />
   <Project Path="Siteswaps.E2ETests/Siteswaps.E2ETests.csproj" />
+  <Project Path="Siteswaps.Mcp.Server.Test/Siteswaps.Mcp.Server.Test.csproj" />
+  <Project Path="Siteswaps.Mcp.Server/Siteswaps.Mcp.Server.csproj" />
   <Project Path="Siteswaps.Test/Siteswaps.Test.csproj" />
   <Project Path="Webassembly/Webassembly.csproj" />
 </Solution>

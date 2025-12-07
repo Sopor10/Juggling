@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Siteswaps.Generator.Generator;
+using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Test.Filter;
 

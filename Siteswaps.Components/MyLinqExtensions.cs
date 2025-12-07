@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Siteswaps.Components;
+﻿namespace Siteswaps.Components;
 
 public static class MyLinqExtensions
 {
