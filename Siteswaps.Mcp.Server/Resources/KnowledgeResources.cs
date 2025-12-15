@@ -8,7 +8,7 @@ public class KnowledgeResources
 {
     [McpServerResource]
     [Description("siteswap:definition:siteswap")]
-    public Task<string> siteswap_definition_siteswap() =>
+    public Task<string> SiteswapDefinitionSiteswap() =>
         Task.FromResult("Siteswap is a numeric notation system for juggling patterns. A siteswap sequence describes the order in which objects are thrown and caught, and only that.");
 
     [McpServerResource]
