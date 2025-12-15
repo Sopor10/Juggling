@@ -1,0 +1,597 @@
+in: Notation
+Siteswap
+EDIT
+
+Siteswap is the most commonly used juggling notation system. It is a useful tool for communicating between jugglers, discovering new patterns, and finding transitions between different patterns. Many juggling animators use siteswap notation as their pattern input.
+
+Basic siteswap notation only describes solo patterns where one object is thrown at a time, but more complex extensions of siteswap can be used to describe synchronous or asynchronous patterns for any number of objects and any number of people, with various throw heights, crossing and non-crossing throws, pauses in the pattern, passing objects directly from one hand to another, multiplex throws and squeeze catches, and transitions between sync and async patterns.
+
+The siteswap of a trick is the siteswap notation that describes an aspect of that trick (for example, the siteswap of Burke's barrage is 423), but it doesn't necessarily describe everything about the trick. There are elements of juggling tricks that siteswap does not describe, including the positions of the throws (like backcrosses or under the leg throws), the positions of the catches (like penguins or blind catches), the paths the props take between being thrown and caught (like outside throws or bounced throws), how the props rotate in the air (like pancakes or helicopters), and things that are added to the juggling but aren't actually part of the pattern (like 360s or balances). Patterns that involve throwing at different heights and can be sufficiently described using only siteswap notation are called siteswaps.
+
+3 Connected DB97531's
+
+3 rounds of db97531 by Lauge Benjaminsen
+
+Contents
+1	History
+2	Basic notation
+2.1	Examples of basic siteswap patterns
+3	Properties of siteswap patterns
+4	Creating new siteswaps
+5	Synchronous notation
+5.1	Examples of synchronous siteswap patterns
+6	Multiplex notation
+7	Passing notation
+7.1	4-handed siteswap
+8	Diabolo siteswaps
+9	See also
+10	External links
+History
+
+Siteswap was independently invented by Paul Klimek and Don Hatch in 1981. It was originally called "quantum juggling" by Paul Klimek. In 1982, Jeff Walker also independently found a way to create siteswap patterns (using ladder diagrams), and he used numbers to label throws of different heights, though he didn't use sequences of numbers to name the patterns. Mike Day, Colin Wright, and Adam Chalcraft in Cambridge, England invented a notation system very similar to Klimek's called "Cambridge notation" in 1985.
+
+Around the same time, Bruce Tiemann, who had not yet heard of these notation systems, invented a method for finding the tricks they describe. He called these tricks "site swaps", because his method for generating them was based on swapping which objects are in which sites in time and space.
+
+An example of "swapping sites" is swapping the landing times (and the catching hands) for pairs of consecutive throws in a 4 ball fountain, which results in the siteswap pattern 53. In the basic pattern the balls would be caught in the same order they were thrown, but for each pair of throws in 53, the second ball thrown is caught before the first.
+
+Jack Boyce developed the notation for synchronous, multiplex, and passing patterns in 1990. The asterisk in sync patterns was first used by Ben Beever in his book, Siteswap Ben's Guide to Juggling Patterns.
+
+Learn the JUGGLING NUMBERS!- SITESWAP Tutorial
+
+Vanilla siteswap tutorial
+
+Basic notation
+
+All patterns described by basic siteswap (called vanilla siteswap) follow these rules:
+
+All tosses are made to a strict beat so that every throw is on a beat.
+Each of the two hands throws in turn (called asynchronous). A pattern can start with either hand, and then the throws alternate between hands: right-left-right-left-right-left... or left-right-left-right-left-right...
+No multiplexes or squeezes are allowed, meaning only one prop is thrown from one hand at a time, and only one prop is caught in one hand at a time.
+
+(More complex forms of siteswap notation that do not necessarily follow all of those rules are described later in this article.)
+
+A siteswap pattern is a sequence of numbers. Each number represents a type of throw to be done at that time or "beat" in the sequence. A number in a siteswap generally represents the kind of throw that would be done in the basic pattern for that number of objects (juggled at the same speed as the siteswap). In a vanilla siteswap, odd numbers represent throws that cross from one hand to the other, and even numbers represent throws that are caught by the same hand that made the throw. Numbers greater than 9 are written as letters, so that "10" is "a" and "11" is "b" and so on. (This is not hexadecimal, it's just writing numbers as letters to avoid ambiguous double-digits. Numbers beyond f are written as g, h, i... not 10, 11, 12...) Strings of values are sometimes written separated (e.g. "6 4 5 1" or "10 8 6 4"), but with alphanumeric digits the spaces are unnecessary, so siteswaps are generally written without spaces (e.g. "6451" or "a864").
+
+There are three numbers with special meanings: a "0" is a pause with an empty hand (the hand that would throw on that beat does nothing because it has nothing to throw), a "1" is a quick pass straight across to the other hand (also called a handoff, a feed, a zip, or a vamp), and a "2" is usually a pause with an object held in the hand that would otherwise throw on that beat (called a passive 2). An active 2 (which can be notated as "2T") is a quick throw that comes right back to the same hand before that hand does any more throws. These are all things that can be done continually with their respective numbers of objects.
+
+Each of the numbers in a siteswap sequence corresponds to the number of beats later an object will be thrown again after the throw that number represents (including 1s and 2s as "throws"). This usually corresponds to how high it was thrown (higher siteswap number = higher throw), so many people refer to the numbers as heights, but this is not technically correct; all that matters is the number of beats before the object will be thrown again, not how high it is thrown. For example, throwing a ball and letting it bounce off the floor before catching it can take longer than a throw in the air at the same height, so a bounced throw can be a higher siteswap value without being a higher throw. The height of a throw in the air represented by a certain number in a siteswap depends on the speed and dwell time used for the pattern - a 3 in a pattern juggled very slowly can be a higher throw than a 5 in a pattern that is done faster, but within one siteswap pattern juggled at a constant speed, a tossed 5 will always be higher than a 3. Also, the throw heights (for normal throws in the air) are not proportional to the siteswap numbers, so a 6 is not just twice the height of a 3 (see the height formula).
+
+The sequence that defines a siteswap pattern can be repeated indefinitely, but a pattern is normally expressed in the shortest possible form (no repetition), so that the 5 ball cascade, which is tossed as "...5555555555...", is notated as just "5". Patterns containing more than one throw height, such as "...1234512345...", can be written without repetition several different ways, since a variety of starting points are possible for the notation. "12345", "23451", "34512", "45123", and "51234" all represent the same pattern, since they all look the same when written as an indefinitely repeating sequence. A siteswap string is normally written in an order that allows the pattern to be directly entered from the basic pattern, so "...636636..." is written "663", because it's only possible to transition directly to that pattern from the cascade if you start with two 6s, rather than starting it with a 3, or just one 6 and then a 3. If there is more than one way (or no way) to enter the pattern directly, a siteswap is usually written so that it starts with the highest number, so "...345345345..." is written as "534", not "453".
+
+Examples of basic siteswap patterns
+
+0
+
+In a siteswap that is only one beat long (when written in its shortest form), every throw is the same kind of throw, and you alternate throwing with your right hand and your left hand. A "0" represents an empty hand. Since every beat in this siteswap is a 0, your hands are empty all the time.
+
+	
+
+1
+
+A "1" means you pass the ball straight from one hand to the other. In asynchronous siteswap patterns (where only one hand throws at a time), the throws are made alternately with the right hand and the left hand, so in the siteswap 1, the right hand passes the ball across to the left hand, then the left hand passes it back to the right hand, the right hand passes it back into the left hand, etc.
+
+	
+
+2
+
+A "2" means that the ball you're ready to throw will have to be thrown again two beats later (by the same hand). 2s are usually done by just keeping the ball in the hand and not throwing it until those two beats are over. On every beat in the siteswap "2", you do a 2 - you hold the ball in your hand until two beats later, when you will have to do another 2 with the same hand. On the beat in between two "2s" done with the same hand, you're doing a 2 with the other hand. Since every beat is a 2, in this siteswap you just keep holding a ball in each hand and never throw anything.
+
+
+
+
+2T
+
+This is the same siteswap as "2", but with the 2s done in a different way. The hands alternate throwing "active 2s" - low throws that return to the same hand fast enough that the same ball can be thrown again two beats later.
+
+	
+
+3
+
+On every beat, you throw a "3", meaning it takes three beats before that ball will be thrown again. If you always alternate making right hand and left hand throws, and you throw a ball from your right hand and then throw the same ball again three beats later, that next throw has to be made with the left hand. So every beat in this pattern is a throw that crosses from one hand to the other.
+
+	
+
+4
+
+Every throw is a "4": the ball will be thrown again four beats later, by the same hand. Unlike 2s, a 4 spends enough time in the air that the hand that threw it can catch and throw another ball before catching the 4.
+
+
+	
+
+5
+
+A "5" crosses from one hand to the other, like a 3, but is thrown higher so that it spends two more beats in the air than a 3. To juggle 3 balls, you throw 3s, but to juggle 5 balls, you need each ball to stay in the air longer so that you have time to throw more balls, so for that pattern you throw 5s.
+
+	
+
+6
+
+When you throw a "6", it stays in the air long enough for the hand that threw it to catch and throw two more balls, and then the 6 is caught by the same hand. In this async 6 ball pattern, every throw is a 6.
+
+	
+
+7
+
+Every throw crosses, like in the pattern "5", but higher. Each time you throw a ball, it takes 7 beats before the same ball is thrown again.
+
+
+	
+
+20
+
+In a siteswap that is two beats long (when written in its shortest form), so there are two different numbers in it, the throw represented by one of the numbers is always done by the right hand, and the other number is always done by the left hand. This pattern alternates between one hand doing a 2 (just holding the ball until two beats later, when it will have to do another 2), and the other hand doing a 0 (doing nothing because that hand has nothing to throw).
+
+	
+
+40
+
+In this pattern one hand is throwing 4s (non-crossing throws like you would do if you were juggling 4 balls), and the other hand is doing 0s (staying empty).
+
+	
+
+60
+
+On one side of this pattern you throw like you're juggling 6, and on the other side you do nothing, like you're "juggling 0".
+
+
+
+31
+
+Both of the numbers in this siteswap are odd, so all the throws cross. One hand throws 3s, and three beats after a 3 is thrown, that ball is passed back to the other hand, which will throw it again on the next beat (one beat after the 1).
+
+	
+
+51
+
+This pattern is the same as 31, except the hand that throws high throws higher. Each throw from that hand takes 5 beats before it's passed back over by the other hand, instead of just 3 beats, so this pattern requires one more ball.
+
+	
+
+71
+
+One hand throws like you're juggling 7, and the other hand throws like you're doing 1 (in the siteswap "1").
+
+
+
+42
+
+This is the same as 40, except the hand that isn't juggling two balls (doing 4s) is holding a ball (doing 2s) instead of being empty (doing 0s).
+
+	
+
+53
+
+One hand throws like you're juggling 5 balls, and the other hand throws like you're juggling 3 balls.
+
+	
+
+64
+
+Both numbers are even, so all the throws in this siteswap are non-crossing throws. One hand makes high throws like you would do in a 6 ball pattern - each of these balls gets thrown every six beats. The other hand makes lower throws like you would do in a 4 ball pattern - each of these balls gets thrown every four beats.
+
+
+
+330
+
+This siteswap repeats every three beats, and the beats alternate between the right and left hands, so the 3-beat sequence alternates starting with the right hand and starting with the left hand:
+
+right-3, left-3, right-0,
+left-3, right-3, left-0...
+
+On most of the beats in this pattern you throw 3s, like you're juggling 3 balls, but on every third beat you have an empty hand (a 0), because you're really only doing 2 balls.
+
+	
+
+441
+
+Most of the time in this 3 ball pattern, you make non-crossing throws like you're juggling 4. Those are 4s, because whenever you make one of those throws, that ball will be thrown again four beats later. On every third beat you pass a ball straight across to the other hand. Those are 1s, because whenever you make one of those throws, that ball will be thrown again just one beat later.
+
+	
+
+552
+
+This pattern is mostly 5s: throwing a ball to the opposite hand, high enough that it doesn't get thrown again until five beats later (or longer if the next "throw" with that ball is a 2). On every third beat you do a 2: instead of throwing a ball on that beat, you keep it in your hand for two extra beats.
+
+
+
+411
+
+Throw a ball like you would if you were juggling 4, then pass a ball across from the other hand, then pass it back to that hand. When you're doing any 3-beat sequence of throws continually, you alternate which hand make the first throw in the sequence.
+
+	
+
+522
+
+In this pattern you only throw a ball every three beats. The other two beats are 2s: you just keep the ball in your hand until two beats later, when you will either do another 2 (hold the ball in your hand for two more beats) or throw the ball as a 5. 522 is actually just a slower version of the pattern "3".
+
+	
+
+633
+
+One high non-crossing throw like you're juggling 6, and then two low crossing throws like you're juggling 3. You could make the high throws lower and let them bounce off the floor before catching them,(animation) and as long as there are six beats from one of those throws to the next time you throw the same ball, it's still a 6.
+
+
+
+201
+
+2: The right hand is holding a ball and won't throw it until two beats later.
+0: The next beat is a left hand beat, but the left hand doesn't do anything, because it has nothing to throw.
+1: This beat is two beats after you did the 2, so now you have to do something with that same ball: pass it from the right to the left hand.
+
+The last throw was from the right hand, so the next time you do this sequence of beats it will start with the left hand, instead of the right hand. Since the 1 is the only beat where you're doing anything, this pattern is just a slower version of the siteswap "1".
+
+	
+
+312
+
+3: Right hand throws a ball across.
+1: Left hand passes a ball straight to the right hand.
+2: Right hand is now holding that ball and won't do anything with it for two more beats.
+3: Left hand throws the ball from three beats ago across.
+1: Right hand passes a ball straight to the left hand.
+2: Left hand is now holding that ball and won't do anything with it for two more beats.
+	
+423
+
+4: One hand makes a non-crossing throw.
+2: A pause with the other hand holding a ball.
+3: The first hand makes a lower, crossing throw.
+
+Repeat the sequence, but with the roles of the hands reversed.
+
+
+
+420
+
+Non-crossing throw
+Pause with a ball in the hand
+Pause with an empty hand
+
+In this siteswap you're not doing anything except on the first beat out of every three. This is a slower version of the siteswap "2" (with active 2s).
+
+	
+
+531
+
+High crossing throw like in a 5 ball pattern
+Lower crossing throw like in a 3 ball pattern
+Pass a ball straight across like in a 1 ball pattern (the siteswap "1")
+
+The second throw is a 3: three beats after you throw it you will throw the same ball again. Since the pattern repeats every three throws, three beats after throwing a 3, you throw another 3 - so the 3s in this pattern are always done with the same ball.
+
+	
+
+642
+
+High non-crossing throw
+Lower non-crossing throw
+Pause while holding a ball
+
+
+
+4400
+
+This is a sequence of four beats (an even number), so it starts with the same hand each time you repeat it. One hand makes a non-crossing throw so that the ball will be thrown again four beats later, and then the other hand does the same thing. On the next beat the first hand is empty, and on the next beat the other hand is empty.
+
+	
+
+5511
+
+Each hand makes a high non-crossing throw, and then each hand passes a ball straight across.
+
+	
+
+6622
+
+Two high non-crossing throws, alternating with two beats of doing nothing while the balls are in your hands, ready to be thrown. Six beats after you throw a 6, you do a 2 with the same ball, and two beats after doing a 2, you do a 6 with the same ball.
+
+
+
+55550
+
+This siteswap is like a 5 ball cascade, except the last ball is missing, so on the last beat in the sequence you have an empty hand (a 0), instead of throwing a 5 like you do on the rest of the beats.
+
+	
+
+55500
+
+55550 is a 4 ball pattern, because there is one ball missing from the 5 ball pattern. This is a 5 ball cascade with two balls missing, so it's a 3 ball pattern.
+
+	
+
+50505
+
+This is also a 5 ball cascade with two balls missing, but not two that you would throw consecutively.
+
+ 
+
+Properties of siteswap patterns
+
+The average of the numbers in a siteswap is the number of objects used in the pattern. For example, to find the average for the pattern 744, add all the numbers in the siteswap (7 + 4 + 4 = 15), and then divide this sum by the number of numbers in the siteswap (15 / 3 = 5), and you get 5, so 744 is a 5 object pattern. All siteswaps must have a whole number average, but not every sequence with a whole number average is a valid siteswap. To be jugglable, a sequence cannot have a number followed 1 beat later by 1 less than that number, or a number followed 2 beats later by 2 less than that number, or a number followed 3 beats later by 3 less than that number, etc. Every invalid sequence with a whole number average can be rearranged at least one way to get a valid siteswap.
+
+The period of a siteswap is the number of beats in the siteswap before it repeats (ignoring which hand makes each throw), e.g. 97531 is a period 5 siteswap, repeating the same sequence of throws every 5 beats (but alternating which hand it starts from). The full period of a siteswap is the number of beats before the pattern repeats if the hands are considered interchangeable, but the props are not. The full period of 441 is 9, because the next ball to be thrown when the siteswap repeats after the first three beats is not the same ball the pattern started with, and it takes 9 beats before the props get back to the right arrangement so that the order the balls will be thrown in next is the same as the order they were thrown in at the beginning of the pattern.
+
+Patterns that can be entered directly from the basic pattern (such as 744) are called ground state siteswaps; patterns that require special transition throws to enter starting from the basic pattern (such as 771) are called excited state siteswaps.
+
+Relative Heights of Siteswap Throws Boppo's Whiteboard
+
+To compare the throw heights for two numbers in a siteswap, subtract 1 from each of the numbers and square the results - e.g. to compare the heights of a 9 and a 5, subtracting 1 they become 8 and 4, and squaring those gives 64 and 16. 64 divided by 16 = 4, so a 9 is about four times as high as a 5 (assuming a dwell ratio of 0.5). The actual height of a throw in a siteswap (measured from the height where it leaves the hand to the peak of the throw) is equal to
+
+g × (st − 2dt)² / 8 , where g = acceleration due to gravity (about 32.17 feet per second per second, or 9.8 meters per second per second), s = the siteswap number, t = the amount of time between throws, and d = the dwell ratio.
+
+Creating new siteswaps
+
+Here are some ways to turn valid siteswaps into new valid siteswaps:
+
+Repeating the same sequence of numbers results in another way of writing the same pattern. Example: 3 becomes 33.
+Moving a throw from the beginning of the notation to the end also results in another way of writing the same pattern. Example: 423 becomes 234.
+Add the period of the pattern to (or subtract the period from) any number to get a pattern using one more (or one less) object. Example: 42 becomes 62 or 22 when the first throw is changed.
+Add 1 to (or subtract 1 from) each number in a siteswap to get a pattern using one more (or one less) object. Example: 441 becomes 552 or 330.
+Swap two consecutive numbers, then add 1 to the first number and subtract 1 from the second number. This is equivalent to swapping the landing sites of those two throws. Example: 522 becomes 531 when the 2s are swapped. If two throws are not consecutive, you can still swap them by adding and subtracting a higher number. Example: The second 5 and the second 1 in 5511 are two beats apart. When you swap those numbers (to get 5115), add 2 to the first, and subtract 2 from the second, it becomes 5313.
+Move each number in the siteswap that number of places to the right (e.g. if there's a 3, move it three places to the right; wrap around to the beginning of the pattern if necessary), then read the resulting sequence backwards to get the time-reversed version of the siteswap. Usually the reverse of a siteswap is the same siteswap, but sometimes it's a different pattern that has the same numbers in a different order. Example: 603 becomes 360 (normally written as 603).
+Subtract each number in the pattern from twice the number of objects used, then read the resulting sequence backwards to get the siteswap's dual. Example: subtract each number in 504 from 6 to get 162, then read it backwards to get 261 (normally written as 612).
+Replace a section of a siteswap with a different sequence of throws that starts and ends in the same states as that section. Example: 531 becomes 73131. (Starting from the ground state 111, the throw sequences 5 and 731 both end in the state 11001.)
+Combine two patterns that visit the same state by changing to the other pattern whenever you get to that state. Example: 51 visits the state 10101 after the 5, and 60 visits that state before the 6, so those can be combined to get 5601.
+Switch any pair of synchronous throws, and change each of those throws to a crossing throw if it's a non-crossing throw or vice versa. Example: (6x,4)(2,4x) becomes (4x,6)(2,4x) when the first pair of throws is changed, or (6x,4)(4,2x) when the second pair is changed.
+Turn a vanilla siteswap into a showered or one-handed version by replacing each number with the notation for a shower or one-handed pattern with that number of objects. Example: 534 becomes 915171 or a06080.
+
+Introduction to Synchronized Siteswaps
+
+Sync siteswap tutorial
+
+Synchronous notation
+
+Synchronous siteswap notation, for patterns where both hands throw at the same time, has a few new rules:
+
+Right-hand and left-hand throws made simultaneously are grouped together in parentheses, with a comma separating the two throws. The numbers to the left and right of the comma could represent throws made by the left and right hands respectively, or by the right and left hands respectively, but use whichever of these you choose consistently within a pattern.
+Two "beats" are counted by the siteswap numbers for every time you make two throws (including 0s and 2s as "throws"), even if both throws are made on the same beat, so there is an "empty beat" (no throws) after each pair of synchronous throws. (In transitions between sync and async patterns, there can be a sync pair with no empty beat after it, indicated by an exclamation mark in the notation.)
+In synchronous patterns, even numbers can sometimes represent crossing throws. An "x" after an even number indicates that that throw crosses over to the other hand. A "2x" is similar to the "1" in asynchronous (vanilla) siteswap: a quick pass/horizontal throw from one hand to the other (something that can be done continually with 2 balls in a synchronous pattern). A "0x" is normally not allowed in a siteswap.
+All the numbers in a sync pattern must be even. An even number is always caught by the same hand that threw it, unless it has an "x" after it, making it a crossing throw. (An "x" after an odd number makes it a non-crossing throw, and is only used in transitions between sync and async patterns.)
+An asterisk (read as "star") at the end of a sync pattern means that each time the sequence is repeated, the roles of the hands are reversed, e.g. (4,2x)* is short for (4,2x)(2x,4).
+Examples of synchronous siteswap patterns
+
+(0,0)
+
+Both hands are empty (doing 0s).
+
+	
+
+(2,2)
+
+Each hand is holding a ball (doing 2s)
+
+	
+
+(2T,2T)
+
+(2,2) done with active 2s. Since the 2s are grouped together with parentheses in the notation, they are thrown at the same time.
+
+
+
+(2x,2x)
+
+Every throw is a 2x: two throws are made (at the same time) before throwing the same ball again (because of the 2), and the ball crosses over to the other hand (because of the x).
+
+	
+
+(4,4)
+
+Every throw is a 4: a non-crossing throw that will be re-thrown four "beats" later (including empty beats).
+
+	
+
+(4x,4x)
+
+Every throw is a 4x: the same as a 4, except it crosses to the other hand.
+
+
+
+(2,0)
+
+One hand holds a ball while the other hand is empty.
+
+	
+
+(4,0)
+
+One hand throws like you're juggling 4 balls while the other hand is empty, so this is half of a 4 ball pattern.
+
+	
+
+(6,0)
+
+One hand throws like you're juggling 6 balls while the other hand is empty.
+
+
+
+(4,2)
+
+One hand throws like you're juggling 4 balls while the other hand holds a ball.
+
+	
+
+(6,2)
+
+One hand throws like you're juggling 6 while the other hand holds a ball.
+
+	
+
+(6,4)
+
+One side of the pattern is like you're juggling 6 balls (you juggle 3 in one hand with that hand), and the other side is like you're juggling 4 balls (you juggle 2 in one hand with that hand).
+
+
+
+(4x,2x)
+
+One hand throws a ball high and crossing, so that it will be thrown again 4 beats (two pairs of throws) later, while the other hand throws a ball straight across, so that it will be thrown again 2 beats (one pair of throws) later.
+
+	
+
+(6x,2x)
+
+The same as (4x,2x), except the high throws are higher so that they are re-thrown after 6 "beats".
+
+	
+
+(6x,4x)
+
+Both hands make crossing throws. The balls thrown from one hand are thrown again after 6 beats, and the balls thrown from the other hand go lower so that they're thrown again after just 4 beats. One hand is throwing like you would in a 6 ball wimpy pattern, and the other is throwing like you would in a 4 ball wimpy pattern.
+
+
+
+(2x,0)(0,2x) or (2x,0)*
+
+The right hand throws the ball straight across while the left hand is empty, and then the left hand throws the ball straight across while the right hand is empty. This is a pattern very similar to the siteswap "1", but written in synchronous notation.
+
+	
+
+(4,0)*
+
+One way of writing the siteswap "2" (with active 2s) in synchronous notation.
+
+	
+
+(6x,0)*
+
+A way of writing the siteswap "3" in synchronous notation.
+
+
+
+(4x,2)*
+
+Another way of writing "3" in synchronous notation. Each 4x is synchronized with a 2, which isn't actually a throw, so there are no synchronous throws even though the pattern is written in sync notation.
+
+	
+
+(6,2)*
+
+Another way of writing "4" in synchronous notation.
+
+	
+
+(8x,2)*
+
+A way to write "5" in synchronous notation.
+
+
+
+(4,2x)*
+
+One hand makes a high non-crossing throw that will be thrown again two pairs of throws later, while the other hand throws a ball straight across so it can be thrown again one pair of throws later. The hands switch roles each time the two throws are made.
+
+	
+
+(6x,2x)*
+
+This is the same as (4,2x)* except the high throws are crossing at 6 ball height, instead of 4 ball height and not crossing, which makes this a 4 ball pattern instead of a 3 ball pattern. This is also the same as (6x,0)* (one way of writing the 3 ball cascade in sync notation), except there's an extra ball going back and forth at the bottom of the pattern (the hand that isn't throwing a 6x is doing a 2x instead of a 0).
+
+	
+
+(8,2x)*
+
+A 5 ball version of (4,2x)*, with 8s (a ball is re-thrown 4 pairs of throws later) instead of 4s (a ball is re-thrown 2 pairs of throws later).
+
+
+
+(6x,4)*
+
+Each pair of throws is a crossing throw at 6 ball height, which will be re-thrown 6 beats (3 pairs of throws) later, and a non-crossing throw at 4 ball height, which will be re-thrown 4 beats (2 pairs of throws) later.
+
+	
+
+(6,4x)*
+
+This pattern is the same as (6x,4)*, except the 4s cross and the 6s don't.
+
+	
+
+(8x,6)*
+
+Another pattern similar to (6x,4)*. Each throw stays in the air 2 beats longer, making this a 7 ball pattern instead of a 5 ball pattern.
+
+
+
+(4x,4x)(0,0)
+
+Each hand makes a crossing throw at 4 ball height, and then both hands are empty while those are in the air.
+
+	
+
+(6,6)(2x,2x)
+
+Each hand makes a high throw at 6 ball height, then each hand throws a ball straight across, and those balls are both thrown again in the next pair of throws.
+
+	
+
+(8,8)(4,4)
+
+Two balls are thrown at 8 ball height, so they won't be thrown again until 8 beats later, and then two balls are thrown at 4 ball height, so they will be thrown again just 4 beats later.
+
+ 
+
+5 ball siteswap 5
+
+5 ball siteswaps by Tsubasa Murakami
+
+Multiplex notation
+
+A multiplex throw is written in siteswap notation as two or more numbers in square brackets. 6 balls juggled in a 3 ball cascade (6 ball duplex stacks) would be written as [33].
+
+If the brackets for a multiplex contain a 2, it means one object stays in the hand instead of being thrown at that time, so it may not be an actual multiplex throw. If a multiplex contains a 1, it's a sliced throw. A 0 in multiplex brackets can be ignored, so [30] can be simplified to 3.
+
+When working out the average of a multiplex siteswap to determine the number of balls in the pattern, the throws inside the brackets are added together but treated as one throw. So, [43]23 = [4 + 3] + 2 + 3 = 12. 12 / 3 (the number of throws) = 4 ball pattern.
+
+32 - Patterns - 3 and 4 handed siteswaps
+
+3-handed and 4-handed siteswaps
+
+Passing notation
+
+A beat in passing notation is divided into multiple parts, the throwing instructions for each juggler. The notation 3|3 describes 2 jugglers each doing a 3 ball cascade. The "|" symbol separates throws made simultaneously by different jugglers. Normally the throws within a | are either all right-hand throws or all left-hand throws, but not all patterns have both right hands throwing at the same time. Juggling Lab uses the notation <R|L> before a pattern to indicate that one person throws with the right hand while the other person throws with the left hand.
+
+A "p" after a number means that throw is a pass to the other person. If the throw without a "p" would go to your left hand, the throw goes to your partner's left hand (on your right), and vice versa, so adding a "p" turns crossing throws into straight passes, and non-crossing throws into diagonal passes. If there are more than two jugglers, a number can be used after the "p" to indicate which juggler you're passing to, with the convention that the leftmost juggler in the | is juggler #1, the next is juggler #2, and so on. So for example, 3p|3p (6-object 1-count) could also be written as 3p2|3p1, and a 1-count between three people would be written as 3p2|3p3|3p13p3|3p1|3p2.
+
+29 - Patterns - Norihide & Tomoko Tokushige
+
+4-handed siteswaps
+
+4-handed siteswap
+
+4-handed siteswap is another notation system for passing. This system is for fully asynchronous patterns, where all four hands take turns throwing at separate times. A pattern like this can be written as either a global siteswap, listing all the throws from both people in the order they're made, or a local siteswap, which only shows the throws one person makes. A local siteswap always includes all the same throws as the equivalent global siteswap, but in a different order. When one person is starting a cycle of their local siteswap, the other person is halfway through making that same sequence of throws.
+
+Numbers in a 4-handed siteswap don't represent the same kinds of throws as they would in a 2-handed siteswap. An even number in 4-handed siteswap is always a non-passed throw, the same kind of throw that would be notated as half that number in a solo siteswap. Odd numbers are passes. If the global throwing order is juggler #1 right hand, juggler #2 right hand, juggler #1 left hand, juggler #2 left hand, then juggler #1 passes diagonally when doing 1s, 5s, etc., and passes straight when doing 3s, 7s, etc., while juggler #2 does the opposite, passing straight when doing 1s, 5s, etc., and passing diagonally when doing 3s, 7s, etc. 1s and 3s are both done by placing an object directly into one of the other person's hands, or by making a quick horizontal throw to the other person.
+
+Diabolo siteswaps
+
+Siteswap notation can also be used for diabolo patterns. Since diabolos are juggled with only one manipulator (the string) instead of two hands, the numbers have different meanings. A number still represents the kind of throw that would be done in the basic pattern for that number (of diabolos), and corresponds to the number of beats later that object will be thrown again, but the only difference in the throws is the height, instead of having crossing and non-crossing throws. A "0" in diabolo siteswap is a pause with an empty string (with time to do a 360 or jump rope with the string), and a "1" is a pause with a diabolo on the string (with time to do a sun).
+
+See also
+Siteswaps category on Juggle Wiki
+Software for animating siteswaps
+Siteswap anagrams
+Siteswap synonyms
+Dual siteswaps
+Siteswap transitions
+Showered siteswaps
+One-handed siteswaps
+Three-handed siteswaps
+Impossible siteswaps
+Generalised siteswap
+State notation
+Ladder diagram
+Stack notation
+Beatmap
+Multi-hand notation
+External links
+Siteswap.org
+Siteswap article on Wikipedia
+Siteswap articles in the IJDB Compendium
+Siteswaps DVD set (also available to watch online: explanations, patterns, interviews)
+Juggling Lab
+Siteswap Explorer
+Siteswap pattern and transition generator
+Passist - Generates and animates passing siteswaps
+Diabolo Simulator
+Community content is available under CC-BY-SA unless otherwise noted.
+

@@ -16,4 +16,10 @@
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
