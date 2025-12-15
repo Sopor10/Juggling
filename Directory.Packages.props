@@ -39,7 +39,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.13.0" />
+    <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.13.1" />
     <PackageVersion Include="Verify" Version="31.8.0" />
     <PackageVersion Include="Verify.NUnit" Version="31.8.0" />
     <PackageVersion Include="Verify.ImageMagick" Version="3.8.1" />
