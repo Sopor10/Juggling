@@ -21,7 +21,7 @@ public class GenerateSiteswapsTool
         [Description("Numbers that must occur exactly this many times. Format: '5:2' for single, '5:2,6:1' for multiple, '3,4:2' for multiple numbers")] string? exactOccurrence = null,
         [Description("Exact number of passes (requires numberOfJugglers)")] int? numberOfPasses = null,
         [Description("Number of jugglers (required for numberOfPasses/pattern)")] int? numberOfJugglers = null,
-        [Description("Pattern to match (comma-separated numbers, e.g., '3,3,1')")] string? pattern = null,
+        [Description("Pattern to match (comma-separated numbers, e.g., '3,3,1'). Supports negative numbers: -1 (empty/egal), -2 (any self/P), -3 (any pass/S). Use patternRotation to specify 'global' or 'local' pattern matching.")] string? pattern = null,
         [Description("State filter (comma-separated 0/1 values, e.g., '1,1,0,0' for state with first two slots occupied)")] string? state = null,
         [Description("Flexible pattern (semicolon-separated groups, e.g., '3,4;5,6' for two groups)")] string? flexiblePattern = null,
         [Description("Use default filter (right amount of balls)")] bool useDefaultFilter = true,
@@ -66,7 +66,7 @@ public class GenerateSiteswapsTool
         var filter = filterBuilder.Build();
 
         // SiteswapGenerator mit Filter erstellen und ausführen
-        var generator = new Siteswaps.Generator.Core.Generator.SiteswapGenerator(filter, input);
+        var generator = new SiteswapGenerator(filter, input);
 
         var results = new List<string>();
         await foreach (var siteswap in generator.GenerateAsync(cancellationToken))

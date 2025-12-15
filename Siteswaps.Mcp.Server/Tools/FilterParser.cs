@@ -4,25 +4,12 @@ using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
-public class FilterParser
+public class FilterParser(
+    SiteswapGeneratorInput input,
+    int? numberOfJugglers = null,
+    int minHeight = 0,
+    int maxHeight = 0)
 {
-    private readonly SiteswapGeneratorInput _input;
-    private readonly int? _numberOfJugglers;
-    private readonly int _minHeight;
-    private readonly int _maxHeight;
-
-    public FilterParser(
-        SiteswapGeneratorInput input,
-        int? numberOfJugglers = null,
-        int minHeight = 0,
-        int maxHeight = 0)
-    {
-        _input = input;
-        _numberOfJugglers = numberOfJugglers;
-        _minHeight = minHeight;
-        _maxHeight = maxHeight;
-    }
-
     /// <summary>
     /// Parst Occurrence-Filter-Strings (minOccurrence, maxOccurrence, exactOccurrence)
     /// Format: '3:2' für einzelne, '3:2,4:1' für mehrere, '3,4:2' für mehrere Zahlen
@@ -89,7 +76,8 @@ public class FilterParser
 
     /// <summary>
     /// Parst Pattern-Strings (Komma-getrennte Zahlen)
-    /// Format: '3,3,1'
+    /// Format: '3,3,1' oder '3,-1,1' für negative Zahlen
+    /// Unterstützt negative Zahlen: -1 (Empty/Egal), -2 (AnySelf/P), -3 (AnyPass/S)
     /// </summary>
     public List<int>? ParsePattern(string patternString)
     {
@@ -145,7 +133,7 @@ public class FilterParser
     public PersonalizedNumberFilter? ParsePersonalizedNumberFilter(string personalizedNumberFilterString)
     {
         var parts = personalizedNumberFilterString.Split(':');
-        if (parts.Length != 4 || !_numberOfJugglers.HasValue)
+        if (parts.Length != 4 || !numberOfJugglers.HasValue)
             return null;
         
         var numberParts = parts[0].Split(',')
@@ -160,9 +148,9 @@ public class FilterParser
             int.TryParse(parts[3], out var from))
         {
             return new PersonalizedNumberFilter(
-                _numberOfJugglers.Value,
-                _minHeight,
-                _maxHeight,
+                numberOfJugglers.Value,
+                minHeight,
+                maxHeight,
                 numberParts,
                 amount,
                 type,
@@ -194,7 +182,7 @@ public class FilterParser
             }
             if (orFilters.Count > 0)
             {
-                var orBuilder = new FilterBuilder(_input);
+                var orBuilder = new FilterBuilder(input);
                 return orBuilder.Or(orFilters).Build();
             }
         }
@@ -218,7 +206,7 @@ public class FilterParser
         var filterType = parts[0].Trim().ToLower();
         var filterValue = parts[1].Trim();
         
-        IFilterBuilder tempBuilder = new FilterBuilder(_input);
+        IFilterBuilder tempBuilder = new FilterBuilder(input);
         
         switch (filterType)
         {
@@ -250,12 +238,12 @@ public class FilterParser
                 return tempBuilder.Build();
                 
             case "pattern":
-                if (_numberOfJugglers.HasValue)
+                if (numberOfJugglers.HasValue)
                 {
                     var patternNumbers = ParsePattern(filterValue);
                     if (patternNumbers != null && patternNumbers.Any())
                     {
-                        tempBuilder = tempBuilder.Pattern(patternNumbers, _numberOfJugglers.Value);
+                        tempBuilder = tempBuilder.Pattern(patternNumbers, numberOfJugglers.Value);
                         return tempBuilder.Build();
                     }
                 }
@@ -272,12 +260,12 @@ public class FilterParser
                 
             case "flexiblepattern":
             case "flexible_pattern":
-                if (_numberOfJugglers.HasValue)
+                if (numberOfJugglers.HasValue)
                 {
                     var groups = ParseFlexiblePattern(filterValue);
                     if (groups != null && groups.Any())
                     {
-                        tempBuilder = tempBuilder.FlexiblePattern(groups, _numberOfJugglers.Value, isGlobalPattern: true);
+                        tempBuilder = tempBuilder.FlexiblePattern(groups, numberOfJugglers.Value, isGlobalPattern: true);
                         return tempBuilder.Build();
                     }
                 }
@@ -285,9 +273,9 @@ public class FilterParser
                 
             case "numberofpasses":
             case "number_of_passes":
-                if (_numberOfJugglers.HasValue && int.TryParse(filterValue, out var passes))
+                if (numberOfJugglers.HasValue && int.TryParse(filterValue, out var passes))
                 {
-                    tempBuilder = tempBuilder.ExactNumberOfPasses(passes, _numberOfJugglers.Value);
+                    tempBuilder = tempBuilder.ExactNumberOfPasses(passes, numberOfJugglers.Value);
                     return tempBuilder.Build();
                 }
                 break;
@@ -312,7 +300,7 @@ public class FilterParser
             var orFilters = new List<ISiteswapFilter>();
             foreach (var orPart in occurrenceString.Split('|'))
             {
-                IFilterBuilder tempBuilder = new FilterBuilder(_input);
+                IFilterBuilder tempBuilder = new FilterBuilder(input);
                 var parsed = ParseOccurrenceFilters(orPart.Trim());
                 foreach (var (numbers, amount) in parsed)
                 {
@@ -323,13 +311,13 @@ public class FilterParser
             }
             if (orFilters.Count > 0)
             {
-                var orBuilder = new FilterBuilder(_input);
+                var orBuilder = new FilterBuilder(input);
                 return orBuilder.Or(orFilters).Build();
             }
         }
         else
         {
-            IFilterBuilder tempBuilder = new FilterBuilder(_input);
+            IFilterBuilder tempBuilder = new FilterBuilder(input);
             var parsed = ParseOccurrenceFilters(occurrenceString);
             foreach (var (numbers, amount) in parsed)
             {
@@ -346,7 +334,7 @@ public class FilterParser
     /// </summary>
     public ISiteswapFilter? BuildPatternFilterWithOr(string patternString)
     {
-        if (string.IsNullOrWhiteSpace(patternString) || !_numberOfJugglers.HasValue)
+        if (string.IsNullOrWhiteSpace(patternString) || !numberOfJugglers.HasValue)
             return null;
 
         // Prüfe auf OR-Logik (|)
@@ -358,15 +346,15 @@ public class FilterParser
                 var patternNumbers = ParsePattern(orPart.Trim());
                 if (patternNumbers != null && patternNumbers.Any())
                 {
-                    IFilterBuilder tempBuilder = new FilterBuilder(_input);
-                    tempBuilder = tempBuilder.Pattern(patternNumbers, _numberOfJugglers.Value);
+                    IFilterBuilder tempBuilder = new FilterBuilder(input);
+                    tempBuilder = tempBuilder.Pattern(patternNumbers, numberOfJugglers.Value);
                     var builtFilter = tempBuilder.Build();
                     orFilters.Add(builtFilter);
                 }
             }
             if (orFilters.Count > 0)
             {
-                var orBuilder = new FilterBuilder(_input);
+                var orBuilder = new FilterBuilder(input);
                 return orBuilder.Or(orFilters).Build();
             }
         }
@@ -375,8 +363,8 @@ public class FilterParser
             var patternNumbers = ParsePattern(patternString);
             if (patternNumbers != null && patternNumbers.Any())
             {
-                IFilterBuilder tempBuilder = new FilterBuilder(_input);
-                tempBuilder = tempBuilder.Pattern(patternNumbers, _numberOfJugglers.Value);
+                IFilterBuilder tempBuilder = new FilterBuilder(input);
+                tempBuilder = tempBuilder.Pattern(patternNumbers, numberOfJugglers.Value);
                 return tempBuilder.Build();
             }
         }
@@ -401,7 +389,7 @@ public class FilterParser
                 var stateObj = ParseState(orPart.Trim());
                 if (stateObj != null)
                 {
-                    IFilterBuilder tempBuilder = new FilterBuilder(_input);
+                    IFilterBuilder tempBuilder = new FilterBuilder(input);
                     tempBuilder = tempBuilder.WithState(stateObj);
                     var builtFilter = tempBuilder.Build();
                     orFilters.Add(builtFilter);
@@ -409,7 +397,7 @@ public class FilterParser
             }
             if (orFilters.Count > 0)
             {
-                var orBuilder = new FilterBuilder(_input);
+                var orBuilder = new FilterBuilder(input);
                 return orBuilder.Or(orFilters).Build();
             }
         }
@@ -418,7 +406,7 @@ public class FilterParser
             var stateObj = ParseState(stateString);
             if (stateObj != null)
             {
-                IFilterBuilder tempBuilder = new FilterBuilder(_input);
+                IFilterBuilder tempBuilder = new FilterBuilder(input);
                 tempBuilder = tempBuilder.WithState(stateObj);
                 return tempBuilder.Build();
             }
@@ -432,7 +420,7 @@ public class FilterParser
     /// </summary>
     public ISiteswapFilter? BuildFlexiblePatternFilterWithOr(string flexiblePatternString)
     {
-        if (string.IsNullOrWhiteSpace(flexiblePatternString) || !_numberOfJugglers.HasValue)
+        if (string.IsNullOrWhiteSpace(flexiblePatternString) || !numberOfJugglers.HasValue)
             return null;
 
         // Prüfe auf OR-Logik (|)
@@ -444,15 +432,15 @@ public class FilterParser
                 var groups = ParseFlexiblePattern(orPart.Trim());
                 if (groups != null && groups.Any())
                 {
-                    IFilterBuilder tempBuilder = new FilterBuilder(_input);
-                    tempBuilder = tempBuilder.FlexiblePattern(groups, _numberOfJugglers.Value, isGlobalPattern: true);
+                    IFilterBuilder tempBuilder = new FilterBuilder(input);
+                    tempBuilder = tempBuilder.FlexiblePattern(groups, numberOfJugglers.Value, isGlobalPattern: true);
                     var builtFilter = tempBuilder.Build();
                     orFilters.Add(builtFilter);
                 }
             }
             if (orFilters.Count > 0)
             {
-                var orBuilder = new FilterBuilder(_input);
+                var orBuilder = new FilterBuilder(input);
                 return orBuilder.Or(orFilters).Build();
             }
         }
@@ -461,8 +449,8 @@ public class FilterParser
             var groups = ParseFlexiblePattern(flexiblePatternString);
             if (groups != null && groups.Any())
             {
-                IFilterBuilder tempBuilder = new FilterBuilder(_input);
-                tempBuilder = tempBuilder.FlexiblePattern(groups, _numberOfJugglers.Value, isGlobalPattern: true);
+                IFilterBuilder tempBuilder = new FilterBuilder(input);
+                tempBuilder = tempBuilder.FlexiblePattern(groups, numberOfJugglers.Value, isGlobalPattern: true);
                 return tempBuilder.Build();
             }
         }
@@ -488,7 +476,7 @@ public class FilterParser
         string? personalizedNumberFilter = null,
         string? notFilter = null)
     {
-        IFilterBuilder filterBuilder = new FilterBuilder(_input);
+        IFilterBuilder filterBuilder = new FilterBuilder(input);
         
         // MinimumOccurrence Filter (unterstützt mehrere mit Komma, OR mit |)
         if (!string.IsNullOrWhiteSpace(minOccurrence))
@@ -557,9 +545,9 @@ public class FilterParser
         }
         
         // NumberOfPasses Filter
-        if (numberOfPasses.HasValue && _numberOfJugglers.HasValue)
+        if (numberOfPasses.HasValue && numberOfJugglers.HasValue)
         {
-            filterBuilder = filterBuilder.ExactNumberOfPasses(numberOfPasses.Value, _numberOfJugglers.Value);
+            filterBuilder = filterBuilder.ExactNumberOfPasses(numberOfPasses.Value, numberOfJugglers.Value);
         }
         
         // Pattern Filter (unterstützt OR mit |)
@@ -574,9 +562,9 @@ public class FilterParser
             {
                 // Fallback für einfache Fälle ohne OR
                 var patternNumbers = ParsePattern(pattern);
-                if (patternNumbers != null && patternNumbers.Any() && _numberOfJugglers.HasValue)
+                if (patternNumbers != null && patternNumbers.Any() && numberOfJugglers.HasValue)
                 {
-                    filterBuilder = filterBuilder.Pattern(patternNumbers, _numberOfJugglers.Value);
+                    filterBuilder = filterBuilder.Pattern(patternNumbers, numberOfJugglers.Value);
                 }
             }
         }
@@ -601,7 +589,7 @@ public class FilterParser
         }
         
         // Flexible Pattern Filter (unterstützt OR mit |)
-        if (!string.IsNullOrWhiteSpace(flexiblePattern) && _numberOfJugglers.HasValue)
+        if (!string.IsNullOrWhiteSpace(flexiblePattern) && numberOfJugglers.HasValue)
         {
             var flexiblePatternFilter = BuildFlexiblePatternFilterWithOr(flexiblePattern);
             if (flexiblePatternFilter != null)
@@ -614,7 +602,7 @@ public class FilterParser
                 var groups = ParseFlexiblePattern(flexiblePattern);
                 if (groups != null && groups.Any())
                 {
-                    filterBuilder = filterBuilder.FlexiblePattern(groups, _numberOfJugglers.Value, isGlobalPattern: true);
+                    filterBuilder = filterBuilder.FlexiblePattern(groups, numberOfJugglers.Value, isGlobalPattern: true);
                 }
             }
         }
@@ -626,22 +614,22 @@ public class FilterParser
         }
         
         // LocallyValidFilter (für spezifischen Jongleur)
-        if (jugglerIndex.HasValue && _numberOfJugglers.HasValue)
+        if (jugglerIndex.HasValue && numberOfJugglers.HasValue)
         {
-            var locallyValidFilter = new LocallyValidFilter(_numberOfJugglers.Value, jugglerIndex.Value);
+            var locallyValidFilter = new LocallyValidFilter(numberOfJugglers.Value, jugglerIndex.Value);
             filterBuilder = filterBuilder.And([locallyValidFilter]);
         }
         
         // RotationAwareFlexiblePatternFilter (für spezifischen Jongleur)
-        if (!string.IsNullOrWhiteSpace(rotationAwarePattern) && _numberOfJugglers.HasValue && jugglerIndex.HasValue)
+        if (!string.IsNullOrWhiteSpace(rotationAwarePattern) && numberOfJugglers.HasValue && jugglerIndex.HasValue)
         {
             var groups = ParseFlexiblePattern(rotationAwarePattern);
             if (groups != null && groups.Any())
             {
                 var rotationAwareFilter = new RotationAwareFlexiblePatternFilter(
                     groups,
-                    _numberOfJugglers.Value,
-                    _input,
+                    numberOfJugglers.Value,
+                    input,
                     jugglerIndex.Value
                 );
                 filterBuilder = filterBuilder.And([rotationAwareFilter]);
@@ -649,7 +637,7 @@ public class FilterParser
         }
         
         // PersonalizedNumberFilter (für spezifischen Jongleur)
-        if (!string.IsNullOrWhiteSpace(personalizedNumberFilter) && _numberOfJugglers.HasValue)
+        if (!string.IsNullOrWhiteSpace(personalizedNumberFilter) && numberOfJugglers.HasValue)
         {
             var personalizedFilter = ParsePersonalizedNumberFilter(personalizedNumberFilter);
             if (personalizedFilter != null)
