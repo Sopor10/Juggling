@@ -1,9 +1,14 @@
 ﻿using System.Text.Json;
+using ModelContextProtocol.Protocol;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddMcpServer()
+    .AddMcpServer(options => options.ServerInfo = new Implementation
+    {
+        Name = "Siteswaps.Mcp.Server",
+        Version = "1.0.0"
+    })
     .WithHttpTransport()
     .WithToolsFromAssembly()
     .WithResourcesFromAssembly();
@@ -17,30 +22,35 @@ app.Use(async (context, next) =>
     {
         // Request-Body lesen und zurückspulen
         context.Request.EnableBuffering();
-        var originalBodyStream = context.Request.Body;
-        
+
         using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
         var body = await reader.ReadToEndAsync();
         context.Request.Body.Position = 0;
-        
+
         if (!string.IsNullOrEmpty(body))
-        {
             try
             {
                 using var doc = JsonDocument.Parse(body);
                 if (doc.RootElement.TryGetProperty("method", out var methodElement))
                 {
                     var method = methodElement.GetString();
-                    if (method == "resources/read")
+                    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+                    switch (method)
                     {
-                        if (doc.RootElement.TryGetProperty("params", out var paramsElement))
+                        case "resources/list":
+                            logger.LogInformation("resources/list request handler called");
+                            break;
+                        case "resources/read":
                         {
-                            if (paramsElement.TryGetProperty("uri", out var uriElement))
-                            {
-                                var uri = uriElement.GetString();
-                                var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-                                logger.LogInformation("resources/read request handler called with URI: {Uri}", uri);
-                            }
+                            if (doc.RootElement.TryGetProperty("params", out var paramsElement))
+                                if (paramsElement.TryGetProperty("uri", out var uriElement))
+                                {
+                                    var uri = uriElement.GetString();
+                                    logger.LogInformation("resources/read request handler called with URI: {Uri}", uri);
+                                }
+
+                            break;
                         }
                     }
                 }
@@ -49,9 +59,8 @@ app.Use(async (context, next) =>
             {
                 // Ignore JSON parsing errors
             }
-        }
     }
-    
+
     await next();
 });
 

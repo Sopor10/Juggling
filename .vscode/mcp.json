@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"siteswaps": {
+			"url": "http://localhost:5000",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
