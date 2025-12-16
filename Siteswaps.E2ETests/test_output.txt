@@ -1,0 +1,222 @@
+  Wiederherzustellende Projekte werden ermittelt...
+  Alle Projekte sind für die Wiederherstellung auf dem neuesten Stand.
+  Siteswap.Details -> C:\Users\larsl\RiderProjects\Juggling\Siteswap.Details\bin\Debug\net10.0\Siteswap.Details.dll
+  Siteswaps.Generator.Core -> C:\Users\larsl\RiderProjects\Juggling\Generator\Siteswaps.Generator.Core\bin\Debug\net10.0\Siteswaps.Generator.Core.dll
+  Siteswaps.Components -> C:\Users\larsl\RiderProjects\Juggling\Siteswaps.Components\bin\Debug\net10.0\Siteswaps.Components.dll
+  Siteswaps.Generator -> C:\Users\larsl\RiderProjects\Juggling\Generator\Siteswaps.Generator\bin\Debug\net10.0\Siteswaps.Generator.dll
+  Webassembly -> C:\Users\larsl\RiderProjects\Juggling\Webassembly\bin\Debug\net10.0\Webassembly.dll
+  Webassembly (Blazor output) -> C:\Users\larsl\RiderProjects\Juggling\Webassembly\bin\Debug\net10.0\wwwroot
+  Siteswaps.E2ETests.Server -> C:\Users\larsl\RiderProjects\Juggling\Siteswaps.E2ETests.Server\bin\Debug\net10.0\Siteswaps.E2ETests.Server.dll
+  Siteswaps.E2ETests -> C:\Users\larsl\RiderProjects\Juggling\Siteswaps.E2ETests\bin\Debug\net10.0\Siteswaps.E2ETests.dll
+Testlauf für "C:\Users\larsl\RiderProjects\Juggling\Siteswaps.E2ETests\bin\Debug\net10.0\Siteswaps.E2ETests.dll" (.NETCoreApp,Version=v10.0)
+VSTest-Version 18.0.1 (x64)
+
+Die Testausführung wird gestartet, bitte warten...
+Insgesamt 1 Testdateien stimmten mit dem angegebenen Muster überein.
+[xUnit.net 00:00:00.92]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Number_Filter_Maximum [FAIL]
+[xUnit.net 00:00:00.94]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_State_Filter [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Passing_Pattern [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Different_Number_Of_Clubs [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_In_Default_Conditions [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Can_Add_Pattern_Filter [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Multiple_Filters [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Number_Filter_AtLeast [FAIL]
+[xUnit.net 00:00:00.95]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Specific_Throws [FAIL]
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Number_Filter_Maximum [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_State_Filter [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Passing_Pattern [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Different_Number_Of_Clubs [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_In_Default_Conditions [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Can_Add_Pattern_Filter [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Multiple_Filters [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Number_Filter_AtLeast [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Specific_Throws [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+[xUnit.net 00:00:01.00]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Custom_Period [FAIL]
+[xUnit.net 00:00:01.00]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Longer_Period [FAIL]
+[xUnit.net 00:00:01.00]     Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Number_Filter_Exactly [FAIL]
+[xUnit.net 00:00:01.01]     [Test Class Cleanup Failure (Siteswaps.E2ETests.GenerateSiteswapsTests)] System.NullReferenceException
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Custom_Period [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Longer_Period [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+  Fehler Siteswaps.E2ETests.GenerateSiteswapsTests.Generate_Siteswaps_With_Number_Filter_Exactly [1 ms]
+  Fehlermeldung:
+   Docker.DotNet.DockerApiException : Docker API responded with status code=InternalServerError, response={"message":"Get \"https://mcr.microsoft.com/v2/\": EOF"}
+
+  Stapelverfolgung:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response) in /_/src/Docker.DotNet/DockerClient.cs:line 514
+   at Docker.DotNet.DockerClient.MakeRequestForRawResponseAsync(HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, CancellationToken token) in /_/src/Docker.DotNet/DockerClient.cs:line 342
+   at Docker.DotNet.Models.StreamUtil.MonitorResponseForMessagesAsync[T](Task`1 responseTask, DockerClient client, CancellationToken cancel, IProgress`1 progress) in /_/src/Docker.DotNet/Endpoints/StreamUtil.cs:line 41
+   at DotNet.Testcontainers.Clients.DockerImageOperations.CreateAsync(IImage image, IDockerRegistryAuthenticationConfiguration dockerRegistryAuthConfig, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerImageOperations.cs:line 73
+   at DotNet.Testcontainers.Clients.TestcontainersClient.PullImageAsync(IImage image, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 400
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 313
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 410
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 280
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.SetUpWebApplication()
+   at PlaywrightTesting.Infrastructure.PlaywrightFixture.InitializeAsync()
+   at PlaywrightTesting.Infrastructure.BlazorWebassemblyFixture`1.InitializeAsync()
+
+Fehler!      : Fehler:    12, erfolgreich:     0, übersprungen:     0, gesamt:    12, Dauer: 95 ms - Siteswaps.E2ETests.dll (net10.0)
