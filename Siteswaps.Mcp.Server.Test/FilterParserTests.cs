@@ -6,7 +6,12 @@ namespace Siteswaps.Mcp.Server.Test;
 
 public class FilterParserTests
 {
-    private SiteswapGeneratorInput CreateInput(int period = 3, int numberOfObjects = 3, int minHeight = 1, int maxHeight = 7)
+    private SiteswapGeneratorInput CreateInput(
+        int period = 3,
+        int numberOfObjects = 3,
+        int minHeight = 1,
+        int maxHeight = 7
+    )
     {
         return new SiteswapGeneratorInput(period, numberOfObjects, minHeight, maxHeight);
     }
@@ -300,7 +305,8 @@ public class FilterParserTests
         // Act
         var result = parser.BuildOccurrenceFilterWithOr(
             "3:2|4:1",
-            (builder, numbers, amount) => builder.MinimumOccurence(numbers, amount));
+            (builder, numbers, amount) => builder.MinimumOccurence(numbers, amount)
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -316,7 +322,8 @@ public class FilterParserTests
         // Act
         var result = parser.BuildOccurrenceFilterWithOr(
             "3:2",
-            (builder, numbers, amount) => builder.MinimumOccurence(numbers, amount));
+            (builder, numbers, amount) => builder.MinimumOccurence(numbers, amount)
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -427,7 +434,8 @@ public class FilterParserTests
             jugglerIndex: 0,
             rotationAwarePattern: "3,4;5",
             personalizedNumberFilter: "3:2:atleast:0",
-            notFilter: "minOccurrence:6:1");
+            notFilter: "minOccurrence:6:1"
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -443,8 +451,7 @@ public class FilterParserTests
         var parser = new FilterParser(input);
 
         // Act
-        var result = parser.BuildFilterFromParameters(
-            useDefaultFilter: true);
+        var result = parser.BuildFilterFromParameters(useDefaultFilter: true);
 
         // Assert
         result.Should().NotBeNull();
@@ -463,7 +470,8 @@ public class FilterParserTests
         var result = parser.BuildFilterFromParameters(
             minOccurrence: "3:2|4:1",
             pattern: "3,3,1|4,4,1",
-            state: "1,1,0|1,0,1");
+            state: "1,1,0|1,0,1"
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -471,4 +479,3 @@ public class FilterParserTests
         filter.Should().NotBeNull();
     }
 }
-

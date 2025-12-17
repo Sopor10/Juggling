@@ -9,15 +9,21 @@ namespace Siteswaps.Mcp.Server.Tools;
 public class SwapPositionsTool
 {
     [McpServerTool]
-    [Description("Swaps two positions in a siteswap and adjusts values accordingly. Returns the modified siteswap.")]
+    [Description(
+        "Swaps two positions in a siteswap and adjusts values accordingly. Returns the modified siteswap."
+    )]
     public string SwapPositions(
         [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap,
         [Description("First position index (0-based)")] int position1,
-        [Description("Second position index (0-based)")] int position2)
+        [Description("Second position index (0-based)")] int position2
+    )
     {
         if (string.IsNullOrWhiteSpace(siteswap))
         {
-            throw new ArgumentException("Siteswap string cannot be null or empty.", nameof(siteswap));
+            throw new ArgumentException(
+                "Siteswap string cannot be null or empty.",
+                nameof(siteswap)
+            );
         }
 
         if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
@@ -27,16 +33,21 @@ public class SwapPositionsTool
 
         if (position1 < 0)
         {
-            throw new ArgumentException("Position indices must be non-negative.", nameof(position1));
+            throw new ArgumentException(
+                "Position indices must be non-negative.",
+                nameof(position1)
+            );
         }
 
         if (position2 < 0)
         {
-            throw new ArgumentException("Position indices must be non-negative.", nameof(position2));
+            throw new ArgumentException(
+                "Position indices must be non-negative.",
+                nameof(position2)
+            );
         }
 
         var swapped = siteswapObj.Swap(position1, position2);
         return swapped.ToString();
     }
 }
-

@@ -10,19 +10,28 @@ namespace Siteswaps.Mcp.Server.Tools;
 public class GenerateCausalDiagramTool
 {
     [McpServerTool]
-    [Description("Generates a causal diagram representation of a siteswap showing ball movements between hands. Returns nodes (throws) and transitions (ball paths).")]
+    [Description(
+        "Generates a causal diagram representation of a siteswap showing ball movements between hands. Returns nodes (throws) and transitions (ball paths)."
+    )]
     public CausalDiagramInfo GenerateCausalDiagram(
         [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap,
-        [Description("Number of hands (default: 2)")] int numberOfHands = 2)
+        [Description("Number of hands (default: 2)")] int numberOfHands = 2
+    )
     {
         if (string.IsNullOrWhiteSpace(siteswap))
         {
-            throw new ArgumentException("Siteswap string cannot be null or empty.", nameof(siteswap));
+            throw new ArgumentException(
+                "Siteswap string cannot be null or empty.",
+                nameof(siteswap)
+            );
         }
 
         if (numberOfHands < 1)
         {
-            throw new ArgumentException("Number of hands must be at least 1.", nameof(numberOfHands));
+            throw new ArgumentException(
+                "Number of hands must be at least 1.",
+                nameof(numberOfHands)
+            );
         }
 
         if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
@@ -47,25 +56,29 @@ public class GenerateCausalDiagramTool
         {
             Siteswap = siteswapObj.ToString(),
             NumberOfHands = numberOfHands,
-            Throws = diagram.Throws.Select(t => new CausalDiagramThrow
-            {
-                Hand = t.Hand.Name,
-                Person = t.Hand.Person.Name,
-                Height = t.Height,
-                Time = t.Time
-            }).ToList(),
-            Transitions = diagram.Transitions.Select(tr => new CausalDiagramTransition
-            {
-                FromHand = tr.Start.Hand.Name,
-                FromPerson = tr.Start.Hand.Person.Name,
-                FromHeight = tr.Start.Height,
-                FromTime = tr.Start.Time,
-                ToHand = tr.End.Hand.Name,
-                ToPerson = tr.End.Hand.Person.Name,
-                ToHeight = tr.End.Height,
-                ToTime = tr.End.Time
-            }).ToList(),
-            MaxTime = diagram.MaxTime
+            Throws = diagram
+                .Throws.Select(t => new CausalDiagramThrow
+                {
+                    Hand = t.Hand.Name,
+                    Person = t.Hand.Person.Name,
+                    Height = t.Height,
+                    Time = t.Time,
+                })
+                .ToList(),
+            Transitions = diagram
+                .Transitions.Select(tr => new CausalDiagramTransition
+                {
+                    FromHand = tr.Start.Hand.Name,
+                    FromPerson = tr.Start.Hand.Person.Name,
+                    FromHeight = tr.Start.Height,
+                    FromTime = tr.Start.Time,
+                    ToHand = tr.End.Hand.Name,
+                    ToPerson = tr.End.Hand.Person.Name,
+                    ToHeight = tr.End.Height,
+                    ToTime = tr.End.Time,
+                })
+                .ToList(),
+            MaxTime = diagram.MaxTime,
         };
     }
 }
@@ -98,4 +111,3 @@ public class CausalDiagramTransition
     public int ToHeight { get; init; }
     public decimal ToTime { get; init; }
 }
-

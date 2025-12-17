@@ -10,13 +10,19 @@ namespace Siteswaps.Mcp.Server.Tools;
 public class SimulateThrowTool
 {
     [McpServerTool]
-    [Description("Simulates a single throw in a siteswap and returns the resulting state and siteswap. This shows what happens when one throw is executed.")]
+    [Description(
+        "Simulates a single throw in a siteswap and returns the resulting state and siteswap. This shows what happens when one throw is executed."
+    )]
     public ThrowSimulationResult SimulateThrow(
-        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap)
+        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap
+    )
     {
         if (string.IsNullOrWhiteSpace(siteswap))
         {
-            throw new ArgumentException("Siteswap string cannot be null or empty.", nameof(siteswap));
+            throw new ArgumentException(
+                "Siteswap string cannot be null or empty.",
+                nameof(siteswap)
+            );
         }
 
         if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
@@ -33,7 +39,7 @@ public class SimulateThrowTool
             ThrowValue = throwInfo.Value,
             StartingState = throwInfo.StartingState.ToString(),
             EndingState = throwInfo.EndingState.ToString(),
-            PrettyPrint = throwInfo.PrettyPrint()
+            PrettyPrint = throwInfo.PrettyPrint(),
         };
     }
 }
@@ -47,4 +53,3 @@ public class ThrowSimulationResult
     public string EndingState { get; init; } = string.Empty;
     public string PrettyPrint { get; init; } = string.Empty;
 }
-

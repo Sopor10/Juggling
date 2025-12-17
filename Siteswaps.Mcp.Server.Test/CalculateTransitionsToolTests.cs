@@ -73,7 +73,8 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions(string.Empty, "531", 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Source siteswap cannot be null or empty.*");
     }
 
@@ -85,7 +86,8 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions(null!, "531", 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Source siteswap cannot be null or empty.*");
     }
 
@@ -97,7 +99,8 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions("531", string.Empty, 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Target siteswap cannot be null or empty.*");
     }
 
@@ -109,7 +112,8 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions("531", null!, 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Target siteswap cannot be null or empty.*");
     }
 
@@ -121,8 +125,7 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions("43", "531", 1);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid source siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid source siteswap: 43*");
     }
 
     [Test]
@@ -133,8 +136,7 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions("531", "43", 1);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid target siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid target siteswap: 43*");
     }
 
     [Test]
@@ -145,7 +147,8 @@ public class CalculateTransitionsToolTests
 
         // Act & Assert
         var act = () => tool.CalculateTransitions("531", "441", -1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Maximum transition length must be non-negative.*");
     }
 
@@ -183,10 +186,15 @@ public class CalculateTransitionsToolTests
         result.Should().NotBeNull();
         var transitionsWithThrows = result.Where(t => t.Throws.Any()).ToList();
         transitionsWithThrows.Should().NotBeEmpty();
-        transitionsWithThrows.Should().OnlyContain(t => 
-            t.Throws.All(th => th.Value > 0 && 
-                              !string.IsNullOrWhiteSpace(th.StartingState) && 
-                              !string.IsNullOrWhiteSpace(th.EndingState)));
+        transitionsWithThrows
+            .Should()
+            .OnlyContain(t =>
+                t.Throws.All(th =>
+                    th.Value > 0
+                    && !string.IsNullOrWhiteSpace(th.StartingState)
+                    && !string.IsNullOrWhiteSpace(th.EndingState)
+                )
+            );
     }
 
     [Test]
@@ -206,4 +214,3 @@ public class CalculateTransitionsToolTests
         result.Should().OnlyContain(t => !string.IsNullOrWhiteSpace(t.PrettyPrint));
     }
 }
-

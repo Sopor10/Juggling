@@ -43,7 +43,8 @@ public class NormalizeSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.NormalizeSiteswap(string.Empty);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -55,8 +56,6 @@ public class NormalizeSiteswapToolTests
 
         // Act & Assert
         var act = () => tool.NormalizeSiteswap("43");
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
     }
 }
-

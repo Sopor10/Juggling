@@ -47,8 +47,7 @@ public class GenerateCausalDiagramToolTests
 
         // Act & Assert
         var act = () => tool.GenerateCausalDiagram("531", 0);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Number of hands must be at least 1.*");
+        act.Should().Throw<ArgumentException>().WithMessage("Number of hands must be at least 1.*");
     }
 
     [Test]
@@ -59,8 +58,8 @@ public class GenerateCausalDiagramToolTests
 
         // Act & Assert
         var act = () => tool.GenerateCausalDiagram(string.Empty);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 }
-

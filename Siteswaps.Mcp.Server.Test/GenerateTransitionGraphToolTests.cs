@@ -49,7 +49,8 @@ public class GenerateTransitionGraphToolTests
 
         // Act & Assert
         var act = () => tool.GenerateTransitionGraph(string.Empty, 1);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswaps string cannot be null or empty.*");
     }
 
@@ -61,7 +62,8 @@ public class GenerateTransitionGraphToolTests
 
         // Act & Assert
         var act = () => tool.GenerateTransitionGraph("531", 0);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Maximum transition length must be at least 1.*");
     }
 
@@ -73,8 +75,6 @@ public class GenerateTransitionGraphToolTests
 
         // Act & Assert
         var act = () => tool.GenerateTransitionGraph("43", 1);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("Invalid siteswap: 43*");
+        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
     }
 }
-

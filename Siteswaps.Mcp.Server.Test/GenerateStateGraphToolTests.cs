@@ -47,7 +47,8 @@ public class GenerateStateGraphToolTests
 
         // Act & Assert
         var act = () => tool.GenerateStateGraph(string.Empty);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -59,7 +60,8 @@ public class GenerateStateGraphToolTests
 
         // Act & Assert
         var act = () => tool.GenerateStateGraph(null!);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage("Siteswap string cannot be null or empty.*");
     }
 
@@ -72,7 +74,8 @@ public class GenerateStateGraphToolTests
 
         // Act & Assert
         var act = () => tool.GenerateStateGraph(invalidSiteswap);
-        act.Should().Throw<ArgumentException>()
+        act.Should()
+            .Throw<ArgumentException>()
             .WithMessage($"Invalid siteswap: {invalidSiteswap}*");
     }
 
@@ -103,10 +106,13 @@ public class GenerateStateGraphToolTests
 
         // Assert
         result.Edges.Should().NotBeEmpty();
-        result.Edges.Should().OnlyContain(e => 
-            !string.IsNullOrWhiteSpace(e.FromState) && 
-            !string.IsNullOrWhiteSpace(e.ToState) && 
-            e.ThrowValue > 0);
+        result
+            .Edges.Should()
+            .OnlyContain(e =>
+                !string.IsNullOrWhiteSpace(e.FromState)
+                && !string.IsNullOrWhiteSpace(e.ToState)
+                && e.ThrowValue > 0
+            );
     }
 
     [Test]
@@ -121,9 +127,9 @@ public class GenerateStateGraphToolTests
 
         // Assert
         var nodeSet = result.Nodes.ToHashSet();
-        result.Edges.Should().OnlyContain(e => 
-            nodeSet.Contains(e.FromState) && 
-            nodeSet.Contains(e.ToState));
+        result
+            .Edges.Should()
+            .OnlyContain(e => nodeSet.Contains(e.FromState) && nodeSet.Contains(e.ToState));
     }
 
     [Test]
@@ -174,4 +180,3 @@ public class GenerateStateGraphToolTests
         result.Nodes.Should().OnlyHaveUniqueItems();
     }
 }
-

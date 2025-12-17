@@ -9,13 +9,19 @@ namespace Siteswaps.Mcp.Server.Tools;
 public class NormalizeSiteswapTool
 {
     [McpServerTool]
-    [Description("Normalizes a siteswap to its unique representation (canonical form). This ensures that different rotations of the same siteswap are represented identically.")]
+    [Description(
+        "Normalizes a siteswap to its unique representation (canonical form). This ensures that different rotations of the same siteswap are represented identically."
+    )]
     public string NormalizeSiteswap(
-        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap)
+        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap
+    )
     {
         if (string.IsNullOrWhiteSpace(siteswap))
         {
-            throw new ArgumentException("Siteswap string cannot be null or empty.", nameof(siteswap));
+            throw new ArgumentException(
+                "Siteswap string cannot be null or empty.",
+                nameof(siteswap)
+            );
         }
 
         if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
@@ -23,9 +29,10 @@ public class NormalizeSiteswapTool
             throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
         }
 
-        var normalized = SiteswapDetails.ToUniqueRepresentation(siteswapObj.Items.EnumerateValues(1).ToArray());
+        var normalized = SiteswapDetails.ToUniqueRepresentation(
+            siteswapObj.Items.EnumerateValues(1).ToArray()
+        );
         var normalizedSiteswap = new SiteswapDetails(normalized);
         return normalizedSiteswap.ToString();
     }
 }
-
