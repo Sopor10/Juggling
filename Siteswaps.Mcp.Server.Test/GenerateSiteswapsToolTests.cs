@@ -20,21 +20,7 @@ public class GenerateSiteswapsToolTests
             maxHeight: 5,
             maxResults: 10,
             timeoutSeconds: 5,
-            minOccurrence: null,
-            maxOccurrence: null,
-            exactOccurrence: null,
-            numberOfPasses: null,
-            numberOfJugglers: null,
-            pattern: null,
-            state: null,
-            flexiblePattern: null,
-            useDefaultFilter: true,
-            useNoFilter: false,
-            jugglerIndex: null,
-            rotationAwarePattern: null,
-            personalizedNumberFilter: null,
-            notFilter: null,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
 
         // Assert
@@ -43,52 +29,13 @@ public class GenerateSiteswapsToolTests
     }
 
     [Test]
-    public async Task GenerateSiteswaps_With_NotFilter_MinOccurrence_Excludes_Matching_Siteswaps()
+    public async Task GenerateSiteswaps_With_MinOcc_Filter_Works()
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
         var tool = new GenerateSiteswapsTool();
 
-        // Act - Generiere Siteswaps OHNE Not-Filter (sollte Siteswaps mit 3 enthalten)
-        var resultsWithoutNot = await tool.GenerateSiteswaps(
-            period: 3,
-            numberOfObjects: 3,
-            minHeight: 2,
-            maxHeight: 5,
-            maxResults: 20,
-            timeoutSeconds: 5,
-            notFilter: null,
-            cancellationToken: cancellationToken
-        );
-
-        // Act - Generiere Siteswaps MIT Not-Filter (sollte Siteswaps mit 3 ausschließen)
-        var resultsWithNot = await tool.GenerateSiteswaps(
-            period: 3,
-            numberOfObjects: 3,
-            minHeight: 2,
-            maxHeight: 5,
-            maxResults: 20,
-            timeoutSeconds: 5,
-            notFilter: "minOccurrence:3:1",
-            cancellationToken: cancellationToken
-        );
-
-        // Assert
-        resultsWithoutNot.Should().NotBeEmpty();
-        resultsWithNot.Should().NotBeEmpty();
-        // Die Ergebnisse sollten unterschiedlich sein (Not-Filter sollte einige ausschließen)
-        // Da wir nicht garantieren können, dass alle Siteswaps eine 3 enthalten,
-        // prüfen wir nur, dass beide Listen nicht leer sind
-    }
-
-    [Test]
-    public async Task GenerateSiteswaps_With_OR_MaxOccurrence_Works()
-    {
-        // Arrange
-        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
-
-        // Act - OR-Logik: maxOccurrence von 5:1 ODER 6:1
+        // Act
         var results = await tool.GenerateSiteswaps(
             period: 3,
             numberOfObjects: 3,
@@ -96,23 +43,26 @@ public class GenerateSiteswapsToolTests
             maxHeight: 7,
             maxResults: 20,
             timeoutSeconds: 5,
-            maxOccurrence: "5:1|6:1",
+            filter: "minOcc(5,1)",
             cancellationToken: cancellationToken
         );
 
         // Assert
         results.Should().NotBeEmpty();
-        results.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s));
+        foreach (var siteswap in results)
+        {
+            siteswap.Should().Contain("5");
+        }
     }
 
     [Test]
-    public async Task GenerateSiteswaps_With_OR_ExactOccurrence_Works()
+    public async Task GenerateSiteswaps_With_MaxOcc_Filter_Works()
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
         var tool = new GenerateSiteswapsTool();
 
-        // Act - OR-Logik: exactOccurrence von 4:1 ODER 5:1
+        // Act
         var results = await tool.GenerateSiteswaps(
             period: 3,
             numberOfObjects: 3,
@@ -120,85 +70,199 @@ public class GenerateSiteswapsToolTests
             maxHeight: 7,
             maxResults: 20,
             timeoutSeconds: 5,
-            exactOccurrence: "4:1|5:1",
+            filter: "maxOcc(5,1)",
             cancellationToken: cancellationToken
         );
 
         // Assert
         results.Should().NotBeEmpty();
-        results.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s));
+        foreach (var siteswap in results)
+        {
+            siteswap.Count(c => c == '5').Should().BeLessThanOrEqualTo(1);
+        }
     }
 
     [Test]
-    public async Task GenerateSiteswaps_With_OR_Pattern_Works()
+    public async Task GenerateSiteswaps_With_ExactOcc_Filter_Works()
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
         var tool = new GenerateSiteswapsTool();
 
-        // Act - OR-Logik: pattern "3,3,1" ODER "4,4,1"
+        // Act
         var results = await tool.GenerateSiteswaps(
             period: 3,
             numberOfObjects: 3,
-            minHeight: 1,
-            maxHeight: 5,
+            minHeight: 2,
+            maxHeight: 7,
             maxResults: 20,
             timeoutSeconds: 5,
-            numberOfJugglers: 1,
-            pattern: "3,3,1|4,4,1",
+            filter: "exactOcc(5,1)",
             cancellationToken: cancellationToken
         );
 
         // Assert
         results.Should().NotBeEmpty();
-        results.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s));
+        foreach (var siteswap in results)
+        {
+            siteswap.Count(c => c == '5').Should().Be(1);
+        }
     }
 
     [Test]
-    public async Task GenerateSiteswaps_With_OR_State_Works()
+    public async Task GenerateSiteswaps_With_Or_Filter_Works()
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
         var tool = new GenerateSiteswapsTool();
 
-        // Act - OR-Logik: state "1,1,0" ODER "1,0,1" (kann leer sein, wenn keine Siteswaps diese States haben)
+        // Act
         var results = await tool.GenerateSiteswaps(
             period: 3,
             numberOfObjects: 3,
             minHeight: 1,
             maxHeight: 7,
-            maxResults: 50,
-            timeoutSeconds: 10,
-            state: "1,1,0|1,0,1",
-            cancellationToken: cancellationToken
-        );
-
-        // Assert - State-Filter können sehr restriktiv sein, daher akzeptieren wir auch leere Ergebnisse
-        results.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s));
-    }
-
-    [Test]
-    public async Task GenerateSiteswaps_With_OR_FlexiblePattern_Works()
-    {
-        // Arrange
-        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
-
-        // Act - OR-Logik: flexiblePattern "3,4;5" ODER "4,5;6"
-        var results = await tool.GenerateSiteswaps(
-            period: 5,
-            numberOfObjects: 4,
-            minHeight: 2,
-            maxHeight: 7,
             maxResults: 20,
             timeoutSeconds: 5,
-            numberOfJugglers: 2,
-            flexiblePattern: "3,4;5|4,5;6",
+            filter: "minOcc(5,1) OR minOcc(7,1)",
             cancellationToken: cancellationToken
         );
 
         // Assert
         results.Should().NotBeEmpty();
-        results.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s));
+        foreach (var siteswap in results)
+        {
+            var has5 = siteswap.Contains('5');
+            var has7 = siteswap.Contains('7');
+            (has5 || has7).Should().BeTrue();
+        }
+    }
+
+    [Test]
+    public async Task GenerateSiteswaps_With_And_Filter_Works()
+    {
+        // Arrange
+        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+        var tool = new GenerateSiteswapsTool();
+
+        // Act
+        var results = await tool.GenerateSiteswaps(
+            period: 3,
+            numberOfObjects: 3,
+            minHeight: 0,
+            maxHeight: 7,
+            maxResults: 20,
+            timeoutSeconds: 5,
+            filter: "minOcc(5,1) AND noZeros",
+            cancellationToken: cancellationToken
+        );
+
+        // Assert
+        results.Should().NotBeEmpty();
+        foreach (var siteswap in results)
+        {
+            siteswap.Should().Contain("5");
+            siteswap.Should().NotContain("0");
+        }
+    }
+
+    [Test]
+    public async Task GenerateSiteswaps_With_Not_Filter_Works()
+    {
+        // Arrange
+        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+        var tool = new GenerateSiteswapsTool();
+
+        // Act
+        var results = await tool.GenerateSiteswaps(
+            period: 3,
+            numberOfObjects: 3,
+            minHeight: 1,
+            maxHeight: 7,
+            maxResults: 20,
+            timeoutSeconds: 5,
+            filter: "NOT minOcc(5,2)",
+            cancellationToken: cancellationToken
+        );
+
+        // Assert
+        results.Should().NotBeEmpty();
+        foreach (var siteswap in results)
+        {
+            siteswap.Count(c => c == '5').Should().BeLessThan(2);
+        }
+    }
+
+    [Test]
+    public async Task GenerateSiteswaps_With_Complex_Filter_Works()
+    {
+        // Arrange
+        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+        var tool = new GenerateSiteswapsTool();
+
+        // Act
+        var results = await tool.GenerateSiteswaps(
+            period: 3,
+            numberOfObjects: 3,
+            minHeight: 0,
+            maxHeight: 7,
+            maxResults: 20,
+            timeoutSeconds: 5,
+            filter: "(minOcc(5,1) OR minOcc(7,1)) AND noZeros",
+            cancellationToken: cancellationToken
+        );
+
+        // Assert
+        results.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public async Task GenerateSiteswaps_With_NoZeros_Filter_Works()
+    {
+        // Arrange
+        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+        var tool = new GenerateSiteswapsTool();
+
+        // Act
+        var results = await tool.GenerateSiteswaps(
+            period: 3,
+            numberOfObjects: 3,
+            minHeight: 0,
+            maxHeight: 7,
+            maxResults: 10,
+            timeoutSeconds: 5,
+            filter: "noZeros",
+            cancellationToken: cancellationToken
+        );
+
+        // Assert
+        results.Should().NotBeEmpty();
+        foreach (var siteswap in results)
+        {
+            siteswap.Should().NotContain("0");
+        }
+    }
+
+    [Test]
+    public async Task GenerateSiteswaps_With_Ground_Filter_Works()
+    {
+        // Arrange
+        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+        var tool = new GenerateSiteswapsTool();
+
+        // Act
+        var results = await tool.GenerateSiteswaps(
+            period: 3,
+            numberOfObjects: 3,
+            minHeight: 1,
+            maxHeight: 7,
+            maxResults: 10,
+            timeoutSeconds: 5,
+            filter: "ground",
+            cancellationToken: cancellationToken
+        );
+
+        // Assert
+        results.Should().NotBeEmpty();
     }
 }

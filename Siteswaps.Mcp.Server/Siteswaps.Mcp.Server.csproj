@@ -8,6 +8,8 @@
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" />
+    <PackageReference Include="Pidgin" />
+    <PackageReference Include="Dunet" />
   </ItemGroup>
 
   <ItemGroup>
