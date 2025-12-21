@@ -28,7 +28,8 @@ public class ValidateSiteswapToolTests
         var result = tool.ValidateSiteswap(siteswap);
 
         // Assert
-        result.Should().Be(expectedResult);
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().Be(expectedResult);
     }
 
     [Test]
@@ -41,7 +42,8 @@ public class ValidateSiteswapToolTests
         var result = tool.ValidateSiteswap(null!);
 
         // Assert
-        result.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().BeFalse();
     }
 
     [Test]
@@ -55,7 +57,8 @@ public class ValidateSiteswapToolTests
         var result = tool.ValidateSiteswap(validSiteswap);
 
         // Assert
-        result.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().BeTrue();
     }
 
     [Test]
@@ -69,7 +72,8 @@ public class ValidateSiteswapToolTests
         var result = tool.ValidateSiteswap(invalidSiteswap);
 
         // Assert
-        result.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().BeFalse();
     }
 
     [Test]
@@ -82,7 +86,8 @@ public class ValidateSiteswapToolTests
         var result = tool.ValidateSiteswap(string.Empty);
 
         // Assert
-        result.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().BeFalse();
     }
 
     [Test]
@@ -95,6 +100,7 @@ public class ValidateSiteswapToolTests
         var result = tool.ValidateSiteswap("   ");
 
         // Assert
-        result.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().BeFalse();
     }
 }

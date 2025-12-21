@@ -16,10 +16,11 @@ public class GenerateCausalDiagramToolTests
         var result = tool.GenerateCausalDiagram(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be(siteswap);
-        result.NumberOfHands.Should().Be(2);
-        result.Throws.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data.NumberOfHands.Should().Be(2);
+        result.Data.Throws.Should().NotBeEmpty();
     }
 
     [Test]
@@ -34,9 +35,10 @@ public class GenerateCausalDiagramToolTests
         var result = tool.GenerateCausalDiagram(siteswap, numberOfHands);
 
         // Assert
-        result.Should().NotBeNull();
-        result.NumberOfHands.Should().Be(numberOfHands);
-        result.Throws.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.NumberOfHands.Should().Be(numberOfHands);
+        result.Data.Throws.Should().NotBeEmpty();
     }
 
     [Test]
@@ -46,8 +48,9 @@ public class GenerateCausalDiagramToolTests
         var tool = new GenerateCausalDiagramTool();
 
         // Act & Assert
-        var act = () => tool.GenerateCausalDiagram("531", 0);
-        act.Should().Throw<ArgumentException>().WithMessage("Number of hands must be at least 1.*");
+        var result = tool.GenerateCausalDiagram("531", 0);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Number of hands must be at least 1");
     }
 
     [Test]
@@ -57,9 +60,8 @@ public class GenerateCausalDiagramToolTests
         var tool = new GenerateCausalDiagramTool();
 
         // Act & Assert
-        var act = () => tool.GenerateCausalDiagram(string.Empty);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.GenerateCausalDiagram(string.Empty);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 }

@@ -16,13 +16,14 @@ public class AnalyzeSiteswapToolTests
         var result = tool.AnalyzeSiteswap(validSiteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be("531");
-        result.Period.Should().Be(3);
-        result.NumberOfObjects.Should().Be(3);
-        result.Length.Should().Be(3);
-        result.Orbits.Should().NotBeEmpty();
-        result.AllStates.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be("531");
+        result.Data.Period.Should().Be(3);
+        result.Data.NumberOfObjects.Should().Be(3);
+        result.Data.Length.Should().Be(3);
+        result.Data.Orbits.Should().NotBeEmpty();
+        result.Data.AllStates.Should().NotBeEmpty();
     }
 
     [Test]
@@ -36,12 +37,13 @@ public class AnalyzeSiteswapToolTests
         var result = tool.AnalyzeSiteswap(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be("441");
-        result.Period.Should().Be(3);
-        result.NumberOfObjects.Should().BeApproximately(3, 0.01m);
-        result.Length.Should().Be(3);
-        result.MaxHeight.Should().BeGreaterThan(0);
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be("441");
+        result.Data.Period.Should().Be(3);
+        result.Data.NumberOfObjects.Should().BeApproximately(3, 0.01m);
+        result.Data.Length.Should().Be(3);
+        result.Data.MaxHeight.Should().BeGreaterThan(0);
     }
 
     [Test]
@@ -51,10 +53,9 @@ public class AnalyzeSiteswapToolTests
         var tool = new AnalyzeSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.AnalyzeSiteswap(string.Empty);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.AnalyzeSiteswap(string.Empty);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -64,10 +65,9 @@ public class AnalyzeSiteswapToolTests
         var tool = new AnalyzeSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.AnalyzeSiteswap(null!);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.AnalyzeSiteswap(null!);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -78,10 +78,9 @@ public class AnalyzeSiteswapToolTests
         var invalidSiteswap = "43";
 
         // Act & Assert
-        var act = () => tool.AnalyzeSiteswap(invalidSiteswap);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage($"Invalid siteswap: {invalidSiteswap}*");
+        var result = tool.AnalyzeSiteswap(invalidSiteswap);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain($"Invalid siteswap: {invalidSiteswap}");
     }
 
     [Test]
@@ -95,9 +94,10 @@ public class AnalyzeSiteswapToolTests
         var result = tool.AnalyzeSiteswap(siteswap);
 
         // Assert
-        result.Orbits.Should().NotBeEmpty();
-        result.Orbits.Should().OnlyContain(o => !string.IsNullOrWhiteSpace(o.DisplayValue));
-        result.Orbits.Should().OnlyContain(o => o.Items.Any());
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.Orbits.Should().NotBeEmpty();
+        result.Data.Orbits.Should().OnlyContain(o => !string.IsNullOrWhiteSpace(o.DisplayValue));
+        result.Data.Orbits.Should().OnlyContain(o => o.Items.Any());
     }
 
     [Test]
@@ -111,9 +111,10 @@ public class AnalyzeSiteswapToolTests
         var result = tool.AnalyzeSiteswap(siteswap);
 
         // Assert
-        result.AllStates.Should().NotBeEmpty();
-        result.AllStates.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s.State));
-        result.AllStates.Should().OnlyContain(s => s.Siteswaps.Any());
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.AllStates.Should().NotBeEmpty();
+        result.Data.AllStates.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s.State));
+        result.Data.AllStates.Should().OnlyContain(s => s.Siteswaps.Any());
     }
 
     [Test]
@@ -127,7 +128,8 @@ public class AnalyzeSiteswapToolTests
         var result = tool.AnalyzeSiteswap(siteswap);
 
         // Assert
-        result.CurrentState.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.CurrentState.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
@@ -141,10 +143,11 @@ public class AnalyzeSiteswapToolTests
         var result = tool.AnalyzeSiteswap(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be("97531");
-        result.Period.Should().Be(5);
-        result.Length.Should().Be(5);
-        result.MaxHeight.Should().Be(9);
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be("97531");
+        result.Data.Period.Should().Be(5);
+        result.Data.Length.Should().Be(5);
+        result.Data.MaxHeight.Should().Be(9);
     }
 }
