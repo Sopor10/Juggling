@@ -12,7 +12,7 @@ public class CalculateTransitionsTool
     [Description(
         "Calculates all possible transitions between two siteswaps. Returns a list of transition paths showing how to move from the source siteswap to the target siteswap."
     )]
-    public List<TransitionInfo> CalculateTransitions(
+    public ToolResult<List<TransitionInfo>> CalculateTransitions(
         [Description("Source siteswap string (e.g., '531', '441')")] string fromSiteswap,
         [Description("Target siteswap string (e.g., '531', '441')")] string toSiteswap,
         [Description("Maximum transition length (number of throws in the transition path)")]
@@ -21,66 +21,82 @@ public class CalculateTransitionsTool
             int? maxHeight = null
     )
     {
-        if (string.IsNullOrWhiteSpace(fromSiteswap))
+        return ToolResult.From(() =>
         {
-            throw new ArgumentException(
-                "Source siteswap cannot be null or empty.",
-                nameof(fromSiteswap)
-            );
-        }
-
-        if (string.IsNullOrWhiteSpace(toSiteswap))
-        {
-            throw new ArgumentException(
-                "Target siteswap cannot be null or empty.",
-                nameof(toSiteswap)
-            );
-        }
-
-        if (maxLength < 0)
-        {
-            throw new ArgumentException(
-                "Maximum transition length must be non-negative.",
-                nameof(maxLength)
-            );
-        }
-
-        if (!SiteswapDetails.TryCreate(fromSiteswap, out var from))
-        {
-            throw new ArgumentException(
-                $"Invalid source siteswap: {fromSiteswap}",
-                nameof(fromSiteswap)
-            );
-        }
-
-        if (!SiteswapDetails.TryCreate(toSiteswap, out var to))
-        {
-            throw new ArgumentException(
-                $"Invalid target siteswap: {toSiteswap}",
-                nameof(toSiteswap)
-            );
-        }
-
-        var transitions = TransitionCalculator.CreateTransitions(from, to, maxLength, maxHeight);
-
-        return transitions
-            .Select(t => new TransitionInfo
+            if (string.IsNullOrWhiteSpace(fromSiteswap))
             {
-                FromSiteswap = t.From.ToString(),
-                ToSiteswap = t.To.ToString(),
-                Throws = t
-                    .Throws.Select(th => new ThrowInfo
-                    {
-                        Value = th.Value,
-                        StartingState = th.StartingState.ToString(),
-                        EndingState = th.EndingState.ToString(),
-                    })
-                    .ToList(),
-                Length = t.Throws.Length,
-                PrettyPrint = t.PrettyPrint(),
-                IsValid = t.IsValid,
-            })
-            .ToList();
+                throw new ArgumentException(
+                    "Source siteswap cannot be null or empty.",
+                    nameof(fromSiteswap)
+                );
+            }
+
+            if (string.IsNullOrWhiteSpace(toSiteswap))
+            {
+                throw new ArgumentException(
+                    "Target siteswap cannot be null or empty.",
+                    nameof(toSiteswap)
+                );
+            }
+
+            if (maxLength < 0)
+            {
+                throw new ArgumentException(
+                    "Maximum transition length must be non-negative.",
+                    nameof(maxLength)
+                );
+            }
+
+            if (!SiteswapDetails.TryCreate(fromSiteswap, out var from))
+            {
+                throw new ArgumentException(
+                    $"Invalid source siteswap: {fromSiteswap}",
+                    nameof(fromSiteswap)
+                );
+            }
+
+            if (!SiteswapDetails.TryCreate(toSiteswap, out var to))
+            {
+                throw new ArgumentException(
+                    $"Invalid target siteswap: {toSiteswap}",
+                    nameof(toSiteswap)
+                );
+            }
+
+            if (from.NumberOfObjects() != to.NumberOfObjects())
+            {
+                throw new ArgumentException(
+                    $"Source and target must use the same number of objects (from: {from.NumberOfObjects()}, to: {to.NumberOfObjects()}).",
+                    nameof(toSiteswap)
+                );
+            }
+
+            var transitions = TransitionCalculator.CreateTransitions(
+                from,
+                to,
+                maxLength,
+                maxHeight
+            );
+
+            return transitions
+                .Select(t => new TransitionInfo
+                {
+                    FromSiteswap = t.From.ToString(),
+                    ToSiteswap = t.To.ToString(),
+                    Throws = t
+                        .Throws.Select(th => new ThrowInfo
+                        {
+                            Value = th.Value,
+                            StartingState = th.StartingState.ToString(),
+                            EndingState = th.EndingState.ToString(),
+                        })
+                        .ToList(),
+                    Length = t.Throws.Length,
+                    PrettyPrint = t.PrettyPrint(),
+                    IsValid = t.IsValid,
+                })
+                .ToList();
+        });
     }
 }
 

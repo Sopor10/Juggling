@@ -58,4 +58,17 @@ public class SwapPositionsToolTests
             .Throw<ArgumentException>()
             .WithMessage("Position indices must be non-negative.*");
     }
+
+    [Test]
+    public void SwapPositions_With_Position_Out_Of_Range_Throws_ArgumentException()
+    {
+        // Arrange
+        var tool = new SwapPositionsTool();
+
+        // Act & Assert
+        var act = () => tool.SwapPositions("531", 0, 99);
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("position2 (99) is out of range for siteswap length 3.*");
+    }
 }

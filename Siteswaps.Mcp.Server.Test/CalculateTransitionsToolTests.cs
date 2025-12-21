@@ -140,6 +140,19 @@ public class CalculateTransitionsToolTests
     }
 
     [Test]
+    public void CalculateTransitions_With_Different_Number_Of_Objects_Throws_ArgumentException()
+    {
+        // Arrange
+        var tool = new CalculateTransitionsTool();
+
+        // Act & Assert
+        var act = () => tool.CalculateTransitions("3", "4444", 2);
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Source and target must use the same number of objects*");
+    }
+
+    [Test]
     public void CalculateTransitions_With_Negative_MaxLength_Throws_ArgumentException()
     {
         // Arrange

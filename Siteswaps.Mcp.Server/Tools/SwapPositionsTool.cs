@@ -47,6 +47,23 @@ public class SwapPositionsTool
             );
         }
 
+        var length = siteswapObj.Length;
+        if (position1 >= length)
+        {
+            throw new ArgumentException(
+                $"position1 ({position1}) is out of range for siteswap length {length}.",
+                nameof(position1)
+            );
+        }
+
+        if (position2 >= length)
+        {
+            throw new ArgumentException(
+                $"position2 ({position2}) is out of range for siteswap length {length}.",
+                nameof(position2)
+            );
+        }
+
         var swapped = siteswapObj.Swap(position1, position2);
         return swapped.ToString();
     }
