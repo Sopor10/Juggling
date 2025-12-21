@@ -12,59 +12,62 @@ public class SwapPositionsTool
     [Description(
         "Swaps two positions in a siteswap and adjusts values accordingly. Returns the modified siteswap."
     )]
-    public string SwapPositions(
+    public ToolResult<string> SwapPositions(
         [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap,
         [Description("First position index (0-based)")] int position1,
         [Description("Second position index (0-based)")] int position2
     )
     {
-        if (string.IsNullOrWhiteSpace(siteswap))
+        return ToolResult.From(() =>
         {
-            throw new ArgumentException(
-                "Siteswap string cannot be null or empty.",
-                nameof(siteswap)
-            );
-        }
+            if (string.IsNullOrWhiteSpace(siteswap))
+            {
+                throw new ArgumentException(
+                    "Siteswap string cannot be null or empty.",
+                    nameof(siteswap)
+                );
+            }
 
-        if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
-        {
-            throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
-        }
+            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
+            {
+                throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
+            }
 
-        if (position1 < 0)
-        {
-            throw new ArgumentException(
-                "Position indices must be non-negative.",
-                nameof(position1)
-            );
-        }
+            if (position1 < 0)
+            {
+                throw new ArgumentException(
+                    "Position indices must be non-negative.",
+                    nameof(position1)
+                );
+            }
 
-        if (position2 < 0)
-        {
-            throw new ArgumentException(
-                "Position indices must be non-negative.",
-                nameof(position2)
-            );
-        }
+            if (position2 < 0)
+            {
+                throw new ArgumentException(
+                    "Position indices must be non-negative.",
+                    nameof(position2)
+                );
+            }
 
-        var length = siteswapObj.Length;
-        if (position1 >= length)
-        {
-            throw new ArgumentException(
-                $"position1 ({position1}) is out of range for siteswap length {length}.",
-                nameof(position1)
-            );
-        }
+            var length = siteswapObj.Length;
+            if (position1 >= length)
+            {
+                throw new ArgumentException(
+                    $"position1 ({position1}) is out of range for siteswap length {length}.",
+                    nameof(position1)
+                );
+            }
 
-        if (position2 >= length)
-        {
-            throw new ArgumentException(
-                $"position2 ({position2}) is out of range for siteswap length {length}.",
-                nameof(position2)
-            );
-        }
+            if (position2 >= length)
+            {
+                throw new ArgumentException(
+                    $"position2 ({position2}) is out of range for siteswap length {length}.",
+                    nameof(position2)
+                );
+            }
 
-        var swapped = siteswapObj.Swap(position1, position2);
-        return swapped.ToString();
+            var swapped = siteswapObj.Swap(position1, position2);
+            return swapped.ToString();
+        });
     }
 }

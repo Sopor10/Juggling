@@ -18,9 +18,10 @@ public class CalculateTransitionsToolTests
         var result = tool.CalculateTransitions(fromSiteswap, toSiteswap, maxLength);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().NotBeEmpty();
-        result.Should().OnlyContain(t => t.IsValid);
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Should().NotBeEmpty();
+        result.Data.Should().OnlyContain(t => t.IsValid);
     }
 
     [Test]
@@ -35,13 +36,14 @@ public class CalculateTransitionsToolTests
         var result = tool.CalculateTransitions(siteswap, siteswap, maxLength);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().ContainSingle();
-        result[0].FromSiteswap.Should().Be(siteswap);
-        result[0].ToSiteswap.Should().Be(siteswap);
-        result[0].Length.Should().Be(0);
-        result[0].Throws.Should().BeEmpty();
-        result[0].IsValid.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Should().ContainSingle();
+        result.Data[0].FromSiteswap.Should().Be(siteswap);
+        result.Data[0].ToSiteswap.Should().Be(siteswap);
+        result.Data[0].Length.Should().Be(0);
+        result.Data[0].Throws.Should().BeEmpty();
+        result.Data[0].IsValid.Should().BeTrue();
     }
 
     [Test]
@@ -57,12 +59,13 @@ public class CalculateTransitionsToolTests
         var result = tool.CalculateTransitions(fromSiteswap, toSiteswap, maxLength);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().NotBeEmpty();
-        result.Should().OnlyContain(t => t.IsValid);
-        result.Should().OnlyContain(t => t.FromSiteswap == fromSiteswap);
-        result.Should().OnlyContain(t => t.ToSiteswap == toSiteswap);
-        result.Should().OnlyContain(t => t.Length > 0);
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Should().NotBeEmpty();
+        result.Data.Should().OnlyContain(t => t.IsValid);
+        result.Data.Should().OnlyContain(t => t.FromSiteswap == fromSiteswap);
+        result.Data.Should().OnlyContain(t => t.ToSiteswap == toSiteswap);
+        result.Data.Should().OnlyContain(t => t.Length > 0);
     }
 
     [Test]
@@ -72,10 +75,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions(string.Empty, "531", 1);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Source siteswap cannot be null or empty.*");
+        var result = tool.CalculateTransitions(string.Empty, "531", 1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Source siteswap cannot be null or empty");
     }
 
     [Test]
@@ -85,10 +87,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions(null!, "531", 1);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Source siteswap cannot be null or empty.*");
+        var result = tool.CalculateTransitions(null!, "531", 1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Source siteswap cannot be null or empty");
     }
 
     [Test]
@@ -98,10 +99,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions("531", string.Empty, 1);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Target siteswap cannot be null or empty.*");
+        var result = tool.CalculateTransitions("531", string.Empty, 1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Target siteswap cannot be null or empty");
     }
 
     [Test]
@@ -111,10 +111,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions("531", null!, 1);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Target siteswap cannot be null or empty.*");
+        var result = tool.CalculateTransitions("531", null!, 1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Target siteswap cannot be null or empty");
     }
 
     [Test]
@@ -124,8 +123,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions("43", "531", 1);
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid source siteswap: 43*");
+        var result = tool.CalculateTransitions("43", "531", 1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Invalid source siteswap: 43");
     }
 
     [Test]
@@ -135,8 +135,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions("531", "43", 1);
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid target siteswap: 43*");
+        var result = tool.CalculateTransitions("531", "43", 1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Invalid target siteswap: 43");
     }
 
     [Test]
@@ -146,10 +147,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions("3", "4444", 2);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Source and target must use the same number of objects*");
+        var result = tool.CalculateTransitions("3", "4444", 2);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("same number of objects");
     }
 
     [Test]
@@ -159,10 +159,9 @@ public class CalculateTransitionsToolTests
         var tool = new CalculateTransitionsTool();
 
         // Act & Assert
-        var act = () => tool.CalculateTransitions("531", "441", -1);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Maximum transition length must be non-negative.*");
+        var result = tool.CalculateTransitions("531", "441", -1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Maximum transition length must be non-negative");
     }
 
     [Test]
@@ -179,8 +178,9 @@ public class CalculateTransitionsToolTests
         var result = tool.CalculateTransitions(fromSiteswap, toSiteswap, maxLength, maxHeight);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().OnlyContain(t => t.Throws.All(th => th.Value <= maxHeight));
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Should().OnlyContain(t => t.Throws.All(th => th.Value <= maxHeight));
     }
 
     [Test]
@@ -196,8 +196,9 @@ public class CalculateTransitionsToolTests
         var result = tool.CalculateTransitions(fromSiteswap, toSiteswap, maxLength);
 
         // Assert
-        result.Should().NotBeNull();
-        var transitionsWithThrows = result.Where(t => t.Throws.Any()).ToList();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        var transitionsWithThrows = result.Data!.Where(t => t.Throws.Any()).ToList();
         transitionsWithThrows.Should().NotBeEmpty();
         transitionsWithThrows
             .Should()
@@ -223,7 +224,8 @@ public class CalculateTransitionsToolTests
         var result = tool.CalculateTransitions(fromSiteswap, toSiteswap, maxLength);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().OnlyContain(t => !string.IsNullOrWhiteSpace(t.PrettyPrint));
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Should().OnlyContain(t => !string.IsNullOrWhiteSpace(t.PrettyPrint));
     }
 }

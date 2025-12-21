@@ -16,12 +16,13 @@ public class SimulateThrowToolTests
         var result = tool.SimulateThrow(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.OriginalSiteswap.Should().Be(siteswap);
-        result.NewSiteswap.Should().NotBeNullOrWhiteSpace();
-        result.ThrowValue.Should().BeGreaterThan(0);
-        result.StartingState.Should().NotBeNullOrWhiteSpace();
-        result.EndingState.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.OriginalSiteswap.Should().Be(siteswap);
+        result.Data.NewSiteswap.Should().NotBeNullOrWhiteSpace();
+        result.Data.ThrowValue.Should().BeGreaterThan(0);
+        result.Data.StartingState.Should().NotBeNullOrWhiteSpace();
+        result.Data.EndingState.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
@@ -31,10 +32,9 @@ public class SimulateThrowToolTests
         var tool = new SimulateThrowTool();
 
         // Act & Assert
-        var act = () => tool.SimulateThrow(string.Empty);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.SimulateThrow(string.Empty);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -44,7 +44,8 @@ public class SimulateThrowToolTests
         var tool = new SimulateThrowTool();
 
         // Act & Assert
-        var act = () => tool.SimulateThrow("43");
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
+        var result = tool.SimulateThrow("43");
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Invalid siteswap: 43");
     }
 }

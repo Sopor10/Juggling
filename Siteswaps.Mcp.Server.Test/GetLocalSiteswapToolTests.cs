@@ -18,12 +18,13 @@ public class GetLocalSiteswapToolTests
         var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
 
         // Assert
-        result.Should().NotBeNull();
-        result.GlobalSiteswap.Should().Be(siteswap);
-        result.Juggler.Should().Be(juggler);
-        result.NumberOfJugglers.Should().Be(numberOfJugglers);
-        result.GlobalNotation.Should().NotBeNullOrWhiteSpace();
-        result.LocalNotation.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.GlobalSiteswap.Should().Be(siteswap);
+        result.Data.Juggler.Should().Be(juggler);
+        result.Data.NumberOfJugglers.Should().Be(numberOfJugglers);
+        result.Data.GlobalNotation.Should().NotBeNullOrWhiteSpace();
+        result.Data.LocalNotation.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
@@ -45,7 +46,8 @@ public class GetLocalSiteswapToolTests
         var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
 
         // Assert
-        result.GlobalNotation.Should().Be(expectedGlobalNotation);
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.GlobalNotation.Should().Be(expectedGlobalNotation);
     }
 
     [Test]
@@ -55,10 +57,9 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap(string.Empty, 0, 2);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.GetLocalSiteswap(string.Empty, 0, 2);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -68,10 +69,9 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap(null!, 0, 2);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.GetLocalSiteswap(null!, 0, 2);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -81,8 +81,9 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap("43", 0, 2);
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
+        var result = tool.GetLocalSiteswap("43", 0, 2);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Invalid siteswap: 43");
     }
 
     [Test]
@@ -92,8 +93,9 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap("531", -1, 2);
-        act.Should().Throw<ArgumentException>().WithMessage("Juggler index must be non-negative.*");
+        var result = tool.GetLocalSiteswap("531", -1, 2);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Juggler index must be non-negative");
     }
 
     [Test]
@@ -103,10 +105,9 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap("531", 0, 0);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Number of jugglers must be at least 1.*");
+        var result = tool.GetLocalSiteswap("531", 0, 0);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Number of jugglers must be at least 1");
     }
 
     [Test]
@@ -116,10 +117,9 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap("531", 0, -1);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Number of jugglers must be at least 1.*");
+        var result = tool.GetLocalSiteswap("531", 0, -1);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Number of jugglers must be at least 1");
     }
 
     [Test]
@@ -129,10 +129,11 @@ public class GetLocalSiteswapToolTests
         var tool = new GetLocalSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.GetLocalSiteswap("531", 2, 2);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Juggler index (2) must be less than number of jugglers (2).*");
+        var result = tool.GetLocalSiteswap("531", 2, 2);
+        result.IsSuccess.Should().BeFalse();
+        result
+            .Error!.Message.Should()
+            .Contain("Juggler index (2) must be less than number of jugglers (2)");
     }
 
     [Test]
@@ -148,8 +149,9 @@ public class GetLocalSiteswapToolTests
         var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
 
         // Assert
-        result.AverageObjectsPerJuggler.Should().BeGreaterThan(0);
-        result.AverageObjectsPerJuggler.Should().BeLessThanOrEqualTo(3); // 531 has 3 objects, so per juggler should be <= 3
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.AverageObjectsPerJuggler.Should().BeGreaterThan(0);
+        result.Data.AverageObjectsPerJuggler.Should().BeLessThanOrEqualTo(3); // 531 has 3 objects, so per juggler should be <= 3
     }
 
     [Test]
@@ -165,10 +167,9 @@ public class GetLocalSiteswapToolTests
         var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
 
         // Assert
-        // IsValidAsGlobalSiteswap is a bool property, so it will always have a value
-        // We just verify the property is accessible and the result is complete
-        result.Should().NotBeNull();
-        result.GlobalNotation.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.GlobalNotation.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
@@ -184,10 +185,11 @@ public class GetLocalSiteswapToolTests
         var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
 
         // Assert
-        result.Should().NotBeNull();
-        result.GlobalSiteswap.Should().Be(siteswap);
-        result.GlobalNotation.Should().NotBeNullOrWhiteSpace();
-        result.LocalNotation.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.GlobalSiteswap.Should().Be(siteswap);
+        result.Data.GlobalNotation.Should().NotBeNullOrWhiteSpace();
+        result.Data.LocalNotation.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
@@ -203,9 +205,10 @@ public class GetLocalSiteswapToolTests
         var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Juggler.Should().Be(1);
-        result.NumberOfJugglers.Should().Be(3);
-        result.GlobalNotation.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Juggler.Should().Be(1);
+        result.Data.NumberOfJugglers.Should().Be(3);
+        result.Data.GlobalNotation.Should().NotBeNullOrWhiteSpace();
     }
 }

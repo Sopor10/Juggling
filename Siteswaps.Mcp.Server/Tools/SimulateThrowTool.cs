@@ -13,34 +13,37 @@ public class SimulateThrowTool
     [Description(
         "Simulates a single throw in a siteswap and returns the resulting state and siteswap. This shows what happens when one throw is executed."
     )]
-    public ThrowSimulationResult SimulateThrow(
+    public ToolResult<ThrowSimulationResult> SimulateThrow(
         [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap
     )
     {
-        if (string.IsNullOrWhiteSpace(siteswap))
+        return ToolResult.From(() =>
         {
-            throw new ArgumentException(
-                "Siteswap string cannot be null or empty.",
-                nameof(siteswap)
-            );
-        }
+            if (string.IsNullOrWhiteSpace(siteswap))
+            {
+                throw new ArgumentException(
+                    "Siteswap string cannot be null or empty.",
+                    nameof(siteswap)
+                );
+            }
 
-        if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
-        {
-            throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
-        }
+            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
+            {
+                throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
+            }
 
-        var (newSiteswap, throwInfo) = siteswapObj.Throw();
+            var (newSiteswap, throwInfo) = siteswapObj.Throw();
 
-        return new ThrowSimulationResult
-        {
-            OriginalSiteswap = siteswapObj.ToString(),
-            NewSiteswap = newSiteswap.ToString(),
-            ThrowValue = throwInfo.Value,
-            StartingState = throwInfo.StartingState.ToString(),
-            EndingState = throwInfo.EndingState.ToString(),
-            PrettyPrint = throwInfo.PrettyPrint(),
-        };
+            return new ThrowSimulationResult
+            {
+                OriginalSiteswap = siteswapObj.ToString(),
+                NewSiteswap = newSiteswap.ToString(),
+                ThrowValue = throwInfo.Value,
+                StartingState = throwInfo.StartingState.ToString(),
+                EndingState = throwInfo.EndingState.ToString(),
+                PrettyPrint = throwInfo.PrettyPrint(),
+            };
+        });
     }
 }
 
