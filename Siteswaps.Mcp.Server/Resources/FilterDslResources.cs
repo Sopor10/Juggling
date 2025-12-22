@@ -21,7 +21,7 @@ public class FilterDslResources
             - Logical operators: AND, OR, NOT (case-insensitive)
             - Parentheses for grouping: (A OR B) AND C
             - Function calls with arguments: minOcc(5, 2)
-            - Keywords without arguments: ground, prime
+            - Keywords without arguments: ground, excited
             - Wildcards in patterns: pattern(5, *, 1)
             - Number lists: occ([5,7,9], 2)
 
@@ -351,7 +351,7 @@ public class FilterDslResources
 
             Examples:
             - excited - only excited-state patterns
-            - excited AND prime - excited-state prime siteswaps
+            - excited AND noZeros - excited-state patterns without zeros
 
             Use case: Find more challenging patterns requiring transitions.
             """;
@@ -417,70 +417,9 @@ public class FilterDslResources
             Use case: Find patterns with deliberate pauses.
             """;
 
-    [McpServerResource]
-    [Description("filter:dsl:function:prime")]
-    public string FilterDslFunctionPrime() =>
-        """
-            prime
-
-            Filters for prime siteswaps only.
-
-            No parameters.
-
-            A prime siteswap's path in the state diagram does not traverse 
-            any state more than once. It cannot be split into shorter valid patterns.
-
-            Examples:
-            - prime - only prime patterns
-            - prime AND ground - prime ground-state patterns
-
-            Use case: Find fundamental, non-composite patterns.
-            """;
-
-    [McpServerResource]
-    [Description("filter:dsl:function:singleOrbit")]
-    public string FilterDslFunctionSingleOrbit() =>
-        """
-            singleOrbit
-
-            Filters for siteswaps with exactly one orbit.
-
-            No parameters.
-
-            In a single-orbit pattern, all objects follow the same cycle of throws.
-            The objects mix completely during the pattern.
-
-            Examples:
-            - singleOrbit - only single-orbit patterns
-            - singleOrbit AND prime - single-orbit prime patterns
-
-            Use case: Find patterns where all balls follow the same path.
-            """;
-
     // ====================================================================================
     // SECTION 7: FUNCTION REFERENCE - ORBIT & PASS FILTERS
     // ====================================================================================
-
-    [McpServerResource]
-    [Description("filter:dsl:function:orbits")]
-    public string FilterDslFunctionOrbits() =>
-        """
-            orbits(count)
-
-            Filters siteswaps with exactly 'count' orbits.
-
-            Parameters:
-            - count: Number of orbits (integer)
-
-            An orbit is a closed cycle that objects follow. Multiple orbits mean 
-            objects are separated into independent groups.
-
-            Examples:
-            - orbits(1) - single orbit (same as singleOrbit)
-            - orbits(2) - exactly two independent orbits
-
-            Use case: Find patterns with specific orbit structure.
-            """;
 
     [McpServerResource]
     [Description("filter:dsl:function:passes")]
@@ -521,26 +460,6 @@ public class FilterDslResources
             Use case: Find patterns with balanced self/pass ratio.
             """;
 
-    [McpServerResource]
-    [Description("filter:dsl:function:compatible")]
-    public string FilterDslFunctionCompatible() =>
-        """
-            compatible
-
-            Filters for compatible passing siteswaps.
-
-            No parameters.
-
-            Compatible siteswaps can be combined with other patterns of the same 
-            period, allowing each passer to do a different pattern.
-
-            Examples:
-            - compatible - only compatible patterns
-            - compatible AND ground - ground-state compatible patterns
-
-            Use case: Find patterns for mixed-skill passing sessions.
-            """;
-
     // ====================================================================================
     // SECTION 8: EXAMPLES
     // ====================================================================================
@@ -563,7 +482,6 @@ public class FilterDslResources
 
             3. Simple combinations:
                - ground AND noZeros
-               - prime OR singleOrbit
                - NOT excited
             """;
 
@@ -633,7 +551,7 @@ public class FilterDslResources
             3. Negation:
                - NOT ground              → Excited-state only
                - NOT hasZeros            → Same as noZeros
-               - NOT (prime OR singleOrbit)
+               - NOT (hasZeros OR ground)
 
             4. Mixed operators with parentheses:
                - (ground OR excited) AND noZeros
@@ -652,20 +570,15 @@ public class FilterDslResources
             Passing Pattern Filter Examples:
 
             1. Basic passing filters:
-               - compatible             → Compatible with other patterns
                - passes(2)              → Two passes per period
 
             2. Pass ratio:
                - passRatio(0.3, 0.5)    → 30-50% passes
 
             3. Combined passing filters:
-               - compatible AND ground
                - passes(1) AND maxHeight(9)
                - passRatio(0.4, 0.6) AND noZeros
-
-            4. Finding compatible pairs:
-               - compatible AND ground AND maxHeight(7)
-               - compatible AND passes(1) AND orbits(1)
+               - passes(2) AND ground
             """;
 
     [McpServerResource]
@@ -688,12 +601,9 @@ public class FilterDslResources
                - contains(4, 4) AND noZeros      → Double-4 patterns
 
             5. Passing patterns for mixed skill:
-               - compatible AND ground AND maxHeight(7)
+               - passes(1) AND ground AND maxHeight(7)
 
-            6. Show-worthy patterns:
-               - singleOrbit AND prime AND ground AND noZeros
-
-            7. Excluding unwanted patterns:
+            6. Excluding unwanted patterns:
                - ground AND NOT hasZeros AND NOT pattern(3)
             """;
 
@@ -732,14 +642,11 @@ public class FilterDslResources
             PROPERTY FILTERS:
             - noZeros                  → No zero throws
             - hasZeros                 → Has zero throws
-            - prime                    → Prime siteswap
-            - singleOrbit              → Single orbit
 
             ORBIT & PASS FILTERS:
             - orbits(count)            → Exactly count orbits
             - passes(count)            → Exactly count passes
             - passRatio(min, max)      → Pass ratio in range
-            - compatible               → Compatible for mixed passing
 
             OPERATORS:
             - AND                      → Both conditions

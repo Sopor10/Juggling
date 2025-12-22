@@ -123,9 +123,6 @@ public static class FilterFunctionRegistry
         Register(new FunctionDefinition("excited", []));
         Register(new FunctionDefinition("noZeros", []));
         Register(new FunctionDefinition("hasZeros", []));
-        Register(new FunctionDefinition("prime", []));
-        Register(new FunctionDefinition("singleOrbit", []));
-        Register(new FunctionDefinition("compatible", []));
     }
 
     private static void Register(FunctionDefinition definition)

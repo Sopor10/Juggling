@@ -15,11 +15,11 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
     public ISiteswapFilter Compile(FilterExpression expression)
     {
         return expression.Match(
-            and => CompileAnd(and),
-            or => CompileOr(or),
-            not => CompileNot(not),
-            functionCall => CompileFunctionCall(functionCall),
-            identifier => CompileIdentifier(identifier)
+            CompileAnd,
+            CompileOr,
+            CompileNot,
+            CompileFunctionCall,
+            CompileIdentifier
         );
     }
 
@@ -52,9 +52,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             "excited" => CompileExcitedFilter(),
             "nozeros" => CompileNoZerosFilter(),
             "haszeros" => CompileHasZerosFilter(),
-            "prime" => CompilePrimeFilter(),
-            "singleorbit" => CompileSingleOrbitFilter(),
-            "compatible" => CompileCompatibleFilter(),
             _ => throw new InvalidOperationException($"Unbekannter Identifier: {identifier.Name}"),
         };
     }
@@ -274,26 +271,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
     {
         return new FilterBuilder(input).MinimumOccurence([0], 1).Build();
     }
-
-    private ISiteswapFilter CompilePrimeFilter()
-    {
-        // Prime-Filter - würde spezielle Orbit-Analyse erfordern
-        // Für jetzt: akzeptiert alles
-        return new FilterBuilder(input).No().Build();
-    }
-
-    private ISiteswapFilter CompileSingleOrbitFilter()
-    {
-        // Single Orbit - würde spezielle Orbit-Analyse erfordern
-        return new FilterBuilder(input).No().Build();
-    }
-
-    private ISiteswapFilter CompileCompatibleFilter()
-    {
-        // Compatible für Passing
-        return new FilterBuilder(input).No().Build();
-    }
-
     #endregion
 
     #region Helper Methods

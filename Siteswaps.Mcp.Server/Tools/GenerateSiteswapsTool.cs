@@ -15,7 +15,7 @@ public class GenerateSiteswapsTool
             + "Use the 'filter' parameter with DSL syntax for powerful filtering. "
             + "Examples: 'minOcc(5,2) AND ground', 'pattern(5,*,1) OR pattern(7,*,1)', 'NOT hasZeros AND minOcc(7,1)'. "
             + "Available functions: minOcc, maxOcc, exactOcc, pattern, contains, startsWith, endsWith, passes, state, height, maxHeight, minHeight. "
-            + "Keywords: ground, excited, noZeros, hasZeros, prime, singleOrbit. "
+            + "Keywords: ground, excited, noZeros, hasZeros. "
             + "Operators: AND, OR, NOT (with parentheses for grouping)."
             + "More details can be found in the resources of this MCP server."
     )]
@@ -30,7 +30,7 @@ public class GenerateSiteswapsTool
             "Filter expression using DSL syntax. "
                 + "Examples: 'minOcc(5,2)', 'ground AND noZeros', '(minOcc(7,2) OR exactOcc(9,1)) AND ground', 'pattern(5,*,1)'. "
                 + "Functions: minOcc(throw,count), maxOcc(throw,count), exactOcc(throw,count), pattern(...), contains(...), passes(count), state(...), height(min,max), maxHeight(max), minHeight(min). "
-                + "Keywords (no args): ground, excited, noZeros, hasZeros, prime, singleOrbit. "
+                + "Keywords (no args): ground, excited, noZeros, hasZeros. "
                 + "Operators: AND, OR, NOT. Use parentheses for grouping. Wildcards (*) in pattern for 'any throw'."
         )]
             string? filter = null,

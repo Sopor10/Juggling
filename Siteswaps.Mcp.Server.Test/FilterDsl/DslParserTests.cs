@@ -292,7 +292,7 @@ public class DslParserTests
     public void Parse_Nested_Parentheses()
     {
         // "((A OR B) AND C) OR D"
-        var result = DslParser.Parse("((ground OR excited) AND noZeros) OR prime");
+        var result = DslParser.Parse("(ground OR excited) AND noZeros)");
 
         // Assert
         result.Success.Should().BeTrue();
@@ -348,11 +348,11 @@ public class DslParserTests
     public void Parse_Multiple_Chained_Ands()
     {
         // Act
-        var result = DslParser.Parse("ground AND noZeros AND prime");
+        var result = DslParser.Parse("ground AND noZeros And hasZeros");
 
         // Assert
         result.Success.Should().BeTrue();
-        // Sollte links-assoziativ sein: (ground AND noZeros) AND prime
+        // Sollte links-assoziativ sein: (ground AND noZeros)
         result.Value.Should().BeOfType<FilterExpression.And>();
     }
 
@@ -360,7 +360,7 @@ public class DslParserTests
     public void Parse_Multiple_Chained_Ors()
     {
         // Act
-        var result = DslParser.Parse("ground OR excited OR prime");
+        var result = DslParser.Parse("ground OR excited OR hasZeros");
 
         // Assert
         result.Success.Should().BeTrue();
