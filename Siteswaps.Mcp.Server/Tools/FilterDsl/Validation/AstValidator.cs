@@ -161,7 +161,29 @@ public static class AstValidator
                         functionName
                     ),
                 },
-            id => null // Identifier sind für zukünftige Erweiterungen vorgesehen
+            id => null, // Identifier sind für zukünftige Erweiterungen vorgesehen
+            pass =>
+                param.Type switch
+                {
+                    ParameterType.NumberOrWildcard => null,
+                    ParameterType.Any => null,
+                    _ => new ValidationError(
+                        ValidationErrorType.InvalidArgumentType,
+                        $"Pass (p) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
+                        functionName
+                    ),
+                },
+            self =>
+                param.Type switch
+                {
+                    ParameterType.NumberOrWildcard => null,
+                    ParameterType.Any => null,
+                    _ => new ValidationError(
+                        ValidationErrorType.InvalidArgumentType,
+                        $"Self (s) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
+                        functionName
+                    ),
+                }
         );
     }
 }

@@ -47,6 +47,18 @@ public static class DslParser
     private static readonly Parser<char, Argument> WildcardParser = Char('*')
         .ThenReturn<Argument>(new Argument.Wildcard());
 
+    /// <summary>
+    /// Parser für Pass (p)
+    /// </summary>
+    private static readonly Parser<char, Argument> PassParser = Char('p')
+        .ThenReturn<Argument>(new Argument.Pass());
+
+    /// <summary>
+    /// Parser für Self (s)
+    /// </summary>
+    private static readonly Parser<char, Argument> SelfParser = Char('s')
+        .ThenReturn<Argument>(new Argument.Self());
+
     #endregion
 
     #region Argument Parsers
@@ -73,6 +85,8 @@ public static class DslParser
     /// </summary>
     private static readonly Parser<char, Argument> ArgumentParser = OneOf(
             WildcardParser,
+            PassParser,
+            SelfParser,
             NumberListParser,
             NumberArgParser
         )

@@ -36,7 +36,6 @@ public class GenerateSiteswapsTool
             string? filter = null,
         [Description("Number of jugglers (required for pattern/passes functions)")]
             int? numberOfJugglers = null,
-        [Description("Use default filter (right amount of balls)")] bool useDefaultFilter = true,
         CancellationToken cancellationToken = default
     )
     {
@@ -63,25 +62,13 @@ public class GenerateSiteswapsTool
                 throw new ArgumentException($"Filter-DSL Fehler: {dslResult.ErrorMessage}");
             }
 
-            // Kombiniere DSL-Filter mit Default-Filter wenn gewünscht
-            if (useDefaultFilter)
-            {
-                var defaultFilter = new FilterBuilder(input).WithDefault().Build();
-                siteswapFilter = new FilterBuilder(input)
-                    .And(dslResult.Filter!, defaultFilter)
-                    .Build();
-            }
-            else
-            {
-                siteswapFilter = dslResult.Filter!;
-            }
+            var defaultFilter = new FilterBuilder(input).WithDefault().Build();
+            siteswapFilter = new FilterBuilder(input).And(dslResult.Filter!, defaultFilter).Build();
         }
         else
         {
             // Kein Filter angegeben - nur Default-Filter verwenden
-            siteswapFilter = useDefaultFilter
-                ? new FilterBuilder(input).WithDefault().Build()
-                : new FilterBuilder(input).No().Build();
+            siteswapFilter = new FilterBuilder(input).WithDefault().Build();
         }
 
         // SiteswapGenerator mit Filter erstellen und ausführen

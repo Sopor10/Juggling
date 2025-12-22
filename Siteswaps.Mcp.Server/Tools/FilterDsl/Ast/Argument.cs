@@ -27,4 +27,14 @@ public partial record Argument
     /// Ein Identifier für zukünftige Erweiterungen
     /// </summary>
     public partial record Id(string Value);
+
+    /// <summary>
+    /// Pass-Indikator (p) - nur für Passing-Pattern
+    /// </summary>
+    public partial record Pass;
+
+    /// <summary>
+    /// Self-Indikator (s) - nur für Passing-Pattern
+    /// </summary>
+    public partial record Self;
 }

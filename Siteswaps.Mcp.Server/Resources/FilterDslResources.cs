@@ -63,10 +63,15 @@ public class FilterDslResources
             1. Numbers - Integer values
                Example: minOcc(5, 2)
                
-            2. Wildcards (*) - Matches any value
+            2. Wildcards (*) - Matches any value in pattern()
                Example: pattern(5, *, 1) - matches 531, 541, 551, etc.
                
-            3. Number Lists [n1, n2, ...] - Multiple allowed values
+            3. Pass/Self (p/s) - Matches pass or self in pattern() (requires numberOfJugglers)
+               Example: pattern(p, s, p) - Pass, Self, Pass sequence
+               p: matches pass throws (ungerade Zahlen bei Passing)
+               s: matches self throws (gerade Zahlen bei Passing)
+               
+            4. Number Lists [n1, n2, ...] - Multiple allowed values
                Example: occ([5,7,9], 2) - throw value can be 5, 7, or 9
                
             Whitespace is flexible:
@@ -188,14 +193,22 @@ public class FilterDslResources
             Filters siteswaps that match a specific pattern with wildcards.
 
             Parameters:
-            - values: Sequence of throw values or wildcards (*)
+            - values: Sequence of throw values, wildcards (*), or pass/self indicators (p/s)
+
+            Wildcards and Indicators:
+            - * : matches any throw value
+            - p : matches pass (ungerade Zahlen bei Passing-Patterns, requires numberOfJugglers)
+            - s : matches self (gerade Zahlen bei Passing-Patterns, requires numberOfJugglers)
 
             Examples:
             - pattern(5, 3, 1) - matches exactly "531"
             - pattern(5, *, 1) - matches "531", "541", "551", etc.
             - pattern(*, *, 1) - any pattern ending with 1
+            - pattern(p, s, p) - pass, self, pass (bei 2 Jongleuren)
+            - pattern(5, p, s) - genau 5, dann Pass, dann Self
 
             Use case: Find patterns with specific structure.
+            Note: p and s require numberOfJugglers parameter in generate_siteswaps.
             """;
 
     [McpServerResource]
@@ -498,13 +511,19 @@ public class FilterDslResources
                - pattern(5, *, 1)       → "5x1" where x is any throw
                - pattern(*, 4, *)       → Any pattern with 4 in middle
 
-            3. Prefix/suffix matching:
+            3. Pass/Self patterns (requires numberOfJugglers):
+               - pattern(p, s, p)       → Pass, Self, Pass sequence
+               - pattern(5, p, *)       → 5, then Pass, then any
+               - pattern(p, p, s, s)    → Two Passes, then two Selfs
+
+            4. Prefix/suffix matching:
                - startsWith(7)          → Patterns starting with 7
                - endsWith(1)            → Patterns ending with zip
                - contains(4, 4)         → Has consecutive 4s
 
-            4. Combined with filters:
+            5. Combined with filters:
                - pattern(5, *, 1) AND ground
+               - pattern(p, s, p) AND minOcc(5,1)
                - startsWith(7) AND maxHeight(9)
             """;
 

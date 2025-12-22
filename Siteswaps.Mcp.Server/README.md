@@ -76,7 +76,6 @@ Generiert Siteswaps basierend auf Parametern.
 - `patternRotation` (string, optional): Pattern-Rotation: "global" (Standard) für globales Pattern-Matching, "local" für lokales Pattern-Matching, oder Juggler-Index (0-basiert, z.B. "0" für Juggler A, "1" für Juggler B). Benötigt numberOfJugglers und pattern.
 - `state` (string, optional): State-Filter (komma-separiert 0/1, z.B. "1,1,0,0" für State mit ersten beiden Slots belegt)
 - `flexiblePattern` (string, optional): Flexibles Pattern (Semikolon-getrennte Gruppen, z.B. "3,4;5,6" für zwei Gruppen, benötigt numberOfJugglers)
-- `useDefaultFilter` (bool, optional, Standard: true): Standard-Filter verwenden (RightAmountOfBallsFilter)
 - `useNoFilter` (bool, optional, Standard: false): Kein Filter verwenden (akzeptiert alle Siteswaps)
 - `jugglerIndex` (int, optional): Index des Jongleurs für lokale Filter (0-basiert, benötigt numberOfJugglers)
 - `rotationAwarePattern` (string, optional): Rotation-aware flexibles Pattern für spezifischen Jongleur (Semikolon-getrennte Gruppen, benötigt numberOfJugglers und jugglerIndex)

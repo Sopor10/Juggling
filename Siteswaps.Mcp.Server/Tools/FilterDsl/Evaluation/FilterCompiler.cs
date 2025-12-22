@@ -281,7 +281,9 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             number => number.Value,
             wildcard => throw new InvalidOperationException("Wildcard nicht erlaubt hier"),
             numberList => throw new InvalidOperationException("NumberList nicht erlaubt hier"),
-            id => throw new InvalidOperationException("Identifier nicht erlaubt hier")
+            id => throw new InvalidOperationException("Identifier nicht erlaubt hier"),
+            pass => throw new InvalidOperationException("Pass nicht erlaubt hier"),
+            self => throw new InvalidOperationException("Self nicht erlaubt hier")
         );
     }
 
@@ -291,7 +293,9 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             number => new[] { number.Value },
             wildcard => throw new InvalidOperationException("Wildcard nicht erlaubt hier"),
             numberList => numberList.Values,
-            id => throw new InvalidOperationException("Identifier nicht erlaubt hier")
+            id => throw new InvalidOperationException("Identifier nicht erlaubt hier"),
+            pass => throw new InvalidOperationException("Pass nicht erlaubt hier"),
+            self => throw new InvalidOperationException("Self nicht erlaubt hier")
         );
     }
 
@@ -302,7 +306,9 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             wildcard => -1, // -1 bedeutet "any" im Pattern
             numberList =>
                 throw new InvalidOperationException("NumberList nicht erlaubt in Pattern"),
-            id => throw new InvalidOperationException("Identifier nicht erlaubt in Pattern")
+            id => throw new InvalidOperationException("Identifier nicht erlaubt in Pattern"),
+            pass => -2, // -2 bedeutet "pass" (ungerade Zahl bei Passing)
+            self => -3 // -3 bedeutet "self" (gerade Zahl bei Passing)
         );
     }
 
