@@ -25,7 +25,10 @@ public class AnalyzeSiteswapTool
                 );
             }
 
-            if (!Siteswap.Details.Siteswap.TryCreate(siteswap, out var siteswapObj) || siteswapObj == null)
+            if (
+                !Siteswap.Details.Siteswap.TryCreate(siteswap, out var siteswapObj)
+                || siteswapObj == null
+            )
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }

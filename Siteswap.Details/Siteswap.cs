@@ -26,7 +26,8 @@ public record Siteswap(CyclicArray<int> Items)
         {
             var result = new int[Items.Length];
 
-            for (var i = 0; i < Items.Length; i++) result[(i + Items[i]) % Items.Length] = Items[i];
+            for (var i = 0; i < Items.Length; i++)
+                result[(i + Items[i]) % Items.Length] = Items[i];
 
             return new Interface(result.ToImmutableList());
         }
@@ -50,15 +51,13 @@ public record Siteswap(CyclicArray<int> Items)
     private static int ToInt(char c)
     {
         var tryParse = int.TryParse(c.ToString(), out var value);
-        if (tryParse) return value;
+        if (tryParse)
+            return value;
 
         return c - 87;
     }
 
-    public static bool TryCreate(
-        IEnumerable<int> items,
-        [NotNullWhen(true)] out Siteswap? siteswap
-    )
+    public static bool TryCreate(IEnumerable<int> items, [NotNullWhen(true)] out Siteswap? siteswap)
     {
         return TryCreate(items.ToCyclicArray(), out siteswap);
     }
@@ -81,11 +80,11 @@ public record Siteswap(CyclicArray<int> Items)
     private static bool IsValid(CyclicArray<int> items)
     {
         return items
-            .Enumerate(1)
-            .Select(x => x.value)
-            .Select((x, i) => (x + i) % items.Length)
-            .ToHashSet()
-            .Count == items.Length;
+                .Enumerate(1)
+                .Select(x => x.value)
+                .Select((x, i) => (x + i) % items.Length)
+                .ToHashSet()
+                .Count == items.Length;
     }
 
     private static CyclicArray<int> ToUniqueRepresentation(CyclicArray<int> input)
@@ -135,7 +134,7 @@ public record Siteswap(CyclicArray<int> Items)
         {
             < 0 => throw new ArgumentException("Negative values are not allowed"),
             < 10 => $"{i}",
-            _ => Convert.ToChar(i + 87).ToString()
+            _ => Convert.ToChar(i + 87).ToString(),
         };
     }
 
@@ -196,7 +195,8 @@ public record Siteswap(CyclicArray<int> Items)
     public IEnumerable<Siteswap> GetHighJacks()
     {
         var numberOfJugglers = 2;
-        if (Period.GetLocalPeriod(numberOfJugglers).Value % 2 == 0) yield break;
+        if (Period.GetLocalPeriod(numberOfJugglers).Value % 2 == 0)
+            yield break;
 
         var highJackPassingValue = Period.GetLocalPeriod(numberOfJugglers).Value + 2;
 
