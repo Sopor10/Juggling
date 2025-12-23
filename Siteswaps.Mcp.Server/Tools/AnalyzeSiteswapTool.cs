@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
-using SiteswapDetails = Siteswap.Details.Siteswap;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
@@ -26,7 +25,7 @@ public class AnalyzeSiteswapTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj) || siteswapObj == null)
+            if (!Siteswap.Details.Siteswap.TryCreate(siteswap, out var siteswapObj) || siteswapObj == null)
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }
@@ -44,6 +43,7 @@ public class AnalyzeSiteswapTool
                 Length = siteswapObj.Length,
                 IsExcitedState = siteswapObj.IsExcitedState(),
                 CurrentState = state.ToString(),
+                Interface = siteswapObj.Interface.ToString(),
                 Orbits = orbits
                     .Select(o => new OrbitInfo { DisplayValue = o.DisplayValue, Items = o.Items })
                     .ToList(),
@@ -70,6 +70,7 @@ public class SiteswapAnalysis
     public string CurrentState { get; set; } = string.Empty;
     public List<OrbitInfo> Orbits { get; set; } = new();
     public List<StateInfo> AllStates { get; set; } = new();
+    public required string Interface { get; set; }
 }
 
 public class OrbitInfo

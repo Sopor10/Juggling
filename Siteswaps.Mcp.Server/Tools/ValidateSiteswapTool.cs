@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
-using SiteswapDetails = Siteswap.Details.Siteswap;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
@@ -23,7 +22,7 @@ public class ValidateSiteswapTool
                 return false;
             }
 
-            return SiteswapDetails.TryCreate(siteswap, out _);
+            return Siteswap.Details.Siteswap.TryCreate(siteswap, out _);
         });
     }
 }
