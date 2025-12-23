@@ -11,7 +11,7 @@ public class SimulateThrowTool
 {
     [McpServerTool]
     [Description(
-        "Simulates a single throw in a siteswap and returns the resulting state and siteswap. This shows what happens when one throw is executed."
+        "Simulates a single throw in a siteswap and returns the resulting state and siteswap. Is also commonly referred to as rotating."
     )]
     public ToolResult<ThrowSimulationResult> SimulateThrow(
         [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap

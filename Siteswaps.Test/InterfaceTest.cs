@@ -9,6 +9,6 @@ public class InterfaceTest
     public void InterfaceOf53Is35()
     {
         Siteswap.Details.Siteswap.TryCreate("53", out var siteswap).Should().BeTrue();
-        siteswap!.Interface.Values.Should().Equal(3, 5);
+        siteswap!.Interface.Items.Should().Equal(3, 5);
     }
 }

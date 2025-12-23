@@ -133,21 +133,21 @@ public class AnalyzeSiteswapToolTests
     }
 
     [Test]
-    public void AnalyzeSiteswap_With_Complex_Siteswap_Returns_Correct_Analysis()
+    public void AnalyzeSiteswap_With_53_Returns_Passing_Info()
     {
         // Arrange
         var tool = new AnalyzeSiteswapTool();
-        var siteswap = "97531";
+        var siteswap = "53";
 
         // Act
-        var result = tool.AnalyzeSiteswap(siteswap);
+        var result = tool.AnalyzeSiteswap(siteswap, 2);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be("97531");
-        result.Data.Period.Should().Be(5);
-        result.Data.Length.Should().Be(5);
-        result.Data.MaxHeight.Should().Be(9);
+        result.Data!.PassOrSelf.Should().ContainInOrder("p", "p"); // 5 and 3 are both odd -> both passes for 2 jugglers
+        result.Data.Jugglers.Should().HaveCount(2);
+        result.Data.Jugglers[0].LocalNotation.Should().NotBeEmpty();
+        result.Data.Jugglers[1].LocalNotation.Should().NotBeEmpty();
     }
 }

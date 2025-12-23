@@ -225,16 +225,33 @@ public record Siteswap(CyclicArray<int> Items)
         (items[x], items[y]) = (items[y] + y - x, items[x] - (y - x));
         return new Siteswap(items);
     }
+
+    public ImmutableList<PassOrSelf> GetPassOrSelf(int numberOfJuggler) =>
+        Items
+            .EnumerateValues(1)
+            .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
+            .ToImmutableList();
 }
 
 /// <summary>
 ///     An interface is the order of catches of a siteswap e.g. 53 will be 35
 /// </summary>
-/// <param name="Values"></param>
-public record Interface(ImmutableList<int> Values)
+/// <param name="Items"></param>
+public record Interface(ImmutableList<int> Items)
 {
     public override string ToString()
     {
-        return string.Join("", Values.Select(Siteswap.Transform));
+        return string.Join("", Items.Select(Siteswap.Transform));
     }
+
+    public ImmutableList<PassOrSelf> GetPassOrSelf(int numberOfJuggler) =>
+        Items
+            .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
+            .ToImmutableList();
+}
+
+public enum PassOrSelf
+{
+    Pass,
+    Self,
 }

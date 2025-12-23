@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
+using Siteswap.Details;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
@@ -12,7 +13,10 @@ public class AnalyzeSiteswapTool
     )]
     public ToolResult<SiteswapAnalysis> AnalyzeSiteswap(
         [Description("The siteswap string to analyze (e.g., '531', '441', 'a7242')")]
-            string siteswap
+            string siteswap,
+        [Description("Number of jugglers (defaults to 2)")]
+        [DefaultValue(2)]
+            int numberOfJugglers = 2
     )
     {
         return ToolResult.From(() =>
@@ -22,6 +26,14 @@ public class AnalyzeSiteswapTool
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
                     nameof(siteswap)
+                );
+            }
+
+            if (numberOfJugglers < 1)
+            {
+                throw new ArgumentException(
+                    "Number of jugglers must be at least 1.",
+                    nameof(numberOfJugglers)
                 );
             }
 
@@ -36,6 +48,29 @@ public class AnalyzeSiteswapTool
             var orbits = siteswapObj.GetOrbits();
             var state = siteswapObj.State;
             var allStates = siteswapObj.AllStates();
+
+            var passOrSelf = siteswapObj
+                .GetPassOrSelf(numberOfJugglers)
+                .Select(MapPassOrSelf)
+                .ToList();
+            var interfacePassOrSelf = siteswapObj
+                .Interface.GetPassOrSelf(numberOfJugglers)
+                .Select(MapPassOrSelf)
+                .ToList();
+            var jugglers = Enumerable
+                .Range(0, numberOfJugglers)
+                .Select(i =>
+                {
+                    var local = siteswapObj.GetLocalSiteswap(i, numberOfJugglers);
+                    return new JugglerInfo
+                    {
+                        JugglerIndex = i,
+                        LocalNotation = local.LocalNotation,
+                        GlobalNotation = local.GlobalNotation,
+                        AverageObjects = local.Average(),
+                    };
+                })
+                .ToList();
 
             return new SiteswapAnalysis
             {
@@ -57,9 +92,21 @@ public class AnalyzeSiteswapTool
                         Siteswaps = kvp.Value.Select(s => s.ToString()).ToList(),
                     })
                     .ToList(),
+                NumberOfJugglers = numberOfJugglers,
+                PassOrSelf = passOrSelf,
+                InterfacePassOrSelf = interfacePassOrSelf,
+                Jugglers = jugglers,
             };
         });
     }
+
+    private static string MapPassOrSelf(PassOrSelf passOrSelf) =>
+        passOrSelf switch
+        {
+            PassOrSelf.Pass => "p",
+            PassOrSelf.Self => "s",
+            _ => throw new ArgumentOutOfRangeException(nameof(passOrSelf), passOrSelf, null),
+        };
 }
 
 public class SiteswapAnalysis
@@ -74,6 +121,18 @@ public class SiteswapAnalysis
     public List<OrbitInfo> Orbits { get; set; } = new();
     public List<StateInfo> AllStates { get; set; } = new();
     public required string Interface { get; set; }
+    public int NumberOfJugglers { get; set; }
+    public List<string> PassOrSelf { get; set; } = new();
+    public List<string> InterfacePassOrSelf { get; set; } = new();
+    public List<JugglerInfo> Jugglers { get; set; } = new();
+}
+
+public class JugglerInfo
+{
+    public int JugglerIndex { get; set; }
+    public string LocalNotation { get; set; } = string.Empty;
+    public string GlobalNotation { get; set; } = string.Empty;
+    public double AverageObjects { get; set; }
 }
 
 public class OrbitInfo
