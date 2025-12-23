@@ -163,7 +163,9 @@ public class AstTests
             number => $"Number:{number.Value}",
             wildcard => "Wildcard",
             numberList => $"NumberList:{numberList.Values.Length}",
-            id => $"Id:{id.Value}"
+            id => $"Id:{id.Value}",
+            pass => "pass",
+            self => "self"
         );
 
         // Assert
