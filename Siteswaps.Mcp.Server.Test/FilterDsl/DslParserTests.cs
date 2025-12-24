@@ -424,16 +424,22 @@ public class DslParserTests
     }
 
     [Test]
-    public void Parse_Just_Operator_Parses_As_Identifier()
+    public void Parse_IssueFilter_ShouldNotFail()
     {
-        // AND allein wird syntaktisch als Identifier geparst.
-        // Die semantische Validierung (Phase 3) sollte prüfen,
-        // ob reservierte Keywords wie AND/OR/NOT als Funktionsnamen verwendet werden.
+        var input = "NOT contains(0) AND NOT contains(1) AND NOT contains(3) AND maxHeight(10)";
+        var result = DslParser.Parse(input);
+
+        result.Success.Should().BeTrue();
+    }
+
+    [Test]
+    public void Parse_Just_Operator_Fails()
+    {
+        // AND allein darf nicht als Identifier geparst werden,
+        // da es ein reserviertes Keyword ist.
         var result = DslParser.Parse("AND");
 
-        // Assert - syntaktisch wird es als Identifier geparst
-        result.Success.Should().BeTrue();
-        result.Value.Should().BeOfType<FilterExpression.Identifier>();
-        ((FilterExpression.Identifier)result.Value).Name.Should().Be("AND");
+        // Assert
+        result.Success.Should().BeFalse();
     }
 }

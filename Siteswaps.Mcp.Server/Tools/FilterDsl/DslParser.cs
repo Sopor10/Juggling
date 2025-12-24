@@ -32,10 +32,19 @@ public static class DslParser
     /// <summary>
     /// Parser für Identifier (Funktionsnamen, Keywords)
     /// </summary>
-    private static readonly Parser<char, string> IdentifierParser = Token(char.IsLetter)
-        .Then(
-            Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(),
-            (first, rest) => first + rest
+    private static readonly Parser<char, string> IdentifierParser = Try(
+            Token(char.IsLetter)
+                .Then(
+                    Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(),
+                    (first, rest) => first + rest
+                )
+                .Assert(
+                    s =>
+                        !s.Equals("AND", StringComparison.OrdinalIgnoreCase)
+                        && !s.Equals("OR", StringComparison.OrdinalIgnoreCase)
+                        && !s.Equals("NOT", StringComparison.OrdinalIgnoreCase),
+                    "Keywords cannot be used as identifiers"
+                )
         )
         .Labelled("identifier");
 
@@ -116,13 +125,7 @@ public static class DslParser
     /// Erfordert Whitespace davor und danach
     /// </summary>
     private static readonly Parser<char, Unit> AndKeyword = Try(
-            Whitespace
-                .Then(CIString("AND"))
-                .Before(
-                    Lookahead(
-                        OneOf(Whitespace.Then(Return(Unit.Value)), Char('(').ThenReturn(Unit.Value))
-                    )
-                )
+            Whitespace.Then(CIString("AND")).Before(Whitespace)
         )
         .IgnoreResult()
         .Labelled("AND");
@@ -131,13 +134,7 @@ public static class DslParser
     /// Parser für OR-Keyword (case-insensitive)
     /// </summary>
     private static readonly Parser<char, Unit> OrKeyword = Try(
-            Whitespace
-                .Then(CIString("OR"))
-                .Before(
-                    Lookahead(
-                        OneOf(Whitespace.Then(Return(Unit.Value)), Char('(').ThenReturn(Unit.Value))
-                    )
-                )
+            Whitespace.Then(CIString("OR")).Before(Whitespace)
         )
         .IgnoreResult()
         .Labelled("OR");
@@ -145,14 +142,7 @@ public static class DslParser
     /// <summary>
     /// Parser für NOT-Keyword (case-insensitive)
     /// </summary>
-    private static readonly Parser<char, Unit> NotKeyword = Try(
-            CIString("NOT")
-                .Before(
-                    Lookahead(
-                        OneOf(Whitespace.Then(Return(Unit.Value)), Char('(').ThenReturn(Unit.Value))
-                    )
-                )
-        )
+    private static readonly Parser<char, Unit> NotKeyword = Try(CIString("NOT").Before(Whitespace))
         .IgnoreResult()
         .Labelled("NOT");
 
