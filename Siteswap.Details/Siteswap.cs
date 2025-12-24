@@ -33,6 +33,35 @@ public record Siteswap(CyclicArray<int> Items)
         }
     }
 
+    public Siteswap ToInterface(int defaultValue = -99)
+    {
+        var interfaceArray = Enumerable.Repeat(defaultValue, Items.Length).ToArray();
+        
+        for (var i = 0; i < Items.Length; i++)
+        {
+            var landingPosition = (i + Items[i]) % Items.Length;
+            interfaceArray[landingPosition] = Items[i];
+        }
+        
+        return new Siteswap(interfaceArray);
+    }
+
+    public Siteswap ToInterface(int defaultValue, int interfaceLength, int length)
+    {
+        var interfaceArray = Enumerable.Repeat(defaultValue, interfaceLength).ToArray();
+        
+        for (var i = 0; i < length; i++)
+        {
+            var landingPosition = i + Items[i % Items.Length];
+            if (landingPosition < interfaceLength)
+            {
+                interfaceArray[landingPosition] = Items[i % Items.Length];
+            }
+        }
+        
+        return new Siteswap(interfaceArray);
+    }
+
     public virtual bool Equals(Siteswap? other)
     {
         if (other is null)
@@ -231,27 +260,10 @@ public record Siteswap(CyclicArray<int> Items)
             .EnumerateValues(1)
             .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
             .ToImmutableList();
-}
 
-/// <summary>
-///     An interface is the order of catches of a siteswap e.g. 53 will be 35
-/// </summary>
-/// <param name="Items"></param>
-public record Interface(ImmutableList<int> Items)
-{
-    public override string ToString()
+    public ClubDistribution GetClubDistribution(int numberOfJugglers)
     {
-        return string.Join("", Items.Select(Siteswap.Transform));
+        return ClubDistribution.FromSiteswap(this, numberOfJugglers);
     }
 
-    public ImmutableList<PassOrSelf> GetPassOrSelf(int numberOfJuggler) =>
-        Items
-            .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
-            .ToImmutableList();
-}
-
-public enum PassOrSelf
-{
-    Pass,
-    Self,
 }

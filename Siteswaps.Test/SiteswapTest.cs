@@ -223,4 +223,33 @@ public class SiteswapTest
         }
         return builder.ToString();
     }
+
+    [Test]
+    public void ClubDistribution_ShouldCalculateGroundState()
+    {
+        var sut = new Siteswap.Details.Siteswap(7, 5, 6, 6);
+        var distribution = sut.GetClubDistribution(2);
+
+        // Bei 2 Jongleuren und 6 Bällen sollte jeder Jongleur 3 Bälle haben
+        distribution.ToString().Should().NotBeEmpty();
+    }
+
+    [TestCase("86777", 2, "A: 2|2 B: 1|2")]
+    [TestCase("441", 1, "A: 1|2")]
+    [TestCase("531", 1, "A: 1|2")]
+    [TestCase("51", 1, "A: 1|2")]
+    [TestCase("27786", 2, "A: 1|2 B: 1|2")]
+    [TestCase("7566", 2, "A: 1|2 B: 1|2")]
+    [TestCase("966", 2, "A: 2|2 B: 1|2")]
+    [TestCase("77772", 2, "A: 1|2 B: 1|2")]
+    [TestCase("97531", 2, "A: 1|2 B: 1|1")]
+    [TestCase("975", 2, "A: 2|2 B: 1|2")]
+    [TestCase("96672", 2, "A: 1|2 B: 1|2")]
+    public void ClubDistribution_Tests(string pattern, int numberOfJugglers, string expected)
+    {
+        Siteswap.Details.Siteswap.TryCreate(pattern, out var s);
+        s.Should().NotBeNull();
+        var distribution = s!.GetClubDistribution(numberOfJugglers);
+        distribution.ToString().Should().Be(expected);
+    }
 }

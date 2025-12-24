@@ -57,6 +57,7 @@ public class AnalyzeSiteswapTool
                 .Interface.GetPassOrSelf(numberOfJugglers)
                 .Select(MapPassOrSelf)
                 .ToList();
+            var clubs = siteswapObj.GetClubDistribution(numberOfJugglers);
             var jugglers = Enumerable
                 .Range(0, numberOfJugglers)
                 .Select(i =>
@@ -68,6 +69,7 @@ public class AnalyzeSiteswapTool
                         LocalNotation = local.LocalNotation,
                         GlobalNotation = local.GlobalNotation,
                         AverageObjects = local.Average(),
+                        ClubDistribution = string.Join("|", clubs.Hands.Where(x => x.Item1.Juggler == i).Select(x => x.Item2))
                     };
                 })
                 .ToList();
@@ -133,6 +135,7 @@ public class JugglerInfo
     public string LocalNotation { get; set; } = string.Empty;
     public string GlobalNotation { get; set; } = string.Empty;
     public double AverageObjects { get; set; }
+    public required string ClubDistribution { get; set; }
 }
 
 public class OrbitInfo
