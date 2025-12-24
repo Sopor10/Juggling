@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Core.Generator;
 
-internal record CyclicArray<T> : IEnumerable<T>
+public record CyclicArray<T> : IEnumerable<T>
 {
     public CyclicArray(IEnumerable<T> items, int rotationIndex = 0)
     {

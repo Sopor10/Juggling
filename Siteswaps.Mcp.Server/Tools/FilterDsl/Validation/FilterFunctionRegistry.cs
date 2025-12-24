@@ -118,6 +118,14 @@ public static class FilterFunctionRegistry
         // State-Funktion
         Register(new FunctionDefinition("state", [], AllowsVariableArgs: true));
 
+        // Interface-Funktion
+        Register(
+            new FunctionDefinition(
+                "interface",
+                [new ParameterDefinition("symbols", ParameterType.NumberOrList)]
+            )
+        );
+
         // Parameterlose Keywords (registriert als Funktionen ohne Parameter)
         Register(new FunctionDefinition("ground", []));
         Register(new FunctionDefinition("excited", []));

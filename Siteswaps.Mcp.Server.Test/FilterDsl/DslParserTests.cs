@@ -442,4 +442,36 @@ public class DslParserTests
         // Assert
         result.Success.Should().BeFalse();
     }
+
+    [Test]
+    public void Parse_FunctionCall_With_Siteswap_Number_Returns_FunctionCall()
+    {
+        // Act
+        var result = DslParser.Parse("pattern(a, 5, 1)");
+
+        // Assert
+        result.Success.Should().BeTrue();
+        var fc = (FilterExpression.FunctionCall)result.Value;
+        fc.Args.Should().HaveCount(3);
+        ((Argument.Number)fc.Args[0]).Value.Should().Be(10);
+    }
+
+    [Test]
+    [TestCase("interface(9)")]
+    [TestCase("interface(9,5,p,s)")]
+    [TestCase("interface (9,5,p,s)")]
+    [TestCase("interface(7, 5, 4, 6, a, a)")]
+    public void Parse_Interface_Syntax_Returns_FunctionCall(string input)
+    {
+        // Act
+        var result = DslParser.Parse(input);
+
+        // Assert
+        result.Success.Should().BeTrue();
+        result.Value.Should().BeOfType<FilterExpression.FunctionCall>();
+        var fc = (FilterExpression.FunctionCall)result.Value;
+        fc.Name.Should().Be("interface");
+        fc.Args.Should().HaveCount(1);
+        fc.Args[0].Should().BeOfType<Argument.NumberList>();
+    }
 }

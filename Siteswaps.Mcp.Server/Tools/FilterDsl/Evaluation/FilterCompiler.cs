@@ -74,6 +74,7 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             "orbits" => CompileOrbits(functionCall.Args),
             "passes" => CompilePasses(functionCall.Args),
             "state" => CompileState(functionCall.Args),
+            "interface" => CompileInterface(functionCall.Args),
             _ => throw new InvalidOperationException($"Unbekannte Funktion: {functionCall.Name}"),
         };
     }
@@ -228,6 +229,47 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
         var stateValues = args.Select(a => GetNumber(a) == 1).ToList();
         var state = new State(stateValues);
         return new FilterBuilder(input).WithState(state).Build();
+    }
+
+    private ISiteswapFilter CompileInterface(Argument[] args)
+    {
+        var pattern = args[0]
+            .Match(
+                number => new List<List<int>> { new() { number.Value } },
+                wildcard => new List<List<int>> { new() { -1 } },
+                numberList => numberList.Values.Select(v => new List<int> { v }).ToList(),
+                id => throw new InvalidOperationException("Identifier nicht erlaubt in Interface"),
+                pass => new List<List<int>> { new() { -2 } },
+                self => new List<List<int>> { new() { -3 } }
+            );
+
+        if (numberOfJugglers.HasValue)
+        {
+            var passValues = Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % numberOfJugglers.Value != 0)
+                .ToList();
+            var selfValues = Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % numberOfJugglers.Value == 0)
+                .ToList();
+
+            pattern = pattern
+                .Select(list =>
+                    list.SelectMany(v =>
+                            v switch
+                            {
+                                -2 => passValues,
+                                -3 => selfValues,
+                                _ => [v],
+                            }
+                        )
+                        .ToList()
+                )
+                .ToList();
+        }
+
+        return new InterfaceFilter(pattern, numberOfJugglers ?? 2);
     }
 
     private ISiteswapFilter CompileGroundFilter()

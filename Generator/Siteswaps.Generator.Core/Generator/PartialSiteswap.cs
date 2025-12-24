@@ -6,7 +6,7 @@ public class PartialSiteswap
     {
         LastFilledPosition = lastFilledPosition;
         Interface = new CyclicArray<int>(Enumerable.Repeat(-1, items.Length));
-        Items = new int[items.Length];
+        Items = Enumerable.Repeat(-1, items.Length).ToArray();
 
         for (int i = 0; i < items.Length; i++)
         {
@@ -15,7 +15,7 @@ public class PartialSiteswap
     }
 
     public int[] Items { get; }
-    private CyclicArray<int> Interface { get; }
+    public CyclicArray<int> Interface { get; }
 
     public int PartialSum { get; private set; }
 

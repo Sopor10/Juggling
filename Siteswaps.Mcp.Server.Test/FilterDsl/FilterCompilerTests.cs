@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Mcp.Server.Tools.FilterDsl;
 using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
 using Siteswaps.Mcp.Server.Tools.FilterDsl.Evaluation;
@@ -264,6 +265,25 @@ public class FilterCompilerTests
         // Assert
         filter.Should().NotBeNull();
     }
+
+    [Test]
+    public void Compile_Interface_Creates_Working_Filter()
+    {
+        // Arrange
+        var input = CreateInput();
+        var compiler = new FilterCompiler(input, 2);
+        var expr = new FilterExpression.FunctionCall(
+            "interface",
+            [new Argument.NumberList([9, 7, -2])]
+        );
+
+        // Act
+        var filter = compiler.Compile(expr);
+
+        // Assert
+        filter.Should().NotBeNull();
+        filter.Should().BeOfType<InterfaceFilter>();
+    }
 }
 
 /// <summary>
@@ -357,6 +377,21 @@ public class FilterDslParserApiTests
         // Assert
         result.Success.Should().BeTrue($"Fehler: {result.ErrorMessage}");
         result.Filter.Should().NotBeNull();
+    }
+
+    [Test]
+    public void CreateFilter_With_Interface_Returns_Success()
+    {
+        // Arrange
+        var parser = new FilterDslParser(new SiteswapGeneratorInput(5, 5, 1, 9), 2);
+
+        // Act
+        var result = parser.CreateFilter("interface(9,7,p)");
+
+        // Assert
+        result.Success.Should().BeTrue($"Fehler: {result.ErrorMessage}");
+        result.Filter.Should().NotBeNull();
+        result.Filter.Should().BeOfType<InterfaceFilter>();
     }
 
     [Test]

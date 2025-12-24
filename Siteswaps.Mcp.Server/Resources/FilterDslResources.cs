@@ -60,8 +60,9 @@ public class FilterDslResources
         """
             Argument Types:
 
-            1. Numbers - Integer values
-               Example: minOcc(5, 2)
+            1. Numbers - Integer values or letters (Base-36)
+               Example: minOcc(5, 2) or minOcc(a, 1) (a=10, b=11, etc.)
+               Note: All letters except 'p' and 's' are treated as numbers.
                
             2. Wildcards (*) - Matches any value in pattern()
                Example: pattern(5, *, 1) - matches 531, 541, 551, etc.
@@ -264,6 +265,34 @@ public class FilterDslResources
             - contains(4, 4) - contains two consecutive 4s
 
             Use case: Find patterns containing specific throw combinations.
+            """;
+
+    [McpServerResource]
+    [Description("filter:dsl:function:interface")]
+    public string FilterDslFunctionInterface() =>
+        """
+            interface(values...)
+
+            Filters siteswaps by their landing schedule (interface).
+            While pattern() filters based on the sequence of throws made, 
+            interface() filters based on the sequence of balls landing.
+
+            Syntax: interface(9, 7, p)
+
+            Parameters:
+            - values: Sequence of throw values, wildcards (*), or pass/self indicators (p/s)
+
+            Wildcards and Indicators:
+            - * : matches any landing ball
+            - p : matches pass (ungerade Zahlen bei Passing-Patterns)
+            - s : matches self (gerade Zahlen bei Passing-Patterns)
+
+            Examples:
+            - interface(9, 7, p) - landing sequence: 9, then 7, then a pass
+            - interface(9, *, s) - 9 landing, then any, then a self landing
+
+            Use case: Precise control over the rhythm and passing structure of a pattern.
+            Note: This filter is rotation-invariant, checking all possible alignments.
             """;
 
     // ====================================================================================
@@ -525,6 +554,7 @@ public class FilterDslResources
                - pattern(5, *, 1) AND ground
                - pattern(p, s, p) AND minOcc(5,1)
                - startsWith(7) AND maxHeight(9)
+               - interface(9, 7, p) AND ground
             """;
 
     [McpServerResource]
@@ -644,6 +674,7 @@ public class FilterDslResources
 
             PATTERN FILTERS:
             - pattern(values...)       → Match pattern with wildcards (*)
+            - interface(values...)     → Match landing sequence (rotation-invariant)
             - startsWith(values...)    → Pattern starts with values
             - endsWith(values...)      → Pattern ends with values
             - contains(values...)      → Pattern contains subsequence
@@ -697,6 +728,7 @@ public class FilterDslResources
             maxHeight(7)               → Manageable difficulty
             minOcc(5, 2)               → Multiple high throws
             pattern(5, *, 1)           → Specific structure
+            interface(9, 7, p)         → Specific passing landing sequence
             prime AND ground           → Fundamental patterns
 
             TIPS:

@@ -66,19 +66,39 @@ public static class DslParser
     private static readonly Parser<char, Argument> SelfParser = Char('s')
         .ThenReturn<Argument>(new Argument.Self());
 
+    private static readonly Parser<char, int> SiteswapNumberParser = OneOf(
+            NumberParser,
+            Token(c => char.IsLetter(c) && char.ToLower(c) != 'p' && char.ToLower(c) != 's')
+                .Select(c => char.ToLower(c) - 'a' + 10)
+        )
+        .Labelled("siteswap number");
+
+    private static readonly Parser<char, int> InterfaceSymbolParser = OneOf(
+        SiteswapNumberParser,
+        Char('p').ThenReturn(-2), // Pass
+        Char('s').ThenReturn(-3) // Self
+    );
+
+    /// <summary>
+    /// Parser für eine Interface-Sequenz (z.B. 9,5,p,s)
+    /// </summary>
+    private static readonly Parser<char, Argument> InterfaceSequenceParser = InterfaceSymbolParser
+        .Between(Whitespace)
+        .SeparatedAtLeastOnce(Char(','))
+        .Select<Argument>(symbols => new Argument.NumberList(symbols.ToArray()));
+
     /// <summary>
     /// Parser für Number-Argument
     /// </summary>
-    private static readonly Parser<char, Argument> NumberArgParser = NumberParser.Select<Argument>(
-        n => new Argument.Number(n)
-    );
+    private static readonly Parser<char, Argument> NumberArgParser =
+        SiteswapNumberParser.Select<Argument>(n => new Argument.Number(n));
 
     /// <summary>
     /// Parser für NumberList-Argument [5,7,9]
     /// </summary>
     private static readonly Parser<char, Argument> NumberListParser = Char('[')
         .Then(Whitespace)
-        .Then(NumberParser.Between(Whitespace).Separated(Char(',')))
+        .Then(SiteswapNumberParser.Between(Whitespace).Separated(Char(',')))
         .Before(Whitespace)
         .Before(Char(']'))
         .Select<Argument>(nums => new Argument.NumberList(nums.ToArray()));
@@ -105,9 +125,22 @@ public static class DslParser
     /// <summary>
     /// Parser für Funktionsaufrufe oder Identifier
     /// </summary>
-    private static readonly Parser<char, FilterExpression> AtomParser = IdentifierParser
-        .Before(Whitespace)
-        .Then(
+    private static readonly Parser<char, FilterExpression> AtomParser = OneOf(
+        Try(
+            CIString("interface")
+                .Then(Whitespace.Optional())
+                .Then(
+                    InterfaceSequenceParser.Between(
+                        Char('(').Before(Whitespace),
+                        Whitespace.Then(Char(')'))
+                    )
+                )
+                .Select<FilterExpression>(arg => new FilterExpression.FunctionCall(
+                    "interface",
+                    [arg]
+                ))
+        ),
+        IdentifierParser.Then(
             Char('(')
                 .Then(Whitespace)
                 .Then(ArgListParser)
@@ -118,7 +151,8 @@ public static class DslParser
                 args.HasValue
                     ? (FilterExpression)new FilterExpression.FunctionCall(name, args.Value)
                     : new FilterExpression.Identifier(name)
-        );
+        )
+    );
 
     /// <summary>
     /// Parser für AND-Keyword (case-insensitive)

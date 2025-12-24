@@ -42,7 +42,7 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
             {
                 var left = g.First(x => x.Item1.Name == "L").Item2;
                 var right = g.First(x => x.Item1.Name == "R").Item2;
-                return $"{g.Key}: {left}|{right}";
+                return $"{(char)('A' + g.Key)}: {left}|{right}";
             })
         );
     }

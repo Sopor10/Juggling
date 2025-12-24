@@ -56,7 +56,8 @@ public class AnalyzeSiteswapTool
             var interfacePassOrSelf = siteswapObj
                 .Interface.GetPassOrSelf(numberOfJugglers)
                 .Select(MapPassOrSelf)
-                .ToList();
+                .ToList()
+                .Aggregate((x, y) => x + y);
             var clubs = siteswapObj.GetClubDistribution(numberOfJugglers);
             var jugglers = Enumerable
                 .Range(0, numberOfJugglers)
@@ -86,7 +87,6 @@ public class AnalyzeSiteswapTool
                 Length = siteswapObj.Length,
                 IsExcitedState = siteswapObj.IsExcitedState(),
                 CurrentState = state.ToString(),
-                Interface = siteswapObj.Interface.ToString(),
                 Orbits = orbits
                     .Select(o => new OrbitInfo { DisplayValue = o.DisplayValue, Items = o.Items })
                     .ToList(),
@@ -99,7 +99,7 @@ public class AnalyzeSiteswapTool
                     .ToList(),
                 NumberOfJugglers = numberOfJugglers,
                 PassOrSelf = passOrSelf,
-                InterfacePassOrSelf = interfacePassOrSelf,
+                Interface = interfacePassOrSelf,
                 Jugglers = jugglers,
             };
         });
@@ -128,7 +128,6 @@ public class SiteswapAnalysis
     public required string Interface { get; set; }
     public int NumberOfJugglers { get; set; }
     public List<string> PassOrSelf { get; set; } = new();
-    public List<string> InterfacePassOrSelf { get; set; } = new();
     public List<JugglerInfo> Jugglers { get; set; } = new();
 }
 
