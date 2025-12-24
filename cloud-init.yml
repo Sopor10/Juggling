@@ -14,7 +14,16 @@ users:
     ssh_authorized_keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEuZ1VOAN2jUNiukYmDlSFwPy/p+bdr9fVqi4yeDOzOX larsl@Lars-Asus
 
-# SSH-Härtung
+packages:
+  - ufw
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - fail2ban
+  - unattended-upgrades
+
+# Kernel-Hardening (Sysctl)
 write_files:
   - path: /etc/ssh/sshd_config.d/99-hardening.conf
     content: |
@@ -24,32 +33,6 @@ write_files:
       UsePAM yes
       AllowTcpForwarding no
       X11Forwarding no
-
-# Firewall (UFW)
-packages:
-  - ufw
-    - ca-certificates
-    - curl
-    - gnupg
-    - lsb-release
-runcmd:
-  - ufw default deny incoming
-  - ufw default allow outgoing
-  - ufw allow ssh
-  - ufw allow 80/tcp
-  - ufw allow 443/tcp
-  - ufw --force enable
-  - systemctl reload sshd
-
-# Fail2Ban
-packages:
-  - fail2ban
-runcmd:
-  - systemctl enable fail2ban
-  - systemctl start fail2ban
-
-# Kernel-Hardening (Sysctl)
-write_files:
   - path: /etc/sysctl.d/99-security.conf
     content: |
       net.ipv4.conf.all.accept_redirects = 0
@@ -58,15 +41,41 @@ write_files:
       net.ipv4.tcp_syncookies = 1
       fs.suid_dumpable = 0
       kernel.kptr_restrict = 2
-  - path: /etc/modules-load.d/99-security.conf
+  - path: /etc/apt/apt.conf.d/20auto-upgrades
+    permissions: "0644"
     content: |
-      # Sicherstellen, dass Module geladen werden
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
 
-# Neu sysctl anwenden
+  - path: /etc/apt/apt.conf.d/50unattended-upgrades
+    permissions: "0644"
+    content: |
+      Unattended-Upgrade::Allowed-Origins {
+              "${distro_id}:${distro_codename}-security";
+      };
+
+      Unattended-Upgrade::Automatic-Reboot "true";
+      Unattended-Upgrade::Automatic-Reboot-Time "03:30";
+
+      Unattended-Upgrade::Remove-Unused-Dependencies "true";
+      Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+
+      Unattended-Upgrade::SyslogEnable "true";
+      
+
 runcmd:
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow ssh
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+  - ufw --force enable
+  - systemctl restart ssh
+
+  - systemctl enable fail2ban
+  - systemctl start fail2ban
+  
   - sysctl --system
-    
-runcmd:
   # Docker GPG Key
   - install -m 0755 -d /etc/apt/keyrings
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -85,3 +94,5 @@ runcmd:
 
   # User zur Docker-Gruppe hinzufügen
   - usermod -aG docker lars
+  - systemctl enable unattended-upgrades
+  - systemctl restart unattended-upgrades
