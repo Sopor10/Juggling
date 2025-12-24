@@ -21,8 +21,6 @@ public class FilterCompilerTests
         return new SiteswapGeneratorInput(period, numberOfObjects, minHeight, maxHeight);
     }
 
-    #region MinOcc Tests
-
     [Test]
     public void Compile_MinOcc_Creates_Working_Filter()
     {
@@ -67,10 +65,6 @@ public class FilterCompilerTests
         filter.Should().NotBeNull();
     }
 
-    #endregion
-
-    #region MaxOcc Tests
-
     [Test]
     public void Compile_MaxOcc_Creates_Working_Filter()
     {
@@ -97,10 +91,6 @@ public class FilterCompilerTests
         filter.CanFulfill(siteswap551).Should().BeFalse();
     }
 
-    #endregion
-
-    #region ExactOcc Tests
-
     [Test]
     public void Compile_ExactOcc_Creates_Working_Filter()
     {
@@ -118,10 +108,6 @@ public class FilterCompilerTests
         // Assert
         filter.Should().NotBeNull();
     }
-
-    #endregion
-
-    #region Logic Operator Tests
 
     [Test]
     public void Compile_And_Creates_Working_Filter()
@@ -199,10 +185,6 @@ public class FilterCompilerTests
         filter.CanFulfill(siteswap531).Should().BeTrue();
     }
 
-    #endregion
-
-    #region Keyword Tests
-
     [Test]
     public void Compile_NoZeros_Creates_Working_Filter()
     {
@@ -237,10 +219,6 @@ public class FilterCompilerTests
         filter.Should().NotBeNull();
     }
 
-    #endregion
-
-    #region Pattern Tests
-
     [Test]
     public void Compile_Pattern_With_Wildcard_Creates_Filter()
     {
@@ -258,10 +236,6 @@ public class FilterCompilerTests
         // Assert
         filter.Should().NotBeNull();
     }
-
-    #endregion
-
-    #region Complex Expression Tests
 
     [Test]
     public void Compile_Complex_Expression_Creates_Working_Filter()
@@ -290,8 +264,6 @@ public class FilterCompilerTests
         // Assert
         filter.Should().NotBeNull();
     }
-
-    #endregion
 }
 
 /// <summary>

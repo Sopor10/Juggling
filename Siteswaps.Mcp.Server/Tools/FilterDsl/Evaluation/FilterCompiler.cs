@@ -78,8 +78,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
         };
     }
 
-    #region Occurrence Filters
-
     private ISiteswapFilter CompileMinOcc(Argument[] args)
     {
         var numbers = GetNumbers(args[0]);
@@ -113,10 +111,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             .MaximumOccurence(numbers, max)
             .Build();
     }
-
-    #endregion
-
-    #region Pattern Filters
 
     private ISiteswapFilter CompilePattern(Argument[] args)
     {
@@ -171,10 +165,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
         return builder.Build();
     }
 
-    #endregion
-
-    #region Height Filters
-
     private ISiteswapFilter CompileHeight(Argument[] args)
     {
         var min = GetNumber(args[0]);
@@ -215,10 +205,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
         return builder.Build();
     }
 
-    #endregion
-
-    #region Other Filters
-
     private ISiteswapFilter CompileOrbits(Argument[] args)
     {
         // Orbits-Filter - verwendet ggf. spezielle Logik
@@ -244,10 +230,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
         return new FilterBuilder(input).WithState(state).Build();
     }
 
-    #endregion
-
-    #region Parameterless Filters
-
     private ISiteswapFilter CompileGroundFilter()
     {
         // Ground State: State mit allen Positionen auf den niedrigsten Werten
@@ -271,9 +253,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
     {
         return new FilterBuilder(input).MinimumOccurence([0], 1).Build();
     }
-    #endregion
-
-    #region Helper Methods
 
     private static int GetNumber(Argument arg)
     {
@@ -311,6 +290,4 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
             self => -3 // -3 bedeutet "self" (gerade Zahl bei Passing)
         );
     }
-
-    #endregion
 }

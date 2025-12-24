@@ -11,8 +11,6 @@ namespace Siteswaps.Mcp.Server.Tools.FilterDsl;
 /// </summary>
 public static class DslParser
 {
-    #region Primitive Parsers
-
     /// <summary>
     /// Parser für Whitespace (wird übersprungen)
     /// </summary>
@@ -59,10 +57,6 @@ public static class DslParser
     private static readonly Parser<char, Argument> SelfParser = Char('s')
         .ThenReturn<Argument>(new Argument.Self());
 
-    #endregion
-
-    #region Argument Parsers
-
     /// <summary>
     /// Parser für Number-Argument
     /// </summary>
@@ -98,10 +92,6 @@ public static class DslParser
     private static readonly Parser<char, Argument[]> ArgListParser = ArgumentParser
         .Separated(Char(','))
         .Select(args => args.ToArray());
-
-    #endregion
-
-    #region Expression Parsers
 
     /// <summary>
     /// Parser für Funktionsaufrufe oder Identifier
@@ -208,10 +198,6 @@ public static class DslParser
         .Before(Whitespace)
         .Before(End);
 
-    #endregion
-
-    #region Public API
-
     /// <summary>
     /// Parst einen DSL-String in einen Filter-AST
     /// </summary>
@@ -249,6 +235,4 @@ public static class DslParser
     {
         return ArgumentParser.Before(End).Parse(input);
     }
-
-    #endregion
 }

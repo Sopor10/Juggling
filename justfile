@@ -11,3 +11,6 @@ run-mcp:
     docker run -d --name siteswaps-mcp-server --restart unless-stopped -p 5005:8080 siteswaps-mcp-server 
     
 deploy-mcp-to-diskstation: change-context-to-diskstation publish-mcp stop-mcp run-mcp
+
+format:
+    dotnet csharpier format .

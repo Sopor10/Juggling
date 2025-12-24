@@ -9,8 +9,6 @@ namespace Siteswaps.Mcp.Server.Test.FilterDsl;
 /// </summary>
 public class DslParserTests
 {
-    #region Primitive Parser Tests
-
     [Test]
     [TestCase("0", 0)]
     [TestCase("5", 5)]
@@ -52,10 +50,6 @@ public class DslParserTests
         result.Value.Should().BeOfType<Argument.Wildcard>();
     }
 
-    #endregion
-
-    #region Argument Parser Tests
-
     [Test]
     public void Parse_Argument_Number_Returns_Number()
     {
@@ -90,10 +84,6 @@ public class DslParserTests
         result.Success.Should().BeTrue();
         result.Value.Should().BeOfType<Argument.NumberList>();
     }
-
-    #endregion
-
-    #region Function Call Parser Tests
 
     [Test]
     public void Parse_FunctionCall_Without_Args_Returns_Identifier()
@@ -167,10 +157,6 @@ public class DslParserTests
         fc.Args[0].Should().BeOfType<Argument.NumberList>();
     }
 
-    #endregion
-
-    #region Logical Operator Tests
-
     [Test]
     public void Parse_And_Expression_Returns_And()
     {
@@ -242,10 +228,6 @@ public class DslParserTests
         result.Value.Should().BeOfType<FilterExpression.Not>();
     }
 
-    #endregion
-
-    #region Operator Precedence Tests
-
     [Test]
     public void Parse_And_Has_Higher_Precedence_Than_Or()
     {
@@ -298,10 +280,6 @@ public class DslParserTests
         result.Success.Should().BeTrue();
         result.Value.Should().BeOfType<FilterExpression.Or>();
     }
-
-    #endregion
-
-    #region Complex Expression Tests
 
     [Test]
     public void Parse_Complex_Expression_With_Functions_And_Logic()
@@ -367,10 +345,6 @@ public class DslParserTests
         result.Value.Should().BeOfType<FilterExpression.Or>();
     }
 
-    #endregion
-
-    #region Whitespace Handling Tests
-
     [Test]
     public void Parse_With_Extra_Whitespace()
     {
@@ -392,10 +366,6 @@ public class DslParserTests
         result.Success.Should().BeTrue();
         result.Value.Should().BeOfType<FilterExpression.FunctionCall>();
     }
-
-    #endregion
-
-    #region Error Cases Tests
 
     [Test]
     public void Parse_Empty_String_Fails()
@@ -466,6 +436,4 @@ public class DslParserTests
         result.Value.Should().BeOfType<FilterExpression.Identifier>();
         ((FilterExpression.Identifier)result.Value).Name.Should().Be("AND");
     }
-
-    #endregion
 }

@@ -9,8 +9,6 @@ namespace Siteswaps.Mcp.Server.Test.FilterDsl;
 /// </summary>
 public class ValidationTests
 {
-    #region Registry Tests
-
     [Test]
     public void Registry_Contains_MinOcc()
     {
@@ -79,10 +77,6 @@ public class ValidationTests
         keywords.Should().Contain("excited");
         keywords.Should().Contain("noZeros");
     }
-
-    #endregion
-
-    #region Validator Tests - Valid Cases
 
     [Test]
     public void Validate_Known_Identifier_Succeeds()
@@ -186,10 +180,6 @@ public class ValidationTests
         // Assert
         result.IsValid.Should().BeTrue();
     }
-
-    #endregion
-
-    #region Validator Tests - Error Cases
 
     [Test]
     public void Validate_Unknown_Identifier_Fails()
@@ -312,6 +302,4 @@ public class ValidationTests
         result.IsValid.Should().BeFalse();
         result.Errors.Should().HaveCount(2);
     }
-
-    #endregion
 }
