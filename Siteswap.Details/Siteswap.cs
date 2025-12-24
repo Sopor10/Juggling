@@ -139,7 +139,7 @@ public record Siteswap(CyclicArray<int> Items)
 
     private bool HasNoRethrow()
     {
-        return !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
+        return !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects);
     }
 
     public bool IsExcitedState()
@@ -147,9 +147,9 @@ public record Siteswap(CyclicArray<int> Items)
         return !IsGroundState();
     }
 
-    public decimal NumberOfObjects()
+    public decimal NumberOfObjects
     {
-        return (decimal)Items.Enumerate(1).Average(x => x.value);
+        get { return (decimal)Items.Enumerate(1).Average(x => x.value); }
     }
 
     public override string ToString()
@@ -192,6 +192,16 @@ public record Siteswap(CyclicArray<int> Items)
         return TransitionCalculator.CreateTransitions(this, to, length, height);
     }
 
+    public List<Transition> GetIns(int length, int? maxHeight = null)
+    {
+        return TransitionCalculator.CreateTransitions(new Siteswap((int)NumberOfObjects), this, length, maxHeight);
+    }
+    
+    public List<Transition> GetOuts(int length, int? maxHeight = null)
+    {
+        return TransitionCalculator.CreateTransitions(this, new Siteswap((int)NumberOfObjects), length, maxHeight);
+    }
+    
     public Dictionary<State, List<Siteswap>> AllStates()
     {
         var siteswaps = Enumerable.Range(0, Period.Value).Select(Rotate).ToList();

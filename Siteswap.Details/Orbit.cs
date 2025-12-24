@@ -4,7 +4,7 @@ public class Orbit(List<int> items)
 {
     public List<int> Items => items;
     public string DisplayValue => Items.ToSiteswapString();
-    public bool HasBalls => new Siteswap(Items.ToArray()).NumberOfObjects() > 0;
+    public bool HasBalls => new Siteswap(Items.ToArray()).NumberOfObjects > 0;
 
     public static IEnumerable<Orbit> CreateFrom(Siteswap siteswap)
     {

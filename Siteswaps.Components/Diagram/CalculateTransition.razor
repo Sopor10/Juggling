@@ -87,9 +87,9 @@
             return;
         }
 
-        if (From.NumberOfObjects() != To.NumberOfObjects())
+        if (From.NumberOfObjects != To.NumberOfObjects)
         {
-            Error += $"{From} has {From.NumberOfObjects()} objects and {To} has {To.NumberOfObjects()} objects.\n";
+            Error += $"{From} has {From.NumberOfObjects} objects and {To} has {To.NumberOfObjects} objects.\n";
         }
 
         var transitions = new List<Transition>();

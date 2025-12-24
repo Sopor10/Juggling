@@ -63,10 +63,10 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (from.NumberOfObjects() != to.NumberOfObjects())
+            if (from.NumberOfObjects != to.NumberOfObjects)
             {
                 throw new ArgumentException(
-                    $"Source and target must use the same number of objects (from: {from.NumberOfObjects()}, to: {to.NumberOfObjects()}).",
+                    $"Source and target must use the same number of objects (from: {from.NumberOfObjects}, to: {to.NumberOfObjects}).",
                     nameof(toSiteswap)
                 );
             }

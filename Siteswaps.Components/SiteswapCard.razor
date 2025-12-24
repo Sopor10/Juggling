@@ -58,7 +58,7 @@
 
         public string PassistLink => $"https://passist.org/siteswap/{Value}?jugglers={NumberOfJugglers}";
 
-        public int NumberOfClubs => (int)Value.NumberOfObjects();
+        public int NumberOfClubs => (int)Value.NumberOfObjects;
 
         public List<string> LocalSiteswaps => Enumerable.Range(0, NumberOfJugglers).Select(i => Value.GetLocalSiteswap(i, NumberOfJugglers).GlobalNotation).ToList();
         

@@ -81,7 +81,7 @@ public class AnalyzeSiteswapTool
             {
                 Siteswap = siteswapObj.ToString(),
                 Period = siteswapObj.Period.Value,
-                NumberOfObjects = siteswapObj.NumberOfObjects(),
+                NumberOfObjects = siteswapObj.NumberOfObjects,
                 MaxHeight = siteswapObj.Max(),
                 Length = siteswapObj.Length,
                 IsExcitedState = siteswapObj.IsExcitedState(),

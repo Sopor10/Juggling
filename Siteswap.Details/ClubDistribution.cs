@@ -15,7 +15,7 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
     )
     {
         var hands = new List<(JugglerHand, int)>();
-        var numberOfObjects = (int)siteswap.NumberOfObjects();
+        var numberOfObjects = (int)siteswap.NumberOfObjects;
 
         for (var juggler = 0; juggler < numberOfJugglers; juggler++)
         {
