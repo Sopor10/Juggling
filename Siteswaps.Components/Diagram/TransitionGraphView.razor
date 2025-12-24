@@ -24,7 +24,7 @@
         base.OnParametersSet();
     }
 
-    private NetworkData Data { get; set; } = new();
+    private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
     private void CreateNetworkData(SiteswapList? list)
     {
