@@ -16,10 +16,11 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be(siteswap);
-        result.Nodes.Should().NotBeEmpty();
-        result.Edges.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data.Nodes.Should().NotBeEmpty();
+        result.Data.Edges.Should().NotBeEmpty();
     }
 
     [Test]
@@ -33,10 +34,11 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be(siteswap);
-        result.Nodes.Should().NotBeEmpty();
-        result.Edges.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data.Nodes.Should().NotBeEmpty();
+        result.Data.Edges.Should().NotBeEmpty();
     }
 
     [Test]
@@ -46,10 +48,9 @@ public class GenerateStateGraphToolTests
         var tool = new GenerateStateGraphTool();
 
         // Act & Assert
-        var act = () => tool.GenerateStateGraph(string.Empty);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.GenerateStateGraph(string.Empty);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -59,10 +60,9 @@ public class GenerateStateGraphToolTests
         var tool = new GenerateStateGraphTool();
 
         // Act & Assert
-        var act = () => tool.GenerateStateGraph(null!);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.GenerateStateGraph(null!);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -73,10 +73,9 @@ public class GenerateStateGraphToolTests
         var invalidSiteswap = "43";
 
         // Act & Assert
-        var act = () => tool.GenerateStateGraph(invalidSiteswap);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage($"Invalid siteswap: {invalidSiteswap}*");
+        var result = tool.GenerateStateGraph(invalidSiteswap);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain($"Invalid siteswap: {invalidSiteswap}");
     }
 
     [Test]
@@ -90,8 +89,9 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Nodes.Should().NotBeEmpty();
-        result.Nodes.Should().OnlyContain(n => !string.IsNullOrWhiteSpace(n));
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.Nodes.Should().NotBeEmpty();
+        result.Data.Nodes.Should().OnlyContain(n => !string.IsNullOrWhiteSpace(n));
     }
 
     [Test]
@@ -105,9 +105,10 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Edges.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.Edges.Should().NotBeEmpty();
         result
-            .Edges.Should()
+            .Data.Edges.Should()
             .OnlyContain(e =>
                 !string.IsNullOrWhiteSpace(e.FromState)
                 && !string.IsNullOrWhiteSpace(e.ToState)
@@ -126,9 +127,10 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        var nodeSet = result.Nodes.ToHashSet();
+        result.IsSuccess.Should().BeTrue();
+        var nodeSet = result.Data!.Nodes.ToHashSet();
         result
-            .Edges.Should()
+            .Data.Edges.Should()
             .OnlyContain(e => nodeSet.Contains(e.FromState) && nodeSet.Contains(e.ToState));
     }
 
@@ -143,10 +145,11 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be(siteswap);
-        result.Nodes.Should().NotBeEmpty();
-        result.Edges.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data.Nodes.Should().NotBeEmpty();
+        result.Data.Edges.Should().NotBeEmpty();
     }
 
     [Test]
@@ -160,10 +163,11 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Siteswap.Should().Be(siteswap);
-        result.Nodes.Should().NotBeEmpty();
-        result.Edges.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data.Nodes.Should().NotBeEmpty();
+        result.Data.Edges.Should().NotBeEmpty();
     }
 
     [Test]
@@ -177,6 +181,7 @@ public class GenerateStateGraphToolTests
         var result = tool.GenerateStateGraph(siteswap);
 
         // Assert
-        result.Nodes.Should().OnlyHaveUniqueItems();
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.Nodes.Should().OnlyHaveUniqueItems();
     }
 }

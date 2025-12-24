@@ -1,0 +1,7 @@
+{
+    "mcpServers": {
+      "siteswap-generator": {
+        "url": "http://localhost:5000/"
+      }
+    }
+  }

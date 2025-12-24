@@ -16,7 +16,8 @@ public class NormalizeSiteswapToolTests
         var result = tool.NormalizeSiteswap(siteswap);
 
         // Assert
-        result.Should().NotBeNullOrWhiteSpace();
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
@@ -32,7 +33,9 @@ public class NormalizeSiteswapToolTests
         var result2 = tool.NormalizeSiteswap(siteswap2);
 
         // Assert
-        result1.Should().Be(result2);
+        result1.IsSuccess.Should().BeTrue();
+        result2.IsSuccess.Should().BeTrue();
+        result1.Data.Should().Be(result2.Data);
     }
 
     [Test]
@@ -42,10 +45,9 @@ public class NormalizeSiteswapToolTests
         var tool = new NormalizeSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.NormalizeSiteswap(string.Empty);
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Siteswap string cannot be null or empty.*");
+        var result = tool.NormalizeSiteswap(string.Empty);
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("cannot be null or empty");
     }
 
     [Test]
@@ -55,7 +57,8 @@ public class NormalizeSiteswapToolTests
         var tool = new NormalizeSiteswapTool();
 
         // Act & Assert
-        var act = () => tool.NormalizeSiteswap("43");
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid siteswap: 43*");
+        var result = tool.NormalizeSiteswap("43");
+        result.IsSuccess.Should().BeFalse();
+        result.Error!.Message.Should().Contain("Invalid siteswap: 43");
     }
 }

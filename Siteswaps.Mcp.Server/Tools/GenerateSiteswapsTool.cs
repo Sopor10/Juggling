@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
+using Siteswaps.Mcp.Server.Tools.FilterDsl;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
@@ -9,7 +11,13 @@ public class GenerateSiteswapsTool
 {
     [McpServerTool]
     [Description(
-        "Generates siteswaps based on the specified parameters. Returns a list of siteswap patterns. Ask the user for missing information."
+        "Generates siteswaps based on the specified parameters. Returns a list of siteswap patterns. "
+            + "Use the 'filter' parameter with DSL syntax for powerful filtering. "
+            + "Examples: 'minOcc(5,2) AND ground', 'pattern(5,*,1) OR pattern(7,*,1)', 'NOT hasZeros AND minOcc(7,1)'. "
+            + "Available functions: minOcc, maxOcc, exactOcc, pattern, contains, startsWith, endsWith, passes, state, height, maxHeight, minHeight. "
+            + "Keywords: ground, excited, noZeros, hasZeros. "
+            + "Operators: AND, OR, NOT (with parentheses for grouping)."
+            + "More details can be found in the resources of this MCP server."
     )]
     public async Task<List<string>> GenerateSiteswaps(
         [Description("Period of the siteswap")] int period,
@@ -19,55 +27,15 @@ public class GenerateSiteswapsTool
         [Description("Maximum number of results to return")] int maxResults = 100,
         [Description("Timeout in seconds")] int timeoutSeconds = 30,
         [Description(
-            "Numbers that must occur at least this many times. Format: '3:2' for single, '3:2,4:1' for multiple, '3:1|4:1' for OR logic, '3,4:2' for multiple numbers"
+            "Filter expression using DSL syntax. "
+                + "Examples: 'minOcc(5,2)', 'ground AND noZeros', '(minOcc(7,2) OR exactOcc(9,1)) AND ground', 'pattern(5,*,1)'. "
+                + "Functions: minOcc(throw,count), maxOcc(throw,count), exactOcc(throw,count), pattern(...), contains(...), passes(count), state(...), height(min,max), maxHeight(max), minHeight(min). "
+                + "Keywords (no args): ground, excited, noZeros, hasZeros. "
+                + "Operators: AND, OR, NOT. Use parentheses for grouping. Wildcards (*) in pattern for 'any throw'."
         )]
-            string? minOccurrence = null,
-        [Description(
-            "Numbers that must occur at most this many times. Format: '5:1' for single, '5:1,6:2' for multiple, '3,4:2' for multiple numbers"
-        )]
-            string? maxOccurrence = null,
-        [Description(
-            "Numbers that must occur exactly this many times. Format: '5:2' for single, '5:2,6:1' for multiple, '3,4:2' for multiple numbers"
-        )]
-            string? exactOccurrence = null,
-        [Description("Exact number of passes (requires numberOfJugglers)")]
-            int? numberOfPasses = null,
-        [Description("Number of jugglers (required for numberOfPasses/pattern)")]
+            string? filter = null,
+        [Description("Number of jugglers (required for pattern/passes functions)")]
             int? numberOfJugglers = null,
-        [Description(
-            "Pattern to match (comma-separated numbers, e.g., '3,3,1'). "
-                + "Special values: -1 (any value), -2 (any pass), -3 (any self). "
-                + "Example: '9,-1,6,-1' matches patterns where position 0=9 and position 2=6."
-        )]
-            string? pattern = null,
-        [Description(
-            "State filter (comma-separated 0/1 values, e.g., '1,1,0,0' for state with first two slots occupied)"
-        )]
-            string? state = null,
-        [Description(
-            "Flexible pattern (semicolon-separated groups, e.g., '3,4;5,6' for two groups). "
-                + "Special values: -1 (any value), -2 (any pass), -3 (any self). "
-                + "Example: '-2,-3;-3,-2' for alternating pass/self pattern."
-        )]
-            string? flexiblePattern = null,
-        [Description("Use default filter (right amount of balls)")] bool useDefaultFilter = true,
-        [Description("Use no filter (accepts all siteswaps)")] bool useNoFilter = false,
-        [Description(
-            "Locally valid filter for specific juggler (requires numberOfJugglers and jugglerIndex)"
-        )]
-            int? jugglerIndex = null,
-        [Description(
-            "Rotation-aware flexible pattern for specific juggler (semicolon-separated groups, requires numberOfJugglers and jugglerIndex)"
-        )]
-            string? rotationAwarePattern = null,
-        [Description(
-            "Personalized number filter for specific juggler. Format: 'number:amount:type:from' where type is 'exact', 'atleast', or 'atmost' (requires numberOfJugglers)"
-        )]
-            string? personalizedNumberFilter = null,
-        [Description(
-            "Not filter - negate a filter. Format: 'minOccurrence:3:2' to negate minOccurrence filter, 'pattern:3,3,1' to negate pattern filter, etc. Use | for OR logic, e.g., 'minOccurrence:3:2|maxOccurrence:5:1'"
-        )]
-            string? notFilter = null,
         CancellationToken cancellationToken = default
     )
     {
@@ -82,28 +50,29 @@ public class GenerateSiteswapsTool
             StopCriteria = new StopCriteria(TimeSpan.FromSeconds(timeoutSeconds), maxResults),
         };
 
-        // Filter erstellen
-        var parser = new FilterParser(input, numberOfJugglers, minHeight, maxHeight);
-        var filterBuilder = parser.BuildFilterFromParameters(
-            minOccurrence: minOccurrence,
-            maxOccurrence: maxOccurrence,
-            exactOccurrence: exactOccurrence,
-            numberOfPasses: numberOfPasses,
-            pattern: pattern,
-            state: state,
-            flexiblePattern: flexiblePattern,
-            useDefaultFilter: useDefaultFilter,
-            useNoFilter: useNoFilter,
-            jugglerIndex: jugglerIndex,
-            rotationAwarePattern: rotationAwarePattern,
-            personalizedNumberFilter: personalizedNumberFilter,
-            notFilter: notFilter
-        );
+        ISiteswapFilter siteswapFilter;
 
-        var filter = filterBuilder.Build();
+        if (!string.IsNullOrWhiteSpace(filter))
+        {
+            var dslParser = new FilterDslParser(input, numberOfJugglers);
+            var dslResult = dslParser.CreateFilter(filter);
+
+            if (!dslResult.Success)
+            {
+                throw new ArgumentException($"Filter-DSL Fehler: {dslResult.ErrorMessage}");
+            }
+
+            var defaultFilter = new FilterBuilder(input).WithDefault().Build();
+            siteswapFilter = new FilterBuilder(input).And(dslResult.Filter!, defaultFilter).Build();
+        }
+        else
+        {
+            // Kein Filter angegeben - nur Default-Filter verwenden
+            siteswapFilter = new FilterBuilder(input).WithDefault().Build();
+        }
 
         // SiteswapGenerator mit Filter erstellen und ausführen
-        var generator = new Siteswaps.Generator.Core.Generator.SiteswapGenerator(filter, input);
+        var generator = new SiteswapGenerator(siteswapFilter, input);
 
         var results = new List<string>();
         await foreach (var siteswap in generator.GenerateAsync(cancellationToken))

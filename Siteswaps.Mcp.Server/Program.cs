@@ -1,36 +1,69 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using System.Text.Json;
+using ModelContextProtocol.Protocol;
 
-// Session-Support hinzufügen für MCP HTTP-Transport
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(60);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
+var builder = WebApplication.CreateBuilder(args);
 
 builder
-    .Services.AddMcpServer()
+    .Services.AddMcpServer(options =>
+        options.ServerInfo = new Implementation { Name = "Siteswaps.Mcp.Server", Version = "1.0.0" }
+    )
     .WithHttpTransport()
     .WithToolsFromAssembly()
-    .WithResourcesFromAssembly();
+    .WithResourcesFromAssembly()
+    .WithPromptsFromAssembly();
 
 var app = builder.Build();
 
-// Session-Middleware aktivieren
-app.UseSession();
-
-// Middleware: GET-Requests ignorieren (keine Fehlerme ldung)
+// Middleware zum Loggen der URI für resources/read Requests
 app.Use(
     async (context, next) =>
     {
-        if (context.Request.Method == "GET" && context.Request.Path == "/")
+        if (context.Request.Path == "/" && context.Request.Method == "POST")
         {
-            // 200 OK mit leerer Antwort - damit keine Fehlermeldung in der UI erscheint
-            context.Response.StatusCode = 200;
-            await context.Response.WriteAsync("");
-            return;
+            // Request-Body lesen und zurückspulen
+            context.Request.EnableBuffering();
+
+            using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
+            var body = await reader.ReadToEndAsync();
+            context.Request.Body.Position = 0;
+
+            if (!string.IsNullOrEmpty(body))
+                try
+                {
+                    using var doc = JsonDocument.Parse(body);
+                    if (doc.RootElement.TryGetProperty("method", out var methodElement))
+                    {
+                        var method = methodElement.GetString();
+                        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+                        switch (method)
+                        {
+                            case "resources/list":
+                                logger.LogInformation("resources/list request handler called");
+                                break;
+                            case "resources/read":
+                            {
+                                if (doc.RootElement.TryGetProperty("params", out var paramsElement))
+                                    if (paramsElement.TryGetProperty("uri", out var uriElement))
+                                    {
+                                        var uri = uriElement.GetString();
+                                        logger.LogInformation(
+                                            "resources/read request handler called with URI: {Uri}",
+                                            uri
+                                        );
+                                    }
+
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch (JsonException)
+                {
+                    // Ignore JSON parsing errors
+                }
         }
+
         await next();
     }
 );

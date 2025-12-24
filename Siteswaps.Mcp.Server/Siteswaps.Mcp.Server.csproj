@@ -3,14 +3,30 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ContainerRepository>siteswaps-mcp-server</ContainerRepository>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" />
+    <PackageReference Include="Pidgin" />
+    <PackageReference Include="Dunet" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Generator\Siteswaps.Generator.Core\Siteswaps.Generator.Core.csproj" />
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 </Project>
