@@ -36,20 +36,20 @@ public record Siteswap(CyclicArray<int> Items)
     public Siteswap ToInterface(int defaultValue = -99)
     {
         var interfaceArray = Enumerable.Repeat(defaultValue, Items.Length).ToArray();
-        
+
         for (var i = 0; i < Items.Length; i++)
         {
             var landingPosition = (i + Items[i]) % Items.Length;
             interfaceArray[landingPosition] = Items[i];
         }
-        
+
         return new Siteswap(interfaceArray);
     }
 
     public Siteswap ToInterface(int defaultValue, int interfaceLength, int length)
     {
         var interfaceArray = Enumerable.Repeat(defaultValue, interfaceLength).ToArray();
-        
+
         for (var i = 0; i < length; i++)
         {
             var landingPosition = i + Items[i % Items.Length];
@@ -58,7 +58,7 @@ public record Siteswap(CyclicArray<int> Items)
                 interfaceArray[landingPosition] = Items[i % Items.Length];
             }
         }
-        
+
         return new Siteswap(interfaceArray);
     }
 
@@ -265,5 +265,4 @@ public record Siteswap(CyclicArray<int> Items)
     {
         return ClubDistribution.FromSiteswap(this, numberOfJugglers);
     }
-
 }

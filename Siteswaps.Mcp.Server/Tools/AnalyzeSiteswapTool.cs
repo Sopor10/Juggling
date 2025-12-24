@@ -69,7 +69,10 @@ public class AnalyzeSiteswapTool
                         LocalNotation = local.LocalNotation,
                         GlobalNotation = local.GlobalNotation,
                         AverageObjects = local.Average(),
-                        ClubDistribution = string.Join("|", clubs.Hands.Where(x => x.Item1.Juggler == i).Select(x => x.Item2))
+                        ClubDistribution = string.Join(
+                            "|",
+                            clubs.Hands.Where(x => x.Item1.Juggler == i).Select(x => x.Item2)
+                        ),
                     };
                 })
                 .ToList();

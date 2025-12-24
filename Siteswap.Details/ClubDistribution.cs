@@ -9,7 +9,10 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
         return CalculateGroundStateClubDistribution(siteswap, numberOfJugglers);
     }
 
-    public static ClubDistribution CalculateGroundStateClubDistribution(Siteswap siteswap, int numberOfJugglers)
+    public static ClubDistribution CalculateGroundStateClubDistribution(
+        Siteswap siteswap,
+        int numberOfJugglers
+    )
     {
         var hands = new List<(JugglerHand, int)>();
         var numberOfObjects = (int)siteswap.NumberOfObjects();
@@ -19,7 +22,7 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
             var numberOfClubsForJuggler = numberOfObjects / numberOfJugglers;
             if (juggler < numberOfObjects % numberOfJugglers)
                 numberOfClubsForJuggler++;
-            
+
             var numberOfClubsRightHand = numberOfClubsForJuggler / 2 + numberOfClubsForJuggler % 2;
             var numberOfClubsLeftHand = numberOfClubsForJuggler / 2;
 
@@ -33,11 +36,14 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
     public override string ToString()
     {
         var grouped = Hands.GroupBy(x => x.Item1.Juggler);
-        return string.Join(" ", grouped.Select(g => 
-        {
-            var left = g.First(x => x.Item1.Name == "L").Item2;
-            var right = g.First(x => x.Item1.Name == "R").Item2;
-            return $"{g.Key}: {left}|{right}";
-        }));
+        return string.Join(
+            " ",
+            grouped.Select(g =>
+            {
+                var left = g.First(x => x.Item1.Name == "L").Item2;
+                var right = g.First(x => x.Item1.Name == "R").Item2;
+                return $"{g.Key}: {left}|{right}";
+            })
+        );
     }
 }
