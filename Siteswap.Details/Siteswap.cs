@@ -194,14 +194,24 @@ public record Siteswap(CyclicArray<int> Items)
 
     public List<Transition> GetIns(int length, int? maxHeight = null)
     {
-        return TransitionCalculator.CreateTransitions(new Siteswap((int)NumberOfObjects), this, length, maxHeight);
+        return TransitionCalculator.CreateTransitions(
+            new Siteswap((int)NumberOfObjects),
+            this,
+            length,
+            maxHeight
+        );
     }
-    
+
     public List<Transition> GetOuts(int length, int? maxHeight = null)
     {
-        return TransitionCalculator.CreateTransitions(this, new Siteswap((int)NumberOfObjects), length, maxHeight);
+        return TransitionCalculator.CreateTransitions(
+            this,
+            new Siteswap((int)NumberOfObjects),
+            length,
+            maxHeight
+        );
     }
-    
+
     public Dictionary<State, List<Siteswap>> AllStates()
     {
         var siteswaps = Enumerable.Range(0, Period.Value).Select(Rotate).ToList();
