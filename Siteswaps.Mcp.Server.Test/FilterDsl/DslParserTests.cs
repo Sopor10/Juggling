@@ -292,7 +292,7 @@ public class DslParserTests
     public void Parse_Nested_Parentheses()
     {
         // "((A OR B) AND C) OR D"
-        var result = DslParser.Parse("(ground OR excited) AND noZeros)");
+        var result = DslParser.Parse("(((ground OR excited) AND noZeros) OR excited)");
 
         // Assert
         result.Success.Should().BeTrue();
