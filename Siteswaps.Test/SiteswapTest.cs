@@ -245,6 +245,9 @@ public class SiteswapTest
     [TestCase("97531", 2, "A: 1|2 B: 1|1")]
     [TestCase("975", 2, "A: 2|2 B: 1|2")]
     [TestCase("96672", 2, "A: 1|2 B: 1|2")]
+    [TestCase("946935", 2, "A: 2|2 B: 1|1")]
+    [TestCase("847737", 2, "A: 2|2 B: 1|1")]
+    [TestCase("935847", 2, "A: 2|1 B: 1|2")]
     public void ClubDistribution_Tests(string pattern, int numberOfJugglers, string expected)
     {
         Siteswap.Details.Siteswap.TryCreate(pattern, out var s);
