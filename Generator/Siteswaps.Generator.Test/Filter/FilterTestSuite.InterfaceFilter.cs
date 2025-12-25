@@ -48,6 +48,7 @@ public partial class FilterTestSuite
         ]);
         sutValid.CanFulfill(psValid).Should().BeFalse();
     }
+
     [Test]
     public void InterfaceFilter_With_Wildcard_Matches()
     {
@@ -56,7 +57,7 @@ public partial class FilterTestSuite
         // ps[1] = 7 -> Interface[1 + 7 % 3] = Interface[2] = 7
         // ps[2] = 5 -> Interface[2 + 5 % 3] = Interface[1] = 5
         // Interface: [9, 5, 7]
-        
+
         var pattern = new List<List<int>>
         {
             new() { 9 },
@@ -66,6 +67,7 @@ public partial class FilterTestSuite
         var sut = new InterfaceFilter(pattern);
         sut.CanFulfill(ps).Should().BeTrue();
     }
+
     [Test]
     public void InterfaceFilter_With_Pass_Wildcard_Matches()
     {
@@ -79,7 +81,7 @@ public partial class FilterTestSuite
         // i=3, v=-1 -> skips
         // i=4, v=-1 -> skips
         // Interface should be: [-1, -1, 6, 8, 2]
-        
+
         var sut = new InterfaceFilter([
             [-1],
             [-1],

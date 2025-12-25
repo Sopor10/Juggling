@@ -489,5 +489,4 @@ public class SiteswapGeneratorGuideResource
             3. Loosen occurrence filters
             4. Check NOT filters (may exclude too much)
             """;
-
 }
