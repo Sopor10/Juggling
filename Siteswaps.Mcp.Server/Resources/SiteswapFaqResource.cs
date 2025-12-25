@@ -149,4 +149,49 @@ public class SiteswapFaqResource
             - 534 → 552 (swap second and third)
             - 534 → 444 (swap first and second)
             """;
+
+    [McpServerResource]
+    [Description("Common pitfalls and troubleshooting when working with siteswaps and the generator")]
+    public string GetTroubleshooting() =>
+        """
+        # Common Mistakes & Troubleshooting
+
+        ## 1. Verwechselung von passOrSelf und interface (German Context)
+        In the analysis of a siteswap, you'll see two rhythm-related fields:
+        - `passOrSelf` (Array): This is the **Throw Sequence** (Pattern).
+        - `interface` (String): This is the **Landing Sequence**.
+
+        **Don't call it `interfacePassOrSelf`!** The API field is named `passOrSelf`.
+
+        ## 2. Filter Syntax Errors
+        - **Incorrect**: `interface(psspss)` (sent as a single string)
+        - **Correct**: `interface(p, s, s, p, s, s)` (comma-separated arguments)
+
+        ## 3. Pattern vs. Interface Compatibility
+        - If you want to find siteswaps with the same **throwing rhythm** → use `pattern()`.
+        - If you want to find siteswaps with the same **landing rhythm** → use `interface()`.
+        They are different! Two siteswaps can have the same pattern but different interfaces.
+
+        ## 4. Validating Combinations
+        To check if two jugglers can perform different siteswaps together:
+        1. Both siteswaps must be valid (use `validate_siteswap`).
+        2. They must share the SAME `interface` to be compatible.
+        """;
+    
+    [McpServerResource]
+    [Description("Information about compatability of siteswaps. The user may be interested in generating patterns of different difficulty.")]
+    public string GetCompatability() =>
+        """
+        # Compatability
+        
+        ## Pattern vs. Interface Compatibility
+        - If you want to find siteswaps with the same **throwing rhythm** → use `pattern()`.
+        - If you want to find siteswaps with the same **landing rhythm** → use `interface()`.
+        They are different! Two siteswaps can have the same pattern but different interfaces.
+
+        ## Validating Combinations
+        To check if two jugglers can perform different siteswaps together:
+        1. Both siteswaps must be valid (use `validate_siteswap`).
+        2. They must share the SAME `interface` to be compatible.
+        """;
 }

@@ -461,6 +461,8 @@ public class DslParserTests
     [TestCase("interface(9,5,p,s)")]
     [TestCase("interface (9,5,p,s)")]
     [TestCase("interface(7, 5, 4, 6, a, a)")]
+    [TestCase("interface(p,p,s,s,s,s)")]
+    [TestCase("interface(p,p,s,s,s,*)")]
     public void Parse_Interface_Syntax_Returns_FunctionCall(string input)
     {
         // Act

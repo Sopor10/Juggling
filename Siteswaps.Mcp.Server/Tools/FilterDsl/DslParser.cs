@@ -76,7 +76,8 @@ public static class DslParser
     private static readonly Parser<char, int> InterfaceSymbolParser = OneOf(
         SiteswapNumberParser,
         Char('p').ThenReturn(-2), // Pass
-        Char('s').ThenReturn(-3) // Self
+        Char('s').ThenReturn(-3), // Self
+        Char('*').ThenReturn(-1) // Wildcard
     );
 
     /// <summary>

@@ -191,24 +191,24 @@ public class FilterDslResources
         """
             pattern(values...)
 
-            Filters siteswaps that match a specific pattern with wildcards.
+            Filters siteswaps based on their throw sequence (what and when you throw).
+            This defines the rhythm and the "pattern" in the traditional sense.
 
             Parameters:
             - values: Sequence of throw values, wildcards (*), or pass/self indicators (p/s)
 
             Wildcards and Indicators:
             - * : matches any throw value
-            - p : matches pass (ungerade Zahlen bei Passing-Patterns, requires numberOfJugglers)
-            - s : matches self (gerade Zahlen bei Passing-Patterns, requires numberOfJugglers)
+            - p : matches pass (odd numbers in 2-juggler patterns, requires numberOfJugglers)
+            - s : matches self (even numbers in 2-juggler patterns, requires numberOfJugglers)
+            - Numbers (4-9 or hex a): Match exact throw height
 
             Examples:
             - pattern(5, 3, 1) - matches exactly "531"
-            - pattern(5, *, 1) - matches "531", "541", "551", etc.
-            - pattern(*, *, 1) - any pattern ending with 1
-            - pattern(p, s, p) - pass, self, pass (bei 2 Jongleuren)
-            - pattern(5, p, s) - genau 5, dann Pass, dann Self
+            - pattern(5, *, 1) - matches "5x1" where x is any throw
+            - pattern(p, s, s, p, s, s) - defines a specific pass-self-self rhythm
 
-            Use case: Find patterns with specific structure.
+            Use case: Find siteswaps with a specific throwing rhythm or exact sequence.
             Note: p and s require numberOfJugglers parameter in generate_siteswaps.
             """;
 
@@ -273,25 +273,30 @@ public class FilterDslResources
         """
             interface(values...)
 
-            Filters siteswaps by their landing schedule (interface).
-            While pattern() filters based on the sequence of throws made, 
-            interface() filters based on the sequence of balls landing.
-
-            Syntax: interface(9, 7, p)
+            Filters siteswaps by their landing sequence (the rhythm of balls landing).
+            While pattern() filters based on when balls are thrown, interface() 
+            filters based on when balls land.
 
             Parameters:
             - values: Sequence of throw values, wildcards (*), or pass/self indicators (p/s)
 
             Wildcards and Indicators:
             - * : matches any landing ball
-            - p : matches pass (ungerade Zahlen bei Passing-Patterns)
-            - s : matches self (gerade Zahlen bei Passing-Patterns)
+            - p : matches pass landing (odd numbers in 2-juggler patterns)
+            - s : matches self landing (even numbers in 2-juggler patterns)
+            - Numbers (4-9 or hex a): Match exact landing height
 
             Examples:
-            - interface(9, 7, p) - landing sequence: 9, then 7, then a pass
-            - interface(9, *, s) - 9 landing, then any, then a self landing
+            - interface(p, s, s, p, s, s) - defines a specific landing rhythm (PSSPSS)
+            - interface(9, 7, p) - landing sequence: a 9, then a 7, then a pass
 
-            Use case: Precise control over the rhythm and passing structure of a pattern.
+            Key Differences from pattern():
+            - pattern() = Throwing rhythm (when you throw what)
+            - interface() = Landing rhythm (when what lands)
+
+            Compatibility: Two siteswaps with the same landing sequence (interface) 
+            are "landing-compatible" and can often be swapped or combined.
+
             Note: This filter is rotation-invariant, checking all possible alignments.
             """;
 
