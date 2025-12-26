@@ -34,9 +34,7 @@ public static class TransitionCalculator
             );
         }
 
-        return result
-            .Select(x => new Transition(from, to, x.ToArray()))
-            .ToList();
+        return result.Select(x => new Transition(from, to, x.ToArray())).ToList();
     }
 
     private static IEnumerable<ImmutableList<Throw>> Recurse(

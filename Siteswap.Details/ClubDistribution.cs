@@ -9,14 +9,17 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
     {
         var numberOfObjects = (int)siteswap.NumberOfObjects;
 
-        Transition getin = Enumerable.Range(0, siteswap.Length)
-            .Select(i => siteswap.GetIns(i))
-            .FirstOrDefault(ins => ins.Count > 0)
-            ?.First() ?? throw new Exception("Could not find get-in sequence");
+        Transition getin =
+            Enumerable
+                .Range(0, siteswap.Length)
+                .Select(i => siteswap.GetIns(i))
+                .FirstOrDefault(ins => ins.Count > 0)
+                ?.First()
+            ?? throw new Exception("Could not find get-in sequence");
 
         var getinLength = getin.Throws.Length;
         var jugglerClubs = new (int left, int right)[numberOfJugglers];
-        
+
         for (var juggler = 0; juggler < numberOfJugglers; juggler++)
         {
             var clubsForJuggler = numberOfObjects / numberOfJugglers;
@@ -39,8 +42,9 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
         for (var i = 0; i < getinLength; i++)
         {
             var throwValue = getin.Throws[i].Value;
-            var throwingJuggler = (i + numberOfJugglers - getinLength % numberOfJugglers) % numberOfJugglers;
-            
+            var throwingJuggler =
+                (i + numberOfJugglers - getinLength % numberOfJugglers) % numberOfJugglers;
+
             var throwsLeftForJuggler = (getinLength - i) / numberOfJugglers;
             if (throwingJuggler >= numberOfJugglers - (getinLength - i) % numberOfJugglers)
                 throwsLeftForJuggler++;
@@ -52,15 +56,21 @@ public record ClubDistribution(ImmutableList<(JugglerHand, int)> Hands)
             if (!isRightHandThrowing)
                 isRightHandCatching = !isRightHandCatching;
 
-            if (isRightHandThrowing) jugglerClubs[throwingJuggler].right--;
-            else jugglerClubs[throwingJuggler].left--;
+            if (isRightHandThrowing)
+                jugglerClubs[throwingJuggler].right--;
+            else
+                jugglerClubs[throwingJuggler].left--;
 
-            if (isRightHandCatching) jugglerClubs[catchingJuggler].right++;
-            else jugglerClubs[catchingJuggler].left++;
+            if (isRightHandCatching)
+                jugglerClubs[catchingJuggler].right++;
+            else
+                jugglerClubs[catchingJuggler].left++;
         }
 
-        var hands = jugglerClubs.SelectMany((c, i) => new[] 
-            { (new JugglerHand(i, "L"), c.left), (new JugglerHand(i, "R"), c.right) });
+        var hands = jugglerClubs.SelectMany(
+            (c, i) =>
+                new[] { (new JugglerHand(i, "L"), c.left), (new JugglerHand(i, "R"), c.right) }
+        );
 
         return new ClubDistribution(hands.ToImmutableList());
     }

@@ -101,7 +101,7 @@ public class SiteswapTest
 
         InlineSnapshot.Validate(PrettyPrint(transitions), "3 --> 531");
     }
-    
+
     [Test]
     public void Calculate_Transition_Length_0()
     {
@@ -122,6 +122,7 @@ public class SiteswapTest
             "8 --> 8"
         );
     }
+
     [Test]
     public void Create_Specific_Transition_Length_1()
     {
