@@ -53,4 +53,18 @@ public class LocalSiteswapTest
 
         result.Should().Be().Siteswap(new Siteswap.Details.Siteswap("9289495897"));
     }
+
+    [Test]
+    public void Combining_Two_Period_5_Siteswaps_Results_In_Period_10_From_Strings()
+    {
+        var result = LocalSiteswap.FromLocals(
+            new List<IList<int>>()
+            {
+                new List<int>() { 9, 8, 4, 5, 9 },
+                new List<int>() { 2, 9, 9, 8, 7 },
+            }
+        );
+
+        result.Should().Be().Siteswap(new Siteswap.Details.Siteswap("9289495897"));
+    }
 }
