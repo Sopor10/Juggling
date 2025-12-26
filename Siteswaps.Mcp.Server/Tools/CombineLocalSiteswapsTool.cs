@@ -9,17 +9,16 @@ namespace Siteswaps.Mcp.Server.Tools;
 public class CombineLocalSiteswapsTool
 {
     [McpServerTool]
-    [Description(
-        "Combines multiple local siteswaps into a single global siteswap. All local siteswaps must have the same length and compatible interfaces."
-    )]
+    [Description("Combines multiple local siteswaps into a single global siteswap.")]
     public ToolResult<CombineLocalSiteswapsResult> CombineLocalSiteswaps(
-        [Description("List of local siteswap strings (e.g., ['978', '732'])")]
-            IEnumerable<string> localSiteswaps
+        [Description("List of local siteswap string seperated with , (e.g., 978,732)")]
+            string localSiteswaps
     )
     {
         var result = LocalSiteswap.FromLocals(
             localSiteswaps
-                .Select(IList<int> (x) => x.Select(SiteswapDetails.ToInt).ToList())
+                .Split(',')
+                .Select(IList<int> (x) => [.. x.Select(SiteswapDetails.ToInt)])
                 .ToList()
         );
         return result switch
