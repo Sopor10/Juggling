@@ -1,6 +1,3 @@
-using FluentAssertions;
-using FluentAssertions.Execution;
-using FluentAssertions.Primitives;
 using Siteswap.Details;
 
 namespace Siteswaps.Test;
@@ -16,7 +13,7 @@ public class LocalSiteswapTest
 
         var result = LocalSiteswap.FromLocals([local0, local1]);
 
-        result.Should().BeError("Expected 3 local siteswaps, but got 2.");
+        result.Should().Be().Error("Expected 3 local siteswaps, but got 2.");
     }
 
     [Test]
@@ -29,7 +26,7 @@ public class LocalSiteswapTest
 
         var result = LocalSiteswap.FromLocals([local0, local1, local2]);
 
-        result.Should().BeError("Juggler indices are not unique or incomplete.");
+        result.Should().Be().Error("Juggler indices are not unique or incomplete.");
     }
 
     [Test]
@@ -42,7 +39,7 @@ public class LocalSiteswapTest
 
         var result = LocalSiteswap.FromLocals([local2, local0, local1]);
 
-        result.Should().BeSiteswap(global);
+        result.Should().Be().Siteswap(global);
     }
 
     [Test]
@@ -55,7 +52,7 @@ public class LocalSiteswapTest
 
         var result = LocalSiteswap.FromLocals([local0, local1, local2]);
 
-        result.Should().BeSiteswap(global);
+        result.Should().Be().Siteswap(global);
     }
 
     [Test]
@@ -66,70 +63,6 @@ public class LocalSiteswapTest
 
         var result = LocalSiteswap.FromLocals([local0, local1]);
 
-        result.Should().BeSiteswap(new Siteswap.Details.Siteswap("9289495897"));
-    }
-}
-
-public static class ResultExtensions
-{
-    public static ResultAssertions<T> Should<T>(this Result<T> instance)
-    {
-        return new ResultAssertions<T>(instance);
-    }
-}
-
-public class ResultAssertions<T> : ReferenceTypeAssertions<Result<T>, ResultAssertions<T>>
-{
-    public ResultAssertions(Result<T> instance)
-        : base(instance, AssertionChain.GetOrCreate()) { }
-
-    protected override string Identifier => "result";
-
-    public AndConstraint<ResultAssertions<T>> BeSiteswap(
-        Siteswap.Details.Siteswap expected,
-        string because = "",
-        params object[] becauseArgs
-    )
-    {
-        AssertionChain
-            .GetOrCreate()
-            .BecauseOf(because, becauseArgs)
-            .Given(() => Subject)
-            .ForCondition(subject => subject is Result<T>.Success)
-            .FailWith("Expected {context:result} to be Success, but found Failure.")
-            .Then.Given(subject => ((Result<T>.Success)subject).Value)
-            .ForCondition(value =>
-                value is Siteswap.Details.Siteswap s && s.ToString() == expected.ToString()
-            )
-            .FailWith(
-                "Expected {context:result} to be {0}, but found {1}.",
-                _ => expected.ToString(),
-                value => value?.ToString() ?? "null"
-            );
-
-        return new AndConstraint<ResultAssertions<T>>(this);
-    }
-
-    public AndConstraint<ResultAssertions<T>> BeError(
-        string expectedError,
-        string because = "",
-        params object[] becauseArgs
-    )
-    {
-        AssertionChain
-            .GetOrCreate()
-            .BecauseOf(because, becauseArgs)
-            .Given(() => Subject)
-            .ForCondition(subject => subject is Result<T>.Failure)
-            .FailWith("Expected {context:result} to be Failure, but found Success.")
-            .Then.Given(subject => ((Result<T>.Failure)subject).Error)
-            .ForCondition(error => error == expectedError)
-            .FailWith(
-                "Expected {context:result} to have error {0}, but found {1}.",
-                _ => expectedError,
-                error => error
-            );
-
-        return new AndConstraint<ResultAssertions<T>>(this);
+        result.Should().Be().Siteswap(new Siteswap.Details.Siteswap("9289495897"));
     }
 }
