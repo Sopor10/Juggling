@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Generator/">
     <Project Path="Generator/Siteswaps.Generator.Core/Siteswaps.Generator.Core.csproj" />
+    <Project Path="Generator/Siteswaps.Generator.Cli/Siteswaps.Generator.Cli.csproj" />
     <Project Path="Generator/Siteswaps.Generator.Test/Siteswaps.Generator.Test.csproj" />
     <Project Path="Generator/Siteswaps.Generator/Siteswaps.Generator.csproj" />
   </Folder>
