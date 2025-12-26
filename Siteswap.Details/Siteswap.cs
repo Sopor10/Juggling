@@ -132,7 +132,7 @@ public record Siteswap(CyclicArray<int> Items)
         return biggest.ToCyclicArray();
     }
 
-    private bool IsGroundState()
+    public bool IsGroundState()
     {
         return HasNoRethrow();
     }
