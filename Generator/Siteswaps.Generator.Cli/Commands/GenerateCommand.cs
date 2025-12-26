@@ -15,6 +15,9 @@ public class GenerateCommand : ICommand
 
     [CommandOption("objects", 'o', Description = "The number of objects.")]
     public int NumberOfObjects { get; init; } = 3;
+    
+    [CommandOption("jugglers", 'j', Description = "The number of jugglers.")]
+    public int NumberOfJugglers { get; init; } = 2;
 
     [CommandOption("min", Description = "The minimum throw height.")]
     public int MinHeight { get; init; } = 2;
@@ -43,7 +46,7 @@ public class GenerateCommand : ICommand
 
         if (!string.IsNullOrWhiteSpace(Filter))
         {
-            var parser = new FilterDslParser(input);
+            var parser = new FilterDslParser(input, numberOfJugglers: NumberOfJugglers);
             var result = parser.CreateFilter(Filter);
 
             if (!result.Success)

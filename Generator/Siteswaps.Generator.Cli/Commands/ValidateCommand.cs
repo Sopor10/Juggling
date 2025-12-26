@@ -67,15 +67,21 @@ public class ValidateCommand : ICommand
                 Orbits = orbits.ToList(),
                 Interface = interfacePassOrSelf,
                 Jugglers = jugglers,
-                State = siteswapObj.State.ToString()
+                State = siteswapObj.State.ToString(),
             };
-            var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(
+                result,
+                new JsonSerializerOptions { WriteIndented = true }
+            );
             console.Output.WriteLine(json);
         }
         else
         {
             var result = new ValidationError();
-            var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(
+                result,
+                new JsonSerializerOptions { WriteIndented = true }
+            );
             console.Output.WriteLine(json);
         }
 
