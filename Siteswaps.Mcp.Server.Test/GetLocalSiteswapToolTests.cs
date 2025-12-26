@@ -25,6 +25,30 @@ public class GetLocalSiteswapToolTests
         result.Data.NumberOfJugglers.Should().Be(numberOfJugglers);
         result.Data.GlobalNotation.Should().NotBeNullOrWhiteSpace();
         result.Data.LocalNotation.Should().NotBeNullOrWhiteSpace();
+        result.Data.ClubDistribution.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Test]
+    [TestCase("531", 0, 2, "1|1")]
+    [TestCase("531", 1, 2, "0|1")]
+    [TestCase("441", 0, 2, "1|1")]
+    [TestCase("441", 1, 2, "0|1")]
+    public void GetLocalSiteswap_Returns_Correct_ClubDistribution(
+        string siteswap,
+        int juggler,
+        int numberOfJugglers,
+        string expectedClubDistribution
+    )
+    {
+        // Arrange
+        var tool = new GetLocalSiteswapTool();
+
+        // Act
+        var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.ClubDistribution.Should().Be(expectedClubDistribution);
     }
 
     [Test]

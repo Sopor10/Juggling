@@ -57,6 +57,8 @@ public class GetLocalSiteswapTool
 
             var localSiteswap = siteswapObj.GetLocalSiteswap(juggler, numberOfJugglers);
 
+            var clubs = siteswapObj.GetClubDistribution(numberOfJugglers);
+
             return new LocalSiteswapInfo
             {
                 GlobalSiteswap = siteswap,
@@ -66,6 +68,10 @@ public class GetLocalSiteswapTool
                 GlobalNotation = localSiteswap.GlobalNotation,
                 AverageObjectsPerJuggler = localSiteswap.Average(),
                 IsValidAsGlobalSiteswap = localSiteswap.IsValidAsGlobalSiteswap(),
+                ClubDistribution = string.Join(
+                    "|",
+                    clubs.Hands.Where(x => x.Item1.Juggler == juggler).Select(x => x.Item2)
+                ),
             };
         });
     }
@@ -80,4 +86,5 @@ public class LocalSiteswapInfo
     public string GlobalNotation { get; init; } = string.Empty;
     public double AverageObjectsPerJuggler { get; init; }
     public bool IsValidAsGlobalSiteswap { get; init; }
+    public string ClubDistribution { get; init; } = string.Empty;
 }
