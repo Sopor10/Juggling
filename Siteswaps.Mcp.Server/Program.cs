@@ -55,6 +55,9 @@ app.Use(
 
                                 break;
                             }
+
+                            default:
+                                break;
                         }
                     }
                 }

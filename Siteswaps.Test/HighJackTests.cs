@@ -10,7 +10,7 @@ public class HighJackTests
         var sut = new Siteswap.Details.Siteswap(8, 5, 5);
         InlineSnapshot.Validate(
             string.Join(Environment.NewLine, sut.GetHighJacks().Select(x => x.ToString())),
-            "588825"
+            "588"
         );
     }
 

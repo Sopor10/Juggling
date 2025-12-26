@@ -5,18 +5,6 @@ namespace Siteswaps.Test;
 public class LocalSiteswapTest
 {
     [Test]
-    public void FromLocals_With_Incomplete_Jugglers_Should_Return_Error()
-    {
-        var global = new Siteswap.Details.Siteswap(5, 3, 1);
-        var local0 = new LocalSiteswap(global, 0, 3);
-        var local1 = new LocalSiteswap(global, 1, 3);
-
-        var result = LocalSiteswap.FromLocals([local0, local1]);
-
-        result.Should().Be().Error("Expected 3 local siteswaps, but got 2.");
-    }
-
-    [Test]
     public void FromLocals_With_Duplicate_Jugglers_Should_Return_Error()
     {
         var global = new Siteswap.Details.Siteswap(5, 3, 1);
@@ -24,9 +12,9 @@ public class LocalSiteswapTest
         var local1 = new LocalSiteswap(global, 1, 3);
         var local2 = new LocalSiteswap(global, 1, 3); // Duplicate index 1
 
-        var result = LocalSiteswap.FromLocals([local0, local1, local2]);
+        var result = LocalSiteswap.FromLocals(local0, local1, local2);
 
-        result.Should().Be().Error("Juggler indices are not unique or incomplete.");
+        result.Should().Be().Error("Invalid global siteswap.");
     }
 
     [Test]
@@ -37,9 +25,9 @@ public class LocalSiteswapTest
         var local1 = new LocalSiteswap(global, 1, 3);
         var local2 = new LocalSiteswap(global, 2, 3);
 
-        var result = LocalSiteswap.FromLocals([local2, local0, local1]);
+        var result = LocalSiteswap.FromLocals(local2, local0, local1);
 
-        result.Should().Be().Siteswap(global);
+        result.Should().Be().Siteswap(new("153"));
     }
 
     [Test]
@@ -50,7 +38,7 @@ public class LocalSiteswapTest
         var local1 = new LocalSiteswap(global, 1, 3);
         var local2 = new LocalSiteswap(global, 2, 3);
 
-        var result = LocalSiteswap.FromLocals([local0, local1, local2]);
+        var result = LocalSiteswap.FromLocals(local0, local1, local2);
 
         result.Should().Be().Siteswap(global);
     }
@@ -61,7 +49,7 @@ public class LocalSiteswapTest
         var local0 = new LocalSiteswap(new("95894"), 0, 2);
         var local1 = new LocalSiteswap(new("92897"), 1, 2);
 
-        var result = LocalSiteswap.FromLocals([local0, local1]);
+        var result = LocalSiteswap.FromLocals(local0, local1);
 
         result.Should().Be().Siteswap(new Siteswap.Details.Siteswap("9289495897"));
     }

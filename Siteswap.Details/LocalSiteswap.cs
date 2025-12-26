@@ -1,6 +1,4 @@
-﻿using Dunet;
-
-namespace Siteswap.Details;
+﻿namespace Siteswap.Details;
 
 public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
 {
@@ -13,7 +11,7 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
                 .Select(x => x.ToString("0.##"))
         );
 
-    private List<int> GetLocalSiteswapReal()
+    internal List<int> GetLocalSiteswapReal()
     {
         var result = new List<int>();
 
@@ -37,57 +35,23 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
         return items.Select((x, i) => (x + i) % items.Count).ToHashSet().Count == items.Count;
     }
 
-    public static Result<Siteswap> FromLocals(IEnumerable<LocalSiteswap> input)
+    public static Result<Siteswap> FromLocals(params IEnumerable<LocalSiteswap> input)
     {
-        var locals = input.ToList();
-        if (locals.Count == 0)
-        {
-            return "No local siteswaps provided.";
-        }
+        return FromLocals(input.Select(x => (IList<int>)x.GetLocalSiteswapReal()).ToList());
+    }
 
-        var numberOfJugglers = locals[0].NumberOfJugglers;
-        if (locals.Any(x => x.NumberOfJugglers != numberOfJugglers))
-        {
-            return "Different number of jugglers.";
-        }
+    public static Result<Siteswap> FromLocals(IList<IList<int>> input)
+    {
+        var lcm = input.Select(x => x.Count).Aggregate(Helper.Lcm);
 
-        if (locals.Count != numberOfJugglers)
-        {
-            return $"Expected {numberOfJugglers} local siteswaps, but got {locals.Count}.";
-        }
-
-        if (locals.Select(x => x.Juggler).Distinct().Count() != numberOfJugglers)
-        {
-            return "Juggler indices are not unique or incomplete.";
-        }
-
-        var localData = locals
-            .OrderBy(x => x.Juggler)
-            .Select(x => x.GetLocalSiteswapReal())
-            .ToList();
-        if (localData.Select(x => x.Count).Distinct().Count() > 1)
-        {
-            return "Local siteswaps have different lengths.";
-        }
-
-        if (
-            locals
-                .Select(x => x.Siteswap.Interface.AsPassOrSelf(numberOfJugglers))
-                .Distinct()
-                .Count() != 1
-        )
-        {
-            return "Local siteswaps have different interfaces.";
-        }
-
-        var localPeriod = localData[0].Count;
-        var globalPeriod = localPeriod * numberOfJugglers;
+        var numberOfJugglers = input.Count;
+        var globalPeriod = lcm * numberOfJugglers;
         var globalItems = new int[globalPeriod];
 
         for (var j = 0; j < numberOfJugglers; j++)
         {
-            var data = localData[j];
-            for (var i = 0; i < localPeriod; i++)
+            var data = input[j];
+            for (var i = 0; j + i * numberOfJugglers < globalPeriod; i++)
             {
                 globalItems[j + i * numberOfJugglers] = data[i];
             }
@@ -100,12 +64,4 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
 
         return "Invalid global siteswap.";
     }
-}
-
-[Union]
-public partial record Result<T>
-{
-    public partial record Success(T Value);
-
-    public partial record Failure(string Error);
 }

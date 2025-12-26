@@ -1,3 +1,4 @@
+using ExhaustiveMatching;
 using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
 
 namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Validation;
@@ -144,22 +145,34 @@ public static class AstValidator
                 {
                     ParameterType.NumberOrWildcard => null,
                     ParameterType.Any => null,
-                    _ => new ValidationError(
+                    ParameterType.Number => new ValidationError(
                         ValidationErrorType.WildcardNotAllowed,
                         $"Wildcard (*) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
                         functionName
                     ),
+                    ParameterType.NumberOrList => new ValidationError(
+                        ValidationErrorType.WildcardNotAllowed,
+                        $"Wildcard (*) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
+                        functionName
+                    ),
+                    _ => throw ExhaustiveMatch.Failed(),
                 },
             numberList =>
                 param.Type switch
                 {
                     ParameterType.NumberOrList => null,
                     ParameterType.Any => null,
-                    _ => new ValidationError(
+                    ParameterType.Number => new ValidationError(
                         ValidationErrorType.InvalidArgumentType,
                         $"Nummernliste ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
                         functionName
                     ),
+                    ParameterType.NumberOrWildcard => new ValidationError(
+                        ValidationErrorType.InvalidArgumentType,
+                        $"Nummernliste ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
+                        functionName
+                    ),
+                    _ => throw ExhaustiveMatch.Failed(),
                 },
             id => null, // Identifier sind für zukünftige Erweiterungen vorgesehen
             pass =>
@@ -167,22 +180,34 @@ public static class AstValidator
                 {
                     ParameterType.NumberOrWildcard => null,
                     ParameterType.Any => null,
-                    _ => new ValidationError(
+                    ParameterType.Number => new ValidationError(
                         ValidationErrorType.InvalidArgumentType,
                         $"Pass (p) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
                         functionName
                     ),
+                    ParameterType.NumberOrList => new ValidationError(
+                        ValidationErrorType.InvalidArgumentType,
+                        $"Pass (p) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
+                        functionName
+                    ),
+                    _ => throw ExhaustiveMatch.Failed(),
                 },
             self =>
                 param.Type switch
                 {
                     ParameterType.NumberOrWildcard => null,
                     ParameterType.Any => null,
-                    _ => new ValidationError(
+                    ParameterType.Number => new ValidationError(
                         ValidationErrorType.InvalidArgumentType,
                         $"Self (s) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
                         functionName
                     ),
+                    ParameterType.NumberOrList => new ValidationError(
+                        ValidationErrorType.InvalidArgumentType,
+                        $"Self (s) ist für Parameter '{param.Name}' in Funktion '{functionName}' nicht erlaubt.",
+                        functionName
+                    ),
+                    _ => throw ExhaustiveMatch.Failed(),
                 }
         );
     }

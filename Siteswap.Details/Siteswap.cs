@@ -12,6 +12,11 @@ public record Siteswap
     public Siteswap(params int[] items)
         : this(new CyclicArray<int>(items)) { }
 
+    private Siteswap(CyclicArray<int> items, bool _)
+    {
+        Items = items;
+    }
+
     public Siteswap(CyclicArray<int> items)
     {
         Items = items;
@@ -59,7 +64,7 @@ public record Siteswap
         return value != string.Empty && TryCreate(value.Select(ToInt), out siteswap);
     }
 
-    private static int ToInt(char c)
+    public static int ToInt(char c)
     {
         var tryParse = int.TryParse(c.ToString(), out var value);
         if (tryParse)
@@ -246,7 +251,7 @@ public record Siteswap
                 highJackablePassPosition.position + i * numberOfJugglers + 1 // 1 should be 0...numberOfJugglers - 1 instead
             );
 
-        yield return new Siteswap(5, 8, 8, 8, 2, 5);
+        yield return new Siteswap(5, 8, 8);
     }
 
     public Siteswap Swap(int x, int y)

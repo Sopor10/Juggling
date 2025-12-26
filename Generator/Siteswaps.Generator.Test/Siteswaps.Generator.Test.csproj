@@ -18,4 +18,7 @@
     <ProjectReference Include="..\Siteswaps.Generator\Siteswaps.Generator.csproj" />
     <ProjectReference Include="..\Siteswaps.Generator.Core\Siteswaps.Generator.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Update="Verify.NUnit" Version="31.9.2" />
+  </ItemGroup>
 </Project>

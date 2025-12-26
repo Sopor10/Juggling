@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <PackageReference Include="ExhaustiveMatching.Analyzer" />
     <PackageReference Include="morelinq" />
     <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="Pidgin" />
     <PackageReference Include="Dunet" />
+    <PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" />
   </ItemGroup>
 </Project>

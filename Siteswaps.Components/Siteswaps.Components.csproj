@@ -3,7 +3,7 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ExhaustiveMatching.Analyzer" />
+    <PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" />
     <PackageReference Include="Fluxor" />
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="Microsoft.AspNetCore.Components" />
