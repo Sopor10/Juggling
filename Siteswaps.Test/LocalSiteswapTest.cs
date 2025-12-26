@@ -8,19 +8,6 @@ namespace Siteswaps.Test;
 public class LocalSiteswapTest
 {
     [Test]
-    public void FromLocals_Should_Reconstruct_Siteswap()
-    {
-        var global = new Siteswap.Details.Siteswap(5, 3, 1); // 3 Jongleure: 5, 3, 1
-        var local0 = new LocalSiteswap(global, 0, 3);
-        var local1 = new LocalSiteswap(global, 1, 3);
-        var local2 = new LocalSiteswap(global, 2, 3);
-
-        var result = LocalSiteswap.FromLocals([local0, local1, local2]);
-
-        result.Should().BeSiteswap(global);
-    }
-
-    [Test]
     public void FromLocals_With_Incomplete_Jugglers_Should_Return_Error()
     {
         var global = new Siteswap.Details.Siteswap(5, 3, 1);
@@ -54,6 +41,19 @@ public class LocalSiteswapTest
         var local2 = new LocalSiteswap(global, 2, 3);
 
         var result = LocalSiteswap.FromLocals([local2, local0, local1]);
+
+        result.Should().BeSiteswap(global);
+    }
+
+    [Test]
+    public void FromLocals_Should_Reconstruct_Siteswap()
+    {
+        var global = new Siteswap.Details.Siteswap(5, 3, 1); // 3 Jongleure: 5, 3, 1
+        var local0 = new LocalSiteswap(global, 0, 3);
+        var local1 = new LocalSiteswap(global, 1, 3);
+        var local2 = new LocalSiteswap(global, 2, 3);
+
+        var result = LocalSiteswap.FromLocals([local0, local1, local2]);
 
         result.Should().BeSiteswap(global);
     }

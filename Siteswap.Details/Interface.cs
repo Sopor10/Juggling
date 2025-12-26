@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 namespace Siteswap.Details;
 
 /// <summary>
-///     An interface is the order of catches of a siteswap e.g. 53 will be 35
+/// An interface is the order of catches of a siteswap e.g. 53 will be 35
 /// </summary>
 /// <param name="Items"></param>
 public record Interface(ImmutableList<int> Items)
