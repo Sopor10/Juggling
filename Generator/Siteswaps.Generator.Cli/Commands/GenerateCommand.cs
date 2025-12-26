@@ -15,7 +15,7 @@ public class GenerateCommand : ICommand
 
     [CommandOption("objects", 'o', Description = "The number of objects.")]
     public int NumberOfObjects { get; init; } = 3;
-    
+
     [CommandOption("jugglers", 'j', Description = "The number of jugglers.")]
     public int NumberOfJugglers { get; init; } = 2;
 
