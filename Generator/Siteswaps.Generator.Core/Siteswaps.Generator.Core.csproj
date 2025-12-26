@@ -2,5 +2,7 @@
   <ItemGroup>
     <PackageReference Include="morelinq" />
     <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="Pidgin" />
+    <PackageReference Include="Dunet" />
   </ItemGroup>
 </Project>

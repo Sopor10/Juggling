@@ -1,7 +1,7 @@
 using FluentAssertions;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
 
-namespace Siteswaps.Mcp.Server.Test.FilterDsl;
+namespace Siteswaps.Generator.Test.FilterDsl;
 
 /// <summary>
 /// Tests für die AST-Definition

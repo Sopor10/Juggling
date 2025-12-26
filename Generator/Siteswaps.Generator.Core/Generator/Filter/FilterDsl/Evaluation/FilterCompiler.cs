@@ -1,8 +1,8 @@
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
 
-namespace Siteswaps.Mcp.Server.Tools.FilterDsl.Evaluation;
+namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Evaluation;
 
 /// <summary>
 /// Kompiliert einen validierten AST in einen ausführbaren Filter

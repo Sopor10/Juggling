@@ -1,10 +1,10 @@
 using Pidgin;
 using Pidgin.Expression;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
 using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
 
-namespace Siteswaps.Mcp.Server.Tools.FilterDsl;
+namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl;
 
 /// <summary>
 /// Parser für die Filter-DSL basierend auf Pidgin.

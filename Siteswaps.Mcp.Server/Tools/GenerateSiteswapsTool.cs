@@ -2,7 +2,7 @@ using System.ComponentModel;
 using ModelContextProtocol.Server;
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using Siteswaps.Mcp.Server.Tools.FilterDsl;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl;
 
 namespace Siteswaps.Mcp.Server.Tools;
 

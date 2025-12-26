@@ -1,6 +1,6 @@
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
 
-namespace Siteswaps.Mcp.Server.Tools.FilterDsl.Validation;
+namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Validation;
 
 /// <summary>
 /// Validiert den AST semantisch

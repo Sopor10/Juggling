@@ -1,4 +1,4 @@
-namespace Siteswaps.Mcp.Server.Tools.FilterDsl.Validation;
+namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Validation;
 
 /// <summary>
 /// Definiert eine Filter-Funktion mit ihren erlaubten Parametern

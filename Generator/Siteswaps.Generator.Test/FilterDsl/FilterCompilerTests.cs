@@ -1,11 +1,11 @@
 using FluentAssertions;
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using Siteswaps.Mcp.Server.Tools.FilterDsl;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Evaluation;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Evaluation;
 
-namespace Siteswaps.Mcp.Server.Test.FilterDsl;
+namespace Siteswaps.Generator.Test.FilterDsl;
 
 /// <summary>
 /// Tests für den FilterCompiler

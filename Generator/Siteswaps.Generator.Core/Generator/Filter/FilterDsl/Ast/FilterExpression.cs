@@ -1,6 +1,6 @@
 using Dunet;
 
-namespace Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
+namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
 
 /// <summary>
 /// Repräsentiert einen Filter-Ausdruck im AST.

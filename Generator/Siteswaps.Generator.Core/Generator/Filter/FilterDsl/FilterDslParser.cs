@@ -1,10 +1,10 @@
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Evaluation;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Validation;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Evaluation;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Validation;
 
-namespace Siteswaps.Mcp.Server.Tools.FilterDsl;
+namespace Siteswaps.Generator.Core.Generator.Filter.FilterDsl;
 
 /// <summary>
 /// Haupteinstiegspunkt für die Filter-DSL.

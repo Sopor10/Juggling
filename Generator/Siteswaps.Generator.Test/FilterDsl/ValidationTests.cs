@@ -1,8 +1,8 @@
 using FluentAssertions;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Ast;
-using Siteswaps.Mcp.Server.Tools.FilterDsl.Validation;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Ast;
+using Siteswaps.Generator.Core.Generator.Filter.FilterDsl.Validation;
 
-namespace Siteswaps.Mcp.Server.Test.FilterDsl;
+namespace Siteswaps.Generator.Test.FilterDsl;
 
 /// <summary>
 /// Tests für die semantische Validierung
