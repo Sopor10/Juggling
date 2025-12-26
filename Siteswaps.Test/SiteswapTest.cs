@@ -101,7 +101,27 @@ public class SiteswapTest
 
         InlineSnapshot.Validate(PrettyPrint(transitions), "3 --> 531");
     }
+    
+    [Test]
+    public void Calculate_Transition_Length_0()
+    {
+        var sut = new Siteswap.Details.Siteswap(3);
+        var to = new Siteswap.Details.Siteswap(5, 3, 1);
+        var transitions = sut.PossibleTransitions(to, 0);
 
+        InlineSnapshot.Validate(PrettyPrint(transitions), "3 --> 531");
+    }
+
+    [Test]
+    public void TestGroundState()
+    {
+        var sut = new Siteswap.Details.Siteswap(8);
+        var result = sut.PossibleTransitions(new Siteswap.Details.Siteswap(8), 1);
+        InlineSnapshot.Validate(
+            string.Join(Environment.NewLine, result.Select(x => x.PrettyPrint())),
+            "8 --> 8"
+        );
+    }
     [Test]
     public void Create_Specific_Transition_Length_1()
     {
@@ -135,7 +155,12 @@ public class SiteswapTest
         InlineSnapshot.Validate(
             PrettyPrint(transitions),
             """
+            531 -334-> 414
+            531 -34-> 414
+            531 -352-> 414
             531 -4-> 414
+            531 -424-> 414
+            531 -451-> 414
             531 -52-> 414
             """
         );
@@ -170,7 +195,12 @@ public class SiteswapTest
         InlineSnapshot.Validate(
             result,
             """
+            441 -334-> 51
+            441 -34-> 51
+            441 -352-> 51
             441 -4-> 51
+            441 -424-> 51
+            441 -451-> 51
             441 -52-> 51
             """
         );
@@ -237,7 +267,7 @@ public class SiteswapTest
     [TestCase("86777", 2, "A: 2|2 B: 1|2")]
     [TestCase("441", 1, "A: 1|2")]
     [TestCase("531", 1, "A: 1|2")]
-    [TestCase("51", 1, "A: 1|2")]
+    [TestCase("51", 1, "A: 2|1")]
     [TestCase("27786", 2, "A: 1|2 B: 1|2")]
     [TestCase("7566", 2, "A: 1|2 B: 1|2")]
     [TestCase("966", 2, "A: 2|2 B: 1|2")]

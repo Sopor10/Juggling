@@ -93,7 +93,7 @@ public class CalculateTransitionsTool
                         .ToList(),
                     Length = t.Throws.Length,
                     PrettyPrint = t.PrettyPrint(),
-                    IsValid = t.IsValid,
+                    IsMinimal = t.IsMinimal,
                 })
                 .ToList();
         });
@@ -107,7 +107,7 @@ public class TransitionInfo
     public List<ThrowInfo> Throws { get; init; } = new();
     public int Length { get; init; }
     public string PrettyPrint { get; init; } = string.Empty;
-    public bool IsValid { get; init; }
+    public bool IsMinimal { get; init; }
 }
 
 public class ThrowInfo

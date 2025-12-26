@@ -25,7 +25,11 @@ public record Transition(Siteswap From, Siteswap To, Throw[] Throws)
         return $"{From} -{Throws.Aggregate("", (s, i) => s + Siteswap.Transform(i.Value))}-> {To}";
     }
 
-    public bool IsValid
+    /// <summary>
+    /// True if the transition is minimal (does not visit any state more than once, including the start and end state)
+    /// False otherwise
+    /// </summary>
+    public bool IsMinimal
     {
         get
         {

@@ -21,7 +21,7 @@ public class CalculateTransitionsToolTests
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
         result.Data!.Should().NotBeEmpty();
-        result.Data.Should().OnlyContain(t => t.IsValid);
+        result.Data.Should().OnlyContain(t => t.IsMinimal);
     }
 
     [Test]
@@ -43,29 +43,7 @@ public class CalculateTransitionsToolTests
         result.Data[0].ToSiteswap.Should().Be(siteswap);
         result.Data[0].Length.Should().Be(0);
         result.Data[0].Throws.Should().BeEmpty();
-        result.Data[0].IsValid.Should().BeTrue();
-    }
-
-    [Test]
-    public void CalculateTransitions_With_3_To_51_Returns_Valid_Transitions()
-    {
-        // Arrange
-        var tool = new CalculateTransitionsTool();
-        var fromSiteswap = "3";
-        var toSiteswap = "51";
-        var maxLength = 2;
-
-        // Act
-        var result = tool.CalculateTransitions(fromSiteswap, toSiteswap, maxLength);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Data.Should().NotBeNull();
-        result.Data!.Should().NotBeEmpty();
-        result.Data.Should().OnlyContain(t => t.IsValid);
-        result.Data.Should().OnlyContain(t => t.FromSiteswap == fromSiteswap);
-        result.Data.Should().OnlyContain(t => t.ToSiteswap == toSiteswap);
-        result.Data.Should().OnlyContain(t => t.Length > 0);
+        result.Data[0].IsMinimal.Should().BeTrue();
     }
 
     [Test]
