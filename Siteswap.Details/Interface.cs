@@ -17,4 +17,10 @@ public record Interface(ImmutableList<int> Items)
         Items
             .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
             .ToImmutableList();
+
+    public string AsPassOrSelf(int numberOfJugglers) =>
+        string.Join(
+            "",
+            GetPassOrSelf(numberOfJugglers).Select(x => x == PassOrSelf.Pass ? "p" : "s")
+        );
 }

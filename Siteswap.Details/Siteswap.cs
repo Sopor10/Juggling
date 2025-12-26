@@ -4,12 +4,23 @@ using Siteswap.Details.StateDiagram;
 
 namespace Siteswap.Details;
 
-public record Siteswap(CyclicArray<int> Items)
+public record Siteswap
 {
+    public Siteswap(string value)
+        : this(value.Select(ToInt).ToArray()) { }
+
     public Siteswap(params int[] items)
-        : this(new CyclicArray<int>(items))
+        : this(new CyclicArray<int>(items)) { }
+
+    public Siteswap(CyclicArray<int> items)
     {
-        IsValid(new CyclicArray<int>(items));
+        Items = items;
+        if (!IsValid(items))
+        {
+            throw new ArgumentException(
+                $"Invalid siteswap {string.Join("", items.EnumerateValues(1).Select(Transform))}"
+            );
+        }
     }
 
     public int Length => Items.Length;
@@ -31,35 +42,6 @@ public record Siteswap(CyclicArray<int> Items)
 
             return new Interface(result.ToImmutableList());
         }
-    }
-
-    public Siteswap ToInterface(int defaultValue = -99)
-    {
-        var interfaceArray = Enumerable.Repeat(defaultValue, Items.Length).ToArray();
-
-        for (var i = 0; i < Items.Length; i++)
-        {
-            var landingPosition = (i + Items[i]) % Items.Length;
-            interfaceArray[landingPosition] = Items[i];
-        }
-
-        return new Siteswap(interfaceArray);
-    }
-
-    public Siteswap ToInterface(int defaultValue, int interfaceLength, int length)
-    {
-        var interfaceArray = Enumerable.Repeat(defaultValue, interfaceLength).ToArray();
-
-        for (var i = 0; i < length; i++)
-        {
-            var landingPosition = i + Items[i % Items.Length];
-            if (landingPosition < interfaceLength)
-            {
-                interfaceArray[landingPosition] = Items[i % Items.Length];
-            }
-        }
-
-        return new Siteswap(interfaceArray);
     }
 
     public virtual bool Equals(Siteswap? other)
@@ -151,6 +133,8 @@ public record Siteswap(CyclicArray<int> Items)
     {
         get { return (decimal)Items.Enumerate(1).Average(x => x.value); }
     }
+
+    public CyclicArray<int> Items { get; init; }
 
     public override string ToString()
     {
@@ -284,5 +268,10 @@ public record Siteswap(CyclicArray<int> Items)
     public ClubDistribution GetClubDistribution(int numberOfJugglers)
     {
         return ClubDistribution.FromSiteswap(this, numberOfJugglers);
+    }
+
+    public void Deconstruct(out CyclicArray<int> Items)
+    {
+        Items = this.Items;
     }
 }
