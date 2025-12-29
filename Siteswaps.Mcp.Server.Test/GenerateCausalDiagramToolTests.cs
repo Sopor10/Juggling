@@ -18,7 +18,7 @@ public class GenerateCausalDiagramToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data!.Siteswap.Should().Be("5,3,1");
         result.Data.NumberOfHands.Should().Be(2);
         result.Data.Throws.Should().NotBeEmpty();
     }

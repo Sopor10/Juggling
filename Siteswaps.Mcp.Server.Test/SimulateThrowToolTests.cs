@@ -18,7 +18,7 @@ public class SimulateThrowToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.OriginalSiteswap.Should().Be(siteswap);
+        result.Data!.OriginalSiteswap.Should().Be("5,3,1");
         result.Data.NewSiteswap.Should().NotBeNullOrWhiteSpace();
         result.Data.ThrowValue.Should().BeGreaterThan(0);
         result.Data.StartingState.Should().NotBeNullOrWhiteSpace();

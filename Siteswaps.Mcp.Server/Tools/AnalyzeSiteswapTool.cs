@@ -12,7 +12,7 @@ public class AnalyzeSiteswapTool
         "Analyzes a siteswap and returns detailed information including orbits, states, period, number of objects, and other properties."
     )]
     public ToolResult<SiteswapAnalysis> AnalyzeSiteswap(
-        [Description("The siteswap string to analyze (e.g., '531', '441', 'a7242')")]
+        [Description("The siteswap string to analyze (e.g., '5,3,1', '4,4,1', 'a,7,2,4,2')")]
             string siteswap,
         [Description("Number of jugglers (defaults to 2)")]
         [DefaultValue(2)]
@@ -21,7 +21,8 @@ public class AnalyzeSiteswapTool
     {
         return ToolResult.From(() =>
         {
-            if (string.IsNullOrWhiteSpace(siteswap))
+            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
+            if (string.IsNullOrWhiteSpace(coreSiteswap))
             {
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
@@ -38,7 +39,7 @@ public class AnalyzeSiteswapTool
             }
 
             if (
-                !Siteswap.Details.Siteswap.TryCreate(siteswap, out var siteswapObj)
+                !Siteswap.Details.Siteswap.TryCreate(coreSiteswap, out var siteswapObj)
                 || siteswapObj == null
             )
             {
@@ -67,8 +68,8 @@ public class AnalyzeSiteswapTool
                     return new JugglerInfo
                     {
                         JugglerIndex = i,
-                        LocalNotation = local.LocalNotation,
-                        GlobalNotation = local.GlobalNotation,
+                        LocalNotation = SiteswapMapper.LocalToDisplayFormat(local.LocalNotation),
+                        GlobalNotation = SiteswapMapper.ToDisplayFormat(local.GlobalNotation),
                         AverageObjects = local.Average(),
                         ClubDistribution = string.Join(
                             "|",
@@ -80,7 +81,7 @@ public class AnalyzeSiteswapTool
 
             return new SiteswapAnalysis
             {
-                Siteswap = siteswapObj.ToString(),
+                Siteswap = SiteswapMapper.ToDisplayFormat(siteswapObj),
                 Period = siteswapObj.Period.Value,
                 NumberOfObjects = siteswapObj.NumberOfObjects,
                 MaxHeight = siteswapObj.Max(),
@@ -88,13 +89,22 @@ public class AnalyzeSiteswapTool
                 IsExcitedState = siteswapObj.IsExcitedState(),
                 CurrentState = state.ToString(),
                 Orbits = orbits
-                    .Select(o => new OrbitInfo { DisplayValue = o.DisplayValue, Items = o.Items })
+                    .Select(o => new OrbitInfo
+                    {
+                        DisplayValue = string.Join(
+                            ",",
+                            o.Items.Select(Siteswap.Details.Siteswap.Transform)
+                        ),
+                        Items = o.Items,
+                    })
                     .ToList(),
                 AllStates = allStates
                     .Select(kvp => new StateInfo
                     {
                         State = kvp.Key.ToString(),
-                        Siteswaps = kvp.Value.Select(s => s.ToString()).ToList(),
+                        Siteswaps = kvp
+                            .Value.Select(s => SiteswapMapper.ToDisplayFormat(s))
+                            .ToList(),
                     })
                     .ToList(),
                 NumberOfJugglers = numberOfJugglers,

@@ -15,12 +15,13 @@ public class GenerateStateGraphTool
         "Generates a state graph for a siteswap showing all state transitions. Returns nodes (states) and edges (transitions with throw values) that represent the complete state diagram."
     )]
     public ToolResult<StateGraphInfo> GenerateStateGraph(
-        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap
+        [Description("Siteswap string (e.g., '5,3,1', '4,4,1', 'a,7,2,4,2')")] string siteswap
     )
     {
         return ToolResult.From(() =>
         {
-            if (string.IsNullOrWhiteSpace(siteswap))
+            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
+            if (string.IsNullOrWhiteSpace(coreSiteswap))
             {
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
@@ -28,7 +29,7 @@ public class GenerateStateGraphTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
+            if (!SiteswapDetails.TryCreate(coreSiteswap, out var siteswapObj))
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }
@@ -38,7 +39,7 @@ public class GenerateStateGraphTool
 
             return new StateGraphInfo
             {
-                Siteswap = siteswapObj.ToString(),
+                Siteswap = SiteswapMapper.ToDisplayFormat(siteswapObj),
                 Nodes = graph.Nodes.Select(n => n.ToString()).ToList(),
                 Edges = graph
                     .Edges.Select(e => new StateGraphEdge

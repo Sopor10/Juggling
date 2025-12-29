@@ -39,8 +39,8 @@ public class CalculateTransitionsToolTests
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
         result.Data!.Should().ContainSingle();
-        result.Data[0].FromSiteswap.Should().Be(siteswap);
-        result.Data[0].ToSiteswap.Should().Be(siteswap);
+        result.Data[0].FromSiteswap.Should().Be("5,3,1");
+        result.Data[0].ToSiteswap.Should().Be("5,3,1");
         result.Data[0].Length.Should().Be(0);
         result.Data[0].Throws.Should().BeEmpty();
         result.Data[0].IsMinimal.Should().BeTrue();

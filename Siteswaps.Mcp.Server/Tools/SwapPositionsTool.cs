@@ -13,14 +13,15 @@ public class SwapPositionsTool
         "Swaps two positions in a siteswap and adjusts values accordingly. Returns the modified siteswap."
     )]
     public ToolResult<string> SwapPositions(
-        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap,
+        [Description("Siteswap string (e.g., '5,3,1', '4,4,1', 'a,7,2,4,2')")] string siteswap,
         [Description("First position index (0-based)")] int position1,
         [Description("Second position index (0-based)")] int position2
     )
     {
         return ToolResult.From(() =>
         {
-            if (string.IsNullOrWhiteSpace(siteswap))
+            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
+            if (string.IsNullOrWhiteSpace(coreSiteswap))
             {
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
@@ -28,7 +29,7 @@ public class SwapPositionsTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
+            if (!SiteswapDetails.TryCreate(coreSiteswap, out var siteswapObj))
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }
@@ -67,7 +68,7 @@ public class SwapPositionsTool
             }
 
             var swapped = siteswapObj.Swap(position1, position2);
-            return swapped.ToString();
+            return SiteswapMapper.ToDisplayFormat(swapped);
         });
     }
 }

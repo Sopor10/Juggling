@@ -15,7 +15,10 @@ public class GenerateTransitionGraphTool
         "Generates a transition graph for a list of siteswaps showing all possible transitions between them. Returns nodes (siteswaps) and edges (transitions)."
     )]
     public ToolResult<TransitionGraphInfo> GenerateTransitionGraph(
-        [Description("Comma-separated list of siteswaps (e.g., '531,441,423')")] string siteswaps,
+        [Description(
+            "List of siteswaps separated by | or if no commas are used with , (e.g., '5,3,1|4,4,1' or '531,441')"
+        )]
+            string siteswaps,
         [Description("Maximum transition length (number of throws in transition paths)")]
             int maxLength
     )
@@ -38,8 +41,14 @@ public class GenerateTransitionGraphTool
                 );
             }
 
+            var separators = new[] { '|' };
+            if (!siteswaps.Contains('|'))
+            {
+                separators = new[] { ',' };
+            }
+
             var siteswapStrings = siteswaps.Split(
-                ',',
+                separators,
                 StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
             );
             if (siteswapStrings.Length == 0)
@@ -53,7 +62,8 @@ public class GenerateTransitionGraphTool
             var siteswapList = new List<SiteswapDetails>();
             foreach (var siteswapStr in siteswapStrings)
             {
-                if (!SiteswapDetails.TryCreate(siteswapStr, out var siteswapObj))
+                var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswapStr);
+                if (!SiteswapDetails.TryCreate(coreSiteswap, out var siteswapObj))
                 {
                     throw new ArgumentException(
                         $"Invalid siteswap: {siteswapStr}",
@@ -69,14 +79,19 @@ public class GenerateTransitionGraphTool
 
             return new TransitionGraphInfo
             {
-                Siteswaps = siteswaps,
+                Siteswaps = string.Join(
+                    "|",
+                    siteswapList.Select(s => SiteswapMapper.ToDisplayFormat(s))
+                ),
                 MaxLength = maxLength,
-                Nodes = graph.Nodes.Select(n => n.ToString()).ToList(),
+                Nodes = graph
+                    .Nodes.Select(n => SiteswapMapper.ToDisplayFormat(n.ToString()))
+                    .ToList(),
                 Edges = graph
                     .Edges.Select(e => new TransitionGraphEdge
                     {
-                        FromSiteswap = e.N1.ToString(),
-                        ToSiteswap = e.N2.ToString(),
+                        FromSiteswap = SiteswapMapper.ToDisplayFormat(e.N1.ToString()),
+                        ToSiteswap = SiteswapMapper.ToDisplayFormat(e.N2.ToString()),
                         Transition = e.Data.PrettyPrint(),
                     })
                     .ToList(),

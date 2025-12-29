@@ -19,7 +19,7 @@ public class GenerateTransitionGraphToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswaps.Should().Be(siteswaps);
+        result.Data!.Siteswaps.Should().Be("5,3,1|4,4,1");
         result.Data.MaxLength.Should().Be(maxLength);
         result.Data.Nodes.Should().NotBeEmpty();
     }

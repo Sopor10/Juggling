@@ -18,7 +18,7 @@ public class AnalyzeSiteswapToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be("531");
+        result.Data!.Siteswap.Should().Be("5,3,1");
         result.Data.Period.Should().Be(3);
         result.Data.NumberOfObjects.Should().Be(3);
         result.Data.Length.Should().Be(3);
@@ -39,7 +39,7 @@ public class AnalyzeSiteswapToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be("441");
+        result.Data!.Siteswap.Should().Be("4,4,1");
         result.Data.Period.Should().Be(3);
         result.Data.NumberOfObjects.Should().BeApproximately(3, 0.01m);
         result.Data.Length.Should().Be(3);

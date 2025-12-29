@@ -13,8 +13,8 @@ public class CalculateTransitionsTool
         "Calculates all possible transitions between two siteswaps. Returns a list of transition paths showing how to move from the source siteswap to the target siteswap."
     )]
     public ToolResult<List<TransitionInfo>> CalculateTransitions(
-        [Description("Source siteswap string (e.g., '531', '441')")] string fromSiteswap,
-        [Description("Target siteswap string (e.g., '531', '441')")] string toSiteswap,
+        [Description("Source siteswap string (e.g., '5,3,1', '4,4,1')")] string fromSiteswap,
+        [Description("Target siteswap string (e.g., '5,3,1', '4,4,1')")] string toSiteswap,
         [Description("Maximum transition length (number of throws in the transition path)")]
             int maxLength,
         [Description("Maximum throw height (optional, defaults to max of both siteswaps)")]
@@ -23,7 +23,10 @@ public class CalculateTransitionsTool
     {
         return ToolResult.From(() =>
         {
-            if (string.IsNullOrWhiteSpace(fromSiteswap))
+            var coreFrom = SiteswapMapper.ToCoreFormat(fromSiteswap);
+            var coreTo = SiteswapMapper.ToCoreFormat(toSiteswap);
+
+            if (string.IsNullOrWhiteSpace(coreFrom))
             {
                 throw new ArgumentException(
                     "Source siteswap cannot be null or empty.",
@@ -31,7 +34,7 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (string.IsNullOrWhiteSpace(toSiteswap))
+            if (string.IsNullOrWhiteSpace(coreTo))
             {
                 throw new ArgumentException(
                     "Target siteswap cannot be null or empty.",
@@ -47,7 +50,7 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(fromSiteswap, out var from))
+            if (!SiteswapDetails.TryCreate(coreFrom, out var from))
             {
                 throw new ArgumentException(
                     $"Invalid source siteswap: {fromSiteswap}",
@@ -55,7 +58,7 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(toSiteswap, out var to))
+            if (!SiteswapDetails.TryCreate(coreTo, out var to))
             {
                 throw new ArgumentException(
                     $"Invalid target siteswap: {toSiteswap}",
@@ -81,8 +84,8 @@ public class CalculateTransitionsTool
             return transitions
                 .Select(t => new TransitionInfo
                 {
-                    FromSiteswap = t.From.ToString(),
-                    ToSiteswap = t.To.ToString(),
+                    FromSiteswap = SiteswapMapper.ToDisplayFormat(t.From),
+                    ToSiteswap = SiteswapMapper.ToDisplayFormat(t.To),
                     Throws = t
                         .Throws.Select(th => new ThrowInfo
                         {

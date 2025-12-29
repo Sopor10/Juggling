@@ -14,12 +14,13 @@ public class SimulateThrowTool
         "Simulates a single throw in a siteswap and returns the resulting state and siteswap. Is also commonly referred to as rotating."
     )]
     public ToolResult<ThrowSimulationResult> SimulateThrow(
-        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap
+        [Description("Siteswap string (e.g., '5,3,1', '4,4,1', 'a,7,2,4,2')")] string siteswap
     )
     {
         return ToolResult.From(() =>
         {
-            if (string.IsNullOrWhiteSpace(siteswap))
+            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
+            if (string.IsNullOrWhiteSpace(coreSiteswap))
             {
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
@@ -27,7 +28,7 @@ public class SimulateThrowTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
+            if (!SiteswapDetails.TryCreate(coreSiteswap, out var siteswapObj))
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }
@@ -36,8 +37,8 @@ public class SimulateThrowTool
 
             return new ThrowSimulationResult
             {
-                OriginalSiteswap = siteswapObj.ToString(),
-                NewSiteswap = newSiteswap.ToString(),
+                OriginalSiteswap = SiteswapMapper.ToDisplayFormat(siteswapObj),
+                NewSiteswap = SiteswapMapper.ToDisplayFormat(newSiteswap),
                 ThrowValue = throwInfo.Value,
                 StartingState = throwInfo.StartingState.ToString(),
                 EndingState = throwInfo.EndingState.ToString(),

@@ -77,7 +77,7 @@ public class GenerateSiteswapsTool
         var results = new List<string>();
         await foreach (var siteswap in generator.GenerateAsync(cancellationToken))
         {
-            results.Add(siteswap.ToString());
+            results.Add(SiteswapMapper.ToDisplayFormat(siteswap.ToString()));
         }
 
         return results;

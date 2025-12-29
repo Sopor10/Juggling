@@ -18,7 +18,7 @@ public class GenerateStateGraphToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data!.Siteswap.Should().Be("5,3,1");
         result.Data.Nodes.Should().NotBeEmpty();
         result.Data.Edges.Should().NotBeEmpty();
     }
@@ -36,7 +36,7 @@ public class GenerateStateGraphToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data!.Siteswap.Should().Be("4,4,1");
         result.Data.Nodes.Should().NotBeEmpty();
         result.Data.Edges.Should().NotBeEmpty();
     }
@@ -147,7 +147,7 @@ public class GenerateStateGraphToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data!.Siteswap.Should().Be("3");
         result.Data.Nodes.Should().NotBeEmpty();
         result.Data.Edges.Should().NotBeEmpty();
     }
@@ -165,7 +165,7 @@ public class GenerateStateGraphToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.Siteswap.Should().Be(siteswap);
+        result.Data!.Siteswap.Should().Be("9,7,5,3,1");
         result.Data.Nodes.Should().NotBeEmpty();
         result.Data.Edges.Should().NotBeEmpty();
     }
