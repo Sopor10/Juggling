@@ -12,7 +12,7 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
     <PackageVersion Include="ModelContextProtocol" Version="0.4.1-preview.1" />
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.1-preview.1" />
-    <PackageVersion Include="Reqnroll.xUnit" Version="3.3.0" />
+    <PackageVersion Include="Reqnroll.xUnit" Version="3.3.1" />
     <PackageVersion Include="Sopor10.ArchunitExtension" Version="1.1.28" />
     <PackageVersion Include="Sopor10.Playwright.Testing" Version="1.1.28" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.1" />
