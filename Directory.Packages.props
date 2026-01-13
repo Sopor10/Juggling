@@ -9,7 +9,7 @@
     <PackageVersion Include="Meziantou.Framework.InlineSnapshotTesting" Version="3.3.35" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
     <PackageVersion Include="ModelContextProtocol" Version="0.4.1-preview.1" />
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.1-preview.1" />
     <PackageVersion Include="Reqnroll.xUnit" Version="3.3.1" />
