@@ -1,0 +1,90 @@
+/* _content/Siteswaps.Generator/Components/EasyUI.razor.rz.scp.css */
+.input-container[b-4qcww11n0j]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 640px ;
+    min-width: 320px;
+    margin: 0 auto;
+    width: 100%;
+}
+.input-column[b-4qcww11n0j]{
+    min-width: 128px;
+}
+/* _content/Siteswaps.Generator/Components/Internal/EasyFilter/EasyNumberFilter.razor.rz.scp.css */
+h1[b-pla97srsg6] {text-align: center;}
+/* _content/Siteswaps.Generator/Components/Internal/EasyFilter/EasyStateFilter.razor.rz.scp.css */
+/* MyCheckbox.razor.css */
+[b-ipyev5q0sh](.rz-chkbox-box)::before {
+    content: "0";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    pointer-events: none;
+}
+[b-ipyev5q0sh](.rz-chkbox-box.rz-state-active)::before {
+    content: "1";
+}
+/* _content/Siteswaps.Generator/Components/Internal/EasyFilter/Filter.razor.rz.scp.css */
+.filter-dropdown[b-qfyono3jd8]{
+    padding: 2px;
+    margin-left: 8px;
+    max-width: 100px;
+}
+/* _content/Siteswaps.Generator/Components/Keyboard.razor.rz.scp.css */
+.highlight-cursor-position[b-1ffkl4g7ed]{
+    border: 1px solid #fa011e;
+}
+
+.keyboard-container[b-1ffkl4g7ed]{
+    justify-content: center;
+    max-width: 500px;
+    padding: 0px;
+    margin: 0px;
+}
+/* _content/Siteswaps.Generator/Components/KeyboardComponent.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Library/CustomNumeric.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Library/CustomSlider.razor.rz.scp.css */
+/* _content/Siteswaps.Generator/Components/Library/SelectList.razor.rz.scp.css */
+.custom-checkbox-list .row[b-jgju484yht] {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.custom-checkbox-list .col-6[b-jgju484yht] {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding-bottom: 0.5rem;
+}
+
+.custom-checkbox-item[b-jgju484yht] {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.custom-checkbox-item input[type="checkbox"][b-jgju484yht] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-base-500);
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--color-base-100);
+}
+
+.custom-checkbox-item input[type="checkbox"]:checked[b-jgju484yht] {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary-dark);
+}
+
+.custom-checkbox-item label[b-jgju484yht] {
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}

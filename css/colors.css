@@ -1,0 +1,105 @@
+﻿:root {
+    --color-white: #F7F7F7;
+    --color-black: #2E2E2E;
+
+    --color-base: #EBEBEB;
+    --color-base-50: #FFFFFF;
+    --color-base-100: #F3F3F3;
+    --color-base-200: #E0E0E0;
+    --color-base-300: #C8C8C8;
+    --color-base-400: #B0B0B0;
+    --color-base-500: #909090;
+    --color-base-600: #707070;
+    --color-base-700: #505050;
+    --color-base-800: #303030;
+    --color-base-900: #1A1A1A;
+
+    --color-primary: #8E44AD; /* Purple */
+    --color-primary-light: #A569BD;
+    --color-primary-lighter: #BB8FCE;
+    --color-primary-dark: #6C3483;
+    --color-primary-darker: #4A235A;
+
+    --color-secondary: #3F51B5; /* Deep blue */
+    --color-secondary-light: #5C6BC0;
+    --color-secondary-lighter: #7986CB;
+    --color-secondary-dark: #303F9F;
+    --color-secondary-darker: #1A237E;
+
+    --color-warning: #FFEB3B;
+    --color-warning-light: #FFF59D;
+    --color-warning-lighter: #FFF9C4;
+    --color-warning-dark: #FBC02D;
+    --color-warning-darker: #F57F17;
+
+    --color-danger: #F44336;
+    --color-danger-light: #EF5350;
+    --color-danger-lighter: #E57373;
+    --color-danger-dark: #D32F2F;
+    --color-danger-darker: #B71C1C;
+
+    --color-info: #2196F3;
+    --color-info-light: #64B5F6;
+    --color-info-lighter: #90CAF9;
+    --color-info-dark: #1976D2;
+    --color-info-darker: #0D47A1;
+
+    --color-success: #4CAF50;
+    --color-success-light: #81C784;
+    --color-success-lighter: #A5D6A7;
+    --color-success-dark: #388E3C;
+    --color-success-darker: #2E7D32;
+
+    --color-on-dark-gray: #1E1E1E;
+    --color-on-white: #FAFAFA;
+
+
+    --color-base-light: var(--color-base-200);
+    --color-base-lighter: var(--color-base-100);
+    --color-base-dark: var(--color-base-600);
+    --color-base-darker: var(--color-base-900);
+    
+    --color-on-base: var(--color-base-900);
+    --color-on-base-light: var(--color-base-900);
+    --color-on-base-lighter: var(--color-base-900);
+    --color-on-base-dark: var(--color-white);
+    --color-on-base-darker: var(--color-white);
+
+    --color-on-primary: var(--color-white);
+    --color-on-primary-light: var(--color-white);
+    --color-on-primary-lighter: var(--color-primary);
+    --color-on-primary-dark: var(--color-white);
+    --color-on-primary-darker: var(--color-white);
+
+    --color-on-secondary: var(--color-white);
+    --color-on-secondary-light: var(--color-white);
+    --color-on-secondary-lighter: var(--color-secondary);
+    --color-on-secondary-dark: var(--color-white);
+    --color-on-secondary-darker: var(--color-white);
+
+    --color-on-warning: var(--color-white);
+    --color-on-warning-light: var(--color-white);
+    --color-on-warning-lighter: var(--color-warning);
+    --color-on-warning-dark: var(--color-white);
+    --color-on-warning-darker: var(--color-white);
+
+    --color-text-primary: var(--color-base-800); 
+
+    --color-on-info: var(--color-on-dark-gray);
+    --color-on-info-light: var(--color-on-dark-gray);
+    --color-on-info-lighter: var(--color-info-dark);
+    --color-on-info-dark: var(--color-on-white);
+    --color-on-info-darker: var(--color-on-white);
+
+    --color-on-success: var(--color-on-dark-gray);
+    --color-on-success-light: var(--color-on-dark-gray);
+    --color-on-success-lighter: var(--color-success-dark);
+    --color-on-success-dark: var(--color-on-white);
+    --color-on-success-darker: var(--color-on-white);
+
+    --color-on-danger: var(--color-on-dark-gray);
+    --color-on-danger-light: var(--color-on-dark-gray);
+    --color-on-danger-lighter: var(--color-danger-dark);
+    --color-on-danger-dark: var(--color-on-white);
+    --color-on-danger-darker: var(--color-on-white);
+}

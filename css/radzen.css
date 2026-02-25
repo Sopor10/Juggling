@@ -1,0 +1,191 @@
+﻿:root {
+    --rz-white: var(--color-white);
+    --rz-black: var(--color-black);
+
+    --rz-base: var(--color-base);
+    --rz-base-50: var(--color-base-50);
+    --rz-base-100: var(--color-base-100);
+    --rz-base-200: var(--color-base-200);
+    --rz-base-300: var(--color-base-300);
+    --rz-base-400: var(--color-base-400);
+    --rz-base-500: var(--color-base-500);
+    --rz-base-600: var(--color-base-600);
+    --rz-base-700: var(--color-base-700);
+    --rz-base-800: var(--color-base-800);
+    --rz-base-900: var(--color-base-900);
+
+    --rz-base-light: var(--color-base-light);
+    --rz-base-lighter: var(--color-base-lighter);
+    --rz-base-dark: var(--color-base-dark);
+    --rz-base-darker: var(--color-base-darker);
+
+    --rz-primary: var(--color-primary);
+    --rz-primary-light: var(--color-primary-light);
+    --rz-primary-lighter: var(--color-primary-lighter);
+    --rz-primary-dark: var(--color-primary-dark);
+    --rz-primary-darker: var(--color-primary-darker);
+
+    --rz-secondary: var(--color-secondary);
+    --rz-secondary-light: var(--color-secondary-light);
+    --rz-secondary-lighter: var(--color-secondary-lighter);
+    --rz-secondary-dark: var(--color-secondary-dark);
+    --rz-secondary-darker: var(--color-secondary-darker);
+
+    --rz-info: var(--color-info);
+    --rz-info-light: var(--color-info-light);
+    --rz-info-lighter: var(--color-info-lighter);
+    --rz-info-dark: var(--color-info-dark);
+    --rz-info-darker: var(--color-info-darker);
+
+    --rz-success: var(--color-success);
+    --rz-success-light: var(--color-success-light);
+    --rz-success-lighter: var(--color-success-lighter);
+    --rz-success-dark: var(--color-success-dark);
+    --rz-success-darker: var(--color-success-darker);
+
+    --rz-warning: var(--color-warning);
+    --rz-warning-light: var(--color-warning-light);
+    --rz-warning-lighter: var(--color-warning-lighter);
+    --rz-warning-dark: var(--color-warning-dark);
+    --rz-warning-darker: var(--color-warning-darker);
+
+    --rz-danger: var(--color-danger);
+    --rz-danger-light: var(--color-danger-light);
+    --rz-danger-lighter: var(--color-danger-lighter);
+    --rz-danger-dark: var(--color-danger-dark);
+    --rz-danger-darker: var(--color-danger-darker);
+
+    --rz-on-base: var(--color-on-base);
+    --rz-on-base-light: var(--color-on-base-light);
+    --rz-on-base-lighter: var(--color-on-base-lighter);
+    --rz-on-base-dark: var(--color-on-base-dark);
+    --rz-on-base-darker: var(--color-on-base-darker);
+
+    --rz-on-primary: var(--color-on-primary);
+    --rz-on-primary-light: var(--color-on-primary-light);
+    --rz-on-primary-lighter: var(--color-on-primary-lighter);
+    --rz-on-primary-dark: var(--color-on-primary-dark);
+    --rz-on-primary-darker: var(--color-on-primary-darker);
+
+    --rz-on-secondary: var(--color-on-secondary);
+    --rz-on-secondary-light: var(--color-on-secondary-light);
+    --rz-on-secondary-lighter: var(--color-on-secondary-lighter);
+    --rz-on-secondary-dark: var(--color-on-secondary-dark);
+    --rz-on-secondary-darker: var(--color-on-secondary-darker);
+
+    --rz-on-info: var(--color-on-info);
+    --rz-on-info-light: var(--color-on-info-light);
+    --rz-on-info-lighter: var(--color-on-info-lighter);
+    --rz-on-info-dark: var(--color-on-info-dark);
+    --rz-on-info-darker: var(--color-on-info-darker);
+
+    --rz-on-success: var(--color-on-success);
+    --rz-on-success-light: var(--color-on-success-light);
+    --rz-on-success-lighter: var(--color-on-success-lighter);
+    --rz-on-success-dark: var(--color-on-success-dark);
+    --rz-on-success-darker: var(--color-on-success-darker);
+
+    --rz-on-warning: var(--color-on-warning);
+    --rz-on-warning-light: var(--color-on-warning-light);
+    --rz-on-warning-lighter: var(--color-on-warning-lighter);
+    --rz-on-warning-dark: var(--color-on-warning-dark);
+    --rz-on-warning-darker: var(--color-on-warning-darker);
+
+    --rz-on-danger: var(--color-on-danger);
+    --rz-on-danger-light: var(--color-on-danger-light);
+    --rz-on-danger-lighter: var(--color-on-danger-lighter);
+    --rz-on-danger-dark: var(--color-on-danger-dark);
+    --rz-on-danger-darker: var(--color-on-danger-darker);
+
+
+    --rz-series-1: var(--color-info-dark);
+    --rz-series-2: var(--color-info-light);
+    --rz-series-3: var(--color-primary);
+    --rz-series-4: var(--color-danger);
+    --rz-series-5: var(--color-warning);
+    --rz-series-6: var(--color-danger-light);
+    --rz-series-7: var(--color-success);
+    --rz-series-8: var(--color-info);
+    --rz-series-9: var(--color-info-darker);
+    --rz-series-10: var(--color-info-lighter);
+    --rz-series-11: var(--color-primary-light);
+    --rz-series-12: var(--color-danger-lighter);
+    --rz-series-13: var(--color-warning-light);
+    --rz-series-14: var(--color-danger-dark);
+    --rz-series-15: var(--color-success-light);
+    --rz-series-16: var(--color-info-light);
+    --rz-series-17: var(--color-info-dark);
+    --rz-series-18: var(--color-success-lighter);
+    --rz-series-19: var(--color-primary-darker);
+    --rz-series-20: var(--color-danger-dark);
+    --rz-series-21: var(--color-warning-dark);
+    --rz-series-22: var(--color-danger-lighter);
+    --rz-series-23: var(--color-success-darker);
+    --rz-series-24: var(--color-info);
+
+    --rz-body-background-color: var(--color-base-100);
+    --rz-text-title-color: var(--color-base-900);
+    --rz-text-color: var(--color-base-800);
+    --rz-text-secondary-color: var(--color-base-700);
+    --rz-text-tertiary-color: var(--color-base-600);
+    --rz-text-disabled-color: var(--color-base-500);
+    --rz-text-contrast-color: var(--color-white);
+    --rz-text-selection-background-color: var(--color-primary-lighter);
+
+    --rz-link-color: var(--color-secondary);
+    --rz-link-hover-color: var(--color-secondary-dark);
+
+    --rz-border-white: var(--color-white);
+    --rz-border-black: var(--color-black);
+    --rz-border-base: var(--color-base);
+    --rz-border-primary: var(--color-primary);
+    --rz-border-secondary: var(--color-secondary);
+    --rz-border-info: var(--color-info);
+    --rz-border-success: var(--color-success);
+    --rz-border-warning: var(--color-warning);
+    --rz-border-danger: var(--color-danger);
+
+    --rz-outline-color: var(--color-secondary);
+    --rz-outline-primary: var(--color-primary);
+    --rz-outline-secondary: var(--color-secondary);
+    --rz-outline-info: var(--color-info);
+    --rz-outline-success: var(--color-success);
+    --rz-outline-warning: var(--color-warning);
+    --rz-outline-danger: var(--color-danger);
+
+    --rz-button-base-background-color: var(--color-primary);
+    --rz-button-base-color: var(--color-on-primary);
+    --rz-button-hover-background-color: var(--color-primary-light);
+    --rz-button-focus-background-color: var(--color-primary-dark);
+
+    --rz-card-background-color: var(--color-base-100);
+    --rz-card-flat-background-color: var(--color-base-100);
+
+    --rz-input-background-color: var(--color-base-background-color);
+    --rz-input-border: var(--color-base-300);
+    --rz-input-hover-border: var(--color-base-400);
+    --rz-input-focus-border: var(--color-base-500);
+
+    --rz-grid-header-background-color: var(--color-base-200);
+    --rz-grid-cell-background-color: var(--color-base-100);
+    --rz-grid-selected-background-color: var(--color-secondary-dark);
+    --rz-grid-selected-color: var(--color-on-secondary-dark);
+
+    --rz-notification-success-background-color: var(--color-success);
+    --rz-notification-warning-background-color: var(--color-warning);
+    --rz-notification-error-background-color: var(--color-danger);
+    --rz-notification-info-background-color: var(--color-info);
+
+    --rz-progressbar-background-color: var(--color-base-200);
+    --rz-progressbar-value-background-color: var(--color-secondary);
+
+    --rz-switch-background-color: var(--color-base-400);
+    --rz-switch-checked-background-color: var(--color-secondary);
+
+    --rz-tooltip-background-color: var(--color-info);
+    --rz-tooltip-color: var(--color-on-info);
+
+    --rz-dialog-content-padding: 0rem;
+    --rz-tabs-padding: 0.25rem;
+
+}
