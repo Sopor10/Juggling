@@ -1,0 +1,40 @@
+﻿.custom-checkbox-list .row {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.custom-checkbox-list .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding-bottom: 0.5rem;
+}
+
+.custom-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.custom-checkbox-item input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-base-500);
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--color-base-100);
+}
+
+.custom-checkbox-item input[type="checkbox"]:checked {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary-dark);
+}
+
+.custom-checkbox-item label {
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}

@@ -1,0 +1,20 @@
+﻿@using Siteswap.Details
+@inject NavigationManager NavigationManager
+<h3>Orbits</h3>
+
+@if (Value is null)
+{
+    return;
+}
+
+
+    <RadzenDataList TItem="Orbit" Data="Value.GetOrbits()">
+        <Template>
+            <a href="@NavigationManager.GetUriWithQueryParameter("s", context.DisplayValue)"> @context.DisplayValue</a>
+        </Template>
+    </RadzenDataList>
+
+@code
+{
+    [Parameter] public Siteswap? Value { get; set; }
+}

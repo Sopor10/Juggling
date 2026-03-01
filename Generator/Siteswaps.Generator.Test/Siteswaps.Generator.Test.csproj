@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Meziantou.Framework.InlineSnapshotTesting" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Sopor10.ArchunitExtension" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="TngTech.ArchUnitNET.NUnit" />
+    <PackageReference Include="Verify" />
+    <PackageReference Include="Verify.NUnit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.Generator\Siteswaps.Generator.csproj" />
+    <ProjectReference Include="..\Siteswaps.Generator.Core\Siteswaps.Generator.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Update="Verify.NUnit" Version="31.9.2" />
+  </ItemGroup>
+</Project>

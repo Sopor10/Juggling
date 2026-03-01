@@ -1,0 +1,67 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using Siteswaps.Generator.Components.State.FilterTrees
+@inherits FluxorComponent
+@inject IState<SiteswapGeneratorState> State
+@inject IDispatcher Dispatcher
+
+<AddFilterComponent
+    EditFilterFinished="x => AddFilter(x)"
+    Filter="IsNewFilter?null : FilterNumber.Filter"
+    State="State.Value.State"
+/>
+@code {
+    [Parameter]
+    public string? Key { get; set; }
+
+    [Parameter]
+    public FilterLeaf? FilterNumber { get; set; }
+
+    [MemberNotNullWhen(false, nameof(FilterNumber))]
+    private bool IsNewFilter => FilterNumber is null;
+    
+    private void AddFilter(IFilterInformation filterInformation)
+    {
+        if (IsNewFilter)
+        {
+            Dispatcher.Dispatch(new NewFilterCreatedAction(Key, filterInformation));
+            return;
+        }
+        Dispatcher.Dispatch(new ChangedFilterAction(filterInformation, FilterNumber));
+    }
+    
+    public record NewFilterCreatedAction(string? Key, IFilterInformation Value);
+
+    public record ChangedFilterAction(IFilterInformation NewPatternFilterInformation, FilterLeaf FilterNumber);
+    
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceNewFilterCreatedActionAction(
+        SiteswapGeneratorState state,
+        NewFilterCreatedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                FilterTree = state.State.FilterTree.Add(state.State.FilterTree.FindNode(action.Key)?? state.State.FilterTree.Root ?? throw new ArgumentException(), new FilterLeaf(action.Value))
+            },
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceFilterChangedActionAction(
+        SiteswapGeneratorState state,
+        ChangedFilterAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                FilterTree = state
+                    .State.FilterTree.ReplaceLeafContent(action.FilterNumber, action.NewPatternFilterInformation)
+                    
+            },
+        };
+    }
+}

@@ -1,0 +1,122 @@
+﻿@page "/transitionGraph"
+@using Siteswap.Details
+@using VisNetwork.Blazor.Models
+@using Siteswap.Details.StateDiagram
+@using Siteswap.Details.StateDiagram.Graph
+@using SiteswapList = Siteswap.Details.SiteswapList
+
+<Network Id="my-id" Data="@Data" Options="Options" style="width: 640px; height: 480px"/>
+
+@code {
+
+    [Parameter] public SiteswapList? Siteswaps { get; set; } = new(new(4,4,1), new (5,1), new(7,0,7,0,1));
+    [Parameter,SupplyParameterFromQuery] public int Length { get; set; } = 2;
+    [Parameter,SupplyParameterFromQuery(Name = "siteswaps")] public string? SiteswapsString { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrWhiteSpace(SiteswapsString))
+        {
+            Siteswaps = SiteswapList.FromString(SiteswapsString);
+        }
+        
+        CreateNetworkData(Siteswaps);
+        base.OnParametersSet();
+    }
+
+    private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
+
+    private void CreateNetworkData(SiteswapList? list)
+    {
+        var nodes = new List<Node>();
+        var edges = new List<Edge>();
+
+        if (list is null)
+        {
+            return;
+        }
+
+        var graph = list.TransitionGraph(Length);
+
+
+        AddNodes(graph, nodes);
+
+        AddEdges(graph, edges);
+
+        Console.WriteLine(graph.Edges.Count);
+
+        Data = new NetworkData
+        {
+            Edges = edges,
+            Nodes = nodes,
+            
+        };
+    }
+
+
+    private static void AddEdges(Graph<Siteswap, Transition> fromGraph, List<Edge> edges)
+    {
+        foreach (var edge in fromGraph.Edges)
+        {
+            AddEdge(edges, edge.N1.ToString(), edge.N2.ToString(), string.Join("", edge.Data.Throws.Select(x => x.Value.ToSiteswapString())).ToString());
+        }
+    }
+
+    private static void AddEdge(List<Edge> edges, string from, string to, string data)
+    {
+        if (edges.Any(x => x.From == from && x.To == to))
+        {
+            return;
+        }
+
+        var item = new Edge(from, to, data)
+        {
+            Label = data,
+            Arrows = new Arrows
+            {
+                To = new ArrowsOptions { Enabled = true }
+            },
+            Color = new ColorType()
+            {
+                Color = "black"
+            }
+        };
+        edges.Add(item);
+    }
+
+    private static void AddNodes(Graph<Siteswap, Transition> fromGraph, ICollection<Node> nodes)
+    {
+        foreach (var node in fromGraph.Nodes)
+        {
+            nodes.Add(new Node(node.ToString(), node.ToString(), 1, "circle"));
+        }
+    }
+
+    private NetworkOptions Options(Network arg)
+    {
+        return new NetworkOptions
+        {
+            Interaction = new InteractionOptions
+            {
+                DragNodes = true,
+                DragView = false,
+                ZoomView = true
+                
+                
+            },
+            Physics = new PhysicsOptions()
+            {
+                Enabled = false
+            }
+            ,
+            Edges = new EdgeOption()
+            {
+                Smooth = new EdgeSmoothOptions()
+                {
+                    Roundness = 2
+                }
+            }
+        };
+    }
+
+}

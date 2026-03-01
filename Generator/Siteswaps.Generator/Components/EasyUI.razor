@@ -1,0 +1,240 @@
+﻿@page "/easyUI"
+@using System.Collections.Immutable
+@using Siteswaps.Generator.Components.State.FilterTrees
+@inherits FluxorComponent
+@inject IState<SiteswapGeneratorState> State
+@inject DialogService DialogService
+
+@inject IDispatcher Dispatcher
+
+<div class="col input-container">
+
+
+    <div class="row mt-5 mb-5 w-100" style="min-width: 300px;">
+        <div class="col input-column">
+            <h4 class="mb-3">Jugglers</h4>
+            <CustomNumeric Id="numeric-input-numberOfJugglers" Value="State.Value.State.NumberOfJugglers" Min="2"
+                           Max="5" OnChange="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
+            <CustomSlider Min="2" Max="5" Value="State.Value.State.NumberOfJugglers"
+                          OnChange="@(x => Dispatcher.Dispatch(new NumberOfJugglersChangedAction(x)))"/>
+        </div>
+        <div class="col input-column">
+            <h4 class="mb-3">Period</h4>
+            <CustomNumeric Id="numeric-input-period" Value="State.Value.State.Period.Value" Min="1" Max="30"
+                           OnChange="@(x => Dispatcher.Dispatch(CreateAction(x)))"/>
+            <CustomSlider Min="1" Max="30" Value="State.Value.State.Period.Value"
+                          OnChange="@(x => Dispatcher.Dispatch(CreateAction(x)))"/>
+        </div>
+        <div class="col input-column">
+            <h4 class="mb-3">Clubs</h4>
+            <CustomRange
+                @bind-Min:get="State.Value.State.Clubs.MinNumber"
+                @bind-Min:set="x => Dispatcher.Dispatch(new MinNumberChangedAction(x))"
+                @bind-Max:get="State.Value.State.Clubs.MaxNumber"
+                @bind-Max:set="x => Dispatcher.Dispatch(new MaxNumberChangedAction(x))"
+            />
+        </div>
+    </div>
+
+    <div class="row mb-5 w-100">
+        <h4 class="mb-3">Throws</h4>
+        <SelectList TItem="Throw" Items="@(AllThrows)" SelectedItems="@Throws"
+                    TextField="x => x.GetDisplayValue(ShowNames)" OnChange="ThrowsChanged"/>
+    </div>
+
+
+    <div class="row mb-3 w-100">
+        <div class="col">
+            <h4 class="mb-3">Filter</h4>
+            <SelectedFilters/>
+        </div>
+    </div>
+
+    <div class="row mt-2 w-100">
+        <div class="col">
+            <GenerateButton/>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    IEnumerable<Throw> Throws => State.Value.State.Throws;
+    private IEnumerable<Throw> AllThrows => Throw.All(State.Value.State.Settings.MaxHeight);
+    private IEnumerable<int> Clubs => [(State.Value.State.Clubs as Between)?.MinNumber ?? 6, (State.Value.State.Clubs as Between)?.MaxNumber ?? 6];
+    private bool ShowNames => State.Value.State.Settings.ShowThrowNames;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Dispatcher.Dispatch(new LoadSettings());
+        await base.OnInitializedAsync();
+    }
+
+    private void ThrowsChanged(IEnumerable<Throw> throws)
+    {
+        Dispatcher.Dispatch(new ThrowsChangedAction(throws));
+
+        if (Throws.Any() is false)
+        {
+            return;
+        }
+
+        Dispatcher.Dispatch(new MaxThrowChangedAction(Throws.Select(x => x.Height).Max()));
+        Dispatcher.Dispatch(new MinThrowChangedAction(Throws.Select(x => x.Height).Min()));
+    }
+
+    private static PeriodChangedAction CreateAction(int? x)
+    {
+        if(x is null)
+        {
+            throw new ArgumentNullException();
+        }
+        
+        return new PeriodChangedAction(new Period(x.Value));
+    }
+
+    public record MinNumberChangedAction(int Value);
+    public record MaxNumberChangedAction(int Value);
+    public record ThrowsChangedAction(IEnumerable<Throw> Throws);
+    public record MinThrowChangedAction(int? Value);
+    public record MaxThrowChangedAction(int? Value);
+    public record PeriodChangedAction(Period Value);
+    public record NumberOfJugglersChangedAction(int? Value);
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMinNumberOfObjectsChangedAction(
+        SiteswapGeneratorState state,
+        MinNumberChangedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Clubs = state.State.Clubs with { MinNumber = action.Value },
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMaxNumberOfObjectsChangedAction(
+        SiteswapGeneratorState state,
+        MaxNumberChangedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Clubs = state.State.Clubs with { MaxNumber = action.Value },
+            }
+        };
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceThrowsChangedAction(
+        SiteswapGeneratorState state,
+        ThrowsChangedAction action
+    )
+    {
+        return state with
+        {
+            State = state.State with
+            {
+                Throws = action.Throws.ToImmutableList(),
+                FilterTree = state.State.FilterTree
+                    .RemoveAll(x => 
+                        x is FilterLeaf leaf && 
+                        !(Predicate(leaf.Filter, action) && B(leaf.Filter, action))),
+            }
+        };
+    }
+
+    private static bool B(IFilterInformation x, ThrowsChangedAction action)
+    {
+        return !(
+            x is NewPatternFilterInformation newPatternFilterInformation
+            && newPatternFilterInformation.Pattern.Any(x =>
+                action.Throws.Contains(x) is false
+            )
+        );
+    }
+
+    private static bool Predicate(IFilterInformation filter, ThrowsChangedAction action)
+    {
+        return
+            (filter is EasyNumberFilter.NumberFilter numberFilter
+            && action
+                    .Throws.ToImmutableList()
+                    .AddRange(Throw.AllWildCards)
+                    .Contains(numberFilter.Throw)
+                is false) is false;
+
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMinThrowChangedAction(SiteswapGeneratorState state, MinThrowChangedAction action) => state with { State = state.State with { MinThrow = action.Value } };
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementMaxThrowChangedAction(SiteswapGeneratorState state, MaxThrowChangedAction action) =>
+        state with { State = state.State with { MaxThrow = action.Value } };
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementPeriodChangedAction(
+        SiteswapGeneratorState state,
+        PeriodChangedAction action
+    ) =>
+        state with
+        {
+            State = state.State with
+            {
+                Period = action.Value,
+                FilterTree = state.State.FilterTree
+                    .RemoveAll(x => x is FilterLeaf { Filter: { } filter } && 
+                                    RemoveFilter(state.State, filter, action))
+            },
+        };
+    
+    private static bool RemoveFilter(GeneratorState state, IFilterInformation filter, PeriodChangedAction action)
+    {
+        if (filter is NewPatternFilterInformation newPatternFilterInformation)
+        {
+            if (newPatternFilterInformation.PatternRotation == PatternRotation.Global)
+            {
+                return action.Value.Value < newPatternFilterInformation.FilledPattern.Count();
+            }
+
+            if (state.NumberOfJugglers is null)
+            {
+                return false;
+            }
+            
+            return action.Value.GetLocalPeriod(state.NumberOfJugglers.Value).Value < newPatternFilterInformation.FilledPattern.Count();
+            
+        }
+
+        if (filter is EasyNumberFilter.NumberFilter numberFilter)
+        {
+            return action.Value.Value < numberFilter.Amount;
+        }
+
+        return false;
+    }
+
+    [ReducerMethod]
+    public static SiteswapGeneratorState ReduceIncrementNumberOfJugglersChangedAction(
+        SiteswapGeneratorState state,
+        NumberOfJugglersChangedAction action
+    )
+    {
+        return state with { State = state.State with
+        {
+            NumberOfJugglers = action.Value,
+            FilterTree = state.State.FilterTree
+                .RemoveAll(x => 
+                    x is FilterLeaf { Filter: NewPatternFilterInformation newPatternFilterInformation } && 
+                    newPatternFilterInformation.Rotation.Value >= action.Value)
+        } };
+    }
+
+}

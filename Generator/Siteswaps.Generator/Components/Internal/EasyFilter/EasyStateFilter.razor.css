@@ -1,0 +1,13 @@
+﻿/* MyCheckbox.razor.css */
+::deep(.rz-chkbox-box)::before {
+    content: "0";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    pointer-events: none;
+}
+::deep(.rz-chkbox-box.rz-state-active)::before {
+    content: "1";
+}

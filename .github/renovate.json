@@ -1,0 +1,51 @@
+{
+    "labels": ["dependencies"],
+    "automerge": true,
+    "automergeType": "pr",
+    "platformAutomerge": true,
+    "packageRules": [
+        {
+            "matchPackagePatterns": "^Verify.*",
+            "groupName": ["Verify and dependencies"],
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ]
+        },
+        {
+            "matchPackagePatterns": "^Microsoft.AspNetCore.*",
+            "groupName": ["AspNetCore Packages"],
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ]
+        },
+        {
+            "matchPackagePatterns": "^Microsoft.Playwright.*",
+            "groupName": ["Playwright Packages"],
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "major",
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ]
+        }        
+    ],
+  "branchConcurrentLimit": 6
+}

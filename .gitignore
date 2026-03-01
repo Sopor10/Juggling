@@ -4,3 +4,9 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 *.received.txt
+**/.idea
+**/*Dotsettings*
+**/.vs
+
+node_modules
+ExampleVideo/

@@ -1,0 +1,80 @@
+﻿@page "/RangeInput2"
+<div class="col">
+    <div class="row">
+        <div class="col-6 p-0">
+            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" @bind-Value:get="Min" @bind-Value:set="MinChangedInternal" ShowUpDown="false" />
+        </div>
+        <div class="col-6 p-0">
+        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" @bind-Value:get="Max" @bind-Value:set="MaxChangedInternal" ShowUpDown="false" />
+        </div>
+    </div>
+    <div class="row p-0 m-0 w-100">
+        <div class="col p-0">
+            <RadzenSlider class="p-0" Range="true" Value="@(Values)" ValueChanged="UpdateSlider" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%; padding: 0; margin: 0;"/>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        Values = [Min, Max + 1];
+        base.OnInitialized();
+    }
+
+    private int[] Values { get; set; } = [6, 7];
+    [Parameter] public int Min { get; set; } = 6;
+    
+    [Parameter]
+    public EventCallback<int> MinChanged { get; set; }
+
+    [Parameter] public int Max { get; set; } = 6;
+    
+    [Parameter]
+    public EventCallback<int> MaxChanged { get; set; }
+
+    private void MinChangedInternal(int value)
+    {
+        if (value>Max)
+        {
+            return;
+        }
+
+        if (value == Min)
+        {
+            return;
+        }
+        
+        Min = value;
+        Values[0] = Min;
+        MinChanged.InvokeAsync(Min);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void MaxChangedInternal(int value)
+    {
+        if (value<Min)
+        {
+            return;
+        }
+        
+        if (value == Max)
+        {
+            return;
+        }
+        
+        Max = value;
+        Values[1] = Max;
+        MaxChanged.InvokeAsync(Max);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdateSlider(IEnumerable<int> values)
+    {
+        var l = values.ToList();
+        MinChangedInternal(l.First());
+        MaxChangedInternal(l.Last() - 1);
+    }
+
+}

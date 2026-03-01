@@ -1,0 +1,48 @@
+﻿@page "/Settings"
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+
+<h3>Settings</h3>
+
+<EditForm Model="Value" OnValidSubmit="SaveSettings">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <RadzenLabel Text="Use Throw Names" Style="margin-right: 10px;"></RadzenLabel>
+        <RadzenCheckBox TValue="bool" @bind-Value="Value.ShowThrowNames" />
+    </div>
+
+    <div>
+        <RadzenLabel Text="Max Height" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
+        <RadzenNumeric TValue="int" @bind-Value="Value.MaxHeight" Min="1" Max="50" Style="width: 100%;" />
+    </div>
+
+    <button type="submit" class="btn btn-primary float-end mt-2">Save Settings</button>
+</EditForm>
+
+@code {
+    private SettingsDto Value { get; set; } = new SettingsDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings");
+        if (settings != null)
+        {
+            Value = settings;
+        }
+    }
+
+    private async Task SaveSettings()
+    {
+        await LocalStorage.SetItemAsync("settings", Value);
+        // Optional: Display a confirmation or feedback to the user
+        Console.WriteLine("Settings saved successfully.");
+    }
+
+    public record SettingsDto
+    {
+        public bool ShowThrowNames { get; set; } = true;
+        public int MaxHeight { get; set; } = 13;
+    }
+}

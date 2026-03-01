@@ -1,0 +1,67 @@
+﻿@page "/keyboard"
+@using System.Collections.Immutable
+
+<div class="keyboard-container">
+    <div class="form-control" contenteditable="true">
+        @for (var index = 0; index < Filter.Count; index++)
+        {
+            var t = Filter[index];
+            <span class="@(index == CursorPosition ? "highlight-cursor-position" : "")">@t.DisplayValue&nbsp;</span>
+        }
+    </div>
+    <div class="flex-row justify-content-center">
+        <KeyboardComponent Keys="ThrowsAsString" KeyPressed="HandleInput" EnabledKeys="@PossibleThrows.Select(x => x.DisplayValue).ToList()" />
+    </div>
+</div>
+
+@code
+{
+    
+    [Parameter]
+    public ImmutableList<Throw> PossibleThrows { get; set; } = [];
+    
+    [Parameter] public List<Throw> Filter { get; set; } = [];
+    [Parameter]
+    public EventCallback<List<Throw>> FilterChanged { get; set; } 
+    
+    private int CursorPosition { get; set; }
+
+    private List<Throw> Throws { get; } = Throw.Everything().ToList();
+    private List<string> ThrowsAsString => Throws.Select(x => x.DisplayValue).ToList();
+
+    private void HandleInput(string obj)
+    {
+        switch (obj)
+        {
+            case "Backspace":
+                Filter[CursorPosition] = Throw.Empty;
+                break;
+            case "ArrowLeft":
+                CursorPosition = Math.Max(0, CursorPosition - 1);
+                break;
+            case "ArrowRight":
+                CursorPosition = Math.Min(Filter.Count - 1, CursorPosition + 1);
+                break;
+            default:
+                AddThrow(obj);
+                break;
+        }
+    }
+
+    private void AddThrow(string s)
+    {
+        Filter[CursorPosition] = Throw.Parse(s);
+        CursorPosition = Math.Min(Filter.Count - 1, CursorPosition + 1);
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if (CursorPosition >= Filter.Count)
+        {
+            CursorPosition = 0;
+        }
+        
+        return base.OnParametersSetAsync();
+    }
+    
+}

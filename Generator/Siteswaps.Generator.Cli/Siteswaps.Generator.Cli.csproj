@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliFx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.Generator.Core\Siteswaps.Generator.Core.csproj" />
+    <ProjectReference Include="..\..\Siteswap.Details\Siteswap.Details.csproj" />
+  </ItemGroup>
+</Project>
