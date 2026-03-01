@@ -295,9 +295,8 @@ public class RenderJobProcessor : BackgroundService
             if (result.Success)
             {
                 _logger.LogInformation(
-                    "Render and upload completed successfully for PostId: {PostId}, MediaId: {MediaId}",
-                    postId,
-                    result.MediaId
+                    "Render and upload completed successfully for PostId: {PostId}",
+                    postId
                 );
 
                 // Delete job file after successful upload
@@ -444,6 +443,5 @@ public class RenderJob
 public class RenderResult
 {
     public bool Success { get; set; }
-    public int? MediaId { get; set; }
     public string? ErrorMessage { get; set; }
 }

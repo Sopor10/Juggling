@@ -402,6 +402,10 @@ public class Renderer
                     uploadFileName
                 );
 
+                if (mediaId is null)
+                {
+                    throw new InvalidOperationException("Media ID is null after upload.");
+                }
                 await wordPressService.UpdatePostWithVideoAsync(postId, mediaId, postType, ct);
                 logger.LogInformation(
                     "Post updated with video. MediaId: {MediaId}, PostId: {PostId}",
@@ -409,7 +413,7 @@ public class Renderer
                     postId
                 );
 
-                return new RenderResult { Success = true, MediaId = mediaId };
+                return new RenderResult { Success = true };
             }
             catch (Exception ex)
             {

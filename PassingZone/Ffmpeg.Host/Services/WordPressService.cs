@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 
 namespace Ffmpeg.Host.Services;
@@ -39,7 +40,7 @@ public class WordPressService
         _httpClient.BaseAddress = new Uri(_options.BaseUrl);
     }
 
-    public async Task<int> UploadVideoAsync(
+    public async Task<string> UploadVideoAsync(
         string videoPath,
         string? fileName = null,
         CancellationToken cancellationToken = default
@@ -103,7 +104,11 @@ public class WordPressService
                 mediaResponse.SourceUrl
             );
 
-            return mediaResponse.Id.Value;
+            if (mediaResponse.SourceUrl is null)
+            {
+                throw new InvalidOperationException("Media URL is null after upload.");
+            }
+            return mediaResponse.SourceUrl;
         }
         catch (Exception ex)
         {
@@ -114,7 +119,7 @@ public class WordPressService
 
     public async Task UpdatePostWithVideoAsync(
         int postId,
-        int mediaId,
+        string sourceUrl,
         string postType,
         CancellationToken cancellationToken = default
     )
@@ -122,10 +127,10 @@ public class WordPressService
         try
         {
             _logger.LogInformation(
-                "Updating ACF fields for {PostType} {PostId} with video media ID {MediaId}",
+                "Updating ACF fields for {PostType} {PostId} with video Url {MediaId}",
                 postType,
                 postId,
-                mediaId
+                sourceUrl
             );
 
             // Update ACF fields for Presto Player
@@ -135,13 +140,13 @@ public class WordPressService
             {
                 acf = new Dictionary<string, object>
                 {
-                    ["presto_shortcode"] = $"[presto_player id={mediaId.ToString()}]",
+                    ["presto_shortcode"] = $"[presto_player src=\"{sourceUrl}\" preset=6]",
                 },
             };
 
             _logger.LogDebug(
                 "Updating ACF fields: presto_shortcode={MediaId}, PostType={PostType}",
-                mediaId,
+                sourceUrl,
                 postType
             );
 
@@ -184,7 +189,7 @@ public class WordPressService
                 "ACF fields updated successfully for {PostType} {PostId} with media ID {MediaId}",
                 postType,
                 postId,
-                mediaId
+                sourceUrl
             );
         }
         catch (Exception ex)
@@ -197,6 +202,8 @@ public class WordPressService
     private class MediaResponse
     {
         public int? Id { get; set; }
+        
+        [JsonPropertyName("source_url")]
         public string? SourceUrl { get; set; }
     }
 }
