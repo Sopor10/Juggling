@@ -10,4 +10,4 @@ riderModule.iml
 
 node_modules
 ExampleVideo/
-**/appsettings.secrets.json
+ PassingZone/Ffmpeg.Host/appsettings.secrets.json
