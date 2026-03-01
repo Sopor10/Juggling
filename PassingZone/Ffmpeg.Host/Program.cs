@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.secrets.json", optional: false);
 builder.Logging.AddConsole();
 
 // Increase request size and timeout limits for large video uploads
