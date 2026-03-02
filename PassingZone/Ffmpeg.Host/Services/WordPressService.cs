@@ -141,6 +141,7 @@ public class WordPressService
                 acf = new Dictionary<string, object>
                 {
                     ["presto_shortcode"] = $"[presto_player src=\"{sourceUrl}\" preset=6]",
+                    ["_presto_shortcode"] = "field_68f239371a219",
                 },
             };
 
@@ -191,6 +192,9 @@ public class WordPressService
                 postId,
                 sourceUrl
             );
+            _logger.LogInformation(
+                await updateResponse.Content.ReadAsStringAsync(cancellationToken)
+            );
         }
         catch (Exception ex)
         {
@@ -202,7 +206,7 @@ public class WordPressService
     private class MediaResponse
     {
         public int? Id { get; set; }
-        
+
         [JsonPropertyName("source_url")]
         public string? SourceUrl { get; set; }
     }

@@ -1,8 +1,9 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Ffmpeg.Host.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -210,29 +211,3 @@ bool TryExtractPostIdFromUri(string postIdUri, out int postId)
 }
 
 app.Run();
-
-public record RenderOptions(
-    string Title,
-    string Location,
-    string Jugglers,
-    string MusicArtist,
-    string? BlockSpacing = null,
-    string? InternalSpacing = null
-);
-
-public record Input
-{
-    [JsonPropertyName("post_id")]
-    public string? PostId { get; init; }
-
-    [JsonPropertyName("video_url")]
-    public Uri? Video { get; init; }
-
-    /// <summary>Optional. When omitted, the original video audio is kept in the rendered output.</summary>
-    [JsonPropertyName("audio_url")]
-    public Uri? Audio { get; init; }
-    public string? Location { get; init; }
-    public string? Title { get; init; }
-    public string? Jugglers { get; init; }
-    public string? Musicartist { get; init; }
-}
