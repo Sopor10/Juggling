@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 
@@ -116,7 +117,11 @@ public class RenderJobProcessor(
         string jsonContent;
         try
         {
-            jsonContent = await File.ReadAllTextAsync(jobFilePath, cancellationToken);
+            jsonContent = await File.ReadAllTextAsync(
+                jobFilePath,
+                Encoding.UTF8,
+                cancellationToken
+            );
             logger.LogDebug("Successfully read job file. Size: {Size} bytes", jsonContent.Length);
         }
         catch (Exception ex)

@@ -64,7 +64,14 @@ public class WordPressService
             using var content = new MultipartFormDataContent();
             using var fileStreamContent = new ByteArrayContent(fileContent);
             fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("video/mp4");
-            content.Add(fileStreamContent, "file", uploadFileName);
+            fileStreamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue(
+                "form-data"
+            )
+            {
+                Name = "\"file\"",
+                FileName = $"\"{uploadFileName}\"",
+            };
+            content.Add(fileStreamContent);
 
             var response = await _httpClient.PostAsync(
                 "/wp-json/wp/v2/media",

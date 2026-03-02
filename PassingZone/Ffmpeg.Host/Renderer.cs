@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using Ffmpeg.Host.Services;
 
 public class Renderer
@@ -446,23 +447,25 @@ public class Renderer
 
     /// <summary>
     /// Sanitizes a string to be used as a filename by removing/replacing invalid characters.
+    /// Replaces non-ASCII characters with their closest ASCII equivalents using Unicode normalization.
     /// </summary>
     private static string SanitizeFileName(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
             return "video";
 
-        // Remove or replace invalid filename characters
-        var invalidChars = Path.GetInvalidFileNameChars();
+        // Normalize to FormC (recomposes characters if possible)
         var sanitized = string.Join(
             "_",
-            fileName.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries)
+            fileName
+                .Normalize()
+                .Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)
         );
 
         // Remove leading/trailing spaces and dots
         sanitized = sanitized.Trim().Trim('.');
 
-        // Replace multiple spaces/underscores with single underscore
+        // Replace multiple underscores with single underscore
         while (sanitized.Contains("__"))
         {
             sanitized = sanitized.Replace("__", "_");

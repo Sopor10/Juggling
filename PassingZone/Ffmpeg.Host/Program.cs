@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Ffmpeg.Host.Services;
 using Microsoft.AspNetCore.Http.Features;
@@ -132,7 +133,12 @@ app.MapPost(
             };
 
             var jsonContent = JsonSerializer.Serialize(job, jsonOptions);
-            await File.WriteAllTextAsync(jobFilePath, jsonContent, cancellationToken);
+            await File.WriteAllTextAsync(
+                jobFilePath,
+                jsonContent,
+                Encoding.UTF8,
+                cancellationToken
+            );
 
             logger.LogInformation(
                 "Job file written successfully. Size: {Size} bytes, PostId: {PostId}",
