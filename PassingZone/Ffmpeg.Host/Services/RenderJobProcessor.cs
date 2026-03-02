@@ -37,6 +37,21 @@ public class RenderJobProcessor(
         // Update options with resolved directory
         _options.InputDirectory = inputDirectory;
 
+        // Ensure finished directory exists relative to input directory
+        var finishedDirectory = Path.IsPathRooted(_options.FinishedDirectory)
+            ? _options.FinishedDirectory
+            : Path.Combine(inputDirectory, _options.FinishedDirectory);
+
+        if (!Directory.Exists(finishedDirectory))
+        {
+            logger.LogInformation(
+                "Creating finished directory: {FinishedDirectory}",
+                finishedDirectory
+            );
+            Directory.CreateDirectory(finishedDirectory);
+        }
+        _options.FinishedDirectory = finishedDirectory;
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -58,7 +73,10 @@ public class RenderJobProcessor(
     {
         logger.LogDebug("Scanning input directory: {InputDirectory}", _options.InputDirectory);
 
-        var jsonFiles = Directory.GetFiles(_options.InputDirectory, "*.json").ToList();
+        var jsonFiles = Directory
+            .GetFiles(_options.InputDirectory, "*.json")
+            .Where(f => !f.Contains(_options.FinishedDirectory))
+            .ToList();
 
         logger.LogInformation("Found {Count} job file(s) in input directory", jsonFiles.Count);
 
@@ -288,13 +306,30 @@ public class RenderJobProcessor(
                     postId
                 );
 
-                // Delete job file after successful upload
+                // Move job file after successful upload to finished directory
+                var finishedFilePath = Path.Combine(_options.FinishedDirectory, fileName);
+
+                // Handle file name collisions in finished directory
+                if (File.Exists(finishedFilePath))
+                {
+                    var nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+                    var extension = Path.GetExtension(fileName);
+                    finishedFilePath = Path.Combine(
+                        _options.FinishedDirectory,
+                        $"{nameWithoutExt}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}"
+                    );
+                }
+
                 logger.LogInformation(
-                    "Deleting job file after successful upload: {JobFile}",
-                    jobFilePath
+                    "Moving job file to finished directory: {JobFile} -> {FinishedFile}",
+                    jobFilePath,
+                    finishedFilePath
                 );
-                File.Delete(jobFilePath);
-                logger.LogInformation("Job file deleted successfully: {JobFile}", jobFilePath);
+                File.Move(jobFilePath, finishedFilePath);
+                logger.LogInformation(
+                    "Job file moved successfully: {FinishedFile}",
+                    finishedFilePath
+                );
             }
             else
             {

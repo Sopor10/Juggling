@@ -51,19 +51,6 @@ else
 fi
 ffmpeg -i $COMMON/PZ-INTRO-without-pattern-name.avi -vf "drawtext=fontfile=$FONT: enable='gte(t,1.5)': text='$TITLE': fontcolor=white: fontsize=80: x=(w-text_w)/2: y=(h-text_h-80) + (text_h+80)*(2.5-min(t\,2.5))" -c:a copy -y PZ-intro.mp4
 
-# Trim and fade audio.mp3 here because melt needs exact times (optional: if no audio, original video audio is kept)
-USE_EXTERNAL_AUDIO=0
-if [ -f audio.mp3 ]; then
-    USE_EXTERNAL_AUDIO=1
-    duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 video.mp4)
-    # Intro is 5s, Outro is 6.5s
-    audio_duration=$(echo $duration + 5 + 6.5 | bc)
-    non_fade=$(echo $audio_duration - 2 | bc)
-    ffmpeg -i audio.mp3 -t $audio_duration -acodec copy -y trimmed_audio.mp3
-    ffmpeg -i trimmed_audio.mp3 -af "afade=t=out:st=$non_fade:d=2" -y final_audio.mp3
-    rm trimmed_audio.mp3
-fi
-
 # Generate Outro
 # Use environment variables if provided, otherwise fallback to defaults
 # TITLE is already read from title.txt above
@@ -71,11 +58,27 @@ LOCATION=${LOCATION:-"Goirle December 2025"}
 JUGGLERS=${JUGGLERS:-"Lars"}
 MUSICARTIST=${MUSICARTIST:-"Someone"}
 
+# Standard duration for Intro (5s), Outro (6.5s)
+INTRO_DURATION=5
+OUTRO_DURATION=6.5
+
+# Total duration is Intro + Video + Outro
+video_duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 video.mp4)
+final_duration=$(echo $video_duration + $INTRO_DURATION + $OUTRO_DURATION | bc -l)
+
+# Trim and fade audio.mp3 to match the total video duration
+if [ "$USE_EXTERNAL_AUDIO" -eq 1 ]; then
+    echo "Audio track will be trimmed to match total video duration: $final_duration seconds."
+    non_fade=$(echo $final_duration - 2 | bc -l)
+    ffmpeg -i audio.mp3 -vn -t $final_duration -y trimmed_audio.mp3
+    ffmpeg -i trimmed_audio.mp3 -vn -af "afade=t=out:st=$non_fade:d=2" -y final_audio.mp3
+    rm trimmed_audio.mp3
+fi
+
 # Font logic (same as intro)
 # FONT is already determined in the intro section above
 FONT_OUTRO="$FONT"
 # Purple color: #4B0082
-# Duration: 6.5 seconds
 
 # Layout parameters
 BASE_HEADER_SIZE=90
@@ -129,14 +132,14 @@ O4=$(echo "620 * $SCALE" | bc)
 O5=$(echo "850 * $SCALE" | bc)
 O6=$(echo "1020 * $SCALE" | bc)
 
-ffmpeg -f colorspace=all=bt709:range=tv -f lavfi -i "color=c=#321D5B:s=1920x1080:d=6.5" \
+ffmpeg -f colorspace=all=bt709:range=tv -f lavfi -i "color=c=#321D5B:s=1920x1080:d=$OUTRO_DURATION" \
 -vf "drawtext=fontfile=$FONT_OUTRO:text='$TITLE':fontcolor=white:fontsize=$HEADER_SIZE:x=(w-text_w)/2:y=max((h-text_h)/2+$Y1\,h-$SPEED*t+$O1), \
      drawtext=fontfile=$FONT_OUTRO:text='juggled@ $LOCATION':fontcolor=white:fontsize=$INFO_SIZE:x=(w-text_w)/2:y=max((h-text_h)/2+$Y2\,h-$SPEED*t+$O2), \
      drawtext=fontfile=$FONT_OUTRO:text='Jugglers':fontcolor=white:fontsize=$HEADER_SIZE:x=(w-text_w)/2:y=max((h-text_h)/2+$Y3\,h-$SPEED*t+$O3), \
      drawtext=fontfile=$FONT_OUTRO:text='$JUGGLERS':fontcolor=white:fontsize=$INFO_SIZE:x=(w-text_w)/2:y=max((h-text_h)/2+$Y4\,h-$SPEED*t+$O4), \
      drawtext=fontfile=$FONT_OUTRO:text='Music by':fontcolor=white:fontsize=$HEADER_SIZE:x=(w-text_w)/2:y=max((h-text_h)/2+$Y5\,h-$SPEED*t+$O5), \
      drawtext=fontfile=$FONT_OUTRO:text='$MUSICARTIST':fontcolor=white:fontsize=$INFO_SIZE:x=(w-text_w)/2:y=max((h-text_h)/2+$Y6\,h-$SPEED*t+$O6)" \
--c:v libx264 -t 6.5 -pix_fmt yuv420p -y outro.mp4
+-c:v libx264 -t $OUTRO_DURATION -pix_fmt yuv420p -y outro.mp4
 
 # Combine using melt (with external audio mix or video-only to keep original audio)
 if [ "$USE_EXTERNAL_AUDIO" -eq 1 ]; then
