@@ -1,33 +1,17 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 
 namespace Ffmpeg.Host.Services;
 
-public class RenderJobProcessorOptions
+public class RenderJobProcessor(
+    IOptions<RenderJobProcessorOptions> options,
+    ILogger<RenderJobProcessor> logger,
+    IServiceProvider serviceProvider
+) : BackgroundService
 {
-    public string InputDirectory { get; set; } = string.Empty;
-    public int ScanIntervalSeconds { get; set; } = 5;
-}
-
-public class RenderJobProcessor : BackgroundService
-{
-    private readonly RenderJobProcessorOptions _options;
-    private readonly ILogger<RenderJobProcessor> _logger;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly RenderJobProcessorOptions _options = options.Value;
     private readonly ConcurrentDictionary<string, bool> _processingFiles = new();
-
-    public RenderJobProcessor(
-        IOptions<RenderJobProcessorOptions> options,
-        ILogger<RenderJobProcessor> logger,
-        IServiceProvider serviceProvider
-    )
-    {
-        _options = options.Value;
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -36,7 +20,7 @@ public class RenderJobProcessor : BackgroundService
             ? Path.Combine(Path.GetTempPath(), "ffmpeg-jobs")
             : _options.InputDirectory;
 
-        _logger.LogInformation(
+        logger.LogInformation(
             "RenderJobProcessor started. Input directory: {InputDirectory}, Scan interval: {Interval} seconds",
             inputDirectory,
             _options.ScanIntervalSeconds
@@ -45,7 +29,7 @@ public class RenderJobProcessor : BackgroundService
         // Ensure input directory exists
         if (!Directory.Exists(inputDirectory))
         {
-            _logger.LogInformation("Creating input directory: {InputDirectory}", inputDirectory);
+            logger.LogInformation("Creating input directory: {InputDirectory}", inputDirectory);
             Directory.CreateDirectory(inputDirectory);
         }
 
@@ -60,22 +44,22 @@ public class RenderJobProcessor : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in RenderJobProcessor main loop");
+                logger.LogError(ex, "Error in RenderJobProcessor main loop");
             }
 
             await Task.Delay(TimeSpan.FromSeconds(_options.ScanIntervalSeconds), stoppingToken);
         }
 
-        _logger.LogInformation("RenderJobProcessor stopped");
+        logger.LogInformation("RenderJobProcessor stopped");
     }
 
     private async Task ProcessJobsAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Scanning input directory: {InputDirectory}", _options.InputDirectory);
+        logger.LogDebug("Scanning input directory: {InputDirectory}", _options.InputDirectory);
 
         var jsonFiles = Directory.GetFiles(_options.InputDirectory, "*.json").ToList();
 
-        _logger.LogInformation("Found {Count} job file(s) in input directory", jsonFiles.Count);
+        logger.LogInformation("Found {Count} job file(s) in input directory", jsonFiles.Count);
 
         foreach (var jobFile in jsonFiles)
         {
@@ -86,7 +70,7 @@ public class RenderJobProcessor : BackgroundService
             var normalizedPath = Path.GetFullPath(jobFile);
             if (_processingFiles.ContainsKey(normalizedPath))
             {
-                _logger.LogDebug("Skipping job file {JobFile} - already being processed", jobFile);
+                logger.LogDebug("Skipping job file {JobFile} - already being processed", jobFile);
                 continue;
             }
 
@@ -95,11 +79,11 @@ public class RenderJobProcessor : BackgroundService
                 // Mark file as being processed
                 if (!_processingFiles.TryAdd(normalizedPath, true))
                 {
-                    _logger.LogWarning("Failed to mark job file as processing: {JobFile}", jobFile);
+                    logger.LogWarning("Failed to mark job file as processing: {JobFile}", jobFile);
                     continue;
                 }
 
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Processing job file: {JobFile} (currently processing {Count} file(s))",
                     jobFile,
                     _processingFiles.Count
@@ -108,14 +92,14 @@ public class RenderJobProcessor : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing job file {JobFile}", jobFile);
+                logger.LogError(ex, "Error processing job file {JobFile}", jobFile);
                 // Continue with next file even if one fails
             }
             finally
             {
                 // Remove file from processing list
                 _processingFiles.TryRemove(normalizedPath, out _);
-                _logger.LogDebug(
+                logger.LogDebug(
                     "Removed job file from processing list: {JobFile} (currently processing {Count} file(s))",
                     jobFile,
                     _processingFiles.Count
@@ -127,17 +111,17 @@ public class RenderJobProcessor : BackgroundService
     private async Task ProcessJobFileAsync(string jobFilePath, CancellationToken cancellationToken)
     {
         var fileName = Path.GetFileName(jobFilePath);
-        _logger.LogInformation("Reading job file: {FileName}", fileName);
+        logger.LogInformation("Reading job file: {FileName}", fileName);
 
         string jsonContent;
         try
         {
             jsonContent = await File.ReadAllTextAsync(jobFilePath, cancellationToken);
-            _logger.LogDebug("Successfully read job file. Size: {Size} bytes", jsonContent.Length);
+            logger.LogDebug("Successfully read job file. Size: {Size} bytes", jsonContent.Length);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to read job file: {JobFile}", jobFilePath);
+            logger.LogError(ex, "Failed to read job file: {JobFile}", jobFilePath);
             throw;
         }
 
@@ -148,30 +132,30 @@ public class RenderJobProcessor : BackgroundService
                 jsonContent,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             );
-            _logger.LogDebug("Successfully deserialized job file. PostId: {PostId}", job?.PostId);
+            logger.LogDebug("Successfully deserialized job file. PostId: {PostId}", job?.PostId);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to deserialize job file: {JobFile}", jobFilePath);
+            logger.LogError(ex, "Failed to deserialize job file: {JobFile}", jobFilePath);
             throw;
         }
 
         if (job == null)
         {
-            _logger.LogError("Job file deserialized to null: {JobFile}", jobFilePath);
+            logger.LogError("Job file deserialized to null: {JobFile}", jobFilePath);
             throw new InvalidOperationException("Job is null after deserialization");
         }
 
         if (string.IsNullOrEmpty(job.PostId))
         {
-            _logger.LogError("Job file missing post_id: {JobFile}", jobFilePath);
+            logger.LogError("Job file missing post_id: {JobFile}", jobFilePath);
             throw new InvalidOperationException("Job missing post_id");
         }
 
         // Extract post ID and post type from URI (e.g., https://passing.zone/?post_type=pattern&p=2986)
         if (!TryExtractPostIdFromUri(job.PostId, out var postId, out var postType))
         {
-            _logger.LogError(
+            logger.LogError(
                 "Invalid post_id format in job file: {JobFile}, PostId: {PostId}. Expected URI with 'p' query parameter.",
                 jobFilePath,
                 job.PostId
@@ -181,7 +165,7 @@ public class RenderJobProcessor : BackgroundService
             );
         }
 
-        _logger.LogInformation(
+        logger.LogInformation(
             "Starting render and upload process. PostId URI: {PostIdUri}, Extracted PostId: {PostId}, PostType: {PostType}",
             job.PostId,
             postId,
@@ -189,10 +173,10 @@ public class RenderJobProcessor : BackgroundService
         );
 
         // Create a scope for scoped services
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var httpClientFactory = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>();
         var wordPressService = scope.ServiceProvider.GetRequiredService<WordPressService>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Renderer>>();
+        var logger1 = scope.ServiceProvider.GetRequiredService<ILogger<Renderer>>();
 
         var httpClient = httpClientFactory.CreateClient();
 
@@ -202,7 +186,7 @@ public class RenderJobProcessor : BackgroundService
             Guid.NewGuid().ToString()
         );
 
-        _logger.LogInformation(
+        logger.LogInformation(
             "Created working directory: {WorkingDir} for PostId: {PostId}",
             workingDir,
             postId
@@ -215,7 +199,7 @@ public class RenderJobProcessor : BackgroundService
             // Download video if provided
             if (job.Video != null)
             {
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Downloading video from {Url} for PostId: {PostId}",
                     job.Video,
                     postId
@@ -227,7 +211,7 @@ public class RenderJobProcessor : BackgroundService
                 );
                 await using var fileStream = File.Create(videoPath);
                 await stream.CopyToAsync(fileStream, cancellationToken);
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Video downloaded successfully. Path: {Path}, PostId: {PostId}",
                     videoPath,
                     postId
@@ -250,7 +234,7 @@ public class RenderJobProcessor : BackgroundService
 
             if (audioUrl != null)
             {
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Downloading audio from {Url} for PostId: {PostId}",
                     audioUrl,
                     postId
@@ -262,7 +246,7 @@ public class RenderJobProcessor : BackgroundService
                 );
                 await using var fileStream = File.Create(audioPath);
                 await stream.CopyToAsync(fileStream, cancellationToken);
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Audio downloaded successfully. Path: {Path}, PostId: {PostId}",
                     audioPath,
                     postId
@@ -278,14 +262,14 @@ public class RenderJobProcessor : BackgroundService
                 job.InternalSpacing
             );
 
-            _logger.LogInformation("Starting render process for PostId: {PostId}", postId);
+            logger.LogInformation("Starting render process for PostId: {PostId}", postId);
 
             // Perform render and upload
             var renderer = new Renderer();
             var result = await renderer.PerformRenderAndUploadAsync(
                 workingDir,
                 options,
-                logger,
+                logger1,
                 wordPressService,
                 postId,
                 postType,
@@ -294,22 +278,22 @@ public class RenderJobProcessor : BackgroundService
 
             if (result.Success)
             {
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Render and upload completed successfully for PostId: {PostId}",
                     postId
                 );
 
                 // Delete job file after successful upload
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Deleting job file after successful upload: {JobFile}",
                     jobFilePath
                 );
                 File.Delete(jobFilePath);
-                _logger.LogInformation("Job file deleted successfully: {JobFile}", jobFilePath);
+                logger.LogInformation("Job file deleted successfully: {JobFile}", jobFilePath);
             }
             else
             {
-                _logger.LogError(
+                logger.LogError(
                     "Render and upload failed for PostId: {PostId}, Error: {Error}",
                     postId,
                     result.ErrorMessage
@@ -319,7 +303,7 @@ public class RenderJobProcessor : BackgroundService
         }
         catch (Exception ex)
         {
-            _logger.LogError(
+            logger.LogError(
                 ex,
                 "Error during render and upload process for PostId: {PostId}",
                 postId
@@ -334,14 +318,14 @@ public class RenderJobProcessor : BackgroundService
             {
                 if (Directory.Exists(workingDir))
                 {
-                    _logger.LogDebug("Cleaning up working directory: {WorkingDir}", workingDir);
+                    logger.LogDebug("Cleaning up working directory: {WorkingDir}", workingDir);
                     Directory.Delete(workingDir, recursive: true);
-                    _logger.LogDebug("Working directory deleted: {WorkingDir}", workingDir);
+                    logger.LogDebug("Working directory deleted: {WorkingDir}", workingDir);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(
+                logger.LogWarning(
                     ex,
                     "Failed to cleanup working directory: {WorkingDir}",
                     workingDir
@@ -413,35 +397,4 @@ public class RenderJobProcessor : BackgroundService
 
         return foundPostId;
     }
-}
-
-public class RenderJob
-{
-    [JsonPropertyName("post_id")]
-    public string? PostId { get; set; }
-
-    [JsonPropertyName("video_url")]
-    public Uri? Video { get; set; }
-
-    [JsonPropertyName("audio_url")]
-    public Uri? Audio { get; set; }
-
-    public string? Location { get; set; }
-    public string? Title { get; set; }
-    public string? Jugglers { get; set; }
-
-    [JsonPropertyName("musicartist")]
-    public string? Musicartist { get; set; }
-
-    [JsonPropertyName("blockSpacing")]
-    public string? BlockSpacing { get; set; }
-
-    [JsonPropertyName("internalSpacing")]
-    public string? InternalSpacing { get; set; }
-}
-
-public class RenderResult
-{
-    public bool Success { get; set; }
-    public string? ErrorMessage { get; set; }
 }

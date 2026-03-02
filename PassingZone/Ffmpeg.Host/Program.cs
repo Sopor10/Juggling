@@ -1,9 +1,6 @@
 using System.Text.Json;
 using Ffmpeg.Host.Services;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -143,16 +140,15 @@ app.MapPost(
                 postId
             );
 
-            return (IResult)
-                TypedResults.Ok(
-                    new
-                    {
-                        success = true,
-                        postId = postId,
-                        message = "Job queued successfully",
-                        jobFile = jobFilePath,
-                    }
-                );
+            return TypedResults.Ok(
+                new
+                {
+                    success = true,
+                    postId = postId,
+                    message = "Job queued successfully",
+                    jobFile = jobFilePath,
+                }
+            );
         }
         catch (Exception ex)
         {
