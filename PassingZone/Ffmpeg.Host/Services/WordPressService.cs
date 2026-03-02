@@ -38,6 +38,12 @@ public class WordPressService
             authValue
         );
         _httpClient.BaseAddress = new Uri(_options.BaseUrl);
+
+        _logger.LogInformation(
+            "WordPressService initialized with BaseUrl: {BaseUrl}, Username: {Username}",
+            _options.BaseUrl,
+            _options.Username
+        );
     }
 
     public async Task<string> UploadVideoAsync(
@@ -57,13 +63,21 @@ public class WordPressService
 
             // Use provided fileName or fallback to original filename
             var uploadFileName = fileName ?? Path.GetFileName(videoPath);
-            _logger.LogInformation("Uploading video with filename: {FileName}", uploadFileName);
+
+            // Log file info
+            var contentType = "video/mp4"; // Default MIME type
+            _logger.LogInformation(
+                "Uploading video with filename: {FileName}, size: {Size} bytes, content-type: {ContentType}",
+                uploadFileName,
+                new FileInfo(videoPath).Length,
+                contentType
+            );
 
             var fileContent = await File.ReadAllBytesAsync(videoPath, cancellationToken);
 
             using var content = new MultipartFormDataContent();
             using var fileStreamContent = new ByteArrayContent(fileContent);
-            fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("video/mp4");
+            fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             fileStreamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue(
                 "form-data"
             )
@@ -73,19 +87,30 @@ public class WordPressService
             };
             content.Add(fileStreamContent);
 
-            var response = await _httpClient.PostAsync(
-                "/wp-json/wp/v2/media",
-                content,
-                cancellationToken
+            var requestUri = "/wp-json/wp/v2/media";
+            _logger.LogInformation(
+                "Sending POST request to {BaseUrl}{RequestUri} with filename {FileName}",
+                _httpClient.BaseAddress,
+                requestUri,
+                uploadFileName
             );
+
+            var response = await _httpClient.PostAsync(requestUri, content, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                var requestHeaders = _httpClient.DefaultRequestHeaders.ToString();
+                var contentHeaders = content.Headers.ToString();
+                var fileHeaders = fileStreamContent.Headers.ToString();
+
                 _logger.LogError(
-                    "WordPress upload failed with status {StatusCode}: {Error}",
+                    "WordPress upload failed with status {StatusCode}: {Error}. \nRequest Headers: {RequestHeaders}\nContent Headers: {ContentHeaders}\nFile Headers: {FileHeaders}",
                     response.StatusCode,
-                    errorContent
+                    errorContent,
+                    requestHeaders,
+                    contentHeaders,
+                    fileHeaders
                 );
                 throw new HttpRequestException(
                     $"WordPress upload failed: {response.StatusCode} - {errorContent}"

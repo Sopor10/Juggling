@@ -323,17 +323,26 @@ public class RenderJobProcessor(
             {
                 if (Directory.Exists(workingDir))
                 {
-                    logger.LogDebug("Cleaning up working directory: {WorkingDir}", workingDir);
+                    logger.LogInformation(
+                        "Cleaning up working directory: {WorkingDir} for PostId: {PostId}",
+                        workingDir,
+                        postId
+                    );
                     Directory.Delete(workingDir, recursive: true);
-                    logger.LogDebug("Working directory deleted: {WorkingDir}", workingDir);
+                    logger.LogInformation(
+                        "Working directory deleted: {WorkingDir} for PostId: {PostId}",
+                        workingDir,
+                        postId
+                    );
                 }
             }
             catch (Exception ex)
             {
                 logger.LogWarning(
                     ex,
-                    "Failed to cleanup working directory: {WorkingDir}",
-                    workingDir
+                    "Failed to cleanup working directory: {WorkingDir} for PostId: {PostId}",
+                    workingDir,
+                    postId
                 );
             }
         }

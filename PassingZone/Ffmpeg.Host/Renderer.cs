@@ -386,8 +386,9 @@ public class Renderer
                 var sanitizedTitle = SanitizeFileName(options.Title);
                 var uploadFileName = $"{sanitizedTitle}-{postId}.mp4";
                 logger.LogInformation(
-                    "Uploading video with filename: {FileName} for PostId: {PostId}",
+                    "Generated upload filename: {FileName} from original title: '{OriginalTitle}' for PostId: {PostId}",
                     uploadFileName,
+                    options.Title,
                     postId
                 );
 
@@ -454,22 +455,46 @@ public class Renderer
         if (string.IsNullOrWhiteSpace(fileName))
             return "video";
 
-        // Normalize to FormC (recomposes characters if possible)
-        var sanitized = string.Join(
-            "_",
-            fileName
-                .Normalize()
-                .Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)
-        );
+        // Normalize to FormD (decomposes characters like 'ü' into 'u' and '¨')
+        var normalizedString = fileName.Normalize(NormalizationForm.FormD);
+        var stringBuilder = new StringBuilder();
 
-        // Remove leading/trailing spaces and dots
-        sanitized = sanitized.Trim().Trim('.');
-
-        // Replace multiple underscores with single underscore
-        while (sanitized.Contains("__"))
+        foreach (var c in normalizedString)
         {
-            sanitized = sanitized.Replace("__", "_");
+            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                // Only keep ASCII alphanumeric characters, hyphens, and underscores
+                if (
+                    (c >= 'a' && c <= 'z')
+                    || (c >= 'A' && c <= 'Z')
+                    || (c >= '0' && c <= '9')
+                    || c == '-'
+                    || c == '_'
+                )
+                {
+                    stringBuilder.Append(c);
+                }
+                else if (char.IsWhiteSpace(c))
+                {
+                    stringBuilder.Append('-');
+                }
+            }
         }
+
+        var sanitized = stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+
+        // Replace multiple hyphens/underscores with single ones
+        while (sanitized.Contains("--"))
+            sanitized = sanitized.Replace("--", "-");
+        while (sanitized.Contains("__"))
+            sanitized = sanitized.Replace("__", "_");
+        while (sanitized.Contains("-_"))
+            sanitized = sanitized.Replace("-_", "-");
+        while (sanitized.Contains("_-"))
+            sanitized = sanitized.Replace("_-", "_");
+
+        sanitized = sanitized.Trim('-', '_');
 
         // Limit length to avoid filesystem issues
         if (sanitized.Length > 200)
