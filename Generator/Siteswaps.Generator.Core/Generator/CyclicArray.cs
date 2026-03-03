@@ -27,7 +27,7 @@ public record CyclicArray<T> : IEnumerable<T>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public IEnumerable<(int position, T value)> Enumerate(int i)
+    private IEnumerable<(int position, T value)> Enumerate(int i)
     {
         for (var j = 0; j < i; j++)
         {

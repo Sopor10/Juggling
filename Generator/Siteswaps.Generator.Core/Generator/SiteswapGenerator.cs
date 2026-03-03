@@ -39,13 +39,10 @@ public class SiteswapGenerator
 
     private IAsyncEnumerable<Siteswap> GenerateInternalAsync(CancellationToken token)
     {
-        return BackTrack(0, token);
+        return BackTrack(0, token).ToAsyncEnumerable();
     }
 
-    private async IAsyncEnumerable<Siteswap> BackTrack(
-        int uniqueMaxIndex,
-        [EnumeratorCancellation] CancellationToken token
-    )
+    private IEnumerable<Siteswap> BackTrack(int uniqueMaxIndex, CancellationToken token)
     {
         if (token.IsCancellationRequested)
         {
@@ -90,13 +87,16 @@ public class SiteswapGenerator
                 continue;
             }
 
-            var canFulfill = Enumerable
-                .Range(0, PartialSiteswap.LastFilledPosition + 1)
-                .Any(x =>
+            var canFulfill = false;
+            for (int j = 0; j < PartialSiteswap.LastFilledPosition + 1; j++)
+            {
+                PartialSiteswap.RotationIndex = i;
+                if (Filter.CanFulfill(PartialSiteswap))
                 {
-                    PartialSiteswap.RotationIndex = x;
-                    return Filter.CanFulfill(PartialSiteswap);
-                });
+                    canFulfill = true;
+                    break;
+                }
+            }
 
             PartialSiteswap.RotationIndex = 0;
             if (canFulfill is false)
@@ -117,7 +117,7 @@ public class SiteswapGenerator
 
             PartialSiteswap.MoveForward();
 
-            await foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0, token))
+            foreach (var siteswap in BackTrack(i == max ? uniqueMaxIndex + 1 : 0, token))
             {
                 yield return siteswap;
             }

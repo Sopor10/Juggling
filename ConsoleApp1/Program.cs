@@ -1,13 +1,16 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
 
 var res = new ConcurrentBag<string>();
+var timer = new Stopwatch();
+timer.Start();
 await Parallel.ForEachAsync(
     Enumerable.Range(1, 15),
     async (i, token) =>
     {
-        var input = new SiteswapGeneratorInput(14, i, 2, 11)
+        var input = new SiteswapGeneratorInput(10, i, 2, 11)
         {
             StopCriteria = new StopCriteria(TimeSpan.FromSeconds(600), 500_000_000),
         };
@@ -33,5 +36,5 @@ await Parallel.ForEachAsync(
 // {
 //     Console.WriteLine(se);
 // }
-
+Console.WriteLine("Dauer: " + timer.Elapsed);
 Console.WriteLine("count: " + res.Count);

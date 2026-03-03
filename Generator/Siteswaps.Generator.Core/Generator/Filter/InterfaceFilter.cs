@@ -1,21 +1,13 @@
-using Siteswaps.Generator.Core.Generator;
-
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
-public class InterfaceFilter : ISiteswapFilter
+public class InterfaceFilter(List<List<int>> pattern, int numberOfJugglers = 2) : ISiteswapFilter
 {
-    private List<List<int>> Pattern { get; }
-    private int NumberOfJugglers { get; }
-
-    public InterfaceFilter(List<List<int>> pattern, int numberOfJugglers = 2)
-    {
-        Pattern = pattern;
-        NumberOfJugglers = numberOfJugglers;
-    }
+    private List<List<int>> Pattern { get; } = pattern;
+    private int NumberOfJugglers { get; } = numberOfJugglers;
 
     public bool CanFulfill(PartialSiteswap value)
     {
-        if (Matches(value.Interface.Rotate(value.RotationIndex)))
+        if (Matches(value.Interface))
         {
             return true;
         }
