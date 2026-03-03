@@ -59,7 +59,7 @@ public static class CyclicArrayExtensions
         }
         return new CyclicArray<T>(source);
     }
-    
+
     public static CyclicArray<int> ToUniqueRepresentation(this CyclicArray<int> input)
     {
         var biggest = input.EnumerateValues(1).ToList();

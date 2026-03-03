@@ -11,12 +11,12 @@ public class NumberOfPassesFilter(
         .Where(x => x % numberOfJugglers != 0)
         .ToHashSet();
 
-
     public bool CanFulfill(PartialSiteswap value)
     {
         var numberOfPassesSoFar = value.Items.Count(x => passValues.Contains(x));
 
-        if (value.IsFilled()) return numberOfPassesSoFar == numberOfPasses;
+        if (value.IsFilled())
+            return numberOfPassesSoFar == numberOfPasses;
         return numberOfPassesSoFar <= numberOfPasses;
     }
 

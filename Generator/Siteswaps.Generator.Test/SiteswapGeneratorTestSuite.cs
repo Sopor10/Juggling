@@ -32,7 +32,7 @@ public class SiteswapGeneratorTestSuite
     {
         var input = new SiteswapGeneratorInput(10, 6, 2, 10)
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
         };
         var sut = new SiteswapGenerator(
             new FilterBuilder(input).Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2).Build(),
@@ -47,7 +47,7 @@ public class SiteswapGeneratorTestSuite
     {
         var input = new SiteswapGeneratorInput(14, 7, 2, 9)
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
         };
         var sut = new SiteswapGenerator(
             new FilterBuilder(input)
@@ -59,7 +59,7 @@ public class SiteswapGeneratorTestSuite
                         [6],
                         [9],
                         [8],
-                        [2]
+                        [2],
                     ],
                     2,
                     false
@@ -103,7 +103,7 @@ internal class GenerateInputs : IEnumerable
             MaxHeight = maxHeight,
             MinHeight = minHeight,
             NumberOfObjects = numberOfObjects,
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
         };
         return new TestCaseData(input).SetName(ToName(input));
     }

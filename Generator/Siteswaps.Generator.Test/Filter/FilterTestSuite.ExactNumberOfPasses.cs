@@ -17,14 +17,14 @@ public partial class FilterTestSuite
 
         sut.CanFulfill(new PartialSiteswap(siteswap)).Should().BeTrue();
     }
-    
-    [TestCase(new[] { 11,11,8,2,2,2,2,2,5,5 }, 2)]
-    [TestCase(new[] { 11,11,8,2,2,2,2,2,-1,-1 }, 2)]
-    [TestCase(new[] { 11,11,8,2,2,2,2,-1,-1,-1 }, 2)]
+
+    [TestCase(new[] { 11, 11, 8, 2, 2, 2, 2, 2, 5, 5 }, 2)]
+    [TestCase(new[] { 11, 11, 8, 2, 2, 2, 2, 2, -1, -1 }, 2)]
+    [TestCase(new[] { 11, 11, 8, 2, 2, 2, 2, -1, -1, -1 }, 2)]
     public void There_Are_4_Passes(int[] siteswap, int numberOfJugglers)
     {
         Input = new SiteswapGeneratorInput(10, 10, 0, 11);
-        var sut = FilterBuilder.ExactNumberOfPasses(4,numberOfJugglers).Build();
+        var sut = FilterBuilder.ExactNumberOfPasses(4, numberOfJugglers).Build();
 
         sut.CanFulfill(new PartialSiteswap(siteswap)).Should().BeTrue();
     }

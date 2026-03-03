@@ -2,7 +2,8 @@
 
 public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
 {
-    public string UniqueGlobalNotation => GetLocalSiteswapReal().ToCyclicArray().ToUniqueRepresentation().ToSiteswapString();
+    public string UniqueGlobalNotation =>
+        GetLocalSiteswapReal().ToCyclicArray().ToUniqueRepresentation().ToSiteswapString();
     public string GlobalNotation => ToString();
     public string LocalNotation =>
         string.Join(
@@ -21,11 +22,9 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
         {
             result.Add(siteswap[Juggler + i * NumberOfJugglers]);
         }
-        
+
         return result;
     }
-    
-    
 
     public override string ToString() => GetLocalSiteswapReal().ToSiteswapString();
 
