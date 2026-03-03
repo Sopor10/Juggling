@@ -15,7 +15,7 @@ public class InterfaceFilter : ISiteswapFilter
 
     public bool CanFulfill(PartialSiteswap value)
     {
-        if (Matches(value.Interface))
+        if (Matches(value.Interface.Rotate(value.RotationIndex)))
         {
             return true;
         }

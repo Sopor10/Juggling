@@ -35,6 +35,22 @@ public partial class FilterTestSuite
     }
 
     [Test]
+    public void Should_Work()
+    {
+        var psValid = new PartialSiteswap([7, 5, 6, 6, -1, -1]) { RotationIndex = 1 };
+
+        var sutValid = new InterfaceFilter([
+            [Pass],
+            [Self],
+            [Self],
+            [Self],
+            [Self],
+            [Pass],
+        ]);
+        sutValid.CanFulfill(psValid).Should().BeTrue();
+    }
+
+    [Test]
     public void Interface_Can_Not_Be_Fullfilled()
     {
         var psValid = new PartialSiteswap([8, 6, 2, -1, -1]);

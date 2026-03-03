@@ -1,53 +1,37 @@
-﻿using Siteswaps.Generator.Core.Generator;
+﻿using System.Collections.Concurrent;
+using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using LocalSiteswap = Siteswap.Details.LocalSiteswap;
 
-var res = new List<Siteswaps.Generator.Core.Generator.Siteswap>();
-foreach (var i in Enumerable.Range(1, 15))
-{
-    var input = new SiteswapGeneratorInput(10, i, 2, 11)
+var res = new ConcurrentBag<string>();
+await Parallel.ForEachAsync(
+    Enumerable.Range(1, 15),
+    async (i, token) =>
     {
-        StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 50000000),
-    };
-    var siteswaps = await new SiteswapGenerator(
-        new FilterBuilder(input)
-            // .ExactNumberOfPasses(6, 2)
-            .InterfaceFilter(
-                [
-                    [-3],
-                    [-2],
-                    [-2],
-                    [-3],
-                    [-3],
-                    [-3],
-                    [-3],
-                    [-3],
-                    [-3],
-                    [-3],
-                ],
-                2
-            )
-            .ExactOccurence([3], 0)
-            .ExactOccurence([1], 0)
-            .Build(),
-        input
-    ).GenerateAsync(new CancellationTokenSource().Token).ToListAsync();
-    res.AddRange(siteswaps);
-}
+        var input = new SiteswapGeneratorInput(14, i, 2, 11)
+        {
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(600), 500_000_000),
+        };
+        var siteswaps = new SiteswapGenerator(
+            new FilterBuilder(input)
+                .Not(new FilterBuilder(input).ExactNumberOfPasses(0, 2).Build())
+                .ExactOccurence([3], 0)
+                .ExactOccurence([1], 0)
+                .Build(),
+            input
+        ).GenerateAsync(new CancellationTokenSource().Token);
 
-var result = res.Select(x => new Siteswap.Details.Siteswap(x.ToString())).ToList();
+        await foreach (var siteswap in siteswaps)
+        {
+            var s = new Siteswap.Details.Siteswap(siteswap.ToString());
+            res.Add(s.GetLocalSiteswap(0).UniqueGlobalNotation);
+            res.Add(s.GetLocalSiteswap(1).UniqueGlobalNotation);
+        }
+    }
+);
 
-var locals = new List<LocalSiteswap>();
-foreach (var s in result)
-{
-    locals.Add(s.GetLocalSiteswap(0, 2));
-    locals.Add(s.GetLocalSiteswap(1, 2));
-}
+// foreach (var se in res.Distinct())
+// {
+//     Console.WriteLine(se);
+// }
 
-var unique = locals.Select(x => x.UniqueGlobalNotation).Distinct().ToList();
-foreach (var se in unique)
-{
-    Console.WriteLine(se);
-}
-
-Console.WriteLine(unique.Count);
+Console.WriteLine("count: " + res.Count);

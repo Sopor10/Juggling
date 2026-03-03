@@ -203,7 +203,7 @@ public record Siteswap
         return new Siteswap(Items.Rotate(i));
     }
 
-    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers = 2)
     {
         return new LocalSiteswap(this, juggler, numberOfJugglers);
     }

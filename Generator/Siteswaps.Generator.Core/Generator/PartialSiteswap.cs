@@ -47,6 +47,7 @@ public class PartialSiteswap
     }
 
     public int LastFilledPosition { get; private set; }
+
     public int RotationIndex { get; set; }
 
     public bool IsFilled() => Items[^1] != -1;
