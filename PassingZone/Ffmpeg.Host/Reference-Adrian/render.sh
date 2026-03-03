@@ -25,12 +25,16 @@ if [ ! -f video.mp4 ]; then
 fi
 
 # Rename the uploaded audio to audio.mp3 if it's not already
+USE_EXTERNAL_AUDIO=0
 if [ ! -f audio.mp3 ]; then
     AUDIO_FILE=$(ls *.mp3 | head -n 1)
     if [ -n "$AUDIO_FILE" ]; then
         echo "Renaming $AUDIO_FILE to audio.mp3"
         mv "$AUDIO_FILE" audio.mp3
+        USE_EXTERNAL_AUDIO=1
     fi
+else
+    USE_EXTERNAL_AUDIO=1
 fi
 
 # Ensure all files in the working directory have Linux line endings
@@ -143,7 +147,13 @@ ffmpeg -f colorspace=all=bt709:range=tv -f lavfi -i "color=c=#321D5B:s=1920x1080
 
 # Combine using melt (with external audio mix or video-only to keep original audio)
 if [ "$USE_EXTERNAL_AUDIO" -eq 1 ]; then
-    cp "$COMMON/project.melt" ./project.melt
+    # Double check if final_audio.mp3 was actually created
+    if [ -f final_audio.mp3 ]; then
+        cp "$COMMON/project.melt" ./project.melt
+    else
+        echo "Warning: USE_EXTERNAL_AUDIO was 1 but final_audio.mp3 missing. Using video audio."
+        cp "$COMMON/project_no_audio.melt" ./project.melt
+    fi
 else
     cp "$COMMON/project_no_audio.melt" ./project.melt
 fi

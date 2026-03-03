@@ -12,6 +12,7 @@
   <Folder Name="/Solution Items/">
     <File Path="compose.yaml" />
   </Folder>
+  <Project Path="ConsoleApp1/ConsoleApp1.csproj" />
   <Project Path="docs/docs.csproj" />
   <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
   <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />

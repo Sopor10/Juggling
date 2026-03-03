@@ -9,6 +9,12 @@ public static class IntExtensions
             _ => Convert.ToChar(i + 87).ToString(),
         };
 
-    public static string ToSiteswapString(this IEnumerable<int> enumerable) =>
-        string.Join("", enumerable.Select(x => x.ToSiteswapString()));
+    public static string ToSiteswapString(this IEnumerable<int> enumerable)
+    {
+        if (enumerable is CyclicArray<int> cyclicArray)
+        {
+            enumerable = cyclicArray.EnumerateValues(1);
+        }
+        return string.Join("", enumerable.Select(x => x.ToSiteswapString()));
+    }
 }

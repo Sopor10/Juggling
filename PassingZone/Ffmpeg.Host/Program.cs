@@ -22,6 +22,7 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 builder.Services.AddHttpClient();
+builder.Services.AddHealthChecks();
 
 // Configure WordPress Options
 builder.Services.Configure<WordPressOptions>(builder.Configuration.GetSection("WordPress"));
@@ -42,6 +43,8 @@ var app = builder.Build();
 app.UsePathBase("/ffmpeg");
 
 app.MapGet("/", () => "Ffmpeg.Host is running.");
+
+app.MapHealthChecks("/health");
 
 app.MapPost(
     "/postrender",

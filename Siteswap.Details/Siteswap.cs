@@ -103,22 +103,6 @@ public record Siteswap
                 .Count == items.Length;
     }
 
-    private static CyclicArray<int> ToUniqueRepresentation(CyclicArray<int> input)
-    {
-        var biggest = input.EnumerateValues(1).ToList();
-
-        foreach (
-            var list in Enumerable
-                .Range(0, input.Length)
-                .Select(input.Rotate)
-                .Select(x => x.EnumerateValues(1).ToList())
-        )
-            if (biggest.CompareSequences(list) < 0)
-                biggest = list;
-
-        return biggest.ToCyclicArray();
-    }
-
     public bool IsGroundState()
     {
         return HasNoRethrow();
@@ -168,7 +152,7 @@ public record Siteswap
 
     public static CyclicArray<int> ToUniqueRepresentation(int[] input)
     {
-        return ToUniqueRepresentation(input.ToCyclicArray());
+        return input.ToCyclicArray().ToUniqueRepresentation();
     }
 
     public List<Orbit> GetOrbits()
