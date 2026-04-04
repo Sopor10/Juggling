@@ -1,0 +1,5 @@
+[     679ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:7021/_content/Z.Blazor.Diagrams/style.min.css:0
+[     679ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:7021/_content/Z.Blazor.Diagrams/default.styles.min.css:0
+[     749ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:7021/_content/Z.Blazor.Diagrams/script.min.js:0
+[    1526ms] [INFO] Service worker registration successful (scope: http://localhost:7021/) @ http://localhost:7021/sw-registrator.js:10
+[    1533ms] [INFO] Debugging hotkey: Shift+Alt+D (when application has focus) @ http://localhost:7021/_framework/blazor.webassembly.js:0

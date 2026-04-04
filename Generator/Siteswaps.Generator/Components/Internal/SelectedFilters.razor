@@ -28,30 +28,20 @@
                 @switch (node)
                 {
                     case AndNode andNode:
-                        <MudMenu Dense="true" AnchorOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
-                            <ActivatorContent Context="_">
-                                <MudText Style="cursor: pointer" data-testid="@TreeTestId(andNode)">And</MudText>
-                            </ActivatorContent>
-                            <ChildContent>
-                                <MudMenuItem Disabled="true">Add And</MudMenuItem>
-                                <MudMenuItem Disabled="@(!andNode.Children.Any(x => x is OrNode or FilterLeaf))" OnClick="@(() => Dispatcher.Dispatch(new AddOrFilterAction(Tree.GetKey(andNode))))">Add Or</MudMenuItem>
-                                <MudMenuItem OnClick="@(async () => { var k = Tree.GetKey(andNode); if (k is not null) await AddNewFilter(k); })">Add Filter</MudMenuItem>
-                                <MudMenuItem Disabled="@(Tree.Root == andNode)" OnClick="@(() => Dispatcher.Dispatch(new RemoveFilter(andNode)))">Remove</MudMenuItem>
-                            </ChildContent>
-                        </MudMenu>
+                        <div class="d-flex align-items-center gap-1" data-testid="@TreeTestId(andNode)">
+                            <MudText Typo="Typo.body2" Class="me-1"><b>And</b></MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.CallSplit" Size="Size.Small" Title="Add Or" Disabled="@(!andNode.Children.Any(x => x is OrNode or FilterLeaf))" OnClick="@(() => Dispatcher.Dispatch(new AddOrFilterAction(Tree.GetKey(andNode))))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Title="Add Filter" OnClick="@(async () => { var k = Tree.GetKey(andNode); if (k is not null) await AddNewFilter(k); })" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Title="Remove" Disabled="@(Tree.Root == andNode)" OnClick="@(() => Dispatcher.Dispatch(new RemoveFilter(andNode)))" Color="Color.Error" />
+                        </div>
                         break;
                     case OrNode orNode:
-                        <MudMenu Dense="true" AnchorOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
-                            <ActivatorContent Context="_">
-                                <MudText Style="cursor: pointer" data-testid="@TreeTestId(orNode)">Or</MudText>
-                            </ActivatorContent>
-                            <ChildContent>
-                                <MudMenuItem Disabled="@(!orNode.Children.Any(x => x is AndNode or FilterLeaf))" OnClick="@(() => Dispatcher.Dispatch(new AddAndFilterAction(Tree.GetKey(orNode))))">Add And</MudMenuItem>
-                                <MudMenuItem Disabled="true">Add Or</MudMenuItem>
-                                <MudMenuItem OnClick="@(async () => { var k = Tree.GetKey(orNode); if (k is not null) await AddNewFilter(k); })">Add Filter</MudMenuItem>
-                                <MudMenuItem OnClick="@(() => Dispatcher.Dispatch(new RemoveFilter(orNode)))">Remove</MudMenuItem>
-                            </ChildContent>
-                        </MudMenu>
+                        <div class="d-flex align-items-center gap-1" data-testid="@TreeTestId(orNode)">
+                            <MudText Typo="Typo.body2" Class="me-1"><b>Or</b></MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.MergeType" Size="Size.Small" Title="Add And" Disabled="@(!orNode.Children.Any(x => x is AndNode or FilterLeaf))" OnClick="@(() => Dispatcher.Dispatch(new AddAndFilterAction(Tree.GetKey(orNode))))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Title="Add Filter" OnClick="@(async () => { var k = Tree.GetKey(orNode); if (k is not null) await AddNewFilter(k); })" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Title="Remove" OnClick="@(() => Dispatcher.Dispatch(new RemoveFilter(orNode)))" Color="Color.Error" />
+                        </div>
                         break;
                     case FilterLeaf leaf:
                         <div class="card w-100 h-100 flex-grow-1" data-testid="@TreeTestId(leaf)">
@@ -59,12 +49,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <text class="text-break">@(leaf.Filter.Display())</text>
                                     <div class="d-flex">
-                                        <button type="button" class="btn btn-outline-secondary ms-2 me-2" @onclick="() => ShowInlineDialog(leaf)" data-testid="@EditFilterTestId(leaf)">
-                                            <EditPencil/>
-                                        </button>
-                                        <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))" data-testid="@DeleteFilterTestId(leaf)">
-                                            <Trashcan/>
-                                        </button>
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => ShowInlineDialog(leaf)" data-testid="@EditFilterTestId(leaf)" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))" data-testid="@DeleteFilterTestId(leaf)" />
                                     </div>
                                 </div>
                             </div>
