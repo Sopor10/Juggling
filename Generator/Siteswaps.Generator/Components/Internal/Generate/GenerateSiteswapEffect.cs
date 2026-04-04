@@ -91,7 +91,7 @@ public class GenerateSiteswapEffect(INavigation navigation)
                             action.State.Settings.ShowThrowNames is false
                         )
                         .Max()
-                    ?? throw new InvalidOperationException()
+                        ?? throw new InvalidOperationException()
                     : action.State.MaxThrow.Value,
                 MinHeight = action.State.CreateFilterFromThrowList
                     ? action
@@ -101,7 +101,7 @@ public class GenerateSiteswapEffect(INavigation navigation)
                             action.State.Settings.ShowThrowNames is false
                         )
                         .Min()
-                    ?? throw new InvalidOperationException()
+                        ?? throw new InvalidOperationException()
                     : action.State.MinThrow.Value,
                 NumberOfObjects = number,
             };
