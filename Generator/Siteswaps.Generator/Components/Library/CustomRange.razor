@@ -8,6 +8,12 @@
             <MudNumericField T="int" Step="1" Min="1" Max="30" Value="@Max" ValueChanged="MaxChangedInternal" HideSpinButtons="true" />
         </div>
     </div>
+    <div class="row p-0 m-0 w-100">
+        <div class="col p-0">
+            <MudSlider T="int" Min="1" Max="30" Value="@Min" ValueChanged="MinChangedInternal" Style="width: 100%;" />
+            <MudSlider T="int" Min="1" Max="30" Value="@Max" ValueChanged="MaxChangedInternal" Style="width: 100%;" />
+        </div>
+    </div>
 </div>
 
 @code {
