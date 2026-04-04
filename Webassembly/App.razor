@@ -1,6 +1,8 @@
 ﻿<Fluxor.Blazor.Web.StoreInitializer/>
-<RadzenDialog />
-<RadzenContextMenu/>
+<MudThemeProvider/>
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@(new[]{typeof(Siteswaps.Generator.AssemblyInfo).Assembly, typeof(Siteswaps.Components.Assembly).Assembly})">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>

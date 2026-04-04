@@ -4,12 +4,19 @@
 @inject IState<SiteswapGeneratorState> State
 @inject IDispatcher Dispatcher
 
-<AddFilterComponent
-    EditFilterFinished="x => AddFilter(x)"
-    Filter="IsNewFilter?null : FilterNumber.Filter"
-    State="State.Value.State"
-/>
+<MudDialog>
+    <DialogContent>
+        <AddFilterComponent
+            EditFilterFinished="x => AddFilter(x)"
+            Filter="IsNewFilter?null : FilterNumber.Filter"
+            State="State.Value.State"
+        />
+    </DialogContent>
+</MudDialog>
+
 @code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+
     [Parameter]
     public string? Key { get; set; }
 

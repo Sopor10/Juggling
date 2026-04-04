@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using Siteswaps.Generator.Components;
 using Siteswaps.Generator.Components.State;
 #if DEBUG
 using Fluxor.Blazor.Web.ReduxDevTools;
@@ -22,5 +23,6 @@ public static class DependencyInjectionExtensions
         services.AddScoped<INavigation, NavigationManagerAdapter>();
 
         services.AddBlazoredLocalStorage();
+        services.AddScoped<DialogTracker>();
     }
 }

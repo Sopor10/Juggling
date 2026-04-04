@@ -1,4 +1,4 @@
-﻿<RadzenSlider TValue="int?" Step="@Step.ToString()" Min="@Min" Max="@Max" Value="@Value" Change="@(args => OnChange.InvokeAsync(args))" Style="width: 100%"/>
+﻿<MudSlider T="int" Step="@Step" Min="@Min" Max="@Max" Value="@(Value ?? 0)" ValueChanged="@(args => OnChange.InvokeAsync(args))" Style="width: 100%"/>
 
 @code {
     [Parameter] public int? Value { get; set; }

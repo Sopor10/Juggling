@@ -22,13 +22,18 @@
     </div>
     <div class="col">
         <div class="input-group">
-            <RadzenDropDown TValue="Throw" @bind-Value="@Value.Throw" Data="PossibleThrows" TextProperty="@nameof(Throw.DisplayValue)" Style="min-width: 75px;"/>
+            <MudSelect T="Throw" @bind-Value="@Value.Throw" Style="min-width: 75px;">
+                @foreach (var item in PossibleThrows)
+                {
+                    <MudSelectItem T="Throw" Value="@item">@item.DisplayValue</MudSelectItem>
+                }
+            </MudSelect>
         </div>
     </div>
 </div>
 <div class="row mt-2">
     <div class="col"> 
-        <RadzenButton id="finish-new-filter" Text="@AddButtonText"Click="async _ => await AddFilter.InvokeAsync(Value)"/>
+        <MudButton id="finish-new-filter" OnClick="async _ => await AddFilter.InvokeAsync(Value)">@AddButtonText</MudButton>
     </div>
 </div>
 

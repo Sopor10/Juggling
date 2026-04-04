@@ -5,9 +5,7 @@
         {
             
             var i1 = i;
-            <RadzenCheckBox TValue="bool" @bind-Value="Items[i1]">
-                
-            </RadzenCheckBox>
+            <MudCheckBox T="bool" @bind-Value="Items[i1]" />
         }
         
     </div>
@@ -15,7 +13,7 @@
 
 <div class="row mt-2">
     <div class="col"> 
-        <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(Value)"/>
+        <MudButton id="finish-new-filter" OnClick="async _ => await AddFilter.InvokeAsync(Value)">@AddButtonText</MudButton>
     </div>
 </div>
 

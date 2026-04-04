@@ -1,14 +1,14 @@
 ﻿using Fluxor;
-using Radzen;
+using Siteswaps.Generator.Components;
 
 namespace Siteswaps.Generator.Components.Internal.EasyFilter;
 
-public class CloseDialogAfterChangingFilterEffect(DialogService dialogService)
+public class CloseDialogAfterChangingFilterEffect(DialogTracker dialogTracker)
     : Effect<Filter.ChangedFilterAction>
 {
     public override Task HandleAsync(Filter.ChangedFilterAction action, IDispatcher dispatcher)
     {
-        dialogService.Close();
+        dialogTracker.Close();
         return Task.CompletedTask;
     }
 }
