@@ -1,21 +1,15 @@
 ﻿@using System.Collections.Immutable
-<div class="row">
-    <div class="col">
-        @for (int i = 0; i< MaxHeight; i++)
-        {
-            
-            var i1 = i;
-            <RadzenCheckBox TValue="bool" @bind-Value="Items[i1]">
-                
-            </RadzenCheckBox>
-        }
-        
-    </div>
+<div class="d-flex flex-wrap gap-1">
+    @for (int i = 0; i < MaxHeight; i++)
+    {
+        var i1 = i;
+        <MudCheckBox T="bool" @bind-Value="Items[i1]" Dense="true" />
+    }
 </div>
 
 <div class="row mt-2">
     <div class="col"> 
-        <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(Value)"/>
+        <MudButton id="finish-new-filter" OnClick="async _ => await AddFilter.InvokeAsync(Value)">@AddButtonText</MudButton>
     </div>
 </div>
 

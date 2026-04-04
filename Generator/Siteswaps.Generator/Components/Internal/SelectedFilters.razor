@@ -3,109 +3,86 @@
 
 @inject IDispatcher Dispatcher
 @inject IState<SiteswapGeneratorState> State
-@inject DialogService DialogService
-@inject ContextMenuService ContextMenuService
+@inject IDialogService DialogService
+@inject DialogTracker DialogTracker
 
-<RadzenRow class="rz-p-0 rz-p-lg-12">
-    <RadzenColumn Size="12" >
-        <RadzenTree 
-            AllowCheckParents="false" 
-            AllowCheckBoxes="false" 
-            AllowCheckChildren="false" 
-            Data="@entries" 
-            Expand="@Load" 
-            ItemContextMenu="GetContextMenu"
-            Style="width: 100%; height: 300px" >
-            <RadzenTreeLevel
-                Text="@GetTextForNode"
-                Template="@Template"
-                Expanded="@(_ => true)"
-                Checkable="_ => false"/>
-        </RadzenTree>
-    </RadzenColumn>
-</RadzenRow>
+<div class="p-0 p-lg-3">
+    <div class="w-100">
+        <MudTreeView T="FilterNode" Dense="true" Style="width: 100%; height: 300px; overflow-y: auto;">
+            @foreach (var entry in entries)
+            {
+                @RenderNode(entry)
+            }
+        </MudTreeView>
+    </div>
+</div>
 
 @code {
     IEnumerable<FilterNode> entries => new[]{Tree.Root }.OfType<FilterNode>();
     private FilterTree Tree => State.Value.State.FilterTree;
-        
-    void Load(TreeExpandEventArgs args)
+
+    private RenderFragment RenderNode(FilterNode node) => __builder =>
     {
-        if (args.Value is not FilterNode node || args.Children is null)
-        {
-            return;
-        }
+        <MudTreeViewItem T="FilterNode" Value="@node" Expanded="true">
+            <BodyContent Context="_treeItem">
+                @switch (node)
+                {
+                    case AndNode andNode:
+                        <div class="d-flex align-items-center gap-1" data-testid="@TreeTestId(andNode)">
+                            <MudText Typo="Typo.body2" Class="me-1"><b>And</b></MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.CallSplit" Size="Size.Small" Title="Add Or" Disabled="@(!andNode.Children.Any(x => x is OrNode or FilterLeaf))" OnClick="@(() => Dispatcher.Dispatch(new AddOrFilterAction(Tree.GetKey(andNode))))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Title="Add Filter" OnClick="@(async () => { var k = Tree.GetKey(andNode); if (k is not null) await AddNewFilter(k); })" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Title="Remove" Disabled="@(Tree.Root == andNode)" OnClick="@(() => Dispatcher.Dispatch(new RemoveFilter(andNode)))" Color="Color.Error" />
+                        </div>
+                        break;
+                    case OrNode orNode:
+                        <div class="d-flex align-items-center gap-1" data-testid="@TreeTestId(orNode)">
+                            <MudText Typo="Typo.body2" Class="me-1"><b>Or</b></MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.MergeType" Size="Size.Small" Title="Add And" Disabled="@(!orNode.Children.Any(x => x is AndNode or FilterLeaf))" OnClick="@(() => Dispatcher.Dispatch(new AddAndFilterAction(Tree.GetKey(orNode))))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Title="Add Filter" OnClick="@(async () => { var k = Tree.GetKey(orNode); if (k is not null) await AddNewFilter(k); })" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Title="Remove" OnClick="@(() => Dispatcher.Dispatch(new RemoveFilter(orNode)))" Color="Color.Error" />
+                        </div>
+                        break;
+                    case FilterLeaf leaf:
+                        <div class="card w-100 h-100 flex-grow-1" data-testid="@TreeTestId(leaf)">
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <text class="text-break">@(leaf.Filter.Display())</text>
+                                    <div class="d-flex">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => ShowInlineDialog(leaf)" data-testid="@EditFilterTestId(leaf)" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))" data-testid="@DeleteFilterTestId(leaf)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                }
+            </BodyContent>
+            <ChildContent>
+                @{
+                    IEnumerable<FilterNode> children = node switch
+                    {
+                        AndNode a => a.Children,
+                        OrNode o => o.Children,
+                        _ => []
+                    };
+                    foreach (var child in children)
+                    {
+                        @RenderNode(child)
+                    }
+                }
+            </ChildContent>
+        </MudTreeViewItem>
+    };
 
-        args.Children.Data = node switch
-        {
-            AndNode andNode => andNode.Children,
-            FilterLeaf _ => [],
-            OrNode orNode => orNode.Children,
-            _ => throw new ArgumentOutOfRangeException(nameof(node))
-        };
-        args.Children.Text = x => x switch
-        {
-            FilterLeaf leaf => leaf.Filter.Display(),
-            AndNode => "And",
-            OrNode => "Or",
-            _ => throw new ArgumentOutOfRangeException(nameof(x))
-        };
-        args.Children.HasChildren = x => x is FilterLeaf is false;
-        args.Children.Template = Template;
-        args.Children.Checkable = o => false;
-        args.Children.Expanded = x => true;
-    }
-
-    string GetTextForNode(object data)
-    {
-        return data switch
-        {
-            FilterLeaf leaf => leaf.Filter.Display(),
-            AndNode => "And",
-            OrNode => "Or",
-            _ => throw new ArgumentOutOfRangeException(nameof(data))
-        };
-    }
-
-    RenderFragment<RadzenTreeItem> Template => (context) => @<div>
-                                                               @switch (context.Value)
-                                                               {
-                                                                   case AndNode andNode: <RadzenText Text="And" @onclick="x =>GetContextMenu(x, andNode)" data-testid="@TreeTestId(andNode)"/>break;
-                                                                   case OrNode orNode: <RadzenText Text="Or" @onclick="x =>GetContextMenu(x, orNode)" data-testid="@TreeTestId(orNode)"/> break;
-                                                                   case FilterLeaf leaf:
-                                                                       <div class="card w-100 h-100 flex-grow-1"  data-testid="@TreeTestId(leaf)">
-                                                                           <div class="card-body d-flex flex-column justify-content-center">
-                                                                               <div class="d-flex justify-content-between align-items-center">
-                                                                                   <text class="text-break">@(leaf.Filter.Display())</text>
-                                                                                   <div class="d-flex">
-                                                                                       <button type="button" class="btn btn-outline-secondary ms-2 me-2" @onclick="() => ShowInlineDialog(leaf)" data-testid="@EditFilterTestId(leaf)">
-                                                                                           <EditPencil/>
-                                                                                       </button>
-                                                                                       <button type="button" class="bi bi-trash btn btn-outline-danger" @onclick="() => Dispatcher.Dispatch(new RemoveFilter(leaf))" data-testid="@DeleteFilterTestId(leaf)">
-                                                                                           <Trashcan/>
-                                                                                       </button>
-                                                                                   </div>
-                                                                               </div>
-                                                                           </div>
-                                                                       </div>
-                                                                       ;
-                                                                       break;
-
-                                                               }
-                                                           </div>;
-    
-    
     private async Task ShowInlineDialog(FilterLeaf i)
     {
-        await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object?>
-        {
-            { nameof(Filter.FilterNumber), i }
-        }, new DialogOptions
-        {
-            CloseDialogOnOverlayClick = true,
-            Height = "500px",
-            Style = "mind-width: 300px"
-        });
+        var dialog = await DialogService.ShowAsync<Filter>(
+            "Edit Filter",
+            new DialogParameters<Filter> { { x => x.FilterNumber, i } },
+            new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseOnEscapeKey = true }
+        );
+        DialogTracker.CurrentDialog = dialog;
     }
 
     public record RemoveFilter(FilterNode Value);
@@ -120,98 +97,6 @@
         {
             State = state.State with { FilterTree = state.State.FilterTree.Remove(action.Value) }
         };
-    }
-
-
-    private void GetContextMenu(TreeItemContextMenuEventArgs args)
-    {
-        if (args.Value is FilterNode filterNode is false)
-        {
-            return;
-        }
-
-        OpenContextMenu(args, filterNode);
-    }
-    
-    private void GetContextMenu(MouseEventArgs args, FilterNode filterNode)
-    {
-        OpenContextMenu(args, filterNode);
-    }
-
-    private void OpenContextMenu(MouseEventArgs args, FilterNode filterNode)
-    {
-        switch(filterNode)
-        {
-            case AndNode andNode:
-                ContextMenuService.Open(args,
-                    new List<ContextMenuItem> {
-                        new(){ Text = "Add And", Value = 1, Disabled = true},
-                        new(){ Text = "Add Or", Value = 2, Disabled = !andNode.Children.Any(x => x is OrNode or FilterLeaf)} ,
-                        new(){ Text = "Add Filter", Value = 3, Disabled = false} ,
-                        new(){ Text = "Remove", Value = 4, Disabled = Tree.Root == andNode} ,
-                    }, async (e) =>
-                    {
-                        switch(e.Value)
-                        {
-                            case 1:
-                                throw new InvalidOperationException("Cannot add an And to an And");
-                            case 2:
-                                Dispatcher.Dispatch(new AddOrFilterAction(Tree.GetKey(andNode)));
-                                break;
-                            case 3:
-                                var key = Tree.GetKey(andNode);
-                                if (key is null)
-                                {
-                                    return;
-                                }
-                                await AddNewFilter(key);
-                                break;
-                            case 4:
-                                Dispatcher.Dispatch(new RemoveFilter(andNode));
-                                break;
-                        }
-                        ContextMenuService.Close();
-                    }
-                );
-                break;
-            case OrNode orNode:
-                ContextMenuService.Open(args,
-                    new List<ContextMenuItem> {
-                        new(){ Text = "Add And", Value = 1, Disabled = !orNode.Children.Any(x => x is AndNode or FilterLeaf)},
-                        new(){ Text = "Add Or", Value = 2, Disabled = true} ,
-                        new(){ Text = "Add Filter", Value = 3, Disabled = false} ,
-                        new(){ Text = "Remove", Value = 4, Disabled = false} ,
-                    }, async (e) =>
-                    {
-                        switch(e.Value)
-                        {
-                            case 1:
-                                Dispatcher.Dispatch(new AddAndFilterAction(Tree.GetKey(orNode)));
-                                break;
-                            case 2:
-                                throw new InvalidOperationException("Cannot add an And to an Or");
-                            case 3:
-                                var key = Tree.GetKey(orNode);
-                                if (key is null)
-                                {
-                                    return;
-                                }
-                                await AddNewFilter(key);
-                                break;
-                            case 4:
-                                Dispatcher.Dispatch(new RemoveFilter(orNode));
-                                break;
-                        }
-                        ContextMenuService.Close();
-                    }
-                );
-                break;
-            case FilterLeaf filterLeaf:
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(filterNode));
-        }
     }
 
     public record AddOrFilterAction(string? Key);
@@ -261,18 +146,12 @@
     
     private async Task AddNewFilter(string key)
     {
-        await DialogService.OpenAsync<Filter>("New Pattern Filter", 
-            parameters: new ()
-            {
-                { nameof(Filter.Key), key }
-            },
-            options: new DialogOptions
-                {
-                    CloseDialogOnOverlayClick = true,
-                    Height = "500px",
-                    Style = "min-width: 300px"
-                }
+        var dialog = await DialogService.ShowAsync<Filter>(
+            "New Pattern Filter",
+            new DialogParameters<Filter> { { x => x.Key, key } },
+            new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseOnEscapeKey = true }
         );
+        DialogTracker.CurrentDialog = dialog;
     }
     
     private string TreeTestId(FilterNode node) => $"filter-node-{State.Value.State.FilterTree.GetKey(node)}";
@@ -280,8 +159,3 @@
 
     private string DeleteFilterTestId(FilterLeaf leaf) => $"delete-filter-{State.Value.State.FilterTree.GetKey(leaf)}";
 }
-
-
-
-
-

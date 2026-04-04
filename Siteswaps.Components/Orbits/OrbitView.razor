@@ -1,4 +1,5 @@
 ﻿@using Siteswap.Details
+@using MudBlazor
 @inject NavigationManager NavigationManager
 <h3>Orbits</h3>
 
@@ -8,11 +9,14 @@
 }
 
 
-    <RadzenDataList TItem="Orbit" Data="Value.GetOrbits()">
-        <Template>
-            <a href="@NavigationManager.GetUriWithQueryParameter("s", context.DisplayValue)"> @context.DisplayValue</a>
-        </Template>
-    </RadzenDataList>
+<MudList T="Orbit" Dense="true">
+    @foreach (var orbit in Value.GetOrbits())
+    {
+        <MudListItem T="Orbit">
+            <a href="@NavigationManager.GetUriWithQueryParameter("s", orbit.DisplayValue)">@orbit.DisplayValue</a>
+        </MudListItem>
+    }
+</MudList>
 
 @code
 {

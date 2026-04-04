@@ -2,28 +2,28 @@
 <div>
     <div class="d-flex flex-row">
         <div class="me-2">
-            <RadzenDropDown 
-                TValue="PatternRotation" 
-                @bind-Value:get="PatternRotation" 
-                Name="IsGlobal" 
+            <MudSelect T="PatternRotation"
+                @bind-Value:get="PatternRotation"
                 @bind-Value:set="PatternRotationChangedPrivate"
-                TextProperty="Display"
-                Data="Jugglers"/>
+                InputId="IsGlobal">
+                @foreach (var item in Jugglers)
+                {
+                    <MudSelectItem T="PatternRotation" Value="@item">@item.Display</MudSelectItem>
+                }
+            </MudSelect>
         </div>
-        <div class="me-2">
-            <RadzenCheckBox TValue="bool" @bind-Value:get="IsIncludePattern" Name="Include" @bind-Value:set="IsIncludePatternChangedPrivate" />
-            <RadzenLabel Text="Include" Component="Include" Style="vertical-align: middle;"/>
+        <div class="me-2 d-flex align-items-center">
+            <MudCheckBox T="bool" @bind-Value:get="IsIncludePattern" @bind-Value:set="IsIncludePatternChangedPrivate" Label="Include" />
         </div>
-        <div class="me-2">
-            <RadzenCheckBox TValue="bool" @bind-Value:get="ShouldBeValidLocally" Name="LocallyValid" @bind-Value:set="ShouldBeValidLocallyChanged" />
-            <RadzenLabel Text="Locally valid" Component="LocallyValid" Style="vertical-align: middle;"/>
+        <div class="me-2 d-flex align-items-center">
+            <MudCheckBox T="bool" @bind-Value:get="ShouldBeValidLocally" @bind-Value:set="ShouldBeValidLocallyPrivate" Label="Locally valid" />
         </div>
     </div>
 
     <div>
         <Keyboard PossibleThrows="@PossibleThrows" @bind-Filter="Throws"></Keyboard>
     </div>
-    <RadzenButton id="finish-new-filter" Text="@AddButtonText" Click="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, PatternRotation, IsIncludePattern, ShouldBeValidLocally))" data-testid="add-pattern-filter"/>
+    <MudButton id="finish-new-filter" OnClick="async _ => await AddFilter.InvokeAsync(new NewPatternFilterInformation(Throws, PatternRotation, IsIncludePattern, ShouldBeValidLocally))" data-testid="add-pattern-filter">@AddButtonText</MudButton>
     
 </div>
 @code {

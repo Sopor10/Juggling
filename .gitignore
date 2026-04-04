@@ -9,3 +9,4 @@ riderModule.iml
 **/.vs
 
 node_modules
+.playwright-mcp/

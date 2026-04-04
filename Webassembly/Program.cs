@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Radzen;
+using MudBlazor.Services;
 using Siteswaps.Generator;
 using VisNetwork.Blazor;
 
@@ -15,7 +15,7 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.InstallGenerator();
-        builder.Services.AddRadzenComponents();
+        builder.Services.AddMudServices();
         builder.Services.AddVisNetwork();
 
         await builder.Build().RunAsync();

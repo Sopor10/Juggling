@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
     <PackageReference Include="VisNetwork.Blazor" />
-    <PackageReference Include="Radzen.Blazor" />
+    <PackageReference Include="MudBlazor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />

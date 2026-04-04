@@ -2,28 +2,22 @@
 <div class="col">
     <div class="row">
         <div class="col-6 p-0">
-            <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" @bind-Value:get="Min" @bind-Value:set="MinChangedInternal" ShowUpDown="false" />
+            <MudNumericField T="int" Step="1" Min="1" Max="30" Value="@Min" ValueChanged="MinChangedInternal" HideSpinButtons="true" />
         </div>
         <div class="col-6 p-0">
-        <RadzenNumeric TValue="int" Step="1" Min="1" Max="30" @bind-Value:get="Max" @bind-Value:set="MaxChangedInternal" ShowUpDown="false" />
+            <MudNumericField T="int" Step="1" Min="1" Max="30" Value="@Max" ValueChanged="MaxChangedInternal" HideSpinButtons="true" />
         </div>
     </div>
     <div class="row p-0 m-0 w-100">
         <div class="col p-0">
-            <RadzenSlider class="p-0" Range="true" Value="@(Values)" ValueChanged="UpdateSlider" TValue="IEnumerable<int>" Min="1" Max="30" Style="width: 100%; padding: 0; margin: 0;"/>
+            <MudSlider T="int" Min="1" Max="30" Value="@Min" ValueChanged="MinChangedInternal" Style="width: 100%;" />
+            <MudSlider T="int" Min="1" Max="30" Value="@Max" ValueChanged="MaxChangedInternal" Style="width: 100%;" />
         </div>
     </div>
 </div>
 
 @code {
 
-    protected override void OnInitialized()
-    {
-        Values = [Min, Max + 1];
-        base.OnInitialized();
-    }
-
-    private int[] Values { get; set; } = [6, 7];
     [Parameter] public int Min { get; set; } = 6;
     
     [Parameter]
@@ -47,7 +41,6 @@
         }
         
         Min = value;
-        Values[0] = Min;
         MinChanged.InvokeAsync(Min);
         InvokeAsync(StateHasChanged);
     }
@@ -65,16 +58,8 @@
         }
         
         Max = value;
-        Values[1] = Max;
         MaxChanged.InvokeAsync(Max);
         InvokeAsync(StateHasChanged);
-    }
-
-    private void UpdateSlider(IEnumerable<int> values)
-    {
-        var l = values.ToList();
-        MinChangedInternal(l.First());
-        MaxChangedInternal(l.Last() - 1);
     }
 
 }

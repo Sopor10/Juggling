@@ -1,4 +1,4 @@
-﻿<RadzenNumeric id="@Id" TValue="int?" Step="@Step.ToString()" Min="@Min" Max="@Max" Value="@Value" Change="@(args => OnChange.InvokeAsync(args))" ShowUpDown="false" />
+﻿<MudNumericField id="@Id" T="int?" Step="@Step" Min="@Min" Max="@Max" Value="@Value" ValueChanged="@(args => OnChange.InvokeAsync(args))" HideSpinButtons="true" />
 
 @code {
     [Parameter] public int? Value { get; set; }
