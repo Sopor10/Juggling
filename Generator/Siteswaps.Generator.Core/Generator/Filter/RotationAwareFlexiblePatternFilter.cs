@@ -14,7 +14,7 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
 
     private int Juggler { get; }
 
-    private readonly PatternRecord[] _patternsByRotation;
+    private readonly PatternRecord _pattern;
 
     public RotationAwareFlexiblePatternFilter(
         List<List<int>> pattern,
@@ -37,17 +37,13 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
             .Where(x => x % NumberOfJugglers == 0)
             .ToHashSet();
 
-        _patternsByRotation = new PatternRecord[input.Period];
-        for (int rot = 0; rot < input.Period; rot++)
+        var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
+        for (var i = 0; i < Pattern.Count; i++)
         {
-            var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
-            for (var i = 0; i < Pattern.Count; i++)
-            {
-                var pos = (Juggler + rot + i * NumberOfJugglers) % input.Period;
-                p[pos] = Pattern[i];
-            }
-            _patternsByRotation[rot] = new PatternRecord(p, SelfValues, PassValues);
+            var pos = (Juggler + i * NumberOfJugglers) % input.Period;
+            p[pos] = Pattern[i];
         }
+        _pattern = new PatternRecord(p, SelfValues, PassValues);
     }
 
     public bool CanFulfill(PartialSiteswap value)
@@ -55,8 +51,7 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         if (!value.IsFilled())
             return true;
 
-        var rotationIndex = ((value.RotationIndex % Input.Period) + Input.Period) % Input.Period;
-        return _patternsByRotation[rotationIndex].Matches(value.Items);
+        return _pattern.Matches(value.Items);
     }
 
     [DebuggerDisplay("{DebugDisplay}")]
