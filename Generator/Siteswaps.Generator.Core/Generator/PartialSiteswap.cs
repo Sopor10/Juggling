@@ -50,14 +50,8 @@ public class PartialSiteswap
 
     public int RotationIndex
     {
-        get
-        {
-            return this.Interface.RotationIndex;
-        }
-        set
-        {
-            this.Interface.RotationIndex = value;
-        }
+        get { return this.Interface.RotationIndex; }
+        set { this.Interface.RotationIndex = value; }
     }
 
     public int Length => Items.Length;

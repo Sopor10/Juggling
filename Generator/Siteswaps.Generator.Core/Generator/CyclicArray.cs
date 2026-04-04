@@ -48,9 +48,8 @@ public record CyclicArray<T> : IEnumerable<T>
         RotationIndex += i;
         return this;
     }
-    
-    public Span<T> AsSpan() => Items.AsSpan();
 
+    public Span<T> AsSpan() => Items.AsSpan();
 }
 
 public static class CyclicArrayExtensions
