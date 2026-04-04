@@ -31,7 +31,10 @@
         
     void Load(TreeExpandEventArgs args)
     {
-        var node = args.Value as FilterNode;
+        if (args.Value is not FilterNode node || args.Children is null)
+        {
+            return;
+        }
 
         args.Children.Data = node switch
         {
@@ -94,7 +97,7 @@
     
     private async Task ShowInlineDialog(FilterLeaf i)
     {
-        await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object>
+        await DialogService.OpenAsync<Filter>("New Pattern Filter", new Dictionary<string, object?>
         {
             { nameof(Filter.FilterNumber), i }
         }, new DialogOptions
