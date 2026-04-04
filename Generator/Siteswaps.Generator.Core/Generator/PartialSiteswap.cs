@@ -6,7 +6,7 @@ public class PartialSiteswap
     {
         LastFilledPosition = lastFilledPosition;
         Interface = new CyclicArray<int>(Enumerable.Repeat(-1, items.Length));
-        Items = new int[items.Length];
+        Items = Enumerable.Repeat(-1, items.Length).ToCyclicArray();
 
         for (int i = 0; i < items.Length; i++)
         {
@@ -14,8 +14,8 @@ public class PartialSiteswap
         }
     }
 
-    public int[] Items { get; }
-    private CyclicArray<int> Interface { get; }
+    public CyclicArray<int> Items { get; }
+    public CyclicArray<int> Interface { get; }
 
     public int PartialSum { get; private set; }
 
@@ -47,7 +47,20 @@ public class PartialSiteswap
     }
 
     public int LastFilledPosition { get; private set; }
-    public int RotationIndex { get; set; }
+
+    public int RotationIndex
+    {
+        get
+        {
+            return this.Interface.RotationIndex;
+        }
+        set
+        {
+            this.Interface.RotationIndex = value;
+        }
+    }
+
+    public int Length => Items.Length;
 
     public bool IsFilled() => Items[^1] != -1;
 
@@ -89,5 +102,10 @@ public class PartialSiteswap
     {
         ResetCurrentPosition();
         LastFilledPosition--;
+    }
+
+    public Span<int> AsSpan()
+    {
+        return Items.AsSpan();
     }
 }

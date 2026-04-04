@@ -6,7 +6,7 @@ internal class AtLeastXXXTimesFilter(IEnumerable<int> number, int amount)
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)
     {
         int matches = 0;
-        foreach (var x in value.Items)
+        foreach (var x in value.AsSpan())
         {
             if (x == -1 || Number.Contains(x))
             {

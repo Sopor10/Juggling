@@ -51,7 +51,7 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
             p[pos] = Pattern[i];
         }
 
-        return new PatternRecord(p, SelfValues, PassValues).Matches(value.Items.ToCyclicArray());
+        return new PatternRecord(p, SelfValues, PassValues).Matches(value.Items);
     }
 
     [DebuggerDisplay("{DebugDisplay}")]

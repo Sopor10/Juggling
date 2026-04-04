@@ -10,7 +10,7 @@ internal record CyclicArray<T> : IEnumerable<T>
         Items = items.ToArray();
     }
 
-    private int RotationIndex { get; set; }
+    public int RotationIndex { get; set; }
     private T[] Items { get; }
     public int Length => Items.Length;
 
@@ -48,6 +48,9 @@ internal record CyclicArray<T> : IEnumerable<T>
         RotationIndex += i;
         return this;
     }
+    
+    public Span<T> AsSpan() => EnumerateValues(1).ToArray().AsSpan();
+
 }
 
 internal static class CyclicArrayExtensions

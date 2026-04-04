@@ -70,8 +70,7 @@ public class SiteswapGenerator
                 (
                     PartialSiteswap.PartialSum
                     + (Input.Period - PartialSiteswap.LastFilledPosition - 1) * min
-                ) / Input.Period
-                > Input.NumberOfObjects
+                ) > Input.NumberOfObjects * Input.Period
             )
             {
                 PartialSiteswap.ResetCurrentPosition();
@@ -82,21 +81,23 @@ public class SiteswapGenerator
                 (
                     PartialSiteswap.PartialSum
                     + (Input.Period - PartialSiteswap.LastFilledPosition - 1) * Input.MaxHeight
-                ) / Input.Period
-                < Input.NumberOfObjects
+                ) < Input.NumberOfObjects * Input.Period
             )
             {
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
             }
 
-            var canFulfill = Enumerable
-                .Range(0, PartialSiteswap.LastFilledPosition + 1)
-                .Any(x =>
+            var canFulfill = false;
+            for (int j = 0; j < PartialSiteswap.LastFilledPosition + 1; j++)
+            {
+                PartialSiteswap.RotationIndex = j;
+                if (Filter.CanFulfill(PartialSiteswap))
                 {
-                    PartialSiteswap.RotationIndex = x;
-                    return Filter.CanFulfill(PartialSiteswap);
-                });
+                    canFulfill = true;
+                    break;
+                }
+            }
 
             PartialSiteswap.RotationIndex = 0;
             if (canFulfill is false)
