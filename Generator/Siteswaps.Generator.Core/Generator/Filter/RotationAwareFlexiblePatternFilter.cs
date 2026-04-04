@@ -55,8 +55,7 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         if (!value.IsFilled())
             return true;
 
-        var rotationIndex = ((value.RotationIndex % Input.Period) + Input.Period) % Input.Period;
-        return _patternsByRotation[rotationIndex].Matches(value.Items);
+        return _patternsByRotation[0].Matches(value.Items);
     }
 
     [DebuggerDisplay("{DebugDisplay}")]

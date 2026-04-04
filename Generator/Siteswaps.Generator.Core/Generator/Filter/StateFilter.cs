@@ -94,7 +94,7 @@ public record State(uint Value)
         var items = new int[length];
         for (int i = 0; i < length; i++)
         {
-            items[i] = siteswap.Items[i + siteswap.RotationIndex];
+            items[i] = siteswap.Items[i];
         }
 
         return CalculateState(items, maxHeight);

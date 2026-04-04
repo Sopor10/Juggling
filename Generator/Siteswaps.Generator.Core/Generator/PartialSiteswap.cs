@@ -57,6 +57,7 @@ public class PartialSiteswap
         set
         {
             this.Interface.RotationIndex = value;
+            this.Items.RotationIndex = value;
         }
     }
 
