@@ -17,6 +17,7 @@ internal class StateFilter(SiteswapGeneratorInput generatorInput, State state) :
     }
 
     public int Order => 5;
+    public bool IsRotationAware => true;
 }
 
 /// <summary>
@@ -89,14 +90,14 @@ public record State(uint Value)
 
     public static State CalculateState(PartialSiteswap siteswap, int maxHeight)
     {
-        return CalculateState(
-            siteswap
-                .Items.ToCyclicArray()
-                .Rotate(siteswap.RotationIndex)
-                .EnumerateValues(1)
-                .ToArray(),
-            maxHeight
-        );
+        var length = siteswap.Items.Length;
+        var items = new int[length];
+        for (int i = 0; i < length; i++)
+        {
+            items[i] = siteswap.Items[i + siteswap.RotationIndex];
+        }
+
+        return CalculateState(items, maxHeight);
     }
 
     public static State GroundState(int numberOfBalls)

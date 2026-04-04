@@ -56,8 +56,12 @@ internal class FlexiblePatternFilter : ISiteswapFilter
             return true;
         }
 
-        var siteswap = value.Items.ToCyclicArray();
-        return Patterns.Any(pattern => pattern.Matches(siteswap));
+        for (int i = 0; i < Patterns.Count; i++)
+        {
+            if (Patterns[i].Matches(value.Items))
+                return true;
+        }
+        return false;
     }
 
     [DebuggerDisplay("{DebugDisplay}")]

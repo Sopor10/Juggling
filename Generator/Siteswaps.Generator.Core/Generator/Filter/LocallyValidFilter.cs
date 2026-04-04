@@ -12,7 +12,11 @@ public class LocallyValidFilter(int numberOfJugglers, int juggler) : ISiteswapFi
             return true;
         }
 
-        var siteswap = Siteswap.CreateFromCorrect(value.Items);
+        var items = new int[value.Length];
+        for (int i = 0; i < value.Length; i++)
+            items[i] = value.Items[i];
+
+        var siteswap = Siteswap.CreateFromCorrect(items);
         var localSiteswap = siteswap.GetLocalSiteswap(Juggler, NumberOfJugglers);
         return localSiteswap.IsValidAsGlobalSiteswap();
     }
