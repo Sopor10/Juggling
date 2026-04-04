@@ -3,10 +3,12 @@
 public class AndFilter : ISiteswapFilter
 {
     private List<ISiteswapFilter> Filters { get; }
+    private readonly bool _isRotationAware;
 
     public AndFilter(IEnumerable<ISiteswapFilter> filters)
     {
         Filters = filters.OrderBy(x => x.Order).ToList();
+        _isRotationAware = Filters.Any(f => f.IsRotationAware);
     }
 
     public AndFilter(params ISiteswapFilter?[] filter)
@@ -26,6 +28,7 @@ public class AndFilter : ISiteswapFilter
     }
 
     public int Order => 0;
+    public bool IsRotationAware => _isRotationAware;
 }
 
 public class NotFilter(ISiteswapFilter filter) : ISiteswapFilter
@@ -41,4 +44,5 @@ public class NotFilter(ISiteswapFilter filter) : ISiteswapFilter
     }
 
     public int Order => 0;
+    public bool IsRotationAware => filter.IsRotationAware;
 }

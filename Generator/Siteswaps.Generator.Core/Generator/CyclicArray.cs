@@ -2,7 +2,7 @@
 
 namespace Siteswaps.Generator.Core.Generator;
 
-internal record CyclicArray<T> : IEnumerable<T>
+public record CyclicArray<T> : IEnumerable<T>
 {
     public CyclicArray(IEnumerable<T> items, int rotationIndex = 0)
     {
@@ -10,14 +10,14 @@ internal record CyclicArray<T> : IEnumerable<T>
         Items = items.ToArray();
     }
 
-    private int RotationIndex { get; set; }
+    public int RotationIndex { get; set; }
     private T[] Items { get; }
     public int Length => Items.Length;
 
     public T this[int i]
     {
-        get => Items[(i + Items.Length + RotationIndex) % Items.Length];
-        set => Items[(i + Items.Length + RotationIndex) % Items.Length] = value;
+        get => Items[(i + RotationIndex) % Items.Length];
+        set => Items[(i + RotationIndex) % Items.Length] = value;
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -48,9 +48,11 @@ internal record CyclicArray<T> : IEnumerable<T>
         RotationIndex += i;
         return this;
     }
+
+    public Span<T> AsSpan() => Items.AsSpan();
 }
 
-internal static class CyclicArrayExtensions
+public static class CyclicArrayExtensions
 {
     public static CyclicArray<T> ToCyclicArray<T>(this IEnumerable<T> source)
     {
@@ -58,7 +60,7 @@ internal static class CyclicArrayExtensions
     }
 }
 
-internal class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
+public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 {
     public CyclicArray<T> Array { get; } = array;
     private int _position = -1;
@@ -66,7 +68,7 @@ internal class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
     public bool MoveNext()
     {
         _position++;
-        return true;
+        return _position < Array.Length;
     }
 
     public void Reset()
