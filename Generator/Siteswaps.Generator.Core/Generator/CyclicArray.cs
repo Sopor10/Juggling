@@ -48,7 +48,7 @@ public record CyclicArray<T> : IEnumerable<T>
         RotationIndex += i;
         return this;
     }
-    
+
     public Span<T> AsSpan()
     {
         if (RotationIndex % Items.Length == 0)
@@ -59,7 +59,6 @@ public record CyclicArray<T> : IEnumerable<T>
             rotated[i] = this[i];
         return rotated;
     }
-
 }
 
 public static class CyclicArrayExtensions

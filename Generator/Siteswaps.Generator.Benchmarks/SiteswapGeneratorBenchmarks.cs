@@ -13,7 +13,7 @@ public class SiteswapGeneratorBenchmarks
     {
         var input = new SiteswapGeneratorInput(3, 5, 0, 10)
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
         };
         var generator = new SiteswapGenerator(new NoFilter(), input);
         var count = 0;
@@ -27,7 +27,7 @@ public class SiteswapGeneratorBenchmarks
     {
         var input = new SiteswapGeneratorInput(5, 7, 2, 10)
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
         };
         var generator = new SiteswapGenerator(new NoFilter(), input);
         var count = 0;
@@ -41,7 +41,7 @@ public class SiteswapGeneratorBenchmarks
     {
         var input = new SiteswapGeneratorInput(7, 8, 2, 13)
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
         };
         var generator = new SiteswapGenerator(new NoFilter(), input);
         var count = 0;
@@ -55,7 +55,7 @@ public class SiteswapGeneratorBenchmarks
     {
         var input = new SiteswapGeneratorInput(10, 6, 2, 10)
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000)
+            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
         };
         var filter = new FilterBuilder(input)
             .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)

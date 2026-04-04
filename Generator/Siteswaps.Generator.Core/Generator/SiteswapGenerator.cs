@@ -64,12 +64,14 @@ public class SiteswapGenerator
             var minSumRest = GetMinSumToGenerate(PartialSiteswap.LastFilledPosition + 1);
 
             var tightMin = targetSum - partialSumBeforeCurrent - maxSumRest;
-            if (tightMin > min) min = tightMin;
+            if (tightMin > min)
+                min = tightMin;
 
             if (minSumRest < int.MaxValue)
             {
                 var tightMax = targetSum - partialSumBeforeCurrent - minSumRest;
-                if (tightMax < max) max = tightMax;
+                if (tightMax < max)
+                    max = tightMax;
             }
         }
 
@@ -113,7 +115,9 @@ public class SiteswapGenerator
             {
                 if (PartialSiteswap.Items[^1] != uniqueMax)
                 {
-                    results.Add(Siteswap.CreateFromCorrect(PartialSiteswap.Items.AsSpan().ToArray()));
+                    results.Add(
+                        Siteswap.CreateFromCorrect(PartialSiteswap.Items.AsSpan().ToArray())
+                    );
                 }
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
