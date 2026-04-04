@@ -78,7 +78,7 @@
     private async Task ShowInlineDialog(FilterLeaf i)
     {
         var dialog = await DialogService.ShowAsync<Filter>(
-            "New Pattern Filter",
+            "Edit Filter",
             new DialogParameters<Filter> { { x => x.FilterNumber, i } },
             new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseOnEscapeKey = true }
         );

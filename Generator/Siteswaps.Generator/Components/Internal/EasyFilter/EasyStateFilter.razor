@@ -1,14 +1,10 @@
 ﻿@using System.Collections.Immutable
-<div class="row">
-    <div class="col">
-        @for (int i = 0; i< MaxHeight; i++)
-        {
-            
-            var i1 = i;
-            <MudCheckBox T="bool" @bind-Value="Items[i1]" />
-        }
-        
-    </div>
+<div class="d-flex flex-wrap gap-1">
+    @for (int i = 0; i < MaxHeight; i++)
+    {
+        var i1 = i;
+        <MudCheckBox T="bool" @bind-Value="Items[i1]" Dense="true" />
+    }
 </div>
 
 <div class="row mt-2">

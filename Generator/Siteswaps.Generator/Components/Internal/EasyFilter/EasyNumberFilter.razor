@@ -22,7 +22,7 @@
     </div>
     <div class="col">
         <div class="input-group">
-            <MudSelect T="Throw" @bind-Value="@Value.Throw" Style="min-width: 75px;">
+            <MudSelect T="Throw" @bind-Value="@Value.Throw" ToStringFunc="@(t => t?.DisplayValue ?? "")" Style="min-width: 75px;">
                 @foreach (var item in PossibleThrows)
                 {
                     <MudSelectItem T="Throw" Value="@item">@item.DisplayValue</MudSelectItem>
