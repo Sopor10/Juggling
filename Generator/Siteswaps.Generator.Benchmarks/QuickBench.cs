@@ -8,7 +8,7 @@ public static class QuickBench
 {
     public static async Task Run()
     {
-        Console.WriteLine("=== Quick Benchmark (MAIN BASELINE) ===");
+        Console.WriteLine("=== Quick Benchmark (nach Bounds-Optimierung) ===");
         Console.WriteLine($"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
         Console.WriteLine();
 
@@ -35,14 +35,12 @@ public static class QuickBench
 
     private static async Task RunBench(string name, SiteswapGeneratorInput input, ISiteswapFilter? filter = null)
     {
-        // 3 warmup runs
         for (int w = 0; w < 3; w++)
         {
             var warmGen = filter != null ? new SiteswapGenerator(filter, input) : new SiteswapGenerator(input);
             await foreach (var _ in warmGen.GenerateAsync(CancellationToken.None)) { }
         }
 
-        // 5 measured runs
         var times = new List<double>();
         var resultCount = 0;
         for (int run = 0; run < 5; run++)
