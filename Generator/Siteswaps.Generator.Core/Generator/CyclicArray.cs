@@ -49,7 +49,16 @@ public record CyclicArray<T> : IEnumerable<T>
         return this;
     }
     
-    public Span<T> AsSpan() => Items.AsSpan();
+    public Span<T> AsSpan()
+    {
+        if (RotationIndex % Items.Length == 0)
+            return Items.AsSpan();
+
+        var rotated = new T[Items.Length];
+        for (int i = 0; i < Items.Length; i++)
+            rotated[i] = this[i];
+        return rotated;
+    }
 
 }
 
