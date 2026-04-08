@@ -1,0 +1,33 @@
+---
+description: Blazor WebAssembly and Razor component conventions
+globs: "**/*.razor"
+alwaysApply: false
+---
+
+# Blazor Patterns
+
+## UI Libraries
+
+- **Radzen.Blazor** for UI controls (buttons, inputs, dialogs, layouts)
+- **VisNetwork.Blazor** for graph/network visualizations
+- **Fluxor.Blazor.Web** for state management (Redux pattern)
+- **Blazored.LocalStorage** for client-side persistence
+
+## State Management (Fluxor)
+
+- State classes live in `Generator/Siteswaps.Generator/Components/State/`
+- Follow the pattern: State record → Actions → Reducers → Effects
+- Assemblies are scanned automatically via `ScanAssemblies` in DI setup
+- Redux DevTools enabled only in `#if DEBUG`
+
+## Component Organization
+
+- Shared visualization components go in `Siteswaps.Components/`
+- Generator-specific UI components go in `Generator/Siteswaps.Generator/Components/`
+- Page components go in `Webassembly/Pages/`
+
+## PWA / Deployment
+
+- Published via GitHub Pages with `PublishSPAforGitHubPages.Build`
+- Base URL: `https://siteswaps.passing.zone`
+- Service worker support is enabled
