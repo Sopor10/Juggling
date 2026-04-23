@@ -1,0 +1,52 @@
+---
+description: MCP server conventions and tool patterns
+globs: "Siteswaps.Mcp.Server/**/*.cs"
+alwaysApply: false
+---
+
+# MCP Server
+
+The `Siteswaps.Mcp.Server` project exposes siteswap functionality as MCP tools for LLM integration.
+
+## Setup
+
+- ASP.NET Core with `ModelContextProtocol.AspNetCore`
+- HTTP transport at root (`/`)
+- Tools, Resources, and Prompts discovered via assembly scanning (`WithToolsFromAssembly()`)
+
+## Adding New Tools
+
+1. Create a class in `Tools/` with `[McpServerToolType]` attribute
+2. Add a method with `[McpServerTool]` and `[Description(...)]` attributes
+3. Use `[Description(...)]` on each parameter for LLM discoverability
+4. Return typed results — the framework handles serialization
+
+```csharp
+[McpServerToolType]
+public class MyNewTool
+{
+    [McpServerTool]
+    [Description("What this tool does")]
+    public async Task<MyResult> DoSomething(
+        [Description("Param description")] int input,
+        CancellationToken cancellationToken = default)
+    {
+        // implementation
+    }
+}
+```
+
+## Filter DSL
+
+The `Tools/FilterDsl/` directory contains a parser (built with **Pidgin**) and compiler for a custom filter expression language. The DSL supports:
+- Functions: `minOcc`, `maxOcc`, `exactOcc`, `pattern`, `contains`, `passes`, `state`, `height`
+- Keywords: `ground`, `excited`, `noZeros`, `hasZeros`
+- Operators: `AND`, `OR`, `NOT` with parentheses for grouping
+
+## Running Locally
+
+```bash
+dotnet run --project Siteswaps.Mcp.Server
+```
+
+Configure in `.cursor/mcp.json` or `.vscode/mcp.json` with URL `http://localhost:5000/`.
