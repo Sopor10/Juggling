@@ -3,7 +3,7 @@
   // 👇🏼 Use .NET 9 Debian image
   "image": "mcr.microsoft.com/devcontainers/dotnet:9.0-bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:3": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {},
     "ghcr.io/devcontainers/features/powershell:2": {},
   },
   "forwardPorts": [7021],
