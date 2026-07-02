@@ -1,0 +1,81 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import "colors.css";
+@import "radzen.css";
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Fokussierter h1-Titel */
+h1:focus {
+    outline: none;
+}
+
+/* Links und Button-Links */
+a, .btn-link {
+    color: var(--color-primary); /* Primärfarbe */
+}
+
+/* Primäre Buttons */
+.btn-primary {
+    color: #fff;
+    background-color: var(--color-primary); /* Primärfarbe */
+    border-color: var(--color-primary-dark); /* Dunklere Variante der Primärfarbe */
+}
+
+/* Inhaltsbereich Padding */
+.content {
+    padding-top: 1.1rem;
+}
+
+/* Gültige Eingabefelder (modifiziert) */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid var(--color-success); /* Erfolg - auf Primärfarbe basierend */
+}
+
+/* Ungültige Eingabefelder */
+.invalid {
+    outline: 1px solid var(--color-danger); /* Gefahrenfarbe */
+}
+
+/* Validierungsfehlermeldungen */
+.validation-message {
+    color: var(--color-danger); /* Gefahrenfarbe für Fehlermeldungen */
+}
+
+/* Blazor-Fehler-UI */
+#blazor-error-ui {
+    background: var(--color-background-light); /* Heller Fehlerhintergrund */
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Schließen-Button im Blazor-Fehler-UI */
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    color: var(--color-primary); /* Primärfarbe für Dismiss-Button */
+}
+
+/* Fehlerbereich */
+.blazor-error-boundary {
+    background-color: var(--color-error-background); /* Gefahrenfarbe für Fehlerbereiche */
+    color: var(--color-error-text); /* Weißer Text auf Fehlerbereich */
+}
+
+.blazor-error-boundary::after {
+    content: "An error has occurred.";
+}
+
+/* Dismiss-Button im Fehlerbereich beim Hover */
+#blazor-error-ui .dismiss:hover {
+    color: var(--color-success); 
+}
