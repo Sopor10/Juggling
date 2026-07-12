@@ -14,7 +14,7 @@
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="1.4.1" />
     <PackageVersion Include="Reqnroll.xUnit" Version="3.3.4" />
     <PackageVersion Include="Sopor10.ArchunitExtension" Version="1.1.47" />
-    <PackageVersion Include="Sopor10.Playwright.Testing" Version="1.1.41" />
+    <PackageVersion Include="Sopor10.Playwright.Testing" Version="1.1.47" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.9" />
     <PackageVersion
