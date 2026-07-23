@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
@@ -8,7 +9,8 @@ namespace Ffmpeg.Host.Services;
 public class RenderJobProcessor(
     IOptions<RenderJobProcessorOptions> options,
     ILogger<RenderJobProcessor> logger,
-    IServiceProvider serviceProvider
+    IServiceProvider serviceProvider,
+    JobStatusStore jobStatusStore
 ) : BackgroundService
 {
     private readonly RenderJobProcessorOptions _options = options.Value;
@@ -51,6 +53,9 @@ public class RenderJobProcessor(
             Directory.CreateDirectory(finishedDirectory);
         }
         _options.FinishedDirectory = finishedDirectory;
+
+        jobStatusStore.ConfigureDirectories(_options);
+        jobStatusStore.LoadFromDisk();
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -188,197 +193,238 @@ public class RenderJobProcessor(
             );
         }
 
-        logger.LogInformation(
-            "Starting render and upload process. PostId URI: {PostIdUri}, Extracted PostId: {PostId}, PostType: {PostType}",
-            job.PostId,
-            postId,
-            postType
-        );
+        jobStatusStore.Enqueue(postId, job.Title, job.PostId);
 
-        // Create a scope for scoped services
-        using var scope = serviceProvider.CreateScope();
-        var httpClientFactory = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>();
-        var wordPressService = scope.ServiceProvider.GetRequiredService<WordPressService>();
-        var logger1 = scope.ServiceProvider.GetRequiredService<ILogger<Renderer>>();
-
-        var httpClient = httpClientFactory.CreateClient();
-
-        var workingDir = Path.Combine(
-            Path.GetTempPath(),
-            "ffmpeg-render",
-            Guid.NewGuid().ToString()
-        );
-
-        logger.LogInformation(
-            "Created working directory: {WorkingDir} for PostId: {PostId}",
-            workingDir,
-            postId
-        );
-
-        Directory.CreateDirectory(workingDir);
-
-        try
+        using (logger.BeginScope(new Dictionary<string, object> { ["PostId"] = postId }))
         {
-            // Download video if provided
-            if (job.Video != null)
-            {
-                logger.LogInformation(
-                    "Downloading video from {Url} for PostId: {PostId}",
-                    job.Video,
-                    postId
-                );
-                var videoPath = Path.Combine(workingDir, "video.mp4");
-                await using var stream = await httpClient.GetStreamAsync(
-                    job.Video,
-                    cancellationToken
-                );
-                await using var fileStream = File.Create(videoPath);
-                await stream.CopyToAsync(fileStream, cancellationToken);
-                logger.LogInformation(
-                    "Video downloaded successfully. Path: {Path}, PostId: {PostId}",
-                    videoPath,
-                    postId
-                );
-            }
-
-            // Download audio if provided (ignore placeholders like "{field:...}" from forms)
-            var audioUrl = job.Audio;
-            if (audioUrl != null)
-            {
-                var urlString = audioUrl.ToString();
-                if (
-                    string.IsNullOrEmpty(urlString)
-                    || urlString
-                        .TrimStart()
-                        .StartsWith("{field", StringComparison.OrdinalIgnoreCase)
-                )
-                    audioUrl = null;
-            }
-
-            if (audioUrl != null)
-            {
-                logger.LogInformation(
-                    "Downloading audio from {Url} for PostId: {PostId}",
-                    audioUrl,
-                    postId
-                );
-                var audioPath = Path.Combine(workingDir, "audio.mp3");
-                await using var stream = await httpClient.GetStreamAsync(
-                    audioUrl,
-                    cancellationToken
-                );
-                await using var fileStream = File.Create(audioPath);
-                await stream.CopyToAsync(fileStream, cancellationToken);
-                logger.LogInformation(
-                    "Audio downloaded successfully. Path: {Path}, PostId: {PostId}",
-                    audioPath,
-                    postId
-                );
-            }
-
-            var options = new RenderOptions(
-                job.Title ?? "Unknown Title",
-                job.Location ?? "Unknown Location",
-                job.Jugglers ?? "Unknown Jugglers",
-                job.Musicartist ?? "Unknown Artist",
-                job.BlockSpacing,
-                job.InternalSpacing
-            );
-
-            logger.LogInformation("Starting render process for PostId: {PostId}", postId);
-
-            // Perform render and upload
-            var renderer = new Renderer();
-            var result = await renderer.PerformRenderAndUploadAsync(
-                workingDir,
-                options,
-                logger1,
-                wordPressService,
+            logger.LogInformation(
+                "Starting render and upload process. PostId URI: {PostIdUri}, Extracted PostId: {PostId}, PostType: {PostType}",
+                job.PostId,
                 postId,
-                postType,
-                cancellationToken
+                postType
             );
 
-            if (result.Success)
+            // Create a scope for scoped services
+            using var scope = serviceProvider.CreateScope();
+            var httpClientFactory = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>();
+            var wordPressService = scope.ServiceProvider.GetRequiredService<WordPressService>();
+            var wordPressOptions = scope
+                .ServiceProvider.GetRequiredService<IOptions<WordPressOptions>>()
+                .Value;
+            var logger1 = scope.ServiceProvider.GetRequiredService<ILogger<Renderer>>();
+
+            var httpClient = httpClientFactory.CreateClient();
+            // Gravity Forms upload paths are often protected; authenticate with WP application password
+            if (
+                !string.IsNullOrWhiteSpace(wordPressOptions.Username)
+                && !string.IsNullOrWhiteSpace(wordPressOptions.ApplicationPassword)
+            )
             {
-                logger.LogInformation(
-                    "Render and upload completed successfully for PostId: {PostId}",
-                    postId
+                var authValue = Convert.ToBase64String(
+                    Encoding.UTF8.GetBytes(
+                        $"{wordPressOptions.Username}:{wordPressOptions.ApplicationPassword}"
+                    )
                 );
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    "Basic",
+                    authValue
+                );
+            }
 
-                // Move job file after successful upload to finished directory
-                var finishedFilePath = Path.Combine(_options.FinishedDirectory, fileName);
+            var workingDir = Path.Combine(
+                Path.GetTempPath(),
+                "ffmpeg-render",
+                Guid.NewGuid().ToString()
+            );
 
-                // Handle file name collisions in finished directory
-                if (File.Exists(finishedFilePath))
+            logger.LogInformation(
+                "Created working directory: {WorkingDir} for PostId: {PostId}",
+                workingDir,
+                postId
+            );
+
+            Directory.CreateDirectory(workingDir);
+
+            try
+            {
+                jobStatusStore.SetStatus(postId, JobStatus.Downloading);
+
+                // Download video if provided
+                if (job.Video != null)
                 {
-                    var nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
-                    var extension = Path.GetExtension(fileName);
-                    finishedFilePath = Path.Combine(
-                        _options.FinishedDirectory,
-                        $"{nameWithoutExt}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}"
+                    logger.LogInformation(
+                        "Downloading video from {Url} for PostId: {PostId}",
+                        job.Video,
+                        postId
+                    );
+                    var videoPath = Path.Combine(workingDir, "video.mp4");
+                    await using var stream = await httpClient.GetStreamAsync(
+                        job.Video,
+                        cancellationToken
+                    );
+                    await using var fileStream = File.Create(videoPath);
+                    await stream.CopyToAsync(fileStream, cancellationToken);
+                    logger.LogInformation(
+                        "Video downloaded successfully. Path: {Path}, PostId: {PostId}",
+                        videoPath,
+                        postId
                     );
                 }
 
-                logger.LogInformation(
-                    "Moving job file to finished directory: {JobFile} -> {FinishedFile}",
-                    jobFilePath,
-                    finishedFilePath
-                );
-                File.Move(jobFilePath, finishedFilePath);
-                logger.LogInformation(
-                    "Job file moved successfully: {FinishedFile}",
-                    finishedFilePath
-                );
-            }
-            else
-            {
-                logger.LogError(
-                    "Render and upload failed for PostId: {PostId}, Error: {Error}",
-                    postId,
-                    result.ErrorMessage
-                );
-                // Keep the job file for retry
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                ex,
-                "Error during render and upload process for PostId: {PostId}",
-                postId
-            );
-            // Keep the job file for retry
-            throw;
-        }
-        finally
-        {
-            // Cleanup working directory
-            try
-            {
-                if (Directory.Exists(workingDir))
+                // Download audio if provided (ignore placeholders like "{field:...}" from forms)
+                var audioUrl = job.Audio;
+                if (audioUrl != null)
+                {
+                    var urlString = audioUrl.ToString();
+                    if (
+                        string.IsNullOrEmpty(urlString)
+                        || urlString
+                            .TrimStart()
+                            .StartsWith("{field", StringComparison.OrdinalIgnoreCase)
+                    )
+                        audioUrl = null;
+                }
+
+                if (audioUrl != null)
                 {
                     logger.LogInformation(
-                        "Cleaning up working directory: {WorkingDir} for PostId: {PostId}",
-                        workingDir,
+                        "Downloading audio from {Url} for PostId: {PostId}",
+                        audioUrl,
                         postId
                     );
-                    Directory.Delete(workingDir, recursive: true);
+                    var audioPath = Path.Combine(workingDir, "audio.mp3");
+                    await using var stream = await httpClient.GetStreamAsync(
+                        audioUrl,
+                        cancellationToken
+                    );
+                    await using var fileStream = File.Create(audioPath);
+                    await stream.CopyToAsync(fileStream, cancellationToken);
                     logger.LogInformation(
-                        "Working directory deleted: {WorkingDir} for PostId: {PostId}",
-                        workingDir,
+                        "Audio downloaded successfully. Path: {Path}, PostId: {PostId}",
+                        audioPath,
                         postId
                     );
+                }
+
+                var options = new RenderOptions(
+                    job.Title ?? "Unknown Title",
+                    job.Location ?? "Unknown Location",
+                    job.Jugglers ?? "Unknown Jugglers",
+                    job.Musicartist ?? "Unknown Artist",
+                    job.BlockSpacing,
+                    job.InternalSpacing
+                );
+
+                jobStatusStore.SetStatus(postId, JobStatus.Rendering);
+                logger.LogInformation("Starting render process for PostId: {PostId}", postId);
+
+                // Perform render and upload
+                var renderer = new Renderer();
+                var result = await renderer.PerformRenderAndUploadAsync(
+                    workingDir,
+                    options,
+                    logger1,
+                    wordPressService,
+                    postId,
+                    postType,
+                    cancellationToken,
+                    status => jobStatusStore.SetStatus(postId, status)
+                );
+
+                if (result.Success)
+                {
+                    logger.LogInformation(
+                        "Render and upload completed successfully for PostId: {PostId}",
+                        postId
+                    );
+
+                    // Move job file after successful upload to finished directory
+                    var finishedFilePath = Path.Combine(_options.FinishedDirectory, fileName);
+
+                    // Handle file name collisions in finished directory
+                    if (File.Exists(finishedFilePath))
+                    {
+                        var nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+                        var extension = Path.GetExtension(fileName);
+                        finishedFilePath = Path.Combine(
+                            _options.FinishedDirectory,
+                            $"{nameWithoutExt}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}"
+                        );
+                    }
+
+                    logger.LogInformation(
+                        "Moving job file to finished directory: {JobFile} -> {FinishedFile}",
+                        jobFilePath,
+                        finishedFilePath
+                    );
+                    File.Move(jobFilePath, finishedFilePath);
+                    logger.LogInformation(
+                        "Job file moved successfully: {FinishedFile}",
+                        finishedFilePath
+                    );
+                    if (result.MediaId is int mediaId && !string.IsNullOrEmpty(result.VideoUrl))
+                    {
+                        jobStatusStore.SetResult(
+                            postId,
+                            mediaId,
+                            result.VideoUrl,
+                            result.VideoSizeBytes ?? 0,
+                            job.PostId
+                        );
+                    }
+                    jobStatusStore.SetStatus(postId, JobStatus.Finished);
+                }
+                else
+                {
+                    logger.LogError(
+                        "Render and upload failed for PostId: {PostId}, Error: {Error}",
+                        postId,
+                        result.ErrorMessage
+                    );
+                    jobStatusStore.SetStatus(postId, JobStatus.Failed, result.ErrorMessage);
+                    // Keep the job file for retry
                 }
             }
             catch (Exception ex)
             {
-                logger.LogWarning(
+                logger.LogError(
                     ex,
-                    "Failed to cleanup working directory: {WorkingDir} for PostId: {PostId}",
-                    workingDir,
+                    "Error during render and upload process for PostId: {PostId}",
                     postId
                 );
+                jobStatusStore.SetStatus(postId, JobStatus.Failed, ex.Message);
+                // Keep the job file for retry
+                throw;
+            }
+            finally
+            {
+                // Cleanup working directory
+                try
+                {
+                    if (Directory.Exists(workingDir))
+                    {
+                        logger.LogInformation(
+                            "Cleaning up working directory: {WorkingDir} for PostId: {PostId}",
+                            workingDir,
+                            postId
+                        );
+                        Directory.Delete(workingDir, recursive: true);
+                        logger.LogInformation(
+                            "Working directory deleted: {WorkingDir} for PostId: {PostId}",
+                            workingDir,
+                            postId
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning(
+                        ex,
+                        "Failed to cleanup working directory: {WorkingDir} for PostId: {PostId}",
+                        workingDir,
+                        postId
+                    );
+                }
             }
         }
     }

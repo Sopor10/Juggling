@@ -46,7 +46,7 @@ public class WordPressService
         );
     }
 
-    public async Task<string> UploadVideoAsync(
+    public async Task<WordPressUploadResult> UploadVideoAsync(
         string videoPath,
         string? fileName = null,
         CancellationToken cancellationToken = default
@@ -87,7 +87,8 @@ public class WordPressService
             };
             content.Add(fileStreamContent);
 
-            var requestUri = "/wp-json/wp/v2/media";
+            // Pretty /wp-json/ permalinks return Apache 404 on passing.zone; query form works.
+            var requestUri = "?rest_route=/wp/v2/media";
             _logger.LogInformation(
                 "Sending POST request to {BaseUrl}{RequestUri} with filename {FileName}",
                 _httpClient.BaseAddress,
@@ -140,7 +141,12 @@ public class WordPressService
             {
                 throw new InvalidOperationException("Media URL is null after upload.");
             }
-            return mediaResponse.SourceUrl;
+
+            return new WordPressUploadResult
+            {
+                MediaId = mediaResponse.Id.Value,
+                SourceUrl = mediaResponse.SourceUrl,
+            };
         }
         catch (Exception ex)
         {
@@ -189,10 +195,9 @@ public class WordPressService
                 "application/json"
             );
 
-            // Use the correct endpoint for the post type
-            // For custom post types: /wp-json/wp/v2/{post_type}/{id}
-            // For standard posts: /wp-json/wp/v2/posts/{id}
-            var endpoint = $"/wp-json/wp/v2/{postType}/{postId}";
+            // Pretty /wp-json/ permalinks return Apache 404 on passing.zone; query form works.
+            // Custom post types: ?rest_route=/wp/v2/{post_type}/{id}
+            var endpoint = $"?rest_route=/wp/v2/{postType}/{postId}";
             _logger.LogDebug("Using WordPress REST API endpoint: {Endpoint}", endpoint);
 
             var updateResponse = await _httpClient.PutAsync(
@@ -242,4 +247,10 @@ public class WordPressService
         [JsonPropertyName("source_url")]
         public string? SourceUrl { get; set; }
     }
+}
+
+public class WordPressUploadResult
+{
+    public required int MediaId { get; init; }
+    public required string SourceUrl { get; init; }
 }

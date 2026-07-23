@@ -30,7 +30,9 @@ public class Renderer
                 string.Join(", ", Directory.GetFiles(workingDir).Select(Path.GetFileName))
             );
 
-            await File.WriteAllTextAsync(Path.Combine(workingDir, "title.txt"), options.Title, ct);
+            var display = ToAsciiDisplayText(options);
+
+            await File.WriteAllTextAsync(Path.Combine(workingDir, "title.txt"), display.Title, ct);
 
             var scriptPath = Path.Combine(
                 AppContext.BaseDirectory,
@@ -48,10 +50,10 @@ public class Renderer
                 WorkingDirectory = AppContext.BaseDirectory,
             };
 
-            startInfo.EnvironmentVariables["TITLE"] = options.Title;
-            startInfo.EnvironmentVariables["LOCATION"] = options.Location;
-            startInfo.EnvironmentVariables["JUGGLERS"] = options.Jugglers;
-            startInfo.EnvironmentVariables["MUSICARTIST"] = options.MusicArtist;
+            startInfo.EnvironmentVariables["TITLE"] = display.Title;
+            startInfo.EnvironmentVariables["LOCATION"] = display.Location;
+            startInfo.EnvironmentVariables["JUGGLERS"] = display.Jugglers;
+            startInfo.EnvironmentVariables["MUSICARTIST"] = display.MusicArtist;
 
             if (!string.IsNullOrEmpty(options.BlockSpacing))
             {
@@ -149,7 +151,7 @@ public class Renderer
                         postId.Value
                     );
 
-                    var mediaId = await wordPressService.UploadVideoAsync(
+                    var upload = await wordPressService.UploadVideoAsync(
                         videoPath,
                         uploadFileName,
                         ct
@@ -157,21 +159,23 @@ public class Renderer
                     // Default to "posts" if post type is not available in this context
                     await wordPressService.UpdatePostWithVideoAsync(
                         postId.Value,
-                        mediaId,
+                        upload.SourceUrl,
                         "posts",
                         ct
                     );
 
                     logger.LogInformation(
-                        "Video successfully uploaded to WordPress. Media ID: {MediaId}",
-                        mediaId
+                        "Video successfully uploaded to WordPress. Media ID: {MediaId}, URL: {Url}",
+                        upload.MediaId,
+                        upload.SourceUrl
                     );
 
                     return TypedResults.Ok(
                         new
                         {
                             success = true,
-                            mediaId = mediaId,
+                            mediaId = upload.MediaId,
+                            videoUrl = upload.SourceUrl,
                             postId = postId.Value,
                             message = "Video uploaded and post updated successfully",
                         }
@@ -219,7 +223,8 @@ public class Renderer
         WordPressService wordPressService,
         int postId,
         string postType,
-        CancellationToken ct
+        CancellationToken ct,
+        Action<JobStatus>? onStatus = null
     )
     {
         try
@@ -235,8 +240,10 @@ public class Renderer
                 string.Join(", ", Directory.GetFiles(workingDir).Select(Path.GetFileName))
             );
 
-            await File.WriteAllTextAsync(Path.Combine(workingDir, "title.txt"), options.Title, ct);
-            logger.LogDebug("Title file written: {Title}", options.Title);
+            var display = ToAsciiDisplayText(options);
+
+            await File.WriteAllTextAsync(Path.Combine(workingDir, "title.txt"), display.Title, ct);
+            logger.LogDebug("Title file written: {Title}", display.Title);
 
             var scriptPath = Path.Combine(
                 AppContext.BaseDirectory,
@@ -256,10 +263,10 @@ public class Renderer
                 WorkingDirectory = AppContext.BaseDirectory,
             };
 
-            startInfo.EnvironmentVariables["TITLE"] = options.Title;
-            startInfo.EnvironmentVariables["LOCATION"] = options.Location;
-            startInfo.EnvironmentVariables["JUGGLERS"] = options.Jugglers;
-            startInfo.EnvironmentVariables["MUSICARTIST"] = options.MusicArtist;
+            startInfo.EnvironmentVariables["TITLE"] = display.Title;
+            startInfo.EnvironmentVariables["LOCATION"] = display.Location;
+            startInfo.EnvironmentVariables["JUGGLERS"] = display.Jugglers;
+            startInfo.EnvironmentVariables["MUSICARTIST"] = display.MusicArtist;
 
             if (!string.IsNullOrEmpty(options.BlockSpacing))
             {
@@ -378,6 +385,7 @@ public class Renderer
             }
 
             // Upload to WordPress
+            onStatus?.Invoke(JobStatus.Uploading);
             logger.LogInformation("Uploading video to WordPress for post {PostId}", postId);
 
             try
@@ -392,30 +400,34 @@ public class Renderer
                     postId
                 );
 
-                var mediaId = await wordPressService.UploadVideoAsync(
-                    videoPath,
-                    uploadFileName,
-                    ct
-                );
+                var upload = await wordPressService.UploadVideoAsync(videoPath, uploadFileName, ct);
                 logger.LogInformation(
-                    "Video uploaded to WordPress. MediaId: {MediaId}, PostId: {PostId}, FileName: {FileName}",
-                    mediaId,
+                    "Video uploaded to WordPress. MediaId: {MediaId}, URL: {Url}, PostId: {PostId}, FileName: {FileName}",
+                    upload.MediaId,
+                    upload.SourceUrl,
                     postId,
                     uploadFileName
                 );
 
-                if (mediaId is null)
-                {
-                    throw new InvalidOperationException("Media ID is null after upload.");
-                }
-                await wordPressService.UpdatePostWithVideoAsync(postId, mediaId, postType, ct);
+                await wordPressService.UpdatePostWithVideoAsync(
+                    postId,
+                    upload.SourceUrl,
+                    postType,
+                    ct
+                );
                 logger.LogInformation(
                     "Post updated with video. MediaId: {MediaId}, PostId: {PostId}",
-                    mediaId,
+                    upload.MediaId,
                     postId
                 );
 
-                return new RenderResult { Success = true };
+                return new RenderResult
+                {
+                    Success = true,
+                    MediaId = upload.MediaId,
+                    VideoUrl = upload.SourceUrl,
+                    VideoSizeBytes = fileInfo.Length,
+                };
             }
             catch (Exception ex)
             {
@@ -445,6 +457,28 @@ public class Renderer
             };
         }
     }
+
+    /// <summary>
+    /// Replaces German umlauts for drawtext fonts that lack those glyphs.
+    /// </summary>
+    private static RenderOptions ToAsciiDisplayText(RenderOptions options) =>
+        options with
+        {
+            Title = ReplaceGermanUmlauts(options.Title),
+            Location = ReplaceGermanUmlauts(options.Location),
+            Jugglers = ReplaceGermanUmlauts(options.Jugglers),
+            MusicArtist = ReplaceGermanUmlauts(options.MusicArtist),
+        };
+
+    private static string ReplaceGermanUmlauts(string value) =>
+        value
+            .Replace("Ä", "Ae", StringComparison.Ordinal)
+            .Replace("Ö", "Oe", StringComparison.Ordinal)
+            .Replace("Ü", "Ue", StringComparison.Ordinal)
+            .Replace("ä", "ae", StringComparison.Ordinal)
+            .Replace("ö", "oe", StringComparison.Ordinal)
+            .Replace("ü", "ue", StringComparison.Ordinal)
+            .Replace("ß", "ss", StringComparison.Ordinal);
 
     /// <summary>
     /// Sanitizes a string to be used as a filename by removing/replacing invalid characters.

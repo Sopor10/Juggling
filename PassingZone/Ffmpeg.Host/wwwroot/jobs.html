@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FFmpeg Render Jobs</title>
+  <style>
+    :root {
+      --bg: #1a1b1e;
+      --panel: #25262b;
+      --border: #373a40;
+      --text: #e9ecef;
+      --muted: #909296;
+      --accent: #4dabf7;
+      --queued: #868e96;
+      --downloading: #74c0fc;
+      --rendering: #ffd43b;
+      --uploading: #da77f2;
+      --finished: #69db7c;
+      --failed: #ff8787;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+    h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+    .meta { color: var(--muted); }
+    main {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1.2fr);
+      gap: 0;
+      height: calc(100vh - 49px);
+    }
+    @media (max-width: 800px) {
+      main { grid-template-columns: 1fr; height: auto; }
+    }
+    section {
+      overflow: auto;
+      border-right: 1px solid var(--border);
+      padding: 0.5rem;
+    }
+    section:last-child { border-right: none; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      text-align: left;
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 500; position: sticky; top: 0; background: var(--bg); }
+    tr { cursor: pointer; }
+    tr:hover { background: #2c2e33; }
+    tr.selected { background: #2c3a4a; }
+    .status {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      background: #343a40;
+      font-size: 11px;
+    }
+    .status.Queued { color: var(--queued); }
+    .status.Downloading { color: var(--downloading); }
+    .status.Rendering { color: var(--rendering); }
+    .status.Uploading { color: var(--uploading); }
+    .status.Finished { color: var(--finished); }
+    .status.Failed { color: var(--failed); }
+    #detail-header {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      position: sticky;
+      top: 0;
+    }
+    #detail-header h2 { margin: 0 0 0.25rem; font-size: 0.95rem; }
+    #detail-result {
+      margin-top: 0.5rem;
+      display: grid;
+      gap: 0.25rem;
+    }
+    #detail-result a { color: var(--accent); word-break: break-all; }
+    #logs {
+      margin: 0;
+      padding: 0.75rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #ced4da;
+    }
+    .empty { color: var(--muted); padding: 1rem; }
+    .error { color: var(--failed); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FFmpeg Render Jobs</h1>
+    <div class="meta">Auto-refresh <span id="refresh-age">0</span>s · <span id="job-count">0</span> jobs</div>
+  </header>
+  <main>
+    <section>
+      <table>
+        <thead>
+          <tr>
+            <th>Post</th>
+            <th>Status</th>
+            <th>Title</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody id="jobs-body">
+          <tr><td colspan="4" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="detail">
+      <div class="empty" id="detail-empty">Select a job to view logs.</div>
+      <div id="detail-panel" hidden>
+        <div id="detail-header">
+          <h2 id="detail-title"></h2>
+          <div class="meta" id="detail-meta"></div>
+          <div id="detail-result"></div>
+          <div class="error" id="detail-error"></div>
+        </div>
+        <pre id="logs"></pre>
+      </div>
+    </section>
+  </main>
+  <script>
+    // PathBase is /ffmpeg; page is /ffmpeg/jobs → API at /ffmpeg/api/jobs
+    const jobsUrl = new URL('../api/jobs', location.href).pathname;
+    let selectedId = null;
+    let secondsSinceRefresh = 0;
+
+    function fmt(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      return d.toLocaleString();
+    }
+
+    async function loadJobs() {
+      const res = await fetch(jobsUrl);
+      if (!res.ok) throw new Error('Failed to load jobs: ' + res.status);
+      const jobs = await res.json();
+      document.getElementById('job-count').textContent = jobs.length;
+      const body = document.getElementById('jobs-body');
+      if (!jobs.length) {
+        body.innerHTML = '<tr><td colspan="4" class="empty">No jobs yet.</td></tr>';
+        return;
+      }
+      body.innerHTML = jobs.map(j => `
+        <tr data-id="${j.postId}" class="${selectedId === j.postId ? 'selected' : ''}">
+          <td>${j.postId}</td>
+          <td><span class="status ${j.status}">${j.status}</span></td>
+          <td>${escapeHtml(j.title || '—')}</td>
+          <td>${fmt(j.updatedAt)}</td>
+        </tr>
+      `).join('');
+      body.querySelectorAll('tr[data-id]').forEach(row => {
+        row.addEventListener('click', () => selectJob(Number(row.dataset.id)));
+      });
+      secondsSinceRefresh = 0;
+    }
+
+    async function selectJob(id) {
+      selectedId = id;
+      document.querySelectorAll('#jobs-body tr').forEach(r => {
+        r.classList.toggle('selected', Number(r.dataset.id) === id);
+      });
+      const res = await fetch(`${jobsUrl}/${id}`);
+      if (!res.ok) {
+        document.getElementById('detail-empty').hidden = false;
+        document.getElementById('detail-panel').hidden = true;
+        document.getElementById('detail-empty').textContent = 'Job not found.';
+        return;
+      }
+      const job = await res.json();
+      document.getElementById('detail-empty').hidden = true;
+      document.getElementById('detail-panel').hidden = false;
+      document.getElementById('detail-title').textContent =
+        `#${job.postId} · ${job.status}` + (job.title ? ` · ${job.title}` : '');
+      document.getElementById('detail-meta').textContent =
+        `Queued ${fmt(job.queuedAt)} · Started ${fmt(job.startedAt)} · Finished ${fmt(job.finishedAt)}`;
+      document.getElementById('detail-result').innerHTML = renderResult(job);
+      document.getElementById('detail-error').textContent = job.lastError || '';
+      document.getElementById('logs').textContent = job.logs || '(no log lines yet)';
+    }
+
+    function fmtSize(bytes) {
+      if (bytes == null || bytes === 0) return null;
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function renderResult(job) {
+      const parts = [];
+      if (job.mediaId != null) parts.push(`Media ID: ${job.mediaId}`);
+      const size = fmtSize(job.videoSizeBytes);
+      if (size) parts.push(`Size: ${size}`);
+      const lines = [];
+      if (parts.length) lines.push(`<div class="meta">${parts.join(' · ')}</div>`);
+      if (job.videoUrl) {
+        lines.push(`<div>Video: <a href="${escapeHtml(job.videoUrl)}" target="_blank" rel="noopener">${escapeHtml(job.videoUrl)}</a></div>`);
+      }
+      if (job.patternUrl) {
+        lines.push(`<div>Pattern: <a href="${escapeHtml(job.patternUrl)}" target="_blank" rel="noopener">${escapeHtml(job.patternUrl)}</a></div>`);
+      }
+      return lines.join('');
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function tick() {
+      try {
+        await loadJobs();
+        if (selectedId != null) await selectJob(selectedId);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('jobs-body').innerHTML =
+          `<tr><td colspan="4" class="error">${escapeHtml(e.message)}</td></tr>`;
+      }
+    }
+
+    setInterval(() => {
+      secondsSinceRefresh += 1;
+      document.getElementById('refresh-age').textContent = secondsSinceRefresh;
+    }, 1000);
+
+    tick();
+    setInterval(tick, 3000);
+  </script>
+</body>
+</html>
