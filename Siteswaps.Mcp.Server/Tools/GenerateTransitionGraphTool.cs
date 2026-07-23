@@ -15,10 +15,7 @@ public class GenerateTransitionGraphTool
         "Generates a transition graph for a list of siteswaps showing all possible transitions between them. Returns nodes (siteswaps) and edges (transitions)."
     )]
     public ToolResult<TransitionGraphInfo> GenerateTransitionGraph(
-        [Description(
-            "List of siteswaps separated by | or if no commas are used with , (e.g., '5,3,1|4,4,1' or '531,441')"
-        )]
-            string siteswaps,
+        [Description("Comma-separated list of siteswaps (e.g., '531,441,423')")] string siteswaps,
         [Description("Maximum transition length (number of throws in transition paths)")]
             int maxLength
     )
@@ -41,14 +38,8 @@ public class GenerateTransitionGraphTool
                 );
             }
 
-            var separators = new[] { '|' };
-            if (!siteswaps.Contains('|'))
-            {
-                separators = new[] { ',' };
-            }
-
             var siteswapStrings = siteswaps.Split(
-                separators,
+                ',',
                 StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
             );
             if (siteswapStrings.Length == 0)
@@ -78,16 +69,14 @@ public class GenerateTransitionGraphTool
 
             return new TransitionGraphInfo
             {
-                Siteswaps = string.Join("|", siteswapList.Select(SiteswapMapper.ToDisplayFormat)),
+                Siteswaps = siteswaps,
                 MaxLength = maxLength,
-                Nodes = graph
-                    .Nodes.Select(n => SiteswapMapper.ToDisplayFormat(n.ToString()))
-                    .ToList(),
+                Nodes = graph.Nodes.Select(n => n.ToString()).ToList(),
                 Edges = graph
                     .Edges.Select(e => new TransitionGraphEdge
                     {
-                        FromSiteswap = SiteswapMapper.ToDisplayFormat(e.N1.ToString()),
-                        ToSiteswap = SiteswapMapper.ToDisplayFormat(e.N2.ToString()),
+                        FromSiteswap = e.N1.ToString(),
+                        ToSiteswap = e.N2.ToString(),
                         Transition = e.Data.PrettyPrint(),
                     })
                     .ToList(),

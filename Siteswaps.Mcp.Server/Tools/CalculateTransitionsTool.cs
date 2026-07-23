@@ -13,8 +13,8 @@ public class CalculateTransitionsTool
         "Calculates all possible transitions between two siteswaps. Returns a list of transition paths showing how to move from the source siteswap to the target siteswap."
     )]
     public ToolResult<List<TransitionInfo>> CalculateTransitions(
-        [Description("Source siteswap string (e.g., '5,3,1', '4,4,1')")] string fromSiteswap,
-        [Description("Target siteswap string (e.g., '5,3,1', '4,4,1')")] string toSiteswap,
+        [Description("Source siteswap string (e.g., '531', '441')")] string fromSiteswap,
+        [Description("Target siteswap string (e.g., '531', '441')")] string toSiteswap,
         [Description("Maximum transition length (number of throws in the transition path)")]
             int maxLength,
         [Description("Maximum throw height (optional, defaults to max of both siteswaps)")]
@@ -23,10 +23,7 @@ public class CalculateTransitionsTool
     {
         return ToolResult.From(() =>
         {
-            var coreFrom = SiteswapMapper.ToCoreFormat(fromSiteswap);
-            var coreTo = SiteswapMapper.ToCoreFormat(toSiteswap);
-
-            if (string.IsNullOrWhiteSpace(coreFrom))
+            if (string.IsNullOrWhiteSpace(fromSiteswap))
             {
                 throw new ArgumentException(
                     "Source siteswap cannot be null or empty.",
@@ -34,7 +31,7 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (string.IsNullOrWhiteSpace(coreTo))
+            if (string.IsNullOrWhiteSpace(toSiteswap))
             {
                 throw new ArgumentException(
                     "Target siteswap cannot be null or empty.",
@@ -50,7 +47,7 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(coreFrom, out var from))
+            if (!SiteswapDetails.TryCreate(fromSiteswap, out var from))
             {
                 throw new ArgumentException(
                     $"Invalid source siteswap: {fromSiteswap}",
@@ -58,7 +55,7 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(coreTo, out var to))
+            if (!SiteswapDetails.TryCreate(toSiteswap, out var to))
             {
                 throw new ArgumentException(
                     $"Invalid target siteswap: {toSiteswap}",
@@ -66,10 +63,10 @@ public class CalculateTransitionsTool
                 );
             }
 
-            if (from.NumberOfObjects != to.NumberOfObjects)
+            if (from.NumberOfObjects() != to.NumberOfObjects())
             {
                 throw new ArgumentException(
-                    $"Source and target must use the same number of objects (from: {from.NumberOfObjects}, to: {to.NumberOfObjects}).",
+                    $"Source and target must use the same number of objects (from: {from.NumberOfObjects()}, to: {to.NumberOfObjects()}).",
                     nameof(toSiteswap)
                 );
             }
@@ -84,8 +81,8 @@ public class CalculateTransitionsTool
             return transitions
                 .Select(t => new TransitionInfo
                 {
-                    FromSiteswap = SiteswapMapper.ToDisplayFormat(t.From),
-                    ToSiteswap = SiteswapMapper.ToDisplayFormat(t.To),
+                    FromSiteswap = t.From.ToString(),
+                    ToSiteswap = t.To.ToString(),
                     Throws = t
                         .Throws.Select(th => new ThrowInfo
                         {
@@ -96,7 +93,7 @@ public class CalculateTransitionsTool
                         .ToList(),
                     Length = t.Throws.Length,
                     PrettyPrint = t.PrettyPrint(),
-                    IsMinimal = t.IsMinimal,
+                    IsValid = t.IsValid,
                 })
                 .ToList();
         });
@@ -110,7 +107,7 @@ public class TransitionInfo
     public List<ThrowInfo> Throws { get; init; } = new();
     public int Length { get; init; }
     public string PrettyPrint { get; init; } = string.Empty;
-    public bool IsMinimal { get; init; }
+    public bool IsValid { get; init; }
 }
 
 public class ThrowInfo

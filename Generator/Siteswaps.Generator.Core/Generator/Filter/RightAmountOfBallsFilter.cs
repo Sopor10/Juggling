@@ -11,7 +11,7 @@ internal class RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput) :
             return true;
         }
 
-        return value.PartialSum == _generatorInputNumberOfObjects * value.Items.Length;
+        return value.PartialSum == _generatorInputNumberOfObjects * value.Length;
     }
 
     public int Order => 0;

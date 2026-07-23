@@ -60,22 +60,6 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
         return this with { Filter = Filter.Add(new StateFilter(Input, state)) };
     }
 
-    public IFilterBuilder InterfaceFilter(
-        IEnumerable<IEnumerable<int>> value,
-        int nummberOfJugglers
-    )
-    {
-        return this with
-        {
-            Filter = Filter.Add(
-                new InterfaceFilter(
-                    value.Select(x => x.ToList()).ToList(),
-                    numberOfJugglers: nummberOfJugglers
-                )
-            ),
-        };
-    }
-
     public IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
         int numberOfJuggler,

@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Siteswap.Details;
 using Siteswap.Details.CausalDiagram;
-using Hand = Siteswap.Details.CausalDiagram.Hand;
 
 namespace Siteswaps.Test.CausalDiagram;
 

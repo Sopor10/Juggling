@@ -4,28 +4,12 @@ using Siteswap.Details.StateDiagram;
 
 namespace Siteswap.Details;
 
-public record Siteswap
+public record Siteswap(CyclicArray<int> Items)
 {
-    public Siteswap(string value)
-        : this(value.Select(ToInt).ToArray()) { }
-
     public Siteswap(params int[] items)
-        : this(new CyclicArray<int>(items)) { }
-
-    private Siteswap(CyclicArray<int> items, bool _)
+        : this(new CyclicArray<int>(items))
     {
-        Items = items;
-    }
-
-    public Siteswap(CyclicArray<int> items)
-    {
-        Items = items;
-        if (!IsValid(items))
-        {
-            throw new ArgumentException(
-                $"Invalid siteswap {string.Join("", items.EnumerateValues(1).Select(Transform))}"
-            );
-        }
+        IsValid(new CyclicArray<int>(items));
     }
 
     public int Length => Items.Length;
@@ -64,7 +48,7 @@ public record Siteswap
         return value != string.Empty && TryCreate(value.Select(ToInt), out siteswap);
     }
 
-    public static int ToInt(char c)
+    private static int ToInt(char c)
     {
         var tryParse = int.TryParse(c.ToString(), out var value);
         if (tryParse)
@@ -103,14 +87,30 @@ public record Siteswap
                 .Count == items.Length;
     }
 
-    public bool IsGroundState()
+    private static CyclicArray<int> ToUniqueRepresentation(CyclicArray<int> input)
+    {
+        var biggest = input.EnumerateValues(1).ToList();
+
+        foreach (
+            var list in Enumerable
+                .Range(0, input.Length)
+                .Select(input.Rotate)
+                .Select(x => x.EnumerateValues(1).ToList())
+        )
+            if (biggest.CompareSequences(list) < 0)
+                biggest = list;
+
+        return biggest.ToCyclicArray();
+    }
+
+    private bool IsGroundState()
     {
         return HasNoRethrow();
     }
 
     private bool HasNoRethrow()
     {
-        return !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects);
+        return !Items.Enumerate(1).Any(x => x.position + x.value < NumberOfObjects());
     }
 
     public bool IsExcitedState()
@@ -118,12 +118,10 @@ public record Siteswap
         return !IsGroundState();
     }
 
-    public decimal NumberOfObjects
+    public decimal NumberOfObjects()
     {
-        get { return (decimal)Items.Enumerate(1).Average(x => x.value); }
+        return (decimal)Items.Enumerate(1).Average(x => x.value);
     }
-
-    public CyclicArray<int> Items { get; init; }
 
     public override string ToString()
     {
@@ -152,7 +150,7 @@ public record Siteswap
 
     public static CyclicArray<int> ToUniqueRepresentation(int[] input)
     {
-        return input.ToCyclicArray().ToUniqueRepresentation();
+        return ToUniqueRepresentation(input.ToCyclicArray());
     }
 
     public List<Orbit> GetOrbits()
@@ -163,26 +161,6 @@ public record Siteswap
     public List<Transition> PossibleTransitions(Siteswap to, int length, int? height = null)
     {
         return TransitionCalculator.CreateTransitions(this, to, length, height);
-    }
-
-    public List<Transition> GetIns(int length, int? maxHeight = null)
-    {
-        return TransitionCalculator.CreateTransitions(
-            new Siteswap((int)NumberOfObjects),
-            this,
-            length,
-            maxHeight
-        );
-    }
-
-    public List<Transition> GetOuts(int length, int? maxHeight = null)
-    {
-        return TransitionCalculator.CreateTransitions(
-            this,
-            new Siteswap((int)NumberOfObjects),
-            length,
-            maxHeight
-        );
     }
 
     public Dictionary<State, List<Siteswap>> AllStates()
@@ -203,7 +181,7 @@ public record Siteswap
         return new Siteswap(Items.Rotate(i));
     }
 
-    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers = 2)
+    public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
     {
         return new LocalSiteswap(this, juggler, numberOfJugglers);
     }
@@ -235,7 +213,7 @@ public record Siteswap
                 highJackablePassPosition.position + i * numberOfJugglers + 1 // 1 should be 0...numberOfJugglers - 1 instead
             );
 
-        yield return new Siteswap(5, 8, 8);
+        yield return new Siteswap(5, 8, 8, 8, 2, 5);
     }
 
     public Siteswap Swap(int x, int y)
@@ -253,14 +231,27 @@ public record Siteswap
             .EnumerateValues(1)
             .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
             .ToImmutableList();
+}
 
-    public ClubDistribution GetClubDistribution(int numberOfJugglers)
+/// <summary>
+///     An interface is the order of catches of a siteswap e.g. 53 will be 35
+/// </summary>
+/// <param name="Items"></param>
+public record Interface(ImmutableList<int> Items)
+{
+    public override string ToString()
     {
-        return ClubDistribution.FromSiteswap(this, numberOfJugglers);
+        return string.Join("", Items.Select(Siteswap.Transform));
     }
 
-    public void Deconstruct(out CyclicArray<int> Items)
-    {
-        Items = this.Items;
-    }
+    public ImmutableList<PassOrSelf> GetPassOrSelf(int numberOfJuggler) =>
+        Items
+            .Select(x => x % numberOfJuggler == 0 ? PassOrSelf.Self : PassOrSelf.Pass)
+            .ToImmutableList();
+}
+
+public enum PassOrSelf
+{
+    Pass,
+    Self,
 }

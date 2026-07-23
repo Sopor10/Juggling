@@ -27,14 +27,14 @@ public static class TransitionCalculator
             return [new Transition(from, to, [])];
         }
 
-        if (length > 0)
-        {
-            result.AddRange(
-                Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
-            );
-        }
+        result.AddRange(
+            Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
+        );
 
-        return result.Select(x => new Transition(from, to, x.ToArray())).ToList();
+        return result
+            .Select(x => new Transition(from, to, x.ToArray()))
+            .Where(x => x.IsValid)
+            .ToList();
     }
 
     private static IEnumerable<ImmutableList<Throw>> Recurse(

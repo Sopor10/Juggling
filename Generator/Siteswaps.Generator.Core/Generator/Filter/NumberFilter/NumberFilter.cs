@@ -17,4 +17,5 @@ public abstract class NumberFilter(IEnumerable<int> number, int amount) : ISites
     protected HashSet<int> Number { get; } = number.ToHashSet();
     protected int Amount { get; } = amount;
     public int Order => 0;
+    public bool IsRotationAware => true;
 }

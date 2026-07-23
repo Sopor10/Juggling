@@ -60,9 +60,8 @@ public class FilterDslResources
         """
             Argument Types:
 
-            1. Numbers - Integer values or letters (Base-36)
-               Example: minOcc(5, 2) or minOcc(a, 1) (a=10, b=11, etc.)
-               Note: All letters except 'p' and 's' are treated as numbers.
+            1. Numbers - Integer values
+               Example: minOcc(5, 2)
                
             2. Wildcards (*) - Matches any value in pattern()
                Example: pattern(5, *, 1) - matches 531, 541, 551, etc.
@@ -191,24 +190,24 @@ public class FilterDslResources
         """
             pattern(values...)
 
-            Filters siteswaps based on their throw sequence (what and when you throw).
-            This defines the rhythm and the "pattern" in the traditional sense.
+            Filters siteswaps that match a specific pattern with wildcards.
 
             Parameters:
             - values: Sequence of throw values, wildcards (*), or pass/self indicators (p/s)
 
             Wildcards and Indicators:
             - * : matches any throw value
-            - p : matches pass (odd numbers in 2-juggler patterns, requires numberOfJugglers)
-            - s : matches self (even numbers in 2-juggler patterns, requires numberOfJugglers)
-            - Numbers (4-9 or hex a): Match exact throw height
+            - p : matches pass (ungerade Zahlen bei Passing-Patterns, requires numberOfJugglers)
+            - s : matches self (gerade Zahlen bei Passing-Patterns, requires numberOfJugglers)
 
             Examples:
             - pattern(5, 3, 1) - matches exactly "531"
-            - pattern(5, *, 1) - matches "5x1" where x is any throw
-            - pattern(p, s, s, p, s, s) - defines a specific pass-self-self rhythm
+            - pattern(5, *, 1) - matches "531", "541", "551", etc.
+            - pattern(*, *, 1) - any pattern ending with 1
+            - pattern(p, s, p) - pass, self, pass (bei 2 Jongleuren)
+            - pattern(5, p, s) - genau 5, dann Pass, dann Self
 
-            Use case: Find siteswaps with a specific throwing rhythm or exact sequence.
+            Use case: Find patterns with specific structure.
             Note: p and s require numberOfJugglers parameter in generate_siteswaps.
             """;
 
@@ -265,39 +264,6 @@ public class FilterDslResources
             - contains(4, 4) - contains two consecutive 4s
 
             Use case: Find patterns containing specific throw combinations.
-            """;
-
-    [McpServerResource]
-    [Description("filter:dsl:function:interface")]
-    public string FilterDslFunctionInterface() =>
-        """
-            interface(values...)
-
-            Filters siteswaps by their landing sequence (the rhythm of balls landing).
-            While pattern() filters based on when balls are thrown, interface() 
-            filters based on when balls land.
-
-            Parameters:
-            - values: Sequence of throw values, wildcards (*), or pass/self indicators (p/s)
-
-            Wildcards and Indicators:
-            - * : matches any landing ball
-            - p : matches pass landing (odd numbers in 2-juggler patterns)
-            - s : matches self landing (even numbers in 2-juggler patterns)
-            - Numbers (4-9 or hex a): Match exact landing height
-
-            Examples:
-            - interface(p, s, s, p, s, s) - defines a specific landing rhythm (PSSPSS)
-            - interface(9, 7, p) - landing sequence: a 9, then a 7, then a pass
-
-            Key Differences from pattern():
-            - pattern() = Throwing rhythm (when you throw what)
-            - interface() = Landing rhythm (when what lands)
-
-            Compatibility: Two siteswaps with the same landing sequence (interface) 
-            are "landing-compatible" and can often be swapped or combined.
-
-            Note: This filter is rotation-invariant, checking all possible alignments.
             """;
 
     // ====================================================================================
@@ -559,7 +525,6 @@ public class FilterDslResources
                - pattern(5, *, 1) AND ground
                - pattern(p, s, p) AND minOcc(5,1)
                - startsWith(7) AND maxHeight(9)
-               - interface(9, 7, p) AND ground
             """;
 
     [McpServerResource]
@@ -679,7 +644,6 @@ public class FilterDslResources
 
             PATTERN FILTERS:
             - pattern(values...)       → Match pattern with wildcards (*)
-            - interface(values...)     → Match landing sequence (rotation-invariant)
             - startsWith(values...)    → Pattern starts with values
             - endsWith(values...)      → Pattern ends with values
             - contains(values...)      → Pattern contains subsequence
@@ -733,7 +697,6 @@ public class FilterDslResources
             maxHeight(7)               → Manageable difficulty
             minOcc(5, 2)               → Multiple high throws
             pattern(5, *, 1)           → Specific structure
-            interface(9, 7, p)         → Specific passing landing sequence
             prime AND ground           → Fundamental patterns
 
             TIPS:

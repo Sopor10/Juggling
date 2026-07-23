@@ -36,5 +36,4 @@ public interface IFilterBuilder
     );
     IFilterBuilder WithDefault();
     ISiteswapFilter Build();
-    IFilterBuilder InterfaceFilter(IEnumerable<IEnumerable<int>> value, int nummberOfJugglers);
 }

@@ -2,7 +2,7 @@ using System.ComponentModel;
 using ModelContextProtocol.Server;
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using Siteswaps.Generator.Core.Generator.Filter.FilterDsl;
+using Siteswaps.Mcp.Server.Tools.FilterDsl;
 
 namespace Siteswaps.Mcp.Server.Tools;
 
@@ -77,7 +77,7 @@ public class GenerateSiteswapsTool
         var results = new List<string>();
         await foreach (var siteswap in generator.GenerateAsync(cancellationToken))
         {
-            results.Add(SiteswapMapper.ToDisplayFormat(siteswap.ToString()));
+            results.Add(siteswap.ToString());
         }
 
         return results;

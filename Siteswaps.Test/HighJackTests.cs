@@ -10,7 +10,18 @@ public class HighJackTests
         var sut = new Siteswap.Details.Siteswap(8, 5, 5);
         InlineSnapshot.Validate(
             string.Join(Environment.NewLine, sut.GetHighJacks().Select(x => x.ToString())),
-            "588"
+            "588825"
+        );
+    }
+
+    [Test]
+    public void TestMCode()
+    {
+        var sut = new Siteswap.Details.Siteswap(8, 5, 5);
+        var result = sut.PossibleTransitions(new Siteswap.Details.Siteswap(8, 8, 5, 8, 2, 5), 1);
+        InlineSnapshot.Validate(
+            string.Join(Environment.NewLine, result.Select(x => x.PrettyPrint())),
+            "855 --> 885825"
         );
     }
 

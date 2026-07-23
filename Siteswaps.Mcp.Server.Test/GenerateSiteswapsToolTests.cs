@@ -25,7 +25,6 @@ public class GenerateSiteswapsToolTests
 
         // Assert
         results.Should().NotBeEmpty();
-        results.Should().OnlyContain(s => s.Contains(","));
         results.Should().OnlyContain(s => !string.IsNullOrWhiteSpace(s));
     }
 

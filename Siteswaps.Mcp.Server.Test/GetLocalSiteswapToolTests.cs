@@ -20,40 +20,16 @@ public class GetLocalSiteswapToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.GlobalSiteswap.Should().Be("5,3,1");
+        result.Data!.GlobalSiteswap.Should().Be(siteswap);
         result.Data.Juggler.Should().Be(juggler);
         result.Data.NumberOfJugglers.Should().Be(numberOfJugglers);
         result.Data.GlobalNotation.Should().NotBeNullOrWhiteSpace();
         result.Data.LocalNotation.Should().NotBeNullOrWhiteSpace();
-        result.Data.ClubDistribution.Should().NotBeNullOrWhiteSpace();
     }
 
     [Test]
-    [TestCase("531", 0, 2, "1|1")]
-    [TestCase("531", 1, 2, "0|1")]
-    [TestCase("441", 0, 2, "1|1")]
-    [TestCase("441", 1, 2, "0|1")]
-    public void GetLocalSiteswap_Returns_Correct_ClubDistribution(
-        string siteswap,
-        int juggler,
-        int numberOfJugglers,
-        string expectedClubDistribution
-    )
-    {
-        // Arrange
-        var tool = new GetLocalSiteswapTool();
-
-        // Act
-        var result = tool.GetLocalSiteswap(siteswap, juggler, numberOfJugglers);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Data!.ClubDistribution.Should().Be(expectedClubDistribution);
-    }
-
-    [Test]
-    [TestCase("531", 0, 2, "5,1,3")]
-    [TestCase("531", 1, 2, "3,5,1")]
+    [TestCase("531", 0, 2, "513")]
+    [TestCase("531", 1, 2, "351")]
     [TestCase("51", 0, 2, "5")]
     [TestCase("51", 1, 2, "1")]
     public void GetLocalSiteswap_Returns_Correct_GlobalNotation(
@@ -211,7 +187,7 @@ public class GetLocalSiteswapToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.GlobalSiteswap.Should().Be("a,7,2,4,2");
+        result.Data!.GlobalSiteswap.Should().Be(siteswap);
         result.Data.GlobalNotation.Should().NotBeNullOrWhiteSpace();
         result.Data.LocalNotation.Should().NotBeNullOrWhiteSpace();
     }

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "pwsh -NoProfile -File .cursor/hooks/run-csharpier.ps1"
+      }
+    ]
+  }
+}

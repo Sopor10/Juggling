@@ -11,12 +11,8 @@ builder
     .WithToolsFromAssembly()
     .WithResourcesFromAssembly()
     .WithPromptsFromAssembly();
-builder.Services.AddHealthChecks();
+
 var app = builder.Build();
-
-app.UsePathBase("/mcp");
-
-app.MapHealthChecks("/health");
 
 // Middleware zum Loggen der URI für resources/read Requests
 app.Use(
@@ -59,9 +55,6 @@ app.Use(
 
                                 break;
                             }
-
-                            default:
-                                break;
                         }
                     }
                 }

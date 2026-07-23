@@ -1,18 +1,10 @@
 <Solution>
   <Folder Name="/Generator/">
+    <Project Path="Generator/Siteswaps.Generator.Benchmarks/Siteswaps.Generator.Benchmarks.csproj" />
     <Project Path="Generator/Siteswaps.Generator.Core/Siteswaps.Generator.Core.csproj" />
-    <Project Path="Generator/Siteswaps.Generator.Cli/Siteswaps.Generator.Cli.csproj" />
     <Project Path="Generator/Siteswaps.Generator.Test/Siteswaps.Generator.Test.csproj" />
     <Project Path="Generator/Siteswaps.Generator/Siteswaps.Generator.csproj" />
   </Folder>
-  <Folder Name="/PassingZone/">
-    <Project Path="PassingZone/Ffmpeg.Host/Ffmpeg.Host.csproj" />
-    <Project Path="PassingZone/ReverseProxy/ReverseProxy.csproj" />
-  </Folder>
-  <Folder Name="/Solution Items/">
-    <File Path="compose.yaml" />
-  </Folder>
-  <Project Path="ConsoleApp1/ConsoleApp1.csproj" />
   <Project Path="docs/docs.csproj" />
   <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
   <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />
@@ -22,4 +14,8 @@
   <Project Path="Siteswaps.Mcp.Server/Siteswaps.Mcp.Server.csproj" />
   <Project Path="Siteswaps.Test/Siteswaps.Test.csproj" />
   <Project Path="Webassembly/Webassembly.csproj" />
+  <Folder Name="/PassingZone/">
+    <Project Path="PassingZone/Ffmpeg.Host/Ffmpeg.Host.csproj" />
+    <Project Path="PassingZone/ReverseProxy/ReverseProxy.csproj" />
+  </Folder>
 </Solution>

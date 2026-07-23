@@ -1,19 +1,24 @@
 ﻿namespace Siteswaps.Generator.Core.Generator.Filter;
 
-public class NumberOfPassesFilter(
+internal class NumberOfPassesFilter(
     int numberOfPasses,
     int numberOfJugglers,
     SiteswapGeneratorInput generatorInput
 ) : ISiteswapFilter
 {
-    private readonly HashSet<int> passValues = Enumerable
-        .Range(0, generatorInput.MaxHeight + 1)
+    private readonly HashSet<int> _passValues = Enumerable
+        .Range(0, generatorInput.MaxHeight)
         .Where(x => x % numberOfJugglers != 0)
         .ToHashSet();
 
     public bool CanFulfill(PartialSiteswap value)
     {
-        var numberOfPassesSoFar = value.Items.Count(x => passValues.Contains(x));
+        int numberOfPassesSoFar = 0;
+        foreach (var x in value.AsSpan())
+        {
+            if (_passValues.Contains(x))
+                numberOfPassesSoFar++;
+        }
 
         if (value.IsFilled())
             return numberOfPassesSoFar == numberOfPasses;

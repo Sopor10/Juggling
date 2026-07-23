@@ -2,8 +2,6 @@
 
 public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
 {
-    public string UniqueGlobalNotation =>
-        GetLocalSiteswapReal().ToCyclicArray().ToUniqueRepresentation().ToSiteswapString();
     public string GlobalNotation => ToString();
     public string LocalNotation =>
         string.Join(
@@ -35,35 +33,5 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
         var items = GetLocalSiteswapReal();
 
         return items.Select((x, i) => (x + i) % items.Count).ToHashSet().Count == items.Count;
-    }
-
-    public static Result<Siteswap> FromLocals(params IEnumerable<LocalSiteswap> input)
-    {
-        return FromLocals(input.Select(x => (IList<int>)x.GetLocalSiteswapReal()).ToList());
-    }
-
-    public static Result<Siteswap> FromLocals(IList<IList<int>> input)
-    {
-        var lcm = input.Select(x => x.Count).Aggregate(Helper.Lcm);
-
-        var numberOfJugglers = input.Count;
-        var globalPeriod = lcm * numberOfJugglers;
-        var globalItems = new int[globalPeriod];
-
-        for (var j = 0; j < numberOfJugglers; j++)
-        {
-            var data = input[j];
-            for (var i = 0; j + i * numberOfJugglers < globalPeriod; i++)
-            {
-                globalItems[j + i * numberOfJugglers] = data[i];
-            }
-        }
-
-        if (Siteswap.TryCreate(globalItems, out var siteswap))
-        {
-            return siteswap;
-        }
-
-        return "Invalid global siteswap.";
     }
 }

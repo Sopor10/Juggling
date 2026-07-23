@@ -13,7 +13,7 @@ public class GetLocalSiteswapTool
         "Converts a global siteswap to local notation for a specific juggler in a passing pattern. Returns the local siteswap notation, global notation, average objects per juggler, and validation information."
     )]
     public ToolResult<LocalSiteswapInfo> GetLocalSiteswap(
-        [Description("Global siteswap string (e.g., '5,3,1', 'a,7,2,4,2')")] string siteswap,
+        [Description("Global siteswap string (e.g., '531', 'a7242')")] string siteswap,
         [Description("Juggler index (0-based, e.g., 0 for first juggler, 1 for second juggler)")]
             int juggler,
         [Description("Number of jugglers in the passing pattern")] int numberOfJugglers
@@ -21,8 +21,7 @@ public class GetLocalSiteswapTool
     {
         return ToolResult.From(() =>
         {
-            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
-            if (string.IsNullOrWhiteSpace(coreSiteswap))
+            if (string.IsNullOrWhiteSpace(siteswap))
             {
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
@@ -51,28 +50,22 @@ public class GetLocalSiteswapTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(coreSiteswap, out var siteswapObj))
+            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }
 
             var localSiteswap = siteswapObj.GetLocalSiteswap(juggler, numberOfJugglers);
 
-            var clubs = siteswapObj.GetClubDistribution(numberOfJugglers);
-
             return new LocalSiteswapInfo
             {
-                GlobalSiteswap = SiteswapMapper.ToDisplayFormat(siteswapObj),
+                GlobalSiteswap = siteswap,
                 Juggler = juggler,
                 NumberOfJugglers = numberOfJugglers,
-                LocalNotation = SiteswapMapper.LocalToDisplayFormat(localSiteswap.LocalNotation),
-                GlobalNotation = SiteswapMapper.ToDisplayFormat(localSiteswap.GlobalNotation),
+                LocalNotation = localSiteswap.LocalNotation,
+                GlobalNotation = localSiteswap.GlobalNotation,
                 AverageObjectsPerJuggler = localSiteswap.Average(),
                 IsValidAsGlobalSiteswap = localSiteswap.IsValidAsGlobalSiteswap(),
-                ClubDistribution = string.Join(
-                    "|",
-                    clubs.Hands.Where(x => x.Item1.Juggler == juggler).Select(x => x.Item2)
-                ),
             };
         });
     }
@@ -87,5 +80,4 @@ public class LocalSiteswapInfo
     public string GlobalNotation { get; init; } = string.Empty;
     public double AverageObjectsPerJuggler { get; init; }
     public bool IsValidAsGlobalSiteswap { get; init; }
-    public string ClubDistribution { get; init; } = string.Empty;
 }

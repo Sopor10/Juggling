@@ -10,14 +10,14 @@ public record CyclicArray<T> : IEnumerable<T>
         Items = items.ToArray();
     }
 
-    private int RotationIndex { get; set; }
+    public int RotationIndex { get; set; }
     private T[] Items { get; }
     public int Length => Items.Length;
 
     public T this[int i]
     {
-        get => Items[(i + Items.Length + RotationIndex) % Items.Length];
-        set => Items[(i + Items.Length + RotationIndex) % Items.Length] = value;
+        get => Items[(i + RotationIndex) % Items.Length];
+        set => Items[(i + RotationIndex) % Items.Length] = value;
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -27,7 +27,7 @@ public record CyclicArray<T> : IEnumerable<T>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    private IEnumerable<(int position, T value)> Enumerate(int i)
+    public IEnumerable<(int position, T value)> Enumerate(int i)
     {
         for (var j = 0; j < i; j++)
         {
@@ -48,9 +48,20 @@ public record CyclicArray<T> : IEnumerable<T>
         RotationIndex += i;
         return this;
     }
+
+    public Span<T> AsSpan()
+    {
+        if (RotationIndex % Items.Length == 0)
+            return Items.AsSpan();
+
+        var rotated = new T[Items.Length];
+        for (int i = 0; i < Items.Length; i++)
+            rotated[i] = this[i];
+        return rotated;
+    }
 }
 
-internal static class CyclicArrayExtensions
+public static class CyclicArrayExtensions
 {
     public static CyclicArray<T> ToCyclicArray<T>(this IEnumerable<T> source)
     {
@@ -58,7 +69,7 @@ internal static class CyclicArrayExtensions
     }
 }
 
-internal class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
+public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 {
     public CyclicArray<T> Array { get; } = array;
     private int _position = -1;
@@ -66,7 +77,7 @@ internal class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
     public bool MoveNext()
     {
         _position++;
-        return true;
+        return _position < Array.Length;
     }
 
     public void Reset()

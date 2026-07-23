@@ -103,27 +103,6 @@ public class SiteswapTest
     }
 
     [Test]
-    public void Calculate_Transition_Length_0()
-    {
-        var sut = new Siteswap.Details.Siteswap(3);
-        var to = new Siteswap.Details.Siteswap(5, 3, 1);
-        var transitions = sut.PossibleTransitions(to, 0);
-
-        InlineSnapshot.Validate(PrettyPrint(transitions), "3 --> 531");
-    }
-
-    [Test]
-    public void TestGroundState()
-    {
-        var sut = new Siteswap.Details.Siteswap(8);
-        var result = sut.PossibleTransitions(new Siteswap.Details.Siteswap(8), 1);
-        InlineSnapshot.Validate(
-            string.Join(Environment.NewLine, result.Select(x => x.PrettyPrint())),
-            "8 --> 8"
-        );
-    }
-
-    [Test]
     public void Create_Specific_Transition_Length_1()
     {
         var from = new Siteswap.Details.Siteswap(5, 3, 1);
@@ -156,12 +135,7 @@ public class SiteswapTest
         InlineSnapshot.Validate(
             PrettyPrint(transitions),
             """
-            531 -334-> 414
-            531 -34-> 414
-            531 -352-> 414
             531 -4-> 414
-            531 -424-> 414
-            531 -451-> 414
             531 -52-> 414
             """
         );
@@ -196,12 +170,7 @@ public class SiteswapTest
         InlineSnapshot.Validate(
             result,
             """
-            441 -334-> 51
-            441 -34-> 51
-            441 -352-> 51
             441 -4-> 51
-            441 -424-> 51
-            441 -451-> 51
             441 -52-> 51
             """
         );
@@ -253,37 +222,5 @@ public class SiteswapTest
             builder.AppendLine(edge);
         }
         return builder.ToString();
-    }
-
-    [Test]
-    public void ClubDistribution_ShouldCalculateGroundState()
-    {
-        var sut = new Siteswap.Details.Siteswap(7, 5, 6, 6);
-        var distribution = sut.GetClubDistribution(2);
-
-        // Bei 2 Jongleuren und 6 Bällen sollte jeder Jongleur 3 Bälle haben
-        distribution.ToString().Should().NotBeEmpty();
-    }
-
-    [TestCase("86777", 2, "A: 2|2 B: 1|2")]
-    [TestCase("441", 1, "A: 1|2")]
-    [TestCase("531", 1, "A: 1|2")]
-    [TestCase("51", 1, "A: 2|1")]
-    [TestCase("27786", 2, "A: 1|2 B: 1|2")]
-    [TestCase("7566", 2, "A: 1|2 B: 1|2")]
-    [TestCase("966", 2, "A: 2|2 B: 1|2")]
-    [TestCase("77772", 2, "A: 1|2 B: 1|2")]
-    [TestCase("97531", 2, "A: 1|2 B: 1|1")]
-    [TestCase("975", 2, "A: 2|2 B: 1|2")]
-    [TestCase("96672", 2, "A: 1|2 B: 1|2")]
-    [TestCase("946935", 2, "A: 2|2 B: 1|1")]
-    [TestCase("847737", 2, "A: 2|2 B: 1|1")]
-    [TestCase("935847", 2, "A: 2|1 B: 1|2")]
-    public void ClubDistribution_Tests(string pattern, int numberOfJugglers, string expected)
-    {
-        Siteswap.Details.Siteswap.TryCreate(pattern, out var s);
-        s.Should().NotBeNull();
-        var distribution = s!.GetClubDistribution(numberOfJugglers);
-        distribution.ToString().Should().Be(expected);
     }
 }

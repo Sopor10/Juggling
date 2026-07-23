@@ -14,14 +14,13 @@ public class GenerateCausalDiagramTool
         "Generates a causal diagram representation of a siteswap showing ball movements between hands. Returns nodes (throws) and transitions (ball paths)."
     )]
     public ToolResult<CausalDiagramInfo> GenerateCausalDiagram(
-        [Description("Siteswap string (e.g., '5,3,1', '4,4,1', 'a,7,2,4,2')")] string siteswap,
+        [Description("Siteswap string (e.g., '531', '441', 'a7242')")] string siteswap,
         [Description("Number of hands (default: 2)")] int numberOfHands = 2
     )
     {
         return ToolResult.From(() =>
         {
-            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
-            if (string.IsNullOrWhiteSpace(coreSiteswap))
+            if (string.IsNullOrWhiteSpace(siteswap))
             {
                 throw new ArgumentException(
                     "Siteswap string cannot be null or empty.",
@@ -37,7 +36,7 @@ public class GenerateCausalDiagramTool
                 );
             }
 
-            if (!SiteswapDetails.TryCreate(coreSiteswap, out var siteswapObj))
+            if (!SiteswapDetails.TryCreate(siteswap, out var siteswapObj))
             {
                 throw new ArgumentException($"Invalid siteswap: {siteswap}", nameof(siteswap));
             }
@@ -57,7 +56,7 @@ public class GenerateCausalDiagramTool
 
             return new CausalDiagramInfo
             {
-                Siteswap = SiteswapMapper.ToDisplayFormat(siteswapObj),
+                Siteswap = siteswapObj.ToString(),
                 NumberOfHands = numberOfHands,
                 Throws = diagram
                     .Throws.Select(t => new CausalDiagramThrow

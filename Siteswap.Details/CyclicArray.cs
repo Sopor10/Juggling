@@ -59,20 +59,4 @@ public static class CyclicArrayExtensions
         }
         return new CyclicArray<T>(source);
     }
-
-    public static CyclicArray<int> ToUniqueRepresentation(this CyclicArray<int> input)
-    {
-        var biggest = input.EnumerateValues(1).ToList();
-
-        foreach (
-            var list in Enumerable
-                .Range(0, input.Length)
-                .Select(input.Rotate)
-                .Select(x => x.EnumerateValues(1).ToList())
-        )
-            if (biggest.CompareSequences(list) < 0)
-                biggest = list;
-
-        return biggest.ToCyclicArray();
-    }
 }

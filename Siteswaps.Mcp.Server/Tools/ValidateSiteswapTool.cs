@@ -11,19 +11,18 @@ public class ValidateSiteswapTool
         "Validates whether a siteswap string is valid. Returns true if the siteswap is valid, false otherwise."
     )]
     public ToolResult<bool> ValidateSiteswap(
-        [Description("The siteswap string to validate (e.g., '5,3,1', '4,4,1', 'a,7,2,4,2')")]
+        [Description("The siteswap string to validate (e.g., '531', '441', 'a7242')")]
             string siteswap
     )
     {
         return ToolResult.From(() =>
         {
-            var coreSiteswap = SiteswapMapper.ToCoreFormat(siteswap);
-            if (string.IsNullOrWhiteSpace(coreSiteswap))
+            if (string.IsNullOrWhiteSpace(siteswap))
             {
                 return false;
             }
 
-            return Siteswap.Details.Siteswap.TryCreate(coreSiteswap, out _);
+            return Siteswap.Details.Siteswap.TryCreate(siteswap, out _);
         });
     }
 }

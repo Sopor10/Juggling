@@ -8,10 +8,20 @@ public class ExactlyXXXTimesFilter(IEnumerable<int> number, int amount)
 {
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)
     {
-        if (value.Items.Count(x => Number.Contains(x)) > Amount)
+        int exactCount = 0;
+        int possibleCount = 0;
+        foreach (var x in value.AsSpan())
         {
-            return false;
+            if (Number.Contains(x))
+            {
+                exactCount++;
+                possibleCount++;
+            }
+            else if (x == -1)
+            {
+                possibleCount++;
+            }
         }
-        return value.Items.Count(x => Number.Contains(x) || x == -1) >= Amount;
+        return exactCount <= Amount && possibleCount >= Amount;
     }
 }
