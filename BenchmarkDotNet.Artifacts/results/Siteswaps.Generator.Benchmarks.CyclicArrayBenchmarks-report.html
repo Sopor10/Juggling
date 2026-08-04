@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Siteswaps.Generator.Benchmarks.CyclicArrayBenchmarks-20260404-191922</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, Windows 11 (10.0.26200.7840/25H2/2025Update/HudsonValley2)
+Intel Core Ultra 9 185H 2.50GHz, 1 CPU, 22 logical and 16 physical cores
+.NET SDK 10.0.103
+  [Host]   : .NET 10.0.3 (10.0.3, 10.0.326.7603), X64 RyuJIT x86-64-v3
+  ShortRun : .NET 10.0.3 (10.0.3, 10.0.326.7603), X64 RyuJIT x86-64-v3
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method       </th><th>Period</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Ratio</th><th>RatioSD</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>Modulo</td><td>5</td><td>72.53 ns</td><td>6.087 ns</td><td>0.334 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>IndexCache</td><td>5</td><td>31.53 ns</td><td>17.716 ns</td><td>0.971 ns</td><td>0.43</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>DuplicatedArray</td><td>5</td><td>24.70 ns</td><td>11.451 ns</td><td>0.628 ns</td><td>0.34</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>BitMaskPowerOf2</td><td>5</td><td>NA</td><td>NA</td><td>NA</td><td>?</td><td>?</td><td>NA</td><td>?</td>
+</tr><tr><td>ConditionalSubtract</td><td>5</td><td>35.09 ns</td><td>10.490 ns</td><td>0.575 ns</td><td>0.48</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>Modulo</td><td>10</td><td>298.79 ns</td><td>18.754 ns</td><td>1.028 ns</td><td>1.00</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>IndexCache</td><td>10</td><td>130.75 ns</td><td>63.943 ns</td><td>3.505 ns</td><td>0.44</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>DuplicatedArray</td><td>10</td><td>94.21 ns</td><td>53.209 ns</td><td>2.917 ns</td><td>0.32</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>BitMaskPowerOf2</td><td>10</td><td>NA</td><td>NA</td><td>NA</td><td>?</td><td>?</td><td>NA</td><td>?</td>
+</tr><tr><td>ConditionalSubtract</td><td>10</td><td>107.34 ns</td><td>33.327 ns</td><td>1.827 ns</td><td>0.36</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>Modulo</td><td>14</td><td>562.55 ns</td><td>78.445 ns</td><td>4.300 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>IndexCache</td><td>14</td><td>263.01 ns</td><td>198.894 ns</td><td>10.902 ns</td><td>0.47</td><td>0.02</td><td>-</td><td>NA</td>
+</tr><tr><td>DuplicatedArray</td><td>14</td><td>169.87 ns</td><td>159.834 ns</td><td>8.761 ns</td><td>0.30</td><td>0.01</td><td>-</td><td>NA</td>
+</tr><tr><td>BitMaskPowerOf2</td><td>14</td><td>NA</td><td>NA</td><td>NA</td><td>?</td><td>?</td><td>NA</td><td>?</td>
+</tr><tr><td>ConditionalSubtract</td><td>14</td><td>228.69 ns</td><td>76.224 ns</td><td>4.178 ns</td><td>0.41</td><td>0.01</td><td>-</td><td>NA</td>
+</tr></tbody></table>
+</body>
+</html>

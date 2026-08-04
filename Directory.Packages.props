@@ -13,6 +13,10 @@
     <PackageVersion Include="ModelContextProtocol" Version="2.0.0" />
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="2.0.0" />
     <PackageVersion Include="Reqnroll.xUnit" Version="3.3.4" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Map" Version="2.0.0" />
     <PackageVersion Include="Sopor10.ArchunitExtension" Version="1.1.47" />
     <PackageVersion Include="Sopor10.Playwright.Testing" Version="1.1.47" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.3" />

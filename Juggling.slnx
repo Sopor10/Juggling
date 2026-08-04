@@ -14,4 +14,8 @@
   <Project Path="Siteswaps.Mcp.Server/Siteswaps.Mcp.Server.csproj" />
   <Project Path="Siteswaps.Test/Siteswaps.Test.csproj" />
   <Project Path="Webassembly/Webassembly.csproj" />
+  <Folder Name="/PassingZone/">
+    <Project Path="PassingZone/Ffmpeg.Host/Ffmpeg.Host.csproj" />
+    <Project Path="PassingZone/ReverseProxy/ReverseProxy.csproj" />
+  </Folder>
 </Solution>

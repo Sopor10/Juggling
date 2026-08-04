@@ -9,3 +9,5 @@ riderModule.iml
 **/.vs
 
 node_modules
+ExampleVideo/
+appsettings.secrets.json

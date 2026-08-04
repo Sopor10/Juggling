@@ -1,0 +1,29 @@
+﻿services:
+  ffmpeg.host:
+    image: ffmpeg.host
+    build:
+      context: .
+      dockerfile: PassingZone/Ffmpeg.Host/Dockerfile
+    volumes:
+      - ffmpeg-jobs:/tmp/ffmpeg-jobs
+    restart: unless-stopped
+
+  reverseproxy:
+    image: reverseproxy
+    build:
+      context: .
+      dockerfile: PassingZone/ReverseProxy/Dockerfile
+    ports:
+      - "80:8080"
+    restart: unless-stopped
+
+  siteswaps.mcp.server:
+    image: siteswaps.mcp.server
+    build:
+      context: .
+      dockerfile: Siteswaps.Mcp.Server/Dockerfile
+    restart: unless-stopped
+
+volumes:
+  ffmpeg-jobs:
+

@@ -1,0 +1,5 @@
+[*.cs]
+dotnet_diagnostic.CTH001.suppress_on_record_hierarchies = true
+dotnet_diagnostic.IDE0010.severity = error
+dotnet_diagnostic.IDE0072.severity = error
+dotnet_diagnostic.CS8509.severity = error
