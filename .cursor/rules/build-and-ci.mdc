@@ -1,0 +1,42 @@
+---
+description: Build system, CI/CD pipeline, and local development setup
+alwaysApply: true
+---
+
+# Build & CI
+
+## Prerequisites
+
+- .NET SDK 10.0.103 (pinned in `global.json`)
+- CSharpier tool: `dotnet tool restore`
+
+## Local Development
+
+```bash
+dotnet tool restore       # restore CSharpier
+dotnet build              # build all projects
+dotnet test               # run all tests
+dotnet csharpier .        # format all files
+dotnet csharpier check .  # verify formatting (CI does this)
+```
+
+## CI Pipeline (GitHub Actions)
+
+### PR Validation (`.github/workflows/PR.yml`)
+Runs on PRs to `main`: format check → build → test
+
+### Deploy (`.github/workflows/github-pages.yml`)
+Runs on push to `main`: test → publish Blazor WASM → deploy to GitHub Pages
+
+### Composite Action (`.github/workflows/steps/action.yml`)
+Shared steps: setup .NET SDK → `dotnet tool restore` → `dotnet csharpier check .` → install wasm-tools workload → `dotnet test`
+
+## Package Management
+
+- **Central Package Management** via `Directory.Packages.props`
+- Add package versions there, reference without version in `.csproj` files
+- Global build properties in `Directory.Build.props`
+
+## No Solution File
+
+This repo has no `.sln` file. Open the folder directly in your IDE. The `Directory.Build.props` applies settings to all projects.

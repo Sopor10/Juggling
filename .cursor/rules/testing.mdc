@@ -1,0 +1,38 @@
+---
+description: Testing conventions and patterns
+globs: "**/*Test*/**/*.cs"
+alwaysApply: false
+---
+
+# Testing Conventions
+
+## Test Frameworks
+
+| Layer | Framework | Location |
+|-------|-----------|----------|
+| Domain / Unit | NUnit + FluentAssertions | `Siteswaps.Test/` |
+| Generator / Arch | NUnit + ArchUnitNET + Verify | `Generator/Siteswaps.Generator.Test/` |
+| MCP Server | NUnit | `Siteswaps.Mcp.Server.Test/` |
+| E2E | Playwright + Reqnroll (xUnit) | `Siteswaps.E2ETests/` |
+| Benchmarks | BenchmarkDotNet | `Generator/Siteswaps.Generator.Benchmarks/` |
+
+## Patterns
+
+- Use `[Test]` and `[TestCase(...)]` attributes (NUnit style)
+- Assert with **FluentAssertions** (`value.Should().Be(...)`)
+- Use **Verify** for snapshot testing — approved snapshots are committed to the repo
+- Use **Meziantou InlineSnapshotTesting** for inline snapshot assertions
+- E2E tests use **Page Object** pattern in `Siteswaps.E2ETests/`
+- The E2E test server (`Siteswaps.E2ETests.Server`) hosts the Blazor WASM app for Playwright
+
+## Architecture Tests
+
+- `ArchitectureTests.cs` enforces layer boundaries using ArchUnitNET
+- Generator core must not depend on UI components
+
+## Running Tests
+
+```bash
+dotnet test              # run all tests
+dotnet test --filter "FullyQualifiedName~SiteswapTest"  # run specific tests
+```

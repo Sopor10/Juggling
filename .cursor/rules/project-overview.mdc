@@ -1,0 +1,44 @@
+---
+description: Project architecture and structure overview for the Juggling Siteswap System
+alwaysApply: true
+---
+
+# Juggling Siteswap System
+
+A tool for generating, analyzing, and visualizing juggling siteswap patterns. Deployed as a Blazor WebAssembly PWA at https://siteswaps.passing.zone.
+
+## Architecture (Layered)
+
+```
+Webassembly (Blazor WASM host, pages, routing)
+  └─ Siteswaps.Components (reusable Razor components, visualizations)
+  └─ Siteswaps.Generator (Fluxor state, UI-facing generator logic)
+       └─ Siteswaps.Generator.Core (backtracking algorithm, filters)
+            └─ Siteswap.Details (domain model, validation, math)
+
+Siteswaps.Mcp.Server (ASP.NET Core MCP server, AI tool integration)
+  └─ Siteswaps.Generator.Core
+  └─ Siteswap.Details
+```
+
+## Key Projects
+
+| Project | Purpose |
+|---------|---------|
+| `Siteswap.Details` | Domain model: `Siteswap` record, states, orbits, causal/state diagrams |
+| `Siteswaps.Generator.Core` | Backtracking generator with composable `ISiteswapFilter` pipeline |
+| `Siteswaps.Generator` | Fluxor state management, Blazor Razor library for generator UI |
+| `Siteswaps.Components` | Shared visualization components (diagrams, graphs) |
+| `Webassembly` | Blazor WASM app host |
+| `Siteswaps.Mcp.Server` | MCP server exposing siteswap tools/resources/prompts via HTTP |
+
+## Tech Stack
+
+- .NET 10, C# with nullable enabled, warnings-as-errors
+- Blazor WebAssembly with Radzen UI, Fluxor (Redux-style state), VisNetwork.Blazor
+- Central Package Management (`Directory.Packages.props`)
+- CSharpier for formatting (enforced in CI)
+- NUnit + FluentAssertions + Verify for unit tests
+- Playwright + Reqnroll for E2E tests
+- ArchUnitNET for architecture enforcement
+- arc42 documentation in `docs/arc42/`

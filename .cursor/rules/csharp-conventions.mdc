@@ -1,0 +1,41 @@
+---
+description: C# coding conventions and patterns used in this project
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# C# Conventions
+
+## Build Settings
+
+- Target: `net10.0` (SDK 10.0.103 via `global.json`)
+- `Nullable: enable`, `ImplicitUsings: enable`
+- `TreatWarningsAsErrors: true`, `WarningsAsErrors: nullable`
+- All package versions live in `Directory.Packages.props` (Central Package Management) — never put versions in `.csproj` files
+
+## Formatting
+
+- **CSharpier** is the sole formatter — do not use other formatting tools
+- Run `dotnet csharpier .` to format; CI runs `dotnet csharpier check .`
+- Do not fight CSharpier's style (e.g. trailing commas, line breaks)
+
+## Code Style
+
+- Prefer `record` types for value-like domain objects (see `Siteswap`, `State`, `Period`)
+- Use file-scoped namespaces (`namespace Foo;`)
+- Use `TryCreate` pattern with `[NotNullWhen(true)]` for fallible construction
+- Favor `IEnumerable<T>` / `IAsyncEnumerable<T>` for lazy sequences
+- Use expression-bodied members where they improve readability
+- Avoid unnecessary comments — code should be self-documenting
+
+## Architecture Rules (enforced by ArchUnitNET)
+
+- `Siteswaps.Generator.Core.Generator` must NOT depend on `Siteswaps.Generator.Components`
+- Domain layer (`Siteswap.Details`) has no dependencies on UI or generator projects
+- Keep the dependency direction: UI → Generator → Core → Details
+
+## Patterns
+
+- **Filter pipeline**: Implement `ISiteswapFilter` for new generator filters. Compose with `AndFilter`/`OrFilter` from `Filter.Combinatorics`
+- **Fluxor state**: Actions, Reducers, Effects in `Components/State/`. Use `[FeatureState]` attribute
+- **Domain model**: Two separate `Siteswap` types exist intentionally — `Siteswap.Details.Siteswap` (rich domain) vs `Siteswaps.Generator.Core.Generator.Siteswap` (generator-internal)
