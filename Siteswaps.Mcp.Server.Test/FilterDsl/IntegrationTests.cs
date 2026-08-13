@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Siteswaps.Mcp.Server.Tools;
 
 namespace Siteswaps.Mcp.Server.Test.FilterDsl;
@@ -8,7 +9,7 @@ namespace Siteswaps.Mcp.Server.Test.FilterDsl;
 /// </summary>
 public class IntegrationTests
 {
-    private readonly GenerateSiteswapsTool _tool = new();
+    private readonly GenerateSiteswapsTool _tool = new(NullLogger<GenerateSiteswapsTool>.Instance);
 
     [Test]
     public async Task GenerateSiteswaps_With_Dsl_MinOcc_Works()
