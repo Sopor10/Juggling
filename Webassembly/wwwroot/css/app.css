@@ -29,6 +29,10 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
+.content:has(.wizard-page) {
+    padding-top: 0;
+}
+
 /* Gültige Eingabefelder (modifiziert) */
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid var(--color-success); /* Erfolg - auf Primärfarbe basierend */

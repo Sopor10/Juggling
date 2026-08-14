@@ -8,10 +8,10 @@
 
 .wizard-dualrange-track-wrap {
     position: relative;
-    /* Tall enough to give the enlarged 40px thumbs room without clipping. */
     height: 40px;
     margin: 0 4px;
     cursor: pointer;
+    touch-action: none;
 }
 
 .wizard-dualrange-track {
@@ -46,10 +46,10 @@
     pointer-events: none;
 }
 
-/* When Min == Max both thumbs sit exactly on top of each other; whichever
-   input the user is actively dragging/focusing must come to the front so it
-   stays grabbable/adjustable instead of being permanently stuck under the
-   other (later-in-DOM) input. */
+.wizard-dualrange-input.is-high {
+    z-index: 2;
+}
+
 .wizard-dualrange-input:active,
 .wizard-dualrange-input:focus,
 .wizard-dualrange-input:focus-within {
@@ -67,12 +67,9 @@
 .wizard-dualrange-input::-webkit-slider-thumb {
     -webkit-appearance: none;
     pointer-events: auto;
-    /* >= 40x40px touch target (was 26x26px, well under accessibility guidance). */
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: white;
-    border: 3px solid var(--wizard-purple-700);
     box-shadow: var(--wizard-shadow-sm);
     cursor: grab;
     margin-top: 0;
@@ -83,10 +80,28 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: white;
-    border: 3px solid var(--wizard-purple-700);
     box-shadow: var(--wizard-shadow-sm);
     cursor: grab;
+}
+
+.wizard-dualrange-input.is-low::-webkit-slider-thumb {
+    background: white;
+    border: 3px solid var(--wizard-purple-700);
+}
+
+.wizard-dualrange-input.is-low::-moz-range-thumb {
+    background: white;
+    border: 3px solid var(--wizard-purple-700);
+}
+
+.wizard-dualrange-input.is-high::-webkit-slider-thumb {
+    background: var(--wizard-orange);
+    border: 3px solid var(--wizard-purple-950);
+}
+
+.wizard-dualrange-input.is-high::-moz-range-thumb {
+    background: var(--wizard-orange);
+    border: 3px solid var(--wizard-purple-950);
 }
 
 .wizard-dualrange-bounds {

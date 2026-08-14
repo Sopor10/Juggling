@@ -6,57 +6,53 @@
 
 <p class="wizard-hint">Tippe ein Feld an, dann einen Wurf darunter.</p>
 <div class="wizard-pattern-row">
-    <label class="wizard-sr-only" for="patRotation">Bezug</label>
-    <select id="patRotation" class="wizard-select" value="@Value.PatternRotation.Value" @onchange="OnRotationChanged">
-        @foreach (var r in RotationOptions)
-        {
-            <option value="@r.Value">@RotationLabel(r)</option>
-        }
-    </select>
+    <label class="wizard-sr-only" for="patRotation-trigger">Bezug</label>
+    <WizardSelect Id="patRotation"
+                  AriaLabel="Bezug"
+                  Value="@Value.PatternRotation.Value.ToString()"
+                  ValueChanged="OnRotationValueChanged"
+                  Options="_rotationOptions" />
     <div class="wizard-segmented" role="radiogroup" aria-label="Muster soll">
         <button id="wizard-pattern-include" type="button" class="wizard-chip wizard-segment @(Value.IsIncludePattern ? "active" : "")"
                 role="radio" aria-checked="@(Value.IsIncludePattern ? "true" : "false")" tabindex="@(Value.IsIncludePattern ? "0" : "-1")"
                 @onkeydown="e => OnIncludeKeyDown(e, true)"
                 @onpointerdown:stopPropagation="true"
-                @onclick="() => SetInclude(true)">enthalten sein</button>
+                @onclick="() => SetInclude(true)">enthalten</button>
         <button id="wizard-pattern-exclude" type="button" class="wizard-chip wizard-segment @(!Value.IsIncludePattern ? "active" : "")"
                 role="radio" aria-checked="@(!Value.IsIncludePattern ? "true" : "false")" tabindex="@(!Value.IsIncludePattern ? "0" : "-1")"
                 @onkeydown="e => OnIncludeKeyDown(e, false)"
                 @onpointerdown:stopPropagation="true"
-                @onclick="() => SetInclude(false)">ausgeschlossen sein</button>
+                @onclick="() => SetInclude(false)">ausgeschlossen</button>
     </div>
 </div>
 
-<div class="wizard-pattern-slots" role="group" aria-label="Muster-Sequenz, Feld antippen und dann Wurf unten wählen">
-    @for (var i = 0; i < Value.Pattern.Count; i++)
-    {
-        var index = i;
-        var isActive = index == _activeSlotIndex;
-        <button type="button" class="wizard-chip wizard-pattern-slot @(isActive ? "active" : "")"
-                aria-pressed="@(isActive ? "true" : "false")"
-                @onpointerdown:stopPropagation="true"
-                @onclick="() => SelectSlot(index)">
-            @Value.Pattern[index].GetDisplayValue(true)
-        </button>
-    }
+<div class="wizard-pattern-sequence">
+    <p class="wizard-pattern-sequence-label">Muster</p>
+    <div class="wizard-pattern-slots" role="group" aria-label="Muster-Sequenz, Feld antippen und dann Wurf unten wählen">
+        @for (var i = 0; i < Value.Pattern.Count; i++)
+        {
+            var index = i;
+            var isActive = index == _activeSlotIndex;
+            <button type="button" class="wizard-pattern-slot @(isActive ? "active" : "")"
+                    aria-pressed="@(isActive ? "true" : "false")"
+                    @onpointerdown:stopPropagation="true"
+                    @onclick="() => SelectSlot(index)">
+                @PaletteLabel(Value.Pattern[index])
+            </button>
+        }
+    </div>
 </div>
+<p class="wizard-pattern-sequence-label">Würfe</p>
 <div class="wizard-chip-grid wizard-pattern-palette" role="group" aria-label="Wurf-Palette">
-    @foreach (var t in PossibleThrows)
+    @foreach (var t in PaletteThrows)
     {
         <button type="button" class="wizard-chip"
                 @onpointerdown:stopPropagation="true"
                 @onclick="() => AssignActiveSlot(t)">
-            @t.GetDisplayValue(true)
+            @PaletteLabel(t)
         </button>
     }
 </div>
-
-<label class="wizard-checkbox-row">
-    <input type="checkbox" checked="@Value.IsValidLocally"
-           @onpointerdown:stopPropagation="true"
-           @onchange="OnValidLocallyChanged" />
-    <span>Muss auch lokal gültig sein</span>
-</label>
 
 @code {
     [Parameter, EditorRequired]
@@ -77,10 +73,25 @@
     private int _activeSlotIndex;
     private IJSObjectReference? _jsModule;
     private string? _focusTargetId;
+    private IReadOnlyList<WizardSelect.Option> _rotationOptions = [];
+
+    private IEnumerable<Throw> PaletteThrows =>
+        PossibleThrows.Any(t => t.Height == Throw.Empty.Height)
+            ? PossibleThrows
+            : PossibleThrows.Prepend(Throw.Empty);
+
+    private static string PaletteLabel(Throw t) =>
+        t.Height == Throw.Empty.Height ? "frei" : t.GetDisplayValue(true);
 
     protected override void OnInitialized()
     {
+        RefreshRotationOptions();
         ResizePatternToCurrentLength();
+    }
+
+    protected override void OnParametersSet()
+    {
+        RefreshRotationOptions();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -107,10 +118,17 @@
             .Prepend(PatternRotation.Local)
             .Prepend(PatternRotation.Global);
 
+    private void RefreshRotationOptions()
+    {
+        _rotationOptions = RotationOptions
+            .Select(r => new WizardSelect.Option(r.Value.ToString(), RotationLabel(r)))
+            .ToArray();
+    }
+
     private static string RotationLabel(PatternRotation r) =>
         r.Value switch
         {
-            -2 => "Global (ganzer Zyklus)",
+            -2 => "Global",
             -1 => "Lokal (flexibel)",
             _ => $"Lokal - Jongleur {r.Display}",
         };
@@ -128,10 +146,9 @@
             return;
         }
 
-        var fallback = PossibleThrows.FirstOrDefault() ?? Throw.Empty;
         var resized = Enumerable
             .Range(0, length)
-            .Select(i => i < Value.Pattern.Count ? Value.Pattern[i] : fallback)
+            .Select(i => i < Value.Pattern.Count ? Value.Pattern[i] : Throw.Empty)
             .ToList();
         Value.Pattern.Clear();
         Value.Pattern.AddRange(resized);
@@ -141,17 +158,13 @@
         }
     }
 
-    private async Task OnRotationChanged(ChangeEventArgs e)
+    private async Task OnRotationValueChanged(string value)
     {
-        if (!int.TryParse(e.Value?.ToString(), out var v))
+        if (!int.TryParse(value, out var v))
         {
             return;
         }
 
-        // NewPatternFilterInformation has two rotation-ish properties (the positional
-        // "PatternRotation" and the explicit mutable "Rotation" used by the real app's own
-        // EasyPatternFilter binding). FilterTranslation only reads "PatternRotation", so that's
-        // the one we keep authoritative here; a plain `with` keeps everything else untouched.
         Value = Value with { PatternRotation = new PatternRotation(v) };
         ResizePatternToCurrentLength();
         await ValueChanged.InvokeAsync(Value);
@@ -171,12 +184,6 @@
             _focusTargetId = current ? "wizard-pattern-exclude" : "wizard-pattern-include";
             await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private async Task OnValidLocallyChanged(ChangeEventArgs e)
-    {
-        Value = Value with { IsValidLocally = e.Value is true };
-        await ValueChanged.InvokeAsync(Value);
     }
 
     private void SelectSlot(int index) => _activeSlotIndex = index;

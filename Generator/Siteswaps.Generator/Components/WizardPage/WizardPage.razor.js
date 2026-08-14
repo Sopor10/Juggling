@@ -15,6 +15,13 @@ const SWIPE_THRESHOLD = 50;
 const SWIPE_DIRECTION_FACTOR = 1.2;
 const SWIPE_ANGLE_FACTOR = 1.5;
 
+function isSwipeBlockedTarget(target) {
+  return (
+    target instanceof Element &&
+    !!target.closest('[data-wizard-no-swipe], input[type="range"]')
+  );
+}
+
 export function initTouchSwipe(element, dotnetHelper) {
   if (!element || touchSwipeHandlers.has(element)) {
     return;
@@ -23,16 +30,18 @@ export function initTouchSwipe(element, dotnetHelper) {
   let startX = 0;
   let startY = 0;
   let horizontalSwipe = false;
+  let tracking = false;
 
   const reset = () => {
     startX = 0;
     startY = 0;
     horizontalSwipe = false;
+    tracking = false;
     element.classList.remove('wizard-swipe-active');
   };
 
   const onTouchStart = (event) => {
-    if (event.touches.length !== 1) {
+    if (event.touches.length !== 1 || isSwipeBlockedTarget(event.target)) {
       reset();
       return;
     }
@@ -40,10 +49,11 @@ export function initTouchSwipe(element, dotnetHelper) {
     startX = event.touches[0].clientX;
     startY = event.touches[0].clientY;
     horizontalSwipe = false;
+    tracking = true;
   };
 
   const onTouchMove = (event) => {
-    if (event.touches.length !== 1 || startX === 0 && startY === 0) {
+    if (!tracking || event.touches.length !== 1) {
       return;
     }
 
@@ -64,7 +74,7 @@ export function initTouchSwipe(element, dotnetHelper) {
   };
 
   const onTouchEnd = (event) => {
-    if (!horizontalSwipe || event.changedTouches.length !== 1) {
+    if (!tracking || !horizontalSwipe || event.changedTouches.length !== 1) {
       reset();
       return;
     }

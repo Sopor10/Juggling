@@ -1,0 +1,58 @@
+using FluentAssertions;
+using Microsoft.Playwright;
+using PlaywrightTesting.Infrastructure;
+using Xunit;
+using Program = Siteswaps.E2ETests.Server.Program;
+
+namespace Siteswaps.E2ETests.Functional;
+
+
+/// <summary>Step state preservation and reload contracts for /wizard (history/double-next live in Ux).</summary>
+[Collection(WizardE2ECollection.Name)]
+public class WizardNavigationTests(BlazorWebassemblyFixture<Program> fixture)
+{
+    /// <summary>Summary: Jugglers and period chosen on step 1 must survive forward and back navigation.</summary>
+    [Fact]
+    public async Task Jugglers_And_Period_Survive_Step_Navigation()
+    {
+        var page = await fixture.Context!.NewPageAsync();
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await wizard.WaitUntilLoadedAsync();
+
+        await wizard.SelectJugglerChipAsync(3);
+        await wizard.SetPeriodAsync(7);
+        await wizard.ClickNextAsync();
+        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ClickBackAsync();
+        await wizard.ExpectStepTitleAsync("Jongleure & Periode");
+
+        await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("7");
+        await Assertions
+            .Expect(page.Locator(".wizard-juggler-picker .wizard-chip.active"))
+            .ToHaveTextAsync("3");
+    }
+
+    /// <summary>Summary: Full reload must open a coherent editing session at step 1 with default inputs.</summary>
+    [Fact]
+    public async Task Reload_Opens_Default_Editing_Session()
+    {
+        var page = await fixture.Context!.NewPageAsync();
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await wizard.WaitUntilLoadedAsync();
+
+        await wizard.SelectJugglerChipAsync(4);
+        await wizard.SetPeriodAsync(9);
+        await wizard.AdvanceToFiltersAsync();
+
+        await page.ReloadAsync(new PageReloadOptions { WaitUntil = WaitUntilState.NetworkIdle });
+        wizard = new WizardPageObject(page);
+        await wizard.WaitUntilLoadedAsync();
+
+        await wizard.ExpectStepTitleAsync("Jongleure & Periode");
+        await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("5");
+        await Assertions
+            .Expect(page.Locator(".wizard-juggler-picker .wizard-chip.active"))
+            .ToHaveTextAsync("2");
+        await Assertions.Expect(wizard.Results).ToBeHiddenAsync();
+    }
+}

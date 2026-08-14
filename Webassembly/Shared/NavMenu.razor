@@ -1,52 +1,35 @@
-﻿<div class="pznav-top-row top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="pznav-brand navbar-brand" href="">
-            <span class="pznav-logo">PZ</span>
+﻿<nav class="pznav" aria-label="Hauptnavigation">
+    <div class="pznav-bar">
+        <a class="pznav-brand" href="" aria-label="Passing Zone – Siteswap Generator">
+            <img class="pznav-logo" src="images/brand/passing_zone_short_logo.svg" width="52" height="32" alt="Passing Zone" />
             <span class="pznav-brand-text">Siteswap Generator</span>
         </a>
-        <button title="Navigation menu" class="pznav-toggler navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="pznav-toggler-icon"></span>
+        <button type="button" title="Navigation menu" class="pznav-toggler" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
+            <span class="pznav-toggler-icon" aria-hidden="true"></span>
         </button>
+        <div class="@NavMenuCssClass pznav-links">
+            <NavLink class="pznav-link" href="wizard" Match="NavLinkMatch.Prefix" @onclick="CloseNavMenu">
+                Assistent
+            </NavLink>
+            <NavLink class="pznav-link" href="CalculateTransition" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                Transition
+            </NavLink>
+            <NavLink class="pznav-link" href="SiteswapState" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                State
+            </NavLink>
+            <NavLink class="pznav-link" href="Settings" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                Settings
+            </NavLink>
+        </div>
     </div>
-</div>
-
-<div class="@NavMenuCssClass pznav-menu" @onclick="ToggleNavMenu">
-    <div class="pznav-brand-panel">
-        <span class="pznav-logo pznav-logo-lg">PZ</span>
-        <span class="pznav-eyebrow">SITESWAP GENERATOR</span>
-    </div>
-    <ul class="nav flex-column pznav-list">
-        <li class="nav-item px-3">
-            <NavLink class="pznav-link nav-link" href="wizard" Match="NavLinkMatch.All">
-                <span class="pznav-icon">🪄</span> Assistent
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="pznav-link nav-link" href="CalculateTransition" Match="NavLinkMatch.All">
-                <span class="pznav-icon">🔀</span> Transition
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="pznav-link nav-link" href="SiteswapState" Match="NavLinkMatch.All">
-                <span class="pznav-icon">🧮</span> State
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="pznav-link nav-link" href="Settings" Match="NavLinkMatch.All">
-                <span class="pznav-icon">⚙️</span> Settings
-            </NavLink>
-        </li>
-    </ul>
-</div>
+</nav>
 
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? NavMenuCssClass => collapseNavMenu ? "pznav-links-collapsed" : null;
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+    private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
 
+    private void CloseNavMenu() => collapseNavMenu = true;
 }

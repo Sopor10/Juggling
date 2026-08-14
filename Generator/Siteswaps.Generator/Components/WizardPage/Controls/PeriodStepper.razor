@@ -25,6 +25,10 @@
                 @onpointerdown:stopPropagation="true"
                 @onclick="() => ChangeBy(1)">+</button>
     </div>
+    @if (_clampMessage is not null)
+    {
+        <p class="wizard-clamp-feedback" role="status">@_clampMessage</p>
+    }
 </div>
 
 @code {
@@ -40,6 +44,8 @@
     [Parameter]
     public int Max { get; set; } = WizardState.MaxPeriod;
 
+    private string? _clampMessage;
+
     private async Task ChangeBy(int delta) => await SetValue(Value + delta);
 
     private async Task OnExactInput(ChangeEventArgs e)
@@ -51,9 +57,13 @@
         await SetValue(parsed);
     }
 
-    private async Task SetValue(int v)
+    private async Task SetValue(int requested)
     {
-        v = Math.Clamp(v, Min, Max);
+        var v = Math.Clamp(requested, Min, Max);
+        _clampMessage = v != requested
+            ? $"Wert auf {v} begrenzt (erlaubt: {Min}–{Max})."
+            : null;
+
         if (v == Value)
         {
             return;

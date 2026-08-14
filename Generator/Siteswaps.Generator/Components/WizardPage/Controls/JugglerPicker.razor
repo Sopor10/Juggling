@@ -20,6 +20,10 @@
                @onpointerdown:stopPropagation="true"
                @onchange="OnExactInput" />
     </div>
+    @if (_clampMessage is not null)
+    {
+        <p class="wizard-clamp-feedback" role="status">@_clampMessage</p>
+    }
 </div>
 
 @code {
@@ -39,6 +43,8 @@
     [Parameter]
     public int MaxExact { get; set; } = WizardState.MaxJugglersExact;
 
+    private string? _clampMessage;
+
     private IEnumerable<int> Options => Enumerable.Range(MinOption, MaxOption - MinOption + 1);
 
     private async Task Select(int v) => await SetValue(v);
@@ -51,9 +57,13 @@
         }
     }
 
-    private async Task SetValue(int v)
+    private async Task SetValue(int requested)
     {
-        v = Math.Clamp(v, MinOption, MaxExact);
+        var v = Math.Clamp(requested, MinOption, MaxExact);
+        _clampMessage = v != requested
+            ? $"Wert auf {v} begrenzt (erlaubt: {MinOption}–{MaxExact})."
+            : null;
+
         if (v == Value)
         {
             return;

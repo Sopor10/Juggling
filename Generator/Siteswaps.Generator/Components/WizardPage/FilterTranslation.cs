@@ -11,69 +11,12 @@ namespace Siteswaps.Generator.Components.WizardPage;
 
 /// <summary>
 /// Fluxor-free adaptation of the filter-tree construction and generator-input building logic
-/// from Components/Internal/Generate/GenerateSiteswapEffect.cs (read-only reference, not
-/// modified). Builds an AndNode/OrNode/FilterLeaf tree from the wizard's flat filter list +
-/// connectors (the DNF "Or of And-groups" construction from design-mockups/shared/pz-demo.js,
-/// computeGroups()), then reuses the same FilterBuilder/ISiteswapFilter machinery from
+/// from Components/Internal/Generate/GenerateSiteswapEffect.cs. Reuses the wizard's nested
+/// <see cref="FilterTree"/> and the FilterBuilder/ISiteswapFilter machinery from
 /// Siteswaps.Generator.Core to build one SiteswapGenerator per club count.
 /// </summary>
 internal static class FilterTranslation
 {
-    public static List<List<WizardFilterEntry>> ComputeGroups(
-        IReadOnlyList<WizardFilterEntry> filters,
-        IReadOnlyList<WizardFilterConnector> connectors
-    )
-    {
-        if (filters.Count == 0)
-        {
-            return new List<List<WizardFilterEntry>>();
-        }
-
-        var groups = new List<List<WizardFilterEntry>> { new() { filters[0] } };
-        for (var i = 1; i < filters.Count; i++)
-        {
-            if (i - 1 < connectors.Count && connectors[i - 1] == WizardFilterConnector.And)
-            {
-                groups[^1].Add(filters[i]);
-            }
-            else
-            {
-                groups.Add(new List<WizardFilterEntry> { filters[i] });
-            }
-        }
-
-        return groups;
-    }
-
-    public static FilterTree BuildFilterTree(
-        IReadOnlyList<WizardFilterEntry> filters,
-        IReadOnlyList<WizardFilterConnector> connectors
-    )
-    {
-        var groups = ComputeGroups(filters, connectors);
-        if (groups.Count == 0)
-        {
-            return new FilterTree(new AndNode());
-        }
-
-        var groupNodes = groups
-            .Select(group =>
-                group.Count == 1
-                    ? (FilterNode)new FilterLeaf(group[0].Filter)
-                    : new AndNode(
-                        group
-                            .Select(entry => (FilterNode)new FilterLeaf(entry.Filter))
-                            .ToImmutableList()
-                    )
-            )
-            .ToList();
-
-        FilterNode root =
-            groupNodes.Count == 1 ? groupNodes[0] : new OrNode(groupNodes.ToImmutableList());
-
-        return new FilterTree(root);
-    }
-
     public static List<SiteswapGenerator> CreateGenerators(WizardState state)
     {
         var result = new List<SiteswapGenerator>();
@@ -98,8 +41,6 @@ internal static class FilterTranslation
         var maxHeight = allowedHeights.Max();
         var minHeight = allowedHeights.Min();
 
-        var filterTree = BuildFilterTree(state.Filters, state.Connectors);
-
         for (var number = state.Clubs.MinNumber; number <= state.Clubs.MaxNumber; number++)
         {
             var input = new SiteswapGeneratorInput
@@ -112,7 +53,9 @@ internal static class FilterTranslation
 
             var filters = new List<ISiteswapFilter>();
 
-            var treeFilter = filterTree.Root?.Visit(new FilterBuilderVisitor(input, state));
+            var treeFilter = state.FilterTree.Root?.Visit(
+                new FilterBuilderVisitor(input, state)
+            );
             if (treeFilter is not null)
             {
                 filters.Add(treeFilter);
@@ -143,7 +86,11 @@ internal static class FilterTranslation
             new OrFilter(node.Children.Select(x => x.Visit(this)));
 
         public ISiteswapFilter Visit(FilterLeaf node) =>
-            ToFilter(node.Filter, state.NumberOfJugglers, state.ShowThrowNames is false);
+            ToFilter(
+                WizardFilterTree.Unwrap(node.Filter),
+                state.NumberOfJugglers,
+                state.ShowThrowNames is false
+            );
 
         private ISiteswapFilter ToFilter(
             IFilterInformation filterInformation,

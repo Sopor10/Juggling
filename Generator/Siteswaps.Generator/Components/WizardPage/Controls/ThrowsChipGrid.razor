@@ -25,9 +25,12 @@
     public List<Throw> Selected { get; set; } = new();
 
     [Parameter]
+    public int MaxHeight { get; set; } = 13;
+
+    [Parameter]
     public EventCallback SelectionChanged { get; set; }
 
-    private IEnumerable<Throw> AllThrows => Throw.All(WizardState.MaxThrowHeight);
+    private IEnumerable<Throw> AllThrows => Throw.All(MaxHeight);
 
     private async Task Toggle(Throw t)
     {

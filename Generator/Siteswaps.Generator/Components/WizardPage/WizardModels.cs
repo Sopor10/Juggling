@@ -1,4 +1,5 @@
 using Siteswaps.Generator.Components.State;
+using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Components.WizardPage;
@@ -15,20 +16,7 @@ public enum WizardPhase
 }
 
 /// <summary>
-/// Connector between two neighbouring filters in the flat filter list, mirroring the
-/// validated UX from design-mockups/shared/pz-demo.js (`pzInitFilterBuilder`): consecutive
-/// "And" connectors form a group, groups are joined by "Or". Every combination of connectors
-/// is automatically a valid "Or of And-groups" (DNF) - there is nothing to validate.
-/// </summary>
-public enum WizardFilterConnector
-{
-    And,
-    Or,
-}
-
-/// <summary>
-/// One entry of the flat filter list. Wraps one of the existing, Fluxor-free
-/// <see cref="IFilterInformation"/> implementations from the main app (read-only reference).
+/// One leaf in the nested filter tree, used when opening the editor sheet.
 /// </summary>
 public sealed record WizardFilterEntry(int Id, IFilterInformation Filter);
 
@@ -53,8 +41,16 @@ public sealed class WizardState
     public const int MinClubs = 2;
     public const int MaxClubs = 30;
 
-    /// <summary>Highest throw height offered anywhere in the wizard (chip grid, pattern palette, state grid).</summary>
-    public const int MaxThrowHeight = 12;
+    /// <summary>
+    /// Absolute ceiling for Settings MaxHeight (matches Settings.razor Max="50").
+    /// </summary>
+    public const int AbsoluteMaxThrowHeight = 50;
+
+    /// <summary>
+    /// Highest throw height offered in the chip grid and state filter.
+    /// Loaded from Settings (localStorage key "settings"); default matches SettingsDto.
+    /// </summary>
+    public int MaxThrowHeight { get; set; } = 13;
 
     public int CurrentStep { get; set; }
 
@@ -72,9 +68,10 @@ public sealed class WizardState
 
     public List<Throw> AllowedThrows { get; } = DefaultThrows();
 
-    public List<WizardFilterEntry> Filters { get; } = new();
-
-    public List<WizardFilterConnector> Connectors { get; } = new();
+    /// <summary>
+    /// Nested And/Or filter tree. Null root means no filters.
+    /// </summary>
+    public FilterTree FilterTree { get; set; } = new(null);
 
     public List<Siteswap> Results { get; } = new();
 
@@ -99,11 +96,16 @@ public sealed class WizardState
         Clubs = new Between { MinNumber = 5, MaxNumber = 7 };
         ShowThrowNames = true;
         AllowedThrows.Clear();
-        AllowedThrows.AddRange(DefaultThrows());
-        Filters.Clear();
-        Connectors.Clear();
+        AllowedThrows.AddRange(DefaultThrows().Where(t => t.Height <= MaxThrowHeight));
+        FilterTree = new FilterTree(null);
         Results.Clear();
         WasCancelled = false;
+    }
+
+    public void ApplyMaxThrowHeight(int maxHeight)
+    {
+        MaxThrowHeight = Math.Clamp(maxHeight, 1, AbsoluteMaxThrowHeight);
+        AllowedThrows.RemoveAll(t => t.Height > MaxThrowHeight);
     }
 
     private static List<Throw> DefaultThrows() =>

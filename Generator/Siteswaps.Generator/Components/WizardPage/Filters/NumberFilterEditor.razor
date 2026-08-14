@@ -3,25 +3,31 @@
 
 <p class="wizard-hint">z. B. „genau 2× Heff“</p>
 <div class="wizard-number-row">
-    <label class="wizard-sr-only" for="numComparison">Vergleich</label>
-    <select id="numComparison" class="wizard-select" value="@Value.Type" @onchange="OnTypeChanged">
-        <option value="@EasyNumberFilter.NumberFilterType.Exactly">Genau</option>
-        <option value="@EasyNumberFilter.NumberFilterType.Maximum">Maximal</option>
-        <option value="@EasyNumberFilter.NumberFilterType.AtLeast">Mindestens</option>
-    </select>
+    <WizardSelect Id="numComparison"
+                  AriaLabel="Vergleich"
+                  Value="@Value.Type.ToString()"
+                  ValueChanged="OnTypeChanged"
+                  Options="_typeOptions" />
     <label class="wizard-sr-only" for="numAmount">Anzahl</label>
     <input id="numAmount" type="number" min="0" max="30" class="wizard-input-number"
            value="@Value.Amount" @oninput="OnAmountChanged" />
-    <label class="wizard-sr-only" for="numThrow">Wurf</label>
-    <select id="numThrow" class="wizard-select" value="@Value.Throw.Height" @onchange="OnThrowChanged">
-        @foreach (var t in PossibleThrows)
-        {
-            <option value="@t.Height">@t.GetDisplayValue(true)</option>
-        }
-    </select>
+    <WizardSelect Id="numThrow"
+                  AriaLabel="Wurf"
+                  Value="@Value.Throw.Height.ToString()"
+                  ValueChanged="OnThrowChanged"
+                  Options="_throwOptions" />
 </div>
 
 @code {
+    private static readonly IReadOnlyList<WizardSelect.Option> _typeOptions =
+    [
+        new(EasyNumberFilter.NumberFilterType.Exactly.ToString(), "Genau"),
+        new(EasyNumberFilter.NumberFilterType.Maximum.ToString(), "Maximal"),
+        new(EasyNumberFilter.NumberFilterType.AtLeast.ToString(), "Mindestens"),
+    ];
+
+    private IReadOnlyList<WizardSelect.Option> _throwOptions = [];
+
     [Parameter, EditorRequired]
     public IReadOnlyList<Throw> PossibleThrows { get; set; } = Array.Empty<Throw>();
 
@@ -31,9 +37,16 @@
     [Parameter]
     public EventCallback<EasyNumberFilter.NumberFilter> ValueChanged { get; set; }
 
-    private async Task OnTypeChanged(ChangeEventArgs e)
+    protected override void OnParametersSet()
     {
-        if (Enum.TryParse<EasyNumberFilter.NumberFilterType>(e.Value?.ToString(), out var type))
+        _throwOptions = PossibleThrows
+            .Select(t => new WizardSelect.Option(t.Height.ToString(), t.GetDisplayValue(true)))
+            .ToArray();
+    }
+
+    private async Task OnTypeChanged(string value)
+    {
+        if (Enum.TryParse<EasyNumberFilter.NumberFilterType>(value, out var type))
         {
             await Update(Value with { Type = type });
         }
@@ -47,10 +60,10 @@
         }
     }
 
-    private async Task OnThrowChanged(ChangeEventArgs e)
+    private async Task OnThrowChanged(string value)
     {
         if (
-            int.TryParse(e.Value?.ToString(), out var height)
+            int.TryParse(value, out var height)
             && PossibleThrows.FirstOrDefault(t => t.Height == height) is { } t
         )
         {

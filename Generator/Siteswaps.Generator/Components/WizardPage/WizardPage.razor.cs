@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using Blazored.LocalStorage;
 using Siteswaps.Generator.Components.State;
+using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;
 using Siteswaps.Generator.Core.Generator;
 
@@ -41,6 +43,9 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     [Inject]
     private IJSRuntime JsRuntime { get; set; } = default!;
 
+    [Inject]
+    private ILocalStorageService LocalStorage { get; set; } = default!;
+
     private bool IsStepActive(int step) => State.CurrentStep == step;
 
     private bool IsLastStep => State.CurrentStep == WizardState.TotalSteps - 1;
@@ -63,6 +68,16 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     protected override void OnInitialized()
     {
         Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = await LocalStorage.GetItemAsync<Settings.SettingsDto>("settings");
+        State.ApplyMaxThrowHeight(settings?.MaxHeight ?? new Settings.SettingsDto().MaxHeight);
+        if (settings is not null)
+        {
+            State.ShowThrowNames = settings.ShowThrowNames;
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -225,7 +240,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
         if (next)
         {
-            await AdvanceStepAsync();
+            await OnNextClicked();
         }
         else
         {
@@ -233,44 +248,44 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
     }
 
-    private void OpenAddFilterSheet() => _filterSheet?.OpenForNew();
+    private FilterNode? _insertParent;
+
+    private void OpenAddFilterSheet()
+    {
+        _insertParent = null;
+        _filterSheet?.OpenForNew();
+    }
+
+    private void OpenAddFilterInGroup(FilterNode? parent)
+    {
+        _insertParent = parent;
+        _filterSheet?.OpenForNew();
+    }
 
     private void OpenEditFilterSheet(WizardFilterEntry entry) => _filterSheet?.OpenForEdit(entry);
+
+    private void OnFilterTreeChanged(FilterTree tree)
+    {
+        State.FilterTree = tree;
+    }
 
     private void OnFilterAdded(IFilterInformation filter)
     {
         var id = State.NextFilterId();
-        if (State.Filters.Count > 0)
-        {
-            State.Connectors.Add(WizardFilterConnector.And);
-        }
-
-        State.Filters.Add(new WizardFilterEntry(id, filter));
+        var leaf = new FilterLeaf(new WizardIdentifiedFilter(id, filter));
+        State.FilterTree = WizardFilterTree.AddLeaf(State.FilterTree, _insertParent, leaf);
+        _insertParent = null;
     }
 
     private void OnFilterEdited((int Id, IFilterInformation Filter) args)
     {
-        var index = State.Filters.FindIndex(f => f.Id == args.Id);
-        if (index >= 0)
-        {
-            State.Filters[index] = new WizardFilterEntry(args.Id, args.Filter);
-        }
+        State.FilterTree = WizardFilterTree.ReplaceLeaf(State.FilterTree, args.Id, args.Filter);
     }
 
     private void RemoveFilter(int id)
     {
-        var index = State.Filters.FindIndex(f => f.Id == id);
-        if (index < 0)
-        {
-            return;
-        }
-
-        State.Filters.RemoveAt(index);
-        if (State.Connectors.Count > 0)
-        {
-            var connectorIndex = Math.Min(index, State.Connectors.Count - 1);
-            State.Connectors.RemoveAt(connectorIndex);
-        }
+        State.FilterTree = WizardFilterTree.RemoveLeaf(State.FilterTree, id);
+        _insertParent = null;
     }
 
     private async Task StartGenerationAsync()
@@ -292,6 +307,20 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         if (_jsModule is not null)
         {
             await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
+        }
+
+        var cacheKey = WizardGenerationCacheKey.From(State);
+        if (await TryLoadCachedResultsAsync(cacheKey))
+        {
+            State.Phase = WizardPhase.Results;
+            _isStartingGeneration = false;
+            await InvokeAsync(StateHasChanged);
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
+            }
+
+            return;
         }
 
         await Task.Delay(1);
@@ -350,6 +379,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         else
         {
             State.Results.AddRange(buffer);
+            await SaveCachedResultsAsync(cacheKey, State.Results);
         }
 
         State.Phase = WizardPhase.Results;
@@ -359,6 +389,56 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         if (_jsModule is not null)
         {
             await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
+        }
+    }
+
+    private async Task<bool> TryLoadCachedResultsAsync(string cacheKey)
+    {
+        try
+        {
+            var cached = await LocalStorage.GetItemAsync<WizardGenerationCacheEntry>(cacheKey);
+            if (cached is null)
+            {
+                return false;
+            }
+
+            if (cached.IsExpired())
+            {
+                await LocalStorage.RemoveItemAsync(cacheKey);
+                return false;
+            }
+
+            State.Results.Clear();
+            foreach (var value in cached.Results)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    continue;
+                }
+
+                State.Results.Add(Siteswap.CreateFromCorrect(value));
+            }
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    private async Task SaveCachedResultsAsync(string cacheKey, IReadOnlyList<Siteswap> results)
+    {
+        try
+        {
+            await LocalStorage.SetItemAsync(
+                cacheKey,
+                WizardGenerationCacheEntry.FromResults(results)
+            );
+        }
+        catch (Exception)
+        {
+            // Quota / private mode: generation still succeeded; cache is best-effort.
         }
     }
 

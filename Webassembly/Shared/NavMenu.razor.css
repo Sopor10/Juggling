@@ -1,11 +1,4 @@
-/* Passing Zone visual language for the app navigation - independent copy of the
-   design tokens from design-mockups/shared/pz-theme.css / the mobile pages'
-   *.razor.css files (purple/orange palette, Baloo 2 display font).
-   The 'Baloo 2' font itself is loaded globally via wwwroot/css/app.css since
-   @import is not allowed inside scoped (CSS-isolated) stylesheets. */
-
-.pznav-top-row,
-.pznav-menu {
+.pznav {
     --pznav-purple-950: #241a3d;
     --pznav-purple-900: #2c1f52;
     --pznav-purple-800: #33225d;
@@ -17,11 +10,62 @@
     --pznav-purple-100: #e8e1f7;
     --pznav-orange: #f9a500;
     --pznav-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    background: radial-gradient(140% 180% at 15% 0%, var(--pznav-purple-600) 0%, var(--pznav-purple-800) 55%, var(--pznav-purple-950) 100%);
+    box-shadow: 0 4px 16px -6px rgba(36, 26, 61, 0.45);
 }
 
-.navbar-toggler {
-    background-color: transparent;
+.pznav-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    min-height: 3.5rem;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+}
+
+.pznav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white !important;
+    text-decoration: none;
+    margin-right: auto;
+}
+
+.pznav-brand-text {
+    font-family: var(--pznav-font-display);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.pznav-logo {
+    display: block;
+    height: 32px;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.pznav-toggler {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
     border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.pznav-toggler:hover {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .pznav-toggler-icon {
@@ -33,103 +77,30 @@
     mask: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23fff' stroke-width='2' stroke-linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
-.top-row.pznav-top-row {
-    height: 3.5rem;
-    background: radial-gradient(140% 180% at 15% 0%, var(--pznav-purple-600) 0%, var(--pznav-purple-800) 55%, var(--pznav-purple-950) 100%);
-}
-
-.pznav-brand {
+.pznav-links {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    color: white !important;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    padding: 4px 0 10px;
 }
 
-.pznav-brand-text {
-    font-family: var(--pznav-font-display);
-    font-weight: 700;
-    font-size: 1rem;
+.pznav-links-collapsed {
+    display: none;
 }
-
-.pznav-logo {
-    font-family: var(--pznav-font-display);
-    font-weight: 800;
-    color: white;
-    border: 2px solid white;
-    border-radius: 8px;
-    padding: 1px 6px;
-    line-height: 1.3;
-    font-size: 13px;
-    flex-shrink: 0;
-}
-
-.pznav-logo-lg {
-    font-size: 16px;
-    padding: 3px 9px;
-    border-radius: 10px;
-    border-width: 2.5px;
-}
-
-.pznav-menu {
-    background: linear-gradient(180deg, var(--pznav-purple-700) 0%, var(--pznav-purple-950) 100%);
-}
-
-.pznav-brand-panel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 18px 20px 14px;
-}
-
-.pznav-eyebrow {
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-}
-
-.pznav-divider {
-    height: 1px;
-    margin: 10px 20px 10px 3rem;
-    background: rgba(255, 255, 255, 0.12);
-    list-style: none;
-}
-
-.pznav-list {
-    padding-bottom: 12px;
-}
-
-.nav-item {
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding-bottom: 0.35rem;
-}
-
-    .nav-item:first-of-type {
-        padding-top: 0.5rem;
-    }
-
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
 
 .pznav-link {
-    color: rgba(255, 255, 255, 0.75) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
     border-radius: 999px;
-    height: 2.9rem;
+    min-height: 2.75rem;
     display: flex;
     align-items: center;
-    gap: 10px;
-    line-height: 1;
-    padding-left: 14px !important;
+    padding: 0 16px;
     transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.pznav-icon {
-    font-size: 1rem;
-    width: 1.4rem;
-    text-align: center;
-    flex-shrink: 0;
 }
 
 .pznav-link.active {
@@ -146,15 +117,38 @@
 
 .pznav-link.active:hover {
     background: var(--pznav-orange);
+    color: var(--pznav-purple-950) !important;
 }
 
 @media (min-width: 718px) {
-    .navbar-toggler {
+    .pznav-toggler {
         display: none;
     }
 
-    .collapse.pznav-menu {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
+    .pznav-bar {
+        flex-wrap: nowrap;
+        padding: 0 1.25rem;
+    }
+
+    .pznav-links,
+    .pznav-links-collapsed {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        margin-left: auto;
+        margin-right: 0;
+        padding: 0;
+        gap: 4px;
+    }
+
+    .pznav-brand {
+        margin-right: 0;
+    }
+
+    .pznav-link {
+        min-height: 2.4rem;
+        padding: 0 14px;
+        font-size: 0.9rem;
     }
 }

@@ -1,36 +1,29 @@
-@* Dual-thumb range slider built without JS interop: two overlapping native
-   <input type="range"> elements. Pointer-events on the track are disabled and
-   re-enabled only on the ::-webkit-slider-thumb / ::-moz-range-thumb pseudo
-   elements (see DualRangeSlider.razor.css), so the user can grab either thumb
-   directly even though both inputs occupy the exact same area. When both
-   values are equal, the later (max) input's thumb sits exactly on top of the
-   min input's thumb; :active/:focus-within z-index rules in the stylesheet
-   bring whichever one the user is actually interacting with to the front.
-   Tap-to-jump on the track container is handled via DualRangeSlider.razor.js. *@
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 @inject IJSRuntime JsRuntime
 
-<div class="wizard-dualrange">
+<div class="wizard-dualrange" data-wizard-no-swipe>
     <div class="wizard-dualrange-echo">
-        <span>@Min</span> – <span>@Max</span>
+        <span>@SortedMin</span> – <span>@SortedMax</span>
     </div>
     <div @ref="_trackWrapRef" class="wizard-dualrange-track-wrap">
         <div class="wizard-dualrange-track">
             <div class="wizard-dualrange-fill" style="@FillStyle"></div>
         </div>
-        <label class="wizard-sr-only" for="@($"{Id}-min")">@MinLabel</label>
-        <input @ref="_minInputRef" id="@($"{Id}-min")" type="range" class="wizard-dualrange-input"
-               min="@LowerBound" max="@UpperBound" value="@Min"
-               aria-label="@MinLabel"
+        <label class="wizard-sr-only" for="@($"{Id}-a")">@MinLabel</label>
+        <input @ref="_aInputRef" id="@($"{Id}-a")" type="range"
+               class="wizard-dualrange-input @_aRoleClass"
+               min="@LowerBound" max="@UpperBound" value="@_a"
+               aria-label="@(_a <= _b ? MinLabel : MaxLabel)"
                @onpointerdown:stopPropagation="true"
-               @oninput="OnMinInput" />
-        <label class="wizard-sr-only" for="@($"{Id}-max")">@MaxLabel</label>
-        <input @ref="_maxInputRef" id="@($"{Id}-max")" type="range" class="wizard-dualrange-input wizard-dualrange-input-max"
-               min="@LowerBound" max="@UpperBound" value="@Max"
-               aria-label="@MaxLabel"
+               @oninput="OnAInput" />
+        <label class="wizard-sr-only" for="@($"{Id}-b")">@MaxLabel</label>
+        <input @ref="_bInputRef" id="@($"{Id}-b")" type="range"
+               class="wizard-dualrange-input wizard-dualrange-input-b @_bRoleClass"
+               min="@LowerBound" max="@UpperBound" value="@_b"
+               aria-label="@(_b < _a ? MinLabel : MaxLabel)"
                @onpointerdown:stopPropagation="true"
-               @oninput="OnMaxInput" />
+               @oninput="OnBInput" />
     </div>
     <div class="wizard-dualrange-bounds">
         <span>@LowerBound</span><span>@UpperBound</span>
@@ -42,9 +35,13 @@
     private readonly string Id = $"dualrange-{++_idCounter}";
 
     private ElementReference _trackWrapRef;
-    private ElementReference _minInputRef;
-    private ElementReference _maxInputRef;
+    private ElementReference _aInputRef;
+    private ElementReference _bInputRef;
     private IJSObjectReference? _module;
+
+    private int _a;
+    private int _b;
+    private bool _initialized;
 
     [Parameter]
     public int LowerBound { get; set; } = WizardState.MinClubs;
@@ -70,18 +67,56 @@
     [Parameter]
     public EventCallback<int> MaxChanged { get; set; }
 
+    private int SortedMin => Math.Min(_a, _b);
+
+    private int SortedMax => Math.Max(_a, _b);
+
+    private string _aRoleClass => _a <= _b ? "is-low" : "is-high";
+
+    private string _bRoleClass => _b < _a ? "is-low" : "is-high";
+
     private string FillStyle
     {
         get
         {
-            var minP = ToPercent(Min);
-            var maxP = ToPercent(Max);
-            return $"left:{minP:0.##}%;width:{Math.Max(0, maxP - minP):0.##}%";
+            var lowP = ToPercent(SortedMin);
+            var highP = ToPercent(SortedMax);
+            return $"left:{lowP:0.##}%;width:{Math.Max(0, highP - lowP):0.##}%";
         }
     }
 
     private double ToPercent(int v) =>
         UpperBound == LowerBound ? 0 : Math.Clamp((v - LowerBound) * 100.0 / (UpperBound - LowerBound), 0, 100);
+
+    protected override void OnParametersSet()
+    {
+        var min = Math.Clamp(Math.Min(Min, Max), LowerBound, UpperBound);
+        var max = Math.Clamp(Math.Max(Min, Max), LowerBound, UpperBound);
+
+        if (!_initialized)
+        {
+            _a = min;
+            _b = max;
+            _initialized = true;
+            return;
+        }
+
+        if (min == SortedMin && max == SortedMax)
+        {
+            return;
+        }
+
+        if (_a <= _b)
+        {
+            _a = min;
+            _b = max;
+        }
+        else
+        {
+            _a = max;
+            _b = min;
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -97,14 +132,18 @@
         await _module.InvokeVoidAsync(
             "initTrackTap",
             _trackWrapRef,
-            _minInputRef,
-            _maxInputRef,
+            _aInputRef,
+            _bInputRef,
             LowerBound,
             UpperBound
         );
     }
 
-    private async Task OnMinInput(ChangeEventArgs e)
+    private Task OnAInput(ChangeEventArgs e) => OnHandleInput(e, isA: true);
+
+    private Task OnBInput(ChangeEventArgs e) => OnHandleInput(e, isA: false);
+
+    private async Task OnHandleInput(ChangeEventArgs e, bool isA)
     {
         if (!int.TryParse(e.Value?.ToString(), out var v))
         {
@@ -112,32 +151,44 @@
         }
 
         v = Math.Clamp(v, LowerBound, UpperBound);
-        v = Math.Min(v, Max);
-        if (v == Min)
+        if (isA)
         {
-            return;
+            if (v == _a)
+            {
+                return;
+            }
+
+            _a = v;
+        }
+        else
+        {
+            if (v == _b)
+            {
+                return;
+            }
+
+            _b = v;
         }
 
-        Min = v;
-        await MinChanged.InvokeAsync(Min);
+        await EmitSortedAsync();
     }
 
-    private async Task OnMaxInput(ChangeEventArgs e)
+    private async Task EmitSortedAsync()
     {
-        if (!int.TryParse(e.Value?.ToString(), out var v))
+        var min = SortedMin;
+        var max = SortedMax;
+
+        if (min != Min)
         {
-            return;
+            Min = min;
+            await MinChanged.InvokeAsync(min);
         }
 
-        v = Math.Clamp(v, LowerBound, UpperBound);
-        v = Math.Max(v, Min);
-        if (v == Max)
+        if (max != Max)
         {
-            return;
+            Max = max;
+            await MaxChanged.InvokeAsync(max);
         }
-
-        Max = v;
-        await MaxChanged.InvokeAsync(Max);
     }
 
     public async ValueTask DisposeAsync()

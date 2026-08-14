@@ -1,6 +1,7 @@
 @using Siteswaps.Generator.Components.Internal.EasyFilter
 
 <p class="wizard-hint">Welche zukünftigen Würfe sind belegt?</p>
+<p class="wizard-state-notation" aria-live="polite" aria-atomic="true">@StateNotation</p>
 <div class="wizard-chip-grid wizard-state-grid" role="group" aria-label="Welche zukünftigen Würfe sind belegt?">
     @for (var i = 0; i < Value.Items.Length; i++)
     {
@@ -22,6 +23,8 @@
 
     [Parameter]
     public EventCallback<EasyStateFilter.StateFilter> ValueChanged { get; set; }
+
+    private string StateNotation => Value.Notation();
 
     private async Task Toggle(int index)
     {

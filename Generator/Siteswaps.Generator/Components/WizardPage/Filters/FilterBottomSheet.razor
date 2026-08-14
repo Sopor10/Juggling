@@ -13,21 +13,20 @@
     <div class="wizard-sheet-handle"></div>
     <div class="wizard-sheet-heading">
         <h3 id="wizard-sheet-title" class="wizard-sheet-title">@SheetTitle</h3>
-        <button type="button" class="wizard-sheet-close wizard-btn-ghost" @onclick="Close" aria-label="Filterdialog schließen">Schließen</button>
     </div>
 
     <div class="wizard-tabs" role="tablist" aria-label="Filtertyp">
-        <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.Number ? "active" : "")"
+        <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.Number ? "active" : "")"
                 id="wizard-filter-tab-number" role="tab" aria-selected="@(_activeTab == FilterTabKind.Number ? "true" : "false")"
                 aria-controls="wizard-filter-panel-number" tabindex="@(_activeTab == FilterTabKind.Number ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.Number)"
                 @onclick="() => SelectTab(FilterTabKind.Number)">Anzahl</button>
-        <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.Pattern ? "active" : "")"
+        <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.Pattern ? "active" : "")"
                 id="wizard-filter-tab-pattern" role="tab" aria-selected="@(_activeTab == FilterTabKind.Pattern ? "true" : "false")"
                 aria-controls="wizard-filter-panel-pattern" tabindex="@(_activeTab == FilterTabKind.Pattern ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.Pattern)"
                 @onclick="() => SelectTab(FilterTabKind.Pattern)">Muster</button>
-        <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.State ? "active" : "")"
+        <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.State ? "active" : "")"
                 id="wizard-filter-tab-state" role="tab" aria-selected="@(_activeTab == FilterTabKind.State ? "true" : "false")"
                 aria-controls="wizard-filter-panel-state" tabindex="@(_activeTab == FilterTabKind.State ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.State)"
@@ -35,15 +34,15 @@
     </div>
 
     <div class="wizard-sheet-body">
-        <div id="wizard-filter-panel-number" class="@(_activeTab == FilterTabKind.Number ? "" : "wizard-hidden")" role="tabpanel" aria-labelledby="wizard-filter-tab-number">
+        <div id="wizard-filter-panel-number" class="wizard-sheet-panel @(_activeTab == FilterTabKind.Number ? "active" : null)" role="tabpanel" aria-labelledby="wizard-filter-tab-number" aria-hidden="@(_activeTab == FilterTabKind.Number ? "false" : "true")">
             <NumberFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_numberDraft"
                                  ValueChanged="v => _numberDraft = v" />
         </div>
-        <div id="wizard-filter-panel-pattern" class="@(_activeTab == FilterTabKind.Pattern ? "" : "wizard-hidden")" role="tabpanel" aria-labelledby="wizard-filter-tab-pattern">
+        <div id="wizard-filter-panel-pattern" class="wizard-sheet-panel @(_activeTab == FilterTabKind.Pattern ? "active" : null)" role="tabpanel" aria-labelledby="wizard-filter-tab-pattern" aria-hidden="@(_activeTab == FilterTabKind.Pattern ? "false" : "true")">
             <PatternFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_patternDraft"
                                   ValueChanged="v => _patternDraft = v" Period="Period" NumberOfJugglers="NumberOfJugglers" />
         </div>
-        <div id="wizard-filter-panel-state" class="@(_activeTab == FilterTabKind.State ? "" : "wizard-hidden")" role="tabpanel" aria-labelledby="wizard-filter-tab-state">
+        <div id="wizard-filter-panel-state" class="wizard-sheet-panel @(_activeTab == FilterTabKind.State ? "active" : null)" role="tabpanel" aria-labelledby="wizard-filter-tab-state" aria-hidden="@(_activeTab == FilterTabKind.State ? "false" : "true")">
             <StateFilterEditor @key="_sessionId" Value="_stateDraft" ValueChanged="v => _stateDraft = v" />
         </div>
     </div>
@@ -76,6 +75,9 @@
     public IReadOnlyList<Throw> AllowedThrows { get; set; } = Array.Empty<Throw>();
 
     [Parameter]
+    public int MaxThrowHeight { get; set; } = 13;
+
+    [Parameter]
     public int Period { get; set; } = 5;
 
     [Parameter]
@@ -102,8 +104,8 @@
     private IJSObjectReference? _jsModule;
 
     private EasyNumberFilter.NumberFilter _numberDraft = NewNumberDraft(Array.Empty<Throw>());
-    private NewPatternFilterInformation _patternDraft = NewPatternDraft(Array.Empty<Throw>(), 5, 3);
-    private EasyStateFilter.StateFilter _stateDraft = NewStateDraft();
+    private NewPatternFilterInformation _patternDraft = NewPatternDraft(5);
+    private EasyStateFilter.StateFilter _stateDraft = NewStateDraft(13);
 
     private string SheetTitle => _editingId is null ? "Filter hinzufügen" : "Filter bearbeiten";
 
@@ -112,8 +114,8 @@
         _editingId = null;
         _sessionId++;
         _numberDraft = NewNumberDraft(AllowedThrows);
-        _patternDraft = NewPatternDraft(AllowedThrows, Period, NumberOfJugglers);
-        _stateDraft = NewStateDraft();
+        _patternDraft = NewPatternDraft(Period);
+        _stateDraft = NewStateDraft(MaxThrowHeight);
         _activeTab = FilterTabKind.Number;
         _isOpen = true;
         _validationMessage = null;
@@ -125,8 +127,8 @@
         _editingId = entry.Id;
         _sessionId++;
         _numberDraft = NewNumberDraft(AllowedThrows);
-        _patternDraft = NewPatternDraft(AllowedThrows, Period, NumberOfJugglers);
-        _stateDraft = NewStateDraft();
+        _patternDraft = NewPatternDraft(Period);
+        _stateDraft = NewStateDraft(MaxThrowHeight);
 
         switch (entry.Filter)
         {
@@ -283,22 +285,17 @@
             Throw = throws.FirstOrDefault() ?? Throw.Empty,
         };
 
-    private static NewPatternFilterInformation NewPatternDraft(
-        IReadOnlyList<Throw> throws,
-        int period,
-        int jugglers
-    )
+    private static NewPatternFilterInformation NewPatternDraft(int period)
     {
-        var fallback = throws.FirstOrDefault() ?? Throw.Empty;
         var length = Math.Max(1, period);
         return new NewPatternFilterInformation(
-            Enumerable.Repeat(fallback, length).ToList(),
+            Enumerable.Repeat(Throw.Empty, length).ToList(),
             PatternRotation.Global,
             true,
             false
         );
     }
 
-    private static EasyStateFilter.StateFilter NewStateDraft() =>
-        new([.. new bool[WizardState.MaxThrowHeight]]);
+    private static EasyStateFilter.StateFilter NewStateDraft(int maxThrowHeight) =>
+        new([.. new bool[Math.Max(1, maxThrowHeight)]]);
 }
