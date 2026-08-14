@@ -1,6 +1,6 @@
 /* ==========================================================================
    Design tokens - a small, independent copy of the palette/spacing ideas
-   from design-mockups/shared/pz-theme.css (colors extracted from the
+   from the Passing Zone brand palette (colors extracted from the
    mockups). Intentionally duplicated (not shared/imported) so this page has
    zero coupling to the parallel "card stack" page or the mockup files.
    Defined on the page's own root element; CSS custom properties inherit
