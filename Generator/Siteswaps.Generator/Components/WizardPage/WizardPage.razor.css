@@ -621,7 +621,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.28s ease;
-    z-index: 30;
+    z-index: 110;
 }
 
 .wizard-page ::deep .wizard-sheet-backdrop.open {
@@ -644,7 +644,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     padding: 20px;
-    z-index: 40;
+    z-index: 120;
     display: flex;
     flex-direction: column;
 }

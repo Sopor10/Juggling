@@ -386,8 +386,15 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
 
         var cacheKey = WizardGenerationCacheKey.From(State);
+        var startedAt = Environment.TickCount64;
         if (await TryLoadCachedResultsAsync(cacheKey))
         {
+            var remaining = MinSpinnerVisibleMs - (int)(Environment.TickCount64 - startedAt);
+            if (remaining > 0)
+            {
+                await Task.Delay(remaining);
+            }
+
             State.Phase = WizardPhase.Results;
             _isStartingGeneration = false;
             await InvokeAsync(StateHasChanged);
@@ -401,7 +408,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
         await Task.Delay(1);
 
-        var startedAt = Environment.TickCount64;
         var generators = FilterTranslation.CreateGenerators(State);
         var buffer = new List<Siteswap>();
 
