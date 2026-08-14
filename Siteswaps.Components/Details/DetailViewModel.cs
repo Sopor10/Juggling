@@ -63,7 +63,7 @@ public sealed class DetailViewModel
                         return new JugglerThrow(
                             LocalDisplay: (height * 1.0 / NumberOfJugglers).ToString("0.##"),
                             GlobalDisplay: FormatThrow(height),
-                            NameDisplay: FormatThrowName(height),
+                            NameDisplay: FormatThrowName(height, NumberOfJugglers),
                             Kind: PassOrSelf[globalIndex]
                         );
                     })
@@ -132,26 +132,11 @@ public sealed class DetailViewModel
         global::Siteswap.Details.Siteswap.Transform(height);
 
     /// <summary>
-    /// Common four-handed / passing throw names keyed by global height.
-    /// Unknown heights fall back to siteswap digit notation.
+    /// Passing throw names for a global height, scaled by juggler count
+    /// (see <see cref="PassingThrowNames"/>).
     /// </summary>
-    public static string FormatThrowName(int height) =>
-        height switch
-        {
-            0 => "0",
-            2 => "Zip",
-            4 => "Hold",
-            5 => "Zap",
-            6 => "Self",
-            7 => "Single",
-            8 => "Heff",
-            9 => "Double",
-            10 => "Triple S",
-            11 => "Triple",
-            12 => "Quad",
-            13 => "Quad Pass",
-            _ => FormatThrow(height),
-        };
+    public static string FormatThrowName(int height, int numberOfJugglers) =>
+        PassingThrowNames.Format(height, numberOfJugglers);
 
     private static string FormatPassSelfLetter(global::Siteswap.Details.PassOrSelf value) =>
         value switch

@@ -1,0 +1,150 @@
+.sdv-transitions {
+    display: flex;
+    justify-content: center;
+}
+
+.sdv-transitions-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(100%, 42rem);
+    box-sizing: border-box;
+}
+
+.sdv-transitions-stack > .sdv-section-title {
+    text-align: center;
+    width: 100%;
+}
+
+.sdv-transitions-stack > .sdv-muted {
+    text-align: center;
+    margin: 0 0 20px;
+}
+
+.sdv-transitions-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 20px;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.sdv-transitions-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 8rem;
+}
+
+.sdv-transitions-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sd-purple-500);
+}
+
+.sdv-transitions-from {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: var(--sd-radius-sm);
+    background: color-mix(in srgb, var(--sd-purple-100) 40%, white);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--sd-purple-800);
+}
+
+.sdv-transitions-field ::deep input,
+.sdv-transitions-input,
+.sdv-transitions-length {
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: var(--sd-radius-sm);
+    background: white;
+    color: var(--sd-purple-900);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    width: 100%;
+}
+
+.sdv-transitions-length {
+    max-width: 6rem;
+}
+
+.sdv-transitions-generate {
+    appearance: none;
+    border: 0;
+    border-radius: 999px;
+    min-height: 44px;
+    padding: 10px 22px;
+    background: var(--sd-purple-700);
+    color: white;
+    font-family: var(--sd-font-display);
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.sdv-transitions-generate:hover {
+    background: var(--sd-purple-600);
+}
+
+.sdv-transitions-error {
+    margin: 16px 0 0;
+    color: #b42318;
+    font-weight: 700;
+    text-align: center;
+}
+
+.sdv-transitions-list {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    width: 100%;
+    display: grid;
+    gap: 10px;
+}
+
+.sdv-transitions-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: var(--sd-radius-sm);
+    background: var(--sd-bg);
+}
+
+.sdv-transitions-show {
+    appearance: none;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: 999px;
+    min-height: 36px;
+    padding: 6px 14px;
+    background: white;
+    color: var(--sd-purple-700);
+    font-family: var(--sd-font-display);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.sdv-transitions-show:hover {
+    border-color: var(--sd-purple-400);
+    color: var(--sd-purple-800);
+}
+
+.sdv-transitions-graph {
+    width: 100%;
+    margin-top: 24px;
+    overflow: auto;
+}

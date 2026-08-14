@@ -80,10 +80,10 @@ public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
         await wizard.DeselectAllThrowsAsync();
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Noch Filter?");
+        await wizard.ExpectStepAsync(2);
         await wizard.ClickGenerateAsync();
         await wizard.WaitForResultsAsync();
 

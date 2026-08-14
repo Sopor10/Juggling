@@ -1,60 +1,66 @@
 @using Siteswaps.Generator.Components.Internal
 
 <div class="wizard-results">
-    <div class="wizard-results-header">
-        <h2 class="wizard-results-title">
+    <div class="wizard-results-scroll">
+        <div class="wizard-results-header">
+            <h2 class="wizard-results-title">
+                @if (IsGenerating)
+                {
+                    <text>Generiere…</text>
+                }
+                else
+                {
+                    <text>@Results.Count Ergebnis@(Results.Count == 1 ? "" : "se")</text>
+                }
+            </h2>
             @if (IsGenerating)
             {
-                <text>Generiere…</text>
+                <button type="button" class="wizard-btn-ghost" @onclick="Cancel">Abbrechen</button>
             }
-            else
-            {
-                <text>@Results.Count Ergebnis@(Results.Count == 1 ? "" : "se")</text>
-            }
-        </h2>
-        @if (IsGenerating)
+        </div>
+
+        @if (IsGenerating && Results.Count == 0)
         {
-            <button type="button" class="wizard-btn-ghost" @onclick="Cancel">Abbrechen</button>
+            <div class="wizard-spinner" role="status" aria-live="polite" aria-label="Generiere Ergebnisse">
+                <div class="wizard-spinner-dot"></div>
+                <div class="wizard-spinner-dot"></div>
+                <div class="wizard-spinner-dot"></div>
+            </div>
+        }
+        else if (!IsGenerating && Results.Count == 0)
+        {
+            <p class="wizard-filters-empty">Keine passenden Muster gefunden. Versuche es mit anderen Einstellungen oder weniger Filtern.</p>
+        }
+        else
+        {
+            @if (IsGenerating)
+            {
+                <p class="wizard-loading-more" role="status" aria-live="polite">Lädt weitere Ergebnisse…</p>
+            }
+            <div class="wizard-results-grid" role="list">
+                @foreach (var s in Results.Take(_visibleResultCount))
+                {
+                    <SiteswapCard Siteswap="s" NumberOfJugglers="NumberOfJugglers" />
+                }
+            </div>
+            @if (!IsGenerating && _visibleResultCount < Results.Count)
+            {
+                <button type="button" class="wizard-btn-ghost wizard-load-more" @onclick="LoadMore">
+                    Mehr laden (@Math.Min(_visibleResultCount, Results.Count) von @Results.Count)
+                </button>
+            }
         }
     </div>
-
-    @if (IsGenerating && Results.Count == 0)
-    {
-        <div class="wizard-spinner" role="status" aria-live="polite" aria-label="Generiere Ergebnisse">
-            <div class="wizard-spinner-dot"></div>
-            <div class="wizard-spinner-dot"></div>
-            <div class="wizard-spinner-dot"></div>
-        </div>
-    }
-    else if (!IsGenerating && Results.Count == 0)
-    {
-        <p class="wizard-filters-empty">Keine passenden Muster gefunden. Versuche es mit anderen Einstellungen oder weniger Filtern.</p>
-    }
-    else
-    {
-        @if (IsGenerating)
-        {
-            <p class="wizard-loading-more" role="status" aria-live="polite">Lädt weitere Ergebnisse…</p>
-        }
-        <div class="wizard-results-grid" role="list">
-            @foreach (var s in Results.Take(_visibleResultCount))
-            {
-                <SiteswapCard Siteswap="s" NumberOfJugglers="NumberOfJugglers" />
-            }
-        </div>
-        @if (!IsGenerating && _visibleResultCount < Results.Count)
-        {
-            <button type="button" class="wizard-btn-ghost wizard-load-more" @onclick="LoadMore">
-                Mehr laden (@Math.Min(_visibleResultCount, Results.Count) von @Results.Count)
-            </button>
-        }
-    }
 
     @if (!IsGenerating)
     {
         <div class="wizard-results-actions">
-            <button type="button" class="wizard-btn-ghost" @onclick="BackToEditing">Filter anpassen</button>
-            <button type="button" class="wizard-btn-primary wizard-flex-1" @onclick="StartOver">Neue Suche</button>
+            <div class="wizard-measure">
+                <div class="wizard-nav-buttons">
+                    <button type="button" class="wizard-btn-ghost" @onclick="BackToEditing">Filter anpassen</button>
+                    <button type="button" class="wizard-btn-primary wizard-flex-1" @onclick="StartOver">Neue Suche</button>
+                </div>
+            </div>
         </div>
     }
 </div>

@@ -2,14 +2,14 @@ using Microsoft.Playwright;
 
 namespace Siteswaps.E2ETests;
 
-/// <summary>Page object for the /wizard Blazor route (<c>.wizard-page</c> UI).</summary>
+/// <summary>Page object for the wizard Blazor route at <c>/</c> (<c>.wizard-page</c> UI).</summary>
 public class WizardPageObject(IPage page)
 {
     public IPage Page => page;
 
     public ILocator Root => page.Locator(".wizard-page");
 
-    public ILocator ActiveStepTitle => page.Locator(".wizard-step.active .wizard-step-title");
+    public ILocator ActiveProgressDot => page.Locator(".wizard-dots .wizard-dot.active");
 
     public ILocator NextOrGenerateButton =>
         page.Locator(
@@ -77,14 +77,18 @@ public class WizardPageObject(IPage page)
         await Root.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
-        await ActiveStepTitle.First.WaitForAsync(
+        await ActiveProgressDot.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
+        await page.Locator(".wizard-step.active")
+            .WaitForAsync(
+                new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
+            );
     }
 
     public async Task<bool> IsLoadedAsync()
     {
-        return await Root.IsVisibleAsync() && await ActiveStepTitle.First.IsVisibleAsync();
+        return await Root.IsVisibleAsync() && await ActiveProgressDot.IsVisibleAsync();
     }
 
     public async Task ClickNextAsync()
@@ -105,9 +109,9 @@ public class WizardPageObject(IPage page)
     public async Task AdvanceToFiltersAsync()
     {
         await ClickNextAsync();
-        await ExpectStepTitleAsync("Keulen & Würfe");
+        await ExpectStepAsync(1);
         await ClickNextAsync();
-        await ExpectStepTitleAsync("Noch Filter?");
+        await ExpectStepAsync(2);
     }
 
     public async Task AdvanceToGenerateAsync()
@@ -132,11 +136,18 @@ public class WizardPageObject(IPage page)
             );
     }
 
-    public async Task ExpectStepTitleAsync(string title)
+    public async Task ExpectStepAsync(int stepIndex)
     {
         await Assertions
-            .Expect(ActiveStepTitle.First)
-            .ToHaveTextAsync(title, new LocatorAssertionsToHaveTextOptions { Timeout = 15_000 });
+            .Expect(page.Locator($"#wizard-step-tab-{stepIndex}"))
+            .ToHaveAttributeAsync(
+                "aria-selected",
+                "true",
+                new LocatorAssertionsToHaveAttributeOptions { Timeout = 15_000 }
+            );
+        await Assertions
+            .Expect(page.Locator($"#wizard-panel-{stepIndex}"))
+            .ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions { Timeout = 15_000 });
     }
 
     public async Task OpenAddFilterSheetAsync()

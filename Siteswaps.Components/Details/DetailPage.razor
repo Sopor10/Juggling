@@ -6,8 +6,7 @@
 <div class="sd-page">
     <header class="sd-header">
         <div class="sd-header-row">
-            <a class="sd-back" href="/wizard">← Wizard</a>
-            <h1 class="sd-brand">Siteswap</h1>
+            <a class="sd-back" href="/">← Assistent</a>
             @if (Model is not null)
             {
                 <a class="sd-external" href="@Model.PassistLink" target="_blank" rel="noopener">Passist</a>
@@ -18,7 +17,7 @@
             <div class="sd-header-notation" role="group" aria-label="Siteswap rotation">
                 <button type="button"
                         class="sd-rotate"
-                        aria-label="Rotate siteswap left"
+                        aria-label="Siteswap nach links rotieren"
                         disabled="@(Model.Period <= 1)"
                         @onclick="() => Rotate(-1)">
                     ◄
@@ -26,13 +25,32 @@
                 <span class="sd-header-notation-value">@Model.Notation</span>
                 <button type="button"
                         class="sd-rotate"
-                        aria-label="Rotate siteswap right"
+                        aria-label="Siteswap nach rechts rotieren"
                         disabled="@(Model.Period <= 1)"
                         @onclick="() => Rotate(1)">
                     ►
                 </button>
             </div>
-            <p class="sd-header-meta">@Model.NumberOfJugglers Jongleure · @Model.NumberOfClubs Keulen</p>
+            <div class="sd-header-meta" role="group" aria-label="Jongleure und Keulen">
+                <div class="sd-juggler-stepper" role="group" aria-label="Anzahl Jongleure">
+                    <button type="button"
+                            class="sd-rotate sd-juggler-step"
+                            aria-label="Weniger Jongleure"
+                            disabled="@(Model.NumberOfJugglers <= MinJugglers)"
+                            @onclick="() => ChangeJugglers(-1)">
+                        ◄
+                    </button>
+                    <span class="sd-header-meta-value">@Model.NumberOfJugglers Jongleure</span>
+                    <button type="button"
+                            class="sd-rotate sd-juggler-step"
+                            aria-label="Mehr Jongleure"
+                            disabled="@(Model.NumberOfJugglers >= MaxJugglers)"
+                            @onclick="() => ChangeJugglers(1)">
+                        ►
+                    </button>
+                </div>
+                <span class="sd-header-meta-clubs">@Model.NumberOfClubs Keulen</span>
+            </div>
         }
     </header>
 
@@ -68,6 +86,9 @@
                     case "analysis":
                         <DetailVariantAnalysis Model="Model" />
                         break;
+                    case "transitions":
+                        <DetailVariantTransitions Model="Model" />
+                        break;
                     case "diagrams":
                         <DetailVariantDiagrams Model="Model" />
                         break;
@@ -78,6 +99,9 @@
 </div>
 
 @code {
+    private const int MinJugglers = 1;
+    private const int MaxJugglers = 20;
+
     [Parameter, SupplyParameterFromQuery(Name = "s")]
     public string StringValue { get; set; } = "";
 
@@ -91,12 +115,14 @@
     [
         new("hero", "Übersicht"),
         new("analysis", "Analyse"),
+        new("transitions", "Transitions"),
         new("diagrams", "Diagramme"),
     ];
 
     protected override void OnParametersSet()
     {
-        Model = DetailViewModel.TryCreate(StringValue, NumberOfJugglers);
+        var jugglers = NumberOfJugglers < MinJugglers ? 2 : Math.Clamp(NumberOfJugglers, MinJugglers, MaxJugglers);
+        Model = DetailViewModel.TryCreate(StringValue, jugglers);
         base.OnParametersSet();
     }
 
@@ -111,6 +137,22 @@
 
         var rotated = Model.Value.Rotate(steps).ToString();
         Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("s", rotated));
+    }
+
+    private void ChangeJugglers(int delta)
+    {
+        if (Model is null)
+        {
+            return;
+        }
+
+        var next = Math.Clamp(Model.NumberOfJugglers + delta, MinJugglers, MaxJugglers);
+        if (next == Model.NumberOfJugglers)
+        {
+            return;
+        }
+
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("n", next.ToString()));
     }
 
     private sealed record TabInfo(string Id, string Label);

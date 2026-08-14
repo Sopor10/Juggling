@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 
 namespace Siteswaps.E2ETests;
 
@@ -7,9 +7,8 @@ public static class PageExtensions
 {
     public static async Task<WizardPageObject> OpenWizardAsync(this IPage page, Uri baseUri)
     {
-        var wizardUri = new Uri(baseUri, "wizard");
         await page.GotoAsync(
-            wizardUri.ToString(),
+            baseUri.ToString(),
             new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle }
         );
         return new WizardPageObject(page);

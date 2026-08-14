@@ -52,7 +52,7 @@ public class WizardGenerationTests(BlazorWebassemblyFixture<Program> fixture)
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
         await wizard.SetClubsRangeAsync(6, 6);
         await Assertions.Expect(wizard.ClubsEcho).ToContainTextAsync("6");
         await wizard.ClickNextAsync();

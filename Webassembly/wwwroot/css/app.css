@@ -35,6 +35,10 @@ a, .btn-link {
     background: #f5f3fb;
 }
 
+.content:has(.wizard-page) {
+    overflow: hidden;
+}
+
 html:has(.sd-page),
 body:has(.sd-page) {
     background: #f5f3fb;

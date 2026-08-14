@@ -1,56 +1,59 @@
+@page "/"
 @page "/wizard"
 
 <PageTitle>Assistent – Siteswap Generator</PageTitle>
 
 <div class="wizard-page">
 
+    <header class="wizard-header">
+        <ProgressDots Total="WizardState.ProgressStepCount"
+                      Current="HeaderStep"
+                      Visited="HeaderVisitedSteps"
+                      StepSelected="OnProgressStepSelectedAsync" />
+        @if (State.Phase == WizardPhase.Editing)
+        {
+            <p class="wizard-swipe-hint">@(IsLastStep ? "← wischen zum Generieren →" : "← nach links/rechts wischen →")</p>
+        }
+    </header>
+
     @if (State.Phase == WizardPhase.Editing)
     {
-        <header class="wizard-header">
-            <ProgressDots Total="WizardState.TotalSteps" Current="State.CurrentStep" Visited="State.VisitedSteps" StepSelected="JumpToStepAsync" />
-            <p class="wizard-swipe-hint">@(IsLastStep ? "← wischen zum Generieren →" : "← nach links/rechts wischen →")</p>
-        </header>
-
         <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
         <div @ref="_stepsElement" class="wizard-steps">
 
             <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
                 <div class="wizard-measure">
-                    <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 1 / 3</span></div>
-                    <h2 class="wizard-step-title">Jongleure &amp; Periode</h2>
-                    <p class="wizard-step-subtitle">Wer wirft mit, und wie lang ist das Muster?</p>
+                    <div class="wizard-field">
+                        <p class="wizard-section-label">Jongleure</p>
+                        <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+                    </div>
 
-                    <p class="wizard-section-label">Jongleure</p>
-                    <JugglerPicker @bind-Value="State.NumberOfJugglers" />
-
-                    <p class="wizard-section-label wizard-mt">Periode</p>
-                    <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+                    <div class="wizard-field">
+                        <p class="wizard-section-label">Periode</p>
+                        <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+                    </div>
                 </div>
             </section>
 
             <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
                 <div class="wizard-measure">
-                    <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 2 / 3</span></div>
-                    <h2 class="wizard-step-title">Keulen &amp; Würfe</h2>
-                    <p class="wizard-step-subtitle">Wie viele Keulen, und welche Wurfhöhen dürfen vorkommen?</p>
+                    <div class="wizard-field">
+                        <p class="wizard-section-label">Anzahl Keulen</p>
+                        <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
+                                          Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
+                                          LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                          MinLabel="Keulen Minimum" MaxLabel="Keulen Maximum" />
+                    </div>
 
-                    <p class="wizard-section-label">Anzahl Keulen</p>
-                    <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
-                                      Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
-                                      LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                      MinLabel="Keulen Minimum" MaxLabel="Keulen Maximum" />
-
-                    <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
+                    <div class="wizard-field">
+                        <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
+                    </div>
                 </div>
             </section>
 
             <section id="wizard-panel-2" class="wizard-step wizard-step-filters @(IsStepActive(2) ? "active" : "")" aria-hidden="@AriaHidden(2)" aria-labelledby="wizard-step-tab-2">
                 <div class="wizard-measure">
-                    <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 3 / 3 · optional</span></div>
-                    <h2 class="wizard-step-title">Noch Filter?</h2>
-                    <p class="wizard-step-subtitle">Kannst du auch überspringen und direkt generieren.</p>
-
                     <div class="wizard-filters-scroll">
                         <FilterList Tree="State.FilterTree"
                                     Edit="OpenEditFilterSheet"
@@ -93,12 +96,15 @@
     }
     else
     {
-        <ResultsView Results="State.Results"
-                     IsGenerating="State.Phase == WizardPhase.Generating"
-                     NumberOfJugglers="State.NumberOfJugglers"
-                     CancelRequested="CancelGeneration"
-                     BackToEditingRequested="BackToEditing"
-                     StartOverRequested="StartOver" />
+        <div class="wizard-sr-only" aria-live="polite">Schritt 4 / @WizardState.ProgressStepCount: Ergebnisse</div>
+        <div id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
+            <ResultsView Results="State.Results"
+                         IsGenerating="State.Phase == WizardPhase.Generating"
+                         NumberOfJugglers="State.NumberOfJugglers"
+                         CancelRequested="CancelGeneration"
+                         BackToEditingRequested="BackToEditing"
+                         StartOverRequested="StartOver" />
+        </div>
     }
 
 </div>

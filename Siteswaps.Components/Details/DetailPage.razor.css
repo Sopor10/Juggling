@@ -53,7 +53,9 @@
 .sd-header-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
+    min-height: 1.5rem;
 }
 
 .sd-back,
@@ -69,22 +71,12 @@
     color: var(--sd-orange);
 }
 
-.sd-brand {
-    flex: 1;
-    margin: 0;
-    text-align: center;
-    font-family: var(--sd-font-display);
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-}
-
 .sd-header-notation {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin: 14px 0 4px;
+    margin: 10px 0 8px;
 }
 
 .sd-header-notation-value {
@@ -118,11 +110,37 @@
 }
 
 .sd-header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     margin: 0;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.sd-juggler-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sd-juggler-step {
+    font-size: 16px;
+    padding: 4px 6px;
+}
+
+.sd-header-meta-value,
+.sd-header-meta-clubs {
+    font-variant-numeric: tabular-nums;
+}
+
+.sd-header-meta-clubs {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
 }
 
 .sd-sheet {

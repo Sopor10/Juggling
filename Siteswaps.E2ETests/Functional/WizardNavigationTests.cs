@@ -21,9 +21,9 @@ public class WizardNavigationTests(BlazorWebassemblyFixture<Program> fixture)
         await wizard.SelectJugglerChipAsync(3);
         await wizard.SetPeriodAsync(7);
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
         await wizard.ClickBackAsync();
-        await wizard.ExpectStepTitleAsync("Jongleure & Periode");
+        await wizard.ExpectStepAsync(0);
 
         await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("7");
         await Assertions
@@ -47,7 +47,7 @@ public class WizardNavigationTests(BlazorWebassemblyFixture<Program> fixture)
         wizard = new WizardPageObject(page);
         await wizard.WaitUntilLoadedAsync();
 
-        await wizard.ExpectStepTitleAsync("Jongleure & Periode");
+        await wizard.ExpectStepAsync(0);
         await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("5");
         await Assertions
             .Expect(page.Locator(".wizard-juggler-picker .wizard-chip.active"))

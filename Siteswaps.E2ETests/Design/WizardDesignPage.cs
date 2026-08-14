@@ -15,7 +15,7 @@ public sealed class WizardDesignPage(IPage page, WizardPageObject wizard)
 
     public ILocator StepSheet => page.Locator(".wizard-steps");
 
-    public ILocator StepTitle => page.Locator(".wizard-step.active .wizard-step-title");
+    public ILocator DisplaySample => page.Locator(".wizard-period-value");
 
     public ILocator PrimaryForwardButton =>
         page.Locator(

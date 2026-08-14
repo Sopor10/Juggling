@@ -126,6 +126,24 @@ public record Throw(string Name, int Height, string DisplayValue)
         return result;
     }
 
+    /// <summary>
+    /// Display name for a global height at the given juggler count (inverse of
+    /// <see cref="GetHeightForJugglers"/> for named throws).
+    /// </summary>
+    public static string GetDisplayNameForHeight(int height, int amountOfJugglers)
+    {
+        var jugglers = Math.Max(1, amountOfJugglers);
+        foreach (var named in NamedThrows)
+        {
+            if (named.GetHeightForJugglers(jugglers, useLiteralValue: false).Contains(height))
+            {
+                return named.DisplayValue;
+            }
+        }
+
+        return height.ToString();
+    }
+
     public string GetDisplayValue(bool showName)
     {
         if (showName)

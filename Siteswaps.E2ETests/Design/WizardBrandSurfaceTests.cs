@@ -81,7 +81,7 @@ public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
         var pageFont = await design.StyleAsync(design.Wizard.Root, "font-family");
         pageFont.Should().ContainEquivalentOf("Nunito");
 
-        var titleFont = await design.StyleAsync(design.StepTitle, "font-family");
+        var titleFont = await design.StyleAsync(design.DisplaySample, "font-family");
         titleFont.Should().ContainEquivalentOf("Baloo");
 
         await design.Logo.WaitForAsync();

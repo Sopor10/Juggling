@@ -1,3 +1,28 @@
+.sdv-analysis {
+    display: flex;
+    justify-content: center;
+}
+
+.sdv-analysis-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(100%, 42rem);
+    box-sizing: border-box;
+}
+
+.sdv-analysis-stack > .sdv-section-title,
+.sdv-analysis-stack ::deep .sdv-section-title {
+    text-align: center;
+    width: 100%;
+}
+
+.sdv-analysis-stack > .sdv-prop-sheet,
+.sdv-analysis-stack > .sdv-orbit-expand-list,
+.sdv-analysis-stack > .sdv-muted {
+    width: 100%;
+}
+
 .sdv-prop-sheet {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -10,6 +35,7 @@
     border: 2px solid var(--sd-purple-100);
     border-radius: var(--sd-radius-sm);
     padding: 10px 12px;
+    text-align: left;
 }
 
 .sdv-prop dt {
@@ -57,20 +83,14 @@
     margin: 48px 0 18px;
 }
 
-.sdv-analysis-beats {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 8px;
+.sdv-analysis-gap-tight {
+    margin: 22px 0 14px;
 }
 
-.sdv-analysis-beats-body {
+.sdv-analysis-beats {
     width: max-content;
     max-width: 100%;
-}
-
-.sdv-analysis-beats-body > .sdv-section-title {
-    margin-bottom: 14px;
+    margin-top: 8px;
 }
 
 .sdv-analysis-beats-footer {
@@ -221,29 +241,4 @@
 .sdv-bullet-list li {
     margin-bottom: 4px;
     font-size: 16px;
-}
-
-.sdv-states {
-    display: grid;
-    gap: 10px;
-    margin-top: 4px;
-}
-
-.sdv-state-key {
-    font-size: 15px;
-    color: var(--sd-purple-700);
-    margin-bottom: 8px;
-}
-
-.sdv-state-swaps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.sdv-state-swap {
-    background: var(--sd-purple-100);
-    padding: 4px 8px;
-    border-radius: 8px;
-    font-size: 13px;
 }

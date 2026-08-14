@@ -12,6 +12,19 @@ public class ThrowTests
     {
         @throw.GetHeightForJugglers(jugglers, false).Should().BeEquivalentTo(heights);
     }
+
+    [TestCase(3, 3, "Zip")]
+    [TestCase(3, 9, "Self")]
+    [TestCase(3, 10, "Single")]
+    [TestCase(2, 9, "Double")]
+    public void GetDisplayNameForHeight_Uses_Juggler_Scaled_Names(
+        int jugglers,
+        int height,
+        string expected
+    )
+    {
+        Throw.GetDisplayNameForHeight(height, jugglers).Should().Be(expected);
+    }
 }
 
 public class GenerateInputs : IEnumerable

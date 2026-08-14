@@ -29,6 +29,12 @@ public sealed class WizardState
 {
     public const int TotalSteps = 3;
 
+    /// <summary>Progress-dot index for the results screen (editing steps are 0..TotalSteps-1).</summary>
+    public const int ResultsStepIndex = TotalSteps;
+
+    /// <summary>Editing steps plus the results step shown in the header progress dots.</summary>
+    public const int ProgressStepCount = TotalSteps + 1;
+
     public const int MinJugglers = 2;
     public const int MaxJugglers = 8;
 

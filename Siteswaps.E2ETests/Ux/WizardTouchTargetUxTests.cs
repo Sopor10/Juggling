@@ -58,7 +58,7 @@ public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
 
         await WizardUxGeometry.AssertMinTouchTargetAsync(
             wizard.DualRangeTrackWrap,
@@ -76,7 +76,7 @@ public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
 
         var lastChip = wizard.ThrowChips.Last;
         await lastChip.ScrollIntoViewIfNeededAsync();

@@ -51,6 +51,28 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     private bool IsLastStep => State.CurrentStep == WizardState.TotalSteps - 1;
 
+    private int HeaderStep =>
+        State.Phase is WizardPhase.Results or WizardPhase.Generating
+            ? WizardState.ResultsStepIndex
+            : State.CurrentStep;
+
+    private IReadOnlySet<int> HeaderVisitedSteps =>
+        State.VisitedSteps.Contains(WizardState.ResultsStepIndex)
+        || State.Phase is WizardPhase.Results or WizardPhase.Generating
+            ? WithResultsStepVisited(State.VisitedSteps)
+            : State.VisitedSteps;
+
+    private static IReadOnlySet<int> WithResultsStepVisited(IReadOnlySet<int> visited)
+    {
+        if (visited.Contains(WizardState.ResultsStepIndex))
+        {
+            return visited;
+        }
+
+        var copy = new HashSet<int>(visited) { WizardState.ResultsStepIndex };
+        return copy;
+    }
+
     private string NextButtonText => IsLastStep ? "Generieren →" : "Weiter";
 
     private bool IsNextDisabled =>
@@ -112,8 +134,13 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
     }
 
-    private static bool IsWizardLocation(string location) =>
-        location.Contains("/wizard", StringComparison.OrdinalIgnoreCase);
+    private bool IsWizardLocation(string location)
+    {
+        var relative = Navigation.ToBaseRelativePath(location);
+        var pathOnly = relative.Split('?', '#')[0].TrimEnd('/');
+        return string.IsNullOrEmpty(pathOnly)
+            || pathOnly.Equals("wizard", StringComparison.OrdinalIgnoreCase);
+    }
 
     [JSInvokable]
     public async Task OnBrowserPopState(int step, bool isResults)
@@ -231,6 +258,53 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
     }
 
+    private async Task OnProgressStepSelectedAsync(int step)
+    {
+        if (_isStepTransitioning)
+        {
+            return;
+        }
+
+        if (step == WizardState.ResultsStepIndex)
+        {
+            if (
+                !State.VisitedSteps.Contains(WizardState.ResultsStepIndex)
+                && State.Phase is not (WizardPhase.Results or WizardPhase.Generating)
+            )
+            {
+                return;
+            }
+
+            if (State.Phase is WizardPhase.Results or WizardPhase.Generating)
+            {
+                return;
+            }
+
+            State.MarkVisited(WizardState.ResultsStepIndex);
+            State.Phase = WizardPhase.Results;
+            await InvokeAsync(StateHasChanged);
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
+            }
+
+            return;
+        }
+
+        if (State.Phase != WizardPhase.Editing)
+        {
+            State.GenerationCancellation?.Cancel();
+            State.Phase = WizardPhase.Editing;
+            State.CurrentStep = step;
+            State.MarkVisited(step);
+            await PushEditorHistoryStateAsync();
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        await JumpToStepAsync(step);
+    }
+
     [JSInvokable]
     public async Task OnTouchSwipe(bool next)
     {
@@ -304,6 +378,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         State.Results.Clear();
         State.WasCancelled = false;
         State.Phase = WizardPhase.Generating;
+        State.MarkVisited(WizardState.ResultsStepIndex);
         await InvokeAsync(StateHasChanged);
         if (_jsModule is not null)
         {

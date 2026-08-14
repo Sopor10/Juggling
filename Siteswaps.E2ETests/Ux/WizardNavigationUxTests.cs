@@ -6,7 +6,7 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Ux;
 
-/// <summary>Encodes navigation, history, and step-clarity UX contracts for /wizard.</summary>
+/// <summary>Encodes navigation, history, and step-clarity UX contracts for the wizard at /.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
 {
@@ -20,11 +20,11 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.NextOrGenerateButton.DblClickAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
-        (await wizard.ActiveStepTitle.First.InnerTextAsync()).Trim().Should().NotBe("Noch Filter?");
+        await wizard.ExpectStepAsync(1);
+        await Assertions.Expect(page.Locator("#wizard-step-tab-2")).ToHaveAttributeAsync("aria-selected", "false");
     }
 
-    /// <summary>Summary: Browser back from step 2 must stay inside /wizard on step 1, not leave the flow.</summary>
+    /// <summary>Summary: Browser back from step 2 must stay on the wizard root on step 1, not leave the flow.</summary>
     [Fact]
     public async Task Browser_Back_From_Step2_Stays_On_Wizard_Step1()
     {
@@ -33,14 +33,14 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
 
         await page.GoBackAsync();
         await wizard.Root.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15_000 }
         );
-        page.Url.Should().Contain("/wizard");
-        await wizard.ExpectStepTitleAsync("Jongleure & Periode");
+        new Uri(page.Url).AbsolutePath.TrimEnd('/').Should().BeOneOf("", "/wizard");
+        await wizard.ExpectStepAsync(0);
     }
 
     /// <summary>Summary: Browser back from results must restore the filter step, not an empty broken page.</summary>
@@ -58,9 +58,9 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
         await wizard.Root.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15_000 }
         );
-        page.Url.Should().Contain("/wizard");
+        new Uri(page.Url).AbsolutePath.TrimEnd('/').Should().BeOneOf("", "/wizard");
         (await wizard.IsLoadedAsync()).Should().BeTrue();
-        await wizard.ExpectStepTitleAsync("Noch Filter?");
+        await wizard.ExpectStepAsync(2);
         (await wizard.Results.CountAsync()).Should().Be(0);
     }
 
@@ -82,7 +82,7 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
         (await step2.IsDisabledAsync()).Should().BeTrue();
 
         await wizard.ClickNextAsync();
-        await wizard.ExpectStepTitleAsync("Keulen & Würfe");
+        await wizard.ExpectStepAsync(1);
 
         (await step1.GetAttributeAsync("aria-selected")).Should().Be("true");
         (await step0.IsDisabledAsync()).Should().BeFalse();
