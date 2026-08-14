@@ -76,12 +76,9 @@
     private IReadOnlyList<WizardSelect.Option> _rotationOptions = [];
 
     private IEnumerable<Throw> PaletteThrows =>
-        PossibleThrows.Any(t => t.Height == Throw.Empty.Height)
-            ? PossibleThrows
-            : PossibleThrows.Prepend(Throw.Empty);
+        WizardPatternFilterUi.WithDontCarePalette(PossibleThrows);
 
-    private static string PaletteLabel(Throw t) =>
-        t.Height == Throw.Empty.Height ? "frei" : t.GetDisplayValue(true);
+    private static string PaletteLabel(Throw t) => WizardPatternFilterUi.Label(t);
 
     protected override void OnInitialized()
     {

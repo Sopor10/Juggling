@@ -285,16 +285,13 @@
             Throw = throws.FirstOrDefault() ?? Throw.Empty,
         };
 
-    private static NewPatternFilterInformation NewPatternDraft(int period)
-    {
-        var length = Math.Max(1, period);
-        return new NewPatternFilterInformation(
-            Enumerable.Repeat(Throw.Empty, length).ToList(),
+    private static NewPatternFilterInformation NewPatternDraft(int period) =>
+        new(
+            WizardPatternFilterUi.DefaultSlots(period),
             PatternRotation.Global,
             true,
             false
         );
-    }
 
     private static EasyStateFilter.StateFilter NewStateDraft(int maxThrowHeight) =>
         new([.. new bool[Math.Max(1, maxThrowHeight)]]);

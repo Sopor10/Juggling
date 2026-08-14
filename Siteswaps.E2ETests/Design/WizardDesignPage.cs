@@ -28,6 +28,8 @@ public sealed class WizardDesignPage(IPage page, WizardPageObject wizard)
 
     public ILocator ActiveProgressDot => page.Locator(".wizard-dot.active");
 
+    public ILocator SwipeHint => page.Locator(".wizard-swipe-hint");
+
     public ILocator ActiveJugglerChip => page.Locator(".wizard-juggler-picker .wizard-chip.active");
 
     public ILocator BottomSheet => page.Locator(".wizard-bottom-sheet");

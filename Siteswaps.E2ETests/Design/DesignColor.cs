@@ -65,7 +65,7 @@ public static partial class DesignColor
         }
 
         var expected = FromHex(expectedHex);
-        foreach (Match match in RgbRegex().Matches(cssValue))
+        foreach (Match match in RgbaRegex().Matches(cssValue))
         {
             var r = byte.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
             var g = byte.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
@@ -86,6 +86,18 @@ public static partial class DesignColor
     public static bool TryParseCssRgb(string cssColor, out (byte R, byte G, byte B) rgb)
     {
         rgb = default;
+        if (!TryParseCssRgba(cssColor, out var rgba))
+        {
+            return false;
+        }
+
+        rgb = (rgba.R, rgba.G, rgba.B);
+        return true;
+    }
+
+    public static bool TryParseCssRgba(string cssColor, out (byte R, byte G, byte B, double A) rgba)
+    {
+        rgba = default;
         if (string.IsNullOrWhiteSpace(cssColor))
         {
             return false;
@@ -94,20 +106,25 @@ public static partial class DesignColor
         var trimmed = cssColor.Trim();
         if (trimmed.StartsWith('#'))
         {
-            rgb = FromHex(trimmed);
+            var rgb = FromHex(trimmed);
+            rgba = (rgb.R, rgb.G, rgb.B, 1);
             return true;
         }
 
-        var match = RgbRegex().Match(trimmed);
+        var match = RgbaRegex().Match(trimmed);
         if (!match.Success)
         {
             return false;
         }
 
-        rgb = (
+        var alpha = match.Groups[4].Success
+            ? double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture)
+            : 1d;
+        rgba = (
             byte.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
             byte.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture),
-            byte.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture)
+            byte.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture),
+            alpha
         );
         return true;
     }
@@ -127,8 +144,11 @@ public static partial class DesignColor
 
     public static string NormalizeHex(string hex) => hex.Trim().TrimStart('#').ToLowerInvariant();
 
-    [GeneratedRegex(@"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)", RegexOptions.IgnoreCase)]
-    private static partial Regex RgbRegex();
+    [GeneratedRegex(
+        @"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?",
+        RegexOptions.IgnoreCase
+    )]
+    private static partial Regex RgbaRegex();
 
     [GeneratedRegex(@"^(-?[\d.]+)px$", RegexOptions.IgnoreCase)]
     private static partial Regex PxRegex();

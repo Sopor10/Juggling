@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
@@ -108,5 +109,34 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
             await design.StyleAsync(design.PrimaryForwardButton, "border-top-left-radius")
         );
         radius.Should().BeGreaterThanOrEqualTo(box!.Height / 2 - 1);
+    }
+
+    /// <summary>Summary: Swipe hint on the purple header must stay high-contrast (near-white, not washed out).</summary>
+    [Fact]
+    public async Task Wizard_SwipeHint_IsHighContrastOnHeader()
+    {
+        var design = await WizardDesignPage.OpenAsync(fixture);
+        var color = await design.StyleAsync(design.SwipeHint, "color");
+        var opacity = await design.StyleAsync(design.SwipeHint, "opacity");
+
+        DesignColor.TryParseCssRgba(color, out var rgba).Should().BeTrue($"expected rgba color, got {color}");
+        rgba.A.Should().BeGreaterThanOrEqualTo(0.85, because: "swipe hint must remain readable on the purple header");
+        ((rgba.R + rgba.G + rgba.B) / 3.0)
+            .Should()
+            .BeGreaterThanOrEqualTo(200, because: "swipe hint must stay near-white on the dark header");
+        if (
+            double.TryParse(
+                opacity,
+                System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out var op
+            )
+        )
+        {
+            op.Should().BeGreaterThanOrEqualTo(0.85);
+        }
+
+        await Assertions.Expect(design.SwipeHint).ToBeVisibleAsync();
+        (await design.SwipeHint.InnerTextAsync()).Should().Contain("wischen");
     }
 }
