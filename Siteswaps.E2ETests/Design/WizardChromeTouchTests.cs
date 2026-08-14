@@ -153,7 +153,8 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
         var sheetBox = await design.StepSheet.BoundingBoxAsync();
         hintBox.Should().NotBeNull();
         sheetBox.Should().NotBeNull();
-        hintBox!.Y.Should()
+        hintBox!
+            .Y.Should()
             .BeLessThan(
                 sheetBox!.Y - 1,
                 because: "swipe hint must sit fully above the white step sheet, not under its overlap"

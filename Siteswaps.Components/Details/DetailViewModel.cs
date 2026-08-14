@@ -161,8 +161,9 @@ public sealed class DetailViewModel
             _ => "?",
         };
 
-    private static string FormatPassSelf(IReadOnlyList<global::Siteswap.Details.PassOrSelf> values) =>
-        string.Concat(values.Select(FormatPassSelfLetter));
+    private static string FormatPassSelf(
+        IReadOnlyList<global::Siteswap.Details.PassOrSelf> values
+    ) => string.Concat(values.Select(FormatPassSelfLetter));
 
     public enum ThrowDisplayMode
     {

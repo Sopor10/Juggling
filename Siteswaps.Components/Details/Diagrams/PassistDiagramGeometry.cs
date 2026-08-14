@@ -28,8 +28,7 @@ public static class PassistDiagramGeometry
     {
         var dx = ColumnWidth(timeStretchFactor);
         var width = steps * dx + 50;
-        var height =
-            (jugglerCount - (jugglerCount > 1 ? 1m : 1.4m)) * RowHeight + 2 * YOffset;
+        var height = (jugglerCount - (jugglerCount > 1 ? 1m : 1.4m)) * RowHeight + 2 * YOffset;
         return (width, height);
     }
 
