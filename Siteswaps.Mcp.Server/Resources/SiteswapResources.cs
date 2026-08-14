@@ -6,9 +6,6 @@ namespace Siteswaps.Mcp.Server.Resources;
 [McpServerResourceType]
 public class SiteswapResources
 {
-    // ====================================================================================
-    // SECTION 1: SITESWAP DEFINITIONS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:definition:siteswap")]
@@ -150,9 +147,6 @@ public class SiteswapResources
     public string SiteswapDefinitionProgramming() =>
         "Programming is a collective term for hijacking and lowjacking. A passer 'programs' their partner by actively changing the pattern.";
 
-    // ====================================================================================
-    // SECTION 2: SITESWAP RULES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:rule:averaging-theorem")]
@@ -309,9 +303,6 @@ public class SiteswapResources
     public string SiteswapRuleHijackingPassesRequired() =>
         "All patterns must have one or more passes. Not just period+2 passes, but any pass satisfies this condition.";
 
-    // ====================================================================================
-    // SECTION 3: SITESWAP TRANSFORMATIONS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:transformation:rotation")]
@@ -383,9 +374,6 @@ public class SiteswapResources
     public string SiteswapTransformationOneHandedConversion() =>
         "Turn a vanilla siteswap into a one-handed version by replacing each number with the notation for a one-handed pattern with that number of objects. Example: 534 becomes a06080.";
 
-    // ====================================================================================
-    // SECTION 4: SITESWAP EXAMPLES (Solo Patterns)
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:cascade-3")]
@@ -512,9 +500,6 @@ public class SiteswapResources
     public string SiteswapExamplePattern50505() =>
         "50505 is a 3-ball pattern. A 5-ball cascade with two balls missing, but not two consecutive ones. Average: (5+0+5+0+5)/5 = 3.";
 
-    // ====================================================================================
-    // SECTION 5: SYNCHRONOUS SITESWAP EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:sync-shower")]
@@ -546,9 +531,6 @@ public class SiteswapResources
     public string SiteswapExampleSync4x2xStar() =>
         "(4x,2x)* or (4x,2x)(2x,4) is a synchronous pattern. One hand throws high crossing 4s, the other quick crossing 2s, then roles switch.";
 
-    // ====================================================================================
-    // SECTION 6: MULTIPLEX EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:multiplex-duplex")]
@@ -560,9 +542,6 @@ public class SiteswapResources
     public string SiteswapExampleMultiplex4323() =>
         "[43]23 is a 4-ball multiplex pattern. Average: (4+3+2+3)/4 = 12/4 = 3, but actually 4 balls, since [43] counts as one throw time.";
 
-    // ====================================================================================
-    // SECTION 7: PASSING EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:passing-2-count")]
@@ -594,9 +573,6 @@ public class SiteswapResources
     public string SiteswapExampleHijackingPeriod7() =>
         "In period-7 patterns, the hijackable passes are: 7+2=9. Example: 9788827 can transition to 9797226 vs 9797888.";
 
-    // ====================================================================================
-    // SECTION 8: ORBIT EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:orbit-561")]
@@ -623,9 +599,6 @@ public class SiteswapResources
     public string SiteswapExampleOrbit55514() =>
         "55514 has four orbits, each with 1 ball: (5), (5), (5), (1,4). Each ball stays in its own orbit.";
 
-    // ====================================================================================
-    // SECTION 9: STATE EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:state-xxx")]
@@ -652,9 +625,6 @@ public class SiteswapResources
     public string SiteswapExampleStateMultiplex() =>
         "In multiplex states, the binary representation can contain numbers greater than 1: 2 means 2 balls land. Example: State 2-1-0 means 2 balls land now, 1 in one beat, 0 in two beats.";
 
-    // ====================================================================================
-    // SECTION 10: VALIDITY EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("siteswap:example:invalid-543")]
@@ -671,9 +641,6 @@ public class SiteswapResources
     public string SiteswapExampleValid531() =>
         "531 is valid. Calculation: (5+0) mod 3 = 2, (3+1) mod 3 = 1, (1+2) mod 3 = 0. Values 2, 1, 0 are all unique, therefore valid.";
 
-    // ====================================================================================
-    // SECTION 11: FOUR-HANDED SITESWAP THROW DEFINITIONS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:throw:2-zip")]
@@ -720,9 +687,6 @@ public class SiteswapResources
     public string Passing4HswThrowBTriple() =>
         "In four-handed siteswap, a 'b' (11) is a triple pass. Very high pass with three rotations. Less common due to difficulty, but used in advanced patterns like 9ab5678.";
 
-    // ====================================================================================
-    // SECTION 12: FOUR-HANDED SITESWAP NOTATION AND READING
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:notation:reading-sequence")]
@@ -749,9 +713,6 @@ public class SiteswapResources
     public string Passing4HswNotationCrossingRules() =>
         "In four-handed siteswap, one passer throws crossing passes, the other straight. For 5s (zaps) and 9s (doubles): crossing for passer A, straight for passer B. For 7s (singles): straight for passer A, crossing for passer B. This alternation is fundamental to the pattern structure.";
 
-    // ====================================================================================
-    // SECTION 13: FOUR-HANDED SITESWAP CORE RULES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:rule:even-odd")]
@@ -768,9 +729,6 @@ public class SiteswapResources
     public string Passing4HswRuleAsynchronousRhythm() =>
         "Four-handed siteswaps are fully asynchronous: all four hands throw at different times, creating an interleaved rhythm. Order is typically: A right, B right, A left, B left, then repeating.";
 
-    // ====================================================================================
-    // SECTION 14: FOUR-HANDED SITESWAP BEGINNER PATTERNS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:pattern:744")]
@@ -787,9 +745,6 @@ public class SiteswapResources
     public string Passing4HswPattern786() =>
         "786 (French Three-Count) is a 7-club four-handed siteswap. Pattern: single pass (7), heff (8), self (6). One of the most popular intermediate patterns. Compatible with 744 for mixed-skill passing.";
 
-    // ====================================================================================
-    // SECTION 15: FOUR-HANDED SITESWAP INTERMEDIATE PATTERNS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:pattern:966")]
@@ -806,9 +761,6 @@ public class SiteswapResources
     public string Passing4HswPattern756() =>
         "756 is a 6-club four-handed siteswap. Pattern: single (7), zap (5), self (6). Introduces zaps - the fast, low passes that require precise timing.";
 
-    // ====================================================================================
-    // SECTION 16: FOUR-HANDED SITESWAP ADVANCED PATTERNS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:pattern:975-holygrail")]
@@ -840,9 +792,6 @@ public class SiteswapResources
     public string Passing4HswPattern9969788Poem() =>
         "9969788 (Poem) is a challenging 8-club pattern. One of the harder named patterns requiring solid control of all throw types.";
 
-    // ====================================================================================
-    // SECTION 17: COMPATIBLE SITESWAPS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:4hsw:compatible:definition")]
@@ -864,9 +813,6 @@ public class SiteswapResources
     public string Passing4HswCompatibleFinding() =>
         "To find compatible patterns: 1) List patterns with same period, 2) Analyze pass positions (odd numbers), 3) Match patterns where passes occur at same positions, 4) Verify club counts work. For period-3: 744, 786, 966, 948, 969, 996 are all potentially compatible.";
 
-    // ====================================================================================
-    // SECTION 18: MODERN PASSING CONCEPTS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("passing:modern:definition")]

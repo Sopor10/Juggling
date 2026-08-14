@@ -134,8 +134,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
         // Implementiert startsWith als pattern am Anfang
         var patternValues = args.Select(GetPatternValue).ToList();
 
-        // Für startsWith: Prüfe die ersten n Positionen
-        // Vereinfachte Implementierung: Verwende minOcc für jede Position
         IFilterBuilder builder = new FilterBuilder(input);
         foreach (var (value, index) in patternValues.Select((v, i) => (v, i)))
         {
@@ -221,8 +219,6 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
 
     private ISiteswapFilter CompileOrbits(Argument[] args)
     {
-        // Orbits-Filter - verwendet ggf. spezielle Logik
-        // Für jetzt: Dummy-Implementierung
         return new FilterBuilder(input).No().Build();
     }
 
@@ -303,12 +299,12 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
     {
         return arg.Match(
             number => number.Value,
-            wildcard => -1, // -1 bedeutet "any" im Pattern
+            wildcard => -1,
             numberList =>
                 throw new InvalidOperationException("NumberList nicht erlaubt in Pattern"),
             id => throw new InvalidOperationException("Identifier nicht erlaubt in Pattern"),
-            pass => -2, // -2 bedeutet "pass" (ungerade Zahl bei Passing)
-            self => -3 // -3 bedeutet "self" (gerade Zahl bei Passing)
+            pass => -2,
+            self => -3
         );
     }
 

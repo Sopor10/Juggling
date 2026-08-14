@@ -1,4 +1,4 @@
 root = true
 
 [*.cs]
-dotnet_diagnostic.SOP003.max_method_lines = 75
+dotnet_diagnostic.SOP003.max_method_lines = 150

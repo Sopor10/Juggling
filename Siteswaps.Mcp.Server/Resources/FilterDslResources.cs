@@ -9,9 +9,6 @@ namespace Siteswaps.Mcp.Server.Resources;
 [McpServerResourceType]
 public class FilterDslResources
 {
-    // ====================================================================================
-    // SECTION 1: SYNTAX REFERENCE
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:syntax:overview")]
@@ -99,9 +96,6 @@ public class FilterDslResources
             Keywords (AND, OR, NOT) are case-insensitive.
             """;
 
-    // ====================================================================================
-    // SECTION 2: FUNCTION REFERENCE - OCCURRENCE FILTERS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:function:minOcc")]
@@ -180,9 +174,6 @@ public class FilterDslResources
             Use case: Flexible occurrence constraints.
             """;
 
-    // ====================================================================================
-    // SECTION 3: FUNCTION REFERENCE - PATTERN FILTERS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:function:pattern")]
@@ -266,9 +257,6 @@ public class FilterDslResources
             Use case: Find patterns containing specific throw combinations.
             """;
 
-    // ====================================================================================
-    // SECTION 4: FUNCTION REFERENCE - HEIGHT FILTERS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:function:height")]
@@ -325,9 +313,6 @@ public class FilterDslResources
             Use case: Find patterns with consistently high throws.
             """;
 
-    // ====================================================================================
-    // SECTION 5: FUNCTION REFERENCE - STATE FILTERS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:function:ground")]
@@ -387,9 +372,6 @@ public class FilterDslResources
             Use case: Find patterns in a specific juggling state.
             """;
 
-    // ====================================================================================
-    // SECTION 6: FUNCTION REFERENCE - PROPERTY FILTERS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:function:noZeros")]
@@ -430,9 +412,6 @@ public class FilterDslResources
             Use case: Find patterns with deliberate pauses.
             """;
 
-    // ====================================================================================
-    // SECTION 7: FUNCTION REFERENCE - ORBIT & PASS FILTERS
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:function:passes")]
@@ -473,9 +452,6 @@ public class FilterDslResources
             Use case: Find patterns with balanced self/pass ratio.
             """;
 
-    // ====================================================================================
-    // SECTION 8: EXAMPLES
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:examples:basic")]
@@ -626,9 +602,6 @@ public class FilterDslResources
                - ground AND NOT hasZeros AND NOT pattern(3)
             """;
 
-    // ====================================================================================
-    // SECTION 9: QUICK REFERENCE
-    // ====================================================================================
 
     [McpServerResource]
     [Description("filter:dsl:reference:all-functions")]

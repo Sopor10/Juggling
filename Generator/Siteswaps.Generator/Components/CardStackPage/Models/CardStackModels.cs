@@ -13,9 +13,7 @@ public sealed class CardStackFormState
     public int Jugglers { get; set; } = 3;
     public int Period { get; set; } = 5;
 
-    // Deliberately not equal: with a dual-range slider, identical min/max thumbs
-    // start out stacked exactly on top of each other, making the lower one hard
-    // to grab. Different defaults keep both handles visible/reachable from the start.
+    // Deliberately not equal: identical dual-range-slider thumbs start out stacked, making the lower one hard to grab.
     public int ClubsMin { get; set; } = 5;
     public int ClubsMax { get; set; } = 7;
     public bool ShowThrowNames { get; set; } = true;

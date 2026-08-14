@@ -88,12 +88,7 @@ public static class FilterTranslation
         var filterTree = BuildFilterTree(state);
         var useLiteralValue = state.ShowThrowNames is false;
 
-        // The generator's internal SiteswapGeneratorInput.MinHeight/MaxHeight operate
-        // in the *expanded* per-juggler-count space (see Throw.GetHeightForJugglers),
-        // not in the raw "named throw height" space the UI shows. Forgetting this
-        // expansion here (and only doing it inside the filter visitor) causes the
-        // generator to search the wrong height range entirely - e.g. displaying
-        // implausible repeated local-notation values like "2.67".
+        // MinHeight/MaxHeight must use the expanded per-juggler-count space (Throw.GetHeightForJugglers), not the raw named-throw-height space the UI shows, or the generator searches the wrong range (e.g. "2.67").
         var allowedHeights = state
             .AllowedThrowHeights.SelectMany(h =>
                 ThrowForHeight(h).GetHeightForJugglers(state.Jugglers, useLiteralValue)
@@ -121,8 +116,7 @@ public static class FilterTranslation
                 filters.Add(filterTree.Root.Visit(visitor));
             }
 
-            // Throws that are not in the allowed set but fall within [min,max]
-            // must be forbidden explicitly, mirroring the reference logic.
+            // Throws within [min,max] but not in the allowed set must be forbidden explicitly, mirroring the reference logic.
             for (var i = minHeight; i <= maxHeight; i++)
             {
                 if (allowedHeights.Contains(i))

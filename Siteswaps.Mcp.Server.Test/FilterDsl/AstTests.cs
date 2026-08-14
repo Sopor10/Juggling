@@ -110,8 +110,6 @@ public class AstTests
     [Test]
     public void Complex_Ast_Can_Be_Built()
     {
-        // Arrange & Act
-        // Baut: (minOcc(7,2) OR exactOcc(9,1)) AND ground
         var minOcc = new FilterExpression.FunctionCall(
             "minOcc",
             [new Argument.Number(7), new Argument.Number(2)]
