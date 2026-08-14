@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using Siteswaps.Generator.Components;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;
@@ -72,8 +73,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        var settings = await LocalStorage.GetItemAsync<Settings.SettingsDto>("settings");
-        State.ApplyMaxThrowHeight(settings?.MaxHeight ?? new Settings.SettingsDto().MaxHeight);
+        var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings");
+        State.ApplyMaxThrowHeight(settings?.MaxHeight ?? new SettingsDto().MaxHeight);
         if (settings is not null)
         {
             State.ShowThrowNames = settings.ShowThrowNames;

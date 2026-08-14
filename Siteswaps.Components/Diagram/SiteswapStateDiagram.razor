@@ -4,7 +4,7 @@
 @if (Value is not null)
 {
     <div class="border-1">
-        <Network Id="siteswap-detail-diagram" Data="@Data" style="width: 640px; height: 480px"/>
+        <Network Id="@NetworkId" Data="@Data" style="width: 100%; max-width: 640px; height: 360px"/>
     </div>
 }
 
@@ -12,6 +12,10 @@
 {
 
     [Parameter] public Siteswap? Value { get; set; } = new(3);
+
+    [Parameter] public string? Id { get; set; }
+
+    private string NetworkId => string.IsNullOrWhiteSpace(Id) ? "siteswap-detail-diagram" : Id;
 
     private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 

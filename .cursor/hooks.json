@@ -4,6 +4,15 @@
     "afterFileEdit": [
       {
         "command": "pwsh -NoProfile -File .cursor/hooks/run-csharpier.ps1"
+      },
+      {
+        "command": "pwsh -NoProfile -File .cursor/hooks/mark-file-edited.ps1"
+      }
+    ],
+    "stop": [
+      {
+        "command": "pwsh -NoProfile -File .cursor/hooks/aspire-start-on-stop.ps1",
+        "timeout": 600
       }
     ]
   }

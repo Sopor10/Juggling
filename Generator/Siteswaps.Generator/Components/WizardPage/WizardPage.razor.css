@@ -58,7 +58,9 @@
 .wizard-header {
     background: radial-gradient(120% 140% at 20% 0%, var(--wizard-purple-600) 0%, var(--wizard-purple-800) 45%, var(--wizard-purple-950) 100%);
     color: white;
-    padding: 14px 20px 14px;
+    /* Extra bottom padding clears the .wizard-steps negative-margin overlap
+       so the swipe hint stays fully visible above the white sheet. */
+    padding: 14px 20px calc(14px + var(--wizard-radius-lg));
     flex-shrink: 0;
 }
 
@@ -68,6 +70,8 @@
     font-size: 12px;
     font-weight: 700;
     margin: 6px 0 0;
+    position: relative;
+    z-index: 1;
 }
 
 /* ::deep is required here (not just `.wizard-sr-only`) because these labels are

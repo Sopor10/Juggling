@@ -148,5 +148,21 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
 
         await Assertions.Expect(design.SwipeHint).ToBeVisibleAsync();
         (await design.SwipeHint.InnerTextAsync()).Should().Contain("wischen");
+
+        var hintBox = await design.SwipeHint.BoundingBoxAsync();
+        var sheetBox = await design.StepSheet.BoundingBoxAsync();
+        hintBox.Should().NotBeNull();
+        sheetBox.Should().NotBeNull();
+        hintBox!.Y.Should()
+            .BeLessThan(
+                sheetBox!.Y - 1,
+                because: "swipe hint must sit fully above the white step sheet, not under its overlap"
+            );
+        (hintBox.Y + hintBox.Height)
+            .Should()
+            .BeLessThanOrEqualTo(
+                sheetBox.Y + 1,
+                because: "swipe hint must not be clipped by the step sheet overlap"
+            );
     }
 }

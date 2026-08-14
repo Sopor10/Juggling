@@ -1,0 +1,117 @@
+@namespace Siteswaps.Components.Details.Diagrams
+@using System.Globalization
+@using Siteswap.Details.CausalDiagram
+@using Siteswaps.Components.Details
+
+@if (Diagram is null)
+{
+    return;
+}
+
+@{
+    var inv = CultureInfo.InvariantCulture;
+    var nJugglers = Diagram.Jugglers.Count;
+    var (width, height) = PassistDiagramGeometry.ViewSize(
+        Diagram.Throws.Count,
+        nJugglers,
+        Diagram.TimeStretchFactor
+    );
+    var dx = PassistDiagramGeometry.ColumnWidth(Diagram.TimeStretchFactor);
+    var arrows = Mode == DiagramMode.Ladder ? Diagram.LadderArrows : Diagram.CausalArrows;
+    var markerId = $"pd-arrow-{Mode}-{Diagram.Throws.Count}";
+}
+
+<div class="pd-wrap" data-testid="passist-diagram-@Mode">
+    <svg class="pd-svg"
+         width="@width.ToString(inv)"
+         height="@height.ToString(inv)"
+         role="img"
+         aria-label="@(Mode == DiagramMode.Causal ? "Causal diagram" : "Ladder diagram")">
+        <defs>
+            <marker id="@markerId"
+                    class="pd-marker"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="0"
+                    refY="3"
+                    orient="auto"
+                    markerUnits="strokeWidth">
+                <path class="pd-arrow-fill" d="M0,0 L0,6 L9,3 z" />
+            </marker>
+        </defs>
+
+        <rect class="pd-frame"
+              x="0"
+              y="0"
+              width="@width.ToString(inv)"
+              height="@height.ToString(inv)" />
+
+        @for (var i = 0; i < nJugglers; i++)
+        {
+            var juggler = Diagram.Jugglers[i];
+            var lineY = PassistDiagramGeometry.Y(i);
+            <SvgText X="10" Y="@((lineY + 9).ToString(inv))" CssClass="pd-juggler-label">@juggler.Name</SvgText>
+            @if (Diagram.StartProps.TryGetValue(juggler.Name, out var start))
+            {
+                <SvgText X="20" Y="@((lineY - 10).ToString(inv))" CssClass="pd-start-props">@start.Left</SvgText>
+                <SvgText X="20" Y="@((lineY + 30).ToString(inv))" CssClass="pd-start-props">@start.Right</SvgText>
+            }
+        }
+
+        @foreach (var arrow in arrows)
+        {
+            var fromLine = JugglerIndex(arrow.From.Hand.Person);
+            var toLine = JugglerIndex(arrow.ToJuggler);
+            var path = PassistDiagramGeometry.BuildArrowPath(
+                (decimal)arrow.From.Time,
+                arrow.Step,
+                fromLine,
+                toLine,
+                Diagram.TimeStretchFactor
+            );
+            <path class="pd-arrow-stroke" d="@path" marker-end="url(#@markerId)" />
+        }
+
+        @foreach (var node in Diagram.Throws)
+        {
+            var line = JugglerIndex(node.Hand.Person);
+            var cx = PassistDiagramGeometry.X((decimal)node.Time, dx);
+            var cy = PassistDiagramGeometry.Y(line);
+            var handClass = node.Hand.Name == "L" ? "left" : "right";
+            <circle class="pd-node @handClass"
+                    cx="@cx.ToString(inv)"
+                    cy="@cy.ToString(inv)"
+                    r="@PassistDiagramGeometry.NodeRadius.ToString(inv)" />
+            <SvgText X="@cx.ToString(inv)"
+                     Y="@((cy + 5).ToString(inv))"
+                     CssClass="pd-node-label"
+                     TextAnchor="middle">
+                @DetailViewModel.FormatThrow(node.Height)
+            </SvgText>
+        }
+    </svg>
+</div>
+
+@code {
+    public enum DiagramMode
+    {
+        Causal,
+        Ladder,
+    }
+
+    [Parameter] public DiagramSet? Diagram { get; set; }
+    [Parameter] public DiagramMode Mode { get; set; } = DiagramMode.Causal;
+
+    private int JugglerIndex(Person person)
+    {
+        for (var i = 0; i < Diagram!.Jugglers.Count; i++)
+        {
+            if (Diagram.Jugglers[i].Name == person.Name)
+            {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+}

@@ -14,7 +14,7 @@
                 <span class="pz-siteswap-card-notation">@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).LocalNotation</span>
                 @if (Data.Value.Period.Value % Data.NumberOfJugglers == 0)
                 {
-                    <span class="pz-siteswap-card-avg">(@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).Average():0.##)</span>
+                    <span class="pz-siteswap-card-avg">(@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).Average().ToString("0.##"))</span>
                 }
             </p>
         }
@@ -47,7 +47,7 @@
     {
         public string DisplayValue => Value.ToString();
 
-        public string InternalDetailView => $"details?s={Value}&n={NumberOfJugglers}";
+        public string InternalDetailView => $"/details?s={Value}&n={NumberOfJugglers}";
 
         public int NumberOfClubs => (int)Value.Average;
 

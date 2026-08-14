@@ -176,9 +176,16 @@ public record Siteswap(CyclicArray<int> Items)
         return dictionary;
     }
 
-    private Siteswap Rotate(int i)
+    public Siteswap Rotate(int steps)
     {
-        return new Siteswap(Items.Rotate(i));
+        var period = Period.Value;
+        if (period <= 1)
+        {
+            return this;
+        }
+
+        var normalized = ((steps % period) + period) % period;
+        return normalized == 0 ? this : new Siteswap(Items.Rotate(normalized));
     }
 
     public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)

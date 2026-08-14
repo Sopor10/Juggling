@@ -1,0 +1,162 @@
+.sdv-hero-jugglers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 22px;
+}
+
+.sdv-hero-jugglers-body {
+    width: max-content;
+    max-width: 100%;
+}
+
+.sdv-hero-jugglers-body > .sdv-section-title {
+    margin-bottom: 14px;
+}
+
+.sdv-hero-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 28px;
+    padding-left: calc(var(--sdv-juggler-id-width, 3.25rem) + 8px);
+}
+
+.sdv-throw-mode {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-left: auto;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--sd-bg);
+}
+
+.sdv-throw-mode button {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    padding: 8px 12px;
+    min-height: 36px;
+    background: transparent;
+    color: var(--sd-purple-400);
+    font-family: var(--sd-font-display);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sdv-throw-mode button + button {
+    border-left: 2px solid var(--sd-purple-100);
+}
+
+.sdv-throw-mode button:hover {
+    color: var(--sd-purple-700);
+}
+
+.sdv-throw-mode button.active {
+    background: var(--sd-purple-700);
+    color: white;
+}
+
+.sdv-hero-juggler {
+    margin-bottom: 14px;
+}
+
+.sdv-hero-beats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sdv-hero-id {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    flex-shrink: 0;
+    width: var(--sdv-juggler-id-width, 3.25rem);
+    min-width: var(--sdv-juggler-id-width, 3.25rem);
+}
+
+.sdv-hero-label {
+    font-weight: 800;
+    color: var(--sd-purple-500);
+    line-height: 1;
+    font-size: 16px;
+}
+
+.sdv-hero-avg {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.sdv-hero-throws {
+    margin-left: calc(var(--sdv-stagger, 0) * (44px + 8px) / var(--sdv-jugglers, 2));
+}
+
+.sdv-hero-throws ::deep .sdv-beat-row {
+    margin: 0;
+    flex-wrap: nowrap;
+}
+
+.sdv-hero-throws ::deep .sdv-beat-throw {
+    font-size: 15px;
+}
+
+.sdv-start-props {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 4px 8px;
+    border-radius: var(--sd-radius-sm);
+    border: 2px dashed color-mix(in srgb, var(--sd-purple-400) 40%, white);
+    background: color-mix(in srgb, var(--sd-purple-100) 55%, white);
+    flex-shrink: 0;
+}
+
+.sdv-start-props-hand {
+    font-family: var(--sd-font-display);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--sd-purple-700);
+}
+
+.sdv-beat-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 0;
+}
+
+.sdv-beat-legend .sdv-beat {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 2px;
+}
+
+.sdv-beat-legend .sdv-beat-throw {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.sdv-start-props-legend {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 2px 6px;
+}
+
+.sdv-start-props-legend .sdv-start-props-hand {
+    font-size: 11px;
+}

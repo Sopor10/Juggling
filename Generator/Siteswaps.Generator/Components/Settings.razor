@@ -13,7 +13,18 @@
         <RadzenCheckBox TValue="bool" @bind-Value="Value.ShowThrowNames" />
     </div>
 
-    <div>
+    <div class="mt-3">
+        <RadzenLabel Text="Throw display (details)" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
+        <RadzenRadioButtonList TValue="string" @bind-Value="Value.ThrowDisplayMode" Orientation="Orientation.Horizontal">
+            <Items>
+                <RadzenRadioButtonListItem Text="Local" Value="@("Local")" />
+                <RadzenRadioButtonListItem Text="Global" Value="@("Global")" />
+                <RadzenRadioButtonListItem Text="Names" Value="@("Name")" />
+            </Items>
+        </RadzenRadioButtonList>
+    </div>
+
+    <div class="mt-3">
         <RadzenLabel Text="Max Height" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
         <RadzenNumeric TValue="int" @bind-Value="Value.MaxHeight" Min="1" Max="50" Style="width: 100%;" />
     </div>
@@ -22,7 +33,7 @@
 </EditForm>
 
 @code {
-    private SettingsDto Value { get; set; } = new SettingsDto();
+    private SettingsDto Value { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,19 +41,15 @@
         if (settings != null)
         {
             Value = settings;
+            if (string.IsNullOrWhiteSpace(Value.ThrowDisplayMode))
+            {
+                Value.ThrowDisplayMode = "Global";
+            }
         }
     }
 
     private async Task SaveSettings()
     {
         await LocalStorage.SetItemAsync("settings", Value);
-        // Optional: Display a confirmation or feedback to the user
-        Console.WriteLine("Settings saved successfully.");
-    }
-
-    public record SettingsDto
-    {
-        public bool ShowThrowNames { get; set; } = true;
-        public int MaxHeight { get; set; } = 13;
     }
 }

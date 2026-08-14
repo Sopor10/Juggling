@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Core.Generator;
+using SettingsDto = Siteswaps.Generator.Components.SettingsDto;
 
 namespace Siteswaps.Generator.Components.State;
 
@@ -28,8 +29,9 @@ public record GeneratorState
     public FilterTree FilterTree { get; init; } = new(new AndNode());
 
     public bool CreateFilterFromThrowList => true;
-    public Settings.SettingsDto Settings { get; set; } = new();
+    public SettingsDto Settings { get; set; } = new();
 }
+
 
 public record Between
 {

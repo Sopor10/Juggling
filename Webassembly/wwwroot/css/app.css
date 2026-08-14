@@ -29,8 +29,15 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
-.content:has(.wizard-page) {
+.content:has(.wizard-page),
+.content:has(.sd-page) {
     padding-top: 0;
+    background: #f5f3fb;
+}
+
+html:has(.sd-page),
+body:has(.sd-page) {
+    background: #f5f3fb;
 }
 
 /* Gültige Eingabefelder (modifiziert) */

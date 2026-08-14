@@ -20,9 +20,6 @@
                         @((char)(juggler + 'A')): @Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).LocalNotation
                         @(Data.Value.Period.Value % Data.NumberOfJugglers == 0 ? $"({Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).Average():0.##})" : "")
                     </p>
-                    <p class="card-text">
-                        ( @(Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).IsValidAsGlobalSiteswap() ? "valid":"invalid" ) )
-                    </p>
                 }
             </div>
 

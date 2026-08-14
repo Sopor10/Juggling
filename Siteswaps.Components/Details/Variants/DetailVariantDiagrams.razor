@@ -1,0 +1,31 @@
+@namespace Siteswaps.Components.Details.Variants
+@using Siteswap.Details.CausalDiagram
+@using Siteswaps.Components.Details
+@using Siteswaps.Components.Details.Diagrams
+
+@if (Model is null || Diagram is null)
+{
+    return;
+}
+
+<section class="sdv-diagrams">
+    <h3 class="sdv-section-title">Causal Diagram</h3>
+    <p class="sdv-muted">Pfeile: welcher Wurf erzwingt den nächsten.</p>
+    <PassistStyleDiagram Diagram="Diagram" Mode="PassistStyleDiagram.DiagramMode.Causal" />
+
+    <h3 class="sdv-section-title sdv-diagrams-gap">Ladder Diagram</h3>
+    <p class="sdv-muted">Objektpfade; Pfeillänge = Wurfhöhe.</p>
+    <PassistStyleDiagram Diagram="Diagram" Mode="PassistStyleDiagram.DiagramMode.Ladder" />
+</section>
+
+@code {
+    [Parameter] public DetailViewModel? Model { get; set; }
+
+    private DiagramSet? Diagram { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Diagram = Model?.Diagrams;
+        base.OnParametersSet();
+    }
+}

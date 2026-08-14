@@ -19,6 +19,8 @@ main {
     min-width: 0;
 }
 
-.content:has(.wizard-page) {
+.content:has(.wizard-page),
+.content:has(.sd-page) {
     padding: 0;
+    background: #f5f3fb;
 }

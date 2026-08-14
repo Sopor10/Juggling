@@ -9,3 +9,6 @@ riderModule.iml
 **/.vs
 
 node_modules
+
+# Cursor hook turn-state (files-edited marker, etc.)
+.cursor/hooks/state/

@@ -1,0 +1,117 @@
+@page "/details"
+@namespace Siteswaps.Components.Details
+@using Siteswaps.Components.Details.Variants
+@inject NavigationManager Navigation
+
+<div class="sd-page">
+    <header class="sd-header">
+        <div class="sd-header-row">
+            <a class="sd-back" href="/wizard">← Wizard</a>
+            <h1 class="sd-brand">Siteswap</h1>
+            @if (Model is not null)
+            {
+                <a class="sd-external" href="@Model.PassistLink" target="_blank" rel="noopener">Passist</a>
+            }
+        </div>
+        @if (Model is not null)
+        {
+            <div class="sd-header-notation" role="group" aria-label="Siteswap rotation">
+                <button type="button"
+                        class="sd-rotate"
+                        aria-label="Rotate siteswap left"
+                        disabled="@(Model.Period <= 1)"
+                        @onclick="() => Rotate(-1)">
+                    ◄
+                </button>
+                <span class="sd-header-notation-value">@Model.Notation</span>
+                <button type="button"
+                        class="sd-rotate"
+                        aria-label="Rotate siteswap right"
+                        disabled="@(Model.Period <= 1)"
+                        @onclick="() => Rotate(1)">
+                    ►
+                </button>
+            </div>
+            <p class="sd-header-meta">@Model.NumberOfJugglers Jongleure · @Model.NumberOfClubs Keulen</p>
+        }
+    </header>
+
+    <div class="sd-sheet">
+        @if (Model is null)
+        {
+            <div class="sd-empty">
+                <h2>Kein gültiger Siteswap</h2>
+                <p>Öffne einen Siteswap aus dem Wizard oder setze <code>?s=</code> und optional <code>&amp;n=</code>.</p>
+            </div>
+        }
+        else
+        {
+            <div class="sd-tabs" role="tablist" aria-label="Detail-Varianten">
+                @foreach (var tab in Tabs)
+                {
+                    <button type="button"
+                            role="tab"
+                            class="sd-tab @(ActiveTab == tab.Id ? "active" : null)"
+                            aria-selected="@(ActiveTab == tab.Id)"
+                            @onclick="() => SelectTab(tab.Id)">
+                        @tab.Label
+                    </button>
+                }
+            </div>
+
+            <div class="sd-variant" role="tabpanel">
+                @switch (ActiveTab)
+                {
+                    case "hero":
+                        <DetailVariantHero Model="Model" />
+                        break;
+                    case "analysis":
+                        <DetailVariantAnalysis Model="Model" />
+                        break;
+                    case "diagrams":
+                        <DetailVariantDiagrams Model="Model" />
+                        break;
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, SupplyParameterFromQuery(Name = "s")]
+    public string StringValue { get; set; } = "";
+
+    [Parameter, SupplyParameterFromQuery(Name = "n")]
+    public int NumberOfJugglers { get; set; } = 2;
+
+    private DetailViewModel? Model { get; set; }
+    private string ActiveTab { get; set; } = "hero";
+
+    private static readonly TabInfo[] Tabs =
+    [
+        new("hero", "Übersicht"),
+        new("analysis", "Analyse"),
+        new("diagrams", "Diagramme"),
+    ];
+
+    protected override void OnParametersSet()
+    {
+        Model = DetailViewModel.TryCreate(StringValue, NumberOfJugglers);
+        base.OnParametersSet();
+    }
+
+    private void SelectTab(string id) => ActiveTab = id;
+
+    private void Rotate(int steps)
+    {
+        if (Model is null || Model.Period <= 1)
+        {
+            return;
+        }
+
+        var rotated = Model.Value.Rotate(steps).ToString();
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("s", rotated));
+    }
+
+    private sealed record TabInfo(string Id, string Label);
+}
