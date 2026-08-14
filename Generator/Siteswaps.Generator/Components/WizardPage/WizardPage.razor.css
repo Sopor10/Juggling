@@ -155,11 +155,19 @@
 }
 
 /* ---------- steps ---------- */
+/* Overlaps up into the header by wizard-radius-lg so the rounded top
+   corners peek in front of the header's flat bottom edge instead of
+   meeting it as a hard rectangular seam - the same "sheet over header"
+   treatment used by .wizard-bottom-sheet, just permanently docked. */
 .wizard-steps {
     flex: 1;
     position: relative;
     overflow: hidden;
     touch-action: pan-y;
+    margin-top: calc(-1 * var(--wizard-radius-lg));
+    background: var(--wizard-card);
+    border-radius: var(--wizard-radius-lg) var(--wizard-radius-lg) 0 0;
+    box-shadow: var(--wizard-shadow);
 }
 
 .wizard-steps.wizard-swipe-active {
@@ -923,7 +931,8 @@
     .wizard-page .wizard-steps {
         max-width: 560px;
         width: 100%;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
