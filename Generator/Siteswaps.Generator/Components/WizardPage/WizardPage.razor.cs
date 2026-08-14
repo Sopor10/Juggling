@@ -188,29 +188,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
     }
 
-    private async Task SkipToLastStepAsync()
-    {
-        if (_isStepTransitioning)
-        {
-            return;
-        }
-
-        _isStepTransitioning = true;
-        try
-        {
-            State.CurrentStep = WizardState.TotalSteps - 1;
-            State.MarkVisited(State.CurrentStep);
-            StateHasChanged();
-            await PushEditorHistoryStateAsync();
-            await Task.Delay(150);
-        }
-        finally
-        {
-            _isStepTransitioning = false;
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
     private async Task JumpToStepAsync(int step)
     {
         if (

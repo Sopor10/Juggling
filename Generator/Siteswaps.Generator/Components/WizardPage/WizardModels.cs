@@ -62,7 +62,7 @@ public sealed class WizardState
 
     public WizardPhase Phase { get; set; } = WizardPhase.Editing;
 
-    public int NumberOfJugglers { get; set; } = 3;
+    public int NumberOfJugglers { get; set; } = 2;
 
     public Period Period { get; set; } = new(5);
 
@@ -94,7 +94,7 @@ public sealed class WizardState
         VisitedSteps.Clear();
         VisitedSteps.Add(0);
         Phase = WizardPhase.Editing;
-        NumberOfJugglers = 3;
+        NumberOfJugglers = 2;
         Period = new Period(5);
         Clubs = new Between { MinNumber = 5, MaxNumber = 7 };
         ShowThrowNames = true;

@@ -94,22 +94,6 @@
     font-weight: 600;
 }
 
-.wizard-skip-btn {
-    /* rgba(255,255,255,.6) on the dark purple header background fell below
-       WCAG AA contrast for small text; brightened + underlined so it still
-       reads clearly as a link rather than disabled text. */
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.92);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 8px 4px;
-    min-height: 40px;
-    cursor: pointer;
-}
-
 .wizard-swipe-hint {
     text-align: center;
     color: rgba(255, 255, 255, 0.5);
