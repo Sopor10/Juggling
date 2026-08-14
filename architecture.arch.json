@@ -1,0 +1,53 @@
+{
+  "components": {
+    "Domain": {
+      "namespaces": [
+        "Siteswap.Details."
+      ]
+    },
+    "GeneratorCore": {
+      "namespaces": [
+        "Siteswaps.Generator.Core."
+      ]
+    },
+    "GeneratorUI": {
+      "namespaces": [
+        "Siteswaps.Generator."
+      ]
+    },
+    "SharedComponents": {
+      "namespaces": [
+        "Siteswaps.Components."
+      ]
+    },
+    "Mcp": {
+      "namespaces": [
+        "Siteswaps.Mcp.Server."
+      ]
+    },
+    "Web": {
+      "namespaces": [
+        "Webassembly."
+      ]
+    },
+    "Hosting": {
+      "namespaces": [
+        "Juggling.AppHost."
+      ]
+    },
+    "Tests": {
+      "namespaces": [
+        "Siteswaps.Test.",
+        "Siteswaps.Generator.Test.",
+        "Siteswaps.Mcp.Server.Test.",
+        "Siteswaps.E2ETests.",
+        "Siteswaps.E2ETests.Server."
+      ]
+    },
+    "Benchmarks": {
+      "namespaces": [
+        "Siteswaps.Generator.Benchmarks."
+      ]
+    }
+  }
+}
