@@ -37,14 +37,14 @@
 
             <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
                 <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 2 / 3</span></div>
-                <h2 class="wizard-step-title">Clubs &amp; Würfe</h2>
-                <p class="wizard-step-subtitle">Wie viele Clubs, und welche Wurfhöhen dürfen vorkommen?</p>
+                <h2 class="wizard-step-title">Keulen &amp; Würfe</h2>
+                <p class="wizard-step-subtitle">Wie viele Keulen, und welche Wurfhöhen dürfen vorkommen?</p>
 
-                <p class="wizard-section-label">Anzahl Clubs</p>
+                <p class="wizard-section-label">Anzahl Keulen</p>
                 <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
                                   Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
                                   LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                  MinLabel="Clubs Minimum" MaxLabel="Clubs Maximum" />
+                                  MinLabel="Keulen Minimum" MaxLabel="Keulen Maximum" />
 
                 <ThrowsChipGrid Selected="State.AllowedThrows" />
             </section>

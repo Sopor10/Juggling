@@ -21,7 +21,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private static readonly string[] StepTitles =
     {
         "Jongleure & Periode",
-        "Clubs & Würfe",
+        "Keulen & Würfe",
         "Noch Filter?",
     };
 
