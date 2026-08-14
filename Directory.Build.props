@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);SOP002;SOP003</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Sopor10.Analyzers">
