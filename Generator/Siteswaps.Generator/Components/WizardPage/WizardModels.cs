@@ -109,13 +109,12 @@ public sealed class WizardState
     private static List<Throw> DefaultThrows() =>
         new()
         {
-            Throw.EmptyHand,
             Throw.Zip,
+            Throw.Hold,
             Throw.Zap,
             Throw.Self,
             Throw.SinglePass,
             Throw.Heff,
             Throw.DoublePass,
-            Throw.TripleSelf,
         };
 }
