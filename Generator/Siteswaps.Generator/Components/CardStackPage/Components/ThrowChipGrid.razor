@@ -1,0 +1,32 @@
+@using Siteswaps.Generator.Components.State
+
+<div class="cs-chip-grid" role="group" aria-label="Erlaubte Würfe">
+    @foreach (var t in AllThrows)
+    {
+        var isActive = Value.Contains(t.Height);
+        <button type="button" class="cs-chip @(isActive ? "active" : "")" aria-pressed="@(isActive ? "true" : "false")"
+                title="@t.GetDisplayValue(true)" @onclick="() => Toggle(t.Height)">
+            @t.GetDisplayValue(true)
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<int> Value { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<List<int>> ValueChanged { get; set; }
+
+    [Parameter]
+    public int MaxHeight { get; set; } = 12;
+
+    private IEnumerable<Throw> AllThrows => Throw.All(MaxHeight);
+
+    private async Task Toggle(int height)
+    {
+        var next = Value.Contains(height) ? Value.Where(h => h != height).ToList() : [..Value, height];
+        Value = next;
+        await ValueChanged.InvokeAsync(next);
+    }
+}

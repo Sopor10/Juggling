@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Mockup 2 – Geführter Wizard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="shared/pz-theme.css" />
+<style>
+  body { display: flex; align-items: flex-start; justify-content: center; padding: 24px 12px; }
+  .step { display: none; }
+  .step.active { display: flex; }
+</style>
+</head>
+<body>
+
+<div class="pz-phone flex flex-col">
+
+  <!-- header with progress -->
+  <div class="pz-header px-5 pt-6 pb-4 relative z-10 shrink-0">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <div class="pz-logo-pz">PZ</div>
+        <span class="text-white/70 text-xs font-semibold" data-i18n="app.eyebrow">GENERATOR</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="langToggle"></div>
+        <button type="button" id="skipBtn" class="text-white/60 text-xs font-bold py-2 px-1" data-i18n="wizard.showAll">Alles zeigen</button>
+      </div>
+    </div>
+    <div class="flex gap-2 justify-center mb-2" id="dots" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-label="Fortschritt"></div>
+  </div>
+
+  <!-- live region announcing step changes for screen readers -->
+  <div class="sr-only" aria-live="polite" id="stepAnnouncer"></div>
+
+  <!-- steps -->
+  <div class="flex-1 relative overflow-hidden">
+
+    <div class="step active flex-col justify-center h-full px-6" data-step="0">
+      <div class="text-center mb-2">
+        <span class="pz-pill" style="background:var(--pz-purple-100)" id="stepLabel0">Schritt 1 / 5</span>
+      </div>
+      <h1 tabindex="-1" class="pz-font-display text-2xl text-center text-[color:var(--pz-purple-800)] mt-4 mb-2" data-i18n="wizard.title.jugglers">Wie viele Jongleure?</h1>
+      <p class="text-center text-sm text-[color:var(--pz-purple-400)] mb-8" data-i18n="wizard.subtitle.jugglers">Wähle, wie viele Personen mitwerfen.</p>
+      <div class="flex justify-center gap-3 flex-wrap" role="radiogroup" aria-label="Jongleure">
+        <button type="button" class="w-16 h-16 rounded-2xl pz-pill flex items-center justify-center text-xl" data-v="2" role="radio" aria-checked="false">2</button>
+        <button type="button" class="w-16 h-16 rounded-2xl pz-pill active flex items-center justify-center text-xl" data-v="3" role="radio" aria-checked="true">3</button>
+        <button type="button" class="w-16 h-16 rounded-2xl pz-pill flex items-center justify-center text-xl" data-v="4" role="radio" aria-checked="false">4</button>
+        <button type="button" class="w-16 h-16 rounded-2xl pz-pill flex items-center justify-center text-xl" data-v="5" role="radio" aria-checked="false">5</button>
+        <button type="button" class="w-16 h-16 rounded-2xl pz-pill flex items-center justify-center text-sm" data-v="6" role="radio" aria-checked="false">6+</button>
+      </div>
+    </div>
+
+    <div class="step flex-col justify-center h-full px-6" data-step="1">
+      <div class="text-center mb-2"><span class="pz-pill" style="background:var(--pz-purple-100)" id="stepLabel1">Schritt 2 / 5</span></div>
+      <h1 tabindex="-1" class="pz-font-display text-2xl text-center text-[color:var(--pz-purple-800)] mt-4 mb-2" data-i18n="wizard.title.period">Wie lang ist die Periode?</h1>
+      <p class="text-center text-sm text-[color:var(--pz-purple-400)] mb-8" data-i18n="wizard.subtitle.period">Nach wie vielen Würfen wiederholt sich das Muster?</p>
+      <div class="flex items-center justify-center gap-5">
+        <button type="button" class="pz-stepper-btn" id="periodMinus" aria-label="Periode verringern">–</button>
+        <div class="pz-font-display text-5xl text-[color:var(--pz-purple-800)] w-20 text-center" id="periodValue" aria-live="polite">5</div>
+        <button type="button" class="pz-stepper-btn" id="periodPlus" aria-label="Periode erhöhen">+</button>
+      </div>
+      <label class="sr-only" for="periodSlider">Periode</label>
+      <input type="range" min="1" max="12" value="5" class="pz-slider mt-8 mx-4" id="periodSlider" />
+    </div>
+
+    <div class="step flex-col justify-center h-full px-6" data-step="2">
+      <div class="text-center mb-2"><span class="pz-pill" style="background:var(--pz-purple-100)" id="stepLabel2">Schritt 3 / 5</span></div>
+      <h1 tabindex="-1" class="pz-font-display text-2xl text-center text-[color:var(--pz-purple-800)] mt-4 mb-2" data-i18n="wizard.title.clubs">Wie viele Clubs?</h1>
+      <p class="text-center text-sm text-[color:var(--pz-purple-400)] mb-10" data-i18n="wizard.subtitle.clubs">Bereich von–bis ist erlaubt.</p>
+      <div class="text-center pz-font-display text-3xl text-[color:var(--pz-purple-800)] mb-4">
+        <span id="clubsMinEcho">6</span> – <span id="clubsMaxEcho">6</span>
+      </div>
+      <div class="relative pt-2 pb-1 mx-2" id="clubsRange">
+        <div class="pz-range-track"><div class="pz-range-fill" id="clubsFill"></div></div>
+        <div class="pz-range-thumb" id="clubsThumbMin" role="slider" tabindex="0" aria-label="Clubs Minimum" aria-valuemin="3" aria-valuemax="12"></div>
+        <div class="pz-range-thumb" id="clubsThumbMax" role="slider" tabindex="0" aria-label="Clubs Maximum" aria-valuemin="3" aria-valuemax="12"></div>
+      </div>
+      <div class="flex justify-between text-[11px] text-[color:var(--pz-purple-400)] mt-1 font-semibold mx-2">
+        <span>3</span><span>12</span>
+      </div>
+    </div>
+
+    <div class="step flex-col h-full px-6 pt-6" data-step="3">
+      <div class="text-center mb-2"><span class="pz-pill" style="background:var(--pz-purple-100)" id="stepLabel3">Schritt 4 / 5</span></div>
+      <h1 tabindex="-1" class="pz-font-display text-2xl text-center text-[color:var(--pz-purple-800)] mt-4 mb-2" data-i18n="wizard.title.throws">Welche Würfe erlauben?</h1>
+      <p class="text-center text-sm text-[color:var(--pz-purple-400)] mb-4" data-i18n="wizard.subtitle.throws">Tippe die Wurfhöhen an, die vorkommen dürfen.</p>
+      <div class="flex justify-center mb-4">
+        <button type="button" class="pz-pill active text-xs py-2 px-3 min-h-[36px]" id="throwsNameToggle" aria-pressed="true">Namen</button>
+      </div>
+      <div class="grid grid-cols-4 gap-2" id="throwsGrid"></div>
+    </div>
+
+    <div class="step flex-col h-full px-6 pt-6" data-step="4">
+      <div class="text-center mb-2"><span class="pz-pill" style="background:var(--pz-purple-100)" id="stepLabel4">Schritt 5 / 5 · optional</span></div>
+      <h1 tabindex="-1" class="pz-font-display text-2xl text-center text-[color:var(--pz-purple-800)] mt-4 mb-2" data-i18n="wizard.title.filters">Noch Filter?</h1>
+      <p class="text-center text-sm text-[color:var(--pz-purple-400)] mb-4" data-i18n="wizard.subtitle.filters">Kannst du auch überspringen und direkt generieren.</p>
+      <div class="flex-1 overflow-y-auto pz-scrollbar-none">
+        <div class="space-y-2 mb-3" id="filterList"></div>
+        <button type="button" class="w-full py-2.5 rounded-xl border-2 border-dashed border-[color:var(--pz-purple-100)] text-[color:var(--pz-purple-500)] font-bold text-sm" id="addFilterBtn" data-i18n="filters.add">+ Filter hinzufügen</button>
+        <div class="pz-card mt-4 p-4 text-center">
+          <div class="text-[11px] font-bold text-[color:var(--pz-purple-400)] uppercase tracking-wide" data-i18n="footer.estimatedMatches">Voraussichtliche Treffer</div>
+          <div class="pz-font-display text-3xl text-[color:var(--pz-purple-800)]" data-value="0" id="matchCount" aria-live="polite" aria-atomic="true">0</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- nav -->
+  <div class="px-5 py-4 flex items-center gap-3 shrink-0 relative z-10 bg-[color:var(--pz-bg)]">
+    <button type="button" id="backBtn" class="pz-btn-ghost px-5 py-3 pz-font-display text-sm invisible" data-i18n="wizard.back">Zurück</button>
+    <button type="button" id="nextBtn" class="pz-btn-primary flex-1 py-3 pz-font-display text-base" data-i18n="wizard.next">Weiter</button>
+  </div>
+
+  <!-- filter add/edit sheet -->
+  <div class="pz-sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="pz-bottom-sheet p-5" id="filterSheet">
+    <div class="w-10 h-1.5 bg-[color:var(--pz-purple-100)] rounded-full mx-auto mb-4"></div>
+    <h3 class="pz-font-display text-lg mb-3 text-[color:var(--pz-purple-800)]" id="sheetTitle">Filter hinzufügen</h3>
+
+    <div class="flex gap-2 mb-4" id="filterTabs" role="tablist" aria-label="Filtertyp">
+      <button type="button" class="pz-pill active flex-1" data-tab="number" role="tab" aria-selected="true">Anzahl</button>
+      <button type="button" class="pz-pill flex-1" data-tab="pattern" role="tab" aria-selected="false">Muster</button>
+      <button type="button" class="pz-pill flex-1" data-tab="state" role="tab" aria-selected="false">Zustand</button>
+    </div>
+
+    <!-- Number filter panel -->
+    <div data-panel="number" role="tabpanel">
+      <p class="text-sm text-[color:var(--pz-purple-400)] mb-4" data-i18n="number.hint">z. B. „genau 2× Heff“</p>
+      <div class="flex gap-2 mb-2">
+        <label class="sr-only" for="numComparison" data-i18n="number.comparisonLabel">Vergleich</label>
+        <select id="numComparison" class="flex-1 border-2 border-[color:var(--pz-purple-100)] rounded-xl px-3 py-2 font-bold text-sm">
+          <option value="exact">Genau</option>
+          <option value="max">Maximal</option>
+          <option value="min">Mindestens</option>
+        </select>
+        <label class="sr-only" for="numAmount" data-i18n="number.amountLabel">Anzahl</label>
+        <input id="numAmount" type="number" value="2" min="0" max="30" class="w-16 border-2 border-[color:var(--pz-purple-100)] rounded-xl px-3 py-2 font-bold text-sm text-center" />
+        <label class="sr-only" for="numThrow" data-i18n="number.throwLabel">Wurf</label>
+        <select id="numThrow" class="flex-1 border-2 border-[color:var(--pz-purple-100)] rounded-xl px-3 py-2 font-bold text-sm"></select>
+      </div>
+    </div>
+
+    <!-- Pattern filter panel -->
+    <div data-panel="pattern" class="hidden" role="tabpanel">
+      <p class="text-sm text-[color:var(--pz-purple-400)] mb-3" data-i18n="pattern.hint">Tippe ein Feld an, dann einen Wurf darunter.</p>
+      <div class="flex gap-2 mb-3">
+        <label class="sr-only" for="patRotation" data-i18n="pattern.rotationLabel">Bezug</label>
+        <select id="patRotation" class="flex-1 border-2 border-[color:var(--pz-purple-100)] rounded-xl px-3 py-2 font-bold text-sm"></select>
+        <div class="flex rounded-xl overflow-hidden border-2 border-[color:var(--pz-purple-100)]" role="radiogroup" aria-label="Muster soll">
+          <button type="button" id="patIncludeYes" class="pz-chip px-3 text-xs min-h-[44px]" style="border:none;border-radius:0" role="radio" aria-checked="true" data-i18n="pattern.include.yes">enthalten sein</button>
+          <button type="button" id="patIncludeNo" class="pz-chip px-3 text-xs min-h-[44px]" style="border:none;border-radius:0" role="radio" aria-checked="false" data-i18n="pattern.include.no">ausgeschlossen sein</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-5 gap-1.5 mb-3" id="patSlots"></div>
+      <div class="flex flex-wrap gap-1.5" id="patPalette"></div>
+    </div>
+
+    <!-- State filter panel -->
+    <div data-panel="state" class="hidden" role="tabpanel">
+      <p class="text-sm text-[color:var(--pz-purple-400)] mb-3" data-i18n="state.hint">Welche zukünftigen Würfe sind belegt?</p>
+      <div class="grid grid-cols-5 gap-2" id="stateGrid"></div>
+    </div>
+
+    <div class="flex gap-2 mt-5">
+      <button type="button" id="sheetDeleteBtn" class="pz-btn-ghost px-4 py-3 pz-font-display text-sm hidden" data-i18n="sheet.delete">Filter entfernen</button>
+      <button type="button" id="sheetSaveBtn" class="pz-btn-primary flex-1 py-3 pz-font-display" data-i18n="sheet.saveAdd">Filter übernehmen</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="shared/pz-demo.js"></script>
+<script>
+  const state = { jugglers: 3, period: 5, clubsMin: 6, clubsMax: 6, throws: 6, filters: 0 };
+  const TOTAL_STEPS = 5;
+  let step = 0;
+
+  const dotsEl = document.getElementById('dots');
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const d = document.createElement('div');
+    d.className = 'pz-progress-dot' + (i === 0 ? ' active' : '');
+    dotsEl.appendChild(d);
+  }
+  function renderDots() {
+    dotsEl.querySelectorAll('.pz-progress-dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i === step) d.classList.add('active');
+      else if (i < step) d.classList.add('done');
+    });
+  }
+
+  function updateStepLabels() {
+    for (let i = 0; i < TOTAL_STEPS; i++) {
+      const el = document.getElementById('stepLabel' + i);
+      if (!el) continue;
+      const base = pzT('wizard.stepOf', { n: i + 1, total: TOTAL_STEPS });
+      el.textContent = i === TOTAL_STEPS - 1 ? `${base} · ${pzT('wizard.optional')}` : base;
+    }
+  }
+
+  function showStep(i) {
+    document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', parseInt(s.dataset.step) === i));
+    document.getElementById('backBtn').classList.toggle('invisible', i === 0);
+    document.getElementById('nextBtn').textContent = i === TOTAL_STEPS - 1 ? pzT('footer.generate') : pzT('wizard.next');
+    document.getElementById('dots').setAttribute('aria-valuenow', String(i + 1));
+    renderDots();
+    const activeStep = document.querySelector(`.step[data-step="${i}"]`);
+    const heading = activeStep ? activeStep.querySelector('h1') : null;
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }
+    const announcer = document.getElementById('stepAnnouncer');
+    if (announcer && heading) {
+      announcer.textContent = `${pzT('wizard.stepOf', { n: i + 1, total: TOTAL_STEPS })}: ${heading.textContent}`;
+    }
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (step < TOTAL_STEPS - 1) { step++; showStep(step); }
+    else { document.getElementById('nextBtn').textContent = pzT('footer.generating'); }
+  });
+  document.getElementById('backBtn').addEventListener('click', () => {
+    if (step > 0) { step--; showStep(step); }
+  });
+  document.getElementById('skipBtn').addEventListener('click', () => {
+    step = TOTAL_STEPS - 1; showStep(step);
+  });
+
+  function refresh() {
+    pzAnimateNumber(document.getElementById('matchCount'), pzFakeMatchCount(state));
+  }
+
+  // Language toggle
+  pzCreateLangToggle(document.getElementById('langToggle'), () => {
+    updateStepLabels();
+    showStep(step);
+    document.getElementById('throwsNameToggle').textContent = throwsController.isShowingNames() ? pzT('throws.names') : pzT('throws.numbers');
+    filterBuilder.refreshTexts();
+  });
+  updateStepLabels();
+
+  // step 0 - jugglers
+  document.querySelectorAll('[data-step="0"] .pz-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-step="0"] .pz-pill').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-checked', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-checked', 'true');
+      state.jugglers = parseInt(btn.dataset.v, 10);
+      refresh();
+    });
+  });
+
+  // step 1 - period
+  const periodValueEl = document.getElementById('periodValue');
+  const periodSlider = document.getElementById('periodSlider');
+  function setPeriod(v) {
+    v = Math.max(1, Math.min(12, v));
+    state.period = v;
+    periodValueEl.textContent = v;
+    periodSlider.value = v;
+    refresh();
+  }
+  document.getElementById('periodMinus').addEventListener('click', () => setPeriod(state.period - 1));
+  document.getElementById('periodPlus').addEventListener('click', () => setPeriod(state.period + 1));
+  periodSlider.addEventListener('input', e => setPeriod(parseInt(e.target.value, 10)));
+
+  // step 2 - clubs
+  const rangeEl = document.getElementById('clubsRange');
+  const thumbMin = document.getElementById('clubsThumbMin');
+  const thumbMax = document.getElementById('clubsThumbMax');
+  const fillEl = document.getElementById('clubsFill');
+  const CLUBS_MIN = 3, CLUBS_MAX = 12;
+  function clubsToPercent(v) { return (v - CLUBS_MIN) / (CLUBS_MAX - CLUBS_MIN) * 100; }
+  function layoutClubs() {
+    const minP = clubsToPercent(state.clubsMin);
+    const maxP = clubsToPercent(state.clubsMax);
+    thumbMin.style.left = minP + '%';
+    thumbMax.style.left = maxP + '%';
+    fillEl.style.left = minP + '%';
+    fillEl.style.width = (maxP - minP) + '%';
+    document.getElementById('clubsMinEcho').textContent = state.clubsMin;
+    document.getElementById('clubsMaxEcho').textContent = state.clubsMax;
+    thumbMin.setAttribute('aria-valuenow', String(state.clubsMin));
+    thumbMax.setAttribute('aria-valuenow', String(state.clubsMax));
+  }
+  function setClub(isMin, v) {
+    v = Math.max(CLUBS_MIN, Math.min(CLUBS_MAX, v));
+    if (isMin) { v = Math.min(v, state.clubsMax); state.clubsMin = v; }
+    else { v = Math.max(v, state.clubsMin); state.clubsMax = v; }
+    layoutClubs(); refresh();
+  }
+  function makeDraggable(thumb, isMin) {
+    thumb.addEventListener('pointerdown', e => {
+      thumb.setPointerCapture(e.pointerId);
+      const move = (ev) => {
+        const rect = rangeEl.getBoundingClientRect();
+        let pct = (ev.clientX - rect.left) / rect.width;
+        pct = Math.max(0, Math.min(1, pct));
+        setClub(isMin, Math.round(CLUBS_MIN + pct * (CLUBS_MAX - CLUBS_MIN)));
+      };
+      const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    });
+    thumb.addEventListener('keydown', e => {
+      const current = isMin ? state.clubsMin : state.clubsMax;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setClub(isMin, current + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setClub(isMin, current - 1); }
+      else if (e.key === 'Home') { e.preventDefault(); setClub(isMin, CLUBS_MIN); }
+      else if (e.key === 'End') { e.preventDefault(); setClub(isMin, CLUBS_MAX); }
+    });
+  }
+  makeDraggable(thumbMin, true);
+  makeDraggable(thumbMax, false);
+  layoutClubs();
+
+  // step 3 - throws (names by default, e.g. Heff/Zip/Self – see pz-demo.js)
+  const throwsGrid = document.getElementById('throwsGrid');
+  const throwsController = pzCreateThrowsController(throwsGrid, {
+    chipClass: 'pz-chip py-3 text-sm',
+    onChange: (n) => { state.throws = n; refresh(); },
+  });
+  state.throws = throwsController.count();
+
+  document.getElementById('throwsNameToggle').addEventListener('click', (e) => {
+    const showingNames = throwsController.toggleNames();
+    e.target.textContent = showingNames ? pzT('throws.names') : pzT('throws.numbers');
+    e.target.classList.toggle('active', showingNames);
+    e.target.setAttribute('aria-pressed', String(showingNames));
+  });
+
+  // step 4 - filters
+  const filterBuilder = pzInitFilterBuilder({
+    getPeriod: () => state.period,
+    getJugglers: () => state.jugglers,
+    getAllowedThrows: () => {
+      const active = Array.from(throwsGrid.querySelectorAll('.pz-chip.active')).map(c => parseInt(c.dataset.height, 10));
+      return active.length ? active : PZ_THROWS.map(t => t.height);
+    },
+    onChange: (n) => { state.filters = n; refresh(); },
+    defaultFilters: [],
+  });
+  state.filters = filterBuilder.count();
+
+  showStep(0);
+  refresh();
+</script>
+</body>
+</html>

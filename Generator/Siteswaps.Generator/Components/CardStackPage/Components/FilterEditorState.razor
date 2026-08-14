@@ -1,0 +1,28 @@
+<p class="cs-sheet-hint">Welche zukünftigen Würfe sind belegt?</p>
+<div class="cs-chip-grid" role="group" aria-label="Zustand: belegte Beats">
+    @for (var i = 0; i < ActiveBeats.Length; i++)
+    {
+        var index = i;
+        var isActive = ActiveBeats[index];
+        <button type="button" class="cs-chip @(isActive ? "active" : "")" title="Beat @(index + 1)"
+                aria-pressed="@(isActive ? "true" : "false")" @onclick="() => Toggle(index)">
+            @(index + 1)
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public bool[] ActiveBeats { get; set; } = new bool[9];
+
+    [Parameter]
+    public EventCallback<bool[]> ActiveBeatsChanged { get; set; }
+
+    private async Task Toggle(int index)
+    {
+        var updated = (bool[])ActiveBeats.Clone();
+        updated[index] = !updated[index];
+        ActiveBeats = updated;
+        await ActiveBeatsChanged.InvokeAsync(updated);
+    }
+}

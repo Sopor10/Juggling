@@ -1,0 +1,140 @@
+@using Siteswaps.Generator.Components.CardStackPage.Models
+@using Siteswaps.Generator.Components.State
+
+@if (State.Filters.Count == 0)
+{
+    <p class="cs-filters-empty">Noch keine Filter – das Muster ist noch unbeschränkt.</p>
+}
+else
+{
+    var groups = State.ComputeGroups();
+    var globalIndex = 0;
+    <div class="cs-filter-groups" role="list">
+        @for (var gi = 0; gi < groups.Count; gi++)
+        {
+            var group = groups[gi];
+            if (gi > 0)
+            {
+                var orConnectorIndex = globalIndex - 1;
+                <div class="cs-connector-row cs-connector-row-or">
+                    <button type="button" class="cs-connector-pill cs-connector-or" @onclick="() => ToggleConnector(orConnectorIndex)">
+                        ODER
+                    </button>
+                </div>
+            }
+
+            var isGroup = group.Count > 1;
+            <div class="@(isGroup ? "cs-filter-group" : "")">
+                @if (isGroup)
+                {
+                    <div class="cs-filter-group-label">Gruppe @(gi + 1)</div>
+                }
+                @for (var li = 0; li < group.Count; li++)
+                {
+                    var filter = group[li];
+                    if (li > 0)
+                    {
+                        var andConnectorIndex = globalIndex - 1;
+                        <div class="cs-connector-row">
+                            <button type="button" class="cs-connector-pill cs-connector-and" @onclick="() => ToggleConnector(andConnectorIndex)">
+                                UND
+                            </button>
+                        </div>
+                    }
+                    <div class="cs-filter-row" role="listitem">
+                        <div class="cs-filter-desc">@Describe(filter)</div>
+                        <button type="button" class="cs-icon-btn" title="Bearbeiten" aria-label="Bearbeiten" @onclick="() => OnEditRequested.InvokeAsync(filter)">✎</button>
+                        <button type="button" class="cs-icon-btn cs-icon-btn-danger" title="Entfernen" aria-label="Entfernen" @onclick="() => RemoveFilter(filter.Id)">✕</button>
+                    </div>
+                    globalIndex++;
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public CardStackFormState State { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback OnChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<CardStackFilterItem> OnEditRequested { get; set; }
+
+    private async Task ToggleConnector(int index)
+    {
+        State.Connectors[index] = State.Connectors[index] == CardStackFilterConnector.And
+            ? CardStackFilterConnector.Or
+            : CardStackFilterConnector.And;
+        await OnChanged.InvokeAsync();
+    }
+
+    private async Task RemoveFilter(int id)
+    {
+        var index = State.Filters.FindIndex(f => f.Id == id);
+        if (index == -1)
+        {
+            return;
+        }
+
+        State.Filters.RemoveAt(index);
+        if (State.Connectors.Count > 0)
+        {
+            var connectorIndex = Math.Min(index, State.Connectors.Count - 1);
+            State.Connectors.RemoveAt(connectorIndex);
+        }
+
+        await OnChanged.InvokeAsync();
+    }
+
+    private static string Describe(CardStackFilterItem filter) =>
+        filter.Kind switch
+        {
+            CardStackFilterKind.Number => DescribeNumber(filter),
+            CardStackFilterKind.Pattern => DescribePattern(filter),
+            CardStackFilterKind.State => DescribeState(filter),
+            _ => "",
+        };
+
+    private static string DescribeNumber(CardStackFilterItem filter)
+    {
+        var comparison = filter.NumberComparison switch
+        {
+            CardStackNumberComparison.Exactly => "Genau",
+            CardStackNumberComparison.Maximum => "Maximal",
+            CardStackNumberComparison.AtLeast => "Mindestens",
+            _ => "",
+        };
+        var throwLabel = Throw.All(13).FirstOrDefault(t => t.Height == filter.NumberThrowHeight)?.GetDisplayValue(true)
+            ?? filter.NumberThrowHeight.ToString();
+        return $"{comparison} {filter.NumberAmount}× {throwLabel}";
+    }
+
+    private static string DescribePattern(CardStackFilterItem filter)
+    {
+        var sequence = filter.PatternSequenceHeights.Count == 0
+            ? "leer"
+            : string.Join(
+                " ",
+                filter.PatternSequenceHeights.Select(h =>
+                    Throw.All(13).FirstOrDefault(t => t.Height == h)?.GetDisplayValue(true) ?? h.ToString()
+                )
+            );
+        var verb = filter.PatternIsInclude ? "enthält" : "ohne";
+        var rotation = filter.PatternRotation.Display;
+        return $"Muster {verb} „{sequence}“ · {rotation}";
+    }
+
+    private static string DescribeState(CardStackFilterItem filter)
+    {
+        var beats = filter
+            .StateActiveBeats.Select((active, i) => (active, i))
+            .Where(x => x.active)
+            .Select(x => (x.i + 1).ToString())
+            .ToList();
+        var list = beats.Count == 0 ? "keine" : string.Join(", ", beats);
+        return $"Zustand · Beats {list} belegt";
+    }
+}

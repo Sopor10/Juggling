@@ -1,0 +1,45 @@
+@inherits LayoutComponentBase
+
+@* Dedicated layout for standalone mobile flows (Card Stack, Wizard). These
+   pages render their own in-app header/progress UI and are dedicated mobile
+   experiences without a desktop sidebar, so no global NavMenu/top-row is
+   rendered here - avoids stacking the app-wide nav on top of the page's own
+   hero header ("double header" problem). *@
+
+<div class="mobile-layout">
+    <a class="mobile-layout-home" href="/" aria-label="Zurück zur Generator-Startseite">
+        <span class="mobile-layout-home-icon" aria-hidden="true">←</span>
+        <span class="mobile-layout-home-text">Generator</span>
+    </a>
+    @Body
+</div>
+
+<style>
+    .mobile-layout {
+        position: relative;
+    }
+
+    .mobile-layout-home {
+        position: fixed;
+        top: calc(10px + env(safe-area-inset-top, 0px));
+        left: calc(10px + env(safe-area-inset-left, 0px));
+        z-index: 50;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+        min-height: 40px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        color: #33225d;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
+    }
+
+    .mobile-layout-home-icon {
+        font-size: 16px;
+        line-height: 1;
+    }
+</style>

@@ -1,0 +1,187 @@
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@using Siteswaps.Generator.Components.State
+@using Siteswaps.Generator.Core.Generator
+
+<div class="wizard-sheet-backdrop @(_isOpen ? "open" : "")" @onclick="Close"></div>
+<div class="wizard-bottom-sheet @(_isOpen ? "open" : "")" role="dialog" aria-modal="true" aria-label="@SheetTitle">
+    <div class="wizard-sheet-handle"></div>
+    <h3 class="wizard-sheet-title">@SheetTitle</h3>
+
+    <div class="wizard-tabs" role="tablist" aria-label="Filtertyp">
+        <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.Number ? "active" : "")"
+                role="tab" aria-selected="@(_activeTab == FilterTabKind.Number ? "true" : "false")"
+                @onclick="() => SelectTab(FilterTabKind.Number)">Anzahl</button>
+        <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.Pattern ? "active" : "")"
+                role="tab" aria-selected="@(_activeTab == FilterTabKind.Pattern ? "true" : "false")"
+                @onclick="() => SelectTab(FilterTabKind.Pattern)">Muster</button>
+        <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.State ? "active" : "")"
+                role="tab" aria-selected="@(_activeTab == FilterTabKind.State ? "true" : "false")"
+                @onclick="() => SelectTab(FilterTabKind.State)">Zustand</button>
+    </div>
+
+    @if (_isOpen)
+    {
+        <div class="@(_activeTab == FilterTabKind.Number ? "" : "wizard-hidden")" role="tabpanel">
+            <NumberFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_numberDraft"
+                                 ValueChanged="v => _numberDraft = v" />
+        </div>
+        <div class="@(_activeTab == FilterTabKind.Pattern ? "" : "wizard-hidden")" role="tabpanel">
+            <PatternFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_patternDraft"
+                                  ValueChanged="v => _patternDraft = v" Period="Period" NumberOfJugglers="NumberOfJugglers" />
+        </div>
+        <div class="@(_activeTab == FilterTabKind.State ? "" : "wizard-hidden")" role="tabpanel">
+            <StateFilterEditor @key="_sessionId" Value="_stateDraft" ValueChanged="v => _stateDraft = v" />
+        </div>
+    }
+
+    <div class="wizard-sheet-actions">
+        @if (_editingId is not null)
+        {
+            <button type="button" class="wizard-btn-ghost" @onclick="Delete">Filter entfernen</button>
+        }
+        <button type="button" class="wizard-btn-filter-primary wizard-flex-1" @onclick="Save">
+            @(_editingId is null ? "Filter übernehmen" : "Änderungen speichern")
+        </button>
+    </div>
+</div>
+
+@code {
+    private enum FilterTabKind
+    {
+        Number,
+        Pattern,
+        State,
+    }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<Throw> AllowedThrows { get; set; } = Array.Empty<Throw>();
+
+    [Parameter]
+    public int Period { get; set; } = 5;
+
+    [Parameter]
+    public int NumberOfJugglers { get; set; } = 3;
+
+    [Parameter]
+    public EventCallback<IFilterInformation> FilterAdded { get; set; }
+
+    [Parameter]
+    public EventCallback<(int Id, IFilterInformation Filter)> FilterEdited { get; set; }
+
+    [Parameter]
+    public EventCallback<int> FilterDeleted { get; set; }
+
+    private bool _isOpen;
+    private int? _editingId;
+    private FilterTabKind _activeTab = FilterTabKind.Number;
+    private int _sessionId;
+
+    private EasyNumberFilter.NumberFilter _numberDraft = NewNumberDraft(Array.Empty<Throw>());
+    private NewPatternFilterInformation _patternDraft = NewPatternDraft(Array.Empty<Throw>(), 5, 3);
+    private EasyStateFilter.StateFilter _stateDraft = NewStateDraft();
+
+    private string SheetTitle => _editingId is null ? "Filter hinzufügen" : "Filter bearbeiten";
+
+    public void OpenForNew()
+    {
+        _editingId = null;
+        _sessionId++;
+        _numberDraft = NewNumberDraft(AllowedThrows);
+        _patternDraft = NewPatternDraft(AllowedThrows, Period, NumberOfJugglers);
+        _stateDraft = NewStateDraft();
+        _activeTab = FilterTabKind.Number;
+        _isOpen = true;
+    }
+
+    public void OpenForEdit(WizardFilterEntry entry)
+    {
+        _editingId = entry.Id;
+        _sessionId++;
+        _numberDraft = NewNumberDraft(AllowedThrows);
+        _patternDraft = NewPatternDraft(AllowedThrows, Period, NumberOfJugglers);
+        _stateDraft = NewStateDraft();
+
+        switch (entry.Filter)
+        {
+            case EasyNumberFilter.NumberFilter numberFilter:
+                _numberDraft = numberFilter;
+                _activeTab = FilterTabKind.Number;
+                break;
+            case NewPatternFilterInformation patternFilter:
+                // Clone the mutable Pattern list - PatternFilterEditor mutates it in-place
+                // (Clear()/AddRange()/index-set), so editing without cloning would corrupt
+                // the saved filter immediately, even if the user later cancels/closes.
+                _patternDraft = patternFilter with { Pattern = new List<Throw>(patternFilter.Pattern) };
+                _activeTab = FilterTabKind.Pattern;
+                break;
+            case EasyStateFilter.StateFilter stateFilter:
+                _stateDraft = stateFilter;
+                _activeTab = FilterTabKind.State;
+                break;
+        }
+
+        _isOpen = true;
+    }
+
+    private void SelectTab(FilterTabKind kind) => _activeTab = kind;
+
+    private void Close() => _isOpen = false;
+
+    private async Task Save()
+    {
+        IFilterInformation value = _activeTab switch
+        {
+            FilterTabKind.Number => _numberDraft,
+            FilterTabKind.Pattern => _patternDraft,
+            FilterTabKind.State => _stateDraft,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+
+        _isOpen = false;
+
+        if (_editingId is { } id)
+        {
+            await FilterEdited.InvokeAsync((id, value));
+        }
+        else
+        {
+            await FilterAdded.InvokeAsync(value);
+        }
+    }
+
+    private async Task Delete()
+    {
+        _isOpen = false;
+        if (_editingId is { } id)
+        {
+            await FilterDeleted.InvokeAsync(id);
+        }
+    }
+
+    private static EasyNumberFilter.NumberFilter NewNumberDraft(IReadOnlyList<Throw> throws) =>
+        new()
+        {
+            Amount = 2,
+            Type = EasyNumberFilter.NumberFilterType.Exactly,
+            Throw = throws.FirstOrDefault() ?? Throw.Empty,
+        };
+
+    private static NewPatternFilterInformation NewPatternDraft(
+        IReadOnlyList<Throw> throws,
+        int period,
+        int jugglers
+    )
+    {
+        var fallback = throws.FirstOrDefault() ?? Throw.Empty;
+        var length = Math.Max(1, period);
+        return new NewPatternFilterInformation(
+            Enumerable.Repeat(fallback, length).ToList(),
+            PatternRotation.Global,
+            true,
+            false
+        );
+    }
+
+    private static EasyStateFilter.StateFilter NewStateDraft() =>
+        new([.. new bool[WizardState.MaxThrowHeight]]);
+}

@@ -1,0 +1,110 @@
+@page "/wizard"
+@layout MobileLayout
+
+<PageTitle>Assistent – Siteswap Generator</PageTitle>
+
+<div class="wizard-page">
+
+    @if (State.Phase == WizardPhase.Editing)
+    {
+        <header class="wizard-header">
+            <div class="wizard-header-top">
+                <div class="wizard-brand">
+                    <span class="wizard-logo">PZ</span>
+                    <span class="wizard-eyebrow">SITESWAP GENERATOR</span>
+                </div>
+                <button type="button" class="wizard-skip-btn" @onclick="SkipToLastStep">Alles zeigen</button>
+            </div>
+            <ProgressDots Total="WizardState.TotalSteps" Current="State.CurrentStep" Visited="State.VisitedSteps" StepSelected="JumpToStep" />
+            <p class="wizard-swipe-hint">← nach links/rechts wischen →</p>
+        </header>
+
+        <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
+
+        <div class="wizard-steps"
+             @onpointerdown="OnStepsPointerDown"
+             @onpointerup="OnStepsPointerUp"
+             @onpointercancel="OnStepsPointerCancel">
+
+            <section class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)">
+                <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 1 / 3</span></div>
+                <h2 class="wizard-step-title">Jongleure &amp; Periode</h2>
+                <p class="wizard-step-subtitle">Wer wirft mit, und wie lang ist das Muster?</p>
+
+                <p class="wizard-section-label">Jongleure</p>
+                <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+
+                <p class="wizard-section-label wizard-mt">Periode</p>
+                <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+            </section>
+
+            <section class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)">
+                <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 2 / 3</span></div>
+                <h2 class="wizard-step-title">Clubs &amp; Würfe</h2>
+                <p class="wizard-step-subtitle">Wie viele Clubs, und welche Wurfhöhen dürfen vorkommen?</p>
+
+                <p class="wizard-section-label">Anzahl Clubs</p>
+                <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
+                                  Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
+                                  LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                  MinLabel="Clubs Minimum" MaxLabel="Clubs Maximum" />
+
+                <ThrowsChipGrid Selected="State.AllowedThrows" />
+            </section>
+
+            <section class="wizard-step wizard-step-filters @(IsStepActive(2) ? "active" : "")" aria-hidden="@AriaHidden(2)">
+                <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 3 / 3 · optional</span></div>
+                <h2 class="wizard-step-title">Noch Filter?</h2>
+                <p class="wizard-step-subtitle">Kannst du auch überspringen und direkt generieren.</p>
+
+                <div class="wizard-filters-scroll">
+                    <FilterList Filters="State.Filters" Connectors="State.Connectors"
+                                Edit="OpenEditFilterSheet" RemoveRequested="RemoveFilter" />
+                    <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">+ Filter hinzufügen</button>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="wizard-nav">
+            @if (NextPreviewText is not null)
+            {
+                <p class="wizard-next-preview">@NextPreviewText</p>
+            }
+            <div class="wizard-nav-buttons">
+                <button type="button" class="wizard-btn-ghost wizard-back-btn @(State.CurrentStep == 0 ? "wizard-invisible" : "")"
+                        disabled="@(State.CurrentStep == 0 || _isStepTransitioning)"
+                        @onclick="GoBack">Zurück</button>
+                <button type="button"
+                        class="wizard-flex-1 @(IsLastStep ? "wizard-btn-generate" : "wizard-btn-primary")"
+                        disabled="@IsNextDisabled"
+                        @onclick="OnNextClicked">@NextButtonText</button>
+            </div>
+        </div>
+
+        <FilterBottomSheet @ref="_filterSheet"
+                            AllowedThrows="State.AllowedThrows"
+                            Period="State.Period.Value"
+                            NumberOfJugglers="State.NumberOfJugglers"
+                            FilterAdded="OnFilterAdded"
+                            FilterEdited="OnFilterEdited"
+                            FilterDeleted="RemoveFilter" />
+    }
+    else
+    {
+        <header class="wizard-header wizard-header-compact">
+            <div class="wizard-brand">
+                <span class="wizard-logo">PZ</span>
+                <span class="wizard-eyebrow">SITESWAP GENERATOR</span>
+            </div>
+        </header>
+
+        <ResultsView Results="State.Results"
+                     IsGenerating="State.Phase == WizardPhase.Generating"
+                     NumberOfJugglers="State.NumberOfJugglers"
+                     CancelRequested="CancelGeneration"
+                     BackToEditingRequested="BackToEditing"
+                     StartOverRequested="StartOver" />
+    }
+
+</div>

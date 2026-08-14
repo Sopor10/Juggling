@@ -1,0 +1,65 @@
+<div class="wizard-juggler-picker">
+    <div class="wizard-chip-row" role="radiogroup" aria-label="Jongleure">
+        @foreach (var v in Options)
+        {
+            var isActive = v == Value;
+            <button type="button"
+                    class="wizard-chip wizard-chip-round @(isActive ? "active" : "")"
+                    role="radio"
+                    aria-checked="@(isActive ? "true" : "false")"
+                    @onpointerdown:stopPropagation="true"
+                    @onclick="() => Select(v)">
+                @v
+            </button>
+        }
+    </div>
+    <div class="wizard-juggler-exact-row">
+        <label class="wizard-juggler-exact-label" for="jugglerExactInput">oder genaue Anzahl</label>
+        <input id="jugglerExactInput" type="number" inputmode="numeric" class="wizard-input-number"
+               min="@MinOption" max="@MaxExact" value="@Value"
+               @onpointerdown:stopPropagation="true"
+               @onchange="OnExactInput" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public int MinOption { get; set; } = WizardState.MinJugglers;
+
+    [Parameter]
+    public int MaxOption { get; set; } = WizardState.MaxJugglers;
+
+    /// <summary>Upper bound for the exact-value number input, independent of the visible pills.</summary>
+    [Parameter]
+    public int MaxExact { get; set; } = WizardState.MaxJugglersExact;
+
+    private IEnumerable<int> Options => Enumerable.Range(MinOption, MaxOption - MinOption + 1);
+
+    private async Task Select(int v) => await SetValue(v);
+
+    private async Task OnExactInput(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var v))
+        {
+            await SetValue(v);
+        }
+    }
+
+    private async Task SetValue(int v)
+    {
+        v = Math.Clamp(v, MinOption, MaxExact);
+        if (v == Value)
+        {
+            return;
+        }
+
+        Value = v;
+        await ValueChanged.InvokeAsync(v);
+    }
+}

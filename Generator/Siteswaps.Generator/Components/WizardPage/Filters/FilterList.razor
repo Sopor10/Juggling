@@ -1,0 +1,146 @@
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@using Siteswaps.Generator.Components.State
+@using Siteswaps.Generator.Core.Generator
+@if (Filters.Count == 0)
+{
+    <p class="wizard-filters-empty">Noch keine Filter – das Muster ist noch unbeschränkt.</p>
+}
+else
+{
+    <div class="wizard-filter-groups" role="list">
+        @{
+            var index = 0;
+            var groups = Groups;
+        }
+        @for (var g = 0; g < groups.Count; g++)
+        {
+            var group = groups[g];
+            var groupNumber = g + 1;
+            if (groupNumber > 1)
+            {
+                var connectorIndex = index - 1;
+                <div class="wizard-connector-row">
+                    <button type="button" class="wizard-pill wizard-connector-or"
+                            @onpointerdown:stopPropagation="true"
+                            aria-label="ODER – zum Wechseln zu UND antippen"
+                            @onclick="() => ToggleConnector(connectorIndex)">ODER</button>
+                </div>
+            }
+
+            <div class="@(group.Count > 1 ? "wizard-filter-group" : "")">
+                @if (group.Count > 1)
+                {
+                    <div class="wizard-filter-group-label">Gruppe @groupNumber</div>
+                }
+                @foreach (var entry in group)
+                {
+                    var isFirstInGroup = group.IndexOf(entry) == 0;
+                    if (!isFirstInGroup)
+                    {
+                        var connectorIndex = index - 1;
+                        <div class="wizard-connector-row wizard-connector-row-and">
+                            <button type="button" class="wizard-connector-and"
+                                    @onpointerdown:stopPropagation="true"
+                                    aria-label="UND – zum Wechseln zu ODER antippen"
+                                    @onclick="() => ToggleConnector(connectorIndex)">UND</button>
+                        </div>
+                    }
+
+                    <div class="wizard-filter-card" role="listitem">
+                        <div class="wizard-filter-desc">@Describe(entry.Filter)</div>
+                        <button type="button" class="wizard-icon-btn"
+                                aria-label="Bearbeiten: @Describe(entry.Filter)"
+                                @onpointerdown:stopPropagation="true"
+                                @onclick="() => Edit.InvokeAsync(entry)">✎</button>
+                        <button type="button" class="wizard-icon-btn wizard-icon-btn-danger"
+                                aria-label="Entfernen: @Describe(entry.Filter)"
+                                @onpointerdown:stopPropagation="true"
+                                @onclick="() => RemoveRequested.InvokeAsync(entry.Id)">✕</button>
+                    </div>
+                    index++;
+                }
+            </div>
+        }
+    </div>
+    <p class="wizard-filters-hint">Filter in derselben Gruppe müssen alle zutreffen – schon eine passende Gruppe reicht aus.</p>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public List<WizardFilterEntry> Filters { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public List<WizardFilterConnector> Connectors { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<WizardFilterEntry> Edit { get; set; }
+
+    [Parameter]
+    public EventCallback<int> RemoveRequested { get; set; }
+
+    [Parameter]
+    public EventCallback ConnectorsChanged { get; set; }
+
+    private List<List<WizardFilterEntry>> Groups => FilterTranslation.ComputeGroups(Filters, Connectors);
+
+    private async Task ToggleConnector(int index)
+    {
+        if (index < 0 || index >= Connectors.Count)
+        {
+            return;
+        }
+
+        Connectors[index] =
+            Connectors[index] == WizardFilterConnector.And
+                ? WizardFilterConnector.Or
+                : WizardFilterConnector.And;
+        await ConnectorsChanged.InvokeAsync();
+    }
+
+    /// <summary>
+    /// German, user-facing filter description - mirrors CardStackPage's
+    /// FilterList.Describe() instead of the generic/English
+    /// IFilterInformation.Display() (which is shared with the main app's
+    /// filter UI and intentionally left untouched here).
+    /// </summary>
+    private static string Describe(IFilterInformation filter) =>
+        filter switch
+        {
+            EasyNumberFilter.NumberFilter numberFilter => DescribeNumber(numberFilter),
+            NewPatternFilterInformation patternFilter => DescribePattern(patternFilter),
+            EasyStateFilter.StateFilter stateFilter => DescribeState(stateFilter),
+            _ => filter.Display(),
+        };
+
+    private static string DescribeNumber(EasyNumberFilter.NumberFilter filter)
+    {
+        var comparison = filter.Type switch
+        {
+            EasyNumberFilter.NumberFilterType.Exactly => "Genau",
+            EasyNumberFilter.NumberFilterType.Maximum => "Maximal",
+            EasyNumberFilter.NumberFilterType.AtLeast => "Mindestens",
+            _ => "",
+        };
+        return $"{comparison} {filter.Amount}× {filter.Throw.GetDisplayValue(true)}";
+    }
+
+    private static string DescribePattern(NewPatternFilterInformation filter)
+    {
+        var sequence = filter.Pattern.Count == 0
+            ? "leer"
+            : string.Join(" ", filter.Pattern.Select(t => t.GetDisplayValue(true)));
+        var verb = filter.IsIncludePattern ? "enthält" : "ohne";
+        return $"Muster {verb} „{sequence}“ · {filter.PatternRotation.Display}";
+    }
+
+    private static string DescribeState(EasyStateFilter.StateFilter filter)
+    {
+        var beats = filter
+            .Items.Select((active, i) => (active, i))
+            .Where(x => x.active)
+            .Select(x => (x.i + 1).ToString())
+            .ToList();
+        var list = beats.Count == 0 ? "keine" : string.Join(", ", beats);
+        return $"Zustand · Beats {list} belegt";
+    }
+}

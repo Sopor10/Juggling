@@ -1,0 +1,46 @@
+@using Siteswaps.Generator.Core.Generator
+
+<div class="wizard-throws">
+    <div class="wizard-throws-header">
+        <p class="wizard-section-label">Erlaubte Würfe</p>
+    </div>
+    <div class="wizard-chip-grid" role="group" aria-label="Erlaubte Würfe">
+        @foreach (var t in AllThrows)
+        {
+            var isActive = Selected.Any(x => x.Height == t.Height);
+            <button type="button"
+                    class="wizard-chip @(isActive ? "active" : "")"
+                    aria-pressed="@(isActive ? "true" : "false")"
+                    title="@t.Name (Höhe @t.Height)"
+                    @onpointerdown:stopPropagation="true"
+                    @onclick="() => Toggle(t)">
+                @t.GetDisplayValue(true)
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<Throw> Selected { get; set; } = new();
+
+    [Parameter]
+    public EventCallback SelectionChanged { get; set; }
+
+    private IEnumerable<Throw> AllThrows => Throw.All(WizardState.MaxThrowHeight);
+
+    private async Task Toggle(Throw t)
+    {
+        var existing = Selected.FirstOrDefault(x => x.Height == t.Height);
+        if (existing is not null)
+        {
+            Selected.Remove(existing);
+        }
+        else
+        {
+            Selected.Add(t);
+        }
+
+        await SelectionChanged.InvokeAsync();
+    }
+}

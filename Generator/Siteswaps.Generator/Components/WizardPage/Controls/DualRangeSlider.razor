@@ -1,0 +1,158 @@
+@* Dual-thumb range slider built without JS interop: two overlapping native
+   <input type="range"> elements. Pointer-events on the track are disabled and
+   re-enabled only on the ::-webkit-slider-thumb / ::-moz-range-thumb pseudo
+   elements (see DualRangeSlider.razor.css), so the user can grab either thumb
+   directly even though both inputs occupy the exact same area. When both
+   values are equal, the later (max) input's thumb sits exactly on top of the
+   min input's thumb; :active/:focus-within z-index rules in the stylesheet
+   bring whichever one the user is actually interacting with to the front.
+   Tap-to-jump on the track container is handled via DualRangeSlider.razor.js. *@
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+
+<div class="wizard-dualrange">
+    <div class="wizard-dualrange-echo">
+        <span>@Min</span> – <span>@Max</span>
+    </div>
+    <div @ref="_trackWrapRef" class="wizard-dualrange-track-wrap">
+        <div class="wizard-dualrange-track">
+            <div class="wizard-dualrange-fill" style="@FillStyle"></div>
+        </div>
+        <label class="wizard-sr-only" for="@($"{Id}-min")">@MinLabel</label>
+        <input @ref="_minInputRef" id="@($"{Id}-min")" type="range" class="wizard-dualrange-input"
+               min="@LowerBound" max="@UpperBound" value="@Min"
+               aria-label="@MinLabel"
+               @onpointerdown:stopPropagation="true"
+               @oninput="OnMinInput" />
+        <label class="wizard-sr-only" for="@($"{Id}-max")">@MaxLabel</label>
+        <input @ref="_maxInputRef" id="@($"{Id}-max")" type="range" class="wizard-dualrange-input wizard-dualrange-input-max"
+               min="@LowerBound" max="@UpperBound" value="@Max"
+               aria-label="@MaxLabel"
+               @onpointerdown:stopPropagation="true"
+               @oninput="OnMaxInput" />
+    </div>
+    <div class="wizard-dualrange-bounds">
+        <span>@LowerBound</span><span>@UpperBound</span>
+    </div>
+</div>
+
+@code {
+    private static int _idCounter;
+    private readonly string Id = $"dualrange-{++_idCounter}";
+
+    private ElementReference _trackWrapRef;
+    private ElementReference _minInputRef;
+    private ElementReference _maxInputRef;
+    private IJSObjectReference? _module;
+
+    [Parameter]
+    public int LowerBound { get; set; } = WizardState.MinClubs;
+
+    [Parameter]
+    public int UpperBound { get; set; } = WizardState.MaxClubs;
+
+    [Parameter]
+    public string MinLabel { get; set; } = "Minimum";
+
+    [Parameter]
+    public string MaxLabel { get; set; } = "Maximum";
+
+    [Parameter]
+    public int Min { get; set; }
+
+    [Parameter]
+    public EventCallback<int> MinChanged { get; set; }
+
+    [Parameter]
+    public int Max { get; set; }
+
+    [Parameter]
+    public EventCallback<int> MaxChanged { get; set; }
+
+    private string FillStyle
+    {
+        get
+        {
+            var minP = ToPercent(Min);
+            var maxP = ToPercent(Max);
+            return $"left:{minP:0.##}%;width:{Math.Max(0, maxP - minP):0.##}%";
+        }
+    }
+
+    private double ToPercent(int v) =>
+        UpperBound == LowerBound ? 0 : Math.Clamp((v - LowerBound) * 100.0 / (UpperBound - LowerBound), 0, 100);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _module = await JsRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Siteswaps.Generator/Components/WizardPage/Controls/DualRangeSlider.razor.js"
+        );
+        await _module.InvokeVoidAsync(
+            "initTrackTap",
+            _trackWrapRef,
+            _minInputRef,
+            _maxInputRef,
+            LowerBound,
+            UpperBound
+        );
+    }
+
+    private async Task OnMinInput(ChangeEventArgs e)
+    {
+        if (!int.TryParse(e.Value?.ToString(), out var v))
+        {
+            return;
+        }
+
+        v = Math.Clamp(v, LowerBound, UpperBound);
+        v = Math.Min(v, Max);
+        if (v == Min)
+        {
+            return;
+        }
+
+        Min = v;
+        await MinChanged.InvokeAsync(Min);
+    }
+
+    private async Task OnMaxInput(ChangeEventArgs e)
+    {
+        if (!int.TryParse(e.Value?.ToString(), out var v))
+        {
+            return;
+        }
+
+        v = Math.Clamp(v, LowerBound, UpperBound);
+        v = Math.Max(v, Min);
+        if (v == Max)
+        {
+            return;
+        }
+
+        Max = v;
+        await MaxChanged.InvokeAsync(Max);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.InvokeVoidAsync("dispose", _trackWrapRef);
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+    }
+}

@@ -1,0 +1,37 @@
+<div class="wizard-dots" role="tablist" aria-label="Fortschritt: Schritt @(Current + 1) von @Total">
+    @for (var i = 0; i < Total; i++)
+    {
+        var step = i;
+        var isDone = Visited.Contains(step) && step != Current;
+        var isActive = step == Current;
+        var isReachable = Visited.Contains(step);
+        <button type="button" class="wizard-dot @(isActive ? "active" : "") @(isDone ? "done" : "")"
+                role="tab" aria-selected="@(isActive ? "true" : "false")"
+                aria-label="Schritt @(step + 1)"
+                disabled="@(!isReachable)"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => Jump(step)"></button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Total { get; set; }
+
+    [Parameter]
+    public int Current { get; set; }
+
+    [Parameter]
+    public IReadOnlySet<int> Visited { get; set; } = new HashSet<int>();
+
+    [Parameter]
+    public EventCallback<int> StepSelected { get; set; }
+
+    private async Task Jump(int step)
+    {
+        if (Visited.Contains(step) && step != Current)
+        {
+            await StepSelected.InvokeAsync(step);
+        }
+    }
+}

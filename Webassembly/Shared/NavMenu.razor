@@ -1,32 +1,50 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿<div class="pznav-top-row top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Siteswap Helper</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
+        <a class="pznav-brand navbar-brand" href="">
+            <span class="pznav-logo">PZ</span>
+            <span class="pznav-brand-text">Siteswap Generator</span>
+        </a>
+        <button title="Navigation menu" class="pznav-toggler navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="pznav-toggler-icon"></span>
         </button>
     </div>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
+<div class="@NavMenuCssClass pznav-menu" @onclick="ToggleNavMenu">
+    <div class="pznav-brand-panel">
+        <span class="pznav-logo pznav-logo-lg">PZ</span>
+        <span class="pznav-eyebrow">SITESWAP GENERATOR</span>
+    </div>
+    <ul class="nav flex-column pznav-list">
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Generator
+            <NavLink class="pznav-link nav-link" href="" Match="NavLinkMatch.All">
+                <span class="pznav-icon">🎯</span> Generator
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="CalculateTransition" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Transition
+            <NavLink class="pznav-link nav-link" href="CalculateTransition" Match="NavLinkMatch.All">
+                <span class="pznav-icon">🔀</span> Transition
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="SiteswapState" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> State
+            <NavLink class="pznav-link nav-link" href="SiteswapState" Match="NavLinkMatch.All">
+                <span class="pznav-icon">🧮</span> State
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="Settings" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Settings
+            <NavLink class="pznav-link nav-link" href="Settings" Match="NavLinkMatch.All">
+                <span class="pznav-icon">⚙️</span> Settings
+            </NavLink>
+        </li>
+        <li class="pznav-divider" aria-hidden="true"></li>
+        <li class="nav-item px-3">
+            <NavLink class="pznav-link nav-link" href="cardstack" Match="NavLinkMatch.All">
+                <span class="pznav-icon">📱</span> Schnellmodus
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="pznav-link nav-link" href="wizard" Match="NavLinkMatch.All">
+                <span class="pznav-icon">🪄</span> Assistent
             </NavLink>
         </li>
     </ul>

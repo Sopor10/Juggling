@@ -1,0 +1,888 @@
+/* ==========================================================================
+   Design tokens - a small, independent copy of the palette/spacing ideas
+   from design-mockups/shared/pz-theme.css (colors extracted from the
+   mockups). Intentionally duplicated (not shared/imported) so this page has
+   zero coupling to the parallel "card stack" page or the mockup files.
+   Defined on the page's own root element; CSS custom properties inherit
+   through the DOM to every child component regardless of Blazor's CSS
+   isolation scoping, so descendants can reference var(--wizard-*) freely.
+   ========================================================================== */
+.wizard-page {
+    --wizard-purple-950: #241a3d;
+    --wizard-purple-900: #2c1f52;
+    --wizard-purple-800: #33225d;
+    --wizard-purple-700: #3c286d;
+    --wizard-purple-600: #472779;
+    --wizard-purple-500: #552f8c;
+    --wizard-purple-400: #6b41a8;
+    --wizard-purple-300: #8a63c4;
+    --wizard-purple-100: #e8e1f7;
+    --wizard-orange: #f9a500;
+    --wizard-orange-dark: #db8f00;
+    --wizard-bg: #f5f3fb;
+    --wizard-card: #ffffff;
+    --wizard-radius-lg: 22px;
+    --wizard-radius-md: 14px;
+    --wizard-radius-sm: 10px;
+    --wizard-shadow: 0 8px 24px -8px rgba(44, 31, 82, 0.35);
+    --wizard-shadow-sm: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
+    --wizard-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--wizard-bg);
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--wizard-purple-900);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.wizard-page ::deep button:focus-visible,
+.wizard-page ::deep input:focus-visible,
+.wizard-page ::deep select:focus-visible,
+.wizard-page ::deep [tabindex="0"]:focus-visible {
+    outline: 3px solid #00b3ff;
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+/* Step headings are plain h2 (not in tab order). Screen-reader step changes
+   are announced via aria-live (.wizard-sr-only) — no persistent focus ring. */
+
+/* ---------- header ---------- */
+.wizard-header {
+    background: radial-gradient(120% 140% at 20% 0%, var(--wizard-purple-600) 0%, var(--wizard-purple-800) 45%, var(--wizard-purple-950) 100%);
+    color: white;
+    padding: 20px 20px 14px;
+    flex-shrink: 0;
+}
+
+.wizard-header-compact {
+    padding-bottom: 20px;
+}
+
+.wizard-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.wizard-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wizard-logo {
+    font-family: var(--wizard-font-display);
+    font-weight: 800;
+    border: 2.5px solid white;
+    border-radius: 10px;
+    padding: 2px 8px;
+    line-height: 1;
+    font-size: 15px;
+}
+
+.wizard-eyebrow {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.wizard-skip-btn {
+    /* rgba(255,255,255,.6) on the dark purple header background fell below
+       WCAG AA contrast for small text; brightened + underlined so it still
+       reads clearly as a link rather than disabled text. */
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 4px;
+    min-height: 40px;
+    cursor: pointer;
+}
+
+.wizard-swipe-hint {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    font-weight: 600;
+    margin: 6px 0 0;
+}
+
+/* ::deep is required here (not just `.wizard-sr-only`) because these labels are
+   rendered by child components (DualRangeSlider, PeriodStepper, ...), which
+   live in a different CSS-isolation scope than WizardPage itself - without
+   ::deep this rule silently never matches them, leaving the "hidden" label
+   text fully visible and overlapping other UI. */
+.wizard-page ::deep .wizard-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+/* ---------- progress dots ---------- */
+.wizard-page ::deep .wizard-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.wizard-page ::deep .wizard-dot {
+    /* Rendered as a <button> so previously-visited steps are directly
+       tappable to jump back - the visible dot stays small, but padding pads
+       out the actual hit target closer to a comfortable touch size. */
+    width: 8px;
+    height: 8px;
+    padding: 10px;
+    background-clip: content-box;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.25);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.wizard-page ::deep .wizard-dot:disabled {
+    cursor: default;
+}
+
+.wizard-page ::deep .wizard-dot.active {
+    width: 22px;
+    background-color: var(--wizard-orange);
+}
+
+.wizard-page ::deep .wizard-dot.done {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- steps ---------- */
+.wizard-steps {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.wizard-step {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px 22px;
+    overflow-y: auto;
+}
+
+.wizard-step.active {
+    display: flex;
+}
+
+.wizard-step-label {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.wizard-step-title {
+    font-family: var(--wizard-font-display);
+    font-size: 24px;
+    text-align: center;
+    color: var(--wizard-purple-800);
+    margin: 12px 0 6px;
+}
+
+.wizard-step-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: var(--wizard-purple-400);
+    margin: 0 0 20px;
+}
+
+.wizard-section-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--wizard-purple-500);
+    margin: 0 0 8px;
+}
+
+.wizard-mt {
+    margin-top: 24px;
+}
+
+.wizard-filters-scroll {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ---------- generic pill / chip primitives (shared across all child components) ---------- */
+.wizard-page ::deep .wizard-pill {
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 14px;
+    border: 2px solid transparent;
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.wizard-page ::deep .wizard-pill.active {
+    background: var(--wizard-purple-700);
+    color: white;
+    box-shadow: var(--wizard-shadow-sm);
+}
+
+.wizard-page ::deep .wizard-step-pill {
+    background: var(--wizard-purple-100);
+    cursor: default;
+}
+
+.wizard-page ::deep .wizard-chip-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.wizard-page ::deep .wizard-chip {
+    border-radius: var(--wizard-radius-sm);
+    font-weight: 800;
+    font-family: var(--wizard-font-display);
+    font-size: 13px;
+    border: 2px solid var(--wizard-purple-100);
+    background: white;
+    color: var(--wizard-purple-500);
+    padding: 10px 4px;
+    min-height: 44px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.wizard-page ::deep .wizard-chip.active {
+    background: var(--wizard-purple-700);
+    border-color: var(--wizard-purple-700);
+    color: white;
+}
+
+.wizard-page ::deep .wizard-chip:active {
+    transform: scale(0.94);
+}
+
+.wizard-page ::deep .wizard-juggler-exact-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.wizard-page ::deep .wizard-juggler-exact-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--wizard-purple-400);
+}
+
+.wizard-page ::deep .wizard-chip-round {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wizard-page ::deep .wizard-chip-grid {
+    display: grid;
+    /* minmax(0, 1fr) lets tracks shrink below their content's min-width so
+       chips never force the grid wider than its container (horizontal
+       overflow) at narrow viewports. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wizard-page ::deep .wizard-state-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* ---------- period stepper ---------- */
+.wizard-page ::deep .wizard-stepper-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.wizard-page ::deep .wizard-stepper-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+    font-size: 20px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wizard-page ::deep .wizard-stepper-btn:active {
+    background: var(--wizard-purple-700);
+    color: white;
+    transform: scale(0.9);
+}
+
+.wizard-page ::deep .wizard-period-value {
+    font-family: var(--wizard-font-display);
+    font-size: 44px;
+    color: var(--wizard-purple-800);
+    width: 72px;
+    text-align: center;
+}
+
+.wizard-page ::deep .wizard-period-value-input {
+    border: none;
+    background: none;
+    -moz-appearance: textfield;
+}
+
+.wizard-page ::deep .wizard-period-value-input::-webkit-outer-spin-button,
+.wizard-page ::deep .wizard-period-value-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ---------- throws ---------- */
+.wizard-page ::deep .wizard-throws-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* ---------- nav ---------- */
+.wizard-nav {
+    padding: 10px 20px 18px;
+    background: var(--wizard-bg);
+    flex-shrink: 0;
+}
+
+.wizard-next-preview {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--wizard-purple-400);
+    height: 16px;
+    margin: 0 0 8px;
+}
+
+.wizard-nav-buttons {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.wizard-flex-1 {
+    flex: 1;
+}
+
+.wizard-page ::deep .wizard-btn-primary,
+.wizard-page ::deep .wizard-btn-generate,
+.wizard-page ::deep .wizard-btn-filter-primary,
+.wizard-page ::deep .wizard-btn-ghost {
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-family: var(--wizard-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.wizard-page ::deep .wizard-btn-primary {
+    background: var(--wizard-purple-700);
+    color: white;
+}
+
+.wizard-page ::deep .wizard-btn-generate,
+.wizard-page ::deep .wizard-btn-filter-primary {
+    background: linear-gradient(180deg, #ffb838, var(--wizard-orange));
+    color: var(--wizard-purple-950);
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    font-size: 16px;
+}
+
+.wizard-page ::deep .wizard-btn-generate:active,
+.wizard-page ::deep .wizard-btn-filter-primary:active,
+.wizard-page ::deep .wizard-btn-primary:active {
+    transform: scale(0.97);
+}
+
+.wizard-page ::deep .wizard-btn-ghost {
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+}
+
+.wizard-back-btn.wizard-invisible {
+    visibility: hidden;
+}
+
+/* ---------- filter list ---------- */
+.wizard-page ::deep .wizard-filters-empty {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--wizard-purple-400);
+    text-align: center;
+    padding: 28px 12px;
+}
+
+.wizard-page ::deep .wizard-filters-empty::before {
+    content: "🧩";
+    display: block;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.wizard-page ::deep .wizard-filters-hint {
+    font-size: 11px;
+    color: var(--wizard-purple-400);
+    text-align: center;
+    margin-top: 10px;
+}
+
+.wizard-page ::deep .wizard-filter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.wizard-page ::deep .wizard-filter-group {
+    border: 2px dashed var(--wizard-purple-300);
+    background: rgba(138, 99, 196, 0.07);
+    border-radius: 16px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 4px 0;
+}
+
+.wizard-page ::deep .wizard-filter-group-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--wizard-purple-400);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0 4px;
+}
+
+.wizard-page ::deep .wizard-filter-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--wizard-card);
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: var(--wizard-radius-md);
+    padding: 10px 12px;
+}
+
+.wizard-page ::deep .wizard-filter-desc {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--wizard-purple-700);
+}
+
+.wizard-page ::deep .wizard-icon-btn {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-500);
+    border: none;
+    cursor: pointer;
+}
+
+.wizard-page ::deep .wizard-icon-btn-danger {
+    background: #fde3e3;
+    color: #e05353;
+}
+
+.wizard-page ::deep .wizard-connector-row {
+    display: flex;
+    justify-content: center;
+    padding: 2px 0;
+}
+
+.wizard-page ::deep .wizard-connector-or {
+    background: var(--wizard-orange);
+    color: white;
+    font-size: 12px;
+    min-height: 40px;
+    padding: 0 20px;
+}
+
+.wizard-page ::deep .wizard-connector-and {
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-500);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    border-radius: 999px;
+    border: none;
+    padding: 8px 12px;
+    min-height: 40px;
+    cursor: pointer;
+}
+
+.wizard-add-filter-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 14px;
+    border: 2px dashed var(--wizard-purple-100);
+    background: none;
+    color: var(--wizard-purple-500);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ---------- bottom sheet ---------- */
+.wizard-page ::deep .wizard-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(36, 26, 61, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    z-index: 30;
+}
+
+.wizard-page ::deep .wizard-sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.wizard-page ::deep .wizard-bottom-sheet {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 480px;
+    transform: translate(-50%, 100%);
+    background: white;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 30px -10px rgba(36, 26, 61, 0.35);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 40;
+}
+
+.wizard-page ::deep .wizard-bottom-sheet.open {
+    transform: translate(-50%, 0);
+}
+
+.wizard-page ::deep .wizard-sheet-handle {
+    width: 40px;
+    height: 6px;
+    background: var(--wizard-purple-100);
+    border-radius: 999px;
+    margin: 0 auto 16px;
+}
+
+.wizard-page ::deep .wizard-sheet-title {
+    font-family: var(--wizard-font-display);
+    font-size: 18px;
+    color: var(--wizard-purple-800);
+    margin: 0 0 12px;
+}
+
+.wizard-page ::deep .wizard-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.wizard-page ::deep .wizard-tab {
+    flex: 1;
+    text-align: center;
+}
+
+.wizard-page ::deep .wizard-hidden {
+    display: none;
+}
+
+.wizard-page ::deep .wizard-sheet-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.wizard-page ::deep .wizard-hint {
+    font-size: 13px;
+    color: var(--wizard-purple-400);
+    margin: 0 0 14px;
+}
+
+.wizard-page ::deep .wizard-number-row,
+.wizard-page ::deep .wizard-pattern-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.wizard-page ::deep .wizard-select {
+    /* flex-basis: 0 makes both selects share the remaining row width equally
+       instead of sizing to their (very different-length) option text, which
+       previously made the row look unbalanced next to the fixed-width number
+       input. */
+    flex: 1 1 0;
+    min-width: 0;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 12px;
+    padding: 10px 26px 10px 8px;
+    font-weight: 700;
+    font-size: 13px;
+    min-height: 44px;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b41a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: var(--wizard-purple-800);
+    cursor: pointer;
+}
+
+.wizard-page ::deep .wizard-input-number {
+    flex: 0 0 64px;
+    width: 64px;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-weight: 700;
+    font-size: 13px;
+    min-height: 44px;
+    text-align: center;
+}
+
+.wizard-page ::deep .wizard-segmented {
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--wizard-purple-100);
+}
+
+.wizard-page ::deep .wizard-segment {
+    border: none;
+    border-radius: 0;
+    font-size: 11px;
+    padding: 0 10px;
+}
+
+.wizard-page ::deep .wizard-pattern-slots {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.wizard-page ::deep .wizard-pattern-slot {
+    font-size: 12px;
+    padding: 8px 4px;
+}
+
+.wizard-page ::deep .wizard-pattern-palette {
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    margin-bottom: 12px;
+}
+
+.wizard-page ::deep .wizard-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wizard-purple-700);
+}
+
+/* ---------- results ---------- */
+.wizard-page ::deep .wizard-results {
+    padding: 20px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    scroll-margin-top: 0;
+}
+
+.wizard-page ::deep .wizard-results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.wizard-page ::deep .wizard-results-title {
+    font-family: var(--wizard-font-display);
+    font-size: 20px;
+    color: var(--wizard-purple-800);
+    margin: 0;
+}
+
+.wizard-page ::deep .wizard-spinner {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 0;
+}
+
+.wizard-page ::deep .wizard-spinner-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--wizard-purple-400);
+    animation: wizard-bounce 1s infinite ease-in-out;
+}
+
+.wizard-page ::deep .wizard-spinner-dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.wizard-page ::deep .wizard-spinner-dot:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes wizard-bounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+.wizard-page ::deep .wizard-results-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+
+.wizard-page ::deep .wizard-loading-more {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--wizard-purple-400);
+    text-align: center;
+    margin: 0 0 12px;
+}
+
+/* Siteswap result cards — Wizard styling */
+.wizard-page ::deep .pz-siteswap-card {
+    background: var(--wizard-card);
+    border-radius: var(--wizard-radius-lg);
+    box-shadow: var(--wizard-shadow-sm);
+    padding: 14px 16px;
+    border: 2px solid var(--wizard-purple-100);
+    width: 100%;
+}
+
+.wizard-page ::deep .pz-siteswap-card-title {
+    display: block;
+    font-family: var(--wizard-font-display);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--wizard-purple-700);
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.wizard-page ::deep .pz-siteswap-card-title:hover,
+.wizard-page ::deep .pz-siteswap-card-title:focus-visible {
+    color: var(--wizard-orange);
+    outline: none;
+}
+
+.wizard-page ::deep .pz-siteswap-card-jugglers {
+    margin-bottom: 10px;
+}
+
+.wizard-page ::deep .pz-siteswap-card-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0 0 4px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.wizard-page ::deep .pz-siteswap-card-label {
+    font-weight: 800;
+    color: var(--wizard-purple-500);
+    min-width: 1.5em;
+}
+
+.wizard-page ::deep .pz-siteswap-card-notation {
+    font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+    font-weight: 700;
+    color: var(--wizard-purple-900);
+    letter-spacing: 0.02em;
+}
+
+.wizard-page ::deep .pz-siteswap-card-avg {
+    font-size: 12px;
+    color: var(--wizard-purple-400);
+}
+
+.wizard-page ::deep .pz-siteswap-card-clubs {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--wizard-purple-100);
+    font-size: 13px;
+}
+
+.wizard-page ::deep .pz-siteswap-card-clubs-label {
+    font-weight: 800;
+    color: var(--wizard-purple-500);
+}
+
+.wizard-page ::deep .pz-siteswap-card-clubs-value {
+    font-weight: 800;
+    color: var(--wizard-purple-800);
+}
+
+.wizard-page ::deep .wizard-results-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wizard-page ::deep * {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}

@@ -10,6 +10,7 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Sopor10.Playwright.Testing" />
+    <PackageReference Include="SSH.NET" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswaps.E2ETests.Server\Siteswaps.E2ETests.Server.csproj" />

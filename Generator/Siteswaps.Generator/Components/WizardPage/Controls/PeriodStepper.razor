@@ -1,0 +1,54 @@
+@* Single primary control: editable stepper (+/-, direct number entry) -
+   matches the Card Stack decision to not show a redundant slider for the
+   same value at the same time. *@
+<div class="wizard-period">
+    <div class="wizard-stepper-row">
+        <button type="button" class="wizard-stepper-btn" aria-label="Periode verringern"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => ChangeBy(-1)">-</button>
+        <label class="wizard-sr-only" for="periodExactInput">Periode exakt eingeben</label>
+        <input id="periodExactInput" type="number" inputmode="numeric" class="wizard-period-value wizard-period-value-input"
+               min="@Min" max="@Max" value="@Value"
+               @onpointerdown:stopPropagation="true"
+               @oninput="OnExactInput" @onchange="OnExactInput" />
+        <button type="button" class="wizard-stepper-btn" aria-label="Periode erhöhen"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => ChangeBy(1)">+</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public int Min { get; set; } = WizardState.MinPeriod;
+
+    [Parameter]
+    public int Max { get; set; } = WizardState.MaxPeriod;
+
+    private async Task ChangeBy(int delta) => await SetValue(Value + delta);
+
+    private async Task OnExactInput(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var v))
+        {
+            await SetValue(v);
+        }
+    }
+
+    private async Task SetValue(int v)
+    {
+        v = Math.Clamp(v, Min, Max);
+        if (v == Value)
+        {
+            return;
+        }
+
+        Value = v;
+        await ValueChanged.InvokeAsync(v);
+    }
+}

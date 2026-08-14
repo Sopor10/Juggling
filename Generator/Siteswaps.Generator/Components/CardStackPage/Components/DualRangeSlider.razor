@@ -1,0 +1,163 @@
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+
+<div class="cs-range" @ref="_containerRef">
+    <div class="cs-range-track">
+        <div class="cs-range-fill" style="left:@(MinPercent)%; width:@(MaxPercent - MinPercent)%"></div>
+    </div>
+    <div @ref="_thumbMinRef" class="cs-range-thumb" role="slider" tabindex="0" style="left:@(MinPercent)%"
+         aria-label="@MinAriaLabel" aria-valuemin="@Min" aria-valuemax="@Max" aria-valuenow="@ValueMin"
+         @onkeydown="OnMinKeyDown"></div>
+    <div @ref="_thumbMaxRef" class="cs-range-thumb" role="slider" tabindex="0" style="left:@(MaxPercent)%"
+         aria-label="@MaxAriaLabel" aria-valuemin="@Min" aria-valuemax="@Max" aria-valuenow="@ValueMax"
+         @onkeydown="OnMaxKeyDown"></div>
+</div>
+
+@code {
+    private ElementReference _containerRef;
+    private ElementReference _thumbMinRef;
+    private ElementReference _thumbMaxRef;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<DualRangeSlider>? _selfReference;
+
+    [Parameter]
+    public int Min { get; set; }
+
+    [Parameter]
+    public int Max { get; set; } = 100;
+
+    [Parameter]
+    public int ValueMin { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueMinChanged { get; set; }
+
+    [Parameter]
+    public int ValueMax { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueMaxChanged { get; set; }
+
+    [Parameter]
+    public string MinAriaLabel { get; set; } = "Minimum";
+
+    [Parameter]
+    public string MaxAriaLabel { get; set; } = "Maximum";
+
+    private double MinPercent => Max == Min ? 0 : (ValueMin - Min) * 100.0 / (Max - Min);
+    private double MaxPercent => Max == Min ? 0 : (ValueMax - Min) * 100.0 / (Max - Min);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _selfReference = DotNetObjectReference.Create(this);
+            _module = await JsRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Siteswaps.Generator/Components/CardStackPage/Components/DualRangeSlider.razor.js"
+            );
+            await _module.InvokeVoidAsync(
+                "init",
+                _containerRef,
+                _thumbMinRef,
+                _thumbMaxRef,
+                _selfReference
+            );
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnDrag(bool isMin, double percent)
+    {
+        var raw = (int)Math.Round(Min + Math.Clamp(percent, 0, 1) * (Max - Min));
+        if (isMin)
+        {
+            await SetMin(raw);
+        }
+        else
+        {
+            await SetMax(raw);
+        }
+    }
+
+    private async Task SetMin(int value)
+    {
+        var clamped = Math.Clamp(value, Min, Math.Min(ValueMax, Max));
+        if (clamped == ValueMin)
+        {
+            return;
+        }
+
+        ValueMin = clamped;
+        await ValueMinChanged.InvokeAsync(ValueMin);
+    }
+
+    private async Task SetMax(int value)
+    {
+        var clamped = Math.Clamp(value, Math.Max(ValueMin, Min), Max);
+        if (clamped == ValueMax)
+        {
+            return;
+        }
+
+        ValueMax = clamped;
+        await ValueMaxChanged.InvokeAsync(ValueMax);
+    }
+
+    private async Task OnMinKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowRight" or "ArrowUp":
+                await SetMin(ValueMin + 1);
+                break;
+            case "ArrowLeft" or "ArrowDown":
+                await SetMin(ValueMin - 1);
+                break;
+            case "Home":
+                await SetMin(Min);
+                break;
+            case "End":
+                await SetMin(Max);
+                break;
+        }
+    }
+
+    private async Task OnMaxKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowRight" or "ArrowUp":
+                await SetMax(ValueMax + 1);
+                break;
+            case "ArrowLeft" or "ArrowDown":
+                await SetMax(ValueMax - 1);
+                break;
+            case "Home":
+                await SetMax(Min);
+                break;
+            case "End":
+                await SetMax(Max);
+                break;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.InvokeVoidAsync("dispose", _containerRef);
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone - nothing to clean up.
+        }
+
+        _selfReference?.Dispose();
+    }
+}

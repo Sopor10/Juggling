@@ -1,0 +1,34 @@
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+
+<p class="wizard-hint">Welche zukünftigen Würfe sind belegt?</p>
+<div class="wizard-chip-grid wizard-state-grid" role="group" aria-label="Welche zukünftigen Würfe sind belegt?">
+    @for (var i = 0; i < Value.Items.Length; i++)
+    {
+        var index = i;
+        var isActive = Value.Items[index];
+        <button type="button" class="wizard-chip @(isActive ? "active" : "")"
+                aria-pressed="@(isActive ? "true" : "false")"
+                title="Beat @(index + 1)"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => Toggle(index)">
+            @(index + 1)
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public EasyStateFilter.StateFilter Value { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<EasyStateFilter.StateFilter> ValueChanged { get; set; }
+
+    private async Task Toggle(int index)
+    {
+        var items = Value.Items.ToArray();
+        items[index] = !items[index];
+        var value = new EasyStateFilter.StateFilter([.. items]);
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+}

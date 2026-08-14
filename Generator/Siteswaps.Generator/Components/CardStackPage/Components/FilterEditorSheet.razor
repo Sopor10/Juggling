@@ -1,0 +1,137 @@
+@using Siteswaps.Generator.Components.CardStackPage.Models
+
+<BottomSheet IsOpen="IsOpen" IsOpenChanged="OnSheetOpenChanged" Title="@(IsEditing ? "Filter bearbeiten" : "Filter hinzufügen")">
+    @if (_draft is not null)
+    {
+        <div class="cs-tabs" role="tablist" aria-label="Filtertyp">
+            <button type="button" class="cs-pill cs-tab @(_draft.Kind == CardStackFilterKind.Number ? "active" : "")" role="tab"
+                    aria-selected="@(_draft.Kind == CardStackFilterKind.Number ? "true" : "false")" @onclick="() => SelectTab(CardStackFilterKind.Number)">
+                Anzahl
+            </button>
+            <button type="button" class="cs-pill cs-tab @(_draft.Kind == CardStackFilterKind.Pattern ? "active" : "")" role="tab"
+                    aria-selected="@(_draft.Kind == CardStackFilterKind.Pattern ? "true" : "false")" @onclick="() => SelectTab(CardStackFilterKind.Pattern)">
+                Muster
+            </button>
+            <button type="button" class="cs-pill cs-tab @(_draft.Kind == CardStackFilterKind.State ? "active" : "")" role="tab"
+                    aria-selected="@(_draft.Kind == CardStackFilterKind.State ? "true" : "false")" @onclick="() => SelectTab(CardStackFilterKind.State)">
+                Zustand
+            </button>
+        </div>
+
+        @if (_draft.Kind == CardStackFilterKind.Number)
+        {
+            <FilterEditorNumber
+                Comparison="_draft.NumberComparison"
+                ComparisonChanged="v => _draft.NumberComparison = v"
+                Amount="_draft.NumberAmount"
+                AmountChanged="v => _draft.NumberAmount = v"
+                ThrowHeight="_draft.NumberThrowHeight"
+                ThrowHeightChanged="v => _draft.NumberThrowHeight = v"
+                AllowedThrowHeights="AllowedThrowHeights" />
+        }
+        else if (_draft.Kind == CardStackFilterKind.Pattern)
+        {
+            <FilterEditorPattern
+                Rotation="_draft.PatternRotation"
+                RotationChanged="v => _draft.PatternRotation = v"
+                IsInclude="_draft.PatternIsInclude"
+                IsIncludeChanged="v => _draft.PatternIsInclude = v"
+                SequenceHeights="_draft.PatternSequenceHeights"
+                SequenceHeightsChanged="v => _draft.PatternSequenceHeights = v"
+                Period="Period"
+                Jugglers="Jugglers"
+                AllowedThrowHeights="AllowedThrowHeights" />
+        }
+        else
+        {
+            <FilterEditorState ActiveBeats="_draft.StateActiveBeats" ActiveBeatsChanged="v => _draft.StateActiveBeats = v" />
+        }
+
+        <div class="cs-sheet-actions">
+            @if (IsEditing)
+            {
+                <button type="button" class="cs-btn-ghost" @onclick="Delete">Filter entfernen</button>
+            }
+            <button type="button" class="cs-btn-primary cs-btn-grow" @onclick="Save">
+                @(IsEditing ? "Änderungen speichern" : "Filter übernehmen")
+            </button>
+        </div>
+    }
+</BottomSheet>
+
+@code {
+    private CardStackFilterItem? _draft;
+    private bool _wasOpen;
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public CardStackFilterItem? EditingItem { get; set; }
+
+    [Parameter]
+    public int Period { get; set; } = 5;
+
+    [Parameter]
+    public int Jugglers { get; set; } = 3;
+
+    [Parameter]
+    public List<int> AllowedThrowHeights { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<CardStackFilterItem> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    private bool IsEditing => EditingItem is not null;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen && _wasOpen is false)
+        {
+            _draft = EditingItem?.Clone() ?? new CardStackFilterItem { Id = 0 };
+        }
+
+        _wasOpen = IsOpen;
+    }
+
+    private void SelectTab(CardStackFilterKind kind)
+    {
+        if (_draft is not null)
+        {
+            _draft.Kind = kind;
+        }
+    }
+
+    private async Task OnSheetOpenChanged(bool value)
+    {
+        IsOpen = value;
+        await IsOpenChanged.InvokeAsync(value);
+    }
+
+    private async Task Save()
+    {
+        if (_draft is null)
+        {
+            return;
+        }
+
+        await OnSave.InvokeAsync(_draft);
+        await OnSheetOpenChanged(false);
+    }
+
+    private async Task Delete()
+    {
+        if (_draft is null)
+        {
+            return;
+        }
+
+        await OnDelete.InvokeAsync(_draft.Id);
+        await OnSheetOpenChanged(false);
+    }
+}

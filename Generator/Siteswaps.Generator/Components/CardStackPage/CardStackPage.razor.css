@@ -1,0 +1,798 @@
+/* Card-Stack page theme. Tokens are inspired by the passing.zone brand palette
+   (purple/orange) seen in the design mockup, re-created independently for this
+   Blazor page rather than importing the mockup's shared stylesheet. */
+
+/* Defined directly on .cs-page (the component's own root element, NOT via
+   ::deep) because ::deep only matches descendants of the component's root -
+   it never matches the root element itself. CSS custom properties still
+   inherit through the DOM to every child component regardless of Blazor's
+   CSS isolation scoping, so descendants can reference var(--cs-*) freely
+   (mirrors the pattern used by WizardPage.razor.css / .wizard-page). */
+.cs-page {
+    --cs-purple-950: #241a3d;
+    --cs-purple-900: #2c1f52;
+    --cs-purple-800: #33225d;
+    --cs-purple-700: #3c286d;
+    --cs-purple-600: #472779;
+    --cs-purple-500: #552f8c;
+    --cs-purple-400: #6b41a8;
+    --cs-purple-300: #8a63c4;
+    --cs-purple-100: #e8e1f7;
+    --cs-orange: #f9a500;
+    --cs-bg: #f5f3fb;
+    --cs-card: #ffffff;
+    --cs-radius-lg: 22px;
+    --cs-radius-md: 14px;
+    --cs-radius-sm: 10px;
+    --cs-shadow-sm: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
+
+    background: var(--cs-bg);
+    color: var(--cs-purple-900);
+    font-family: "Nunito", system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+}
+
+::deep .cs-font-display {
+    font-family: "Baloo 2", "Nunito", sans-serif;
+}
+
+::deep .cs-header {
+    background: radial-gradient(120% 140% at 20% 0%, var(--cs-purple-600) 0%, var(--cs-purple-800) 45%, var(--cs-purple-950) 100%);
+    color: white;
+    padding: 24px 20px 20px;
+    border-radius: 0 0 24px 24px;
+}
+
+::deep .cs-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+::deep .cs-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+::deep .cs-logo {
+    font-family: "Baloo 2", "Nunito", sans-serif;
+    font-weight: 800;
+    border: 2.5px solid white;
+    border-radius: 10px;
+    padding: 2px 8px;
+    line-height: 1;
+    font-size: 15px;
+}
+
+::deep .cs-eyebrow {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+::deep .cs-title {
+    font-size: 26px;
+    margin: 0;
+}
+
+::deep .cs-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 4px 0 0;
+}
+
+::deep .cs-scroll-area {
+    flex: 1;
+    /* --cs-footer-height is measured at runtime (CardStackPage.razor.js); fall
+       back to a conservative estimate so content never sits under the sticky footer. */
+    padding: 16px 16px calc(var(--cs-footer-height, 96px) + 24px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+::deep .cs-card {
+    background: var(--cs-card);
+    border-radius: var(--cs-radius-lg);
+    box-shadow: var(--cs-shadow-sm);
+    padding: 16px;
+}
+
+::deep .cs-card-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 2px;
+    margin-bottom: 12px;
+    gap: 8px;
+}
+
+::deep .cs-card-title {
+    /* Allows the flex item to shrink below its content width instead of
+       forcing the sibling hint/echo text off the row on narrow viewports
+       (e.g. ~390px), which otherwise gets visually squeezed or clipped. */
+    min-width: 0;
+}
+
+::deep .cs-card-header .cs-hint,
+::deep .cs-card-header .cs-echo {
+    text-align: right;
+    white-space: nowrap;
+}
+
+::deep .cs-card-title {
+    font-size: 18px;
+    color: var(--cs-purple-800);
+    margin: 0;
+}
+
+::deep .cs-echo {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--cs-purple-400);
+}
+
+::deep .cs-hint {
+    font-size: 12px;
+    color: var(--cs-purple-400);
+}
+
+::deep .cs-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+::deep .cs-link-btn {
+    /* Real tappable pill (>= 40x40px) instead of a bare inline text link, so it
+       reads as a proper secondary action and meets touch-target guidelines. */
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: none;
+    background: var(--cs-purple-100);
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--cs-purple-500);
+    cursor: pointer;
+}
+
+/* ---------- pills ---------- */
+::deep .cs-pill-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+::deep .cs-pill-group-compact {
+    flex: 1;
+}
+
+::deep .cs-pill {
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 16px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    background: var(--cs-purple-100);
+    color: var(--cs-purple-700);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+::deep .cs-pill.active {
+    background: var(--cs-purple-700);
+    color: white;
+    box-shadow: var(--cs-shadow-sm);
+}
+
+/* ---------- exact-value inputs (jugglers, period) ---------- */
+::deep .cs-exact-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+::deep .cs-exact-input-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cs-purple-400);
+}
+
+/* ---------- chips ---------- */
+/* A fixed 4-column grid (matching the Wizard's chip grid) instead of 6 columns
+   collapsing to 4 only below 420px avoids both horizontal overflow at very
+   narrow widths (320px) and cramped/wrapping labels in the 421-428px gap that
+   the old media query left uncovered. minmax(0, 1fr) lets tracks shrink below
+   their content's min-width so chips never force the grid wider than its
+   container. */
+::deep .cs-chip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+::deep .cs-chip-grid-palette {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+::deep .cs-chip {
+    border-radius: var(--cs-radius-sm);
+    font-weight: 800;
+    font-family: "Baloo 2", sans-serif;
+    font-size: 13px;
+    border: 2px solid var(--cs-purple-100);
+    background: white;
+    color: var(--cs-purple-500);
+    padding: 8px 2px;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.12s ease;
+}
+
+::deep .cs-chip.active {
+    background: var(--cs-purple-700);
+    border-color: var(--cs-purple-700);
+    color: white;
+}
+
+/* ---------- stepper ---------- */
+::deep .cs-stepper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+::deep .cs-stepper-btn {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--cs-purple-100);
+    color: var(--cs-purple-700);
+    font-size: 20px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+}
+
+::deep .cs-stepper-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+::deep .cs-stepper-value {
+    flex: 1;
+    text-align: center;
+    font-family: "Baloo 2", sans-serif;
+    font-size: 28px;
+    color: var(--cs-purple-800);
+}
+
+::deep .cs-stepper-value-input {
+    border: none;
+    background: none;
+    -moz-appearance: textfield;
+}
+
+::deep .cs-stepper-value-input::-webkit-outer-spin-button,
+::deep .cs-stepper-value-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ---------- dual range ---------- */
+::deep .cs-range {
+    position: relative;
+    /* Tall enough to give the enlarged 40px thumbs room, and to make the track
+       itself a comfortably tappable strip for tap-to-jump. */
+    height: 40px;
+    margin-top: 8px;
+}
+
+::deep .cs-range-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 6px;
+    background: var(--cs-purple-100);
+    /* The track/container itself now handles tap-to-jump (see
+       DualRangeSlider.razor.js), so it must stay hit-testable instead of the
+       old click-through-only-thumb behaviour. */
+    cursor: pointer;
+}
+
+::deep .cs-range-fill {
+    position: absolute;
+    height: 6px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--cs-purple-400), var(--cs-purple-700));
+}
+
+::deep .cs-range-thumb {
+    position: absolute;
+    top: 50%;
+    /* >= 40x40px touch target (was 26x26px, well under accessibility guidance). */
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    margin-left: -20px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--cs-purple-700);
+    box-shadow: var(--cs-shadow-sm);
+    cursor: grab;
+    touch-action: none;
+    z-index: 1;
+}
+
+::deep .cs-range-bounds {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cs-purple-400);
+    margin-top: 6px;
+}
+
+/* ---------- filters ---------- */
+::deep .cs-filters-empty {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cs-purple-400);
+    text-align: center;
+    padding: 20px 8px;
+}
+
+::deep .cs-filters-empty::before {
+    content: "🧩";
+    display: block;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+::deep .cs-filter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+::deep .cs-filter-group {
+    border: 2px dashed var(--cs-purple-300);
+    background: rgba(138, 99, 196, 0.07);
+    border-radius: var(--cs-radius-md);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+::deep .cs-filter-group-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--cs-purple-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0 4px;
+}
+
+::deep .cs-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 2px solid var(--cs-purple-100);
+    border-radius: var(--cs-radius-md);
+    padding: 10px 12px;
+}
+
+::deep .cs-filter-desc {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cs-purple-700);
+}
+
+::deep .cs-icon-btn {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: none;
+    background: var(--cs-purple-100);
+    color: var(--cs-purple-500);
+    cursor: pointer;
+}
+
+::deep .cs-icon-btn-danger {
+    background: #fde3e3;
+    color: #e53e3e;
+}
+
+::deep .cs-connector-row {
+    display: flex;
+    justify-content: center;
+}
+
+::deep .cs-connector-pill {
+    border: none;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 8px 18px;
+    min-height: 40px;
+    cursor: pointer;
+}
+
+::deep .cs-connector-and {
+    background: var(--cs-purple-100);
+    color: var(--cs-purple-500);
+}
+
+::deep .cs-connector-or {
+    background: var(--cs-orange);
+    color: white;
+    padding: 10px 22px;
+    font-size: 12px;
+}
+
+::deep .cs-and-hint {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cs-purple-400);
+    margin-bottom: 10px;
+}
+
+::deep .cs-add-filter-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--cs-radius-md);
+    border: 2px dashed var(--cs-purple-100);
+    background: none;
+    color: var(--cs-purple-500);
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ---------- results ---------- */
+::deep .cs-spinner {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 0;
+}
+
+::deep .cs-spinner-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--cs-purple-400);
+    animation: cs-bounce 1s infinite ease-in-out;
+}
+
+::deep .cs-spinner-dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+::deep .cs-spinner-dot:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes cs-bounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+::deep .cs-loading-more {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cs-purple-400);
+    text-align: center;
+    margin: 0 0 12px;
+}
+
+::deep .cs-results-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+/* Siteswap result cards — Card Stack styling */
+::deep .pz-siteswap-card {
+    background: var(--cs-card);
+    border-radius: var(--cs-radius-lg);
+    box-shadow: var(--cs-shadow-sm);
+    padding: 14px 16px;
+    border: 2px solid var(--cs-purple-100);
+}
+
+::deep .pz-siteswap-card-title {
+    display: block;
+    font-family: "Baloo 2", "Nunito", sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--cs-purple-700);
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+::deep .pz-siteswap-card-title:hover,
+::deep .pz-siteswap-card-title:focus-visible {
+    color: var(--cs-orange);
+    outline: none;
+}
+
+::deep .pz-siteswap-card-jugglers {
+    margin-bottom: 10px;
+}
+
+::deep .pz-siteswap-card-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0 0 4px;
+    font-size: 14px;
+    text-align: left;
+}
+
+::deep .pz-siteswap-card-label {
+    font-weight: 800;
+    color: var(--cs-purple-500);
+    min-width: 1.5em;
+}
+
+::deep .pz-siteswap-card-notation {
+    font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+    font-weight: 700;
+    color: var(--cs-purple-900);
+    letter-spacing: 0.02em;
+}
+
+::deep .pz-siteswap-card-avg {
+    font-size: 12px;
+    color: var(--cs-purple-400);
+}
+
+::deep .pz-siteswap-card-clubs {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--cs-purple-100);
+    font-size: 13px;
+}
+
+::deep .pz-siteswap-card-clubs-label {
+    font-weight: 800;
+    color: var(--cs-purple-500);
+}
+
+::deep .pz-siteswap-card-clubs-value {
+    font-weight: 800;
+    color: var(--cs-purple-800);
+}
+
+/* ---------- footer ---------- */
+::deep .cs-footer {
+    position: sticky;
+    bottom: 0;
+    /* Explicitly below the sheet backdrop (z-index: 30) and bottom sheet
+       (z-index: 40) so it can never visually float above them even before the
+       .cs-footer-inert state kicks in. */
+    z-index: 10;
+    padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, var(--cs-bg) 60%, transparent);
+    transition: opacity 0.2s ease;
+}
+
+/* While the filter bottom sheet is open, the backdrop (z-index: 30) already
+   intercepts every pointer event over the footer - without this, the
+   "Generieren" button still looks fully opaque/tappable and silently eats
+   taps, which reads as a dead/broken button. Dim it and disable pointer
+   events so the state is visually obvious and no click gets lost. */
+::deep .cs-footer.cs-footer-inert {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+::deep .cs-btn-primary {
+    background: linear-gradient(180deg, #ffb838, var(--cs-orange));
+    color: var(--cs-purple-950);
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 700;
+    border-radius: 999px;
+    border: none;
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    cursor: pointer;
+}
+
+::deep .cs-btn-primary:disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+
+::deep .cs-generate-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+}
+
+::deep .cs-btn-ghost {
+    background: var(--cs-purple-100);
+    color: var(--cs-purple-700);
+    font-weight: 700;
+    border-radius: 999px;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+}
+
+::deep .cs-btn-grow {
+    flex: 1;
+}
+
+/* ---------- bottom sheet ---------- */
+::deep .cs-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(36, 26, 61, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    z-index: 30;
+}
+
+::deep .cs-sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+::deep .cs-bottom-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 30px -10px rgba(36, 26, 61, 0.35);
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 85vh;
+    overflow-y: auto;
+    z-index: 40;
+    padding: 20px;
+}
+
+::deep .cs-bottom-sheet.open {
+    transform: translateY(0);
+}
+
+::deep .cs-sheet-grabber {
+    width: 40px;
+    height: 6px;
+    background: var(--cs-purple-100);
+    border-radius: 999px;
+    margin: 0 auto 16px;
+}
+
+::deep .cs-sheet-title {
+    font-size: 18px;
+    color: var(--cs-purple-800);
+    margin: 0 0 12px;
+}
+
+::deep .cs-sheet-hint {
+    font-size: 13px;
+    color: var(--cs-purple-400);
+    margin: 0 0 12px;
+}
+
+::deep .cs-sheet-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+::deep .cs-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+::deep .cs-tab {
+    flex: 1;
+    text-align: center;
+}
+
+::deep .cs-select {
+    /* Custom chevron replaces the native browser arrow so the control reads as
+       part of the app's own design system instead of unstyled system chrome. */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b41a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    border: 2px solid var(--cs-purple-100);
+    border-radius: var(--cs-radius-sm);
+    padding: 8px 26px 8px 10px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--cs-purple-800);
+    background-color: white;
+    cursor: pointer;
+}
+
+::deep .cs-select:focus-visible,
+::deep .cs-number-input:focus-visible,
+::deep .cs-stepper-value-input:focus-visible {
+    outline: 3px solid var(--cs-purple-400);
+    outline-offset: 1px;
+}
+
+::deep .cs-select-grow {
+    flex: 1;
+}
+
+::deep .cs-number-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+::deep .cs-number-input {
+    width: 64px;
+    text-align: center;
+    border: 2px solid var(--cs-purple-100);
+    border-radius: var(--cs-radius-sm);
+    padding: 8px;
+    font-weight: 700;
+}
+
+::deep .cs-pattern-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+::deep .cs-pattern-slots {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 12px;
+}
