@@ -98,6 +98,7 @@
     private string? _validationMessage;
     private bool _focusPending;
     private bool _restoreFocusPending;
+    private bool _focusTrapActive;
     private IJSObjectReference? _jsModule;
 
     private EasyNumberFilter.NumberFilter _numberDraft = NewNumberDraft(Array.Empty<Throw>());
@@ -155,6 +156,12 @@
 
     private async Task Close()
     {
+        if (_focusTrapActive && _jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync("deactivateFocusTrap", _sheetElement);
+            _focusTrapActive = false;
+        }
+
         _isOpen = false;
         _validationMessage = null;
         _restoreFocusPending = true;
@@ -176,6 +183,8 @@
             if (_jsModule is not null)
             {
                 await _jsModule.InvokeVoidAsync("captureActiveElement");
+                await _jsModule.InvokeVoidAsync("activateFocusTrap", _sheetElement);
+                _focusTrapActive = true;
             }
             await _sheetElement.FocusAsync();
         }
@@ -230,6 +239,12 @@
             _ => throw new ArgumentOutOfRangeException(),
         };
 
+        if (_focusTrapActive && _jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync("deactivateFocusTrap", _sheetElement);
+            _focusTrapActive = false;
+        }
+
         _isOpen = false;
         _validationMessage = null;
         _restoreFocusPending = true;
@@ -246,6 +261,12 @@
 
     private async Task Delete()
     {
+        if (_focusTrapActive && _jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync("deactivateFocusTrap", _sheetElement);
+            _focusTrapActive = false;
+        }
+
         _isOpen = false;
         _restoreFocusPending = true;
         if (_editingId is { } id)

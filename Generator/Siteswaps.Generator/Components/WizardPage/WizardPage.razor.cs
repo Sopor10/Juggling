@@ -90,8 +90,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             return;
         }
 
-        // Browser back/forward to /wizard must not leave a half-rendered results
-        // screen with stale Blazor state (empty body). Reset to a stable editor view.
         if (State.Phase is WizardPhase.Results or WizardPhase.Generating)
         {
             State.GenerationCancellation?.Cancel();
@@ -160,6 +158,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         finally
         {
             _isStepTransitioning = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -188,12 +187,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         finally
         {
             _isStepTransitioning = false;
+            await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void GoBack()
-    {
-        _ = GoBackAsync();
     }
 
     private async Task SkipToLastStepAsync()
@@ -215,12 +210,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         finally
         {
             _isStepTransitioning = false;
+            await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void SkipToLastStep()
-    {
-        _ = SkipToLastStepAsync();
     }
 
     private async Task JumpToStepAsync(int step)
@@ -246,12 +237,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         finally
         {
             _isStepTransitioning = false;
+            await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void JumpToStep(int step)
-    {
-        _ = JumpToStepAsync(step);
     }
 
     private void OnStepsPointerDown(PointerEventArgs e)
@@ -260,7 +247,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         _swipeStartY = e.ClientY;
     }
 
-    private void OnStepsPointerUp(PointerEventArgs e)
+    private async Task OnStepsPointerUp(PointerEventArgs e)
     {
         if (_swipeStartX is null || _swipeStartY is null || _isStepTransitioning)
         {
@@ -279,11 +266,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
         if (dx < 0)
         {
-            _ = AdvanceStepAsync();
+            await AdvanceStepAsync();
         }
         else
         {
-            _ = GoBackAsync();
+            await GoBackAsync();
         }
     }
 
@@ -354,11 +341,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
         }
 
-        // Task.Yield() only schedules a continuation on the renderer's sync context and
-        // can resume before the browser gets a chance to paint the just-rendered spinner,
-        // especially when the generator below finds its first 10 matches almost
-        // instantly. Task.Delay posts a real timer callback, guaranteeing at least one
-        // animation frame renders the spinner before any CPU-bound work starts.
         await Task.Delay(1);
 
         var startedAt = Environment.TickCount64;
@@ -382,12 +364,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                     }
 
                     buffer.Add(siteswap);
-                    // Also require MinSpinnerVisibleMs to have elapsed before the first
-                    // batch is flushed into State.Results: otherwise, for parameter
-                    // combinations that produce >= 10 matches almost immediately, the
-                    // dot spinner (shown only while Results.Count == 0) would never
-                    // actually become visible on screen - it would be replaced by the
-                    // results grid within the same frame it first appeared in.
                     if (
                         buffer.Count < 10
                         || Environment.TickCount64 - startedAt < MinSpinnerVisibleMs

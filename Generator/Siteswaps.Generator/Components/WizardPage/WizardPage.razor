@@ -13,9 +13,9 @@
                     <span class="wizard-logo">PZ</span>
                     <span class="wizard-eyebrow">SITESWAP GENERATOR</span>
                 </div>
-                <button type="button" class="wizard-skip-btn" @onclick="SkipToLastStep">Alles zeigen</button>
+                <button type="button" class="wizard-skip-btn" @onclick="SkipToLastStepAsync">Alles zeigen</button>
             </div>
-            <ProgressDots Total="WizardState.TotalSteps" Current="State.CurrentStep" Visited="State.VisitedSteps" StepSelected="JumpToStep" />
+            <ProgressDots Total="WizardState.TotalSteps" Current="State.CurrentStep" Visited="State.VisitedSteps" StepSelected="JumpToStepAsync" />
             <p class="wizard-swipe-hint">← nach links/rechts wischen →</p>
         </header>
 
@@ -74,7 +74,7 @@
             <div class="wizard-nav-buttons">
                 <button type="button" class="wizard-btn-ghost wizard-back-btn @(State.CurrentStep == 0 ? "wizard-invisible" : "")"
                         disabled="@(State.CurrentStep == 0 || _isStepTransitioning)"
-                        @onclick="GoBack">Zurück</button>
+                        @onclick="GoBackAsync">Zurück</button>
                 <button type="button"
                         class="wizard-flex-1 @(IsLastStep ? "wizard-btn-generate" : "wizard-btn-primary")"
                         disabled="@IsNextDisabled"

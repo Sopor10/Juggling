@@ -66,9 +66,6 @@ public sealed class WizardState
 
     public Period Period { get; set; } = new(5);
 
-    // Deliberately not equal: with a dual-range slider, identical min/max thumbs
-    // start out stacked exactly on top of each other, making the lower one hard
-    // to grab. Different defaults keep both handles visible/reachable from the start.
     public Between Clubs { get; set; } = new() { MinNumber = 5, MaxNumber = 7 };
 
     public bool ShowThrowNames { get; set; } = true;

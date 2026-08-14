@@ -9,7 +9,6 @@ namespace Siteswaps.Mcp.Server.Resources;
 [McpServerResourceType]
 public class FilterDslResources
 {
-
     [McpServerResource]
     [Description("filter:dsl:syntax:overview")]
     public string FilterDslSyntaxOverview() =>
@@ -96,7 +95,6 @@ public class FilterDslResources
             Keywords (AND, OR, NOT) are case-insensitive.
             """;
 
-
     [McpServerResource]
     [Description("filter:dsl:function:minOcc")]
     public string FilterDslFunctionMinOcc() =>
@@ -173,7 +171,6 @@ public class FilterDslResources
 
             Use case: Flexible occurrence constraints.
             """;
-
 
     [McpServerResource]
     [Description("filter:dsl:function:pattern")]
@@ -257,7 +254,6 @@ public class FilterDslResources
             Use case: Find patterns containing specific throw combinations.
             """;
 
-
     [McpServerResource]
     [Description("filter:dsl:function:height")]
     public string FilterDslFunctionHeight() =>
@@ -312,7 +308,6 @@ public class FilterDslResources
 
             Use case: Find patterns with consistently high throws.
             """;
-
 
     [McpServerResource]
     [Description("filter:dsl:function:ground")]
@@ -372,7 +367,6 @@ public class FilterDslResources
             Use case: Find patterns in a specific juggling state.
             """;
 
-
     [McpServerResource]
     [Description("filter:dsl:function:noZeros")]
     public string FilterDslFunctionNoZeros() =>
@@ -412,7 +406,6 @@ public class FilterDslResources
             Use case: Find patterns with deliberate pauses.
             """;
 
-
     [McpServerResource]
     [Description("filter:dsl:function:passes")]
     public string FilterDslFunctionPasses() =>
@@ -451,7 +444,6 @@ public class FilterDslResources
 
             Use case: Find patterns with balanced self/pass ratio.
             """;
-
 
     [McpServerResource]
     [Description("filter:dsl:examples:basic")]
@@ -601,7 +593,6 @@ public class FilterDslResources
             6. Excluding unwanted patterns:
                - ground AND NOT hasZeros AND NOT pattern(3)
             """;
-
 
     [McpServerResource]
     [Description("filter:dsl:reference:all-functions")]

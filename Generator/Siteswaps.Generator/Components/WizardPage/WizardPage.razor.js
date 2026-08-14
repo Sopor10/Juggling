@@ -6,7 +6,62 @@ export function scrollIntoView(selector) {
 }
 
 const historyHandlers = new WeakMap();
+const focusTrapHandlers = new WeakMap();
 let previousActiveElement = null;
+
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+export function activateFocusTrap(element) {
+  if (!element || focusTrapHandlers.has(element)) {
+    return;
+  }
+
+  const onKeyDown = (event) => {
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusable = [...element.querySelectorAll(focusableSelector)].filter(
+      (candidate) =>
+        candidate instanceof HTMLElement &&
+        candidate.getClientRects().length > 0,
+    );
+
+    if (focusable.length === 0) {
+      event.preventDefault();
+      element.focus();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  element.addEventListener('keydown', onKeyDown);
+  focusTrapHandlers.set(element, onKeyDown);
+}
+
+export function deactivateFocusTrap(element) {
+  const handler = focusTrapHandlers.get(element);
+  if (handler) {
+    element.removeEventListener('keydown', handler);
+    focusTrapHandlers.delete(element);
+  }
+}
 
 export function captureActiveElement() {
   previousActiveElement = document.activeElement;
