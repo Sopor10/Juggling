@@ -119,11 +119,21 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
         var color = await design.StyleAsync(design.SwipeHint, "color");
         var opacity = await design.StyleAsync(design.SwipeHint, "opacity");
 
-        DesignColor.TryParseCssRgba(color, out var rgba).Should().BeTrue($"expected rgba color, got {color}");
-        rgba.A.Should().BeGreaterThanOrEqualTo(0.85, because: "swipe hint must remain readable on the purple header");
+        DesignColor
+            .TryParseCssRgba(color, out var rgba)
+            .Should()
+            .BeTrue($"expected rgba color, got {color}");
+        rgba.A.Should()
+            .BeGreaterThanOrEqualTo(
+                0.85,
+                because: "swipe hint must remain readable on the purple header"
+            );
         ((rgba.R + rgba.G + rgba.B) / 3.0)
             .Should()
-            .BeGreaterThanOrEqualTo(200, because: "swipe hint must stay near-white on the dark header");
+            .BeGreaterThanOrEqualTo(
+                200,
+                because: "swipe hint must stay near-white on the dark header"
+            );
         if (
             double.TryParse(
                 opacity,

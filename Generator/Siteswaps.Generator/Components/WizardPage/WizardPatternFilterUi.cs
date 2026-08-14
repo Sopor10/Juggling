@@ -12,9 +12,7 @@ internal static class WizardPatternFilterUi
     public static IEnumerable<Throw> WithDontCarePalette(IEnumerable<Throw> possibleThrows)
     {
         var list = possibleThrows as IList<Throw> ?? possibleThrows.ToList();
-        return list.Any(t => t.Height == Throw.Empty.Height)
-            ? list
-            : list.Prepend(Throw.Empty);
+        return list.Any(t => t.Height == Throw.Empty.Height) ? list : list.Prepend(Throw.Empty);
     }
 
     public static string Label(Throw t) =>

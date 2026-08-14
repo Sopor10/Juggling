@@ -24,9 +24,7 @@ public class WizardPatternFilterUiTests
     [Test]
     public void WithDontCarePalette_Does_Not_Duplicate_Empty()
     {
-        var palette = WizardPatternFilterUi
-            .WithDontCarePalette([Throw.Empty, Throw.Zip])
-            .ToList();
+        var palette = WizardPatternFilterUi.WithDontCarePalette([Throw.Empty, Throw.Zip]).ToList();
 
         palette.Count(t => t.Height == Throw.Empty.Height).Should().Be(1);
     }
@@ -46,7 +44,12 @@ public class WizardPatternFilterUiTests
     [Test]
     public void DefaultSlots_Clamps_Zero_Length_To_One()
     {
-        WizardPatternFilterUi.DefaultSlots(0).Should().ContainSingle().Which.Should().Be(Throw.Empty);
+        WizardPatternFilterUi
+            .DefaultSlots(0)
+            .Should()
+            .ContainSingle()
+            .Which.Should()
+            .Be(Throw.Empty);
     }
 }
 
