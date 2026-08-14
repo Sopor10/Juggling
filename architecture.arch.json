@@ -39,9 +39,7 @@
       "namespaces": [
         "Siteswaps.Test.",
         "Siteswaps.Generator.Test.",
-        "Siteswaps.Mcp.Server.Test.",
-        "Siteswaps.E2ETests.",
-        "Siteswaps.E2ETests.Server."
+        "Siteswaps.Mcp.Server.Test."
       ]
     },
     "Benchmarks": {

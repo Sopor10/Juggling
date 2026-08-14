@@ -1,8 +1,9 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
-<div class="container-md">
-    <PageTitle>Index</PageTitle>
-
-    <EasyUI></EasyUI>
-
-</div>
+@code {
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo("wizard", replace: true);
+    }
+}
