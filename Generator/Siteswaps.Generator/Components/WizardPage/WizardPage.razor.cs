@@ -111,9 +111,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         _isStartingGeneration = false;
         State.CurrentStep = Math.Clamp(step, 0, WizardState.TotalSteps - 1);
         State.MarkVisited(State.CurrentStep);
-        State.Phase = isResults && State.Results.Count > 0
-            ? WizardPhase.Results
-            : WizardPhase.Editing;
+        State.Phase =
+            isResults && State.Results.Count > 0 ? WizardPhase.Results : WizardPhase.Editing;
         await InvokeAsync(StateHasChanged);
     }
 
@@ -226,7 +225,12 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     private async Task JumpToStepAsync(int step)
     {
-        if (_isStepTransitioning || step < 0 || step >= WizardState.TotalSteps || !State.VisitedSteps.Contains(step))
+        if (
+            _isStepTransitioning
+            || step < 0
+            || step >= WizardState.TotalSteps
+            || !State.VisitedSteps.Contains(step)
+        )
         {
             return;
         }
@@ -350,7 +354,12 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
         }
 
-        await Task.Yield();
+        // Task.Yield() only schedules a continuation on the renderer's sync context and
+        // can resume before the browser gets a chance to paint the just-rendered spinner,
+        // especially when the generator below finds its first 10 matches almost
+        // instantly. Task.Delay posts a real timer callback, guaranteeing at least one
+        // animation frame renders the spinner before any CPU-bound work starts.
+        await Task.Delay(1);
 
         var startedAt = Environment.TickCount64;
         var generators = FilterTranslation.CreateGenerators(State);
@@ -373,7 +382,16 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                     }
 
                     buffer.Add(siteswap);
-                    if (buffer.Count < 10)
+                    // Also require MinSpinnerVisibleMs to have elapsed before the first
+                    // batch is flushed into State.Results: otherwise, for parameter
+                    // combinations that produce >= 10 matches almost immediately, the
+                    // dot spinner (shown only while Results.Count == 0) would never
+                    // actually become visible on screen - it would be replaced by the
+                    // results grid within the same frame it first appeared in.
+                    if (
+                        buffer.Count < 10
+                        || Environment.TickCount64 - startedAt < MinSpinnerVisibleMs
+                    )
                     {
                         continue;
                     }

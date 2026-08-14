@@ -12,6 +12,7 @@ public sealed class CardStackFormState
 {
     public int Jugglers { get; set; } = 3;
     public int Period { get; set; } = 5;
+
     // Deliberately not equal: with a dual-range slider, identical min/max thumbs
     // start out stacked exactly on top of each other, making the lower one hard
     // to grab. Different defaults keep both handles visible/reachable from the start.

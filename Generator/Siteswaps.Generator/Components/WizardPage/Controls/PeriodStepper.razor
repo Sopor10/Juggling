@@ -1,6 +1,16 @@
 @* Single primary control: editable stepper (+/-, direct number entry) -
    matches the Card Stack decision to not show a redundant slider for the
-   same value at the same time. *@
+   same value at the same time.
+
+   The exact-value input intentionally reacts only to @onchange (commit on
+   blur/Enter), not @oninput: with @oninput, every keystroke round-trips
+   through Blazor to re-render the input's `value` attribute while the
+   browser is still mutating the same DOM node from the next keystroke.
+   Typing very quickly (e.g. "123456789") can race these two writers and
+   leave a corrupted, concatenated digit string in the box that briefly
+   exceeds Max and could otherwise be used to start a generation. Reacting
+   only on change lets the browser own the field's value undisturbed while
+   the user types, and Blazor only reads/clamps the final string once. *@
 <div class="wizard-period">
     <div class="wizard-stepper-row">
         <button type="button" class="wizard-stepper-btn" aria-label="Periode verringern"
@@ -10,7 +20,7 @@
         <input id="periodExactInput" type="number" inputmode="numeric" class="wizard-period-value wizard-period-value-input"
                min="@Min" max="@Max" value="@Value"
                @onpointerdown:stopPropagation="true"
-               @oninput="OnExactInput" @onchange="OnExactInput" />
+               @onchange="OnExactInput" />
         <button type="button" class="wizard-stepper-btn" aria-label="Periode erhöhen"
                 @onpointerdown:stopPropagation="true"
                 @onclick="() => ChangeBy(1)">+</button>
@@ -34,10 +44,11 @@
 
     private async Task OnExactInput(ChangeEventArgs e)
     {
-        if (int.TryParse(e.Value?.ToString(), out var v))
-        {
-            await SetValue(v);
-        }
+        // int.TryParse deliberately rejects overlong / non-numeric strings (e.g. a
+        // still-corrupted value from a race elsewhere) instead of silently truncating
+        // them - falls back to re-asserting the current, known-valid Value.
+        var parsed = int.TryParse(e.Value?.ToString(), out var v) ? v : Value;
+        await SetValue(parsed);
     }
 
     private async Task SetValue(int v)
