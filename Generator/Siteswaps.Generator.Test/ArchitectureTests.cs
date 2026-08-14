@@ -32,10 +32,7 @@ public class ArchitectureTests
     [Test]
     public void Generator_Namespaces_Should_Not_Form_Cycles()
     {
-        IArchRule rule = Slices()
-            .Matching("Siteswaps.Generator.(*)")
-            .Should()
-            .BeFreeOfCycles();
+        IArchRule rule = Slices().Matching("Siteswaps.Generator.(*)").Should().BeFreeOfCycles();
 
         rule.Check(Architecture);
     }
