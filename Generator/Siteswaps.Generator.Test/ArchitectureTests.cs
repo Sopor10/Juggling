@@ -2,6 +2,7 @@
 using ArchUnitNET.Fluent;
 using ArchUnitNET.Loader;
 using ArchUnitNET.NUnit;
+using ArchunitNetExtension;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 
 namespace Siteswaps.Generator.Test;
@@ -25,6 +26,17 @@ public class ArchitectureTests
             .NotDependOnAny(
                 Types().That().ResideInNamespaceMatching("Siteswaps.Generator.Components")
             );
+        rule.Check(Architecture);
+    }
+
+    [Test]
+    public void Generator_Namespaces_Should_Not_Form_Cycles()
+    {
+        IArchRule rule = Slices()
+            .Matching("Siteswaps.Generator.(*)")
+            .Should()
+            .BeFreeOfCycles();
+
         rule.Check(Architecture);
     }
 }
