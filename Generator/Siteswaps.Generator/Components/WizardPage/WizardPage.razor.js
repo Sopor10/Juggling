@@ -7,7 +7,104 @@ export function scrollIntoView(selector) {
 
 const historyHandlers = new WeakMap();
 const focusTrapHandlers = new WeakMap();
+const touchSwipeHandlers = new WeakMap();
 let previousActiveElement = null;
+
+const SWIPE_DIRECTION_THRESHOLD = 10;
+const SWIPE_THRESHOLD = 50;
+const SWIPE_DIRECTION_FACTOR = 1.2;
+const SWIPE_ANGLE_FACTOR = 1.5;
+
+export function initTouchSwipe(element, dotnetHelper) {
+  if (!element || touchSwipeHandlers.has(element)) {
+    return;
+  }
+
+  let startX = 0;
+  let startY = 0;
+  let horizontalSwipe = false;
+
+  const reset = () => {
+    startX = 0;
+    startY = 0;
+    horizontalSwipe = false;
+    element.classList.remove('wizard-swipe-active');
+  };
+
+  const onTouchStart = (event) => {
+    if (event.touches.length !== 1) {
+      reset();
+      return;
+    }
+
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+    horizontalSwipe = false;
+  };
+
+  const onTouchMove = (event) => {
+    if (event.touches.length !== 1 || startX === 0 && startY === 0) {
+      return;
+    }
+
+    const dx = event.touches[0].clientX - startX;
+    const dy = event.touches[0].clientY - startY;
+    if (
+      !horizontalSwipe &&
+      Math.abs(dx) > SWIPE_DIRECTION_THRESHOLD &&
+      Math.abs(dx) > Math.abs(dy) * SWIPE_DIRECTION_FACTOR
+    ) {
+      horizontalSwipe = true;
+      element.classList.add('wizard-swipe-active');
+    }
+
+    if (horizontalSwipe) {
+      event.preventDefault();
+    }
+  };
+
+  const onTouchEnd = (event) => {
+    if (!horizontalSwipe || event.changedTouches.length !== 1) {
+      reset();
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+    const isSwipe =
+      Math.abs(dx) >= SWIPE_THRESHOLD &&
+      Math.abs(dx) > Math.abs(dy) * SWIPE_ANGLE_FACTOR;
+
+    reset();
+    if (isSwipe) {
+      dotnetHelper.invokeMethodAsync('OnTouchSwipe', dx < 0);
+    }
+  };
+
+  const onTouchCancel = () => reset();
+
+  element.addEventListener('touchstart', onTouchStart, { passive: true });
+  element.addEventListener('touchmove', onTouchMove, { passive: false });
+  element.addEventListener('touchend', onTouchEnd, { passive: true });
+  element.addEventListener('touchcancel', onTouchCancel, { passive: true });
+
+  touchSwipeHandlers.set(element, () => {
+    element.removeEventListener('touchstart', onTouchStart);
+    element.removeEventListener('touchmove', onTouchMove);
+    element.removeEventListener('touchend', onTouchEnd);
+    element.removeEventListener('touchcancel', onTouchCancel);
+    reset();
+  });
+}
+
+export function disposeTouchSwipe(element) {
+  const cleanup = touchSwipeHandlers.get(element);
+  if (cleanup) {
+    cleanup();
+    touchSwipeHandlers.delete(element);
+  }
+}
 
 const focusableSelector = [
   'a[href]',

@@ -178,6 +178,11 @@
     touch-action: pan-y;
 }
 
+.wizard-steps.wizard-swipe-active {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 .wizard-step {
     display: none;
     flex-direction: column;

@@ -21,10 +21,7 @@
 
         <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
-        <div class="wizard-steps"
-             @onpointerdown="OnStepsPointerDown"
-             @onpointerup="OnStepsPointerUp"
-             @onpointercancel="OnStepsPointerCancel">
+        <div @ref="_stepsElement" class="wizard-steps">
 
             <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
                 <div class="wizard-step-label"><span class="wizard-pill wizard-step-pill">Schritt 1 / 3</span></div>

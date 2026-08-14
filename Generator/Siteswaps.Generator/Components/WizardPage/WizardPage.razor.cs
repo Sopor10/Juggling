@@ -29,15 +29,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     private FilterBottomSheet? _filterSheet;
 
-    private double? _swipeStartX;
-    private double? _swipeStartY;
     private bool _isStepTransitioning;
     private bool _isStartingGeneration;
     private IJSObjectReference? _jsModule;
     private DotNetObjectReference<WizardPage>? _selfReference;
-
-    private const double SwipeThreshold = 50;
-    private const double SwipeAngleFactor = 1.5;
+    private ElementReference _stepsElement;
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
@@ -79,6 +75,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             );
             _selfReference = DotNetObjectReference.Create(this);
             await _jsModule.InvokeVoidAsync("initHistory", _selfReference, State.CurrentStep);
+            await _jsModule.InvokeVoidAsync("initTouchSwipe", _stepsElement, _selfReference);
         }
     }
 
@@ -241,30 +238,15 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
     }
 
-    private void OnStepsPointerDown(PointerEventArgs e)
+    [JSInvokable]
+    public async Task OnTouchSwipe(bool next)
     {
-        _swipeStartX = e.ClientX;
-        _swipeStartY = e.ClientY;
-    }
-
-    private async Task OnStepsPointerUp(PointerEventArgs e)
-    {
-        if (_swipeStartX is null || _swipeStartY is null || _isStepTransitioning)
+        if (_isStepTransitioning)
         {
             return;
         }
 
-        var dx = e.ClientX - _swipeStartX.Value;
-        var dy = e.ClientY - _swipeStartY.Value;
-        _swipeStartX = null;
-        _swipeStartY = null;
-
-        if (Math.Abs(dx) <= SwipeThreshold || Math.Abs(dx) <= Math.Abs(dy) * SwipeAngleFactor)
-        {
-            return;
-        }
-
-        if (dx < 0)
+        if (next)
         {
             await AdvanceStepAsync();
         }
@@ -272,12 +254,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             await GoBackAsync();
         }
-    }
-
-    private void OnStepsPointerCancel(PointerEventArgs e)
-    {
-        _swipeStartX = null;
-        _swipeStartY = null;
     }
 
     private void OpenAddFilterSheet() => _filterSheet?.OpenForNew();
@@ -456,6 +432,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                     await _jsModule.InvokeVoidAsync("disposeHistory", _selfReference);
                 }
 
+                await _jsModule.InvokeVoidAsync("disposeTouchSwipe", _stepsElement);
                 await _jsModule.DisposeAsync();
             }
         }
