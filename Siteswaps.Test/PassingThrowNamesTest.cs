@@ -53,10 +53,7 @@ public class PassingThrowNamesTest
                 foreach (var height in PassingThrowNames.HeightsFor(baseHeight, jugglers))
                 {
                     var name = PassingThrowNames.Format(height, jugglers);
-                    var roundTrip = PassingThrowNames.HeightsFor(
-                        CatalogBaseHeight(name),
-                        jugglers
-                    );
+                    var roundTrip = PassingThrowNames.HeightsFor(CatalogBaseHeight(name), jugglers);
                     roundTrip.Should().Contain(height);
                 }
             }

@@ -82,7 +82,11 @@ public class WizardPageObject(IPage page)
         );
         await page.Locator(".wizard-step.active")
             .WaitForAsync(
-                new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
+                new LocatorWaitForOptions
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = timeoutMs,
+                }
             );
     }
 

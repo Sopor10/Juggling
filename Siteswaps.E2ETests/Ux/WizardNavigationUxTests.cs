@@ -21,7 +21,9 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
 
         await wizard.NextOrGenerateButton.DblClickAsync();
         await wizard.ExpectStepAsync(1);
-        await Assertions.Expect(page.Locator("#wizard-step-tab-2")).ToHaveAttributeAsync("aria-selected", "false");
+        await Assertions
+            .Expect(page.Locator("#wizard-step-tab-2"))
+            .ToHaveAttributeAsync("aria-selected", "false");
     }
 
     /// <summary>Summary: Browser back from step 2 must stay on the wizard root on step 1, not leave the flow.</summary>
