@@ -6,7 +6,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Functional;
 
-
 /// <summary>Generation contracts for the wizard flow with stock and constrained inputs.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardGenerationTests(BlazorWebassemblyFixture<Program> fixture)

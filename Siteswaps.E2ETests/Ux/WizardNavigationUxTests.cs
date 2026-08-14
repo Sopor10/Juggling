@@ -6,7 +6,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Ux;
 
-
 /// <summary>Encodes navigation, history, and step-clarity UX contracts for /wizard.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
@@ -22,10 +21,7 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
 
         await wizard.NextOrGenerateButton.DblClickAsync();
         await wizard.ExpectStepTitleAsync("Keulen & Würfe");
-        (await wizard.ActiveStepTitle.First.InnerTextAsync())
-            .Trim()
-            .Should()
-            .NotBe("Noch Filter?");
+        (await wizard.ActiveStepTitle.First.InnerTextAsync()).Trim().Should().NotBe("Noch Filter?");
     }
 
     /// <summary>Summary: Browser back from step 2 must stay inside /wizard on step 1, not leave the flow.</summary>

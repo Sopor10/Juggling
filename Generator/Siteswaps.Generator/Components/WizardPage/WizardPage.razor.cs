@@ -1,8 +1,8 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using Blazored.LocalStorage;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;

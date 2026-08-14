@@ -20,8 +20,7 @@ internal static class WizardFilterTree
 {
     public static bool IsEmpty(FilterTree tree) => tree.Root is null;
 
-    public static IEnumerable<FilterLeaf> Leaves(FilterTree tree) =>
-        tree.All.OfType<FilterLeaf>();
+    public static IEnumerable<FilterLeaf> Leaves(FilterTree tree) => tree.All.OfType<FilterLeaf>();
 
     public static FilterLeaf? FindLeaf(FilterTree tree, int id) =>
         Leaves(tree)
@@ -162,10 +161,7 @@ internal static class WizardFilterTree
 
     private static FilterNode? NormalizeGroup(ImmutableList<FilterNode> children, bool asOr)
     {
-        var normalized = children
-            .Select(NormalizeNode)
-            .OfType<FilterNode>()
-            .ToImmutableList();
+        var normalized = children.Select(NormalizeNode).OfType<FilterNode>().ToImmutableList();
         return normalized.Count switch
         {
             0 => null,
@@ -174,7 +170,11 @@ internal static class WizardFilterTree
         };
     }
 
-    private static FilterTree ReplaceNode(FilterTree tree, FilterNode target, FilterNode replacement)
+    private static FilterTree ReplaceNode(
+        FilterTree tree,
+        FilterNode target,
+        FilterNode replacement
+    )
     {
         if (tree.Root is null)
         {

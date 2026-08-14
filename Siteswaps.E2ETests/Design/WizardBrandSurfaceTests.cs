@@ -5,7 +5,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Design;
 
-
 /// <summary>Asserts Passing Zone brand surfaces on /wizard: purple tokens, lavender wash, Baloo/Nunito, purple header — not Material #8E44AD.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
@@ -62,11 +61,15 @@ public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
         DesignColor
             .CssContainsHex(combined, DesignColor.BrandPurple800)
             .Should()
-            .BeTrue($"header should include brand purple {DesignColor.BrandPurple800}, got {combined}");
+            .BeTrue(
+                $"header should include brand purple {DesignColor.BrandPurple800}, got {combined}"
+            );
         DesignColor
             .CssContainsHex(combined, DesignColor.LegacyMaterialPurple)
             .Should()
-            .BeFalse($"header must not use Material {DesignColor.LegacyMaterialPurple}, got {combined}");
+            .BeFalse(
+                $"header must not use Material {DesignColor.LegacyMaterialPurple}, got {combined}"
+            );
     }
 
     /// <summary>Summary: Display titles use Baloo 2; PZ brand mark is present; wizard body uses Nunito.</summary>

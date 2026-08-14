@@ -19,7 +19,8 @@ internal static class WizardUxGeometry
     {
         var box = await locator.BoundingBoxAsync();
         box.Should().NotBeNull($"{controlName} must be laid out");
-        box!.Width.Should()
+        box!
+            .Width.Should()
             .BeGreaterThanOrEqualTo(
                 MinTouchPx,
                 because: $"{controlName} width must be >= {MinTouchPx}px"
@@ -47,7 +48,10 @@ internal static class WizardUxGeometry
 
         size[0]
             .Should()
-            .BeGreaterThanOrEqualTo(MinTouchPx, because: "dual-range thumb width must be touch-sized");
+            .BeGreaterThanOrEqualTo(
+                MinTouchPx,
+                because: "dual-range thumb width must be touch-sized"
+            );
         size[1]
             .Should()
             .BeGreaterThanOrEqualTo(

@@ -5,7 +5,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Design;
 
-
 /// <summary>Asserts Passing Zone CTA orange and cyan focus language on /wizard (mockup pz-btn-primary = orange).</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
@@ -40,12 +39,11 @@ public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
         DesignColor
             .EqualsHex(color, DesignColor.BrandPurple950)
             .Should()
-            .BeTrue($"orange CTA text must be dark purple {DesignColor.BrandPurple950}, got {color}");
+            .BeTrue(
+                $"orange CTA text must be dark purple {DesignColor.BrandPurple950}, got {color}"
+            );
 
-        DesignColor
-            .CssContainsHex(combinedBg, DesignColor.LegacyMaterialPurple)
-            .Should()
-            .BeFalse();
+        DesignColor.CssContainsHex(combinedBg, DesignColor.LegacyMaterialPurple).Should().BeFalse();
     }
 
     /// <summary>Summary: Generate CTA must use orange gradient #f9a500 with purple-950 text for contrast.</summary>
@@ -65,12 +63,16 @@ public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
         DesignColor
             .CssContainsHex(combinedBg, DesignColor.BrandOrange)
             .Should()
-            .BeTrue($"Generate CTA must include orange {DesignColor.BrandOrange}, got {combinedBg}");
+            .BeTrue(
+                $"Generate CTA must include orange {DesignColor.BrandOrange}, got {combinedBg}"
+            );
 
         DesignColor
             .EqualsHex(color, DesignColor.BrandPurple950)
             .Should()
-            .BeTrue($"Generate CTA text must be {DesignColor.BrandPurple950} for contrast, got {color}");
+            .BeTrue(
+                $"Generate CTA text must be {DesignColor.BrandPurple950} for contrast, got {color}"
+            );
     }
 
     /// <summary>Summary: Keyboard focus ring on wizard controls must be cyan #00b3ff, not browser default or Material blue.</summary>

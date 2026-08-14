@@ -12,7 +12,9 @@ public class WizardPageObject(IPage page)
     public ILocator ActiveStepTitle => page.Locator(".wizard-step.active .wizard-step-title");
 
     public ILocator NextOrGenerateButton =>
-        page.Locator(".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate");
+        page.Locator(
+            ".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate"
+        );
 
     public ILocator BackButton => page.Locator(".wizard-back-btn");
 
@@ -73,18 +75,10 @@ public class WizardPageObject(IPage page)
     public async Task WaitUntilLoadedAsync(float timeoutMs = 60_000)
     {
         await Root.WaitForAsync(
-            new LocatorWaitForOptions
-            {
-                State = WaitForSelectorState.Visible,
-                Timeout = timeoutMs,
-            }
+            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
         await ActiveStepTitle.First.WaitForAsync(
-            new LocatorWaitForOptions
-            {
-                State = WaitForSelectorState.Visible,
-                Timeout = timeoutMs,
-            }
+            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
     }
 
@@ -125,11 +119,7 @@ public class WizardPageObject(IPage page)
     public async Task WaitForResultsAsync(float timeoutMs = 120_000)
     {
         await Results.WaitForAsync(
-            new LocatorWaitForOptions
-            {
-                State = WaitForSelectorState.Visible,
-                Timeout = timeoutMs,
-            }
+            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
         await page.Locator(".wizard-results-title")
             .Filter(new LocatorFilterOptions { HasNotText = "Generiere" })
@@ -203,9 +193,7 @@ public class WizardPageObject(IPage page)
 
     public async Task ToggleThrowChipAsync(string displayName)
     {
-        await ThrowChips
-            .Filter(new LocatorFilterOptions { HasText = displayName })
-            .ClickAsync();
+        await ThrowChips.Filter(new LocatorFilterOptions { HasText = displayName }).ClickAsync();
     }
 
     public async Task SaveDefaultNumberFilterAsync()

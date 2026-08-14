@@ -18,7 +18,9 @@ public sealed class WizardDesignPage(IPage page, WizardPageObject wizard)
     public ILocator StepTitle => page.Locator(".wizard-step.active .wizard-step-title");
 
     public ILocator PrimaryForwardButton =>
-        page.Locator(".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate");
+        page.Locator(
+            ".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate"
+        );
 
     public ILocator GenerateButton => page.Locator(".wizard-nav-buttons .wizard-btn-generate");
 

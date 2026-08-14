@@ -5,7 +5,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Functional;
 
-
 /// <summary>Filter sheet and list contracts for wizard step 3 (clamp feedback lives in Ux).</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardFilterTests(BlazorWebassemblyFixture<Program> fixture)

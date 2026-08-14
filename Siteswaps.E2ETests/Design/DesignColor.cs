@@ -56,8 +56,10 @@ public static partial class DesignColor
             return false;
         }
 
-        if (cssValue.Contains(NormalizeHex(expectedHex), StringComparison.OrdinalIgnoreCase)
-            || cssValue.Contains(expectedHex.TrimStart('#'), StringComparison.OrdinalIgnoreCase))
+        if (
+            cssValue.Contains(NormalizeHex(expectedHex), StringComparison.OrdinalIgnoreCase)
+            || cssValue.Contains(expectedHex.TrimStart('#'), StringComparison.OrdinalIgnoreCase)
+        )
         {
             return true;
         }
@@ -68,9 +70,11 @@ public static partial class DesignColor
             var r = byte.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
             var g = byte.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
             var b = byte.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-            if (Math.Abs(r - expected.R) <= tolerance
+            if (
+                Math.Abs(r - expected.R) <= tolerance
                 && Math.Abs(g - expected.G) <= tolerance
-                && Math.Abs(b - expected.B) <= tolerance)
+                && Math.Abs(b - expected.B) <= tolerance
+            )
             {
                 return true;
             }

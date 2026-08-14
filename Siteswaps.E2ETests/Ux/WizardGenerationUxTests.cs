@@ -6,7 +6,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Ux;
 
-
 /// <summary>Encodes generation feedback, empty states, and silent-clamp UX contracts.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)

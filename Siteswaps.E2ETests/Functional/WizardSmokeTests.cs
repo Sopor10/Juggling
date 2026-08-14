@@ -5,7 +5,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Functional;
 
-
 /// <summary>Self-hosted smoke test via <see cref="BlazorWebassemblyFixture{TEntryPoint}"/> (does not require Aspire).</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardSmokeTests(BlazorWebassemblyFixture<Program> fixture)

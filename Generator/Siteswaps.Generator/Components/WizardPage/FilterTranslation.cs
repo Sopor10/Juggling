@@ -53,9 +53,7 @@ internal static class FilterTranslation
 
             var filters = new List<ISiteswapFilter>();
 
-            var treeFilter = state.FilterTree.Root?.Visit(
-                new FilterBuilderVisitor(input, state)
-            );
+            var treeFilter = state.FilterTree.Root?.Visit(new FilterBuilderVisitor(input, state));
             if (treeFilter is not null)
             {
                 filters.Add(treeFilter);

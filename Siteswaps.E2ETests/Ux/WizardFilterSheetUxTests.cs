@@ -6,7 +6,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Ux;
 
-
 /// <summary>Encodes filter bottom-sheet focus, dismiss, and contrast UX contracts.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardFilterSheetUxTests(BlazorWebassemblyFixture<Program> fixture)
@@ -26,7 +25,9 @@ public class WizardFilterSheetUxTests(BlazorWebassemblyFixture<Program> fixture)
         {
             await page.Keyboard.PressAsync("Tab");
             var summary = await WizardUxGeometry.ActiveElementSummaryAsync(page);
-            summary.Should().EndWith(":true", because: "focus must stay inside the open filter sheet");
+            summary
+                .Should()
+                .EndWith(":true", because: "focus must stay inside the open filter sheet");
         }
     }
 
@@ -48,7 +49,10 @@ public class WizardFilterSheetUxTests(BlazorWebassemblyFixture<Program> fixture)
 
         await wizard.OpenAddFilterSheetAsync();
         await wizard.FilterSheetBackdrop.ClickAsync(
-            new LocatorClickOptions { Position = new Position { X = 8, Y = 8 } }
+            new LocatorClickOptions
+            {
+                Position = new Position { X = 8, Y = 8 },
+            }
         );
         await wizard.FilterSheet.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = 10_000 }

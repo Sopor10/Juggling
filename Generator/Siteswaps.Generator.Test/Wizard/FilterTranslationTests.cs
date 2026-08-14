@@ -55,9 +55,7 @@ public class FilterTranslationTests
         var allowedHeights = state
             .AllowedThrows.SelectMany(t => t.GetHeightForJugglers(state.NumberOfJugglers, false))
             .ToHashSet();
-        var zipHeights = Throw
-            .Zip.GetHeightForJugglers(state.NumberOfJugglers, false)
-            .ToHashSet();
+        var zipHeights = Throw.Zip.GetHeightForJugglers(state.NumberOfJugglers, false).ToHashSet();
 
         var found = CollectSiteswaps(state, limit: 40);
 

@@ -5,7 +5,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Design;
 
-
 /// <summary>Asserts Passing Zone chrome: sheet radii, pill/chip language, orange progress, and primary CTA size (chip/stepper touch targets live in Ux).</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
@@ -47,17 +46,16 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
         await chip.WaitForAsync();
 
         var background = await design.StyleAsync(chip, "background-color");
-        var radius = DesignColor.ParseCssPx(await design.StyleAsync(chip, "border-top-left-radius"));
+        var radius = DesignColor.ParseCssPx(
+            await design.StyleAsync(chip, "border-top-left-radius")
+        );
         var font = await design.StyleAsync(chip, "font-family");
 
         DesignColor
             .EqualsHex(background, DesignColor.BrandPurple700)
             .Should()
             .BeTrue($"active chip must be {DesignColor.BrandPurple700}, got {background}");
-        DesignColor
-            .EqualsHex(background, DesignColor.LegacyMaterialPurple)
-            .Should()
-            .BeFalse();
+        DesignColor.EqualsHex(background, DesignColor.LegacyMaterialPurple).Should().BeFalse();
         radius.Should().BeGreaterThanOrEqualTo(8);
         font.Should().ContainEquivalentOf("Baloo");
     }
@@ -88,7 +86,9 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
 
         var sheet = design.BottomSheet;
         await sheet.WaitForAsync();
-        var topLeft = DesignColor.ParseCssPx(await design.StyleAsync(sheet, "border-top-left-radius"));
+        var topLeft = DesignColor.ParseCssPx(
+            await design.StyleAsync(sheet, "border-top-left-radius")
+        );
         var topRight = DesignColor.ParseCssPx(
             await design.StyleAsync(sheet, "border-top-right-radius")
         );

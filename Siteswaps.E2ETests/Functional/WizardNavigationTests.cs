@@ -6,7 +6,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Functional;
 
-
 /// <summary>Step state preservation and reload contracts for /wizard (history/double-next live in Ux).</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardNavigationTests(BlazorWebassemblyFixture<Program> fixture)

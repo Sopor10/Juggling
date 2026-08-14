@@ -5,7 +5,6 @@ using Program = Siteswaps.E2ETests.Server.Program;
 
 namespace Siteswaps.E2ETests.Ux;
 
-
 /// <summary>Encodes touch-target UX contracts for the mobile-first wizard.</summary>
 [Collection(WizardE2ECollection.Name)]
 public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
