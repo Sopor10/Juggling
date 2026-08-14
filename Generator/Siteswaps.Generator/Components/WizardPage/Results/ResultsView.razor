@@ -37,11 +37,17 @@
             <p class="wizard-loading-more" role="status" aria-live="polite">Lädt weitere Ergebnisse…</p>
         }
         <div class="wizard-results-grid" role="list">
-            @foreach (var s in Results)
+            @foreach (var s in Results.Take(_visibleResultCount))
             {
                 <SiteswapCard Siteswap="s" NumberOfJugglers="NumberOfJugglers" />
             }
         </div>
+        @if (!IsGenerating && _visibleResultCount < Results.Count)
+        {
+            <button type="button" class="wizard-btn-ghost wizard-load-more" @onclick="LoadMore">
+                Mehr laden (@Math.Min(_visibleResultCount, Results.Count) von @Results.Count)
+            </button>
+        }
     }
 
     @if (!IsGenerating)
@@ -77,4 +83,17 @@
     private Task BackToEditing() => BackToEditingRequested.InvokeAsync();
 
     private Task StartOver() => StartOverRequested.InvokeAsync();
+
+    private int _visibleResultCount = BatchSize;
+    private const int BatchSize = 40;
+
+    protected override void OnParametersSet()
+    {
+        if (_visibleResultCount == 0 || Results.Count <= BatchSize || _visibleResultCount > Results.Count)
+        {
+            _visibleResultCount = Math.Min(BatchSize, Results.Count);
+        }
+    }
+
+    private void LoadMore() => _visibleResultCount = Math.Min(_visibleResultCount + BatchSize, Results.Count);
 }

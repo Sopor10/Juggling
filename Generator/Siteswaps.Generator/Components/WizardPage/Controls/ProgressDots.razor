@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@inject IJSRuntime JsRuntime
+
 <div class="wizard-dots" role="tablist" aria-label="Fortschritt: Schritt @(Current + 1) von @Total">
     @for (var i = 0; i < Total; i++)
     {
@@ -5,11 +9,14 @@
         var isDone = Visited.Contains(step) && step != Current;
         var isActive = step == Current;
         var isReachable = Visited.Contains(step);
-        <button type="button" class="wizard-dot @(isActive ? "active" : "") @(isDone ? "done" : "")"
+        <button id="wizard-step-tab-@step" type="button" class="wizard-dot @(isActive ? "active" : "") @(isDone ? "done" : "")"
                 role="tab" aria-selected="@(isActive ? "true" : "false")"
+                aria-controls="wizard-panel-@step"
+                tabindex="@(isActive ? "0" : "-1")"
                 aria-label="Schritt @(step + 1)"
                 disabled="@(!isReachable)"
                 @onpointerdown:stopPropagation="true"
+                @onkeydown="e => OnKeyDown(e, step)"
                 @onclick="() => Jump(step)"></button>
     }
 </div>
@@ -27,11 +34,49 @@
     [Parameter]
     public EventCallback<int> StepSelected { get; set; }
 
+    private IJSObjectReference? _jsModule;
+    private int? _focusTarget;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Siteswaps.Generator/Components/WizardPage/WizardPage.razor.js");
+        }
+
+        if (_focusTarget is { } target && _jsModule is not null)
+        {
+            _focusTarget = null;
+            await _jsModule.InvokeVoidAsync("focusElement", $"wizard-step-tab-{target}");
+        }
+    }
+
     private async Task Jump(int step)
     {
         if (Visited.Contains(step) && step != Current)
         {
             await StepSelected.InvokeAsync(step);
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e, int step)
+    {
+        var target = e.Key switch
+        {
+            "ArrowRight" or "ArrowDown" => Math.Min(Total - 1, step + 1),
+            "ArrowLeft" or "ArrowUp" => Math.Max(0, step - 1),
+            "Home" => 0,
+            "End" => Total - 1,
+            _ => -1,
+        };
+
+        if (target >= 0 && Visited.Contains(target))
+        {
+            await StepSelected.InvokeAsync(target);
+            _focusTarget = target;
+            await InvokeAsync(StateHasChanged);
         }
     }
 }

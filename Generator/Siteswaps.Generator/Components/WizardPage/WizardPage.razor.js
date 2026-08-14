@@ -6,6 +6,22 @@ export function scrollIntoView(selector) {
 }
 
 const historyHandlers = new WeakMap();
+let previousActiveElement = null;
+
+export function captureActiveElement() {
+  previousActiveElement = document.activeElement;
+}
+
+export function restoreActiveElement() {
+  if (previousActiveElement instanceof HTMLElement) {
+    previousActiveElement.focus();
+  }
+  previousActiveElement = null;
+}
+
+export function focusElement(id) {
+  document.getElementById(id)?.focus();
+}
 
 export function initHistory(dotnetHelper, step) {
   history.replaceState(

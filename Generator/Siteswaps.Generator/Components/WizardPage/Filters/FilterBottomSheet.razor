@@ -1,38 +1,52 @@
 @using Siteswaps.Generator.Components.Internal.EasyFilter
 @using Siteswaps.Generator.Components.State
 @using Siteswaps.Generator.Core.Generator
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@inject IJSRuntime JsRuntime
 
-<div class="wizard-sheet-backdrop @(_isOpen ? "open" : "")" @onclick="Close"></div>
-<div class="wizard-bottom-sheet @(_isOpen ? "open" : "")" role="dialog" aria-modal="true" aria-label="@SheetTitle">
+@if (_isOpen)
+{
+<div class="wizard-sheet-backdrop open" @onclick="Close"></div>
+<div @ref="_sheetElement" class="wizard-bottom-sheet open" role="dialog" aria-modal="true"
+     aria-labelledby="wizard-sheet-title" tabindex="-1" @onkeydown="OnKeyDown">
     <div class="wizard-sheet-handle"></div>
-    <h3 class="wizard-sheet-title">@SheetTitle</h3>
+    <div class="wizard-sheet-heading">
+        <h3 id="wizard-sheet-title" class="wizard-sheet-title">@SheetTitle</h3>
+        <button type="button" class="wizard-sheet-close wizard-btn-ghost" @onclick="Close" aria-label="Filterdialog schließen">Schließen</button>
+    </div>
 
     <div class="wizard-tabs" role="tablist" aria-label="Filtertyp">
         <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.Number ? "active" : "")"
-                role="tab" aria-selected="@(_activeTab == FilterTabKind.Number ? "true" : "false")"
+                id="wizard-filter-tab-number" role="tab" aria-selected="@(_activeTab == FilterTabKind.Number ? "true" : "false")"
+                aria-controls="wizard-filter-panel-number" tabindex="@(_activeTab == FilterTabKind.Number ? "0" : "-1")"
+                @onkeydown="e => OnTabKeyDown(e, FilterTabKind.Number)"
                 @onclick="() => SelectTab(FilterTabKind.Number)">Anzahl</button>
         <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.Pattern ? "active" : "")"
-                role="tab" aria-selected="@(_activeTab == FilterTabKind.Pattern ? "true" : "false")"
+                id="wizard-filter-tab-pattern" role="tab" aria-selected="@(_activeTab == FilterTabKind.Pattern ? "true" : "false")"
+                aria-controls="wizard-filter-panel-pattern" tabindex="@(_activeTab == FilterTabKind.Pattern ? "0" : "-1")"
+                @onkeydown="e => OnTabKeyDown(e, FilterTabKind.Pattern)"
                 @onclick="() => SelectTab(FilterTabKind.Pattern)">Muster</button>
         <button type="button" class="wizard-pill wizard-tab @(_activeTab == FilterTabKind.State ? "active" : "")"
-                role="tab" aria-selected="@(_activeTab == FilterTabKind.State ? "true" : "false")"
+                id="wizard-filter-tab-state" role="tab" aria-selected="@(_activeTab == FilterTabKind.State ? "true" : "false")"
+                aria-controls="wizard-filter-panel-state" tabindex="@(_activeTab == FilterTabKind.State ? "0" : "-1")"
+                @onkeydown="e => OnTabKeyDown(e, FilterTabKind.State)"
                 @onclick="() => SelectTab(FilterTabKind.State)">Zustand</button>
     </div>
 
-    @if (_isOpen)
-    {
-        <div class="@(_activeTab == FilterTabKind.Number ? "" : "wizard-hidden")" role="tabpanel">
+    <div class="wizard-sheet-body">
+        <div id="wizard-filter-panel-number" class="@(_activeTab == FilterTabKind.Number ? "" : "wizard-hidden")" role="tabpanel" aria-labelledby="wizard-filter-tab-number">
             <NumberFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_numberDraft"
                                  ValueChanged="v => _numberDraft = v" />
         </div>
-        <div class="@(_activeTab == FilterTabKind.Pattern ? "" : "wizard-hidden")" role="tabpanel">
+        <div id="wizard-filter-panel-pattern" class="@(_activeTab == FilterTabKind.Pattern ? "" : "wizard-hidden")" role="tabpanel" aria-labelledby="wizard-filter-tab-pattern">
             <PatternFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_patternDraft"
                                   ValueChanged="v => _patternDraft = v" Period="Period" NumberOfJugglers="NumberOfJugglers" />
         </div>
-        <div class="@(_activeTab == FilterTabKind.State ? "" : "wizard-hidden")" role="tabpanel">
+        <div id="wizard-filter-panel-state" class="@(_activeTab == FilterTabKind.State ? "" : "wizard-hidden")" role="tabpanel" aria-labelledby="wizard-filter-tab-state">
             <StateFilterEditor @key="_sessionId" Value="_stateDraft" ValueChanged="v => _stateDraft = v" />
         </div>
-    }
+    </div>
 
     <div class="wizard-sheet-actions">
         @if (_editingId is not null)
@@ -43,7 +57,12 @@
             @(_editingId is null ? "Filter übernehmen" : "Änderungen speichern")
         </button>
     </div>
+    @if (_validationMessage is not null)
+    {
+        <p class="wizard-validation" role="alert">@_validationMessage</p>
+    }
 </div>
+}
 
 @code {
     private enum FilterTabKind
@@ -75,6 +94,11 @@
     private int? _editingId;
     private FilterTabKind _activeTab = FilterTabKind.Number;
     private int _sessionId;
+    private ElementReference _sheetElement;
+    private string? _validationMessage;
+    private bool _focusPending;
+    private bool _restoreFocusPending;
+    private IJSObjectReference? _jsModule;
 
     private EasyNumberFilter.NumberFilter _numberDraft = NewNumberDraft(Array.Empty<Throw>());
     private NewPatternFilterInformation _patternDraft = NewPatternDraft(Array.Empty<Throw>(), 5, 3);
@@ -91,6 +115,8 @@
         _stateDraft = NewStateDraft();
         _activeTab = FilterTabKind.Number;
         _isOpen = true;
+        _validationMessage = null;
+        _focusPending = true;
     }
 
     public void OpenForEdit(WizardFilterEntry entry)
@@ -121,14 +147,81 @@
         }
 
         _isOpen = true;
+        _validationMessage = null;
+        _focusPending = true;
     }
 
     private void SelectTab(FilterTabKind kind) => _activeTab = kind;
 
-    private void Close() => _isOpen = false;
+    private async Task Close()
+    {
+        _isOpen = false;
+        _validationMessage = null;
+        _restoreFocusPending = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Siteswaps.Generator/Components/WizardPage/WizardPage.razor.js");
+        }
+
+        if (_isOpen && _focusPending)
+        {
+            _focusPending = false;
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("captureActiveElement");
+            }
+            await _sheetElement.FocusAsync();
+        }
+        else if (!_isOpen && _restoreFocusPending)
+        {
+            _restoreFocusPending = false;
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("restoreActiveElement");
+            }
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+        {
+            await Close();
+        }
+    }
+
+    private async Task OnTabKeyDown(KeyboardEventArgs e, FilterTabKind current)
+    {
+        if (e.Key is not ("ArrowRight" or "ArrowDown" or "ArrowLeft" or "ArrowUp"))
+        {
+            return;
+        }
+
+        var delta = e.Key is "ArrowRight" or "ArrowDown" ? 1 : -1;
+        var next = (FilterTabKind)(((int)current + delta + 3) % 3);
+        SelectTab(next);
+        await InvokeAsync(StateHasChanged);
+        if (_jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync("focusElement", $"wizard-filter-tab-{next.ToString().ToLowerInvariant()}");
+        }
+    }
 
     private async Task Save()
     {
+        if (_activeTab == FilterTabKind.State && !_stateDraft.Items.Any(item => item))
+        {
+            _validationMessage = "Wähle mindestens einen belegten Wurf aus.";
+            return;
+        }
+
         IFilterInformation value = _activeTab switch
         {
             FilterTabKind.Number => _numberDraft,
@@ -138,6 +231,8 @@
         };
 
         _isOpen = false;
+        _validationMessage = null;
+        _restoreFocusPending = true;
 
         if (_editingId is { } id)
         {
@@ -152,6 +247,7 @@
     private async Task Delete()
     {
         _isOpen = false;
+        _restoreFocusPending = true;
         if (_editingId is { } id)
         {
             await FilterDeleted.InvokeAsync(id);

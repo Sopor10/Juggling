@@ -31,6 +31,8 @@
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
+    padding-top: 56px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     background: var(--wizard-bg);
@@ -142,8 +144,10 @@
     /* Rendered as a <button> so previously-visited steps are directly
        tappable to jump back - the visible dot stays small, but padding pads
        out the actual hit target closer to a comfortable touch size. */
-    width: 8px;
-    height: 8px;
+    width: 20px;
+    height: 20px;
+    min-height: 40px;
+    min-width: 40px;
     padding: 10px;
     background-clip: content-box;
     border: none;
@@ -595,9 +599,11 @@
     box-shadow: 0 -10px 30px -10px rgba(36, 26, 61, 0.35);
     transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
     max-height: 85vh;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 20px;
     z-index: 40;
+    display: flex;
+    flex-direction: column;
 }
 
 .wizard-page ::deep .wizard-bottom-sheet.open {
@@ -610,6 +616,25 @@
     background: var(--wizard-purple-100);
     border-radius: 999px;
     margin: 0 auto 16px;
+}
+
+.wizard-page ::deep .wizard-sheet-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.wizard-page ::deep .wizard-sheet-close {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+}
+
+.wizard-page ::deep .wizard-sheet-body {
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 12px;
 }
 
 .wizard-page ::deep .wizard-sheet-title {
@@ -638,6 +663,16 @@
     display: flex;
     gap: 8px;
     margin-top: 20px;
+    flex-shrink: 0;
+    background: white;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.wizard-page ::deep .wizard-validation {
+    color: #b42318;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 8px 0 0;
 }
 
 .wizard-page ::deep .wizard-hint {
@@ -878,6 +913,29 @@
     gap: 12px;
     margin-top: 20px;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.wizard-page ::deep .wizard-load-more {
+    width: 100%;
+    margin-top: 14px;
+}
+
+@media (min-width: 700px) {
+    .wizard-page {
+        max-width: 760px;
+    }
+
+    .wizard-page .wizard-header,
+    .wizard-page .wizard-nav {
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+
+    .wizard-page .wizard-steps {
+        max-width: 560px;
+        width: 100%;
+        margin: 0 auto;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
