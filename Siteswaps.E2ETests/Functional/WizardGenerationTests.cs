@@ -1,4 +1,4 @@
-using FluentAssertions;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
@@ -15,15 +15,13 @@ public class WizardGenerationTests(SharedBlazorFixture host) : IClassFixture<Sha
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
-        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.AdvanceToGenerateAsync();
         await wizard.WaitForResultsAsync();
 
-        var count = await wizard.ParseResultCountAsync();
-        count.Should().BeGreaterThan(0);
-        (await wizard.SiteswapCards.CountAsync()).Should().BeGreaterThan(0);
+        await Assertions.Expect(wizard.SiteswapCards).Not.ToHaveCountAsync(0);
+        await Assertions.Expect(wizard.ResultsTitle).ToHaveTextAsync(new Regex(@"^[1-9]"));
     }
 
     /// <summary>Summary: An impossible number filter must yield zero results for otherwise valid defaults.</summary>
@@ -32,7 +30,6 @@ public class WizardGenerationTests(SharedBlazorFixture host) : IClassFixture<Sha
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
-        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
 
@@ -40,7 +37,7 @@ public class WizardGenerationTests(SharedBlazorFixture host) : IClassFixture<Sha
         await wizard.ClickGenerateAsync();
         await wizard.WaitForResultsAsync();
 
-        (await wizard.ParseResultCountAsync()).Should().Be(0);
+        await Assertions.Expect(wizard.ResultsTitle).ToContainTextAsync("0");
         await Assertions.Expect(wizard.ResultsEmptyMessage).ToBeVisibleAsync();
     }
 
@@ -50,7 +47,6 @@ public class WizardGenerationTests(SharedBlazorFixture host) : IClassFixture<Sha
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
-        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.ClickNextAsync();
@@ -61,13 +57,10 @@ public class WizardGenerationTests(SharedBlazorFixture host) : IClassFixture<Sha
         await wizard.ClickGenerateAsync();
         await wizard.WaitForResultsAsync();
 
-        (await wizard.ParseResultCountAsync()).Should().BeGreaterThan(0);
         var clubValues = wizard.Page.Locator(".pz-siteswap-card-clubs-value");
-        var n = await clubValues.CountAsync();
-        n.Should().BeGreaterThan(0);
-        for (var i = 0; i < n; i++)
-        {
-            (await clubValues.Nth(i).InnerTextAsync()).Trim().Should().Be("6");
-        }
+        await Assertions.Expect(clubValues).Not.ToHaveCountAsync(0);
+        await Assertions
+            .Expect(wizard.Page.Locator(".pz-siteswap-card-clubs-value:not(:text-is(\"6\"))"))
+            .ToHaveCountAsync(0);
     }
 }

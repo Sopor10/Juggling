@@ -1,4 +1,4 @@
-using FluentAssertions;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
@@ -9,6 +9,8 @@ namespace Siteswaps.E2ETests.Ux;
 /// <summary>Encodes navigation, history, and step-clarity UX contracts for the wizard at /.</summary>
 public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
+    private static readonly Regex WizardRootPath = new(@"/(wizard)?/?$", RegexOptions.IgnoreCase);
+
     /// <summary>Summary: Double-tapping Weiter must advance only one step, never skip to filters.</summary>
     [Fact]
     public async Task Double_Tap_Weiter_Advances_Only_One_Step()
@@ -39,10 +41,8 @@ public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.ExpectStepAsync(1);
 
         await page.GoBackAsync();
-        await wizard.Root.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15_000 }
-        );
-        new Uri(page.Url).AbsolutePath.TrimEnd('/').Should().BeOneOf("", "/wizard");
+        await Assertions.Expect(wizard.Root).ToBeVisibleAsync();
+        await Assertions.Expect(page).ToHaveURLAsync(WizardRootPath);
         await wizard.ExpectStepAsync(0);
     }
 
@@ -59,13 +59,11 @@ public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.WaitForResultsAsync();
 
         await page.GoBackAsync();
-        await wizard.Root.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15_000 }
-        );
-        new Uri(page.Url).AbsolutePath.TrimEnd('/').Should().BeOneOf("", "/wizard");
-        (await wizard.IsLoadedAsync()).Should().BeTrue();
+        await Assertions.Expect(wizard.Root).ToBeVisibleAsync();
+        await Assertions.Expect(page).ToHaveURLAsync(WizardRootPath);
+        await Assertions.Expect(wizard.ActiveProgressDot).ToBeVisibleAsync();
         await wizard.ExpectStepAsync(2);
-        (await wizard.Results.CountAsync()).Should().Be(0);
+        await Assertions.Expect(wizard.Results).ToBeHiddenAsync();
     }
 
     /// <summary>Summary: Progress dots must expose visited vs current state and block jumping to unvisited steps.</summary>
@@ -82,15 +80,15 @@ public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<S
         var step1 = page.Locator("#wizard-step-tab-1");
         var step2 = page.Locator("#wizard-step-tab-2");
 
-        (await step0.GetAttributeAsync("aria-selected")).Should().Be("true");
-        (await step1.IsDisabledAsync()).Should().BeTrue();
-        (await step2.IsDisabledAsync()).Should().BeTrue();
+        await Assertions.Expect(step0).ToHaveAttributeAsync("aria-selected", "true");
+        await Assertions.Expect(step1).ToBeDisabledAsync();
+        await Assertions.Expect(step2).ToBeDisabledAsync();
 
         await wizard.ClickNextAsync();
         await wizard.ExpectStepAsync(1);
 
-        (await step1.GetAttributeAsync("aria-selected")).Should().Be("true");
-        (await step0.IsDisabledAsync()).Should().BeFalse();
-        (await step2.IsDisabledAsync()).Should().BeTrue();
+        await Assertions.Expect(step1).ToHaveAttributeAsync("aria-selected", "true");
+        await Assertions.Expect(step0).ToBeEnabledAsync();
+        await Assertions.Expect(step2).ToBeDisabledAsync();
     }
 }

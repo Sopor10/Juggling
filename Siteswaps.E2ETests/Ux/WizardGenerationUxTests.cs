@@ -24,9 +24,7 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.WaitForResultsAsync();
 
         await Assertions.Expect(wizard.ResultsActions).ToBeVisibleAsync();
-        (await page.Locator(".wizard-btn-generate").CountAsync())
-            .Should()
-            .Be(0, because: "results chrome replaces the generate CTA when generation finishes");
+        await Assertions.Expect(wizard.GenerateButton).ToHaveCountAsync(0);
     }
 
     /// <summary>Summary: Extreme period values must clamp visibly with user feedback, not silently.</summary>
@@ -40,13 +38,7 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.SetPeriodAsync(999);
-        (await wizard.PeriodInput.InputValueAsync()).Should().Be("30");
-        (await wizard.ValueClampFeedback.CountAsync())
-            .Should()
-            .BeGreaterThan(
-                0,
-                because: "clamping period to the max must surface status/alert feedback"
-            );
+        await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("30");
         await Assertions
             .Expect(wizard.ValueClampFeedback.First)
             .ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions { Timeout = 5_000 });
@@ -63,13 +55,10 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.SetExactJugglersAsync(999);
-        (await wizard.JugglerExactInput.InputValueAsync()).Should().Be("20");
-        (await wizard.ValueClampFeedback.CountAsync())
-            .Should()
-            .BeGreaterThan(
-                0,
-                because: "clamping jugglers to the max must surface status/alert feedback"
-            );
+        await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("20");
+        await Assertions
+            .Expect(wizard.ValueClampFeedback.First)
+            .ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions { Timeout = 5_000 });
     }
 
     /// <summary>Summary: Zero-result runs must show a clear empty state, not a blank results shell.</summary>
@@ -89,11 +78,11 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.ClickGenerateAsync();
         await wizard.WaitForResultsAsync();
 
-        (await wizard.ParseResultCountAsync()).Should().Be(0);
+        await Assertions.Expect(wizard.ResultsTitle).ToContainTextAsync("0");
         await Assertions.Expect(wizard.ResultsEmptyMessage).ToBeVisibleAsync();
-        (await wizard.ResultsEmptyMessage.InnerTextAsync())
-            .Should()
-            .Contain("Keine passenden Muster");
+        await Assertions
+            .Expect(wizard.ResultsEmptyMessage)
+            .ToContainTextAsync("Keine passenden Muster");
     }
 
     /// <summary>Summary: Results chrome must not cover the last siteswap card after scrolling to the end.</summary>
@@ -108,13 +97,7 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.AdvanceToGenerateAsync();
         await wizard.WaitForResultsAsync();
 
-        var cardCount = await wizard.SiteswapCards.CountAsync();
-        if (cardCount == 0)
-        {
-            await Assertions.Expect(wizard.ResultsEmptyMessage).ToBeVisibleAsync();
-            return;
-        }
-
+        await Assertions.Expect(wizard.SiteswapCards).Not.ToHaveCountAsync(0);
         await wizard.SiteswapCards.Last.ScrollIntoViewIfNeededAsync();
         await wizard.ResultsActions.ScrollIntoViewIfNeededAsync();
         var covers = await WizardUxGeometry.ResultsActionsCoverLastCardAsync(page);

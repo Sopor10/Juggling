@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
@@ -18,9 +19,9 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
-        var count = await wizard.PeriodStepperButtons.CountAsync();
-        count.Should().BeGreaterThanOrEqualTo(2);
-        for (var i = 0; i < count; i++)
+        await Assertions.Expect(wizard.PeriodStepperButtons.Nth(0)).ToBeVisibleAsync();
+        await Assertions.Expect(wizard.PeriodStepperButtons.Nth(1)).ToBeVisibleAsync();
+        for (var i = 0; i < 2; i++)
         {
             await WizardUxGeometry.AssertMinTouchTargetAsync(
                 wizard.PeriodStepperButtons.Nth(i),
@@ -39,8 +40,8 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
+        await Assertions.Expect(wizard.JugglerChips.First).ToBeVisibleAsync();
         var count = await wizard.JugglerChips.CountAsync();
-        count.Should().BeGreaterThan(0);
         for (var i = 0; i < count; i++)
         {
             await WizardUxGeometry.AssertMinTouchTargetAsync(

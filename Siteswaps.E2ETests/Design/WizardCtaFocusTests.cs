@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
@@ -14,7 +15,7 @@ public class WizardCtaFocusTests(SharedBlazorFixture host) : IClassFixture<Share
     {
         await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var button = design.PrimaryForwardButton;
-        await button.WaitForAsync();
+        await Assertions.Expect(button).ToBeVisibleAsync();
 
         var backgroundImage = await design.StyleAsync(button, "background-image");
         var backgroundColor = await design.StyleAsync(button, "background-color");
@@ -52,7 +53,7 @@ public class WizardCtaFocusTests(SharedBlazorFixture host) : IClassFixture<Share
         await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         await design.Wizard.ClickNextAsync();
         await design.Wizard.ClickNextAsync();
-        await design.GenerateButton.WaitForAsync();
+        await Assertions.Expect(design.GenerateButton).ToBeVisibleAsync();
 
         var backgroundImage = await design.StyleAsync(design.GenerateButton, "background-image");
         var backgroundColor = await design.StyleAsync(design.GenerateButton, "background-color");
@@ -100,7 +101,7 @@ public class WizardCtaFocusTests(SharedBlazorFixture host) : IClassFixture<Share
     {
         await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         await design.Wizard.ClickNextAsync();
-        await design.GhostBackButton.WaitForAsync();
+        await Assertions.Expect(design.GhostBackButton).ToBeVisibleAsync();
 
         var background = await design.StyleAsync(design.GhostBackButton, "background-color");
         var color = await design.StyleAsync(design.GhostBackButton, "color");
