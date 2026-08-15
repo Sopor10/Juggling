@@ -1,0 +1,116 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
+@import "colors.css";
+@import "radzen.css";
+
+html, body {
+    font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    background: #f5f3fb;
+}
+
+/* Pre-Blazor splash: centered brand icon (removed when the app mounts). */
+.app-boot {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f3fb;
+    box-sizing: border-box;
+    padding: 24px;
+}
+
+.app-boot-icon {
+    width: min(512px, 82vw);
+    height: auto;
+    display: block;
+}
+
+/* Fokussierter h1-Titel */
+h1:focus {
+    outline: none;
+}
+
+/* Links und Button-Links */
+a, .btn-link {
+    color: var(--color-primary); /* Primärfarbe */
+}
+
+/* Primäre Buttons */
+.btn-primary {
+    color: #fff;
+    background-color: var(--color-primary); /* Primärfarbe */
+    border-color: var(--color-primary-dark); /* Dunklere Variante der Primärfarbe */
+}
+
+/* Inhaltsbereich Padding */
+.content {
+    padding-top: 1.1rem;
+}
+
+.content:has(.wizard-page),
+.content:has(.sd-page) {
+    padding-top: 0;
+    background: #f5f3fb;
+}
+
+.content:has(.wizard-page) {
+    overflow: hidden;
+}
+
+html:has(.sd-page),
+body:has(.sd-page) {
+    background: #f5f3fb;
+}
+
+/* Gültige Eingabefelder (modifiziert) */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid var(--color-success); /* Erfolg - auf Primärfarbe basierend */
+}
+
+/* Ungültige Eingabefelder */
+.invalid {
+    outline: 1px solid var(--color-danger); /* Gefahrenfarbe */
+}
+
+/* Validierungsfehlermeldungen */
+.validation-message {
+    color: var(--color-danger); /* Gefahrenfarbe für Fehlermeldungen */
+}
+
+/* Blazor-Fehler-UI */
+#blazor-error-ui {
+    background: var(--color-background-light); /* Heller Fehlerhintergrund */
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Schließen-Button im Blazor-Fehler-UI */
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    color: var(--color-primary); /* Primärfarbe für Dismiss-Button */
+}
+
+/* Fehlerbereich */
+.blazor-error-boundary {
+    background-color: var(--color-error-background); /* Gefahrenfarbe für Fehlerbereiche */
+    color: var(--color-error-text); /* Weißer Text auf Fehlerbereich */
+}
+
+.blazor-error-boundary::after {
+    content: "An error has occurred.";
+}
+
+/* Dismiss-Button im Fehlerbereich beim Hover */
+#blazor-error-ui .dismiss:hover {
+    color: var(--color-success); 
+}
