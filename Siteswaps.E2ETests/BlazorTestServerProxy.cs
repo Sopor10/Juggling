@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Program = Siteswaps.E2ETests.Server.Program;
@@ -11,13 +12,13 @@ namespace Siteswaps.E2ETests;
 /// </summary>
 internal static class BlazorTestServerProxy
 {
-    private static readonly FieldInfo HttpClientField =
+    private static readonly FieldInfo FactoryField =
         typeof(BlazorWebassemblyFixture<Program>).GetField(
-            "_httpClient",
+            "_webApplicationFactory",
             BindingFlags.Instance | BindingFlags.NonPublic
         )
         ?? throw new InvalidOperationException(
-            "BlazorWebassemblyFixture._httpClient field was not found."
+            "BlazorWebassemblyFixture._webApplicationFactory field was not found."
         );
 
     public static async Task InstallAsync(
@@ -25,11 +26,15 @@ internal static class BlazorTestServerProxy
         BlazorWebassemblyFixture<Program> fixture
     )
     {
-        var httpClient =
-            HttpClientField.GetValue(fixture) as HttpClient
+        var factory =
+            FactoryField.GetValue(fixture) as WebApplicationFactory<Program>
             ?? throw new InvalidOperationException(
-                "BlazorWebassemblyFixture HttpClient is not initialized."
+                "BlazorWebassemblyFixture WebApplicationFactory is not initialized."
             );
+
+        // One client per browser context so parallel tests do not share a single handler pipeline.
+        var httpClient = factory.CreateClient();
+        context.SetDefaultTimeout(60_000);
 
         var root = fixture.RootUri.AbsoluteUri.TrimEnd('/') + "/";
         await context.RouteAsync(
