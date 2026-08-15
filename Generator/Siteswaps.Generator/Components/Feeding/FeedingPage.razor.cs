@@ -51,6 +51,15 @@ public partial class FeedingPage : ComponentBase
             _ => L["Generation is blocked."].Value,
         };
 
+    private string SetupLeadText =>
+        _b2Locals.Count > 0
+            ? L["Both fedees are ready. Review the local patterns, then show the combination."]
+            : _b1Locals.Count > 0
+                ? L["B1 is ready. Pick a local pattern, then generate B2."]
+                : L[
+                    "A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees."
+                ];
+
     protected override void OnParametersSet()
     {
         if (
@@ -76,7 +85,7 @@ public partial class FeedingPage : ComponentBase
 
         if (string.IsNullOrWhiteSpace(SiteswapNotation))
         {
-            _loadError = L["Provide a two-person siteswap via ?s=."];
+            _loadError = L["Open Feeding from a two-person siteswap on the details page."];
             return;
         }
 

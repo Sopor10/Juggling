@@ -6,9 +6,11 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="3-person feed" xml:space="preserve"><value>3-Personen-Feed</value></data>
   <data name="← Wizard" xml:space="preserve"><value>← Assistent</value></data>
-  <data name="Provide a two-person siteswap via ?s=." xml:space="preserve"><value>Gib einen Zwei-Personen-Siteswap über ?s= an.</value></data>
+  <data name="Open Feeding from a two-person siteswap on the details page." xml:space="preserve"><value>Öffne Feeding von einem Zwei-Personen-Siteswap auf der Detailseite.</value></data>
   <data name="Invalid siteswap." xml:space="preserve"><value>Ungültiger Siteswap.</value></data>
   <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A behält dieses Zwei-Personen-Muster. Weise jeden Pass B1 oder B2 zu und erzeuge danach beide Feedee-Muster.</value></data>
+  <data name="B1 is ready. Pick a local pattern, then generate B2." xml:space="preserve"><value>B1 ist bereit. Wähle ein lokales Muster und erzeuge danach B2.</value></data>
+  <data name="Both fedees are ready. Review the local patterns, then show the combination." xml:space="preserve"><value>Beide Feedees sind bereit. Prüfe die lokalen Muster und zeige dann die Kombination.</value></data>
   <data name="Pass assignments" xml:space="preserve"><value>Pass-Zuordnung</value></data>
   <data name="Beat {0}" xml:space="preserve"><value>Schlag {0}</value></data>
   <data name="Pass partner for beat {0}" xml:space="preserve"><value>Pass-Partner für Schlag {0}</value></data>

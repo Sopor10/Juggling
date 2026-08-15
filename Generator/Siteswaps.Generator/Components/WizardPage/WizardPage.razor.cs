@@ -97,7 +97,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         L[
             "Step {0} / {1}: {2}",
             State.CurrentStep + 1,
-            WizardState.TotalSteps,
+            WizardState.ProgressStepCount,
             StepTitle(State.CurrentStep)
         ];
 
