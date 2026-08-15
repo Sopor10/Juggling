@@ -47,7 +47,9 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
         var slots = page.Locator(".wizard-pattern-slots .wizard-pattern-slot");
         await Assertions.Expect(slots).Not.ToHaveCountAsync(0);
         await Assertions
-            .Expect(page.Locator(".wizard-pattern-slots .wizard-pattern-slot:not(:text-is(\"frei\"))"))
+            .Expect(
+                page.Locator(".wizard-pattern-slots .wizard-pattern-slot:not(:text-is(\"frei\"))")
+            )
             .ToHaveCountAsync(0);
     }
 
