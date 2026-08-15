@@ -1,0 +1,56 @@
+# PR preview deploys to gh-pages under pr-preview/pr-{n}/
+# Follows https://github.com/rossjrw/pr-preview-action setup + full example.
+
+name: Deploy PR previews
+
+concurrency: preview-${{ github.ref }}
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      deployments: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET SDK
+        if: github.event.action != 'closed'
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Install wasm-tools workload
+        if: github.event.action != 'closed'
+        run: dotnet workload install wasm-tools
+
+      - name: Publish
+        if: github.event.action != 'closed'
+        run: >
+          dotnet publish Webassembly/Webassembly.csproj
+          -c:Release
+          -o:publish
+          -p:GHPages=true
+          -p:GHPagesBase=/pr-preview/pr-${{ github.event.number }}/
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./publish/wwwroot/
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          pages-base-url: siteswaps.passing.zone
+          action: auto
+          comment: true
+          qr-code: true
+          wait-for-pages-deployment: true

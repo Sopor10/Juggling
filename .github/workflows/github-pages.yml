@@ -1,5 +1,6 @@
-﻿# This is ".github/workflows/gh-pages.yml" file.
-# This is an EXAMPLE of "GitHub Actions Workflow file".
+﻿# Production deploy to GitHub Pages (gh-pages branch).
+# Keep pr-preview/ so rossjrw/pr-preview-action deployments survive main pushes.
+# See: https://github.com/rossjrw/pr-preview-action#full-example
 
 name: github pages
 
@@ -8,19 +9,31 @@ on:
     branches:
       - main
 
+concurrency:
+  group: pages-production
+  cancel-in-progress: true
+
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/workflows/steps
 
       - name: Publish
-        run: dotnet publish Webassembly/Webassembly.csproj -c:Release -o:publish -p:GHPages=true -p:GHPagesBase=https://siteswaps.passing.zone
+        run: >
+          dotnet publish Webassembly/Webassembly.csproj
+          -c:Release
+          -o:publish
+          -p:GHPages=true
+          -p:GHPagesBase=https://siteswaps.passing.zone
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: publish/wwwroot
-          force_orphan: true
+          folder: publish/wwwroot
+          branch: gh-pages
+          clean-exclude: pr-preview
+          force: false
