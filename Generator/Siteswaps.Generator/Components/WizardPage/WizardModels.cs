@@ -22,7 +22,7 @@ public sealed record WizardFilterEntry(int Id, IFilterInformation Filter);
 
 /// <summary>
 /// The entire state of the wizard page (all steps, the filter list, the generation results).
-/// A plain mutable class - no Fluxor, no Radzen - held as a single instance in the
+/// A plain mutable class - no Fluxor - held as a single instance in the
 /// WizardPage code-behind and passed down to child components via parameters/EventCallbacks.
 /// </summary>
 public sealed class WizardState

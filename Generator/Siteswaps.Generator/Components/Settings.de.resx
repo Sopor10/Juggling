@@ -10,6 +10,8 @@
   <data name="Language" xml:space="preserve"><value>Sprache</value></data>
   <data name="Local" xml:space="preserve"><value>Lokal</value></data>
   <data name="Max height" xml:space="preserve"><value>Max. Höhe</value></data>
+  <data name="Off" xml:space="preserve"><value>Aus</value></data>
+  <data name="On" xml:space="preserve"><value>An</value></data>
   <data name="Names" xml:space="preserve"><value>Namen</value></data>
   <data name="Save settings" xml:space="preserve"><value>Einstellungen speichern</value></data>
   <data name="Settings" xml:space="preserve"><value>Einstellungen</value></data>

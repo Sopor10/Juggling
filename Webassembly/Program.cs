@@ -2,7 +2,6 @@ using System.Globalization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
-using Radzen;
 using Siteswaps.Generator;
 using Siteswaps.Generator.Components;
 using VisNetwork.Blazor;
@@ -19,7 +18,6 @@ public class Program
 
         builder.Services.InstallGenerator();
         builder.Services.AddLocalization();
-        builder.Services.AddRadzenComponents();
         builder.Services.AddVisNetwork();
 
         var host = builder.Build();

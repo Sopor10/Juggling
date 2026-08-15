@@ -11,7 +11,6 @@
     <PackageReference Include="Microsoft.Extensions.Localization" />
     <PackageReference Include="morelinq" />
     <PackageReference Include="Fluxor.Blazor.Web" />
-    <PackageReference Include="Radzen.Blazor" />
     <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
   </ItemGroup>

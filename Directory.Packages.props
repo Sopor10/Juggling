@@ -32,7 +32,6 @@
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.9" />
     <PackageVersion Include="morelinq" Version="4.4.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.11.0" />
-    <PackageVersion Include="Radzen.Blazor" Version="11.1.4" />
     <PackageVersion Include="Bogus" Version="35.6.5" />
     <PackageVersion Include="FluentAssertions" Version="8.10.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
