@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.WizardPage;
@@ -7,7 +8,7 @@ using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Components.Feeding;
 
-public partial class FeedingPage : ComponentBase
+public partial class FeedingPage : ComponentBase, IAsyncDisposable
 {
     private const string PartnerB1 = "B1";
     private const string PartnerB2 = "B2";
@@ -21,12 +22,18 @@ public partial class FeedingPage : ComponentBase
     private IReadOnlyList<LocalFeedSiteswap> _b1Locals = [];
     private IReadOnlyList<LocalFeedSiteswap> _b2Locals = [];
     private string? _activeRole;
+    private IJSObjectReference? _jsModule;
+    private DotNetObjectReference<FeedingPage>? _selfReference;
+    private bool _historyReady;
 
     [Parameter, SupplyParameterFromQuery(Name = "s")]
     public string? SiteswapNotation { get; set; }
 
     [Inject]
     private IStringLocalizer<FeedingPage> L { get; set; } = default!;
+
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; } = default!;
 
     private enum FeedingPhase
     {
@@ -54,11 +61,13 @@ public partial class FeedingPage : ComponentBase
     private string SetupLeadText =>
         _b2Locals.Count > 0
             ? L["Both fedees are ready. Review the local patterns, then show the combination."]
-            : _b1Locals.Count > 0
-                ? L["B1 is ready. Pick a local pattern, then generate B2."]
-                : L[
-                    "A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees."
-                ];
+        : _b1Locals.Count > 0
+            ? _session?.SelectedSiteswap(PartnerB1) is not null
+                    ? L["B1 is ready. A local pattern is selected — generate B2."]
+                : L["B1 is ready. Pick a local pattern, then generate B2."]
+        : L[
+            "A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees."
+        ];
 
     protected override void OnParametersSet()
     {
@@ -73,6 +82,22 @@ public partial class FeedingPage : ComponentBase
         _hasAttemptedLoad = true;
         _loadedNotation = SiteswapNotation;
         TryLoadSession();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Siteswaps.Generator/Components/Feeding/FeedingPage.razor.js"
+        );
+        _selfReference = DotNetObjectReference.Create(this);
+        await _jsModule.InvokeVoidAsync("initHistory", _selfReference, _phase.ToString());
+        _historyReady = true;
     }
 
     private void TryLoadSession()
@@ -103,6 +128,8 @@ public partial class FeedingPage : ComponentBase
         {
             _loadError = L["Invalid siteswap."];
         }
+
+        _ = ReplaceHistoryPhaseAsync(FeedingPhase.Setup);
     }
 
     private void AssignPass(int beatIndex, string partner)
@@ -164,7 +191,7 @@ public partial class FeedingPage : ComponentBase
 
         _workflowConfig = _session.ToGenerationWorkflowConfig("B1");
         _activeRole = "B1";
-        _phase = FeedingPhase.GenerateB1;
+        _ = SetPhaseAsync(FeedingPhase.GenerateB1, push: true);
     }
 
     private void StartGenerateB2()
@@ -176,7 +203,7 @@ public partial class FeedingPage : ComponentBase
 
         _workflowConfig = _session.ToGenerationWorkflowConfig("B2");
         _activeRole = "B2";
-        _phase = FeedingPhase.GenerateB2;
+        _ = SetPhaseAsync(FeedingPhase.GenerateB2, push: true);
     }
 
     private void OnWorkflowResults(IReadOnlyList<Siteswap> results)
@@ -195,7 +222,7 @@ public partial class FeedingPage : ComponentBase
                 _session.SelectSiteswap("B1", locals[0].Global);
             }
 
-            _phase = FeedingPhase.Setup;
+            _ = NavigateBackOrSetSetupAsync();
             return;
         }
 
@@ -205,7 +232,7 @@ public partial class FeedingPage : ComponentBase
             _session.SelectSiteswap("B2", locals[0].Global);
         }
 
-        _phase = FeedingPhase.Setup;
+        _ = NavigateBackOrSetSetupAsync();
     }
 
     private void SelectLocal(string role, LocalFeedSiteswap local)
@@ -222,8 +249,135 @@ public partial class FeedingPage : ComponentBase
             _session?.RestoreOriginalRotation();
         }
 
-        _phase = FeedingPhase.Setup;
+        _ = NavigateBackOrSetSetupAsync();
     }
 
-    private void ShowCombination() => _phase = FeedingPhase.Results;
+    private void ShowCombination() => _ = SetPhaseAsync(FeedingPhase.Results, push: true);
+
+    [JSInvokable]
+    public async Task OnBrowserPopState(string phase)
+    {
+        if (!Enum.TryParse<FeedingPhase>(phase, ignoreCase: true, out var parsed))
+        {
+            parsed = FeedingPhase.Setup;
+        }
+
+        if (parsed == FeedingPhase.Results && (_session is null || _b2Locals.Count == 0))
+        {
+            parsed = FeedingPhase.Setup;
+        }
+
+        if (
+            parsed is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2
+            && (_session is null || !_session.CanGenerate)
+        )
+        {
+            parsed = FeedingPhase.Setup;
+        }
+
+        if (_phase == FeedingPhase.Results && parsed != FeedingPhase.Results)
+        {
+            _session?.RestoreOriginalRotation();
+        }
+
+        if (parsed == FeedingPhase.GenerateB1)
+        {
+            _activeRole = PartnerB1;
+            if (_session is not null)
+            {
+                _workflowConfig = _session.ToGenerationWorkflowConfig(PartnerB1);
+            }
+        }
+        else if (parsed == FeedingPhase.GenerateB2)
+        {
+            _activeRole = PartnerB2;
+            if (_session is not null)
+            {
+                _workflowConfig = _session.ToGenerationWorkflowConfig(PartnerB2);
+            }
+        }
+
+        _phase = parsed;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SetPhaseAsync(FeedingPhase phase, bool push)
+    {
+        _phase = phase;
+        if (!_historyReady || _jsModule is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _jsModule.InvokeVoidAsync(
+                push ? "pushPhaseState" : "replacePhaseState",
+                phase.ToString()
+            );
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+    }
+
+    private async Task ReplaceHistoryPhaseAsync(FeedingPhase phase)
+    {
+        if (!_historyReady || _jsModule is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _jsModule.InvokeVoidAsync("replacePhaseState", phase.ToString());
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+    }
+
+    private async Task NavigateBackOrSetSetupAsync()
+    {
+        var shouldPop = _historyReady && _jsModule is not null && _phase != FeedingPhase.Setup;
+        _phase = FeedingPhase.Setup;
+
+        if (!shouldPop || _jsModule is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _jsModule.InvokeVoidAsync("back");
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_jsModule is not null)
+            {
+                if (_selfReference is not null)
+                {
+                    await _jsModule.InvokeVoidAsync("disposeHistory", _selfReference);
+                }
+
+                await _jsModule.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+
+        _selfReference?.Dispose();
+    }
 }

@@ -26,14 +26,14 @@ public class WizardRound3RetestReproTests
         );
 
         var dotsTotal = ExtractProgressDotsTotalBinding(razor);
-        dotsTotal
-            .Should()
-            .NotBeNullOrWhiteSpace("WizardPage must bind ProgressDots Total");
+        dotsTotal.Should().NotBeNullOrWhiteSpace("WizardPage must bind ProgressDots Total");
 
         var announcementDenominator = ExtractStepAnnouncementDenominator(codeBehind);
         announcementDenominator
             .Should()
-            .NotBeNullOrWhiteSpace("WizardPage must declare StepAnnouncement with a /Y denominator");
+            .NotBeNullOrWhiteSpace(
+                "WizardPage must declare StepAnnouncement with a /Y denominator"
+            );
 
         var sameConstant =
             string.Equals(dotsTotal, announcementDenominator, StringComparison.Ordinal)
@@ -64,9 +64,7 @@ public class WizardRound3RetestReproTests
 
         var resultsPhaseMarkup = ExtractResultsPhaseMarkup(wizardPage) ?? string.Empty;
 
-        var hasBack =
-            HasBackControl(resultsView)
-            || HasBackControl(resultsPhaseMarkup);
+        var hasBack = HasBackControl(resultsView) || HasBackControl(resultsPhaseMarkup);
 
         hasBack
             .Should()
@@ -143,11 +141,7 @@ public class WizardRound3RetestReproTests
     private static bool HasBackControl(string markup) =>
         markup.Contains("""L["Back"]""", StringComparison.Ordinal)
         || markup.Contains("wizard-back-btn", StringComparison.OrdinalIgnoreCase)
-        || Regex.IsMatch(
-            markup,
-            """>\s*@L\["Back"\]\s*<""",
-            RegexOptions.IgnoreCase
-        );
+        || Regex.IsMatch(markup, """>\s*@L\["Back"\]\s*<""", RegexOptions.IgnoreCase);
 
     private static string ReadGeneratorSource(string relativePathUnderGeneratorProject) =>
         File.ReadAllText(

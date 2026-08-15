@@ -1,10 +1,11 @@
 @using Siteswaps.Generator.Components.Internal
+@using Microsoft.JSInterop
 @inject IStringLocalizer<ResultsView> L
 
 <div class="wizard-results">
     <div class="wizard-results-scroll">
         <div class="wizard-results-header">
-            <h2 class="wizard-results-title">
+            <h2 @ref="_titleHeading" class="wizard-results-title" tabindex="-1">
                 @if (IsGenerating)
                 {
                     <text>@L["Generating…"]</text>
@@ -89,14 +90,27 @@
     [Parameter]
     public EventCallback StartOverRequested { get; set; }
 
+    private ElementReference _titleHeading;
+    private int _visibleResultCount = BatchSize;
+    private const int BatchSize = 40;
+
     private Task Cancel() => CancelRequested.InvokeAsync();
 
     private Task BackToEditing() => BackToEditingRequested.InvokeAsync();
 
     private Task StartOver() => StartOverRequested.InvokeAsync();
 
-    private int _visibleResultCount = BatchSize;
-    private const int BatchSize = 40;
+    public async Task FocusTitleAsync()
+    {
+        try
+        {
+            await _titleHeading.FocusAsync();
+        }
+        catch (JSException)
+        {
+            // Heading may not be attached yet during teardown / phase switches.
+        }
+    }
 
     protected override void OnParametersSet()
     {

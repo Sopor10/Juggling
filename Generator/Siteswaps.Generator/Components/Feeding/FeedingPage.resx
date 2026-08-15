@@ -10,6 +10,7 @@
   <data name="Invalid siteswap." xml:space="preserve"><value>Invalid siteswap.</value></data>
   <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees.</value></data>
   <data name="B1 is ready. Pick a local pattern, then generate B2." xml:space="preserve"><value>B1 is ready. Pick a local pattern, then generate B2.</value></data>
+  <data name="B1 is ready. A local pattern is selected — generate B2." xml:space="preserve"><value>B1 is ready. A local pattern is selected — generate B2.</value></data>
   <data name="Both fedees are ready. Review the local patterns, then show the combination." xml:space="preserve"><value>Both fedees are ready. Review the local patterns, then show the combination.</value></data>
   <data name="Pass assignments" xml:space="preserve"><value>Pass assignments</value></data>
   <data name="Beat {0}" xml:space="preserve"><value>Beat {0}</value></data>

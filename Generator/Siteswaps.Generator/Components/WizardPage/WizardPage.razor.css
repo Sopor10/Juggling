@@ -102,9 +102,9 @@
        out the actual hit target closer to a comfortable touch size. */
     width: 20px;
     height: 20px;
-    min-height: 40px;
-    min-width: 40px;
-    padding: 10px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
     background-clip: content-box;
     border: none;
     border-radius: 50%;
@@ -1049,7 +1049,9 @@ h2.wizard-section-label {
 }
 
 .wizard-page ::deep .pz-siteswap-card-title {
-    display: block;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     font-family: var(--wizard-font-display);
     font-size: 18px;
     font-weight: 800;

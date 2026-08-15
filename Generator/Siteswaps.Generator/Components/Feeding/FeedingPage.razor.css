@@ -1,11 +1,14 @@
 .feeding-page {
     --feeding-purple-900: #2c1f52;
+    --feeding-purple-700: #3c286d;
     --feeding-purple-600: #472779;
+    --feeding-purple-500: #552f8c;
     --feeding-purple-100: #e8e1f7;
     --feeding-orange: #f9a500;
     --feeding-bg: #f5f3fb;
     --feeding-card: #ffffff;
     --feeding-radius: 14px;
+    --feeding-radius-sm: 10px;
     /* DualRangeSlider tokens (shared control from Wizard) */
     --wizard-purple-950: #241a3d;
     --wizard-purple-800: #33225d;
@@ -99,7 +102,6 @@
 .feeding-btn-primary,
 .feeding-btn-ghost {
     border: none;
-    border-radius: 10px;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
@@ -109,18 +111,29 @@
 }
 
 .feeding-chip {
-    background: var(--feeding-purple-100);
-    color: var(--feeding-purple-900);
+    border: 2px solid var(--feeding-purple-100);
+    border-radius: var(--feeding-radius-sm);
+    background: white;
+    color: var(--feeding-purple-500);
+    font-weight: 800;
+    transition: all 0.12s ease;
 }
 
 .feeding-chip.active {
-    background: var(--feeding-orange);
-    color: #241a3d;
+    background: #3c286d;
+    border-color: #3c286d;
+    color: white;
 }
 
 .feeding-btn-primary {
-    background: var(--feeding-purple-600);
-    color: white;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffb838, var(--feeding-orange));
+    color: var(--wizard-purple-950);
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+}
+
+.feeding-btn-primary:active {
+    transform: scale(0.97);
 }
 
 .feeding-btn-primary:disabled {
@@ -129,6 +142,7 @@
 }
 
 .feeding-btn-ghost {
+    border-radius: var(--feeding-radius-sm);
     background: transparent;
     color: var(--feeding-purple-600);
     text-decoration: underline;
@@ -145,6 +159,7 @@
 .feeding-result {
     width: 100%;
     text-align: left;
+    border-radius: var(--feeding-radius-sm);
     background: var(--feeding-purple-100);
 }
 
