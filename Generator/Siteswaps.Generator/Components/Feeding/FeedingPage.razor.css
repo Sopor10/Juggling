@@ -99,7 +99,6 @@
 
 .feeding-chip,
 .feeding-result,
-.feeding-btn-primary,
 .feeding-btn-ghost {
     border: none;
     font-weight: 700;
@@ -126,7 +125,15 @@
 }
 
 .feeding-btn-primary {
+    border: none;
     border-radius: 999px;
+    min-height: 48px;
+    min-width: 44px;
+    padding: 10px 20px;
+    font-family: var(--wizard-font-display);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
     background: linear-gradient(180deg, #ffb838, var(--feeding-orange));
     color: var(--wizard-purple-950);
     box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);

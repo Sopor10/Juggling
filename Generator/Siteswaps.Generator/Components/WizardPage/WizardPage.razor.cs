@@ -468,6 +468,18 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                 await Task.Delay(remaining);
             }
 
+            if (cts.IsCancellationRequested || State.Phase != WizardPhase.Generating)
+            {
+                _isStartingGeneration = false;
+                if (State.Phase == WizardPhase.Generating)
+                {
+                    State.Phase = WizardPhase.Results;
+                    await InvokeAsync(StateHasChanged);
+                }
+
+                return;
+            }
+
             State.Phase = WizardPhase.Results;
             _isStartingGeneration = false;
             await InvokeAsync(StateHasChanged);
@@ -518,26 +530,34 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await Task.Delay((int)(MinSpinnerVisibleMs - elapsed));
         }
 
-        if (cts.IsCancellationRequested)
-        {
-            State.WasCancelled = true;
-        }
-        else
+        if (!cts.IsCancellationRequested && State.Phase == WizardPhase.Generating)
         {
             State.Results.AddRange(buffer);
             await SaveCachedResultsAsync(cacheKey, State.Results);
+
+            State.Phase = WizardPhase.Results;
+            _isStartingGeneration = false;
+            await InvokeAsync(StateHasChanged);
+
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
+            }
+
+            await FocusResultsHeadingAsync();
+            return;
         }
 
-        State.Phase = WizardPhase.Results;
         _isStartingGeneration = false;
-        await InvokeAsync(StateHasChanged);
-
-        if (_jsModule is not null)
+        if (State.Phase == WizardPhase.Generating)
         {
-            await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
+            State.Results.AddRange(buffer);
+            State.Phase = WizardPhase.Results;
+            await InvokeAsync(StateHasChanged);
+            return;
         }
 
-        await FocusResultsHeadingAsync();
+        State.WasCancelled = true;
     }
 
     private async Task<bool> TryLoadCachedResultsAsync(string cacheKey)

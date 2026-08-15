@@ -44,7 +44,8 @@
     flex: 1 1 8rem;
     min-width: 0;
     max-width: 16rem;
-    height: 2.4rem;
+    min-height: 44px;
+    height: auto;
     border-radius: 10px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.12);
@@ -81,7 +82,9 @@
 
 .pznav-search-submit {
     flex: 0 0 auto;
-    width: 2.4rem;
+    width: 2.75rem;
+    min-width: 44px;
+    min-height: 44px;
     border: none;
     background: rgba(255, 255, 255, 0.14);
     color: white;
@@ -167,7 +170,7 @@
     font-size: 0.95rem;
     text-decoration: none;
     border-radius: 999px;
-    min-height: 2.75rem;
+    min-height: 44px;
     display: flex;
     align-items: center;
     padding: 0 16px;
@@ -224,7 +227,7 @@
     }
 
     .pznav-link {
-        min-height: 2.4rem;
+        min-height: 44px;
         padding: 0 14px;
         font-size: 0.9rem;
     }

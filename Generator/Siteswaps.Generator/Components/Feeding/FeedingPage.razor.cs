@@ -25,6 +25,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     private IJSObjectReference? _jsModule;
     private DotNetObjectReference<FeedingPage>? _selfReference;
     private bool _historyReady;
+    private ElementReference _setupTitle;
 
     [Parameter, SupplyParameterFromQuery(Name = "s")]
     public string? SiteswapNotation { get; set; }
@@ -222,7 +223,8 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
                 _session.SelectSiteswap("B1", locals[0].Global);
             }
 
-            _ = NavigateBackOrSetSetupAsync();
+            _ = SetPhaseAsync(FeedingPhase.Setup, push: false);
+            _ = RestoreSetupFocusAsync();
             return;
         }
 
@@ -232,7 +234,8 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _session.SelectSiteswap("B2", locals[0].Global);
         }
 
-        _ = NavigateBackOrSetSetupAsync();
+        _ = SetPhaseAsync(FeedingPhase.Setup, push: false);
+        _ = RestoreSetupFocusAsync();
     }
 
     private void SelectLocal(string role, LocalFeedSiteswap local)
@@ -299,6 +302,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
         _phase = parsed;
         await InvokeAsync(StateHasChanged);
+        if (parsed == FeedingPhase.Setup)
+        {
+            await Task.Delay(150);
+            await FocusSetupHeadingAsync();
+        }
     }
 
     private async Task SetPhaseAsync(FeedingPhase phase, bool push)
@@ -339,6 +347,13 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
     }
 
+    private async Task RestoreSetupFocusAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(150);
+        await FocusSetupHeadingAsync();
+    }
+
     private async Task NavigateBackOrSetSetupAsync()
     {
         var shouldPop = _historyReady && _jsModule is not null && _phase != FeedingPhase.Setup;
@@ -346,6 +361,9 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
         if (!shouldPop || _jsModule is null)
         {
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(150);
+            await FocusSetupHeadingAsync();
             return;
         }
 
@@ -356,6 +374,21 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         catch (JSDisconnectedException)
         {
             // Circuit already gone.
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(150);
+            await FocusSetupHeadingAsync();
+        }
+    }
+
+    private async Task FocusSetupHeadingAsync()
+    {
+        try
+        {
+            await _setupTitle.FocusAsync();
+        }
+        catch (JSException)
+        {
+            // Title may not be attached yet during teardown / phase switches.
         }
     }
 
