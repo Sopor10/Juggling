@@ -12,8 +12,7 @@ internal static class E2ECulture
 
     public const string BlazorCulture = "de";
 
-    private const string InitScript =
-        "window.localStorage.setItem('BlazorCulture', 'de');";
+    private const string InitScript = "window.localStorage.setItem('BlazorCulture', 'de');";
 
     public static BrowserNewContextOptions NewContextOptions() => new() { Locale = Locale };
 

@@ -40,7 +40,8 @@ public sealed class WizardDesignPage : IAsyncDisposable
 
     public ILocator SwipeHint => _page.Locator(".wizard-swipe-hint");
 
-    public ILocator ActiveJugglerChip => _page.Locator(".wizard-juggler-picker .wizard-chip.active");
+    public ILocator ActiveJugglerChip =>
+        _page.Locator(".wizard-juggler-picker .wizard-chip.active");
 
     public ILocator BottomSheet => _page.Locator(".wizard-bottom-sheet");
 
@@ -53,7 +54,8 @@ public sealed class WizardDesignPage : IAsyncDisposable
     }
 
     public async Task<string> CssVarAsync(string name) =>
-        await _page.Locator(".wizard-page")
+        await _page
+            .Locator(".wizard-page")
             .EvaluateAsync<string>(
                 "(el, n) => getComputedStyle(el).getPropertyValue(n).trim()",
                 name
