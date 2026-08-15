@@ -21,6 +21,7 @@ public sealed class NormalFeedSession
     private readonly Siteswap _originalFeeder;
     private readonly string?[] _passAssignments;
     private readonly Dictionary<string, Siteswap> _selected = new();
+    private int _rotationSteps;
 
     private NormalFeedSession(Siteswap feederSiteswap, NormalFeed topology)
     {
@@ -177,6 +178,23 @@ public sealed class NormalFeedSession
         _selected.Clear();
         ClubsB1 = CreateDefaultClubs();
         ClubsB2 = CreateDefaultClubs();
+        _rotationSteps = 0;
+    }
+
+    /// <summary>
+    /// Undoes cumulative <see cref="Rotate"/> so the feeder matches the original notation
+    /// again, co-rotating pass assignments and selected siteswaps to stay aligned.
+    /// </summary>
+    public void RestoreOriginalRotation()
+    {
+        if (_rotationSteps == 0)
+        {
+            return;
+        }
+
+        var steps = _rotationSteps;
+        _rotationSteps = 0;
+        ApplyRotation(-steps);
     }
 
     public IReadOnlyList<Throw> ThrowTimeInterfaceFor(string role) => BuildThrowTimeInterface(role);
@@ -319,6 +337,12 @@ public sealed class NormalFeedSession
             return;
         }
 
+        _rotationSteps += steps;
+        ApplyRotation(steps);
+    }
+
+    private void ApplyRotation(int steps)
+    {
         FeederSiteswap = FeedSiteswapRotation.Rotate(FeederSiteswap, steps);
         FeedSiteswapRotation.RotateInPlace(_passAssignments, steps);
 

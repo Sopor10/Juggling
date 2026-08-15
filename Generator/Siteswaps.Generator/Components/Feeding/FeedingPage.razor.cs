@@ -15,6 +15,7 @@ public partial class FeedingPage : ComponentBase
     private NormalFeedSession? _session;
     private string? _loadError;
     private string? _loadedNotation;
+    private bool _hasAttemptedLoad;
     private FeedingPhase _phase = FeedingPhase.Setup;
     private GenerationWorkflowConfig _workflowConfig = new();
     private IReadOnlyList<LocalFeedSiteswap> _b1Locals = [];
@@ -52,11 +53,15 @@ public partial class FeedingPage : ComponentBase
 
     protected override void OnParametersSet()
     {
-        if (string.Equals(_loadedNotation, SiteswapNotation, StringComparison.Ordinal))
+        if (
+            _hasAttemptedLoad
+            && string.Equals(_loadedNotation, SiteswapNotation, StringComparison.Ordinal)
+        )
         {
             return;
         }
 
+        _hasAttemptedLoad = true;
         _loadedNotation = SiteswapNotation;
         TryLoadSession();
     }
@@ -191,7 +196,7 @@ public partial class FeedingPage : ComponentBase
             _session.SelectSiteswap("B2", locals[0].Global);
         }
 
-        _phase = FeedingPhase.Results;
+        _phase = FeedingPhase.Setup;
     }
 
     private void SelectLocal(string role, LocalFeedSiteswap local)
@@ -201,7 +206,15 @@ public partial class FeedingPage : ComponentBase
 
     private void Rotate(int steps) => _session?.Rotate(steps);
 
-    private void BackToSetup() => _phase = FeedingPhase.Setup;
+    private void BackToSetup()
+    {
+        if (_phase == FeedingPhase.Results)
+        {
+            _session?.RestoreOriginalRotation();
+        }
+
+        _phase = FeedingPhase.Setup;
+    }
 
     private void ShowCombination() => _phase = FeedingPhase.Results;
 }

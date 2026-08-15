@@ -35,6 +35,10 @@
 }
 
 .feeding-back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 4px;
     color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     font-weight: 700;
@@ -99,8 +103,9 @@
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    min-height: 40px;
-    padding: 8px 14px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 14px;
 }
 
 .feeding-chip {

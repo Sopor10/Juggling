@@ -1,3 +1,14 @@
+/* Own scope: Feeding hosts DualRangeSlider outside .wizard-page, so WizardPage's
+   ::deep .wizard-sr-only rule does not apply there. */
+.wizard-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
 .wizard-dualrange-echo {
     text-align: center;
     font-family: var(--wizard-font-display);

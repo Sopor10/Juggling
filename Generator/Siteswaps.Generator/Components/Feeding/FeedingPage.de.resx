@@ -8,7 +8,7 @@
   <data name="← Wizard" xml:space="preserve"><value>← Assistent</value></data>
   <data name="Provide a two-person siteswap via ?s=." xml:space="preserve"><value>Gib einen Zwei-Personen-Siteswap über ?s= an.</value></data>
   <data name="Invalid siteswap." xml:space="preserve"><value>Ungültiger Siteswap.</value></data>
-  <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A behält dieses Zwei-Personen-Muster. Weise jeden Pass B1 oder B2 zu und erzeuge danach beide Fedee-Muster.</value></data>
+  <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A behält dieses Zwei-Personen-Muster. Weise jeden Pass B1 oder B2 zu und erzeuge danach beide Feedee-Muster.</value></data>
   <data name="Pass assignments" xml:space="preserve"><value>Pass-Zuordnung</value></data>
   <data name="Beat {0}" xml:space="preserve"><value>Schlag {0}</value></data>
   <data name="Pass partner for beat {0}" xml:space="preserve"><value>Pass-Partner für Schlag {0}</value></data>
@@ -22,7 +22,7 @@
   <data name="B2 clubs maximum" xml:space="preserve"><value>B2 Keulen Maximum</value></data>
   <data name="Feeder has no passes." xml:space="preserve"><value>Feeder hat keine Pässe.</value></data>
   <data name="Pass assignments are incomplete." xml:space="preserve"><value>Pass-Zuordnung ist unvollständig.</value></data>
-  <data name="Each fedee must receive at least one pass." xml:space="preserve"><value>Jeder Fedee braucht mindestens einen Pass.</value></data>
+  <data name="Each fedee must receive at least one pass." xml:space="preserve"><value>Jeder Feedee braucht mindestens einen Pass.</value></data>
   <data name="Club bounds for B1 and B2 must be set." xml:space="preserve"><value>Keulenbereiche für B1 und B2 müssen gesetzt sein.</value></data>
   <data name="Generation is blocked." xml:space="preserve"><value>Generierung ist blockiert.</value></data>
   <data name="Generate B1" xml:space="preserve"><value>B1 erzeugen</value></data>
