@@ -69,4 +69,5 @@ jobs:
           action: auto
           comment: true
           qr-code: true
-          wait-for-pages-deployment: true
+          # Pages build polling is flaky with custom domains / concurrent gh-pages pushes.
+          wait-for-pages-deployment: false
