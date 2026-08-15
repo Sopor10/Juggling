@@ -21,16 +21,16 @@
 
                 <div class="settings-field">
                     <p class="settings-section-label">@L["Language"]</p>
-                    <div class="settings-chip-row" role="radiogroup" aria-label="@L["Language"]">
+                    <div class="settings-segmented" role="radiogroup" aria-label="@L["Language"]">
                         <button type="button"
-                                class="settings-chip @(Value.Culture == AppCultures.German ? "active" : null)"
+                                class="settings-segment @(Value.Culture == AppCultures.German ? "active" : null)"
                                 role="radio"
                                 aria-checked="@(Value.Culture == AppCultures.German ? "true" : "false")"
                                 @onclick='() => Value.Culture = AppCultures.German'>
                             @L["German"]
                         </button>
                         <button type="button"
-                                class="settings-chip @(Value.Culture == AppCultures.English ? "active" : null)"
+                                class="settings-segment @(Value.Culture == AppCultures.English ? "active" : null)"
                                 role="radio"
                                 aria-checked="@(Value.Culture == AppCultures.English ? "true" : "false")"
                                 @onclick='() => Value.Culture = AppCultures.English'>
@@ -41,16 +41,18 @@
 
                 <div class="settings-field">
                     <p class="settings-section-label">@L["Use throw names"]</p>
-                    <div class="settings-chip-row" role="group" aria-label="@L["Use throw names"]">
+                    <div class="settings-segmented" role="radiogroup" aria-label="@L["Use throw names"]">
                         <button type="button"
-                                class="settings-chip @(Value.ShowThrowNames ? "active" : null)"
-                                aria-pressed="@(Value.ShowThrowNames ? "true" : "false")"
+                                class="settings-segment @(Value.ShowThrowNames ? "active" : null)"
+                                role="radio"
+                                aria-checked="@(Value.ShowThrowNames ? "true" : "false")"
                                 @onclick="() => Value.ShowThrowNames = true">
                             @L["On"]
                         </button>
                         <button type="button"
-                                class="settings-chip @(!Value.ShowThrowNames ? "active" : null)"
-                                aria-pressed="@(!Value.ShowThrowNames ? "true" : "false")"
+                                class="settings-segment @(!Value.ShowThrowNames ? "active" : null)"
+                                role="radio"
+                                aria-checked="@(!Value.ShowThrowNames ? "true" : "false")"
                                 @onclick="() => Value.ShowThrowNames = false">
                             @L["Off"]
                         </button>
@@ -59,23 +61,23 @@
 
                 <div class="settings-field">
                     <p class="settings-section-label">@L["Throw display (details)"]</p>
-                    <div class="settings-chip-row" role="radiogroup" aria-label="@L["Throw display (details)"]">
+                    <div class="settings-segmented" role="radiogroup" aria-label="@L["Throw display (details)"]">
                         <button type="button"
-                                class="settings-chip @(Value.ThrowDisplayMode == "Local" ? "active" : null)"
+                                class="settings-segment @(Value.ThrowDisplayMode == "Local" ? "active" : null)"
                                 role="radio"
                                 aria-checked="@(Value.ThrowDisplayMode == "Local" ? "true" : "false")"
                                 @onclick='() => Value.ThrowDisplayMode = "Local"'>
                             @L["Local"]
                         </button>
                         <button type="button"
-                                class="settings-chip @(Value.ThrowDisplayMode == "Global" ? "active" : null)"
+                                class="settings-segment @(Value.ThrowDisplayMode == "Global" ? "active" : null)"
                                 role="radio"
                                 aria-checked="@(Value.ThrowDisplayMode == "Global" ? "true" : "false")"
                                 @onclick='() => Value.ThrowDisplayMode = "Global"'>
                             @L["Global"]
                         </button>
                         <button type="button"
-                                class="settings-chip @(Value.ThrowDisplayMode == "Name" ? "active" : null)"
+                                class="settings-segment @(Value.ThrowDisplayMode == "Name" ? "active" : null)"
                                 role="radio"
                                 aria-checked="@(Value.ThrowDisplayMode == "Name" ? "true" : "false")"
                                 @onclick='() => Value.ThrowDisplayMode = "Name"'>
