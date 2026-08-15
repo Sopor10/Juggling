@@ -21,10 +21,14 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.AdvanceToFiltersAsync();
 
         await wizard.ClickGenerateAsync();
-        await wizard.GeneratingSpinner.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 5_000 }
-        );
-        (await wizard.ResultsTitle.InnerTextAsync()).Should().Contain("Generiere");
+        // Poll the title immediately after click. Waiting for the spinner first, then reading
+        // the title synchronously, races when generation finishes within MinSpinnerVisibleMs.
+        await Assertions
+            .Expect(wizard.ResultsTitle)
+            .ToContainTextAsync(
+                "Generiere",
+                new LocatorAssertionsToContainTextOptions { Timeout = 5_000 }
+            );
         (await page.Locator(".wizard-btn-generate").CountAsync())
             .Should()
             .Be(0, because: "generate CTA must leave the editing chrome while generating");
