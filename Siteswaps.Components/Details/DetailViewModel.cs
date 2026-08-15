@@ -82,6 +82,10 @@ public sealed class DetailViewModel
             .ToList();
         ShowLocalAverages = Period % NumberOfJugglers == 0;
         PassistLink = $"https://passist.org/siteswap/{Notation}?jugglers={NumberOfJugglers}";
+        ThreePersonFeedHref = $"feeding?s={Uri.EscapeDataString(Notation)}";
+        CanCreateThreePersonFeed =
+            NumberOfJugglers == 2
+            && PassOrSelf.Any(kind => kind == global::Siteswap.Details.PassOrSelf.Pass);
         Diagrams = Siteswap.Details.CausalDiagram.SiteswapDiagramBuilder.Build(
             value,
             NumberOfJugglers
@@ -112,6 +116,8 @@ public sealed class DetailViewModel
     public IReadOnlyList<JugglerRow> Jugglers { get; }
     public bool ShowLocalAverages { get; }
     public string PassistLink { get; }
+    public string ThreePersonFeedHref { get; }
+    public bool CanCreateThreePersonFeed { get; }
     public Siteswap.Details.CausalDiagram.DiagramSet Diagrams { get; }
 
     public static DetailViewModel? TryCreate(string? notation, int numberOfJugglers)

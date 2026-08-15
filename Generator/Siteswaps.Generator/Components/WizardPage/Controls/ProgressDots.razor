@@ -1,19 +1,24 @@
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Localization
 @using Microsoft.JSInterop
 @inject IJSRuntime JsRuntime
+@inject IStringLocalizer<ProgressDots> L
 
-<div class="wizard-dots" role="tablist" aria-label="Fortschritt: Schritt @(Current + 1) von @Total">
+<div class="wizard-dots" role="tablist" aria-label="@L["Progress: step {0} of {1}", Current + 1, Total]">
     @for (var i = 0; i < Total; i++)
     {
         var step = i;
         var isDone = Visited.Contains(step) && step != Current;
         var isActive = step == Current;
         var isReachable = Visited.Contains(step);
+        var stepLabel = step == Total - 1 && Total > 1
+            ? L["Results"].Value
+            : L["Step {0}", step + 1].Value;
         <button id="wizard-step-tab-@step" type="button" class="wizard-dot @(isActive ? "active" : "") @(isDone ? "done" : "")"
                 role="tab" aria-selected="@(isActive ? "true" : "false")"
                 aria-controls="wizard-panel-@step"
                 tabindex="@(isActive ? "0" : "-1")"
-                aria-label="@(step == Total - 1 && Total > 1 ? "Ergebnisse" : $"Schritt {step + 1}")"
+                aria-label="@stepLabel"
                 disabled="@(!isReachable)"
                 @onpointerdown:stopPropagation="true"
                 @onkeydown="e => OnKeyDown(e, step)"

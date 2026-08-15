@@ -1,10 +1,16 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Siteswaps.Generator.Core.Generator;
 
 [DebuggerDisplay("{ToString()}}")]
 public record Siteswap
 {
+    /// <summary>
+    /// Upper bound for period length when parsing user-supplied notation.
+    /// </summary>
+    public const int MaxPeriodLength = 64;
+
     public int[] Items { get; }
 
     private Siteswap(int[] items)
@@ -50,28 +56,70 @@ public record Siteswap
 
     public static Siteswap CreateFromCorrect(string s)
     {
-        var result = new List<int>(s.Length);
-        foreach (var i in s)
+        if (!TryCreate(s, out var siteswap) || siteswap is null)
         {
-            result.Add(
-                i switch
-                {
-                    '0' => 0,
-                    '1' => 1,
-                    '2' => 2,
-                    '3' => 3,
-                    '4' => 4,
-                    '5' => 5,
-                    '6' => 6,
-                    '7' => 7,
-                    '8' => 8,
-                    '9' => 9,
-                    var x => x - 87,
-                }
-            );
+            throw new ArgumentException("Invalid siteswap notation.", nameof(s));
         }
-        Console.WriteLine(string.Join(',', result));
-        return new(result.ToArray());
+
+        return siteswap;
+    }
+
+    /// <summary>
+    /// Parses siteswap notation (<c>0-9</c>, <c>a-z</c>/<c>A-Z</c> for heights ≥ 10).
+    /// Rejects empty, overlong, non-notation characters, and landing-invalid patterns.
+    /// </summary>
+    public static bool TryCreate(string? s, [NotNullWhen(true)] out Siteswap? siteswap)
+    {
+        siteswap = null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return false;
+        }
+
+        s = s.Trim();
+        if (s.Length is < 1 or > MaxPeriodLength)
+        {
+            return false;
+        }
+
+        var result = new int[s.Length];
+        for (var i = 0; i < s.Length; i++)
+        {
+            if (!TryParseThrowHeight(s[i], out var height))
+            {
+                return false;
+            }
+
+            result[i] = height;
+        }
+
+        var created = new Siteswap(result);
+        if (!created.IsValid())
+        {
+            return false;
+        }
+
+        siteswap = created;
+        return true;
+    }
+
+    private static bool TryParseThrowHeight(char c, out int height)
+    {
+        switch (c)
+        {
+            case >= '0' and <= '9':
+                height = c - '0';
+                return true;
+            case >= 'a' and <= 'z':
+                height = c - 'a' + 10;
+                return true;
+            case >= 'A' and <= 'Z':
+                height = c - 'A' + 10;
+                return true;
+            default:
+                height = 0;
+                return false;
+        }
     }
 
     public double Average => Items.Average();

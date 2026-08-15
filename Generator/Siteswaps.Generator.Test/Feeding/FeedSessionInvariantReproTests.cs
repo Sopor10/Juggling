@@ -17,7 +17,17 @@ public class FeedSessionInvariantReproTests
     {
         var act = () => NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(6, 6, 6));
 
-        act.Should().Throw<ArgumentException>("feeder must be a two-person pattern with ≥1 pass");
+        act.Should().Throw<ArgumentException>("feeder must be a two-person pattern with ≥2 passes");
+    }
+
+    [Test]
+    public void FromFeederSiteswap_Rejects_Feeder_With_Only_One_Pass()
+    {
+        // a=10 (self), b=11 (pass), c=12 (self) — letter notation that is landing-valid but not a feed.
+        var act = () =>
+            NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(10, 11, 12));
+
+        act.Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -208,19 +218,18 @@ public class FeedSessionInvariantReproTests
     }
 
     [Test]
-    public void Clubs_Default_Zero_Zero_Does_Not_Silently_Allow_Generation()
+    public void Clubs_Default_Matches_Wizard_Window_And_Allows_Generation()
     {
         var session = NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(7, 5, 6));
         session.AssignPass(0, "B1");
         session.AssignPass(1, "B2");
 
-        session.ClubsB1.Should().Be(new Between { MinNumber = 0, MaxNumber = 0 });
-        session.ClubsB2.Should().Be(new Between { MinNumber = 0, MaxNumber = 0 });
+        session.ClubsB1.Should().Be(new Between { MinNumber = 5, MaxNumber = 7 });
+        session.ClubsB2.Should().Be(new Between { MinNumber = 5, MaxNumber = 7 });
 
-        // Soll: unset semantics and/or CanGenerate blocked — not "ready" with 0 objects.
         session
             .CanGenerate.Should()
-            .BeFalse("0–0 club bounds must not silently mean generation-ready");
+            .BeTrue("default club bounds must align with slider UI and allow generate");
     }
 
     [Test]
@@ -234,8 +243,8 @@ public class FeedSessionInvariantReproTests
 
         session.Reset();
 
-        session.ClubsB1.Should().Be(new Between { MinNumber = 0, MaxNumber = 0 });
-        session.ClubsB2.Should().Be(new Between { MinNumber = 0, MaxNumber = 0 });
+        session.ClubsB1.Should().Be(new Between { MinNumber = 5, MaxNumber = 7 });
+        session.ClubsB2.Should().Be(new Between { MinNumber = 5, MaxNumber = 7 });
     }
 
     [Test]

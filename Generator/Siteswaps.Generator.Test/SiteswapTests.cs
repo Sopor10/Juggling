@@ -20,4 +20,27 @@ public class SiteswapTests
             .GlobalNotation.Should()
             .Be(expected);
     }
+
+    [Test]
+    [TestCase("756")]
+    [TestCase("975")]
+    [TestCase("aaa00")]
+    public void TryCreate_Accepts_Valid_Notation(string notation)
+    {
+        Siteswap.TryCreate(notation, out var siteswap).Should().BeTrue();
+        siteswap.Should().NotBeNull();
+        siteswap!.IsValid().Should().BeTrue();
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("   ")]
+    [TestCase("43")]
+    [TestCase("!!!")]
+    [TestCase("hello")]
+    public void TryCreate_Rejects_Invalid_Notation(string notation)
+    {
+        Siteswap.TryCreate(notation, out var siteswap).Should().BeFalse();
+        siteswap.Should().BeNull();
+    }
 }

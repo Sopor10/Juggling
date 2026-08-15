@@ -1,4 +1,6 @@
+using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
+using Siteswaps.Generator.Components.WizardPage;
 using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Components.Feeding;
@@ -88,6 +90,10 @@ public sealed class NormalFeedSession
         }
     }
 
+    /// <summary>
+    /// Stable English fallback for tests/diagnostics. UI should localize via
+    /// <see cref="GenerationBlockCode"/>.
+    /// </summary>
     public string? GenerationBlockReason =>
         GenerationBlockCode switch
         {
@@ -103,10 +109,13 @@ public sealed class NormalFeedSession
     {
         ArgumentNullException.ThrowIfNull(feederSiteswap);
 
-        if (!feederSiteswap.Items.Any(height => ToPassOrSelf(height) == PassOrSelf.Pass))
+        var passCount = feederSiteswap.Items.Count(height =>
+            ToPassOrSelf(height) == PassOrSelf.Pass
+        );
+        if (passCount < 2)
         {
             throw new ArgumentException(
-                "Feeder must be a two-person pattern with at least one pass.",
+                "Feeder must be a two-person pattern with at least two passes (one for each fedee).",
                 nameof(feederSiteswap)
             );
         }
@@ -171,6 +180,27 @@ public sealed class NormalFeedSession
     }
 
     public IReadOnlyList<Throw> ThrowTimeInterfaceFor(string role) => BuildThrowTimeInterface(role);
+
+    /// <summary>
+    /// Builds a locked generation-workflow config for generating one fedee's pair pattern.
+    /// </summary>
+    public GenerationWorkflowConfig ToGenerationWorkflowConfig(string role) =>
+        new()
+        {
+            Period = FeederSiteswap.Items.Length,
+            NumberOfJugglers = 2,
+            PassSelfInterface = InterfaceFor(role).ToList(),
+            Clubs = role switch
+            {
+                "B1" => ClubsB1,
+                "B2" => ClubsB2,
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(role),
+                    role,
+                    "Unknown feed role."
+                ),
+            },
+        };
 
     public IReadOnlyList<Throw> InterfaceFor(string role)
     {
@@ -398,9 +428,15 @@ public sealed class NormalFeedSession
     }
 
     private static bool AreClubsConfigured(Between clubs) =>
-        clubs.MinNumber >= 1 && clubs.MaxNumber >= clubs.MinNumber;
+        clubs.MinNumber >= WizardState.MinClubs
+        && clubs.MaxNumber >= clubs.MinNumber
+        && clubs.MaxNumber <= WizardState.MaxClubs;
 
-    private static Between CreateDefaultClubs() => new() { MinNumber = 0, MaxNumber = 0 };
+    /// <summary>
+    /// Same default club window as the wizard so DualRangeSlider display and
+    /// session state stay aligned (no 0–0 vs clamped 2–2 mismatch).
+    /// </summary>
+    private static Between CreateDefaultClubs() => new() { MinNumber = 5, MaxNumber = 7 };
 
     private static void EnsurePassThrowKind(Throw throwKind)
     {

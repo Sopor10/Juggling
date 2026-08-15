@@ -56,6 +56,7 @@
 
         _invalid = false;
         CloseNavMenu();
-        Navigation.NavigateTo($"/details?s={Uri.EscapeDataString(query)}");
+        // App-relative (no leading '/'): respects <base href> / PathBase in PR previews.
+        Navigation.NavigateTo($"details?s={Uri.EscapeDataString(query)}");
     }
 }

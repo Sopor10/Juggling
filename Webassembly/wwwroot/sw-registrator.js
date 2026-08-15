@@ -7,8 +7,17 @@
     }
 
     const baseHref = document.querySelector('base')?.href || `${window.location.origin}/`;
+    const basePath = new URL(baseHref).pathname;
     // PR preview deploys share the production origin; keep them free of a root-scoped worker.
-    if (new URL(baseHref).pathname.includes('/pr-preview/')) {
+    // Localhost / embedded IDE browsers (Cursor Electron) must not keep a stale SW either —
+    // cached WASM/boot assets there show up as a blank boot screen + blazor-error-ui.
+    const host = window.location.hostname;
+    const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+    const isEmbeddedIdeBrowser = /Electron|Cursor\//i.test(navigator.userAgent || '');
+    if (basePath.includes('/pr-preview/') || isLocalHost || isEmbeddedIdeBrowser) {
+        navigator.serviceWorker.getRegistrations?.().then(regs => {
+            regs.forEach(r => r.unregister());
+        }).catch(() => {});
         resolve(false);
         return;
     }

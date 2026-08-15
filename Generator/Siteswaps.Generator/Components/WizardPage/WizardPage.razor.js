@@ -193,7 +193,12 @@ export function initHistory(dotnetHelper, step) {
 
   const onPopState = (event) => {
     const path = location.pathname.replace(/\/+$/, '').toLowerCase();
-    if (path !== '' && path !== '/wizard') {
+    const isWizardPath =
+      path === '' ||
+      path === '/' ||
+      path === '/wizard' ||
+      path.endsWith('/wizard');
+    if (!isWizardPath) {
       return;
     }
 

@@ -166,7 +166,11 @@ internal static class FilterTranslation
             }
 
             ISiteswapFilter filter;
-            if (newPatternFilterInformation.PatternRotation.Value < 0)
+            if (newPatternFilterInformation.PatternRotation == PatternRotation.Absolute)
+            {
+                filter = new AbsoluteFlexiblePatternFilter(patterns, numberOfJugglers, input);
+            }
+            else if (newPatternFilterInformation.PatternRotation.Value < 0)
             {
                 filter = builder
                     .FlexiblePattern(

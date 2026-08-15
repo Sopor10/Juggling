@@ -1,5 +1,6 @@
 @page "/"
 @page "/wizard"
+@using Siteswaps.Generator.Components.GenerationWorkflow
 
 <PageTitle>@L["Wizard – Siteswap Generator"]</PageTitle>
 
@@ -18,81 +19,83 @@
 
     @if (State.Phase == WizardPhase.Editing)
     {
-        <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
+        <ConfiguredGenerationWorkflow Config="_wizardHostConfig">
+            <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
-        <div @ref="_stepsElement" class="wizard-steps">
+            <div @ref="_stepsElement" class="wizard-steps">
 
-            <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
+                <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
+                    <div class="wizard-measure">
+                        <div class="wizard-field">
+                            <p class="wizard-section-label">@L["Jugglers"]</p>
+                            <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+                        </div>
+
+                        <div class="wizard-field">
+                            <p class="wizard-section-label">@L["Period"]</p>
+                            <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+                        </div>
+                    </div>
+                </section>
+
+                <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
+                    <div class="wizard-measure">
+                        <div class="wizard-field">
+                            <p class="wizard-section-label">@L["Number of clubs"]</p>
+                            <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
+                                              Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
+                                              LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                              MinLabel="@L["Clubs minimum"]" MaxLabel="@L["Clubs maximum"]" />
+                        </div>
+
+                        <div class="wizard-field">
+                            <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
+                        </div>
+                    </div>
+                </section>
+
+                <section id="wizard-panel-2" class="wizard-step wizard-step-filters @(IsStepActive(2) ? "active" : "")" aria-hidden="@AriaHidden(2)" aria-labelledby="wizard-step-tab-2">
+                    <div class="wizard-measure">
+                        <div class="wizard-filters-scroll">
+                            <FilterList Tree="State.FilterTree"
+                                        Edit="OpenEditFilterSheet"
+                                        RemoveRequested="RemoveFilter"
+                                        AddInGroup="OpenAddFilterInGroup"
+                                        TreeChanged="OnFilterTreeChanged" />
+                            <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">@L["+ Add filter"]</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="wizard-nav">
                 <div class="wizard-measure">
-                    <div class="wizard-field">
-                        <p class="wizard-section-label">@L["Jugglers"]</p>
-                        <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+                    @if (NextPreviewText is not null)
+                    {
+                        <p class="wizard-next-preview">@NextPreviewText</p>
+                    }
+                    <div class="wizard-nav-buttons">
+                        <button type="button" class="wizard-btn-ghost wizard-back-btn @(State.CurrentStep == 0 ? "wizard-invisible" : "")"
+                                disabled="@(State.CurrentStep == 0)"
+                                @onclick="GoBackAsync">@L["Back"]</button>
+                        <button type="button"
+                                class="wizard-flex-1 @(IsLastStep ? "wizard-btn-generate" : "wizard-btn-primary")"
+                                disabled="@IsNextDisabled"
+                                @onclick="OnNextClicked">@NextButtonText</button>
                     </div>
-
-                    <div class="wizard-field">
-                        <p class="wizard-section-label">@L["Period"]</p>
-                        <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
-                    </div>
-                </div>
-            </section>
-
-            <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
-                <div class="wizard-measure">
-                    <div class="wizard-field">
-                        <p class="wizard-section-label">@L["Number of clubs"]</p>
-                        <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
-                                          Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
-                                          LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                          MinLabel="@L["Clubs minimum"]" MaxLabel="@L["Clubs maximum"]" />
-                    </div>
-
-                    <div class="wizard-field">
-                        <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
-                    </div>
-                </div>
-            </section>
-
-            <section id="wizard-panel-2" class="wizard-step wizard-step-filters @(IsStepActive(2) ? "active" : "")" aria-hidden="@AriaHidden(2)" aria-labelledby="wizard-step-tab-2">
-                <div class="wizard-measure">
-                    <div class="wizard-filters-scroll">
-                        <FilterList Tree="State.FilterTree"
-                                    Edit="OpenEditFilterSheet"
-                                    RemoveRequested="RemoveFilter"
-                                    AddInGroup="OpenAddFilterInGroup"
-                                    TreeChanged="OnFilterTreeChanged" />
-                        <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">@L["+ Add filter"]</button>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-
-        <div class="wizard-nav">
-            <div class="wizard-measure">
-                @if (NextPreviewText is not null)
-                {
-                    <p class="wizard-next-preview">@NextPreviewText</p>
-                }
-                <div class="wizard-nav-buttons">
-                    <button type="button" class="wizard-btn-ghost wizard-back-btn @(State.CurrentStep == 0 ? "wizard-invisible" : "")"
-                            disabled="@(State.CurrentStep == 0 || _isStepTransitioning)"
-                            @onclick="GoBackAsync">@L["Back"]</button>
-                    <button type="button"
-                            class="wizard-flex-1 @(IsLastStep ? "wizard-btn-generate" : "wizard-btn-primary")"
-                            disabled="@IsNextDisabled"
-                            @onclick="OnNextClicked">@NextButtonText</button>
                 </div>
             </div>
-        </div>
 
-        <FilterBottomSheet @ref="_filterSheet"
-                            AllowedThrows="State.AllowedThrows"
-                            MaxThrowHeight="State.MaxThrowHeight"
-                            Period="State.Period.Value"
-                            NumberOfJugglers="State.NumberOfJugglers"
-                            FilterAdded="OnFilterAdded"
-                            FilterEdited="OnFilterEdited"
-                            FilterDeleted="RemoveFilter" />
+            <FilterBottomSheet @ref="_filterSheet"
+                                AllowedThrows="State.AllowedThrows"
+                                MaxThrowHeight="State.MaxThrowHeight"
+                                Period="State.Period.Value"
+                                NumberOfJugglers="State.NumberOfJugglers"
+                                FilterAdded="OnFilterAdded"
+                                FilterEdited="OnFilterEdited"
+                                FilterDeleted="RemoveFilter" />
+        </ConfiguredGenerationWorkflow>
     }
     else
     {

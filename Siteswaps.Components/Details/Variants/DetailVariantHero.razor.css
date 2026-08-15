@@ -1,1 +1,44 @@
 /* Hero variant currently inherits shared styles from DetailPage / JugglerBeatRows. */
+
+.sdv-continue {
+    margin-top: 20px;
+    padding: 16px 14px 18px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
+}
+
+.sdv-continue-heading {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.sdv-continue-lead {
+    margin: 0 0 14px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+}
+
+.sdv-continue-primary,
+.sdv-continue-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 800;
+    text-decoration: none;
+    margin: 0 10px 8px 0;
+}
+
+.sdv-continue-primary {
+    background: #472779;
+    color: #ffffff;
+}
+
+.sdv-continue-secondary {
+    background: #e8e1f7;
+    color: #2c1f52;
+}

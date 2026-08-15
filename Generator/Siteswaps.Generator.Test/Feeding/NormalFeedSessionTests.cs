@@ -31,6 +31,20 @@ public class NormalFeedTopologyTests
 public class PassAssignmentTests
 {
     [Test]
+    public void Assigning_Multiple_Passes_Keeps_Independent_Assignments()
+    {
+        var session = NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(9, 7, 5));
+
+        session.AssignPass(0, "B1");
+        session.AssignPass(1, "B2");
+        session.AssignPass(2, "B1");
+
+        session.PassAssignments.Should().Equal("B1", "B2", "B1");
+        session.ArePassAssignmentsComplete.Should().BeTrue();
+        session.CanGenerate.Should().BeTrue();
+    }
+
+    [Test]
     public void Incomplete_Pass_Assignments_Prevent_Generation()
     {
         var session = NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(7, 5, 6));
@@ -48,9 +62,6 @@ public class PassAssignmentTests
 
         session.AssignPass(0, "B1");
         session.AssignPass(1, "B2");
-        // Explicit clubs: default 0–0 must not count as generation-ready (see Clubs_Default_Zero_Zero…).
-        session.ClubsB1 = new Between { MinNumber = 3, MaxNumber = 3 };
-        session.ClubsB2 = new Between { MinNumber = 3, MaxNumber = 3 };
 
         session.ArePassAssignmentsComplete.Should().BeTrue();
         session.CanGenerate.Should().BeTrue();

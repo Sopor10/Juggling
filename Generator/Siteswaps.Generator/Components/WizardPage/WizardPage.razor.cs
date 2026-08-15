@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Siteswaps.Generator.Components;
+using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;
@@ -23,6 +24,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private const int MinSpinnerVisibleMs = 500;
 
     private readonly WizardState State = new();
+
+    private readonly GenerationWorkflowConfig _wizardHostConfig = new();
 
     private FilterBottomSheet? _filterSheet;
 
@@ -223,14 +226,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         _isStepTransitioning = true;
         try
         {
+            State.CurrentStep--;
+            StateHasChanged();
             if (_jsModule is not null)
             {
-                await _jsModule.InvokeVoidAsync("back");
-            }
-            else
-            {
-                State.CurrentStep--;
-                StateHasChanged();
+                await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep);
             }
 
             await Task.Delay(150);
@@ -419,39 +419,29 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
         await Task.Delay(1);
 
-        var generators = FilterTranslation.CreateGenerators(State);
         var buffer = new List<Siteswap>();
 
         try
         {
-            foreach (var generator in generators)
+            await foreach (
+                var siteswap in SiteswapListGeneration.GenerateStreamAsync(State, cts.Token)
+            )
             {
                 if (cts.IsCancellationRequested)
                 {
                     break;
                 }
 
-                await foreach (var siteswap in generator.GenerateAsync(cts.Token))
+                buffer.Add(siteswap);
+                if (buffer.Count < 10 || Environment.TickCount64 - startedAt < MinSpinnerVisibleMs)
                 {
-                    if (cts.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-                    buffer.Add(siteswap);
-                    if (
-                        buffer.Count < 10
-                        || Environment.TickCount64 - startedAt < MinSpinnerVisibleMs
-                    )
-                    {
-                        continue;
-                    }
-
-                    State.Results.AddRange(buffer);
-                    buffer.Clear();
-                    await InvokeAsync(StateHasChanged);
-                    await Task.Delay(1, CancellationToken.None);
+                    continue;
                 }
+
+                State.Results.AddRange(buffer);
+                buffer.Clear();
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(1, CancellationToken.None);
             }
         }
         catch (OperationCanceledException)
@@ -509,7 +499,10 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                     continue;
                 }
 
-                State.Results.Add(Siteswap.CreateFromCorrect(value));
+                if (Siteswap.TryCreate(value, out var siteswap) && siteswap is not null)
+                {
+                    State.Results.Add(siteswap);
+                }
             }
 
             return true;

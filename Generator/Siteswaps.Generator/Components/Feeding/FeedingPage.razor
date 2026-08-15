@@ -1,0 +1,174 @@
+@page "/feeding"
+@using Siteswaps.Generator.Components.GenerationWorkflow
+@using Siteswaps.Generator.Components.WizardPage
+@using Siteswaps.Generator.Components.WizardPage.Controls
+
+<PageTitle>@L["3-person feed"]</PageTitle>
+
+<div class="feeding-page">
+    <header class="feeding-header">
+        <a class="feeding-back" href="">@L["← Wizard"]</a>
+        <h1 class="feeding-title">@L["3-person feed"]</h1>
+    </header>
+
+    @if (_loadError is not null)
+    {
+        <div class="feeding-empty" role="alert" aria-live="assertive">
+            <p>@_loadError</p>
+        </div>
+    }
+    else if (_session is not null)
+    {
+        @if (_phase is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2)
+        {
+            <section class="feeding-sheet">
+                <p class="feeding-section-label">
+                    @L["Generate pattern for {0}", _activeRole ?? ""]
+                </p>
+                <ConfiguredGenerationWorkflow Config="_workflowConfig"
+                                              OnResultsReady="OnWorkflowResults"
+                                              OnCancelled="BackToSetup" />
+                <button type="button" class="feeding-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
+            </section>
+        }
+        else if (_phase == FeedingPhase.Results)
+        {
+            <section class="feeding-sheet">
+                <p class="feeding-section-label">@L["Feed combination"]</p>
+                <p class="feeding-feeder">A: @_session.FeederSiteswap</p>
+                @if (_session.SelectedSiteswap("B1") is { } b1)
+                {
+                    <p>B1: @_session.ProjectLocalResults("B1", [b1]).FirstOrDefault()?.LocalNotation</p>
+                    @if (_session.TryStartingClubs("B1", out var clubsB1))
+                    {
+                        <p class="feeding-clubs">@L["B1 starting clubs: L{0} R{1}", clubsB1.Left, clubsB1.Right]</p>
+                    }
+                }
+                @if (_session.SelectedSiteswap("B2") is { } b2)
+                {
+                    <p>B2: @_session.ProjectLocalResults("B2", [b2]).FirstOrDefault()?.LocalNotation</p>
+                    @if (_session.TryStartingClubs("B2", out var clubsB2))
+                    {
+                        <p class="feeding-clubs">@L["B2 starting clubs: L{0} R{1}", clubsB2.Left, clubsB2.Right]</p>
+                    }
+                }
+                <div class="feeding-rotate">
+                    <button type="button"
+                            class="feeding-btn-ghost"
+                            aria-label="@L["Rotate pattern left"]"
+                            @onclick="() => Rotate(-1)">◄</button>
+                    <button type="button"
+                            class="feeding-btn-ghost"
+                            aria-label="@L["Rotate pattern right"]"
+                            @onclick="() => Rotate(1)">►</button>
+                </div>
+                <button type="button" class="feeding-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
+            </section>
+        }
+        else
+        {
+            <section class="feeding-sheet">
+                <p class="feeding-lead">
+                    @L["A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees."]
+                </p>
+                <p class="feeding-feeder">A: @_session.FeederSiteswap</p>
+
+                <p class="feeding-section-label">@L["Pass assignments"]</p>
+                <ul class="feeding-passes">
+                    @foreach (var beat in _session.PassBeatIndexes)
+                    {
+                        var beatIndex = beat;
+                        var assigned = _session.PassAssignments[beatIndex];
+                        <li class="feeding-pass" @key="beatIndex">
+                            <span>@L["Beat {0}", beatIndex] (@_session.FeederSiteswap.Items[beatIndex])</span>
+                            <div class="feeding-pass-actions" role="group" aria-label="@L["Pass partner for beat {0}", beatIndex]">
+                                <button type="button"
+                                        class="feeding-chip @(assigned == PartnerB1 ? "active" : null)"
+                                        aria-pressed="@(assigned == PartnerB1 ? "true" : "false")"
+                                        aria-label="@L["Assign beat {0} to B1", beatIndex]"
+                                        @onclick="() => AssignPass(beatIndex, PartnerB1)">B1</button>
+                                <button type="button"
+                                        class="feeding-chip @(assigned == PartnerB2 ? "active" : null)"
+                                        aria-pressed="@(assigned == PartnerB2 ? "true" : "false")"
+                                        aria-label="@L["Assign beat {0} to B2", beatIndex]"
+                                        @onclick="() => AssignPass(beatIndex, PartnerB2)">B2</button>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                <p class="feeding-section-label">@L["Clubs B1"]</p>
+                <DualRangeSlider Min="_session.ClubsB1.MinNumber" MinChanged="OnClubsB1MinChanged"
+                                  Max="_session.ClubsB1.MaxNumber" MaxChanged="OnClubsB1MaxChanged"
+                                  LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                  MinLabel="@L["B1 clubs minimum"]" MaxLabel="@L["B1 clubs maximum"]" />
+
+                <p class="feeding-section-label">@L["Clubs B2"]</p>
+                <DualRangeSlider Min="_session.ClubsB2.MinNumber" MinChanged="OnClubsB2MinChanged"
+                                  Max="_session.ClubsB2.MaxNumber" MaxChanged="OnClubsB2MaxChanged"
+                                  LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                  MinLabel="@L["B2 clubs minimum"]" MaxLabel="@L["B2 clubs maximum"]" />
+
+                @if (LocalizedBlockReason is { } reason)
+                {
+                    <p class="feeding-block" role="alert" aria-live="polite">@reason</p>
+                }
+
+                <div class="feeding-actions">
+                    <button type="button"
+                            class="feeding-btn-primary"
+                            disabled="@(!_session.CanGenerate)"
+                            @onclick="StartGenerateB1">
+                        @L["Generate B1"]
+                    </button>
+                    @if (_b1Locals.Count > 0)
+                    {
+                        <button type="button"
+                                class="feeding-btn-primary"
+                                disabled="@(!_session.CanGenerate)"
+                                @onclick="StartGenerateB2">
+                            @L["Generate B2"]
+                        </button>
+                    }
+                </div>
+
+                @if (_b1Locals.Count > 0)
+                {
+                    <p class="feeding-section-label">@L["B1 local results"]</p>
+                    <ul class="feeding-results">
+                        @foreach (var local in _b1Locals.Take(40))
+                        {
+                            <li>
+                                <button type="button"
+                                        class="feeding-result"
+                                        @onclick="() => SelectLocal(PartnerB1, local)">
+                                    @local.LocalNotation
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @if (_b2Locals.Count > 0)
+                {
+                    <p class="feeding-section-label">@L["B2 local results"]</p>
+                    <ul class="feeding-results">
+                        @foreach (var local in _b2Locals.Take(40))
+                        {
+                            <li>
+                                <button type="button"
+                                        class="feeding-result"
+                                        @onclick="() => SelectLocal(PartnerB2, local)">
+                                    @local.LocalNotation
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                    <button type="button" class="feeding-btn-primary" @onclick="ShowCombination">
+                        @L["Show combination"]
+                    </button>
+                }
+            </section>
+        }
+    }
+</div>

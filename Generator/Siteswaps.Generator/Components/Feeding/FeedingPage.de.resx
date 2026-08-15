@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="3-person feed" xml:space="preserve"><value>3-Personen-Feed</value></data>
+  <data name="← Wizard" xml:space="preserve"><value>← Assistent</value></data>
+  <data name="Provide a two-person siteswap via ?s=." xml:space="preserve"><value>Gib einen Zwei-Personen-Siteswap über ?s= an.</value></data>
+  <data name="Invalid siteswap." xml:space="preserve"><value>Ungültiger Siteswap.</value></data>
+  <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A behält dieses Zwei-Personen-Muster. Weise jeden Pass B1 oder B2 zu und erzeuge danach beide Fedee-Muster.</value></data>
+  <data name="Pass assignments" xml:space="preserve"><value>Pass-Zuordnung</value></data>
+  <data name="Beat {0}" xml:space="preserve"><value>Schlag {0}</value></data>
+  <data name="Pass partner for beat {0}" xml:space="preserve"><value>Pass-Partner für Schlag {0}</value></data>
+  <data name="Assign beat {0} to B1" xml:space="preserve"><value>Schlag {0} B1 zuweisen</value></data>
+  <data name="Assign beat {0} to B2" xml:space="preserve"><value>Schlag {0} B2 zuweisen</value></data>
+  <data name="Clubs B1" xml:space="preserve"><value>Keulen B1</value></data>
+  <data name="Clubs B2" xml:space="preserve"><value>Keulen B2</value></data>
+  <data name="B1 clubs minimum" xml:space="preserve"><value>B1 Keulen Minimum</value></data>
+  <data name="B1 clubs maximum" xml:space="preserve"><value>B1 Keulen Maximum</value></data>
+  <data name="B2 clubs minimum" xml:space="preserve"><value>B2 Keulen Minimum</value></data>
+  <data name="B2 clubs maximum" xml:space="preserve"><value>B2 Keulen Maximum</value></data>
+  <data name="Feeder has no passes." xml:space="preserve"><value>Feeder hat keine Pässe.</value></data>
+  <data name="Pass assignments are incomplete." xml:space="preserve"><value>Pass-Zuordnung ist unvollständig.</value></data>
+  <data name="Each fedee must receive at least one pass." xml:space="preserve"><value>Jeder Fedee braucht mindestens einen Pass.</value></data>
+  <data name="Club bounds for B1 and B2 must be set." xml:space="preserve"><value>Keulenbereiche für B1 und B2 müssen gesetzt sein.</value></data>
+  <data name="Generation is blocked." xml:space="preserve"><value>Generierung ist blockiert.</value></data>
+  <data name="Generate B1" xml:space="preserve"><value>B1 erzeugen</value></data>
+  <data name="Generate B2" xml:space="preserve"><value>B2 erzeugen</value></data>
+  <data name="Generate pattern for {0}" xml:space="preserve"><value>Muster erzeugen für {0}</value></data>
+  <data name="B1 local results" xml:space="preserve"><value>B1 lokale Ergebnisse</value></data>
+  <data name="B2 local results" xml:space="preserve"><value>B2 lokale Ergebnisse</value></data>
+  <data name="Show combination" xml:space="preserve"><value>Kombination zeigen</value></data>
+  <data name="Feed combination" xml:space="preserve"><value>Feed-Kombination</value></data>
+  <data name="B1 starting clubs: L{0} R{1}" xml:space="preserve"><value>B1 Startkeulen: L{0} R{1}</value></data>
+  <data name="B2 starting clubs: L{0} R{1}" xml:space="preserve"><value>B2 Startkeulen: L{0} R{1}</value></data>
+  <data name="Rotate pattern left" xml:space="preserve"><value>Muster nach links rotieren</value></data>
+  <data name="Rotate pattern right" xml:space="preserve"><value>Muster nach rechts rotieren</value></data>
+  <data name="Back" xml:space="preserve"><value>Zurück</value></data>
+</root>
