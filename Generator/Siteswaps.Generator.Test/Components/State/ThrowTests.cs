@@ -26,6 +26,19 @@ public class ThrowTests
         Throw.GetDisplayNameForHeight(height, jugglers).Should().Be(expected);
     }
 
+    [TestCase(2, 1, "0.5")]
+    [TestCase(2, 15, "7.5")]
+    [TestCase(3, 1, "0.33")]
+    [TestCase(3, 21, "7")]
+    public void GetDisplayNameForHeight_Falls_Back_To_Local_When_Unnamed(
+        int jugglers,
+        int height,
+        string expected
+    )
+    {
+        Throw.GetDisplayNameForHeight(height, jugglers).Should().Be(expected);
+    }
+
     /// <summary>
     /// Property: for every juggler count and named throw,
     /// throw → GetHeightForJugglers → GetDisplayNameForHeight must yield the same throw.

@@ -128,7 +128,8 @@ public record Throw(string Name, int Height, string DisplayValue)
 
     /// <summary>
     /// Display name for a global height at the given juggler count (inverse of
-    /// <see cref="GetHeightForJugglers"/> for named throws).
+    /// <see cref="GetHeightForJugglers"/> for named throws). Falls back to the
+    /// local height when no named throw matches.
     /// </summary>
     public static string GetDisplayNameForHeight(int height, int amountOfJugglers)
     {
@@ -141,7 +142,10 @@ public record Throw(string Name, int Height, string DisplayValue)
             }
         }
 
-        return height.ToString();
+        return (height * 1.0 / jugglers).ToString(
+            "0.##",
+            System.Globalization.CultureInfo.InvariantCulture
+        );
     }
 
     public string GetDisplayValue(bool showName)

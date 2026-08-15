@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Siteswap.Details;
 
 /// <summary>
@@ -59,7 +61,7 @@ public static class PassingThrowNames
 
     /// <summary>
     /// Display name for a global throw height at the given juggler count.
-    /// Falls back to siteswap digit notation when no named throw matches.
+    /// Falls back to the local height when no named throw matches.
     /// </summary>
     public static string Format(int height, int numberOfJugglers)
     {
@@ -72,6 +74,15 @@ public static class PassingThrowNames
             }
         }
 
-        return Siteswap.Transform(height);
+        return ToLocalDisplay(height, jugglers);
+    }
+
+    /// <summary>
+    /// Local height for a global throw: <c>global / jugglers</c>, formatted like local notation.
+    /// </summary>
+    public static string ToLocalDisplay(int height, int numberOfJugglers)
+    {
+        var jugglers = Math.Max(1, numberOfJugglers);
+        return (height * 1.0 / jugglers).ToString("0.##", CultureInfo.InvariantCulture);
     }
 }

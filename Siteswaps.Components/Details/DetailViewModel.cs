@@ -59,7 +59,10 @@ public sealed class DetailViewModel
                         var globalIndex = (i + beat * NumberOfJugglers) % Period;
                         var height = value.Items[i + beat * NumberOfJugglers];
                         return new JugglerThrow(
-                            LocalDisplay: (height * 1.0 / NumberOfJugglers).ToString("0.##"),
+                            LocalDisplay: PassingThrowNames.ToLocalDisplay(
+                                height,
+                                NumberOfJugglers
+                            ),
                             GlobalDisplay: FormatThrow(height),
                             NameDisplay: FormatThrowName(height, NumberOfJugglers),
                             Kind: PassOrSelf[globalIndex]

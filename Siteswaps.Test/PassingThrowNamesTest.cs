@@ -45,10 +45,12 @@ public class PassingThrowNamesTest
     }
 
     [Test]
-    public void Format_Falls_Back_To_Siteswap_Digit_When_Unknown()
+    public void Format_Falls_Back_To_Local_Height_When_Unknown()
     {
-        PassingThrowNames.Format(1, 2).Should().Be("1");
-        PassingThrowNames.Format(15, 2).Should().Be("f");
+        PassingThrowNames.Format(1, 2).Should().Be("0.5");
+        PassingThrowNames.Format(15, 2).Should().Be("7.5");
+        PassingThrowNames.Format(1, 3).Should().Be("0.33");
+        PassingThrowNames.Format(21, 3).Should().Be("7");
     }
 
     [TestCase(2, 2, new[] { 2 })]
