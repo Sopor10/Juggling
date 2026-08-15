@@ -1,4 +1,4 @@
-using FluentAssertions;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
@@ -15,7 +15,6 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
-        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
 
@@ -46,12 +45,12 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
         await Assertions.Expect(palette.Filter(new() { HasText = "frei" })).ToHaveCountAsync(1);
 
         var slots = page.Locator(".wizard-pattern-slots .wizard-pattern-slot");
-        var slotCount = await slots.CountAsync();
-        slotCount.Should().BeGreaterThan(0);
-        for (var i = 0; i < slotCount; i++)
-        {
-            await Assertions.Expect(slots.Nth(i)).ToHaveTextAsync("frei");
-        }
+        await Assertions.Expect(slots).Not.ToHaveCountAsync(0);
+        await Assertions
+            .Expect(
+                page.Locator(".wizard-pattern-slots .wizard-pattern-slot:not(:text-is(\"frei\"))")
+            )
+            .ToHaveCountAsync(0);
     }
 
     /// <summary>Summary: State filter must show classic x/_ notation that updates with beat toggles.</summary>
@@ -68,13 +67,10 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
 
         var notation = page.Locator(".wizard-state-notation");
         await Assertions.Expect(notation).ToBeVisibleAsync();
-        var initial = (await notation.InnerTextAsync()).Trim();
-        initial.Replace(" ", "").Should().MatchRegex("^_+$");
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^[\s_]+$"));
 
         var firstBeat = page.Locator(".wizard-state-grid .wizard-chip").First;
         await firstBeat.ClickAsync();
-        var after = (await notation.InnerTextAsync()).Trim();
-        after.Should().StartWith("x");
-        after.Should().NotBe(initial);
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*x"));
     }
 }

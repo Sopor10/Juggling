@@ -28,6 +28,8 @@ public class WizardPageObject(IPage page)
 
     public ILocator SiteswapCards => page.Locator(".pz-siteswap-card");
 
+    public ILocator GenerateButton => page.Locator(".wizard-btn-generate");
+
     public ILocator PeriodInput => page.Locator("#periodExactInput");
 
     public ILocator JugglerExactInput => page.Locator("#jugglerExactInput");
@@ -74,25 +76,10 @@ public class WizardPageObject(IPage page)
 
     public async Task WaitUntilLoadedAsync(float timeoutMs = 60_000)
     {
-        await Root.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
-        );
-        await ActiveProgressDot.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
-        );
-        await page.Locator(".wizard-step.active")
-            .WaitForAsync(
-                new LocatorWaitForOptions
-                {
-                    State = WaitForSelectorState.Visible,
-                    Timeout = timeoutMs,
-                }
-            );
-    }
-
-    public async Task<bool> IsLoadedAsync()
-    {
-        return await Root.IsVisibleAsync() && await ActiveProgressDot.IsVisibleAsync();
+        var visible = new LocatorAssertionsToBeVisibleOptions { Timeout = timeoutMs };
+        await Assertions.Expect(Root).ToBeVisibleAsync(visible);
+        await Assertions.Expect(ActiveProgressDot).ToBeVisibleAsync(visible);
+        await Assertions.Expect(page.Locator(".wizard-step.active")).ToBeVisibleAsync(visible);
     }
 
     public async Task ClickNextAsync()
@@ -107,7 +94,7 @@ public class WizardPageObject(IPage page)
 
     public async Task ClickGenerateAsync()
     {
-        await page.Locator(".wizard-btn-generate").ClickAsync();
+        await GenerateButton.ClickAsync();
     }
 
     public async Task AdvanceToFiltersAsync()
@@ -126,16 +113,10 @@ public class WizardPageObject(IPage page)
 
     public async Task WaitForResultsAsync(float timeoutMs = 120_000)
     {
-        await Results.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
-        );
-        await GeneratingSpinner.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = timeoutMs }
-        );
-        // Title keys: "Generating…" (en) / "Generiere…" (de)
-        await Assertions
-            .Expect(ResultsTitle)
-            .Not.ToContainTextAsync("Generat", new() { Timeout = timeoutMs });
+        var visible = new LocatorAssertionsToBeVisibleOptions { Timeout = timeoutMs };
+        await Assertions.Expect(Results).ToBeVisibleAsync(visible);
+        // End state only: results actions render when generation has finished (!IsGenerating).
+        await Assertions.Expect(ResultsActions).ToBeVisibleAsync(visible);
     }
 
     public async Task ExpectStepAsync(int stepIndex)
@@ -155,9 +136,7 @@ public class WizardPageObject(IPage page)
     public async Task OpenAddFilterSheetAsync()
     {
         await AddFilterButton.ClickAsync();
-        await FilterSheet.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Visible }
-        );
+        await Assertions.Expect(FilterSheet).ToBeVisibleAsync();
     }
 
     public async Task JumpToStepAsync(int stepIndex)
@@ -213,9 +192,7 @@ public class WizardPageObject(IPage page)
     {
         await OpenAddFilterSheetAsync();
         await page.Locator(".wizard-btn-filter-primary").ClickAsync();
-        await FilterSheet.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden }
-        );
+        await Assertions.Expect(FilterSheet).ToBeHiddenAsync();
     }
 
     public async Task SaveNumberFilterAsync(string comparison, int amount, string throwName)
@@ -225,9 +202,7 @@ public class WizardPageObject(IPage page)
         await page.Locator("#numAmount").FillAsync(amount.ToString());
         await SelectWizardOptionAsync("numThrow", throwName);
         await page.Locator(".wizard-btn-filter-primary").ClickAsync();
-        await FilterSheet.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden }
-        );
+        await Assertions.Expect(FilterSheet).ToBeHiddenAsync();
     }
 
     private async Task SelectWizardOptionAsync(string selectId, string label)
@@ -241,17 +216,5 @@ public class WizardPageObject(IPage page)
     public async Task RemoveFirstFilterAsync()
     {
         await FilterCards.First.Locator(".wizard-icon-btn-danger").ClickAsync();
-    }
-
-    public async Task<string> GetResultsTitleTextAsync()
-    {
-        return (await ResultsTitle.InnerTextAsync()).Trim();
-    }
-
-    public async Task<int> ParseResultCountAsync()
-    {
-        var text = await GetResultsTitleTextAsync();
-        var digits = new string(text.TakeWhile(char.IsDigit).ToArray());
-        return int.TryParse(digits, out var count) ? count : -1;
     }
 }

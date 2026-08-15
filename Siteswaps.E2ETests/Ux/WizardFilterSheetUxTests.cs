@@ -44,9 +44,7 @@ public class WizardFilterSheetUxTests(SharedBlazorFixture host) : IClassFixture<
 
         await wizard.OpenAddFilterSheetAsync();
         await page.Keyboard.PressAsync("Escape");
-        await wizard.FilterSheet.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = 10_000 }
-        );
+        await Assertions.Expect(wizard.FilterSheet).ToBeHiddenAsync();
 
         await wizard.OpenAddFilterSheetAsync();
         await wizard.FilterSheetBackdrop.ClickAsync(
@@ -55,8 +53,6 @@ public class WizardFilterSheetUxTests(SharedBlazorFixture host) : IClassFixture<
                 Position = new Position { X = 8, Y = 8 },
             }
         );
-        await wizard.FilterSheet.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = 10_000 }
-        );
+        await Assertions.Expect(wizard.FilterSheet).ToBeHiddenAsync();
     }
 }

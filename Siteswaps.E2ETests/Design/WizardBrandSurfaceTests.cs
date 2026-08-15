@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
@@ -83,9 +84,12 @@ public class WizardBrandSurfaceTests(SharedBlazorFixture host) : IClassFixture<S
         var titleFont = await design.StyleAsync(design.DisplaySample, "font-family");
         titleFont.Should().ContainEquivalentOf("Baloo");
 
-        await design.Logo.WaitForAsync();
-        (await design.Logo.GetAttributeAsync("src"))
-            .Should()
-            .Contain("passing_zone_short_logo.svg");
+        await Assertions.Expect(design.Logo).ToBeVisibleAsync();
+        await Assertions
+            .Expect(design.Logo)
+            .ToHaveAttributeAsync(
+                "src",
+                new System.Text.RegularExpressions.Regex("passing_zone_short_logo\\.svg")
+            );
     }
 }

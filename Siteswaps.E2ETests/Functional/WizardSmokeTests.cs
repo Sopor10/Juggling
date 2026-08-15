@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
@@ -14,6 +14,7 @@ public class WizardSmokeTests(SharedBlazorFixture host) : IClassFixture<SharedBl
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
-        (await wizard.IsLoadedAsync()).Should().BeTrue();
+        await Assertions.Expect(wizard.Root).ToBeVisibleAsync();
+        await Assertions.Expect(wizard.ActiveProgressDot).ToBeVisibleAsync();
     }
 }

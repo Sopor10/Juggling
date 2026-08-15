@@ -43,7 +43,7 @@ public class WizardChromeTouchTests(SharedBlazorFixture host) : IClassFixture<Sh
     {
         await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var chip = design.ActiveJugglerChip;
-        await chip.WaitForAsync();
+        await Assertions.Expect(chip).ToBeVisibleAsync();
 
         var background = await design.StyleAsync(chip, "background-color");
         var radius = DesignColor.ParseCssPx(
@@ -85,7 +85,7 @@ public class WizardChromeTouchTests(SharedBlazorFixture host) : IClassFixture<Sh
         await design.Wizard.OpenAddFilterSheetAsync();
 
         var sheet = design.BottomSheet;
-        await sheet.WaitForAsync();
+        await Assertions.Expect(sheet).ToBeVisibleAsync();
         var topLeft = DesignColor.ParseCssPx(
             await design.StyleAsync(sheet, "border-top-left-radius")
         );
@@ -146,7 +146,7 @@ public class WizardChromeTouchTests(SharedBlazorFixture host) : IClassFixture<Sh
         }
 
         await Assertions.Expect(design.SwipeHint).ToBeVisibleAsync();
-        (await design.SwipeHint.InnerTextAsync()).Should().Contain("wischen");
+        await Assertions.Expect(design.SwipeHint).ToContainTextAsync("wischen");
 
         var hintBox = await design.SwipeHint.BoundingBoxAsync();
         var sheetBox = await design.StepSheet.BoundingBoxAsync();
