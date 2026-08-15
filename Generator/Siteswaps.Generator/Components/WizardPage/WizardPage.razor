@@ -11,10 +11,10 @@
                       Current="HeaderStep"
                       Visited="HeaderVisitedSteps"
                       StepSelected="OnProgressStepSelectedAsync" />
-        @if (State.Phase == WizardPhase.Editing)
-        {
-            <p class="wizard-swipe-hint">@(IsLastStep ? L["← swipe to generate →"] : L["← swipe left/right →"])</p>
-        }
+        <p class="wizard-swipe-hint @(State.Phase == WizardPhase.Editing ? null : "wizard-invisible")"
+           aria-hidden="@(State.Phase == WizardPhase.Editing ? null : "true")">
+            @(IsLastStep ? L["← swipe to generate →"] : L["← swipe left/right →"])
+        </p>
     </header>
 
     @if (State.Phase == WizardPhase.Editing)
@@ -27,12 +27,12 @@
                 <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
                     <div class="wizard-measure">
                         <div class="wizard-field">
-                            <p class="wizard-section-label">@L["Jugglers"]</p>
+                            <h2 @ref="_stepHeading0" class="wizard-section-label" tabindex="-1">@L["Jugglers"]</h2>
                             <JugglerPicker @bind-Value="State.NumberOfJugglers" />
                         </div>
 
                         <div class="wizard-field">
-                            <p class="wizard-section-label">@L["Period"]</p>
+                            <h2 class="wizard-section-label">@L["Period"]</h2>
                             <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
                     <div class="wizard-measure">
                         <div class="wizard-field">
-                            <p class="wizard-section-label">@L["Number of clubs"]</p>
+                            <h2 @ref="_stepHeading1" class="wizard-section-label" tabindex="-1">@L["Number of clubs"]</h2>
                             <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
                                               Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
                                               LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
@@ -56,6 +56,7 @@
 
                 <section id="wizard-panel-2" class="wizard-step wizard-step-filters @(IsStepActive(2) ? "active" : "")" aria-hidden="@AriaHidden(2)" aria-labelledby="wizard-step-tab-2">
                     <div class="wizard-measure">
+                        <h2 @ref="_stepHeading2" class="wizard-section-label" tabindex="-1">@L["Any filters?"]</h2>
                         <div class="wizard-filters-scroll">
                             <FilterList Tree="State.FilterTree"
                                         Edit="OpenEditFilterSheet"

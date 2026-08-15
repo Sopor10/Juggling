@@ -34,6 +34,9 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private IJSObjectReference? _jsModule;
     private DotNetObjectReference<WizardPage>? _selfReference;
     private ElementReference _stepsElement;
+    private ElementReference _stepHeading0;
+    private ElementReference _stepHeading1;
+    private ElementReference _stepHeading2;
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
@@ -101,6 +104,31 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private static string? AriaHidden(bool isActive) => isActive ? null : "true";
 
     private string? AriaHidden(int step) => AriaHidden(IsStepActive(step));
+
+    private async Task FocusActiveStepHeadingAsync()
+    {
+        if (State.Phase != WizardPhase.Editing)
+        {
+            return;
+        }
+
+        var heading = State.CurrentStep switch
+        {
+            0 => _stepHeading0,
+            1 => _stepHeading1,
+            2 => _stepHeading2,
+            _ => default,
+        };
+
+        try
+        {
+            await heading.FocusAsync();
+        }
+        catch (JSException)
+        {
+            // Heading may not be attached yet during teardown / phase switches.
+        }
+    }
 
     protected override void OnInitialized()
     {
@@ -208,6 +236,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             StateHasChanged();
             await PushEditorHistoryStateAsync();
             await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
         finally
         {
@@ -234,6 +263,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             }
 
             await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
         finally
         {
@@ -261,6 +291,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             StateHasChanged();
             await PushEditorHistoryStateAsync();
             await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
         finally
         {
@@ -310,6 +341,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             State.MarkVisited(step);
             await PushEditorHistoryStateAsync();
             await InvokeAsync(StateHasChanged);
+            await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
             return;
         }
 

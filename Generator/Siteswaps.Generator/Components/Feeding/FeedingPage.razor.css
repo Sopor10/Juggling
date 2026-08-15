@@ -148,6 +148,11 @@
     background: var(--feeding-purple-100);
 }
 
+.feeding-result.active {
+    background: var(--feeding-orange);
+    color: #241a3d;
+}
+
 .feeding-sheet ::deep .wizard-dualrange {
     max-width: 100%;
     overflow: visible;

@@ -187,6 +187,11 @@
     margin: 0 0 0.65rem;
 }
 
+h2.wizard-section-label {
+    /* Keep visual parity with former paragraph labels; not in sequential tab order. */
+    outline: none;
+}
+
 .wizard-mt {
     margin-top: 24px;
 }

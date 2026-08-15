@@ -138,9 +138,11 @@
                     <ul class="feeding-results">
                         @foreach (var local in _b1Locals.Take(40))
                         {
+                            var b1Selected = Equals(_session.SelectedSiteswap(PartnerB1), local.Global);
                             <li>
                                 <button type="button"
-                                        class="feeding-result"
+                                        class="feeding-result @(b1Selected ? "active" : null)"
+                                        aria-pressed="@(b1Selected ? "true" : "false")"
                                         @onclick="() => SelectLocal(PartnerB1, local)">
                                     @local.LocalNotation
                                 </button>
@@ -155,9 +157,11 @@
                     <ul class="feeding-results">
                         @foreach (var local in _b2Locals.Take(40))
                         {
+                            var b2Selected = Equals(_session.SelectedSiteswap(PartnerB2), local.Global);
                             <li>
                                 <button type="button"
-                                        class="feeding-result"
+                                        class="feeding-result @(b2Selected ? "active" : null)"
+                                        aria-pressed="@(b2Selected ? "true" : "false")"
                                         @onclick="() => SelectLocal(PartnerB2, local)">
                                     @local.LocalNotation
                                 </button>

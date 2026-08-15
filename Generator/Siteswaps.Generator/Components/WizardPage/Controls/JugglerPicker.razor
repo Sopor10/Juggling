@@ -1,5 +1,7 @@
+@inject IStringLocalizer<JugglerPicker> L
+
 <div class="wizard-juggler-picker">
-    <div class="wizard-chip-row" role="radiogroup" aria-label="Jongleure">
+    <div class="wizard-chip-row" role="radiogroup" aria-label="@L["Jugglers"]">
         @foreach (var v in Options)
         {
             var isActive = v == Value;
@@ -14,7 +16,7 @@
         }
     </div>
     <div class="wizard-juggler-exact-row">
-        <label class="wizard-juggler-exact-label" for="jugglerExactInput">oder genaue Anzahl</label>
+        <label class="wizard-juggler-exact-label" for="jugglerExactInput">@L["or exact count"]</label>
         <input id="jugglerExactInput" type="number" inputmode="numeric" class="wizard-input-number"
                min="@MinOption" max="@MaxExact" value="@Value"
                @onpointerdown:stopPropagation="true"
@@ -61,7 +63,7 @@
     {
         var v = Math.Clamp(requested, MinOption, MaxExact);
         _clampMessage = v != requested
-            ? $"Wert auf {v} begrenzt (erlaubt: {MinOption}–{MaxExact})."
+            ? L["Value limited to {0} (allowed: {1}–{2}).", v, MinOption, MaxExact].Value
             : null;
 
         if (v == Value)
