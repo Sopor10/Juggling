@@ -52,7 +52,6 @@
     --wizard-orange: #f9a500;
     --wizard-bg: #f5f3fb;
     --wizard-radius-sm: 10px;
-    --wizard-shadow-sm: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
     --wizard-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
 
     width: 100%;
@@ -116,50 +115,59 @@
     margin: 0 0 0.65rem;
 }
 
-.settings-chip-row[b-nbjapcg9lj] {
+/* Same pattern as wizard-segmented / wizard-segment (PatternFilterEditor). */
+.settings-segmented[b-nbjapcg9lj] {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--wizard-purple-100);
+    background: white;
 }
 
-.settings-chip[b-nbjapcg9lj] {
-    border-radius: var(--wizard-radius-sm);
+.settings-segment[b-nbjapcg9lj] {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    margin: 0;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 0;
+    border-right: 2px solid var(--wizard-purple-100);
+    background: white;
+    color: var(--wizard-purple-500);
     font-weight: 800;
     font-family: var(--wizard-font-display);
     font-size: 13px;
-    border: 2px solid var(--wizard-purple-100);
-    background: white;
-    color: var(--wizard-purple-500);
-    padding: 10px 16px;
-    min-height: 44px;
     cursor: pointer;
-    transition: all 0.12s ease;
+    transition: background 0.12s ease, color 0.12s ease;
 }
 
-.settings-chip.active[b-nbjapcg9lj] {
+.settings-segment:last-child[b-nbjapcg9lj] {
+    border-right: none;
+}
+
+.settings-segment.active[b-nbjapcg9lj] {
     background: var(--wizard-purple-700);
-    border-color: var(--wizard-purple-700);
     color: white;
 }
 
-.settings-chip:active[b-nbjapcg9lj] {
-    transform: scale(0.94);
+.settings-segment:active[b-nbjapcg9lj] {
+    transform: none;
 }
 
 .settings-input-number[b-nbjapcg9lj] {
     display: block;
     width: 100%;
-    max-width: 120px;
-    margin-inline: auto;
     border: 2px solid var(--wizard-purple-100);
     border-radius: 12px;
-    padding: 10px 8px;
-    font-weight: 700;
+    padding: 10px 12px;
+    font-weight: 800;
+    font-family: var(--wizard-font-display);
     font-size: 15px;
     min-height: 44px;
     text-align: center;
-    color: var(--wizard-purple-900);
+    color: var(--wizard-purple-500);
     background: white;
     box-sizing: border-box;
 }
