@@ -7,6 +7,23 @@ namespace Siteswaps.Test;
 [TestFixture]
 public class PassingThrowNamesTest
 {
+    private static readonly (string Name, int BaseHeight)[] Catalog =
+    [
+        ("0", 0),
+        ("Zip", 2),
+        ("3", 3),
+        ("Hold", 4),
+        ("Zap", 5),
+        ("Self", 6),
+        ("Single", 7),
+        ("Heff", 8),
+        ("Double", 9),
+        ("Triple S", 10),
+        ("Triple", 11),
+        ("Quad", 12),
+        ("Quad Pass", 13),
+    ];
+
     [TestCase(2, 2, "Zip")]
     [TestCase(2, 4, "Hold")]
     [TestCase(2, 6, "Self")]
@@ -43,39 +60,39 @@ public class PassingThrowNamesTest
         PassingThrowNames.HeightsFor(baseHeight, jugglers).Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Property: for every juggler count and catalog throw,
+    /// throw → HeightsFor → Format must yield the same throw name.
+    /// (Odd/pass bases with 1 juggler yield no heights — skipped.)
+    /// </summary>
     [Test]
-    public void Format_Is_Inverse_Of_HeightsFor_For_Catalog()
+    public void Named_Throw_To_Height_To_Named_Throw_Is_Identity_For_All_Juggler_Counts()
     {
-        foreach (var jugglers in new[] { 2, 3, 4, 5 })
+        foreach (var jugglers in Enumerable.Range(1, 8))
         {
-            foreach (var baseHeight in new[] { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 })
+            foreach (var (name, baseHeight) in Catalog)
             {
-                foreach (var height in PassingThrowNames.HeightsFor(baseHeight, jugglers))
+                var heights = PassingThrowNames.HeightsFor(baseHeight, jugglers);
+                if (heights.Count == 0)
                 {
-                    var name = PassingThrowNames.Format(height, jugglers);
-                    var roundTrip = PassingThrowNames.HeightsFor(CatalogBaseHeight(name), jugglers);
-                    roundTrip.Should().Contain(height);
+                    // Odd/pass bases yield no heights for 1 juggler (every int is a "self").
+                    continue;
+                }
+
+                foreach (var height in heights)
+                {
+                    PassingThrowNames
+                        .Format(height, jugglers)
+                        .Should()
+                        .Be(
+                            name,
+                            because: "throw {0} → height {1} → Format must round-trip for {2} jugglers",
+                            name,
+                            height,
+                            jugglers
+                        );
                 }
             }
         }
     }
-
-    private static int CatalogBaseHeight(string display) =>
-        display switch
-        {
-            "0" => 0,
-            "Zip" => 2,
-            "3" => 3,
-            "Hold" => 4,
-            "Zap" => 5,
-            "Self" => 6,
-            "Single" => 7,
-            "Heff" => 8,
-            "Double" => 9,
-            "Triple S" => 10,
-            "Triple" => 11,
-            "Quad" => 12,
-            "Quad Pass" => 13,
-            _ => throw new ArgumentOutOfRangeException(nameof(display), display, null),
-        };
 }
