@@ -7,15 +7,15 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Functional;
 
 /// <summary>Generation contracts for the wizard flow with stock and constrained inputs.</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardGenerationTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardGenerationTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Stock jugglers/period/clubs/throws must produce at least one siteswap.</summary>
     [Fact]
     public async Task Default_Params_Generate_Produces_Results()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.AdvanceToGenerateAsync();
@@ -30,8 +30,9 @@ public class WizardGenerationTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Impossible_Number_Filter_Yields_Zero_Results()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
 
@@ -47,8 +48,9 @@ public class WizardGenerationTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Clubs_Range_Is_Reflected_In_Result_Cards()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.ClickNextAsync();

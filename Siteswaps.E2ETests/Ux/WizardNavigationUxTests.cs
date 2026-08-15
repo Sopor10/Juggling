@@ -7,16 +7,16 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Ux;
 
 /// <summary>Encodes navigation, history, and step-clarity UX contracts for the wizard at /.</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Double-tapping Weiter must advance only one step, never skip to filters.</summary>
     [Fact]
     public async Task Double_Tap_Weiter_Advances_Only_One_Step()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.NextOrGenerateButton.DblClickAsync();
@@ -30,9 +30,10 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Browser_Back_From_Step2_Stays_On_Wizard_Step1()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
         await wizard.ExpectStepAsync(1);
@@ -49,9 +50,10 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Browser_Back_From_Results_Restores_Filter_Step()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToGenerateAsync();
         await wizard.WaitForResultsAsync();
@@ -70,9 +72,10 @@ public class WizardNavigationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Progress_Dots_Block_Unvisited_Steps_And_Mark_Current()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
         var step0 = page.Locator("#wizard-step-tab-0");

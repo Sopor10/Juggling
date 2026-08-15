@@ -7,15 +7,15 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Functional;
 
 /// <summary>Filter sheet and list contracts for wizard step 3 (clamp feedback lives in Ux).</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardFilterTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Saving a number filter must show it in the list and removing it must clear the list.</summary>
     [Fact]
     public async Task Number_Filter_Can_Be_Added_And_Removed()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
 
@@ -34,8 +34,9 @@ public class WizardFilterTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Pattern_Filter_Defaults_To_Frei_And_Exposes_DontCare_Palette()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
         await wizard.OpenAddFilterSheetAsync();
@@ -57,8 +58,9 @@ public class WizardFilterTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task State_Filter_Shows_Occupied_Free_Notation()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
         await wizard.OpenAddFilterSheetAsync();

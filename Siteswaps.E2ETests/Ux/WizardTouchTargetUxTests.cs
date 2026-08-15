@@ -6,16 +6,16 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Ux;
 
 /// <summary>Encodes touch-target UX contracts for the mobile-first wizard.</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Period +/- stepper controls must offer at least 40x40px touch targets.</summary>
     [Fact]
     public async Task Period_Stepper_Buttons_Meet_Minimum_Touch_Target()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
         var count = await wizard.PeriodStepperButtons.CountAsync();
@@ -33,9 +33,10 @@ public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Juggler_Chips_Meet_Minimum_Touch_Target()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
         var count = await wizard.JugglerChips.CountAsync();
@@ -53,9 +54,10 @@ public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Clubs_DualRange_Thumbs_Meet_Minimum_Touch_Target()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
         await wizard.ExpectStepAsync(1);
@@ -71,9 +73,10 @@ public class WizardTouchTargetUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Throw_Chips_Are_Not_Covered_By_Sticky_Nav()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
         await wizard.ExpectStepAsync(1);

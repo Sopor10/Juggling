@@ -5,45 +5,55 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Design;
 
 /// <summary>Design-focused locators and computed-style reads for the /wizard Passing Zone UI.</summary>
-public sealed class WizardDesignPage(IPage page, WizardPageObject wizard)
+public sealed class WizardDesignPage : IAsyncDisposable
 {
-    public WizardPageObject Wizard => wizard;
+    private readonly IBrowserContext _context;
+    private readonly IPage _page;
 
-    public ILocator Header => page.Locator(".wizard-header");
+    private WizardDesignPage(IBrowserContext context, IPage page, WizardPageObject wizard)
+    {
+        _context = context;
+        _page = page;
+        Wizard = wizard;
+    }
 
-    public ILocator Logo => page.Locator(".pznav-logo");
+    public WizardPageObject Wizard { get; }
 
-    public ILocator StepSheet => page.Locator(".wizard-steps");
+    public ILocator Header => _page.Locator(".wizard-header");
 
-    public ILocator DisplaySample => page.Locator(".wizard-period-value");
+    public ILocator Logo => _page.Locator(".pznav-logo");
+
+    public ILocator StepSheet => _page.Locator(".wizard-steps");
+
+    public ILocator DisplaySample => _page.Locator(".wizard-period-value");
 
     public ILocator PrimaryForwardButton =>
-        page.Locator(
+        _page.Locator(
             ".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate"
         );
 
-    public ILocator GenerateButton => page.Locator(".wizard-nav-buttons .wizard-btn-generate");
+    public ILocator GenerateButton => _page.Locator(".wizard-nav-buttons .wizard-btn-generate");
 
-    public ILocator GhostBackButton => page.Locator(".wizard-nav-buttons .wizard-btn-ghost");
+    public ILocator GhostBackButton => _page.Locator(".wizard-nav-buttons .wizard-btn-ghost");
 
-    public ILocator ActiveProgressDot => page.Locator(".wizard-dot.active");
+    public ILocator ActiveProgressDot => _page.Locator(".wizard-dot.active");
 
-    public ILocator SwipeHint => page.Locator(".wizard-swipe-hint");
+    public ILocator SwipeHint => _page.Locator(".wizard-swipe-hint");
 
-    public ILocator ActiveJugglerChip => page.Locator(".wizard-juggler-picker .wizard-chip.active");
+    public ILocator ActiveJugglerChip => _page.Locator(".wizard-juggler-picker .wizard-chip.active");
 
-    public ILocator BottomSheet => page.Locator(".wizard-bottom-sheet");
+    public ILocator BottomSheet => _page.Locator(".wizard-bottom-sheet");
 
     public static async Task<WizardDesignPage> OpenAsync(BlazorWebassemblyFixture<Program> fixture)
     {
-        var browserPage = await fixture.Context!.NewPageAsync();
-        var wizardPage = await browserPage.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var session = await WizardBrowserSession.CreateAsync(fixture);
+        var wizardPage = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
         await wizardPage.WaitUntilLoadedAsync();
-        return new WizardDesignPage(browserPage, wizardPage);
+        return new WizardDesignPage(session.Context, session.Page, wizardPage);
     }
 
     public async Task<string> CssVarAsync(string name) =>
-        await page.Locator(".wizard-page")
+        await _page.Locator(".wizard-page")
             .EvaluateAsync<string>(
                 "(el, n) => getComputedStyle(el).getPropertyValue(n).trim()",
                 name
@@ -59,4 +69,6 @@ public sealed class WizardDesignPage(IPage page, WizardPageObject wizard)
     {
         await locator.EvaluateAsync("el => el.focus({ focusVisible: true })");
     }
+
+    public ValueTask DisposeAsync() => _context.DisposeAsync();
 }

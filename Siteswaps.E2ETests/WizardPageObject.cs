@@ -129,15 +129,13 @@ public class WizardPageObject(IPage page)
         await Results.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
-        await page.Locator(".wizard-results-title")
-            .Filter(new LocatorFilterOptions { HasNotText = "Generiere" })
-            .WaitForAsync(
-                new LocatorWaitForOptions
-                {
-                    State = WaitForSelectorState.Visible,
-                    Timeout = timeoutMs,
-                }
-            );
+        await GeneratingSpinner.WaitForAsync(
+            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = timeoutMs }
+        );
+        // Title keys: "Generating…" (en) / "Generiere…" (de)
+        await Assertions
+            .Expect(ResultsTitle)
+            .Not.ToContainTextAsync("Generat", new() { Timeout = timeoutMs });
     }
 
     public async Task ExpectStepAsync(int stepIndex)

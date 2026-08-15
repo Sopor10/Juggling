@@ -7,16 +7,16 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Ux;
 
 /// <summary>Encodes generation feedback, empty states, and silent-clamp UX contracts.</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Generate must show loading feedback immediately and disable repeat starts.</summary>
     [Fact]
     public async Task Generate_Shows_Loading_Feedback_And_Disables_Repeat()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
 
@@ -34,9 +34,10 @@ public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Extreme_Period_Input_Provides_Clamp_Feedback()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.SetPeriodAsync(999);
@@ -56,9 +57,10 @@ public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Extreme_Juggler_Input_Provides_Clamp_Feedback()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.SetExactJugglersAsync(999);
@@ -75,9 +77,10 @@ public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Zero_Results_Shows_Helpful_Empty_State()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.ClickNextAsync();
         await wizard.ExpectStepAsync(1);
@@ -98,9 +101,10 @@ public class WizardGenerationUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Results_Footer_Does_Not_Cover_Last_Card()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToGenerateAsync();
         await wizard.WaitForResultsAsync();

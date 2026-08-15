@@ -7,14 +7,13 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Design;
 
 /// <summary>Asserts Passing Zone chrome: sheet radii, pill/chip language, orange progress, and primary CTA size (chip/stepper touch targets live in Ux).</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardChromeTouchTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Content sheet over header must use large top radius (~22px), not flat Material seam.</summary>
     [Fact]
     public async Task Wizard_StepSheet_HasLargeRoundedTopOverHeader()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var topLeft = DesignColor.ParseCssPx(
             await design.StyleAsync(design.StepSheet, "border-top-left-radius")
         );
@@ -30,7 +29,7 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_ActiveProgressDot_IsBrandOrange()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var background = await design.StyleAsync(design.ActiveProgressDot, "background-color");
         DesignColor
             .EqualsHex(background, DesignColor.BrandOrange)
@@ -42,7 +41,7 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_ActiveChip_UsesBrandPurpleTileNotMaterial()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var chip = design.ActiveJugglerChip;
         await chip.WaitForAsync();
 
@@ -65,7 +64,7 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_PrimaryCtaAndProgressDots_MeetBrandTouchSizes()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
 
         var ctaBox = await design.PrimaryForwardButton.BoundingBoxAsync();
         ctaBox.Should().NotBeNull();
@@ -80,7 +79,7 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_FilterBottomSheet_HasRoundedTopCorners()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         await design.Wizard.ClickNextAsync();
         await design.Wizard.ClickNextAsync();
         await design.Wizard.OpenAddFilterSheetAsync();
@@ -102,7 +101,7 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_PrimaryCta_UsesPillRadius()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var box = await design.PrimaryForwardButton.BoundingBoxAsync();
         box.Should().NotBeNull();
         var radius = DesignColor.ParseCssPx(
@@ -115,7 +114,7 @@ public class WizardChromeTouchTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_SwipeHint_IsHighContrastOnHeader()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var color = await design.StyleAsync(design.SwipeHint, "color");
         var opacity = await design.StyleAsync(design.SwipeHint, "opacity");
 

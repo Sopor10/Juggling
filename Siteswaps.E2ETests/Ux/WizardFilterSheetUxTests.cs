@@ -7,16 +7,16 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Ux;
 
 /// <summary>Encodes filter bottom-sheet focus, dismiss, and contrast UX contracts.</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardFilterSheetUxTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardFilterSheetUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Filter sheet must trap Tab focus inside the dialog while open.</summary>
     [Fact]
     public async Task Filter_Sheet_Traps_Keyboard_Focus()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
         await wizard.OpenAddFilterSheetAsync();
@@ -35,9 +35,10 @@ public class WizardFilterSheetUxTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Filter_Sheet_Dismisses_With_Escape_And_Backdrop()
     {
-        var page = await fixture.Context!.NewPageAsync();
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
         await WizardUxGeometry.EnsureMobileViewportAsync(page);
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
 

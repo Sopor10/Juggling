@@ -7,6 +7,7 @@ public static class PageExtensions
 {
     public static async Task<WizardPageObject> OpenWizardAsync(this IPage page, Uri baseUri)
     {
+        await E2ECulture.InstallAsync(page.Context);
         await page.GotoAsync(
             baseUri.ToString(),
             new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle }

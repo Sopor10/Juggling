@@ -7,15 +7,15 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Functional;
 
 /// <summary>Step state preservation and reload contracts for /wizard (history/double-next live in Ux).</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardNavigationTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardNavigationTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Jugglers and period chosen on step 1 must survive forward and back navigation.</summary>
     [Fact]
     public async Task Jugglers_And_Period_Survive_Step_Navigation()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.SelectJugglerChipAsync(3);
@@ -35,8 +35,9 @@ public class WizardNavigationTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Reload_Opens_Default_Editing_Session()
     {
-        var page = await fixture.Context!.NewPageAsync();
-        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(fixture));
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
         await wizard.WaitUntilLoadedAsync();
 
         await wizard.SelectJugglerChipAsync(4);

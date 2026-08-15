@@ -1,3 +1,4 @@
 using Xunit;
 
-[assembly: CollectionBehavior(DisableTestParallelization = true, MaxParallelThreads = 1)]
+// Parallelize across test classes; each test uses its own browser context.
+[assembly: CollectionBehavior(DisableTestParallelization = false, MaxParallelThreads = -1)]

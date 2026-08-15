@@ -6,14 +6,13 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Design;
 
 /// <summary>Asserts Passing Zone CTA orange and cyan focus language on /wizard (mockup pz-btn-primary = orange).</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardCtaFocusTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Forward CTA (Weiter) must use brand orange #f9a500 with dark purple text, not purple fill or Bootstrap primary.</summary>
     [Fact]
     public async Task Wizard_ForwardCta_UsesBrandOrangeNotPurpleFill()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var button = design.PrimaryForwardButton;
         await button.WaitForAsync();
 
@@ -50,7 +49,7 @@ public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_GenerateCta_UsesOrangeGradientWithDarkPurpleText()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         await design.Wizard.ClickNextAsync();
         await design.Wizard.ClickNextAsync();
         await design.GenerateButton.WaitForAsync();
@@ -79,7 +78,7 @@ public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_FocusVisible_UsesBrandCyanOutline()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var button = design.PrimaryForwardButton;
         await design.FocusVisibleAsync(button);
 
@@ -99,7 +98,7 @@ public class WizardCtaFocusTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_GhostBack_UsesLavenderPurpleNotGray()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         await design.Wizard.ClickNextAsync();
         await design.GhostBackButton.WaitForAsync();
 

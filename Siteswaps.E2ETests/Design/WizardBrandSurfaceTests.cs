@@ -6,14 +6,13 @@ using Program = Siteswaps.E2ETests.Server.Program;
 namespace Siteswaps.E2ETests.Design;
 
 /// <summary>Asserts Passing Zone brand surfaces on /wizard: purple tokens, lavender wash, Baloo/Nunito, purple header — not Material #8E44AD.</summary>
-[Collection(WizardE2ECollection.Name)]
-public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
+public class WizardBrandSurfaceTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
     /// <summary>Summary: Wizard CSS vars must be brand purple/orange/lavender, never legacy Material #8E44AD.</summary>
     [Fact]
     public async Task Wizard_CssTokens_MatchPassingZoneBrand()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
 
         DesignColor
             .NormalizeHex(await design.CssVarAsync("--wizard-purple-800"))
@@ -41,7 +40,7 @@ public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_PageBackground_IsLavenderBrandWash()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var background = await design.StyleAsync(design.Wizard.Root, "background-color");
         DesignColor
             .EqualsHex(background, DesignColor.BrandLavenderBg)
@@ -53,7 +52,7 @@ public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_Header_UsesBrandPurpleGradient()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
         var backgroundImage = await design.StyleAsync(design.Header, "background-image");
         var backgroundColor = await design.StyleAsync(design.Header, "background-color");
         var combined = $"{backgroundImage} {backgroundColor}";
@@ -76,7 +75,7 @@ public class WizardBrandSurfaceTests(BlazorWebassemblyFixture<Program> fixture)
     [Fact]
     public async Task Wizard_Fonts_UseBalooDisplayAndNunitoBody()
     {
-        var design = await WizardDesignPage.OpenAsync(fixture);
+        await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
 
         var pageFont = await design.StyleAsync(design.Wizard.Root, "font-family");
         pageFont.Should().ContainEquivalentOf("Nunito");
