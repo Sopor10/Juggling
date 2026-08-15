@@ -27,6 +27,11 @@ public static class TransitionCalculator
             return [new Transition(from, to, [])];
         }
 
+        if (length < 1)
+        {
+            return [];
+        }
+
         result.AddRange(
             Recurse(fromState, toState, ImmutableList<Throw>.Empty, length, maxHeight.Value)
         );

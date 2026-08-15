@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Siteswaps.Mcp.Server.Tools;
 
 namespace Siteswaps.Mcp.Server.Test;
@@ -12,7 +13,7 @@ public class GenerateSiteswapsToolTests
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
 
         // Act
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
         var results = await tool.GenerateSiteswaps(
             period: 3,
             numberOfObjects: 3,
@@ -33,7 +34,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -60,7 +61,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -87,7 +88,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -114,7 +115,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -143,7 +144,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -171,7 +172,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -198,7 +199,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -221,7 +222,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(
@@ -248,7 +249,7 @@ public class GenerateSiteswapsToolTests
     {
         // Arrange
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-        var tool = new GenerateSiteswapsTool();
+        var tool = new GenerateSiteswapsTool(NullLogger<GenerateSiteswapsTool>.Instance);
 
         // Act
         var results = await tool.GenerateSiteswaps(

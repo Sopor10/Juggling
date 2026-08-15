@@ -1,0 +1,38 @@
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@inject IStringLocalizer<StateFilterEditor> L
+
+<p class="wizard-hint">@L["Which future throws are occupied?"]</p>
+<p class="wizard-state-notation" aria-live="polite" aria-atomic="true">@StateNotation</p>
+<div class="wizard-chip-grid wizard-state-grid" role="group" aria-label="@L["Which future throws are occupied?"]">
+    @for (var i = 0; i < Value.Items.Length; i++)
+    {
+        var index = i;
+        var isActive = Value.Items[index];
+        <button type="button" class="wizard-chip @(isActive ? "active" : "")"
+                aria-pressed="@(isActive ? "true" : "false")"
+                title="Beat @(index + 1)"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => Toggle(index)">
+            @(index + 1)
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public EasyStateFilter.StateFilter Value { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<EasyStateFilter.StateFilter> ValueChanged { get; set; }
+
+    private string StateNotation => Value.Notation();
+
+    private async Task Toggle(int index)
+    {
+        var items = Value.Items.ToArray();
+        items[index] = !items[index];
+        var value = new EasyStateFilter.StateFilter([.. items]);
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+}

@@ -440,14 +440,8 @@ public class DslParserTests
     [Test]
     public void Parse_FunctionCall_Empty_Args_Fails()
     {
-        // Act
         var result = DslParser.Parse("minOcc()");
 
-        // Assert
-        // minOcc erfordert Argumente, aber das ist semantische Validierung
-        // Syntaktisch könnte es akzeptiert werden
-        // Die Entscheidung hängt von der Grammatik ab
-        // Für jetzt akzeptieren wir leere Argumente syntaktisch
         result.Success.Should().BeTrue();
         var fc = (FilterExpression.FunctionCall)result.Value;
         fc.Args.Should().BeEmpty();
@@ -456,12 +450,8 @@ public class DslParserTests
     [Test]
     public void Parse_Just_Operator_Parses_As_Identifier()
     {
-        // AND allein wird syntaktisch als Identifier geparst.
-        // Die semantische Validierung (Phase 3) sollte prüfen,
-        // ob reservierte Keywords wie AND/OR/NOT als Funktionsnamen verwendet werden.
         var result = DslParser.Parse("AND");
 
-        // Assert - syntaktisch wird es als Identifier geparst
         result.Success.Should().BeTrue();
         result.Value.Should().BeOfType<FilterExpression.Identifier>();
         ((FilterExpression.Identifier)result.Value).Name.Should().Be("AND");

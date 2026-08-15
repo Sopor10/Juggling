@@ -6,4 +6,13 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Sopor10.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <OutputItemType>Analyzer</OutputItemType>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </PackageReference>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)README.md" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)architecture.arch.json" />
+  </ItemGroup>
 </Project>

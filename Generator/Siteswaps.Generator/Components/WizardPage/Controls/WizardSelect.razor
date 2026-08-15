@@ -1,0 +1,117 @@
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="wizard-select @(_open ? "open" : null)" id="@Id">
+    @if (_open)
+    {
+        <div class="wizard-select-dismiss" @onclick="Close" @onpointerdown:stopPropagation="true"></div>
+    }
+    <button id="@(Id)-trigger"
+            type="button"
+            class="wizard-select-trigger"
+            aria-haspopup="listbox"
+            aria-expanded="@(_open ? "true" : "false")"
+            aria-controls="@(Id)-listbox"
+            aria-label="@AriaLabel"
+            @onpointerdown:stopPropagation="true"
+            @onclick="Toggle"
+            @onkeydown="OnTriggerKeyDown">
+        <span class="wizard-select-label">@SelectedLabel</span>
+    </button>
+    @if (_open)
+    {
+        <ul id="@(Id)-listbox"
+            class="wizard-select-menu"
+            role="listbox"
+            aria-label="@AriaLabel"
+            @onpointerdown:stopPropagation="true">
+            @foreach (var option in Options)
+            {
+                var selected = string.Equals(option.Value, Value, StringComparison.Ordinal);
+                <li role="presentation">
+                    <button type="button"
+                            class="wizard-select-option @(selected ? "active" : null)"
+                            role="option"
+                            aria-selected="@(selected ? "true" : "false")"
+                            @onclick="() => SelectAsync(option.Value)">
+                        @option.Label
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    public sealed record Option(string Value, string Label);
+
+    [Parameter]
+    public string Id { get; set; } = $"wizard-select-{Guid.NewGuid():N}";
+
+    [Parameter]
+    public string AriaLabel { get; set; } = "Auswahl";
+
+    [Parameter]
+    public string Value { get; set; } = "";
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<Option> Options { get; set; } = Array.Empty<Option>();
+
+    private bool _open;
+
+    private string SelectedLabel =>
+        Options.FirstOrDefault(o => string.Equals(o.Value, Value, StringComparison.Ordinal))?.Label
+        ?? Value;
+
+    private void Toggle() => _open = !_open;
+
+    private void Close() => _open = false;
+
+    private async Task SelectAsync(string value)
+    {
+        _open = false;
+        if (string.Equals(value, Value, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private async Task OnTriggerKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key is "Escape" && _open)
+        {
+            Close();
+            return;
+        }
+
+        if (e.Key is "ArrowDown" or "Enter" or " " && !_open)
+        {
+            _open = true;
+            return;
+        }
+
+        if (!_open || Options.Count == 0)
+        {
+            return;
+        }
+
+        var index = Options.ToList().FindIndex(o => string.Equals(o.Value, Value, StringComparison.Ordinal));
+        if (e.Key == "ArrowDown")
+        {
+            index = Math.Min(Options.Count - 1, Math.Max(0, index) + 1);
+            await SelectAsync(Options[index].Value);
+            _open = true;
+        }
+        else if (e.Key == "ArrowUp")
+        {
+            index = Math.Max(0, (index < 0 ? 0 : index) - 1);
+            await SelectAsync(Options[index].Value);
+            _open = true;
+        }
+    }
+}

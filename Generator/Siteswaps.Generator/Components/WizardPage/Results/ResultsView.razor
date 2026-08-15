@@ -1,0 +1,110 @@
+@using Siteswaps.Generator.Components.Internal
+@inject IStringLocalizer<ResultsView> L
+
+<div class="wizard-results">
+    <div class="wizard-results-scroll">
+        <div class="wizard-results-header">
+            <h2 class="wizard-results-title">
+                @if (IsGenerating)
+                {
+                    <text>@L["Generating…"]</text>
+                }
+                else if (Results.Count == 1)
+                {
+                    <text>@L["1 result"]</text>
+                }
+                else
+                {
+                    <text>@L["{0} results", Results.Count]</text>
+                }
+            </h2>
+            @if (IsGenerating)
+            {
+                <button type="button" class="wizard-btn-ghost" @onclick="Cancel">@L["Cancel"]</button>
+            }
+        </div>
+
+        @if (IsGenerating && Results.Count == 0)
+        {
+            <div class="wizard-spinner" role="status" aria-live="polite" aria-label="@L["Generating results"]">
+                <div class="wizard-spinner-dot"></div>
+                <div class="wizard-spinner-dot"></div>
+                <div class="wizard-spinner-dot"></div>
+            </div>
+        }
+        else if (!IsGenerating && Results.Count == 0)
+        {
+            <p class="wizard-filters-empty">@L["No matching patterns found. Try different settings or fewer filters."]</p>
+        }
+        else
+        {
+            @if (IsGenerating)
+            {
+                <p class="wizard-loading-more" role="status" aria-live="polite">@L["Loading more results…"]</p>
+            }
+            <div class="wizard-results-grid" role="list">
+                @foreach (var s in Results.Take(_visibleResultCount))
+                {
+                    <SiteswapCard Siteswap="s" NumberOfJugglers="NumberOfJugglers" />
+                }
+            </div>
+            @if (!IsGenerating && _visibleResultCount < Results.Count)
+            {
+                <button type="button" class="wizard-btn-ghost wizard-load-more" @onclick="LoadMore">
+                    @L["Load more ({0} of {1})", Math.Min(_visibleResultCount, Results.Count), Results.Count]
+                </button>
+            }
+        }
+    </div>
+
+    @if (!IsGenerating)
+    {
+        <div class="wizard-results-actions">
+            <div class="wizard-measure">
+                <div class="wizard-nav-buttons">
+                    <button type="button" class="wizard-btn-ghost" @onclick="BackToEditing">@L["Adjust filters"]</button>
+                    <button type="button" class="wizard-btn-primary wizard-flex-1" @onclick="StartOver">@L["New search"]</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<Siteswap> Results { get; set; } = new();
+
+    [Parameter]
+    public bool IsGenerating { get; set; }
+
+    [Parameter]
+    public int NumberOfJugglers { get; set; }
+
+    [Parameter]
+    public EventCallback CancelRequested { get; set; }
+
+    [Parameter]
+    public EventCallback BackToEditingRequested { get; set; }
+
+    [Parameter]
+    public EventCallback StartOverRequested { get; set; }
+
+    private Task Cancel() => CancelRequested.InvokeAsync();
+
+    private Task BackToEditing() => BackToEditingRequested.InvokeAsync();
+
+    private Task StartOver() => StartOverRequested.InvokeAsync();
+
+    private int _visibleResultCount = BatchSize;
+    private const int BatchSize = 40;
+
+    protected override void OnParametersSet()
+    {
+        if (_visibleResultCount == 0 || Results.Count <= BatchSize || _visibleResultCount > Results.Count)
+        {
+            _visibleResultCount = Math.Min(BatchSize, Results.Count);
+        }
+    }
+
+    private void LoadMore() => _visibleResultCount = Math.Min(_visibleResultCount + BatchSize, Results.Count);
+}

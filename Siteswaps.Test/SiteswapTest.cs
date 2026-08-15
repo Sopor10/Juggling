@@ -93,6 +93,17 @@ public class SiteswapTest
     }
 
     [Test]
+    public void TryCreate_Rejects_Notation_Longer_Than_MaxPeriodLength()
+    {
+        var tooLong = new string('3', Siteswap.Details.Siteswap.MaxPeriodLength + 1);
+
+        var result = Siteswap.Details.Siteswap.TryCreate(tooLong, out var sut);
+
+        result.Should().BeFalse();
+        sut.Should().BeNull();
+    }
+
+    [Test]
     public void Calculate_Transitions()
     {
         var sut = new Siteswap.Details.Siteswap(3);

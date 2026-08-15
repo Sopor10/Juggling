@@ -1,0 +1,126 @@
+@namespace Siteswaps.Components.Details.Variants
+@using Siteswap.Details
+@using Siteswaps.Components.Details
+@using Siteswaps.Components.Diagram
+@inject IStringLocalizer<DetailVariantAnalysis> L
+
+@if (Model is null)
+{
+    return;
+}
+
+<section class="sdv-analysis">
+    <div class="sdv-analysis-stack">
+    <dl class="sdv-prop-sheet">
+        <div class="sdv-prop"><dt>@L["Jugglers"]</dt><dd>@Model.NumberOfJugglers</dd></div>
+        <div class="sdv-prop"><dt>@L["Clubs"]</dt><dd>@Model.NumberOfObjects.ToString("0.##")</dd></div>
+        <div class="sdv-prop">
+            <dt>@L["Period"]</dt>
+            <dd class="sdv-prop-stack">
+                <span>@Model.Period</span>
+                <span class="sdv-prop-sub">@L["local {0}", Model.LocalPeriod]</span>
+            </dd>
+        </div>
+        <div class="sdv-prop"><dt>Max</dt><dd>@Model.MaxHeight</dd></div>
+        <div class="sdv-prop"><dt>State</dt><dd>@GroundOrExcitedLabel · <span class="sdv-mono">@Model.CurrentState</span></dd></div>
+    </dl>
+
+    <div class="sdv-analysis-beats">
+        <h3 class="sdv-section-title sdv-analysis-gap">@L["Throws"]</h3>
+        <ThrowChipRow Chips="ActiveThrowChips" AriaLabel="@L["Throws"]" />
+
+        <h3 class="sdv-section-title sdv-analysis-gap-tight">Interface</h3>
+        <ThrowChipRow Chips="ActiveInterfaceChips" AriaLabel="Interface" />
+
+        <div class="sdv-analysis-beats-footer">
+            <div class="sdv-beat-legend" aria-label="@L["Legend"]">
+                <span class="sdv-beat pass"><span class="sdv-beat-throw">·</span></span>
+                <span class="sdv-muted">Pass</span>
+                <span class="sdv-beat self"><span class="sdv-beat-throw">·</span></span>
+                <span class="sdv-muted">Self</span>
+            </div>
+            <div class="sdv-throw-mode" role="radiogroup" aria-label="@L["Throw display"]">
+                <button type="button"
+                        role="radio"
+                        class="@(_showPassSelf ? null : "active")"
+                        aria-checked="@(!_showPassSelf)"
+                        @onclick="() => _showPassSelf = false">
+                    @L["Number"]
+                </button>
+                <button type="button"
+                        role="radio"
+                        class="@(_showPassSelf ? "active" : null)"
+                        aria-checked="@_showPassSelf"
+                        @onclick="() => _showPassSelf = true">
+                    P/S
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="sdv-section-title sdv-analysis-gap">Orbits (@Model.Orbits.Count)</h3>
+    @if (Model.Orbits.Count == 0)
+    {
+        <p class="sdv-muted">@L["No orbits with objects."]</p>
+    }
+    else
+    {
+        <div class="sdv-orbit-expand-list">
+            @foreach (var orbit in Model.Orbits)
+            {
+                var isOpen = string.Equals(_expandedOrbit, orbit.DisplayValue, StringComparison.Ordinal);
+                <article class="sdv-card sdv-orbit-expand @(isOpen ? "open" : null)">
+                    <button type="button"
+                            class="sdv-orbit-expand-head"
+                            aria-expanded="@isOpen"
+                            @onclick="() => ToggleOrbit(orbit.DisplayValue)">
+                        <span class="sdv-orbit-expand-meta">
+                            <span class="sdv-orbit-label">Orbit</span>
+                            <span class="sdv-mono sdv-orbit-value">@orbit.DisplayValue</span>
+                        </span>
+                        <span class="sdv-orbit-chevron" aria-hidden="true">@(isOpen ? "▾" : "▸")</span>
+                    </button>
+                    @if (isOpen && TryCreateOrbitSiteswap(orbit.DisplayValue, out var orbitSiteswap))
+                    {
+                        <div class="sdv-orbit-expand-body">
+                            <SiteswapStateDiagram Id="@($"orbit-graph-{orbit.DisplayValue}")"
+                                                  Value="orbitSiteswap" />
+                        </div>
+                    }
+                </article>
+            }
+        </div>
+    }
+
+    </div>
+</section>
+
+@code {
+    [Parameter] public DetailViewModel? Model { get; set; }
+
+    private string? _expandedOrbit;
+    private bool _showPassSelf;
+
+    private string GroundOrExcitedLabel =>
+        Model?.IsExcitedState == true ? L["Excited"] : L["Ground"];
+
+    private IReadOnlyList<DetailViewModel.ThrowChip> ActiveThrowChips =>
+        Model is null
+            ? []
+            : _showPassSelf
+                ? Model.ThrowPassSelfChips
+                : Model.ThrowChips;
+
+    private IReadOnlyList<DetailViewModel.ThrowChip> ActiveInterfaceChips =>
+        Model is null
+            ? []
+            : _showPassSelf
+                ? Model.InterfacePassSelfChips
+                : Model.InterfaceChips;
+
+    private void ToggleOrbit(string notation) =>
+        _expandedOrbit = string.Equals(_expandedOrbit, notation, StringComparison.Ordinal) ? null : notation;
+
+    private static bool TryCreateOrbitSiteswap(string notation, out Siteswap? siteswap) =>
+        Siteswap.TryCreate(notation, out siteswap);
+}

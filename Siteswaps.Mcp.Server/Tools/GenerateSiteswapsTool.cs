@@ -7,7 +7,7 @@ using Siteswaps.Mcp.Server.Tools.FilterDsl;
 namespace Siteswaps.Mcp.Server.Tools;
 
 [McpServerToolType]
-public class GenerateSiteswapsTool
+public class GenerateSiteswapsTool(ILogger<GenerateSiteswapsTool> logger)
 {
     [McpServerTool]
     [Description(
@@ -73,6 +73,11 @@ public class GenerateSiteswapsTool
 
         // SiteswapGenerator mit Filter erstellen und ausführen
         var generator = new SiteswapGenerator(siteswapFilter, input);
+
+        logger.LogInformation(
+            "Starting siteswap generation with specified parameters {input}",
+            input
+        );
 
         var results = new List<string>();
         await foreach (var siteswap in generator.GenerateAsync(cancellationToken))

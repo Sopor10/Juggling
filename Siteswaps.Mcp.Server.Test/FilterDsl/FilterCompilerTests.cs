@@ -266,8 +266,6 @@ public class FilterCompilerTests
     [Test]
     public void Compile_Complex_Expression_Creates_Working_Filter()
     {
-        // Arrange
-        // (minOcc(5,1) OR minOcc(7,1)) AND noZeros
         var input = CreateInput();
         var compiler = new FilterCompiler(input);
         var expr = new FilterExpression.And(
@@ -334,13 +332,10 @@ public class FilterDslParserApiTests
     [Test]
     public void CreateFilter_With_Syntax_Error_Returns_Failure()
     {
-        // Arrange
         var parser = new FilterDslParser(CreateInput());
 
-        // Act
-        var result = parser.CreateFilter("minOcc(5,2 AND noZeros"); // Fehlende Klammer
+        var result = parser.CreateFilter("minOcc(5,2 AND noZeros");
 
-        // Assert
         result.Success.Should().BeFalse();
         result.ErrorMessage.Should().Contain("Syntaxfehler");
     }
@@ -362,13 +357,10 @@ public class FilterDslParserApiTests
     [Test]
     public void CreateFilter_With_Wrong_Arg_Count_Returns_Failure()
     {
-        // Arrange
         var parser = new FilterDslParser(CreateInput());
 
-        // Act
-        var result = parser.CreateFilter("minOcc(5)"); // Braucht 2 Argumente
+        var result = parser.CreateFilter("minOcc(5)");
 
-        // Assert
         result.Success.Should().BeFalse();
         result.ErrorMessage.Should().Contain("Argument");
     }

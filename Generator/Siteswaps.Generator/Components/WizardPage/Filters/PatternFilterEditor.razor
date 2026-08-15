@@ -1,0 +1,200 @@
+@using Siteswaps.Generator.Components.State
+@using Siteswaps.Generator.Core.Generator
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@inject IJSRuntime JsRuntime
+@inject IStringLocalizer<PatternFilterEditor> L
+
+<p class="wizard-hint">@L["Tap a slot, then a throw below."]</p>
+<div class="wizard-pattern-row">
+    <label class="wizard-sr-only" for="patRotation-trigger">@L["Reference"]</label>
+    <WizardSelect Id="patRotation"
+                  AriaLabel="@L["Reference"]"
+                  Value="@Value.PatternRotation.Value.ToString()"
+                  ValueChanged="OnRotationValueChanged"
+                  Options="_rotationOptions" />
+    <div class="wizard-segmented" role="radiogroup" aria-label="@L["Pattern should"]">
+        <button id="wizard-pattern-include" type="button" class="wizard-chip wizard-segment @(Value.IsIncludePattern ? "active" : "")"
+                role="radio" aria-checked="@(Value.IsIncludePattern ? "true" : "false")" tabindex="@(Value.IsIncludePattern ? "0" : "-1")"
+                @onkeydown="e => OnIncludeKeyDown(e, true)"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => SetInclude(true)">@L["include"]</button>
+        <button id="wizard-pattern-exclude" type="button" class="wizard-chip wizard-segment @(!Value.IsIncludePattern ? "active" : "")"
+                role="radio" aria-checked="@(!Value.IsIncludePattern ? "true" : "false")" tabindex="@(!Value.IsIncludePattern ? "0" : "-1")"
+                @onkeydown="e => OnIncludeKeyDown(e, false)"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => SetInclude(false)">@L["exclude"]</button>
+    </div>
+</div>
+
+<div class="wizard-pattern-sequence">
+    <p class="wizard-pattern-sequence-label">@L["Pattern"]</p>
+    <div class="wizard-pattern-slots" role="group" aria-label="@L["Pattern sequence: tap a slot, then pick a throw below"]">
+        @for (var i = 0; i < Value.Pattern.Count; i++)
+        {
+            var index = i;
+            var isActive = index == _activeSlotIndex;
+            <button type="button" class="wizard-pattern-slot @(isActive ? "active" : "")"
+                    aria-pressed="@(isActive ? "true" : "false")"
+                    @onpointerdown:stopPropagation="true"
+                    @onclick="() => SelectSlot(index)">
+                @PaletteLabel(Value.Pattern[index])
+            </button>
+        }
+    </div>
+</div>
+<p class="wizard-pattern-sequence-label">@L["Throws"]</p>
+<div class="wizard-chip-grid wizard-pattern-palette" role="group" aria-label="@L["Throw palette"]">
+    @foreach (var t in PaletteThrows)
+    {
+        <button type="button" class="wizard-chip"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => AssignActiveSlot(t)">
+            @PaletteLabel(t)
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<Throw> PossibleThrows { get; set; } = Array.Empty<Throw>();
+
+    [Parameter, EditorRequired]
+    public NewPatternFilterInformation Value { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<NewPatternFilterInformation> ValueChanged { get; set; }
+
+    [Parameter]
+    public int Period { get; set; } = 5;
+
+    [Parameter]
+    public int NumberOfJugglers { get; set; } = 2;
+
+    private int _activeSlotIndex;
+    private IJSObjectReference? _jsModule;
+    private string? _focusTargetId;
+    private IReadOnlyList<WizardSelect.Option> _rotationOptions = [];
+
+    private IEnumerable<Throw> PaletteThrows =>
+        WizardPatternFilterUi.WithDontCarePalette(PossibleThrows);
+
+    private static string PaletteLabel(Throw t) => WizardPatternFilterUi.Label(t);
+
+    protected override void OnInitialized()
+    {
+        RefreshRotationOptions();
+        ResizePatternToCurrentLength();
+    }
+
+    protected override void OnParametersSet()
+    {
+        RefreshRotationOptions();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Siteswaps.Generator/Components/WizardPage/WizardPage.razor.js");
+        }
+
+        if (_focusTargetId is not null && _jsModule is not null)
+        {
+            var targetId = _focusTargetId;
+            _focusTargetId = null;
+            await _jsModule.InvokeVoidAsync("focusElement", targetId);
+        }
+    }
+
+    private IEnumerable<PatternRotation> RotationOptions =>
+        Enumerable
+            .Range(0, NumberOfJugglers)
+            .Select(x => new PatternRotation(x))
+            .Prepend(PatternRotation.Local)
+            .Prepend(PatternRotation.Global);
+
+    private void RefreshRotationOptions()
+    {
+        _rotationOptions = RotationOptions
+            .Select(r => new WizardSelect.Option(r.Value.ToString(), RotationLabel(r)))
+            .ToArray();
+    }
+
+    private string RotationLabel(PatternRotation r) =>
+        r.Value switch
+        {
+            -2 => L["Global"],
+            -1 => L["Local (flexible)"],
+            _ => L["Local – juggler {0}", r.Display],
+        };
+
+    private int ComputeLength(PatternRotation rotation) =>
+        rotation == PatternRotation.Global
+            ? Math.Max(1, Period)
+            : Math.Max(1, new Period(Period).GetLocalPeriod(NumberOfJugglers).Value);
+
+    private void ResizePatternToCurrentLength()
+    {
+        var length = ComputeLength(Value.PatternRotation);
+        if (Value.Pattern.Count == length)
+        {
+            return;
+        }
+
+        var resized = Enumerable
+            .Range(0, length)
+            .Select(i => i < Value.Pattern.Count ? Value.Pattern[i] : Throw.Empty)
+            .ToList();
+        Value.Pattern.Clear();
+        Value.Pattern.AddRange(resized);
+        if (_activeSlotIndex >= length)
+        {
+            _activeSlotIndex = 0;
+        }
+    }
+
+    private async Task OnRotationValueChanged(string value)
+    {
+        if (!int.TryParse(value, out var v))
+        {
+            return;
+        }
+
+        Value = Value with { PatternRotation = new PatternRotation(v) };
+        ResizePatternToCurrentLength();
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task SetInclude(bool include)
+    {
+        Value = Value with { IsIncludePattern = include };
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task OnIncludeKeyDown(KeyboardEventArgs e, bool current)
+    {
+        if (e.Key is "ArrowLeft" or "ArrowRight" or "ArrowUp" or "ArrowDown")
+        {
+            await SetInclude(!current);
+            _focusTargetId = current ? "wizard-pattern-exclude" : "wizard-pattern-include";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void SelectSlot(int index) => _activeSlotIndex = index;
+
+    private async Task AssignActiveSlot(Throw t)
+    {
+        if (_activeSlotIndex < 0 || _activeSlotIndex >= Value.Pattern.Count)
+        {
+            return;
+        }
+
+        Value.Pattern[_activeSlotIndex] = t;
+        _activeSlotIndex = Math.Min(_activeSlotIndex + 1, Value.Pattern.Count - 1);
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

@@ -1,0 +1,165 @@
+@namespace Siteswaps.Components.Details.Variants
+@using Siteswap.Details
+@using Siteswap.Details.StateDiagram
+@using Siteswaps.Components.Details
+@using Siteswaps.Components.Diagram
+@inject IStringLocalizer<DetailVariantTransitions> L
+
+@if (Model is null)
+{
+    return;
+}
+
+<section class="sdv-transitions">
+    <div class="sdv-transitions-stack">
+        <h3 class="sdv-section-title">@L["Transitions"]</h3>
+        <p class="sdv-muted">@L["From this siteswap to another — choose the length of transition throws."]</p>
+
+        <div class="sdv-transitions-form">
+            <label class="sdv-transitions-field">
+                <span class="sdv-transitions-label">@L["From"]</span>
+                <span class="sdv-transitions-from sdv-mono">@Model.Notation</span>
+            </label>
+
+            <label class="sdv-transitions-field">
+                <span class="sdv-transitions-label">@L["To"]</span>
+                <input class="sdv-transitions-input sdv-mono"
+                       type="text"
+                       inputmode="text"
+                       autocomplete="off"
+                       spellcheck="false"
+                       placeholder="@L["e.g. 97522"]"
+                       @bind="_toNotation"
+                       @bind:event="oninput" />
+            </label>
+
+            <label class="sdv-transitions-field">
+                <span class="sdv-transitions-label">@L["Max. length"]</span>
+                <input class="sdv-transitions-length"
+                       type="number"
+                       min="1"
+                       max="20"
+                       @bind="_length"
+                       @bind:event="oninput" />
+            </label>
+        </div>
+
+        <button type="button" class="sdv-transitions-generate" @onclick="Generate">
+            @L["Generate"]
+        </button>
+
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <p class="sdv-transitions-error">@_error</p>
+        }
+
+        @if (_transitions.Count > 0)
+        {
+            <ul class="sdv-transitions-list">
+                @foreach (var transition in _transitions)
+                {
+                    <li class="sdv-transitions-item">
+                        <span class="sdv-mono">@transition.PrettyPrint()</span>
+                        <button type="button"
+                                class="sdv-transitions-show"
+                                @onclick="() => Select(transition)">
+                            @L["Show"]
+                        </button>
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (_selected is not null)
+        {
+            <div class="sdv-transitions-graph">
+                <TransitionGraph Transition="_selected" Id="details-transition-graph" />
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public DetailViewModel? Model { get; set; }
+
+    private string _toNotation = "";
+    private int _length = 2;
+    private string _error = "";
+    private HashSet<Transition> _transitions = [];
+    private Transition? _selected;
+    private string? _fromNotation;
+
+    protected override void OnParametersSet()
+    {
+        var notation = Model?.Notation;
+        if (!string.Equals(_fromNotation, notation, StringComparison.Ordinal))
+        {
+            _fromNotation = notation;
+            _transitions = [];
+            _selected = null;
+            _error = "";
+        }
+
+        base.OnParametersSet();
+    }
+
+    private void Generate()
+    {
+        _error = "";
+        _transitions = [];
+        _selected = null;
+
+        if (Model is null)
+        {
+            return;
+        }
+
+        var from = Model.Value;
+        var toText = _toNotation.Trim();
+        if (string.IsNullOrEmpty(toText))
+        {
+            _error = L["Please enter a target siteswap under “To”."];
+            return;
+        }
+
+        if (!Siteswap.TryCreate(toText, out var to) || to is null)
+        {
+            _error = L["“{0}” is not a valid siteswap.", toText];
+            return;
+        }
+
+        if (from.NumberOfObjects() != to.NumberOfObjects())
+        {
+            _error = L["{0} has {1} objects, {2} has {3}.", from, from.NumberOfObjects(), to, to.NumberOfObjects()];
+            return;
+        }
+
+        if (_length < 1)
+        {
+            _error = L["Length must be at least 1."];
+            return;
+        }
+
+        try
+        {
+            var found = new List<Transition>();
+            for (var i = 1; i <= _length; i++)
+            {
+                found.AddRange(from.PossibleTransitions(to, i));
+            }
+
+            _transitions = found.ToHashSet();
+            if (_transitions.Count == 0)
+            {
+                _error = L["No transitions found."];
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = L["Calculation failed: {0}", ex.Message];
+            _transitions = [];
+        }
+    }
+
+    private void Select(Transition transition) => _selected = transition;
+}

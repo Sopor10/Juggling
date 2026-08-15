@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="exclude" xml:space="preserve"><value>ausgeschlossen</value></data>
+  <data name="Global" xml:space="preserve"><value>Global</value></data>
+  <data name="include" xml:space="preserve"><value>enthalten</value></data>
+  <data name="Local – juggler {0}" xml:space="preserve"><value>Lokal – Jongleur {0}</value></data>
+  <data name="Local (flexible)" xml:space="preserve"><value>Lokal (flexibel)</value></data>
+  <data name="Pattern" xml:space="preserve"><value>Muster</value></data>
+  <data name="Pattern sequence: tap a slot, then pick a throw below" xml:space="preserve"><value>Muster-Sequenz, Feld antippen und dann Wurf unten wählen</value></data>
+  <data name="Pattern should" xml:space="preserve"><value>Muster soll</value></data>
+  <data name="Reference" xml:space="preserve"><value>Bezug</value></data>
+  <data name="Tap a slot, then a throw below." xml:space="preserve"><value>Tippe ein Feld an, dann einen Wurf darunter.</value></data>
+  <data name="Throw palette" xml:space="preserve"><value>Wurf-Palette</value></data>
+  <data name="Throws" xml:space="preserve"><value>Würfe</value></data>
+</root>

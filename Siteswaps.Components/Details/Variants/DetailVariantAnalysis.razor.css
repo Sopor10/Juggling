@@ -1,0 +1,244 @@
+.sdv-analysis {
+    display: flex;
+    justify-content: center;
+}
+
+.sdv-analysis-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(100%, 42rem);
+    box-sizing: border-box;
+}
+
+.sdv-analysis-stack > .sdv-section-title,
+.sdv-analysis-stack ::deep .sdv-section-title {
+    text-align: center;
+    width: 100%;
+}
+
+.sdv-analysis-stack > .sdv-prop-sheet,
+.sdv-analysis-stack > .sdv-orbit-expand-list,
+.sdv-analysis-stack > .sdv-muted {
+    width: 100%;
+}
+
+.sdv-prop-sheet {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 8px 0 0;
+}
+
+.sdv-prop {
+    background: var(--sd-bg);
+    border: 2px solid var(--sd-purple-100);
+    border-radius: var(--sd-radius-sm);
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.sdv-prop dt {
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sd-purple-500);
+}
+
+.sdv-prop dd {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--sd-purple-900);
+    word-break: break-word;
+}
+
+.sdv-prop-wide {
+    grid-column: span 2;
+}
+
+.sdv-prop-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.25;
+}
+
+.sdv-prop-sub {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sd-purple-500);
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 520px) {
+    .sdv-prop-wide {
+        grid-column: span 1;
+    }
+}
+
+.sdv-analysis-gap {
+    margin: 48px 0 18px;
+}
+
+.sdv-analysis-gap-tight {
+    margin: 22px 0 14px;
+}
+
+.sdv-analysis-beats {
+    width: max-content;
+    max-width: 100%;
+    margin-top: 8px;
+}
+
+.sdv-analysis-beats-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 16px;
+}
+
+.sdv-analysis-beats .sdv-throw-mode {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-left: auto;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--sd-bg);
+}
+
+.sdv-analysis-beats .sdv-throw-mode button {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    padding: 8px 12px;
+    min-height: 36px;
+    background: transparent;
+    color: var(--sd-purple-400);
+    font-family: var(--sd-font-display);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sdv-analysis-beats .sdv-throw-mode button + button {
+    border-left: 2px solid var(--sd-purple-100);
+}
+
+.sdv-analysis-beats .sdv-throw-mode button:hover {
+    color: var(--sd-purple-700);
+}
+
+.sdv-analysis-beats .sdv-throw-mode button.active {
+    background: var(--sd-purple-700);
+    color: white;
+}
+
+.sdv-analysis-beats .sdv-beat-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.sdv-analysis-beats .sdv-beat-legend .sdv-beat {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 2px;
+}
+
+.sdv-analysis-beats .sdv-beat-legend .sdv-beat-throw {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.sdv-orbit-expand-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 8px 0 0;
+}
+
+.sdv-orbit-expand {
+    padding: 0;
+    overflow: hidden;
+}
+
+.sdv-orbit-expand.open {
+    grid-column: 1 / -1;
+}
+
+.sdv-orbit-expand-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+}
+
+.sdv-orbit-expand-head:hover {
+    background: color-mix(in srgb, var(--sd-purple-100) 55%, white);
+}
+
+.sdv-orbit-expand-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sdv-orbit-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sd-purple-500);
+}
+
+.sdv-orbit-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--sd-purple-800);
+}
+
+.sdv-orbit-chevron {
+    flex-shrink: 0;
+    color: var(--sd-purple-400);
+    font-size: 16px;
+}
+
+.sdv-orbit-expand-body {
+    padding: 0 12px 12px;
+    overflow: auto;
+    border-top: 1px solid var(--sd-purple-100);
+}
+
+.sdv-orbit-expand-body ::deep .border-1 {
+    border: none !important;
+}
+
+.sdv-bullet-list {
+    margin: 4px 0 0;
+    padding-left: 18px;
+}
+
+.sdv-bullet-list li {
+    margin-bottom: 4px;
+    font-size: 16px;
+}

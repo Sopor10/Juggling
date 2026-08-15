@@ -1,0 +1,15 @@
+@namespace Siteswaps.Components.Details.Variants
+@using Siteswaps.Components.Details
+
+@if (Model is null)
+{
+    return;
+}
+
+<section class="sdv-hero">
+    <JugglerBeatRows Model="Model" />
+</section>
+
+@code {
+    [Parameter] public DetailViewModel? Model { get; set; }
+}

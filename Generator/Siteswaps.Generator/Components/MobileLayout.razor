@@ -1,0 +1,14 @@
+@inherits LayoutComponentBase
+
+@* Legacy mobile-only layout retained for optional pages; prefer MainLayout with the top PZ navbar. *@
+
+<div class="mobile-layout">
+    @Body
+</div>
+
+<style>
+    .mobile-layout {
+        position: relative;
+        min-height: 100%;
+    }
+</style>

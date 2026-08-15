@@ -1,0 +1,80 @@
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@using Siteswaps.Generator.Core.Generator
+@inject IStringLocalizer<NumberFilterEditor> L
+
+<p class="wizard-hint">@L["e.g. \"exactly 2× Heff\""]</p>
+<div class="wizard-number-row">
+    <WizardSelect Id="numComparison"
+                  AriaLabel="@L["Comparison"]"
+                  Value="@Value.Type.ToString()"
+                  ValueChanged="OnTypeChanged"
+                  Options="TypeOptions" />
+    <label class="wizard-sr-only" for="numAmount">@L["Amount"]</label>
+    <input id="numAmount" type="number" min="0" max="30" class="wizard-input-number"
+           value="@Value.Amount" @oninput="OnAmountChanged" />
+    <WizardSelect Id="numThrow"
+                  AriaLabel="@L["Throw"]"
+                  Value="@Value.Throw.Height.ToString()"
+                  ValueChanged="OnThrowChanged"
+                  Options="_throwOptions" />
+</div>
+
+@code {
+    private IReadOnlyList<WizardSelect.Option> TypeOptions =>
+    [
+        new(EasyNumberFilter.NumberFilterType.Exactly.ToString(), L["Exactly"].Value),
+        new(EasyNumberFilter.NumberFilterType.Maximum.ToString(), L["At most"].Value),
+        new(EasyNumberFilter.NumberFilterType.AtLeast.ToString(), L["At least"].Value),
+    ];
+
+    private IReadOnlyList<WizardSelect.Option> _throwOptions = [];
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<Throw> PossibleThrows { get; set; } = Array.Empty<Throw>();
+
+    [Parameter, EditorRequired]
+    public EasyNumberFilter.NumberFilter Value { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<EasyNumberFilter.NumberFilter> ValueChanged { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _throwOptions = PossibleThrows
+            .Select(t => new WizardSelect.Option(t.Height.ToString(), t.GetDisplayValue(true)))
+            .ToArray();
+    }
+
+    private async Task OnTypeChanged(string value)
+    {
+        if (Enum.TryParse<EasyNumberFilter.NumberFilterType>(value, out var type))
+        {
+            await Update(Value with { Type = type });
+        }
+    }
+
+    private async Task OnAmountChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var amount))
+        {
+            await Update(Value with { Amount = Math.Max(0, amount) });
+        }
+    }
+
+    private async Task OnThrowChanged(string value)
+    {
+        if (
+            int.TryParse(value, out var height)
+            && PossibleThrows.FirstOrDefault(t => t.Height == height) is { } t
+        )
+        {
+            await Update(Value with { Throw = t });
+        }
+    }
+
+    private async Task Update(EasyNumberFilter.NumberFilter value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+}

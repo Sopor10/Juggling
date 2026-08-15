@@ -1,28 +1,56 @@
 ﻿@page "/Settings"
 @using Blazored.LocalStorage
+@using Microsoft.JSInterop
 @inject ILocalStorageService LocalStorage
+@inject IJSRuntime JsRuntime
+@inject NavigationManager Navigation
+@inject IStringLocalizer<Settings> L
 
-<h3>Settings</h3>
+<PageTitle>@L["Settings"]</PageTitle>
+
+<h3>@L["Settings"]</h3>
 
 <EditForm Model="Value" OnValidSubmit="SaveSettings">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div>
-        <RadzenLabel Text="Use Throw Names" Style="margin-right: 10px;"></RadzenLabel>
+    <div class="mt-3">
+        <RadzenLabel Text="@L["Language"]" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
+        <RadzenRadioButtonList TValue="string" @bind-Value="Value.Culture" Orientation="Orientation.Horizontal">
+            <Items>
+                <RadzenRadioButtonListItem Text="@L["German"]" Value="@AppCultures.German" />
+                <RadzenRadioButtonListItem Text="@L["English"]" Value="@AppCultures.English" />
+            </Items>
+        </RadzenRadioButtonList>
+    </div>
+
+    <div class="mt-3">
+        <RadzenLabel Text="@L["Use throw names"]" Style="margin-right: 10px;"></RadzenLabel>
         <RadzenCheckBox TValue="bool" @bind-Value="Value.ShowThrowNames" />
     </div>
 
-    <div>
-        <RadzenLabel Text="Max Height" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
+    <div class="mt-3">
+        <RadzenLabel Text="@L["Throw display (details)"]" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
+        <RadzenRadioButtonList TValue="string" @bind-Value="Value.ThrowDisplayMode" Orientation="Orientation.Horizontal">
+            <Items>
+                <RadzenRadioButtonListItem Text="@L["Local"]" Value="@("Local")" />
+                <RadzenRadioButtonListItem Text="@L["Global"]" Value="@("Global")" />
+                <RadzenRadioButtonListItem Text="@L["Names"]" Value="@("Name")" />
+            </Items>
+        </RadzenRadioButtonList>
+    </div>
+
+    <div class="mt-3">
+        <RadzenLabel Text="@L["Max height"]" Style="display: block; margin-bottom: 5px;"></RadzenLabel>
         <RadzenNumeric TValue="int" @bind-Value="Value.MaxHeight" Min="1" Max="50" Style="width: 100%;" />
     </div>
 
-    <button type="submit" class="btn btn-primary float-end mt-2">Save Settings</button>
+    <button type="submit" class="btn btn-primary float-end mt-2">@L["Save settings"]</button>
 </EditForm>
 
 @code {
-    private SettingsDto Value { get; set; } = new SettingsDto();
+    private SettingsDto Value { get; set; } = new();
+    private string _cultureWhenOpened = AppCultures.Default;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,19 +58,28 @@
         if (settings != null)
         {
             Value = settings;
+            if (string.IsNullOrWhiteSpace(Value.ThrowDisplayMode))
+            {
+                Value.ThrowDisplayMode = "Global";
+            }
         }
+
+        var preferred = await JsRuntime.InvokeAsync<string>("blazorCulture.getPreferred");
+        Value.Culture = AppCultures.Normalize(
+            string.IsNullOrWhiteSpace(Value.Culture) ? preferred : Value.Culture
+        );
+        _cultureWhenOpened = Value.Culture;
     }
 
     private async Task SaveSettings()
     {
+        Value.Culture = AppCultures.Normalize(Value.Culture);
         await LocalStorage.SetItemAsync("settings", Value);
-        // Optional: Display a confirmation or feedback to the user
-        Console.WriteLine("Settings saved successfully.");
-    }
+        await JsRuntime.InvokeVoidAsync("blazorCulture.set", Value.Culture);
 
-    public record SettingsDto
-    {
-        public bool ShowThrowNames { get; set; } = true;
-        public int MaxHeight { get; set; } = 13;
+        if (!string.Equals(_cultureWhenOpened, Value.Culture, StringComparison.Ordinal))
+        {
+            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        }
     }
 }

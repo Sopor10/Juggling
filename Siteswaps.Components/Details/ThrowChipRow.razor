@@ -1,0 +1,23 @@
+@namespace Siteswaps.Components.Details
+@using Siteswap.Details
+
+@if (Chips is null || Chips.Count == 0)
+{
+    return;
+}
+
+<div class="sdv-beat-row" aria-label="@AriaLabel">
+    @foreach (var chip in Chips)
+    {
+        var kindClass = chip.Kind == PassOrSelf.Pass ? "pass" : "self";
+        var kindTitle = chip.Kind == PassOrSelf.Pass ? "Pass" : "Self";
+        <div class="sdv-beat @kindClass" title="@kindTitle" aria-label="@chip.Display @kindTitle">
+            <span class="sdv-beat-throw">@chip.Display</span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public IReadOnlyList<DetailViewModel.ThrowChip>? Chips { get; set; }
+    [Parameter] public string AriaLabel { get; set; } = "Throws";
+}

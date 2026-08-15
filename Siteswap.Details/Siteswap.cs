@@ -6,6 +6,12 @@ namespace Siteswap.Details;
 
 public record Siteswap(CyclicArray<int> Items)
 {
+    /// <summary>
+    /// Upper bound for period length when parsing or iterating user-supplied notation.
+    /// Keeps loop bounds independent of unbounded query/input size.
+    /// </summary>
+    public const int MaxPeriodLength = 64;
+
     public Siteswap(params int[] items)
         : this(new CyclicArray<int>(items))
     {
@@ -24,10 +30,11 @@ public record Siteswap(CyclicArray<int> Items)
     {
         get
         {
-            var result = new int[Items.Length];
+            var length = BoundPeriodLength(Items.Length);
+            var result = new int[length];
 
-            for (var i = 0; i < Items.Length; i++)
-                result[(i + Items[i]) % Items.Length] = Items[i];
+            for (var i = 0; i < length; i++)
+                result[(i + Items[i]) % length] = Items[i];
 
             return new Interface(result.ToImmutableList());
         }
@@ -45,8 +52,15 @@ public record Siteswap(CyclicArray<int> Items)
     public static bool TryCreate(string value, [NotNullWhen(true)] out Siteswap? siteswap)
     {
         siteswap = null;
-        return value != string.Empty && TryCreate(value.Select(ToInt), out siteswap);
+        if (string.IsNullOrEmpty(value) || value.Length > MaxPeriodLength)
+        {
+            return false;
+        }
+
+        return TryCreate(value.Select(ToInt), out siteswap);
     }
+
+    private static int BoundPeriodLength(int length) => Math.Clamp(length, 0, MaxPeriodLength);
 
     private static int ToInt(char c)
     {
@@ -67,14 +81,14 @@ public record Siteswap(CyclicArray<int> Items)
         [NotNullWhen(true)] out Siteswap? siteswap
     )
     {
-        if (IsValid(items))
+        if (items.Length is < 1 or > MaxPeriodLength || !IsValid(items))
         {
-            siteswap = new Siteswap(items);
-            return true;
+            siteswap = null;
+            return false;
         }
 
-        siteswap = null;
-        return false;
+        siteswap = new Siteswap(items);
+        return true;
     }
 
     private static bool IsValid(CyclicArray<int> items)
@@ -165,7 +179,8 @@ public record Siteswap(CyclicArray<int> Items)
 
     public Dictionary<State, List<Siteswap>> AllStates()
     {
-        var siteswaps = Enumerable.Range(0, Period.Value).Select(Rotate).ToList();
+        var period = BoundPeriodLength(Period.Value);
+        var siteswaps = Enumerable.Range(0, period).Select(Rotate).ToList();
         var dictionary = new Dictionary<State, List<Siteswap>>();
         foreach (var siteswap in siteswaps)
             if (dictionary.ContainsKey(siteswap.State))
@@ -176,9 +191,16 @@ public record Siteswap(CyclicArray<int> Items)
         return dictionary;
     }
 
-    private Siteswap Rotate(int i)
+    public Siteswap Rotate(int steps)
     {
-        return new Siteswap(Items.Rotate(i));
+        var period = Period.Value;
+        if (period <= 1)
+        {
+            return this;
+        }
+
+        var normalized = ((steps % period) + period) % period;
+        return normalized == 0 ? this : new Siteswap(Items.Rotate(normalized));
     }
 
     public LocalSiteswap GetLocalSiteswap(int juggler, int numberOfJugglers)
