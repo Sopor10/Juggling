@@ -1,7 +1,6 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
 @import "colors.css";
-@import "radzen.css";
 
 html, body {
     font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -49,6 +48,7 @@ a, .btn-link {
 }
 
 .content:has(.wizard-page),
+.content:has(.settings-page),
 .content:has(.sd-page) {
     padding-top: 0;
     background: #f5f3fb;
