@@ -63,7 +63,8 @@ public class ThrowTests
 
                 foreach (var height in heights)
                 {
-                    Throw.GetDisplayNameForHeight(height, jugglers)
+                    Throw
+                        .GetDisplayNameForHeight(height, jugglers)
                         .Should()
                         .Be(
                             named.DisplayValue,
