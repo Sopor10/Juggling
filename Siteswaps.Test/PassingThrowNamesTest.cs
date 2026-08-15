@@ -9,9 +9,7 @@ public class PassingThrowNamesTest
 {
     private static readonly (string Name, int BaseHeight)[] Catalog =
     [
-        ("0", 0),
         ("Zip", 2),
-        ("3", 3),
         ("Hold", 4),
         ("Zap", 5),
         ("Self", 6),
@@ -51,6 +49,15 @@ public class PassingThrowNamesTest
         PassingThrowNames.Format(15, 2).Should().Be("7.5");
         PassingThrowNames.Format(1, 3).Should().Be("0.33");
         PassingThrowNames.Format(21, 3).Should().Be("7");
+    }
+
+    [Test]
+    public void Format_Does_Not_Treat_Digit_Labels_As_Names()
+    {
+        // Former catalog entries "0" / "3" are numbers, not names → local height.
+        PassingThrowNames.Format(0, 2).Should().Be("0");
+        PassingThrowNames.Format(3, 2).Should().Be("1.5");
+        PassingThrowNames.Format(6, 4).Should().Be("1.5");
     }
 
     [TestCase(2, 2, new[] { 2 })]

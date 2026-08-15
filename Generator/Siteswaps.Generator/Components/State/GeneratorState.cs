@@ -77,6 +77,10 @@ public record Throw(string Name, int Height, string DisplayValue)
             QuadPass,
         };
 
+    /// <summary>Throws with real display names (not digit-only labels like 0/3).</summary>
+    private static IEnumerable<Throw> NamedDisplayThrows =>
+        NamedThrows.Where(t => t.DisplayValue.Any(c => !char.IsDigit(c)));
+
     public static IEnumerable<Throw> All(int height = 13)
     {
         foreach (var i in Enumerable.Range(0, height + 1))
@@ -129,12 +133,12 @@ public record Throw(string Name, int Height, string DisplayValue)
     /// <summary>
     /// Display name for a global height at the given juggler count (inverse of
     /// <see cref="GetHeightForJugglers"/> for named throws). Falls back to the
-    /// local height when no named throw matches.
+    /// local height when no named throw matches. Digit-only labels are not names.
     /// </summary>
     public static string GetDisplayNameForHeight(int height, int amountOfJugglers)
     {
         var jugglers = Math.Max(1, amountOfJugglers);
-        foreach (var named in NamedThrows)
+        foreach (var named in NamedDisplayThrows)
         {
             if (named.GetHeightForJugglers(jugglers, useLiteralValue: false).Contains(height))
             {

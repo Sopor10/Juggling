@@ -30,6 +30,8 @@ public class ThrowTests
     [TestCase(2, 15, "7.5")]
     [TestCase(3, 1, "0.33")]
     [TestCase(3, 21, "7")]
+    [TestCase(2, 3, "1.5")]
+    [TestCase(4, 6, "1.5")]
     public void GetDisplayNameForHeight_Falls_Back_To_Local_When_Unnamed(
         int jugglers,
         int height,
@@ -42,15 +44,14 @@ public class ThrowTests
     /// <summary>
     /// Property: for every juggler count and named throw,
     /// throw → GetHeightForJugglers → GetDisplayNameForHeight must yield the same throw.
+    /// Digit-only labels (0, 3) are not names and are excluded.
     /// </summary>
     [Test]
     public void Named_Throw_To_Height_To_Named_Throw_Is_Identity_For_All_Juggler_Counts()
     {
         var namedThrows = new[]
         {
-            Throw.EmptyHand,
             Throw.Zip,
-            Throw.Three,
             Throw.Hold,
             Throw.Zap,
             Throw.Self,

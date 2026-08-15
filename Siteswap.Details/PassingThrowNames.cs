@@ -12,13 +12,12 @@ public static class PassingThrowNames
     private sealed record NamedThrow(string Display, int BaseHeight);
 
     /// <summary>
-    /// Catalog ordered from low to high base height. First match wins on reverse lookup.
+    /// Real throw <em>names</em> only (Zip, Hold, Self, …). Digit-only labels like
+    /// <c>0</c>/<c>3</c> are not names — <see cref="Format"/> falls back to local height.
     /// </summary>
     private static readonly NamedThrow[] Catalog =
     [
-        new("0", 0),
         new("Zip", 2),
-        new("3", 3),
         new("Hold", 4),
         new("Zap", 5),
         new("Self", 6),
