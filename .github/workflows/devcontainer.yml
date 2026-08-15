@@ -35,7 +35,7 @@ jobs:
           node-version: "22"
 
       - name: Install Dev Container CLI
-        run: npm install -g @devcontainers/cli@0.87.0
+        run: npm install -g @devcontainers/cli@0.87.0 --ignore-scripts
 
       - name: Start Dev Container
         run: |
