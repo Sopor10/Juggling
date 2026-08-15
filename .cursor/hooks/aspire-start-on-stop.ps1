@@ -1,5 +1,6 @@
-# On agent turn end: if any file was edited this turn, start Aspire in the background.
-# aspire start handles an already-running AppHost itself.
+# On agent turn end: if any file was edited this turn,
+# 1) format the repo with CSharpier (autofix)
+# 2) start Aspire in the background (aspire start handles an already-running AppHost)
 
 $ErrorActionPreference = 'Continue'
 
@@ -30,20 +31,28 @@ if (-not (Test-Path -LiteralPath $markerPath)) {
 
 Remove-Item -LiteralPath $markerPath -Force -ErrorAction SilentlyContinue
 
-if (-not (Get-Command aspire -ErrorAction SilentlyContinue)) {
-    [Console]::Error.WriteLine('[aspire-start-on-stop] aspire CLI not found on PATH; skipping')
-    Write-HookJson @{}
-    exit 0
-}
-
-if (-not (Test-Path -LiteralPath $appHost)) {
-    [Console]::Error.WriteLine("[aspire-start-on-stop] AppHost not found: $appHost")
-    Write-HookJson @{}
-    exit 0
-}
-
 Push-Location $repoRoot
 try {
+    [Console]::Error.WriteLine('[aspire-start-on-stop] csharpier format (files edited this turn)')
+    dotnet csharpier format . 2>&1 | ForEach-Object {
+        [Console]::Error.WriteLine($_)
+    }
+    if ($LASTEXITCODE -ne 0) {
+        [Console]::Error.WriteLine("[aspire-start-on-stop] csharpier format exited with code $LASTEXITCODE")
+    }
+
+    if (-not (Get-Command aspire -ErrorAction SilentlyContinue)) {
+        [Console]::Error.WriteLine('[aspire-start-on-stop] aspire CLI not found on PATH; skipping start')
+        Write-HookJson @{}
+        exit 0
+    }
+
+    if (-not (Test-Path -LiteralPath $appHost)) {
+        [Console]::Error.WriteLine("[aspire-start-on-stop] AppHost not found: $appHost")
+        Write-HookJson @{}
+        exit 0
+    }
+
     [Console]::Error.WriteLine('[aspire-start-on-stop] aspire start (files edited this turn)')
     aspire start --apphost $appHost --nologo --non-interactive 2>&1 | ForEach-Object {
         [Console]::Error.WriteLine($_)
