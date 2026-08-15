@@ -9,9 +9,9 @@ namespace Siteswaps.E2ETests.Ux;
 /// <summary>Encodes generation feedback, empty states, and silent-clamp UX contracts.</summary>
 public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
-    /// <summary>Summary: Generate must show loading feedback immediately and disable repeat starts.</summary>
+    /// <summary>Summary: Generate must leave editing chrome and finish on the results view.</summary>
     [Fact]
-    public async Task Generate_Shows_Loading_Feedback_And_Disables_Repeat()
+    public async Task Generate_Reaches_Results_Without_Repeat_Generate_Cta()
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var page = session.Page;
@@ -21,17 +21,12 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await wizard.AdvanceToFiltersAsync();
 
         await wizard.ClickGenerateAsync();
-        // Poll the title immediately after click. Waiting for the spinner first, then reading
-        // the title synchronously, races when generation finishes within MinSpinnerVisibleMs.
-        await Assertions
-            .Expect(wizard.ResultsTitle)
-            .ToContainTextAsync(
-                "Generiere",
-                new LocatorAssertionsToContainTextOptions { Timeout = 5_000 }
-            );
+        await wizard.WaitForResultsAsync();
+
+        await Assertions.Expect(wizard.ResultsActions).ToBeVisibleAsync();
         (await page.Locator(".wizard-btn-generate").CountAsync())
             .Should()
-            .Be(0, because: "generate CTA must leave the editing chrome while generating");
+            .Be(0, because: "results chrome replaces the generate CTA when generation finishes");
     }
 
     /// <summary>Summary: Extreme period values must clamp visibly with user feedback, not silently.</summary>

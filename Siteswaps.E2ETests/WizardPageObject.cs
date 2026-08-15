@@ -129,13 +129,10 @@ public class WizardPageObject(IPage page)
         await Results.WaitForAsync(
             new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeoutMs }
         );
-        await GeneratingSpinner.WaitForAsync(
-            new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = timeoutMs }
-        );
-        // Title keys: "Generating…" (en) / "Generiere…" (de)
+        // End state only: results actions render when generation has finished (!IsGenerating).
         await Assertions
-            .Expect(ResultsTitle)
-            .Not.ToContainTextAsync("Generat", new() { Timeout = timeoutMs });
+            .Expect(ResultsActions)
+            .ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions { Timeout = timeoutMs });
     }
 
     public async Task ExpectStepAsync(int stepIndex)
