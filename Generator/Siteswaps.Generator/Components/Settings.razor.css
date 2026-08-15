@@ -1,0 +1,159 @@
+.settings-page {
+    --wizard-purple-950: #241a3d;
+    --wizard-purple-900: #2c1f52;
+    --wizard-purple-800: #33225d;
+    --wizard-purple-700: #3c286d;
+    --wizard-purple-600: #472779;
+    --wizard-purple-500: #552f8c;
+    --wizard-purple-400: #6b41a8;
+    --wizard-purple-100: #e8e1f7;
+    --wizard-orange: #f9a500;
+    --wizard-bg: #f5f3fb;
+    --wizard-radius-sm: 10px;
+    --wizard-shadow-sm: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
+    --wizard-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: var(--wizard-bg);
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--wizard-purple-900);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.settings-page button:focus-visible,
+.settings-page input:focus-visible {
+    outline: 3px solid #00b3ff;
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+.settings-header {
+    background: radial-gradient(120% 140% at 20% 0%, var(--wizard-purple-600) 0%, var(--wizard-purple-800) 45%, var(--wizard-purple-950) 100%);
+    color: white;
+    padding: 18px 20px 22px;
+    flex-shrink: 0;
+}
+
+.settings-title {
+    margin: 0;
+    text-align: center;
+    font-family: var(--wizard-font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.settings-body {
+    flex: 1;
+    padding: 24px 20px 32px;
+    box-sizing: border-box;
+}
+
+.settings-measure {
+    width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    box-sizing: border-box;
+}
+
+.settings-field + .settings-field {
+    margin-top: 1.5rem;
+}
+
+.settings-section-label {
+    display: block;
+    text-align: center;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wizard-purple-600);
+    margin: 0 0 0.65rem;
+}
+
+.settings-chip-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.settings-chip {
+    border-radius: var(--wizard-radius-sm);
+    font-weight: 800;
+    font-family: var(--wizard-font-display);
+    font-size: 13px;
+    border: 2px solid var(--wizard-purple-100);
+    background: white;
+    color: var(--wizard-purple-500);
+    padding: 10px 16px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.settings-chip.active {
+    background: var(--wizard-purple-700);
+    border-color: var(--wizard-purple-700);
+    color: white;
+}
+
+.settings-chip:active {
+    transform: scale(0.94);
+}
+
+.settings-input-number {
+    display: block;
+    width: 100%;
+    max-width: 120px;
+    margin-inline: auto;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-weight: 700;
+    font-size: 15px;
+    min-height: 44px;
+    text-align: center;
+    color: var(--wizard-purple-900);
+    background: white;
+    box-sizing: border-box;
+}
+
+.settings-input-number::-webkit-outer-spin-button,
+.settings-input-number::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.settings-input-number[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.settings-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: stretch;
+}
+
+.settings-btn-primary {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-family: var(--wizard-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(180deg, #ffb838, var(--wizard-orange));
+    color: var(--wizard-purple-950);
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+}
+
+.settings-btn-primary:active {
+    transform: scale(0.97);
+}

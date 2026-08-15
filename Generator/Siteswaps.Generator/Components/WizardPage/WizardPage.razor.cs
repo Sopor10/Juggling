@@ -15,7 +15,7 @@ namespace Siteswaps.Generator.Components.WizardPage;
 /// <summary>
 /// Code-behind for the mobile-first, guided siteswap-generator wizard.
 /// All page state (current step, inputs, flat filter list, generation results) lives in a
-/// single plain <see cref="WizardState"/> instance here - no Fluxor store, no Radzen. Child
+/// single plain <see cref="WizardState"/> instance here - no Fluxor store. Child
 /// components communicate with this page through parameters and EventCallbacks only.
 /// </summary>
 public partial class WizardPage : ComponentBase, IAsyncDisposable

@@ -12,7 +12,6 @@
     <PackageReference Include="Microsoft.Extensions.Localization" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
     <PackageReference Include="VisNetwork.Blazor" />
-    <PackageReference Include="Radzen.Blazor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
