@@ -1,8 +1,9 @@
 @using Siteswaps.Generator.Components.Internal.EasyFilter
+@inject IStringLocalizer<StateFilterEditor> L
 
-<p class="wizard-hint">Welche zukünftigen Würfe sind belegt?</p>
+<p class="wizard-hint">@L["Which future throws are occupied?"]</p>
 <p class="wizard-state-notation" aria-live="polite" aria-atomic="true">@StateNotation</p>
-<div class="wizard-chip-grid wizard-state-grid" role="group" aria-label="Welche zukünftigen Würfe sind belegt?">
+<div class="wizard-chip-grid wizard-state-grid" role="group" aria-label="@L["Which future throws are occupied?"]">
     @for (var i = 0; i < Value.Items.Length; i++)
     {
         var index = i;

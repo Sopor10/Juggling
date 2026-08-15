@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Siteswaps.Generator.Components;
 using Siteswaps.Generator.Components.State;
@@ -21,13 +22,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 {
     private const int MinSpinnerVisibleMs = 500;
 
-    private static readonly string[] StepTitles =
-    {
-        "Jongleure & Periode",
-        "Keulen & Würfe",
-        "Noch Filter?",
-    };
-
     private readonly WizardState State = new();
 
     private FilterBottomSheet? _filterSheet;
@@ -46,6 +40,18 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     [Inject]
     private ILocalStorageService LocalStorage { get; set; } = default!;
+
+    [Inject]
+    private IStringLocalizer<WizardPage> L { get; set; } = default!;
+
+    private string StepTitle(int step) =>
+        step switch
+        {
+            0 => L["Jugglers & period"],
+            1 => L["Clubs & throws"],
+            2 => L["Any filters?"],
+            _ => string.Empty,
+        };
 
     private bool IsStepActive(int step) => State.CurrentStep == step;
 
@@ -73,16 +79,21 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         return copy;
     }
 
-    private string NextButtonText => IsLastStep ? "Generieren →" : "Weiter";
+    private string NextButtonText => IsLastStep ? L["Generate →"] : L["Next"];
 
     private bool IsNextDisabled =>
         _isStepTransitioning || _isStartingGeneration || State.Phase == WizardPhase.Generating;
 
     private string? NextPreviewText =>
-        IsLastStep ? null : $"Weiter: {StepTitles[State.CurrentStep + 1]}";
+        IsLastStep ? null : L["Next: {0}", StepTitle(State.CurrentStep + 1)].Value;
 
     private string StepAnnouncement =>
-        $"Schritt {State.CurrentStep + 1} / {WizardState.TotalSteps}: {StepTitles[State.CurrentStep]}";
+        L[
+            "Step {0} / {1}: {2}",
+            State.CurrentStep + 1,
+            WizardState.TotalSteps,
+            StepTitle(State.CurrentStep)
+        ];
 
     private static string? AriaHidden(bool isActive) => isActive ? null : "true";
 

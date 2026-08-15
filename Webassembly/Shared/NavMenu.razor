@@ -1,33 +1,34 @@
 ﻿@inject NavigationManager Navigation
+@inject IStringLocalizer<NavMenu> L
 
-<nav class="pznav" aria-label="Hauptnavigation">
+<nav class="pznav" aria-label="@L["Main navigation"]">
     <div class="pznav-bar">
-        <a class="pznav-brand" href="" aria-label="Passing Zone – Siteswap Generator">
+        <a class="pznav-brand" href="" aria-label="@L["Passing Zone – Siteswap Generator"]">
             <img class="pznav-logo" src="images/brand/passing_zone_short_logo.svg" width="52" height="32" alt="Passing Zone" />
             <span class="pznav-brand-text">Siteswap Generator</span>
         </a>
         <form class="pznav-search" @onsubmit="OpenSiteswap" @onsubmit:preventDefault>
-            <label class="visually-hidden" for="pznav-siteswap">Siteswap öffnen</label>
+            <label class="visually-hidden" for="pznav-siteswap">@L["Open siteswap"]</label>
             <input id="pznav-siteswap"
                    class="pznav-search-input"
                    type="search"
                    inputmode="text"
                    autocomplete="off"
                    spellcheck="false"
-                   placeholder="Siteswap…"
+                   placeholder="@L["Siteswap…"]"
                    aria-invalid="@(_invalid ? "true" : "false")"
                    @bind="_siteswapQuery"
                    @bind:event="oninput" />
-            <button type="submit" class="pznav-search-submit" title="Details öffnen" aria-label="Details öffnen">
+            <button type="submit" class="pznav-search-submit" title="@L["Open details"]" aria-label="@L["Open details"]">
                 →
             </button>
         </form>
-        <button type="button" title="Navigation menu" class="pznav-toggler" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
+        <button type="button" title="@L["Navigation menu"]" class="pznav-toggler" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
             <span class="pznav-toggler-icon" aria-hidden="true"></span>
         </button>
         <div class="@NavMenuCssClass pznav-links">
             <NavLink class="pznav-link" href="Settings" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
-                Settings
+                @L["Settings"]
             </NavLink>
         </div>
     </div>

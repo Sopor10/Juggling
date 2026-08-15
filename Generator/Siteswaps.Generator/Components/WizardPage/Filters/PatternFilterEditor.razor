@@ -3,32 +3,33 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @inject IJSRuntime JsRuntime
+@inject IStringLocalizer<PatternFilterEditor> L
 
-<p class="wizard-hint">Tippe ein Feld an, dann einen Wurf darunter.</p>
+<p class="wizard-hint">@L["Tap a slot, then a throw below."]</p>
 <div class="wizard-pattern-row">
-    <label class="wizard-sr-only" for="patRotation-trigger">Bezug</label>
+    <label class="wizard-sr-only" for="patRotation-trigger">@L["Reference"]</label>
     <WizardSelect Id="patRotation"
-                  AriaLabel="Bezug"
+                  AriaLabel="@L["Reference"]"
                   Value="@Value.PatternRotation.Value.ToString()"
                   ValueChanged="OnRotationValueChanged"
                   Options="_rotationOptions" />
-    <div class="wizard-segmented" role="radiogroup" aria-label="Muster soll">
+    <div class="wizard-segmented" role="radiogroup" aria-label="@L["Pattern should"]">
         <button id="wizard-pattern-include" type="button" class="wizard-chip wizard-segment @(Value.IsIncludePattern ? "active" : "")"
                 role="radio" aria-checked="@(Value.IsIncludePattern ? "true" : "false")" tabindex="@(Value.IsIncludePattern ? "0" : "-1")"
                 @onkeydown="e => OnIncludeKeyDown(e, true)"
                 @onpointerdown:stopPropagation="true"
-                @onclick="() => SetInclude(true)">enthalten</button>
+                @onclick="() => SetInclude(true)">@L["include"]</button>
         <button id="wizard-pattern-exclude" type="button" class="wizard-chip wizard-segment @(!Value.IsIncludePattern ? "active" : "")"
                 role="radio" aria-checked="@(!Value.IsIncludePattern ? "true" : "false")" tabindex="@(!Value.IsIncludePattern ? "0" : "-1")"
                 @onkeydown="e => OnIncludeKeyDown(e, false)"
                 @onpointerdown:stopPropagation="true"
-                @onclick="() => SetInclude(false)">ausgeschlossen</button>
+                @onclick="() => SetInclude(false)">@L["exclude"]</button>
     </div>
 </div>
 
 <div class="wizard-pattern-sequence">
-    <p class="wizard-pattern-sequence-label">Muster</p>
-    <div class="wizard-pattern-slots" role="group" aria-label="Muster-Sequenz, Feld antippen und dann Wurf unten wählen">
+    <p class="wizard-pattern-sequence-label">@L["Pattern"]</p>
+    <div class="wizard-pattern-slots" role="group" aria-label="@L["Pattern sequence: tap a slot, then pick a throw below"]">
         @for (var i = 0; i < Value.Pattern.Count; i++)
         {
             var index = i;
@@ -42,8 +43,8 @@
         }
     </div>
 </div>
-<p class="wizard-pattern-sequence-label">Würfe</p>
-<div class="wizard-chip-grid wizard-pattern-palette" role="group" aria-label="Wurf-Palette">
+<p class="wizard-pattern-sequence-label">@L["Throws"]</p>
+<div class="wizard-chip-grid wizard-pattern-palette" role="group" aria-label="@L["Throw palette"]">
     @foreach (var t in PaletteThrows)
     {
         <button type="button" class="wizard-chip"
@@ -122,12 +123,12 @@
             .ToArray();
     }
 
-    private static string RotationLabel(PatternRotation r) =>
+    private string RotationLabel(PatternRotation r) =>
         r.Value switch
         {
-            -2 => "Global",
-            -1 => "Lokal (flexibel)",
-            _ => $"Lokal - Jongleur {r.Display}",
+            -2 => L["Global"],
+            -1 => L["Local (flexible)"],
+            _ => L["Local – juggler {0}", r.Display],
         };
 
     private int ComputeLength(PatternRotation rotation) =>

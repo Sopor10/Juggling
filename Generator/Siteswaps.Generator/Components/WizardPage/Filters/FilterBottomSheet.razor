@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @inject IJSRuntime JsRuntime
+@inject IStringLocalizer<FilterBottomSheet> L
 
 @if (_isOpen)
 {
@@ -15,22 +16,22 @@
         <h3 id="wizard-sheet-title" class="wizard-sheet-title">@SheetTitle</h3>
     </div>
 
-    <div class="wizard-tabs" role="tablist" aria-label="Filtertyp">
+    <div class="wizard-tabs" role="tablist" aria-label="@L["Filter type"]">
         <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.Number ? "active" : "")"
                 id="wizard-filter-tab-number" role="tab" aria-selected="@(_activeTab == FilterTabKind.Number ? "true" : "false")"
                 aria-controls="wizard-filter-panel-number" tabindex="@(_activeTab == FilterTabKind.Number ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.Number)"
-                @onclick="() => SelectTab(FilterTabKind.Number)">Anzahl</button>
+                @onclick="() => SelectTab(FilterTabKind.Number)">@L["Number"]</button>
         <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.Pattern ? "active" : "")"
                 id="wizard-filter-tab-pattern" role="tab" aria-selected="@(_activeTab == FilterTabKind.Pattern ? "true" : "false")"
                 aria-controls="wizard-filter-panel-pattern" tabindex="@(_activeTab == FilterTabKind.Pattern ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.Pattern)"
-                @onclick="() => SelectTab(FilterTabKind.Pattern)">Muster</button>
+                @onclick="() => SelectTab(FilterTabKind.Pattern)">@L["Pattern"]</button>
         <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.State ? "active" : "")"
                 id="wizard-filter-tab-state" role="tab" aria-selected="@(_activeTab == FilterTabKind.State ? "true" : "false")"
                 aria-controls="wizard-filter-panel-state" tabindex="@(_activeTab == FilterTabKind.State ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.State)"
-                @onclick="() => SelectTab(FilterTabKind.State)">Zustand</button>
+                @onclick="() => SelectTab(FilterTabKind.State)">@L["State"]</button>
     </div>
 
     <div class="wizard-sheet-body">
@@ -50,10 +51,10 @@
     <div class="wizard-sheet-actions">
         @if (_editingId is not null)
         {
-            <button type="button" class="wizard-btn-ghost" @onclick="Delete">Filter entfernen</button>
+            <button type="button" class="wizard-btn-ghost" @onclick="Delete">@L["Remove filter"]</button>
         }
         <button type="button" class="wizard-btn-filter-primary wizard-flex-1" @onclick="Save">
-            @(_editingId is null ? "Filter übernehmen" : "Änderungen speichern")
+            @(_editingId is null ? L["Apply filter"] : L["Save changes"])
         </button>
     </div>
     @if (_validationMessage is not null)
@@ -107,7 +108,7 @@
     private NewPatternFilterInformation _patternDraft = NewPatternDraft(5);
     private EasyStateFilter.StateFilter _stateDraft = NewStateDraft(13);
 
-    private string SheetTitle => _editingId is null ? "Filter hinzufügen" : "Filter bearbeiten";
+    private string SheetTitle => _editingId is null ? L["Add filter"] : L["Edit filter"];
 
     public void OpenForNew()
     {
@@ -229,7 +230,7 @@
     {
         if (_activeTab == FilterTabKind.State && !_stateDraft.Items.Any(item => item))
         {
-            _validationMessage = "Wähle mindestens einen belegten Wurf aus.";
+            _validationMessage = L["Select at least one occupied throw."];
             return;
         }
 

@@ -1,4 +1,6 @@
-﻿@if (Data is null)
+﻿@inject IStringLocalizer<SiteswapCard> L
+
+@if (Data is null)
 {
     return;
 }
@@ -21,7 +23,7 @@
     </div>
 
     <p class="pz-siteswap-card-clubs">
-        <span class="pz-siteswap-card-clubs-label">Keulen</span>
+        <span class="pz-siteswap-card-clubs-label">@L["Clubs"]</span>
         <span class="pz-siteswap-card-clubs-value">@Data.NumberOfClubs</span>
     </p>
 </article>

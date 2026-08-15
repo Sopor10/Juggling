@@ -1,4 +1,5 @@
 @using Siteswaps.Generator.Components.Internal
+@inject IStringLocalizer<ResultsView> L
 
 <div class="wizard-results">
     <div class="wizard-results-scroll">
@@ -6,22 +7,26 @@
             <h2 class="wizard-results-title">
                 @if (IsGenerating)
                 {
-                    <text>Generiere…</text>
+                    <text>@L["Generating…"]</text>
+                }
+                else if (Results.Count == 1)
+                {
+                    <text>@L["1 result"]</text>
                 }
                 else
                 {
-                    <text>@Results.Count Ergebnis@(Results.Count == 1 ? "" : "se")</text>
+                    <text>@L["{0} results", Results.Count]</text>
                 }
             </h2>
             @if (IsGenerating)
             {
-                <button type="button" class="wizard-btn-ghost" @onclick="Cancel">Abbrechen</button>
+                <button type="button" class="wizard-btn-ghost" @onclick="Cancel">@L["Cancel"]</button>
             }
         </div>
 
         @if (IsGenerating && Results.Count == 0)
         {
-            <div class="wizard-spinner" role="status" aria-live="polite" aria-label="Generiere Ergebnisse">
+            <div class="wizard-spinner" role="status" aria-live="polite" aria-label="@L["Generating results"]">
                 <div class="wizard-spinner-dot"></div>
                 <div class="wizard-spinner-dot"></div>
                 <div class="wizard-spinner-dot"></div>
@@ -29,13 +34,13 @@
         }
         else if (!IsGenerating && Results.Count == 0)
         {
-            <p class="wizard-filters-empty">Keine passenden Muster gefunden. Versuche es mit anderen Einstellungen oder weniger Filtern.</p>
+            <p class="wizard-filters-empty">@L["No matching patterns found. Try different settings or fewer filters."]</p>
         }
         else
         {
             @if (IsGenerating)
             {
-                <p class="wizard-loading-more" role="status" aria-live="polite">Lädt weitere Ergebnisse…</p>
+                <p class="wizard-loading-more" role="status" aria-live="polite">@L["Loading more results…"]</p>
             }
             <div class="wizard-results-grid" role="list">
                 @foreach (var s in Results.Take(_visibleResultCount))
@@ -46,7 +51,7 @@
             @if (!IsGenerating && _visibleResultCount < Results.Count)
             {
                 <button type="button" class="wizard-btn-ghost wizard-load-more" @onclick="LoadMore">
-                    Mehr laden (@Math.Min(_visibleResultCount, Results.Count) von @Results.Count)
+                    @L["Load more ({0} of {1})", Math.Min(_visibleResultCount, Results.Count), Results.Count]
                 </button>
             }
         }
@@ -57,8 +62,8 @@
         <div class="wizard-results-actions">
             <div class="wizard-measure">
                 <div class="wizard-nav-buttons">
-                    <button type="button" class="wizard-btn-ghost" @onclick="BackToEditing">Filter anpassen</button>
-                    <button type="button" class="wizard-btn-primary wizard-flex-1" @onclick="StartOver">Neue Suche</button>
+                    <button type="button" class="wizard-btn-ghost" @onclick="BackToEditing">@L["Adjust filters"]</button>
+                    <button type="button" class="wizard-btn-primary wizard-flex-1" @onclick="StartOver">@L["New search"]</button>
                 </div>
             </div>
         </div>

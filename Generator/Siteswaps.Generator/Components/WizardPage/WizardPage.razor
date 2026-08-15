@@ -1,7 +1,7 @@
 @page "/"
 @page "/wizard"
 
-<PageTitle>Assistent – Siteswap Generator</PageTitle>
+<PageTitle>@L["Wizard – Siteswap Generator"]</PageTitle>
 
 <div class="wizard-page">
 
@@ -12,7 +12,7 @@
                       StepSelected="OnProgressStepSelectedAsync" />
         @if (State.Phase == WizardPhase.Editing)
         {
-            <p class="wizard-swipe-hint">@(IsLastStep ? "← wischen zum Generieren →" : "← nach links/rechts wischen →")</p>
+            <p class="wizard-swipe-hint">@(IsLastStep ? L["← swipe to generate →"] : L["← swipe left/right →"])</p>
         }
     </header>
 
@@ -25,12 +25,12 @@
             <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
                 <div class="wizard-measure">
                     <div class="wizard-field">
-                        <p class="wizard-section-label">Jongleure</p>
+                        <p class="wizard-section-label">@L["Jugglers"]</p>
                         <JugglerPicker @bind-Value="State.NumberOfJugglers" />
                     </div>
 
                     <div class="wizard-field">
-                        <p class="wizard-section-label">Periode</p>
+                        <p class="wizard-section-label">@L["Period"]</p>
                         <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
                     </div>
                 </div>
@@ -39,11 +39,11 @@
             <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
                 <div class="wizard-measure">
                     <div class="wizard-field">
-                        <p class="wizard-section-label">Anzahl Keulen</p>
+                        <p class="wizard-section-label">@L["Number of clubs"]</p>
                         <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
                                           Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
                                           LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                          MinLabel="Keulen Minimum" MaxLabel="Keulen Maximum" />
+                                          MinLabel="@L["Clubs minimum"]" MaxLabel="@L["Clubs maximum"]" />
                     </div>
 
                     <div class="wizard-field">
@@ -60,7 +60,7 @@
                                     RemoveRequested="RemoveFilter"
                                     AddInGroup="OpenAddFilterInGroup"
                                     TreeChanged="OnFilterTreeChanged" />
-                        <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">+ Filter hinzufügen</button>
+                        <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">@L["+ Add filter"]</button>
                     </div>
                 </div>
             </section>
@@ -76,7 +76,7 @@
                 <div class="wizard-nav-buttons">
                     <button type="button" class="wizard-btn-ghost wizard-back-btn @(State.CurrentStep == 0 ? "wizard-invisible" : "")"
                             disabled="@(State.CurrentStep == 0 || _isStepTransitioning)"
-                            @onclick="GoBackAsync">Zurück</button>
+                            @onclick="GoBackAsync">@L["Back"]</button>
                     <button type="button"
                             class="wizard-flex-1 @(IsLastStep ? "wizard-btn-generate" : "wizard-btn-primary")"
                             disabled="@IsNextDisabled"
@@ -96,7 +96,7 @@
     }
     else
     {
-        <div class="wizard-sr-only" aria-live="polite">Schritt 4 / @WizardState.ProgressStepCount: Ergebnisse</div>
+        <div class="wizard-sr-only" aria-live="polite">@L["Step {0} / {1}: Results", WizardState.ResultsStepIndex + 1, WizardState.ProgressStepCount]</div>
         <div id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
             <ResultsView Results="State.Results"
                          IsGenerating="State.Phase == WizardPhase.Generating"

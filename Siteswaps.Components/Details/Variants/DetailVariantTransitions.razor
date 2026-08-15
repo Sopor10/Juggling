@@ -3,6 +3,7 @@
 @using Siteswap.Details.StateDiagram
 @using Siteswaps.Components.Details
 @using Siteswaps.Components.Diagram
+@inject IStringLocalizer<DetailVariantTransitions> L
 
 @if (Model is null)
 {
@@ -11,29 +12,29 @@
 
 <section class="sdv-transitions">
     <div class="sdv-transitions-stack">
-        <h3 class="sdv-section-title">Transitions</h3>
-        <p class="sdv-muted">Von diesem Siteswap zu einem anderen — Länge der Übergangswürfe wählen.</p>
+        <h3 class="sdv-section-title">@L["Transitions"]</h3>
+        <p class="sdv-muted">@L["From this siteswap to another — choose the length of transition throws."]</p>
 
         <div class="sdv-transitions-form">
             <label class="sdv-transitions-field">
-                <span class="sdv-transitions-label">Von</span>
+                <span class="sdv-transitions-label">@L["From"]</span>
                 <span class="sdv-transitions-from sdv-mono">@Model.Notation</span>
             </label>
 
             <label class="sdv-transitions-field">
-                <span class="sdv-transitions-label">Nach</span>
+                <span class="sdv-transitions-label">@L["To"]</span>
                 <input class="sdv-transitions-input sdv-mono"
                        type="text"
                        inputmode="text"
                        autocomplete="off"
                        spellcheck="false"
-                       placeholder="z. B. 97522"
+                       placeholder="@L["e.g. 97522"]"
                        @bind="_toNotation"
                        @bind:event="oninput" />
             </label>
 
             <label class="sdv-transitions-field">
-                <span class="sdv-transitions-label">Max. Länge</span>
+                <span class="sdv-transitions-label">@L["Max. length"]</span>
                 <input class="sdv-transitions-length"
                        type="number"
                        min="1"
@@ -44,7 +45,7 @@
         </div>
 
         <button type="button" class="sdv-transitions-generate" @onclick="Generate">
-            Generieren
+            @L["Generate"]
         </button>
 
         @if (!string.IsNullOrEmpty(_error))
@@ -62,7 +63,7 @@
                         <button type="button"
                                 class="sdv-transitions-show"
                                 @onclick="() => Select(transition)">
-                            Zeigen
+                            @L["Show"]
                         </button>
                     </li>
                 }
@@ -117,26 +118,25 @@
         var toText = _toNotation.Trim();
         if (string.IsNullOrEmpty(toText))
         {
-            _error = "Bitte einen Ziel-Siteswap unter „Nach“ eingeben.";
+            _error = L["Please enter a target siteswap under “To”."];
             return;
         }
 
         if (!Siteswap.TryCreate(toText, out var to) || to is null)
         {
-            _error = $"„{toText}“ ist kein gültiger Siteswap.";
+            _error = L["“{0}” is not a valid siteswap.", toText];
             return;
         }
 
         if (from.NumberOfObjects() != to.NumberOfObjects())
         {
-            _error =
-                $"{from} hat {from.NumberOfObjects()} Objekte, {to} hat {to.NumberOfObjects()}.";
+            _error = L["{0} has {1} objects, {2} has {3}.", from, from.NumberOfObjects(), to, to.NumberOfObjects()];
             return;
         }
 
         if (_length < 1)
         {
-            _error = "Länge muss mindestens 1 sein.";
+            _error = L["Length must be at least 1."];
             return;
         }
 
@@ -151,12 +151,12 @@
             _transitions = found.ToHashSet();
             if (_transitions.Count == 0)
             {
-                _error = "Keine Transitions gefunden.";
+                _error = L["No transitions found."];
             }
         }
         catch (Exception ex)
         {
-            _error = $"Berechnung fehlgeschlagen: {ex.Message}";
+            _error = L["Calculation failed: {0}", ex.Message];
             _transitions = [];
         }
     }

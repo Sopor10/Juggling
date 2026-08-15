@@ -1,17 +1,18 @@
 @using Siteswaps.Generator.Core.Generator
+@inject IStringLocalizer<ThrowsChipGrid> L
 
 <div class="wizard-throws">
     <div class="wizard-throws-header">
-        <p class="wizard-section-label">Erlaubte Würfe</p>
+        <p class="wizard-section-label">@L["Allowed throws"]</p>
     </div>
-    <div class="wizard-chip-grid" role="group" aria-label="Erlaubte Würfe">
+    <div class="wizard-chip-grid" role="group" aria-label="@L["Allowed throws"]">
         @foreach (var t in AllThrows)
         {
             var isActive = Selected.Any(x => x.Height == t.Height);
             <button type="button"
                     class="wizard-chip @(isActive ? "active" : "")"
                     aria-pressed="@(isActive ? "true" : "false")"
-                    title="@t.Name (Höhe @t.Height)"
+                    title="@L["{0} (height {1})", t.Name, t.Height]"
                     @onpointerdown:stopPropagation="true"
                     @onclick="() => Toggle(t)">
                 @t.GetDisplayValue(true)

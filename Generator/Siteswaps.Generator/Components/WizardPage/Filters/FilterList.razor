@@ -2,17 +2,18 @@
 @using Siteswaps.Generator.Components.State
 @using Siteswaps.Generator.Components.State.FilterTrees
 @using Siteswaps.Generator.Core.Generator
+@inject IStringLocalizer<FilterList> L
 
 @if (WizardFilterTree.IsEmpty(Tree))
 {
-    <p class="wizard-filters-empty">Noch keine Filter – das Muster ist noch unbeschränkt.</p>
+    <p class="wizard-filters-empty">@L["No filters yet – the pattern is still unrestricted."]</p>
 }
 else
 {
     <div class="wizard-filter-groups" role="list">
         @RenderNode(Tree.Root!, isRoot: true)
     </div>
-    <p class="wizard-filters-hint">Gruppen können UND/ODER mischen und ineinander geschachtelt werden.</p>
+    <p class="wizard-filters-hint">@L["Groups can mix AND/OR and nest inside each other."]</p>
 }
 
 @code {
@@ -56,11 +57,11 @@ else
         <div class="wizard-filter-card" role="listitem">
             <div class="wizard-filter-desc">@desc</div>
             <button type="button" class="wizard-icon-btn"
-                    aria-label="Bearbeiten: @desc"
+                    aria-label="@L["Edit: {0}", desc]"
                     @onpointerdown:stopPropagation="true"
                     @onclick="() => Edit.InvokeAsync(new WizardFilterEntry(id, inner))">✎</button>
             <button type="button" class="wizard-icon-btn wizard-icon-btn-danger"
-                    aria-label="Entfernen: @desc"
+                    aria-label="@L["Remove: {0}", desc]"
                     @onpointerdown:stopPropagation="true"
                     @onclick="() => RemoveRequested.InvokeAsync(id)">✕</button>
         </div>
@@ -74,12 +75,12 @@ else
             OrNode orNode => orNode.Children,
             _ => [],
         };
-        var opLabel = isOr ? "ODER" : "UND";
+        var opLabel = isOr ? L["OR"] : L["AND"];
         var opHint = isOr
-            ? "ODER – antippen für UND"
-            : "UND – antippen für ODER";
+            ? L["OR – tap for AND"]
+            : L["AND – tap for OR"];
 
-        <div class="wizard-filter-group @(isRoot ? "wizard-filter-group-root" : null)" role="group" aria-label="Filtergruppe @opLabel">
+        <div class="wizard-filter-group @(isRoot ? "wizard-filter-group-root" : null)" role="group" aria-label="@L["Filter group {0}", opLabel]">
             <div class="wizard-filter-group-header">
                 <button type="button" class="wizard-pill @(isOr ? "wizard-connector-or" : "wizard-connector-and")"
                         @onpointerdown:stopPropagation="true"
@@ -97,8 +98,8 @@ else
                         <span class="wizard-group-op-label">@opLabel</span>
                         <button type="button" class="wizard-wrap-btn"
                                 @onpointerdown:stopPropagation="true"
-                                aria-label="Vorherige und diese Zeile einklammern"
-                                title="Einklammern"
+                                aria-label="@L["Wrap previous and this row"]"
+                                title="@L["Wrap"]"
                                 @onclick="() => WrapAt(group, index - 1)">⊂</button>
                     </div>
                 }
@@ -107,7 +108,7 @@ else
 
             <button type="button" class="wizard-add-in-group-btn"
                     @onpointerdown:stopPropagation="true"
-                    @onclick="() => AddInGroup.InvokeAsync(group)">+ Filter in Gruppe</button>
+                    @onclick="() => AddInGroup.InvokeAsync(group)">@L["+ Filter in group"]</button>
         </div>
     };
 
@@ -121,7 +122,7 @@ else
         await TreeChanged.InvokeAsync(WizardFilterTree.WrapAdjacentChildren(Tree, parent, childIndex));
     }
 
-    private static string Describe(IFilterInformation filter) =>
+    private string Describe(IFilterInformation filter) =>
         filter switch
         {
             EasyNumberFilter.NumberFilter numberFilter => DescribeNumber(numberFilter),
@@ -130,27 +131,27 @@ else
             _ => filter.Display(),
         };
 
-    private static string DescribeNumber(EasyNumberFilter.NumberFilter filter)
+    private string DescribeNumber(EasyNumberFilter.NumberFilter filter)
     {
         var comparison = filter.Type switch
         {
-            EasyNumberFilter.NumberFilterType.Exactly => "Genau",
-            EasyNumberFilter.NumberFilterType.Maximum => "Maximal",
-            EasyNumberFilter.NumberFilterType.AtLeast => "Mindestens",
+            EasyNumberFilter.NumberFilterType.Exactly => L["Exactly"].Value,
+            EasyNumberFilter.NumberFilterType.Maximum => L["At most"].Value,
+            EasyNumberFilter.NumberFilterType.AtLeast => L["At least"].Value,
             _ => "",
         };
         return $"{comparison} {filter.Amount}× {filter.Throw.GetDisplayValue(true)}";
     }
 
-    private static string DescribePattern(NewPatternFilterInformation filter)
+    private string DescribePattern(NewPatternFilterInformation filter)
     {
         var sequence = filter.Pattern.Count == 0
-            ? "leer"
+            ? L["empty"].Value
             : string.Join(" ", filter.Pattern.Select(t => t.GetDisplayValue(true)));
-        var verb = filter.IsIncludePattern ? "enthält" : "ohne";
-        return $"Muster {verb} „{sequence}“ · {filter.PatternRotation.Display}";
+        var verb = filter.IsIncludePattern ? L["contains"].Value : L["without"].Value;
+        return L["Pattern {0} \"{1}\" · {2}", verb, sequence, filter.PatternRotation.Display];
     }
 
-    private static string DescribeState(EasyStateFilter.StateFilter filter) =>
-        $"Zustand · {filter.Notation()}";
+    private string DescribeState(EasyStateFilter.StateFilter filter) =>
+        L["State · {0}", filter.Notation()];
 }

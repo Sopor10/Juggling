@@ -4,7 +4,7 @@
 @if (Value is not null)
 {
     <div class="border-1">
-        <Network Id="@NetworkId" Data="@Data" style="width: 100%; max-width: 640px; height: 360px"/>
+        <Network Id="@NetworkId" Data="@Data" Options="DiagramStyle.Options" style="width: 100%; max-width: 640px; height: 360px"/>
     </div>
 }
 
@@ -64,19 +64,7 @@
             return;
         }
 
-        var item = new Edge(from, to, data)
-        {
-            Label = data,
-            Arrows = new Arrows
-            {
-                To = new ArrowsOptions { Enabled = true }
-            },
-            Color = new ColorType
-            {
-                Color = "black"
-            }
-        };
-        edges.Add(item);
+        edges.Add(DiagramStyle.CreateEdge(from, to, data));
     }
 
     private static void AddNodes(StateGraph fromGraph, ICollection<Node> nodes)
@@ -91,15 +79,7 @@
     {
         if (nodes.All(x => x.Id != node.StateRepresentation()))
         {
-            nodes.Add(CreateNode(node));
+            nodes.Add(DiagramStyle.CreateStateNode(node.StateRepresentation(), node.StateRepresentation()));
         }
-    }
-
-    private static Node CreateNode(State node)
-    {
-        return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle")
-        {
-            Mass = 1
-        };
     }
 }

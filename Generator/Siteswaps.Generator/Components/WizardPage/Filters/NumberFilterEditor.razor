@@ -1,29 +1,30 @@
 @using Siteswaps.Generator.Components.Internal.EasyFilter
 @using Siteswaps.Generator.Core.Generator
+@inject IStringLocalizer<NumberFilterEditor> L
 
-<p class="wizard-hint">z. B. „genau 2× Heff“</p>
+<p class="wizard-hint">@L["e.g. \"exactly 2× Heff\""]</p>
 <div class="wizard-number-row">
     <WizardSelect Id="numComparison"
-                  AriaLabel="Vergleich"
+                  AriaLabel="@L["Comparison"]"
                   Value="@Value.Type.ToString()"
                   ValueChanged="OnTypeChanged"
-                  Options="_typeOptions" />
-    <label class="wizard-sr-only" for="numAmount">Anzahl</label>
+                  Options="TypeOptions" />
+    <label class="wizard-sr-only" for="numAmount">@L["Amount"]</label>
     <input id="numAmount" type="number" min="0" max="30" class="wizard-input-number"
            value="@Value.Amount" @oninput="OnAmountChanged" />
     <WizardSelect Id="numThrow"
-                  AriaLabel="Wurf"
+                  AriaLabel="@L["Throw"]"
                   Value="@Value.Throw.Height.ToString()"
                   ValueChanged="OnThrowChanged"
                   Options="_throwOptions" />
 </div>
 
 @code {
-    private static readonly IReadOnlyList<WizardSelect.Option> _typeOptions =
+    private IReadOnlyList<WizardSelect.Option> TypeOptions =>
     [
-        new(EasyNumberFilter.NumberFilterType.Exactly.ToString(), "Genau"),
-        new(EasyNumberFilter.NumberFilterType.Maximum.ToString(), "Maximal"),
-        new(EasyNumberFilter.NumberFilterType.AtLeast.ToString(), "Mindestens"),
+        new(EasyNumberFilter.NumberFilterType.Exactly.ToString(), L["Exactly"].Value),
+        new(EasyNumberFilter.NumberFilterType.Maximum.ToString(), L["At most"].Value),
+        new(EasyNumberFilter.NumberFilterType.AtLeast.ToString(), L["At least"].Value),
     ];
 
     private IReadOnlyList<WizardSelect.Option> _throwOptions = [];

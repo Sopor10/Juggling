@@ -147,4 +147,8 @@
     width: 100%;
     margin-top: 24px;
     overflow: auto;
+    border-radius: var(--sd-radius-md, 14px);
+    border: 1px solid color-mix(in srgb, var(--sd-purple-400) 35%, white);
+    background: var(--sd-card, #ffffff);
+    box-shadow: var(--sd-shadow-sm, 0 2px 8px -2px rgba(44, 31, 82, 0.25));
 }

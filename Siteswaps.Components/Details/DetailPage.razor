@@ -2,11 +2,12 @@
 @namespace Siteswaps.Components.Details
 @using Siteswaps.Components.Details.Variants
 @inject NavigationManager Navigation
+@inject IStringLocalizer<DetailPage> L
 
 <div class="sd-page">
     <header class="sd-header">
         <div class="sd-header-row">
-            <a class="sd-back" href="/">← Assistent</a>
+            <a class="sd-back" href="/">@L["← Wizard"]</a>
             @if (Model is not null)
             {
                 <a class="sd-external" href="@Model.PassistLink" target="_blank" rel="noopener">Passist</a>
@@ -14,10 +15,10 @@
         </div>
         @if (Model is not null)
         {
-            <div class="sd-header-notation" role="group" aria-label="Siteswap rotation">
+            <div class="sd-header-notation" role="group" aria-label="@L["Siteswap rotation"]">
                 <button type="button"
                         class="sd-rotate"
-                        aria-label="Siteswap nach links rotieren"
+                        aria-label="@L["Rotate siteswap left"]"
                         disabled="@(Model.Period <= 1)"
                         @onclick="() => Rotate(-1)">
                     ◄
@@ -25,31 +26,31 @@
                 <span class="sd-header-notation-value">@Model.Notation</span>
                 <button type="button"
                         class="sd-rotate"
-                        aria-label="Siteswap nach rechts rotieren"
+                        aria-label="@L["Rotate siteswap right"]"
                         disabled="@(Model.Period <= 1)"
                         @onclick="() => Rotate(1)">
                     ►
                 </button>
             </div>
-            <div class="sd-header-meta" role="group" aria-label="Jongleure und Keulen">
-                <div class="sd-juggler-stepper" role="group" aria-label="Anzahl Jongleure">
+            <div class="sd-header-meta" role="group" aria-label="@L["Jugglers and clubs"]">
+                <div class="sd-juggler-stepper" role="group" aria-label="@L["Number of jugglers"]">
                     <button type="button"
                             class="sd-rotate sd-juggler-step"
-                            aria-label="Weniger Jongleure"
+                            aria-label="@L["Fewer jugglers"]"
                             disabled="@(Model.NumberOfJugglers <= MinJugglers)"
                             @onclick="() => ChangeJugglers(-1)">
                         ◄
                     </button>
-                    <span class="sd-header-meta-value">@Model.NumberOfJugglers Jongleure</span>
+                    <span class="sd-header-meta-value">@L["{0} jugglers", Model.NumberOfJugglers]</span>
                     <button type="button"
                             class="sd-rotate sd-juggler-step"
-                            aria-label="Mehr Jongleure"
+                            aria-label="@L["More jugglers"]"
                             disabled="@(Model.NumberOfJugglers >= MaxJugglers)"
                             @onclick="() => ChangeJugglers(1)">
                         ►
                     </button>
                 </div>
-                <span class="sd-header-meta-clubs">@Model.NumberOfClubs Keulen</span>
+                <span class="sd-header-meta-clubs">@L["{0} clubs", Model.NumberOfClubs]</span>
             </div>
         }
     </header>
@@ -58,13 +59,13 @@
         @if (Model is null)
         {
             <div class="sd-empty">
-                <h2>Kein gültiger Siteswap</h2>
-                <p>Öffne einen Siteswap aus dem Wizard oder setze <code>?s=</code> und optional <code>&amp;n=</code>.</p>
+                <h2>@L["Invalid siteswap"]</h2>
+                <p>@L["Open a siteswap from the wizard or set ?s= and optionally &n=."]</p>
             </div>
         }
         else
         {
-            <div class="sd-tabs" role="tablist" aria-label="Detail-Varianten">
+            <div class="sd-tabs" role="tablist" aria-label="@L["Detail variants"]">
                 @foreach (var tab in Tabs)
                 {
                     <button type="button"
@@ -111,12 +112,12 @@
     private DetailViewModel? Model { get; set; }
     private string ActiveTab { get; set; } = "hero";
 
-    private static readonly TabInfo[] Tabs =
+    private TabInfo[] Tabs =>
     [
-        new("hero", "Übersicht"),
-        new("analysis", "Analyse"),
-        new("transitions", "Transitions"),
-        new("diagrams", "Diagramme"),
+        new("hero", L["Overview"].Value),
+        new("analysis", L["Analysis"].Value),
+        new("transitions", L["Transitions"].Value),
+        new("diagrams", L["Diagrams"].Value),
     ];
 
     protected override void OnParametersSet()

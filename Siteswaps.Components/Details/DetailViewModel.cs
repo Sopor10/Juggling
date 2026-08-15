@@ -3,8 +3,8 @@ using Siteswap.Details;
 namespace Siteswaps.Components.Details;
 
 /// <summary>
-/// Snapshot of all displayable pattern properties used by detail variants.
-/// Computed once when the query parameters change.
+/// Thin facade over a <see cref="Siteswap"/> for the details page:
+/// derived domain values and projections only — no UI copy.
 /// </summary>
 public sealed class DetailViewModel
 {
@@ -24,8 +24,6 @@ public sealed class DetailViewModel
         Throws = value.Items.EnumerateValues(1).ToList();
         PassOrSelf = value.GetPassOrSelf(NumberOfJugglers).ToList();
         InterfacePassOrSelf = value.Interface.GetPassOrSelf(NumberOfJugglers).ToList();
-        PassSelfLabel = FormatPassSelf(PassOrSelf);
-        InterfacePassSelfLabel = FormatPassSelf(InterfacePassOrSelf);
         ThrowChips = Throws
             .Select((height, i) => new ThrowChip(FormatThrow(height), PassOrSelf[i]))
             .ToList();
@@ -97,14 +95,11 @@ public sealed class DetailViewModel
     public int MaxHeight { get; }
     public int Length { get; }
     public bool IsExcitedState { get; }
-    public string GroundOrExcitedLabel => IsExcitedState ? "Excited" : "Ground";
     public string CurrentState { get; }
     public string Interface { get; }
     public IReadOnlyList<int> Throws { get; }
     public IReadOnlyList<PassOrSelf> PassOrSelf { get; }
     public IReadOnlyList<PassOrSelf> InterfacePassOrSelf { get; }
-    public string PassSelfLabel { get; }
-    public string InterfacePassSelfLabel { get; }
     public IReadOnlyList<ThrowChip> ThrowChips { get; }
     public IReadOnlyList<ThrowChip> ThrowPassSelfChips { get; }
     public IReadOnlyList<ThrowChip> InterfaceChips { get; }
@@ -145,10 +140,6 @@ public sealed class DetailViewModel
             global::Siteswap.Details.PassOrSelf.Self => "s",
             _ => "?",
         };
-
-    private static string FormatPassSelf(
-        IReadOnlyList<global::Siteswap.Details.PassOrSelf> values
-    ) => string.Concat(values.Select(FormatPassSelfLetter));
 
     public enum ThrowDisplayMode
     {

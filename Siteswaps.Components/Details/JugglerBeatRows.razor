@@ -1,6 +1,7 @@
 @namespace Siteswaps.Components.Details
 @using Blazored.LocalStorage
 @inject ILocalStorageService LocalStorage
+@inject IStringLocalizer<JugglerBeatRows> L
 
 @if (Model is null || Model.Jugglers.Count == 0)
 {
@@ -30,7 +31,7 @@
                     @if (start is not null)
                     {
                         <div class="sdv-start-props"
-                             title="Keulenverteilung Start (L / R)"
+                             title="@L["Starting club distribution (L / R)"]"
                              aria-label="@($"Start clubs {juggler.Label}: left {start.Left}, right {start.Right}")">
                             <span class="sdv-start-props-hand">@start.Left</span>
                             <span class="sdv-start-props-hand">@start.Right</span>
@@ -47,12 +48,12 @@
         <div class="sdv-hero-footer">
             @if (ShowLegend)
             {
-                <div class="sdv-beat-legend" aria-label="Legende">
+                <div class="sdv-beat-legend" aria-label="@L["Legend"]">
                     <span class="sdv-start-props sdv-start-props-legend" aria-hidden="true">
                         <span class="sdv-start-props-hand">L</span>
                         <span class="sdv-start-props-hand">R</span>
                     </span>
-                    <span class="sdv-muted">Start Keulen</span>
+                    <span class="sdv-muted">@L["Start clubs"]</span>
                     <span class="sdv-beat pass"><span class="sdv-beat-throw">·</span></span>
                     <span class="sdv-muted">Pass</span>
                     <span class="sdv-beat self"><span class="sdv-beat-throw">·</span></span>
