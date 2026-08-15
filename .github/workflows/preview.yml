@@ -43,6 +43,22 @@ jobs:
           -p:GHPages=true
           -p:GHPagesBase=/pr-preview/pr-${{ github.event.number }}/
 
+      # Previews must not register a service worker: the production worker is root-scoped
+      # and would otherwise keep hijacking /pr-preview/ navigations for returning visitors.
+      - name: Disable service worker in preview
+        if: github.event.action != 'closed'
+        run: |
+          cat > publish/wwwroot/sw-registrator.js <<'EOF'
+          window.updateAvailable = Promise.resolve(false);
+          window.registerForUpdateAvailableNotification = () => {};
+          EOF
+          rm -f publish/wwwroot/service-worker.js \
+                publish/wwwroot/service-worker.js.br \
+                publish/wwwroot/service-worker.js.gz \
+                publish/wwwroot/service-worker-assets.js \
+                publish/wwwroot/service-worker-assets.js.br \
+                publish/wwwroot/service-worker-assets.js.gz
+
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
         with:
