@@ -1,7 +1,7 @@
 using FluentAssertions;
+using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Core.Generator;
 using Siteswaps.Generator.Core.Generator.Filter;
-using Siteswaps.Generator.Components.State;
 
 namespace Siteswaps.Generator.Test;
 
