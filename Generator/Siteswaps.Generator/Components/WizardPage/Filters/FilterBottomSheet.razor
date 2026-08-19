@@ -76,13 +76,13 @@
     public IReadOnlyList<Throw> AllowedThrows { get; set; } = Array.Empty<Throw>();
 
     [Parameter]
-    public int MaxThrowHeight { get; set; } = 13;
-
-    [Parameter]
     public int Period { get; set; } = 5;
 
     [Parameter]
     public int NumberOfJugglers { get; set; } = 3;
+
+    [Parameter]
+    public bool ShowThrowNames { get; set; } = true;
 
     [Parameter]
     public EventCallback<IFilterInformation> FilterAdded { get; set; }
@@ -106,7 +106,10 @@
 
     private EasyNumberFilter.NumberFilter _numberDraft = NewNumberDraft(Array.Empty<Throw>());
     private NewPatternFilterInformation _patternDraft = NewPatternDraft(5);
-    private EasyStateFilter.StateFilter _stateDraft = NewStateDraft(13);
+    private EasyStateFilter.StateFilter _stateDraft = EasyStateFilter.NewDraft(1);
+
+    private int StateDraftLength =>
+        EasyStateFilter.MaxBeatFromAllowedThrows(AllowedThrows, NumberOfJugglers, ShowThrowNames);
 
     private string SheetTitle => _editingId is null ? L["Add filter"] : L["Edit filter"];
 
@@ -116,7 +119,7 @@
         _sessionId++;
         _numberDraft = NewNumberDraft(AllowedThrows);
         _patternDraft = NewPatternDraft(Period);
-        _stateDraft = NewStateDraft(MaxThrowHeight);
+        _stateDraft = EasyStateFilter.NewDraft(StateDraftLength);
         _activeTab = FilterTabKind.Number;
         _isOpen = true;
         _validationMessage = null;
@@ -129,7 +132,7 @@
         _sessionId++;
         _numberDraft = NewNumberDraft(AllowedThrows);
         _patternDraft = NewPatternDraft(Period);
-        _stateDraft = NewStateDraft(MaxThrowHeight);
+        _stateDraft = EasyStateFilter.NewDraft(StateDraftLength);
 
         switch (entry.Filter)
         {
@@ -145,7 +148,7 @@
                 _activeTab = FilterTabKind.Pattern;
                 break;
             case EasyStateFilter.StateFilter stateFilter:
-                _stateDraft = stateFilter;
+                _stateDraft = EasyStateFilter.FitToLength(stateFilter, StateDraftLength);
                 _activeTab = FilterTabKind.State;
                 break;
         }
@@ -293,7 +296,4 @@
             true,
             false
         );
-
-    private static EasyStateFilter.StateFilter NewStateDraft(int maxThrowHeight) =>
-        new([.. new bool[Math.Max(1, maxThrowHeight)]]);
 }
