@@ -29,7 +29,7 @@ public interface IFilterBuilder
 
     public IFilterBuilder WithState(State state);
 
-    public IFilterBuilder WithState(StatePattern pattern);
+    IFilterBuilder WithState(StatePattern pattern);
 
     IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
