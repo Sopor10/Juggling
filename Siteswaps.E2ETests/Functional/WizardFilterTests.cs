@@ -53,7 +53,7 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
             .ToHaveCountAsync(0);
     }
 
-    /// <summary>Summary: State filter defaults to don't-care and cycles through free and occupied notation.</summary>
+    /// <summary>Summary: State filter defaults to don't-care and cycles through occupied and free notation.</summary>
     [Fact]
     public async Task State_Filter_Shows_Occupied_Free_Notation()
     {
@@ -71,12 +71,14 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
 
         var firstBeat = page.Locator(".wizard-state-grid .wizard-chip").First;
         await firstBeat.ClickAsync();
-        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*_"));
-        await firstBeat.ClickAsync();
+        await Assertions.Expect(firstBeat).ToHaveClassAsync(new Regex(@"\bactive\b"));
         await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*x"));
+        await firstBeat.ClickAsync();
+        await Assertions.Expect(firstBeat).ToHaveClassAsync(new Regex(@"\bfree\b"));
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*_"));
     }
 
-    /// <summary>Summary: State filter beat buttons cycle from don't-care through free and occupied back to don't-care.</summary>
+    /// <summary>Summary: State filter beat buttons cycle from don't-care through occupied and free back to don't-care.</summary>
     [Fact]
     public async Task State_Filter_Cycles_To_DontCare()
     {

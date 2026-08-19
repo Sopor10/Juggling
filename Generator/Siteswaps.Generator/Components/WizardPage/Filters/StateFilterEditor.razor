@@ -19,7 +19,7 @@
         </button>
     }
 </div>
-<p class="wizard-hint wizard-state-help">@L["Tap repeatedly to cycle: occupied, free, don't care."]</p>
+<p class="wizard-hint wizard-state-help">@L["Tap repeatedly to cycle: don't care, occupied, free."]</p>
 
 @code {
     [Parameter, EditorRequired]
@@ -35,9 +35,9 @@
         var items = Value.Items.ToArray();
         items[index] = items[index] switch
         {
-            StateValue.Free => StateValue.Occupied,
-            StateValue.Occupied => StateValue.DontCare,
-            StateValue.DontCare => StateValue.Free,
+            StateValue.DontCare => StateValue.Occupied,
+            StateValue.Occupied => StateValue.Free,
+            StateValue.Free => StateValue.DontCare,
             _ => throw new ArgumentOutOfRangeException(),
         };
         var value = new EasyStateFilter.StateFilter([.. items]);
@@ -46,7 +46,13 @@
     }
 
     private static string ChipClass(StateValue state) =>
-        state is StateValue.Occupied ? "active" : state is StateValue.DontCare ? "dont-care" : "";
+        state switch
+        {
+            StateValue.Occupied => "active",
+            StateValue.Free => "free",
+            StateValue.DontCare => "dont-care",
+            _ => "",
+        };
 
     private static string AriaPressed(StateValue state) =>
         state switch

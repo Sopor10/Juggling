@@ -247,6 +247,18 @@
     color: white;
 }
 
+.wizard-page ::deep .wizard-chip.free {
+    background: var(--wizard-purple-100);
+    border-color: var(--wizard-purple-300);
+    color: var(--wizard-purple-700);
+}
+
+.wizard-page ::deep .wizard-chip.dont-care {
+    background: white;
+    border-color: var(--wizard-purple-100);
+    color: var(--wizard-purple-400);
+}
+
 .wizard-page ::deep .wizard-chip:active {
     transform: scale(0.94);
 }
@@ -859,6 +871,18 @@
 .wizard-page ::deep .wizard-select-option.active {
     background: var(--wizard-purple-700);
     color: white;
+}
+
+.wizard.page ::deep .wizard-input-number {
+    flex: 0 0 64px;
+    width: 64px;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-weight: 700;
+    font-size: 13px;
+    min-height: 44px;
+    text-align: center;
 }
 
 .wizard-page ::deep .wizard-input-number {
