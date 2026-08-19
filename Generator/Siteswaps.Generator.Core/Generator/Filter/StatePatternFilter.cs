@@ -1,7 +1,9 @@
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal sealed class StatePatternFilter(Siteswaps.Generator.Core.Generator.SiteswapGeneratorInput generatorInput, StatePattern pattern)
-    : ISiteswapFilter
+internal sealed class StatePatternFilter(
+    Siteswaps.Generator.Core.Generator.SiteswapGeneratorInput generatorInput,
+    StatePattern pattern
+) : ISiteswapFilter
 {
     public bool CanFulfill(PartialSiteswap value)
     {

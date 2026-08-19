@@ -137,9 +137,7 @@ internal static class FilterTranslation
                     _ => throw new ArgumentOutOfRangeException(),
                 },
                 EasyStateFilter.StateFilter stateFilter => builder
-                    .WithState(
-                        new StatePattern(stateFilter.Items)
-                    )
+                    .WithState(new StatePattern(stateFilter.Items))
                     .Build(),
                 _ => throw new ArgumentOutOfRangeException(),
             };

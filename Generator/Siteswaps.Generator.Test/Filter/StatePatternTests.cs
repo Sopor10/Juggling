@@ -10,9 +10,7 @@ public class StatePatternTests
     [Test]
     public void DontCare_Slots_Are_Ignored_When_Matching_A_State()
     {
-        var pattern = new StatePattern(
-            [StateValue.Occupied, StateValue.DontCare, StateValue.Free]
-        );
+        var pattern = new StatePattern([StateValue.Occupied, StateValue.DontCare, StateValue.Free]);
 
         pattern.Matches(new State(1, 1, 0)).Should().BeTrue();
     }
@@ -20,9 +18,7 @@ public class StatePatternTests
     [Test]
     public void Occupied_And_Free_Slots_Must_Match_Exactly()
     {
-        var pattern = new StatePattern(
-            [StateValue.Occupied, StateValue.DontCare, StateValue.Free]
-        );
+        var pattern = new StatePattern([StateValue.Occupied, StateValue.DontCare, StateValue.Free]);
 
         pattern.Matches(new State(0, 1, 0)).Should().BeFalse();
         pattern.Matches(new State(1, 1, 1)).Should().BeFalse();
@@ -31,9 +27,11 @@ public class StatePatternTests
     [Test]
     public void Builder_Uses_DontCare_State_Patterns()
     {
-        var pattern = new StatePattern(
-            [StateValue.DontCare, StateValue.DontCare, StateValue.Occupied]
-        );
+        var pattern = new StatePattern([
+            StateValue.DontCare,
+            StateValue.DontCare,
+            StateValue.Occupied,
+        ]);
         var filter = new FilterBuilder(new SiteswapGeneratorInput(3, 2, 1, 3))
             .WithState(pattern)
             .Build();
