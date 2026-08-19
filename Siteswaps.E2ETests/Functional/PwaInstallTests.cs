@@ -16,9 +16,13 @@ public sealed class PwaInstallTests(SharedBlazorFixture host) : IClassFixture<Sh
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
-        await Assertions.Expect(session.Page.GetByTestId("pwa-install-desktop")).ToHaveCountAsync(0);
+        await Assertions
+            .Expect(session.Page.GetByTestId("pwa-install-desktop"))
+            .ToHaveCountAsync(0);
 
-        var canPrompt = await session.Page.EvaluateAsync<bool>("() => window.pwaInstall.canPrompt()");
+        var canPrompt = await session.Page.EvaluateAsync<bool>(
+            "() => window.pwaInstall.canPrompt()"
+        );
         canPrompt.Should().BeFalse();
     }
 }

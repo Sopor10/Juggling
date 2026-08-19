@@ -138,11 +138,15 @@ internal static class FilterTranslation
             {
                 var type = numberFilter.Type switch
                 {
-                    EasyNumberFilter.NumberFilterType.Exactly => PersonalizedNumberFilter.Type.Exact,
+                    EasyNumberFilter.NumberFilterType.Exactly => PersonalizedNumberFilter
+                        .Type
+                        .Exact,
                     EasyNumberFilter.NumberFilterType.AtLeast => PersonalizedNumberFilter
                         .Type
                         .AtLeast,
-                    EasyNumberFilter.NumberFilterType.Maximum => PersonalizedNumberFilter.Type.AtMost,
+                    EasyNumberFilter.NumberFilterType.Maximum => PersonalizedNumberFilter
+                        .Type
+                        .AtMost,
                     _ => throw new ArgumentOutOfRangeException(),
                 };
                 return new PersonalizedNumberFilter(

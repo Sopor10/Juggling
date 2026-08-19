@@ -86,7 +86,11 @@ public class WizardStateFilterBeatBoundTests
     {
         var allowed = new List<Throw> { Throw.Zip, Throw.Hold, Throw.Self };
 
-        var beats = EasyStateFilter.MaxBeatFromAllowedThrows(allowed, numberOfJugglers: 2, showThrowNames: false);
+        var beats = EasyStateFilter.MaxBeatFromAllowedThrows(
+            allowed,
+            numberOfJugglers: 2,
+            showThrowNames: false
+        );
 
         beats.Should().Be(Throw.Self.Height);
         beats.Should().BeLessThan(13);
@@ -99,7 +103,11 @@ public class WizardStateFilterBeatBoundTests
         var allowed = new List<Throw> { Throw.Heff };
         var expected = Throw.Heff.GetHeightForJugglers(3, useLiteralValue: false).Max();
 
-        var beats = EasyStateFilter.MaxBeatFromAllowedThrows(allowed, numberOfJugglers: 3, showThrowNames: true);
+        var beats = EasyStateFilter.MaxBeatFromAllowedThrows(
+            allowed,
+            numberOfJugglers: 3,
+            showThrowNames: true
+        );
 
         beats.Should().Be(expected);
     }
@@ -112,7 +120,9 @@ public class WizardStateFilterBeatBoundTests
 
         var fitted = EasyStateFilter.FitToLength(longer, 4);
 
-        fitted.Items.Should().Equal(StateValue.Occupied, StateValue.Free, StateValue.Occupied, StateValue.Occupied);
+        fitted
+            .Items.Should()
+            .Equal(StateValue.Occupied, StateValue.Free, StateValue.Occupied, StateValue.Occupied);
     }
 }
 

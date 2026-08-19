@@ -45,7 +45,8 @@ public sealed partial class PwaInstallButton : IAsyncDisposable
         }
 
         var outcome = await Js.InvokeAsync<string>("pwaInstall.prompt");
-        _visible = !string.Equals(outcome, "accepted", StringComparison.Ordinal)
+        _visible =
+            !string.Equals(outcome, "accepted", StringComparison.Ordinal)
             && await Js.InvokeAsync<bool>("pwaInstall.canPrompt");
         await InvokeAsync(StateHasChanged);
     }
@@ -56,9 +57,7 @@ public sealed partial class PwaInstallButton : IAsyncDisposable
         {
             await Js.InvokeVoidAsync("pwaInstall.unsubscribe");
         }
-        catch (JSDisconnectedException)
-        {
-        }
+        catch (JSDisconnectedException) { }
 
         _self?.Dispose();
     }

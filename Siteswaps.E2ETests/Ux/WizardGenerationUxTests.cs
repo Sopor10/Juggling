@@ -119,9 +119,13 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await Assertions.Expect(wizard.SiteswapCardJugglers).Not.ToHaveCountAsync(0);
         await wizard.DenseModeToggle.ClickAsync();
         await Assertions.Expect(wizard.SiteswapCardJugglers).ToHaveCountAsync(0);
-        await Assertions.Expect(wizard.DenseModeToggle).ToHaveAttributeAsync("aria-pressed", "true");
+        await Assertions
+            .Expect(wizard.DenseModeToggle)
+            .ToHaveAttributeAsync("aria-pressed", "true");
         await wizard.DenseModeToggle.ClickAsync();
         await Assertions.Expect(wizard.SiteswapCardJugglers).Not.ToHaveCountAsync(0);
-        await Assertions.Expect(wizard.DenseModeToggle).ToHaveAttributeAsync("aria-pressed", "false");
+        await Assertions
+            .Expect(wizard.DenseModeToggle)
+            .ToHaveAttributeAsync("aria-pressed", "false");
     }
 }
