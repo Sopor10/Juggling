@@ -37,7 +37,7 @@
     <div class="wizard-sheet-body">
         <div id="wizard-filter-panel-number" class="wizard-sheet-panel @(_activeTab == FilterTabKind.Number ? "active" : null)" role="tabpanel" aria-labelledby="wizard-filter-tab-number" aria-hidden="@(_activeTab == FilterTabKind.Number ? "false" : "true")">
             <NumberFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_numberDraft"
-                                 ValueChanged="v => _numberDraft = v" />
+                                 ValueChanged="v => _numberDraft = v" NumberOfJugglers="NumberOfJugglers" />
         </div>
         <div id="wizard-filter-panel-pattern" class="wizard-sheet-panel @(_activeTab == FilterTabKind.Pattern ? "active" : null)" role="tabpanel" aria-labelledby="wizard-filter-tab-pattern" aria-hidden="@(_activeTab == FilterTabKind.Pattern ? "false" : "true")">
             <PatternFilterEditor @key="_sessionId" PossibleThrows="AllowedThrows" Value="_patternDraft"

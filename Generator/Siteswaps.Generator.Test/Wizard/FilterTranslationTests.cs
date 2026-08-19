@@ -89,6 +89,32 @@ public class FilterTranslationTests
         }
     }
 
+    /// <summary>
+    /// Summary: Personalized number filter counts only throws by the selected juggler.
+    /// </summary>
+    [Test]
+    public void CreateGenerators_Personalized_Number_Filter_Is_Applied()
+    {
+        const int jugglerIndex = 0;
+        var state = new WizardState { NumberOfJugglers = 2 };
+        state.Clubs = new Between { MinNumber = 6, MaxNumber = 6 };
+        state.FilterTree = new FilterTree(Leaf(1, Number(2, Throw.Heff, jugglerIndex)));
+
+        var heffHeights = Throw
+            .Heff.GetHeightForJugglers(state.NumberOfJugglers, false)
+            .ToHashSet();
+        var found = CollectSiteswaps(state, limit: 30);
+
+        found.Should().NotBeEmpty();
+        foreach (var siteswap in found)
+        {
+            var fromJuggler = siteswap
+                .Items.Where((_, i) => i % state.NumberOfJugglers == jugglerIndex)
+                .Count(h => heffHeights.Contains(h));
+            fromJuggler.Should().Be(2);
+        }
+    }
+
     /// <summary>Summary: Wrapping adjacent siblings must create a nested opposite-operator group.</summary>
     [Test]
     public void WrapAdjacentChildren_Creates_Nested_Group()
@@ -130,11 +156,16 @@ public class FilterTranslationTests
     private static FilterLeaf Leaf(int id, IFilterInformation filter) =>
         new(new WizardIdentifiedFilter(id, filter));
 
-    private static EasyNumberFilter.NumberFilter Number(int amount, Throw t) =>
+    private static EasyNumberFilter.NumberFilter Number(
+        int amount,
+        Throw t,
+        int? jugglerIndex = null
+    ) =>
         new()
         {
             Amount = amount,
             Type = EasyNumberFilter.NumberFilterType.Exactly,
             Throw = t,
+            JugglerIndex = jugglerIndex,
         };
 }
