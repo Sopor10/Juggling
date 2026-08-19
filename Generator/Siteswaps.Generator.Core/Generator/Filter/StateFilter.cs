@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal class StateFilter(SiteswapGeneratorInput generatorInput, State state) : ISiteswapFilter
+internal class StateFilter(Siteswaps.Generator.Core.Generator.SiteswapGeneratorInput generatorInput, State state) : ISiteswapFilter
 {
     private readonly int maxHeight = generatorInput.MaxHeight;
 
@@ -52,6 +52,8 @@ public record State(uint Value)
     {
         return (b & (1 << pos)) != 0;
     }
+
+    public bool IsOccupiedAt(int position) => IsBitSet(Value, position);
 
     private static State CalculateState(int[] siteswap, int? length = null)
     {
