@@ -53,7 +53,7 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
             .ToHaveCountAsync(0);
     }
 
-    /// <summary>Summary: State filter must show classic x/_ notation that updates with beat toggles.</summary>
+    /// <summary>Summary: State filter defaults to don't-care and cycles through free and occupied notation.</summary>
     [Fact]
     public async Task State_Filter_Shows_Occupied_Free_Notation()
     {
@@ -67,14 +67,16 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
 
         var notation = page.Locator(".wizard-state-notation");
         await Assertions.Expect(notation).ToBeVisibleAsync();
-        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^[\s_]+$"));
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^[\s*]+$"));
 
         var firstBeat = page.Locator(".wizard-state-grid .wizard-chip").First;
+        await firstBeat.ClickAsync();
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*_"));
         await firstBeat.ClickAsync();
         await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*x"));
     }
 
-    /// <summary>Summary: State filter beat buttons cycle through occupied, don't-care, and free.</summary>
+    /// <summary>Summary: State filter beat buttons cycle from don't-care through free and occupied back to don't-care.</summary>
     [Fact]
     public async Task State_Filter_Cycles_To_DontCare()
     {
@@ -88,6 +90,7 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
 
         var notation = page.Locator(".wizard-state-notation");
         var firstBeat = page.Locator(".wizard-state-grid .wizard-chip").First;
+        await firstBeat.ClickAsync();
         await firstBeat.ClickAsync();
         await firstBeat.ClickAsync();
 
