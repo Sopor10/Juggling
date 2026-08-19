@@ -70,6 +70,53 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
         await WizardUxGeometry.AssertWebkitThumbMinSizeAsync(page, ".wizard-dualrange-input");
     }
 
+    /// <summary>
+    /// Summary: Default 5–7 clubs must keep both range values and paint an inclusive fill, not thumbs stuck at min.
+    /// </summary>
+    [Fact]
+    public async Task Clubs_DualRange_Default_Is_Inclusive_Five_To_Seven()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await WizardUxGeometry.EnsureMobileViewportAsync(page);
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        await wizard.WaitUntilLoadedAsync();
+        await wizard.ClickNextAsync();
+        await wizard.ExpectStepAsync(1);
+
+        await Assertions.Expect(wizard.ClubsEcho).ToContainTextAsync("5");
+        await Assertions.Expect(wizard.ClubsEcho).ToContainTextAsync("7");
+        await Assertions.Expect(wizard.DualRangeInputs.Nth(0)).ToHaveValueAsync("5");
+        await Assertions.Expect(wizard.DualRangeInputs.Nth(1)).ToHaveValueAsync("7");
+
+        var geometry = await page.EvaluateAsync<double[]>(
+            @"() => {
+                const fill = document.querySelector('.wizard-dualrange-fill');
+                const wrap = document.querySelector('.wizard-dualrange-track-wrap');
+                if (!fill || !wrap) {
+                    return [0, 0, 0];
+                }
+                const f = fill.getBoundingClientRect();
+                const w = wrap.getBoundingClientRect();
+                return [f.left - w.left, f.width, w.width];
+            }"
+        );
+
+        geometry[2].Should().BeGreaterThan(0);
+        geometry[0]
+            .Should()
+            .BeGreaterThan(
+                geometry[2] * 0.04,
+                because: "min=5 on a 2–30 inclusive track must not sit at the far left"
+            );
+        geometry[1]
+            .Should()
+            .BeGreaterThan(
+                geometry[2] * 0.08,
+                because: "inclusive 5–7 must cover three slots, not an exclusive [5, 7) sliver"
+            );
+    }
+
     /// <summary>Summary: Throw-height chips on step 2 must stay above the sticky bottom nav when scrolled into view.</summary>
     [Fact]
     public async Task Throw_Chips_Are_Not_Covered_By_Sticky_Nav()

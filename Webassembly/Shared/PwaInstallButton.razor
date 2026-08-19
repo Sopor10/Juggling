@@ -1,0 +1,12 @@
+@inject IStringLocalizer<PwaInstallButton> L
+@implements IAsyncDisposable
+
+@if (_visible)
+{
+    <button type="button"
+            class="pwa-install"
+            data-testid="pwa-install-desktop"
+            @onclick="InstallAsync">
+        @L["Install on desktop"]
+    </button>
+}

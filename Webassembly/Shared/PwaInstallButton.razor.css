@@ -1,0 +1,38 @@
+.pwa-install {
+    --pwa-purple-950: #241a3d;
+    --pwa-orange: #f9a500;
+    --pwa-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    color: var(--pwa-purple-950);
+    background: linear-gradient(180deg, #ffb838, var(--pwa-orange));
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: none;
+    border-radius: 999px;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px -2px rgba(249, 165, 0, 0.5);
+    white-space: nowrap;
+}
+
+.pwa-install:hover {
+    filter: brightness(1.05);
+}
+
+.pwa-install:active {
+    transform: scale(0.97);
+}
+
+@media (min-width: 718px) {
+    .pwa-install {
+        min-height: 2.4rem;
+        padding: 0 14px;
+        font-size: 0.9rem;
+    }
+}

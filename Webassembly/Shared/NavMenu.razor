@@ -27,6 +27,7 @@
             <span class="pznav-toggler-icon" aria-hidden="true"></span>
         </button>
         <div class="@NavMenuCssClass pznav-links">
+            <PwaInstallButton OnClicked="CloseNavMenu" />
             <NavLink class="pznav-link" href="Settings" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
                 @L["Settings"]
             </NavLink>

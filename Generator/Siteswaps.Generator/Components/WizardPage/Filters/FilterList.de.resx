@@ -24,4 +24,5 @@
   <data name="without" xml:space="preserve"><value>ohne</value></data>
   <data name="Wrap" xml:space="preserve"><value>Einklammern</value></data>
   <data name="Wrap previous and this row" xml:space="preserve"><value>Vorherige und diese Zeile einklammern</value></data>
+  <data name="{0} · juggler {1}" xml:space="preserve"><value>{0} · Jongleur {1}</value></data>
 </root>

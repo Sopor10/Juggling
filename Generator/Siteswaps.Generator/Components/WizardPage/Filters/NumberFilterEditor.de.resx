@@ -9,6 +9,10 @@
   <data name="At most" xml:space="preserve"><value>Maximal</value></data>
   <data name="Comparison" xml:space="preserve"><value>Vergleich</value></data>
   <data name="e.g. &quot;exactly 2× Heff&quot;" xml:space="preserve"><value>z. B. „genau 2× Heff“</value></data>
+  <data name="e.g. &quot;exactly 2× Heff · juggler {0}&quot;" xml:space="preserve"><value>z. B. „genau 2× Heff · Jongleur {0}“</value></data>
   <data name="Exactly" xml:space="preserve"><value>Genau</value></data>
+  <data name="Global" xml:space="preserve"><value>Global</value></data>
+  <data name="Juggler {0}" xml:space="preserve"><value>Jongleur {0}</value></data>
+  <data name="Scope" xml:space="preserve"><value>Bezug</value></data>
   <data name="Throw" xml:space="preserve"><value>Wurf</value></data>
 </root>

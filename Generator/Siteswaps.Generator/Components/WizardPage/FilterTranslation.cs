@@ -105,39 +105,71 @@ internal static class FilterTranslation
                     builder,
                     useLiteralValue
                 ),
-                EasyNumberFilter.NumberFilter numberFilter => numberFilter.Type switch
-                {
-                    EasyNumberFilter.NumberFilterType.Exactly => builder
-                        .ExactOccurence(
-                            numberFilter.Throw.GetHeightForJugglers(
-                                numberOfJugglers,
-                                useLiteralValue
-                            ),
-                            numberFilter.Amount
-                        )
-                        .Build(),
-                    EasyNumberFilter.NumberFilterType.AtLeast => builder
-                        .MinimumOccurence(
-                            numberFilter.Throw.GetHeightForJugglers(
-                                numberOfJugglers,
-                                useLiteralValue
-                            ),
-                            numberFilter.Amount
-                        )
-                        .Build(),
-                    EasyNumberFilter.NumberFilterType.Maximum => builder
-                        .MaximumOccurence(
-                            numberFilter.Throw.GetHeightForJugglers(
-                                numberOfJugglers,
-                                useLiteralValue
-                            ),
-                            numberFilter.Amount
-                        )
-                        .Build(),
-                    _ => throw new ArgumentOutOfRangeException(),
-                },
+                EasyNumberFilter.NumberFilter numberFilter => BuildNumberFilter(
+                    numberFilter,
+                    numberOfJugglers,
+                    builder,
+                    useLiteralValue
+                ),
                 EasyStateFilter.StateFilter stateFilter => builder
                     .WithState(new StatePattern(stateFilter.Items))
+                    .Build(),
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+        }
+
+        private ISiteswapFilter BuildNumberFilter(
+            EasyNumberFilter.NumberFilter numberFilter,
+            int numberOfJugglers,
+            IFilterBuilder builder,
+            bool useLiteralValue
+        )
+        {
+            var heights = numberFilter.Throw.GetHeightForJugglers(
+                numberOfJugglers,
+                useLiteralValue
+            );
+
+            if (
+                numberFilter.JugglerIndex is { } juggler
+                && juggler >= 0
+                && juggler < numberOfJugglers
+            )
+            {
+                var type = numberFilter.Type switch
+                {
+                    EasyNumberFilter.NumberFilterType.Exactly => PersonalizedNumberFilter
+                        .Type
+                        .Exact,
+                    EasyNumberFilter.NumberFilterType.AtLeast => PersonalizedNumberFilter
+                        .Type
+                        .AtLeast,
+                    EasyNumberFilter.NumberFilterType.Maximum => PersonalizedNumberFilter
+                        .Type
+                        .AtMost,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
+                return new PersonalizedNumberFilter(
+                    numberOfJugglers,
+                    input.MinHeight,
+                    input.MaxHeight,
+                    heights,
+                    numberFilter.Amount,
+                    type,
+                    juggler
+                );
+            }
+
+            return numberFilter.Type switch
+            {
+                EasyNumberFilter.NumberFilterType.Exactly => builder
+                    .ExactOccurence(heights, numberFilter.Amount)
+                    .Build(),
+                EasyNumberFilter.NumberFilterType.AtLeast => builder
+                    .MinimumOccurence(heights, numberFilter.Amount)
+                    .Build(),
+                EasyNumberFilter.NumberFilterType.Maximum => builder
+                    .MaximumOccurence(heights, numberFilter.Amount)
                     .Build(),
                 _ => throw new ArgumentOutOfRangeException(),
             };

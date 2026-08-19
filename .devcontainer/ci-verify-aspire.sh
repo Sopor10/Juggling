@@ -2,10 +2,12 @@
 # Verifies that Aspire can start inside the Dev Container and expose services.
 set -euo pipefail
 
-export PATH="${HOME}/.dotnet/tools:${PATH}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=export-dotnet.sh
+source "${SCRIPT_DIR}/export-dotnet.sh"
 export SSL_CERT_DIR="${SSL_CERT_DIR:-${HOME}/.aspnet/dev-certs/trust:/etc/ssl/certs}"
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${ROOT}"
 
 APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"

@@ -2,7 +2,14 @@
 @using Siteswaps.Generator.Core.Generator
 @inject IStringLocalizer<NumberFilterEditor> L
 
-<p class="wizard-hint">@L["e.g. \"exactly 2× Heff\""]</p>
+<p class="wizard-hint">@HintText</p>
+<div class="wizard-number-row">
+    <WizardSelect Id="numScope"
+                  AriaLabel="@L["Scope"]"
+                  Value="@ScopeValue"
+                  ValueChanged="OnScopeChanged"
+                  Options="_scopeOptions" />
+</div>
 <div class="wizard-number-row">
     <WizardSelect Id="numComparison"
                   AriaLabel="@L["Comparison"]"
@@ -28,6 +35,7 @@
     ];
 
     private IReadOnlyList<WizardSelect.Option> _throwOptions = [];
+    private IReadOnlyList<WizardSelect.Option> _scopeOptions = [];
 
     [Parameter, EditorRequired]
     public IReadOnlyList<Throw> PossibleThrows { get; set; } = Array.Empty<Throw>();
@@ -38,11 +46,46 @@
     [Parameter]
     public EventCallback<EasyNumberFilter.NumberFilter> ValueChanged { get; set; }
 
+    [Parameter]
+    public int NumberOfJugglers { get; set; } = 2;
+
+    private string ScopeValue =>
+        Value.JugglerIndex is { } juggler && juggler < NumberOfJugglers
+            ? juggler.ToString()
+            : "global";
+
+    private string HintText =>
+        Value.JugglerIndex is { } juggler
+            ? L["e.g. \"exactly 2× Heff · juggler {0}\"", (char)('A' + juggler)].Value
+            : L["e.g. \"exactly 2× Heff\""].Value;
+
     protected override void OnParametersSet()
     {
         _throwOptions = PossibleThrows
             .Select(t => new WizardSelect.Option(t.Height.ToString(), t.GetDisplayValue(true)))
             .ToArray();
+        RefreshScopeOptions();
+    }
+
+    private void RefreshScopeOptions()
+    {
+        var options = new List<WizardSelect.Option>
+        {
+            new("global", L["Global"].Value),
+        };
+        for (var i = 0; i < NumberOfJugglers; i++)
+        {
+            var label = L["Juggler {0}", (char)('A' + i)].Value;
+            options.Add(new WizardSelect.Option(i.ToString(), label));
+        }
+
+        _scopeOptions = options;
+    }
+
+    private async Task OnScopeChanged(string value)
+    {
+        int? juggler = value == "global" ? null : int.Parse(value);
+        await Update(Value with { JugglerIndex = juggler });
     }
 
     private async Task OnTypeChanged(string value)
