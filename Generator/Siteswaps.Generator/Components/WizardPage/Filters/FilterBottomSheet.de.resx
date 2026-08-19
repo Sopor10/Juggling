@@ -12,6 +12,6 @@
   <data name="Pattern" xml:space="preserve"><value>Muster</value></data>
   <data name="Remove filter" xml:space="preserve"><value>Filter entfernen</value></data>
   <data name="Save changes" xml:space="preserve"><value>Änderungen speichern</value></data>
-  <data name="Select at least one occupied throw." xml:space="preserve"><value>Wähle mindestens einen belegten Wurf aus.</value></data>
+  <data name="Specify at least one occupied or free throw." xml:space="preserve"><value>Gib mindestens einen belegten oder freien Wurf an.</value></data>
   <data name="State" xml:space="preserve"><value>Zustand</value></data>
 </root>

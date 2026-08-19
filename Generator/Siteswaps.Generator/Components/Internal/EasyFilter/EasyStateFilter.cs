@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Siteswaps.Generator.Components.State;
+using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Components.Internal.EasyFilter;
 
@@ -31,11 +32,13 @@ public static class EasyStateFilter
     }
 
     public static StateFilter NewDraft(int length) =>
-        new([.. new bool[Math.Max(1, length)]]);
+        new([.. Enumerable.Repeat(StateValue.DontCare, Math.Max(1, length))]);
+
+    internal static StateFilter DefaultStateFilter(int maxThrowHeight) => NewDraft(maxThrowHeight);
 
     /// <summary>
-    /// Resize to <paramref name="length"/>: pad with free beats or truncate,
-    /// keeping occupied bits that still fit.
+    /// Resize to <paramref name="length"/>: pad with don't-care beats or truncate,
+    /// keeping values that still fit.
     /// </summary>
     public static StateFilter FitToLength(StateFilter filter, int length)
     {
@@ -45,16 +48,37 @@ public static class EasyStateFilter
             return filter;
         }
 
-        var items = new bool[length];
+        var items = Enumerable.Repeat(StateValue.DontCare, length).ToArray();
         var copyLength = Math.Min(filter.Items.Length, length);
         filter.Items.AsSpan(0, copyLength).CopyTo(items);
         return new StateFilter([.. items]);
     }
 
-    public sealed record StateFilter(ImmutableArray<bool> Items) : IFilterInformation
+    public sealed record StateFilter(ImmutableArray<StateValue> Items) : IFilterInformation
     {
-        public string Display() => "State: " + string.Join(", ", Items.Select(x => x ? "1" : "0"));
+        public StateFilter(params bool[] items)
+            : this([.. items.Select(item => item ? StateValue.Occupied : StateValue.Free)]) { }
 
-        public string Notation() => string.Join(" ", Items.Select(x => x ? "x" : "_"));
+        public string Display() => "State: " + string.Join(", ", Items.Select(DisplayValue));
+
+        public string Notation() => string.Join(" ", Items.Select(NotationValue));
+
+        private static string DisplayValue(StateValue value) =>
+            value switch
+            {
+                StateValue.Occupied => "1",
+                StateValue.Free => "0",
+                StateValue.DontCare => "*",
+                _ => throw new ArgumentOutOfRangeException(nameof(value)),
+            };
+
+        private static string NotationValue(StateValue value) =>
+            value switch
+            {
+                StateValue.Occupied => "x",
+                StateValue.Free => "_",
+                StateValue.DontCare => "*",
+                _ => throw new ArgumentOutOfRangeException(nameof(value)),
+            };
     }
 }

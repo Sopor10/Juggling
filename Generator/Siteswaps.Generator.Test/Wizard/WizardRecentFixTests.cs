@@ -3,6 +3,7 @@ using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.WizardPage;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Test.Wizard;
 
@@ -56,6 +57,16 @@ public class WizardPatternFilterUiTests
 [TestFixture]
 public class WizardStateFilterNotationTests
 {
+    /// <summary>Summary: New state filters must start with all positions set to don't care.</summary>
+    [Test]
+    public void DefaultStateDraft_Uses_DontCare_For_All_Positions()
+    {
+        var filter = EasyStateFilter.DefaultStateFilter(5);
+
+        filter.Items.Should().HaveCount(5);
+        filter.Items.Should().OnlyContain(item => item == StateValue.DontCare);
+    }
+
     /// <summary>Summary: State filters must render classic occupied/free notation (x / _).</summary>
     [Test]
     public void Notation_Uses_X_And_Underscore()
@@ -101,7 +112,7 @@ public class WizardStateFilterBeatBoundTests
 
         var fitted = EasyStateFilter.FitToLength(longer, 4);
 
-        fitted.Items.Should().Equal(true, false, true, true);
+        fitted.Items.Should().Equal(StateValue.Occupied, StateValue.Free, StateValue.Occupied, StateValue.Occupied);
     }
 }
 

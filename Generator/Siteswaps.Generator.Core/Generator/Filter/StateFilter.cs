@@ -53,6 +53,8 @@ public record State(uint Value)
         return (b & (1 << pos)) != 0;
     }
 
+    public bool IsOccupiedAt(int position) => IsBitSet(Value, position);
+
     private static State CalculateState(int[] siteswap, int? length = null)
     {
         var stable = false;
