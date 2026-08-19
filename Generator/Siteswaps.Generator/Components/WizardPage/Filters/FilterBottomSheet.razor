@@ -296,5 +296,5 @@
         );
 
     private static EasyStateFilter.StateFilter NewStateDraft(int maxThrowHeight) =>
-        new([.. Enumerable.Repeat(StateValue.Free, Math.Max(1, maxThrowHeight))]);
+        EasyStateFilter.DefaultStateFilter(maxThrowHeight);
 }

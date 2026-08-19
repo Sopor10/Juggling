@@ -7,6 +7,9 @@ namespace Siteswaps.Generator.Components.Internal.EasyFilter;
 /// <summary>Marker holding state-filter model types used by the wizard.</summary>
 public static class EasyStateFilter
 {
+    internal static StateFilter DefaultStateFilter(int maxThrowHeight) =>
+        new([.. Enumerable.Repeat(StateValue.DontCare, Math.Max(1, maxThrowHeight))]);
+
     public record StateFilter(ImmutableArray<StateValue> Items) : IFilterInformation
     {
         public StateFilter(params bool[] items)
