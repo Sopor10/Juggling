@@ -1,5 +1,5 @@
 @import '_content/Siteswaps.Components/Siteswaps.Components.smouq1e868.bundle.scp.css';
-@import '_content/Siteswaps.Generator/Siteswaps.Generator.0h5mazi1lh.bundle.scp.css';
+@import '_content/Siteswaps.Generator/Siteswaps.Generator.64s7shifnl.bundle.scp.css';
 
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-eywtt48i3v] {
@@ -267,6 +267,45 @@ main[b-eywtt48i3v] {
     }
 
     .pznav-link[b-qldtb9oj5f] {
+        min-height: 2.4rem;
+        padding: 0 14px;
+        font-size: 0.9rem;
+    }
+}
+/* /Shared/PwaInstallButton.razor.rz.scp.css */
+.pwa-install[b-pwv0az68n3] {
+    --pwa-purple-950: #241a3d;
+    --pwa-orange: #f9a500;
+    --pwa-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    color: var(--pwa-purple-950);
+    background: linear-gradient(180deg, #ffb838, var(--pwa-orange));
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: none;
+    border-radius: 999px;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px -2px rgba(249, 165, 0, 0.5);
+    white-space: nowrap;
+}
+
+.pwa-install:hover[b-pwv0az68n3] {
+    filter: brightness(1.05);
+}
+
+.pwa-install:active[b-pwv0az68n3] {
+    transform: scale(0.97);
+}
+
+@media (min-width: 718px) {
+    .pwa-install[b-pwv0az68n3] {
         min-height: 2.4rem;
         padding: 0 14px;
         font-size: 0.9rem;
