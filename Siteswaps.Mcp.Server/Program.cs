@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using ModelContextProtocol.Protocol;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +39,7 @@ app.Use(
                         switch (method)
                         {
                             case "resources/list":
-                                logger.LogInformation("resources/list request handler called");
+                                McpServerLog.ResourcesList(logger);
                                 break;
                             case "resources/read":
                             {
@@ -47,10 +47,7 @@ app.Use(
                                     if (paramsElement.TryGetProperty("uri", out var uriElement))
                                     {
                                         var uri = uriElement.GetString();
-                                        logger.LogInformation(
-                                            "resources/read request handler called with URI: {Uri}",
-                                            uri
-                                        );
+                                        McpServerLog.ResourceRead(logger, uri);
                                     }
 
                                 break;
@@ -71,3 +68,20 @@ app.Use(
 app.MapMcp();
 
 app.Run();
+
+internal static partial class McpServerLog
+{
+    [LoggerMessage(
+        EventId = 1,
+        Level = LogLevel.Information,
+        Message = "resources/list request handler called"
+    )]
+    public static partial void ResourcesList(ILogger logger);
+
+    [LoggerMessage(
+        EventId = 2,
+        Level = LogLevel.Information,
+        Message = "resources/read request handler called with URI: {Uri}"
+    )]
+    public static partial void ResourceRead(ILogger logger, string? uri);
+}
