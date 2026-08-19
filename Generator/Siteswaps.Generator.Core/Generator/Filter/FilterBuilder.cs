@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
@@ -58,6 +58,11 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
     public IFilterBuilder WithState(State state)
     {
         return this with { Filter = Filter.Add(new StateFilter(Input, state)) };
+    }
+
+    public IFilterBuilder WithState(StatePattern pattern)
+    {
+        return this with { Filter = Filter.Add(new StatePatternFilter(Input, pattern)) };
     }
 
     public IFilterBuilder FlexiblePattern(

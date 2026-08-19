@@ -1,6 +1,7 @@
 @using Siteswaps.Generator.Components.Internal.EasyFilter
 @using Siteswaps.Generator.Components.State
 @using Siteswaps.Generator.Core.Generator
+@using Siteswaps.Generator.Core.Generator.Filter
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @inject IJSRuntime JsRuntime
@@ -228,9 +229,9 @@
 
     private async Task Save()
     {
-        if (_activeTab == FilterTabKind.State && !_stateDraft.Items.Any(item => item))
+        if (_activeTab == FilterTabKind.State && !_stateDraft.Items.Any(item => item != StateValue.DontCare))
         {
-            _validationMessage = L["Select at least one occupied throw."];
+            _validationMessage = L["Specify at least one occupied or free throw."];
             return;
         }
 
@@ -295,5 +296,5 @@
         );
 
     private static EasyStateFilter.StateFilter NewStateDraft(int maxThrowHeight) =>
-        new([.. new bool[Math.Max(1, maxThrowHeight)]]);
+        EasyStateFilter.DefaultStateFilter(maxThrowHeight);
 }

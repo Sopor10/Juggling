@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter;
+namespace Siteswaps.Generator.Core.Generator.Filter;
 
 public interface IFilterBuilder
 {
@@ -28,6 +28,8 @@ public interface IFilterBuilder
     public IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler);
 
     public IFilterBuilder WithState(State state);
+
+    IFilterBuilder WithState(StatePattern pattern);
 
     IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
