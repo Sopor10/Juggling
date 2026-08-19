@@ -132,7 +132,7 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
             .Should()
             .BeGreaterThan(
                 geometry[2] * 0.08,
-                because: "inclusive 5–7 must cover three slots, not an exclusive [5, 7) sliver"
+                because: $"inclusive 5–7 must cover three slots, not an exclusive [5, 7) sliver; layout: {diagnostics}"
             );
     }
 
