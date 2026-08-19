@@ -1,3 +1,4 @@
+@using System.Globalization
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 @inject IJSRuntime JsRuntime
@@ -85,7 +86,9 @@
                 LowerBound,
                 UpperBound
             );
-            return $"left:{left:0.##}%;width:{width:0.##}%";
+            var leftPercent = left.ToString("0.##", CultureInfo.InvariantCulture);
+            var widthPercent = width.ToString("0.##", CultureInfo.InvariantCulture);
+            return $"left:{leftPercent}%;width:{widthPercent}%";
         }
     }
 
