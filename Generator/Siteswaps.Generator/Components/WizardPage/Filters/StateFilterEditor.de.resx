@@ -2,7 +2,12 @@
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
-  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Which future throws are occupied?" xml:space="preserve"><value>Welche zukünftigen Würfe sind belegt?</value></data>
+  <data name="Beat {0}: {1}" xml:space="preserve"><value>Schlag {0}: {1}</value></data>
+  <data name="occupied" xml:space="preserve"><value>belegt</value></data>
+  <data name="free" xml:space="preserve"><value>frei</value></data>
+  <data name="don't care" xml:space="preserve"><value>egal</value></data>
+  <data name="Tap repeatedly to cycle: occupied, free, don't care." xml:space="preserve"><value>Mehrfach tippen wechselt zwischen: belegt, frei, egal.</value></data>
 </root>

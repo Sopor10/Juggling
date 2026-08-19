@@ -73,4 +73,24 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
         await firstBeat.ClickAsync();
         await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*x"));
     }
+
+    /// <summary>Summary: State filter beat buttons cycle through occupied, don't-care, and free.</summary>
+    [Fact]
+    public async Task State_Filter_Cycles_To_DontCare()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        var page = session.Page;
+        await wizard.WaitUntilLoadedAsync();
+        await wizard.AdvanceToFiltersAsync();
+        await wizard.OpenAddFilterSheetAsync();
+        await page.Locator("#wizard-filter-tab-state").ClickAsync();
+
+        var notation = page.Locator(".wizard-state-notation");
+        var firstBeat = page.Locator(".wizard-state-grid .wizard-chip").First;
+        await firstBeat.ClickAsync();
+        await firstBeat.ClickAsync();
+
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*\*"));
+    }
 }

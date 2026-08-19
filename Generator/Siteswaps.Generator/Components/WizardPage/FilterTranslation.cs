@@ -138,7 +138,7 @@ internal static class FilterTranslation
                 },
                 EasyStateFilter.StateFilter stateFilter => builder
                     .WithState(
-                        new Siteswaps.Generator.Core.Generator.Filter.State(stateFilter.Items)
+                        new StatePattern(stateFilter.Items)
                     )
                     .Build(),
                 _ => throw new ArgumentOutOfRangeException(),
