@@ -30,7 +30,7 @@
                 @onclick="() => SelectTab(FilterTabKind.Pattern)">@L["Pattern"]</button>
         <button type="button" class="wizard-tab @(_activeTab == FilterTabKind.State ? "active" : "")"
                 id="wizard-filter-tab-state" role="tab" aria-selected="@(_activeTab == FilterTabKind.State ? "true" : "false")"
-                aria-controls="wizard-filter-panel-state" tabindex="@(_activeTab == FilterKind.State ? "0" : "-1")"
+                aria-controls="wizard-filter-panel-state" tabindex="@(_activeTab == FilterTabKind.State ? "0" : "-1")"
                 @onkeydown="e => OnTabKeyDown(e, FilterTabKind.State)"
                 @onclick="() => SelectTab(FilterTabKind.State)">@L["State"]</button>
     </div>
