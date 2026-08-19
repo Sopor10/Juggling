@@ -20,7 +20,7 @@
     {
         <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
-        <div @ref="_stepsElement" class="wizard-steps">
+        <div @ref="_swipeHost" class="wizard-steps">
 
             <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
                 <div class="wizard-measure">
@@ -97,7 +97,7 @@
     else
     {
         <div class="wizard-sr-only" aria-live="polite">@L["Step {0} / {1}: Results", WizardState.ResultsStepIndex + 1, WizardState.ProgressStepCount]</div>
-        <div id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
+        <div @ref="_swipeHost" id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
             <ResultsView Results="State.Results"
                          IsGenerating="State.Phase == WizardPhase.Generating"
                          NumberOfJugglers="State.NumberOfJugglers"
