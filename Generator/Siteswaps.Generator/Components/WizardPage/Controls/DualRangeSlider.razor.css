@@ -17,8 +17,9 @@
 .wizard-dualrange-track {
     position: absolute;
     top: 50%;
-    left: 0;
-    right: 0;
+    /* Inset by thumb radius so fill % matches native thumb travel (inclusive slots). */
+    left: 20px;
+    right: 20px;
     height: 6px;
     margin-top: -3px;
     border-radius: 6px;
@@ -58,10 +59,13 @@
 
 .wizard-dualrange-input::-webkit-slider-runnable-track {
     background: transparent;
+    height: 40px;
 }
 
 .wizard-dualrange-input::-moz-range-track {
     background: transparent;
+    height: 40px;
+    border: none;
 }
 
 .wizard-dualrange-input::-webkit-slider-thumb {

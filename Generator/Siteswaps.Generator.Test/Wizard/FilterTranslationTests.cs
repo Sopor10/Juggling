@@ -44,6 +44,24 @@ public class FilterTranslationTests
         FilterTranslation.CreateGenerators(state).Should().BeEmpty();
     }
 
+    /// <summary>
+    /// Summary: Club range 5–7 must create one generator per count, including max.
+    /// </summary>
+    [Test]
+    public void CreateGenerators_Club_Range_Includes_Max()
+    {
+        var state = new WizardState();
+        state.Clubs = new Between { MinNumber = 5, MaxNumber = 7 };
+
+        FilterTranslation
+            .CreateGenerators(state)
+            .Should()
+            .HaveCount(
+                3,
+                because: "loop must be number <= MaxNumber so 5, 6, and 7 are all generated"
+            );
+    }
+
     /// <summary>Summary: Generated siteswaps must only contain heights from the selected throws.</summary>
     [Test]
     public void CreateGenerators_Results_Only_Use_Allowed_Heights()
