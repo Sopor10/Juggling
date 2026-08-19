@@ -230,6 +230,8 @@
     /* Inset by thumb radius so fill % matches native thumb travel (inclusive slots). */
     left: 20px;
     right: 20px;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
     height: 6px;
     margin-top: -3px;
     border-radius: 6px;
