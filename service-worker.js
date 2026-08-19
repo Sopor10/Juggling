@@ -1,4 +1,4 @@
-/* Manifest version: mV/H7G/t */
+/* Manifest version: OOSWLrz7 */
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
@@ -33,6 +33,8 @@ async function onInstall(event) {
 
 async function onActivate(event) {
     console.info('Service worker: Activate');
+
+    await self.clients.claim();
 
     // Delete unused caches
     const cacheKeys = await caches.keys();

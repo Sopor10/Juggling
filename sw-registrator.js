@@ -14,7 +14,7 @@
     }
 
     const workerUrl = new URL('service-worker.js', baseHref).href;
-    navigator.serviceWorker.register(workerUrl)
+    navigator.serviceWorker.register(workerUrl, { updateViaCache: 'none' })
         .then(registration => {
             console.info(`Service worker registration successful (scope: ${registration.scope})`);
 
