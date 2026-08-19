@@ -89,6 +89,25 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
         await Assertions.Expect(wizard.DualRangeInputs.Nth(0)).ToHaveValueAsync("5");
         await Assertions.Expect(wizard.DualRangeInputs.Nth(1)).ToHaveValueAsync("7");
 
+        var diagnostics = await page.EvaluateAsync<string>(
+            @"() => {
+                const fill = document.querySelector('.wizard-dualrange-fill');
+                const track = document.querySelector('.wizard-dualrange-track');
+                const wrap = document.querySelector('.wizard-dualrange-track-wrap');
+                const describe = (element) => element
+                    ? {
+                        rect: element.getBoundingClientRect().toJSON(),
+                        style: element.getAttribute('style'),
+                        inlineWidth: element.style.width,
+                        computedWidth: getComputedStyle(element).width,
+                        computedDisplay: getComputedStyle(element).display
+                    }
+                    : null;
+                return JSON.stringify({ fill: describe(fill), track: describe(track), wrap: describe(wrap) });
+            }"
+        );
+        Console.WriteLine($"Dual range layout: {diagnostics}");
+
         var geometry = await page.EvaluateAsync<double[]>(
             @"() => {
                 const fill = document.querySelector('.wizard-dualrange-fill');
