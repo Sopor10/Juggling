@@ -103,4 +103,25 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         var covers = await WizardUxGeometry.ResultsActionsCoverLastCardAsync(page);
         covers.Should().BeFalse("results actions must sit below the last card, not overlap it");
     }
+
+    /// <summary>Summary: Dense mode hides juggler sequence preview on result cards.</summary>
+    [Fact]
+    public async Task Dense_Mode_Hides_Juggler_Preview()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await WizardUxGeometry.EnsureMobileViewportAsync(page);
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        await wizard.WaitUntilLoadedAsync();
+        await wizard.AdvanceToGenerateAsync();
+        await wizard.WaitForResultsAsync();
+
+        await Assertions.Expect(wizard.SiteswapCardJugglers).Not.ToHaveCountAsync(0);
+        await wizard.DenseModeToggle.ClickAsync();
+        await Assertions.Expect(wizard.SiteswapCardJugglers).ToHaveCountAsync(0);
+        await Assertions.Expect(wizard.DenseModeToggle).ToHaveAttributeAsync("aria-pressed", "true");
+        await wizard.DenseModeToggle.ClickAsync();
+        await Assertions.Expect(wizard.SiteswapCardJugglers).Not.ToHaveCountAsync(0);
+        await Assertions.Expect(wizard.DenseModeToggle).ToHaveAttributeAsync("aria-pressed", "false");
+    }
 }

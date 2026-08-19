@@ -1,7 +1,10 @@
+@using Blazored.LocalStorage
 @using Siteswaps.Generator.Components.Internal
+@implements IDisposable
 @inject IStringLocalizer<ResultsView> L
+@inject ILocalStorageService LocalStorage
 
-<div class="wizard-results">
+<div class="wizard-results @(_denseMode ? "dense" : "")">
     <div class="wizard-results-scroll">
         <div class="wizard-results-header">
             <h2 class="wizard-results-title">
@@ -18,10 +21,23 @@
                     <text>@L["{0} results", Results.Count]</text>
                 }
             </h2>
-            @if (IsGenerating)
-            {
-                <button type="button" class="wizard-btn-ghost" @onclick="Cancel">@L["Cancel"]</button>
-            }
+            <div class="wizard-results-header-actions">
+                @if (Results.Count > 0)
+                {
+                    <button type="button"
+                            class="wizard-chip wizard-results-dense-toggle @(_denseMode ? "active" : "")"
+                            data-testid="wizard-dense-mode"
+                            aria-pressed="@(_denseMode ? "true" : "false")"
+                            aria-label="@L["Dense mode"]"
+                            @onclick="ToggleDenseMode">
+                        @L["Dense"]
+                    </button>
+                }
+                @if (IsGenerating)
+                {
+                    <button type="button" class="wizard-btn-ghost" @onclick="Cancel">@L["Cancel"]</button>
+                }
+            </div>
         </div>
 
         @if (IsGenerating && Results.Count == 0)
@@ -42,10 +58,10 @@
             {
                 <p class="wizard-loading-more" role="status" aria-live="polite">@L["Loading more results…"]</p>
             }
-            <div class="wizard-results-grid" role="list">
+            <div class="wizard-results-grid @(_denseMode ? "dense" : "")" role="list">
                 @foreach (var s in Results.Take(_visibleResultCount))
                 {
-                    <SiteswapCard Siteswap="s" NumberOfJugglers="NumberOfJugglers" />
+                    <SiteswapCard Siteswap="s" NumberOfJugglers="NumberOfJugglers" DenseMode="_denseMode" />
                 }
             </div>
             @if (!IsGenerating && _visibleResultCount < Results.Count)
@@ -97,6 +113,9 @@
 
     private int _visibleResultCount = BatchSize;
     private const int BatchSize = 40;
+    private const string DenseModeStorageKey = "wizard-dense-mode";
+    private bool _denseMode;
+    private readonly CancellationTokenSource _cts = new();
 
     protected override void OnParametersSet()
     {
@@ -106,5 +125,40 @@
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        try
+        {
+            _denseMode = await LocalStorage.GetItemAsync<bool>(DenseModeStorageKey, _cts.Token);
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private async Task ToggleDenseMode()
+    {
+        _denseMode = !_denseMode;
+        try
+        {
+            await LocalStorage.SetItemAsync(DenseModeStorageKey, _denseMode, _cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
     private void LoadMore() => _visibleResultCount = Math.Min(_visibleResultCount + BatchSize, Results.Count);
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
 }

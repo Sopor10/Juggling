@@ -8,6 +8,8 @@
   <data name="1 result" xml:space="preserve"><value>1 Ergebnis</value></data>
   <data name="Adjust filters" xml:space="preserve"><value>Filter anpassen</value></data>
   <data name="Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Dense" xml:space="preserve"><value>Kompakt</value></data>
+  <data name="Dense mode" xml:space="preserve"><value>Kompaktmodus</value></data>
   <data name="Generating results" xml:space="preserve"><value>Generiere Ergebnisse</value></data>
   <data name="Generating…" xml:space="preserve"><value>Generiere…</value></data>
   <data name="Load more ({0} of {1})" xml:space="preserve"><value>Mehr laden ({0} von {1})</value></data>

@@ -28,6 +28,10 @@ public class WizardPageObject(IPage page)
 
     public ILocator SiteswapCards => page.Locator(".pz-siteswap-card");
 
+    public ILocator SiteswapCardJugglers => page.Locator(".pz-siteswap-card-jugglers");
+
+    public ILocator DenseModeToggle => page.GetByTestId("wizard-dense-mode");
+
     public ILocator GenerateButton => page.Locator(".wizard-btn-generate");
 
     public ILocator PeriodInput => page.Locator("#periodExactInput");
