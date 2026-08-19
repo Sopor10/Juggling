@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Playwright;
 
 namespace Siteswaps.E2ETests;
@@ -12,7 +13,8 @@ public class NumberFilterDialogObject(IPage page)
 
     public async Task<NumberFilterDialogObject> SetAmountAsync(int amount)
     {
-        await page.Locator("input#numberFilterAmount").FillAsync(amount.ToString());
+        await page.Locator("input#numberFilterAmount")
+            .FillAsync(amount.ToString(CultureInfo.InvariantCulture));
         return this;
     }
 

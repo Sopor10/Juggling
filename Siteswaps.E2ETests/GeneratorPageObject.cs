@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Playwright;
 
 namespace Siteswaps.E2ETests;
@@ -12,7 +13,8 @@ public class GeneratorPageObject(IPage page)
 
     public async Task<GeneratorPageObject> SetPeriodAsync(int period)
     {
-        await page.GetByTestId("numeric-input-period").FillAsync(period.ToString());
+        await page.GetByTestId("numeric-input-period")
+            .FillAsync(period.ToString(CultureInfo.InvariantCulture));
         await page.WaitForTimeoutAsync(100);
         return this;
     }
@@ -20,7 +22,7 @@ public class GeneratorPageObject(IPage page)
     public async Task<GeneratorPageObject> SetNumberOfJugglersAsync(int numberOfJugglers)
     {
         await page.GetByTestId("numeric-input-numberOfJugglers")
-            .FillAsync(numberOfJugglers.ToString());
+            .FillAsync(numberOfJugglers.ToString(CultureInfo.InvariantCulture));
         await page.WaitForTimeoutAsync(100);
         return this;
     }
@@ -29,7 +31,7 @@ public class GeneratorPageObject(IPage page)
     {
         var minInput = page.Locator("rz-numeric").First;
         await minInput.ClickAsync();
-        await minInput.Locator("input").FillAsync(minClubs.ToString());
+        await minInput.Locator("input").FillAsync(minClubs.ToString(CultureInfo.InvariantCulture));
         await page.WaitForTimeoutAsync(100);
         return this;
     }
@@ -38,7 +40,7 @@ public class GeneratorPageObject(IPage page)
     {
         var maxInput = page.Locator("rz-numeric").Nth(1);
         await maxInput.ClickAsync();
-        await maxInput.Locator("input").FillAsync(maxClubs.ToString());
+        await maxInput.Locator("input").FillAsync(maxClubs.ToString(CultureInfo.InvariantCulture));
         await page.WaitForTimeoutAsync(100);
         return this;
     }

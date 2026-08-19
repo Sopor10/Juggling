@@ -1,10 +1,10 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 namespace Siteswap.Details.CausalDiagram;
 
 public class CausalDiagramGenerator
 {
-    public CausalDiagram Generate(Siteswap siteswap, CyclicArray<Hand> hands)
+    public static CausalDiagram Generate(Siteswap siteswap, CyclicArray<Hand> hands)
     {
         var nodes = new List<Throw>();
 
@@ -42,7 +42,7 @@ public class CausalDiagramGenerator
         return index >= 0 && index < nodes.Count;
     }
 
-    private Offset CalculateOffset(int numberOfHands, int currentPosition)
+    private static Offset CalculateOffset(int numberOfHands, int currentPosition)
     {
         return new Offset(1.0m * (currentPosition % numberOfHands) / numberOfHands);
     }
