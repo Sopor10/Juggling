@@ -1,4 +1,4 @@
-﻿@inject NavigationManager Navigation
+@inject NavigationManager Navigation
 @inject IStringLocalizer<NavMenu> L
 
 <nav class="pznav" aria-label="@L["Main navigation"]">
@@ -57,6 +57,6 @@
 
         _invalid = false;
         CloseNavMenu();
-        Navigation.NavigateTo($"/details?s={Uri.EscapeDataString(query)}");
+        Navigation.NavigateTo($"details?s={Uri.EscapeDataString(query)}");
     }
 }
