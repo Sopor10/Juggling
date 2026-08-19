@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace Siteswaps.Generator.Core.Generator;
 
@@ -89,7 +89,11 @@ public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 
     object IEnumerator.Current => Current ?? throw new ArgumentNullException();
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
 
     public int Length => Array.Length;
 }
+

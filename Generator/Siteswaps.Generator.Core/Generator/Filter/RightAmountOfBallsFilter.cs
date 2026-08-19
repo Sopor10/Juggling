@@ -1,6 +1,7 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter;
+namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal class RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput) : ISiteswapFilter
+internal sealed class RightAmountOfBallsFilter(SiteswapGeneratorInput generatorInput)
+    : ISiteswapFilter
 {
     private readonly int _generatorInputNumberOfObjects = (int)generatorInput.NumberOfObjects;
 

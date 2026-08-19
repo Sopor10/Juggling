@@ -1,4 +1,4 @@
-﻿using MoreLinq.Extensions;
+using MoreLinq.Extensions;
 
 namespace Siteswaps.Generator.Core.Generator;
 
@@ -65,7 +65,7 @@ public static class EnumerableIntExtension
             list.Add(enumerator.Current);
         }
 
-        if (list.Any())
+        if (list.Count > 0)
         {
             yield return list;
         }

@@ -1,6 +1,6 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter;
+namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal class NumberOfPassesFilter(
+internal sealed class NumberOfPassesFilter(
     int numberOfPasses,
     int numberOfJugglers,
     SiteswapGeneratorInput generatorInput
