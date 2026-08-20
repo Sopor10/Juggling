@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.5.0">
+<Project Sdk="Aspire.AppHost.Sdk/13.5.1">
   <ItemGroup>
     <ProjectReference Include="..\Siteswaps.Mcp.Server\Siteswaps.Mcp.Server.csproj" />
     <ProjectReference Include="..\Webassembly\Webassembly.csproj" />
