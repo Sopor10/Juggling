@@ -37,6 +37,8 @@ public interface IFilterBuilder
 
     public IFilterBuilder WithState(State state);
 
+    IFilterBuilder WithState(StatePattern pattern);
+
     IFilterBuilder FlexiblePattern(
         List<List<int>> pattern,
         int numberOfJuggler,

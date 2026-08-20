@@ -1,0 +1,160 @@
+@page "/details"
+@namespace Siteswaps.Components.Details
+@using Siteswaps.Components.Details.Variants
+@inject NavigationManager Navigation
+@inject IStringLocalizer<DetailPage> L
+
+<div class="sd-page">
+    <header class="sd-header">
+        <div class="sd-header-row">
+            <a class="sd-back" href="/">@L["← Wizard"]</a>
+            @if (Model is not null)
+            {
+                <a class="sd-external" href="@Model.PassistLink" target="_blank" rel="noopener">Passist</a>
+            }
+        </div>
+        @if (Model is not null)
+        {
+            <div class="sd-header-notation" role="group" aria-label="@L["Siteswap rotation"]">
+                <button type="button"
+                        class="sd-rotate"
+                        aria-label="@L["Rotate siteswap left"]"
+                        disabled="@(Model.Period <= 1)"
+                        @onclick="() => Rotate(-1)">
+                    ◄
+                </button>
+                <span class="sd-header-notation-value">@Model.Notation</span>
+                <button type="button"
+                        class="sd-rotate"
+                        aria-label="@L["Rotate siteswap right"]"
+                        disabled="@(Model.Period <= 1)"
+                        @onclick="() => Rotate(1)">
+                    ►
+                </button>
+            </div>
+            <div class="sd-header-meta" role="group" aria-label="@L["Jugglers and clubs"]">
+                <div class="sd-juggler-stepper" role="group" aria-label="@L["Number of jugglers"]">
+                    <button type="button"
+                            class="sd-rotate sd-juggler-step"
+                            aria-label="@L["Fewer jugglers"]"
+                            disabled="@(Model.NumberOfJugglers <= MinJugglers)"
+                            @onclick="() => ChangeJugglers(-1)">
+                        ◄
+                    </button>
+                    <span class="sd-header-meta-value">@L["{0} jugglers", Model.NumberOfJugglers]</span>
+                    <button type="button"
+                            class="sd-rotate sd-juggler-step"
+                            aria-label="@L["More jugglers"]"
+                            disabled="@(Model.NumberOfJugglers >= MaxJugglers)"
+                            @onclick="() => ChangeJugglers(1)">
+                        ►
+                    </button>
+                </div>
+                <span class="sd-header-meta-clubs">@L["{0} clubs", Model.NumberOfClubs]</span>
+            </div>
+        }
+    </header>
+
+    <div class="sd-sheet">
+        @if (Model is null)
+        {
+            <div class="sd-empty">
+                <h2>@L["Invalid siteswap"]</h2>
+                <p>@L["Open a siteswap from the wizard or set ?s= and optionally &n=."]</p>
+            </div>
+        }
+        else
+        {
+            <div class="sd-tabs" role="tablist" aria-label="@L["Detail variants"]">
+                @foreach (var tab in Tabs)
+                {
+                    <button type="button"
+                            role="tab"
+                            class="sd-tab @(ActiveTab == tab.Id ? "active" : null)"
+                            aria-selected="@(ActiveTab == tab.Id)"
+                            @onclick="() => SelectTab(tab.Id)">
+                        @tab.Label
+                    </button>
+                }
+            </div>
+
+            <div class="sd-variant" role="tabpanel">
+                @switch (ActiveTab)
+                {
+                    case "hero":
+                        <DetailVariantHero Model="Model" />
+                        break;
+                    case "analysis":
+                        <DetailVariantAnalysis Model="Model" />
+                        break;
+                    case "transitions":
+                        <DetailVariantTransitions Model="Model" />
+                        break;
+                    case "diagrams":
+                        <DetailVariantDiagrams Model="Model" />
+                        break;
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private const int MinJugglers = 1;
+    private const int MaxJugglers = 20;
+
+    [Parameter, SupplyParameterFromQuery(Name = "s")]
+    public string StringValue { get; set; } = "";
+
+    [Parameter, SupplyParameterFromQuery(Name = "n")]
+    public int NumberOfJugglers { get; set; } = 2;
+
+    private DetailViewModel? Model { get; set; }
+    private string ActiveTab { get; set; } = "hero";
+
+    private TabInfo[] Tabs =>
+    [
+        new("hero", L["Overview"].Value),
+        new("analysis", L["Analysis"].Value),
+        new("transitions", L["Transitions"].Value),
+        new("diagrams", L["Diagrams"].Value),
+    ];
+
+    protected override void OnParametersSet()
+    {
+        var jugglers = NumberOfJugglers < MinJugglers ? 2 : Math.Clamp(NumberOfJugglers, MinJugglers, MaxJugglers);
+        Model = DetailViewModel.TryCreate(StringValue, jugglers);
+        base.OnParametersSet();
+    }
+
+    private void SelectTab(string id) => ActiveTab = id;
+
+    private void Rotate(int steps)
+    {
+        if (Model is null || Model.Period <= 1)
+        {
+            return;
+        }
+
+        var rotated = Model.Value.Rotate(steps).ToString();
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("s", rotated));
+    }
+
+    private void ChangeJugglers(int delta)
+    {
+        if (Model is null)
+        {
+            return;
+        }
+
+        var next = Math.Clamp(Model.NumberOfJugglers + delta, MinJugglers, MaxJugglers);
+        if (next == Model.NumberOfJugglers)
+        {
+            return;
+        }
+
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("n", next.ToString()));
+    }
+
+    private sealed record TabInfo(string Id, string Label);
+}

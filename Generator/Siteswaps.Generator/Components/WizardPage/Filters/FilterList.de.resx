@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="+ Filter in group" xml:space="preserve"><value>+ Filter in Gruppe</value></data>
+  <data name="AND" xml:space="preserve"><value>UND</value></data>
+  <data name="AND – tap for OR" xml:space="preserve"><value>UND – antippen für ODER</value></data>
+  <data name="At least" xml:space="preserve"><value>Mindestens</value></data>
+  <data name="At most" xml:space="preserve"><value>Maximal</value></data>
+  <data name="contains" xml:space="preserve"><value>enthält</value></data>
+  <data name="Edit: {0}" xml:space="preserve"><value>Bearbeiten: {0}</value></data>
+  <data name="empty" xml:space="preserve"><value>leer</value></data>
+  <data name="Exactly" xml:space="preserve"><value>Genau</value></data>
+  <data name="Filter group {0}" xml:space="preserve"><value>Filtergruppe {0}</value></data>
+  <data name="Groups can mix AND/OR and nest inside each other." xml:space="preserve"><value>Gruppen können UND/ODER mischen und ineinander geschachtelt werden.</value></data>
+  <data name="No filters yet – the pattern is still unrestricted." xml:space="preserve"><value>Noch keine Filter – das Muster ist noch unbeschränkt.</value></data>
+  <data name="OR" xml:space="preserve"><value>ODER</value></data>
+  <data name="OR – tap for AND" xml:space="preserve"><value>ODER – antippen für UND</value></data>
+  <data name="Pattern {0} &quot;{1}&quot; · {2}" xml:space="preserve"><value>Muster {0} „{1}“ · {2}</value></data>
+  <data name="Remove: {0}" xml:space="preserve"><value>Entfernen: {0}</value></data>
+  <data name="State · {0}" xml:space="preserve"><value>Zustand · {0}</value></data>
+  <data name="without" xml:space="preserve"><value>ohne</value></data>
+  <data name="Wrap" xml:space="preserve"><value>Einklammern</value></data>
+  <data name="Wrap previous and this row" xml:space="preserve"><value>Vorherige und diese Zeile einklammern</value></data>
+  <data name="{0} · juggler {1}" xml:space="preserve"><value>{0} · Jongleur {1}</value></data>
+</root>

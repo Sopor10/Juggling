@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 
 namespace Siteswap.Details.CausalDiagram;
 
-public class CausalDiagramGenerator
+public static class CausalDiagramGenerator
 {
     public static CausalDiagram Generate(Siteswap siteswap, CyclicArray<Hand> hands)
     {

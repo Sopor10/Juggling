@@ -1,39 +1,40 @@
 {
   "name": "Siteswaps",
-  // 👇🏼 Use .NET 9 Debian image
-  "image": "mcr.microsoft.com/devcontainers/dotnet:9.0-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:4": {},
-    "ghcr.io/devcontainers/features/powershell:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/powershell:2": {}
   },
-  "forwardPorts": [7021],
-  // 👇🏼 This is not supported by Rider but it is supported by VS Code 
+  "forwardPorts": [7021, 5000, 5001],
   "hostRequirements": {
     "cpus": 4,
-    "memory": "16gb",
-    "storage": "20gb"
+    "memory": "8gb",
+    "storage": "32gb"
   },
-  // 👇🏼 Install .NET Aspire project templates, run inside the container 
-  // immediately after it has started for the first time
-  "onCreateCommand": " sudo chown -R vscode:vscode /IdeaProjects/Juggling && dotnet workload restore",
-  // 👇🏼 Restore NuGet packages when the container is created
-  "postCreateCommand": "dotnet restore",
-  // 👇🏼 Trust the development certificates, run each time the
-  // container is successfully started
-  "postStartCommand": "dotnet dev-certs https --trust",
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "DOTNET_NOLOGO": "1",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
+    "SSL_CERT_DIR": "/home/vscode/.aspnet/dev-certs/trust:/etc/ssl/certs"
+  },
+  "onCreateCommand": "bash .devcontainer/onCreate.sh",
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "postStartCommand": "bash .devcontainer/postStart.sh",
   "customizations": {
-    // 👇🏼 Settings and Plugins for Rider
     "jetbrains": {
       "settings": {
         "com.intellij:app:HttpConfigurable.use_proxy_pac": true
-      }
-    , "plugins" : [
-
-      ],
+      },
+      "plugins": []
     },
     "vscode": {
       "extensions": [
         "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
         "GitHub.copilot-chat",
         "GitHub.copilot"
       ]

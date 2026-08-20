@@ -1,34 +1,32 @@
-﻿@page "/transition"
-@using Siteswap.Details
+﻿@using Siteswap.Details
 @using VisNetwork.Blazor.Models
 @using Siteswap.Details.StateDiagram
 
-<Network Id="my-id" Data="@Data" style="width: 640px; height: 480px"/>
+<Network Id="@NetworkId" Data="@Data" Options="DiagramStyle.Options" style="width: 100%; max-width: 640px; height: 360px"/>
 
 @code {
-
     [Parameter]
     public Transition? Transition { get; set; }
 
-    private Transition? OldTransition { get; set; }
+    [Parameter]
+    public string? Id { get; set; }
 
-    protected override void OnInitialized()
-    {
-        OldTransition = Transition;
-        base.OnInitialized();
-    }
+    private string NetworkId => string.IsNullOrWhiteSpace(Id) ? "transition-graph" : Id;
+
+    private Transition? _renderedTransition;
+
+    private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
     protected override void OnParametersSet()
     {
-        if (OldTransition?.PrettyPrint() != Transition?.PrettyPrint())
+        if (_renderedTransition?.PrettyPrint() != Transition?.PrettyPrint())
         {
-            OldTransition = Transition;
+            _renderedTransition = Transition;
             CreateNetworkData(Transition);
         }
+
         base.OnParametersSet();
     }
-
-    private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
     private void CreateNetworkData(Transition? transition)
     {
@@ -37,6 +35,7 @@
 
         if (transition is null)
         {
+            Data = new NetworkData { Edges = edges, Nodes = nodes };
             return;
         }
 
@@ -49,7 +48,16 @@
         AddEdges(fromGraph, edges);
         AddEdges(toGraph, edges);
 
-        var state = transition.From.AllStates().Single(x => x.Value.Contains(transition.From)).Key;
+        var fromMatch = transition
+            .From.AllStates()
+            .FirstOrDefault(x => x.Value.Contains(transition.From));
+        if (fromMatch.Equals(default(KeyValuePair<State, List<Siteswap>>)))
+        {
+            Data = new NetworkData { Edges = edges, Nodes = nodes };
+            return;
+        }
+
+        var state = fromMatch.Key;
 
         foreach (var transitionThrow in transition.Throws)
         {
@@ -58,45 +66,46 @@
             AddState(nodes, state);
             AddState(nodes, nextState);
 
-            AddEdge(edges, state.StateRepresentation(), nextState.StateRepresentation(), transitionThrow.Value.ToSiteswapString(), true);
+            AddEdge(
+                edges,
+                state.StateRepresentation(),
+                nextState.StateRepresentation(),
+                transitionThrow.Value.ToSiteswapString(),
+                highlight: true
+            );
             state = nextState;
         }
 
-        Data = new NetworkData
-        {
-            Edges = edges,
-            Nodes = nodes
-        };
+        Data = new NetworkData { Edges = edges, Nodes = nodes };
     }
 
     private static void AddEdges(StateGraph fromGraph, List<Edge> edges)
     {
         foreach (var edge in fromGraph.Graph.Edges)
         {
-            AddEdge(edges, edge.N1.StateRepresentation(), edge.N2.StateRepresentation(), edge.Data.ToString());
+            AddEdge(
+                edges,
+                edge.N1.StateRepresentation(),
+                edge.N2.StateRepresentation(),
+                edge.Data.ToString()
+            );
         }
     }
 
-    private static void AddEdge(List<Edge> edges, string from, string to, string data, bool isTransition = false)
+    private static void AddEdge(
+        List<Edge> edges,
+        string from,
+        string to,
+        string data,
+        bool highlight = false
+    )
     {
         if (edges.Any(x => x.From == from && x.To == to))
         {
             return;
         }
 
-        var item = new Edge(from, to, data)
-        {
-            Label = data,
-            Arrows = new Arrows
-            {
-                To = new ArrowsOptions { Enabled = true }
-            },
-            Color = new ColorType()
-            {
-                Color = isTransition ? "orange" : "black"
-            }
-        };
-        edges.Add(item);
+        edges.Add(DiagramStyle.CreateEdge(from, to, data, highlight));
     }
 
     private static void AddNodes(StateGraph fromGraph, ICollection<Node> nodes)
@@ -111,12 +120,7 @@
     {
         if (nodes.All(x => x.Id != node.StateRepresentation()))
         {
-            nodes.Add(CreateNode(node));
+            nodes.Add(DiagramStyle.CreateStateNode(node.StateRepresentation(), node.StateRepresentation()));
         }
-    }
-
-    private static Node CreateNode(State node)
-    {
-        return new Node(node.StateRepresentation(), node.StateRepresentation(), 1, "circle");
     }
 }

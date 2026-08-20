@@ -12,6 +12,85 @@ public class ThrowTests
     {
         @throw.GetHeightForJugglers(jugglers, false).Should().BeEquivalentTo(heights);
     }
+
+    [TestCase(3, 3, "Zip")]
+    [TestCase(3, 9, "Self")]
+    [TestCase(3, 10, "Single")]
+    [TestCase(2, 9, "Double")]
+    public void GetDisplayNameForHeight_Uses_Juggler_Scaled_Names(
+        int jugglers,
+        int height,
+        string expected
+    )
+    {
+        Throw.GetDisplayNameForHeight(height, jugglers).Should().Be(expected);
+    }
+
+    [TestCase(2, 1, "0.5")]
+    [TestCase(2, 15, "7.5")]
+    [TestCase(3, 1, "0.33")]
+    [TestCase(3, 21, "7")]
+    [TestCase(2, 3, "1.5")]
+    [TestCase(4, 6, "1.5")]
+    public void GetDisplayNameForHeight_Falls_Back_To_Local_When_Unnamed(
+        int jugglers,
+        int height,
+        string expected
+    )
+    {
+        Throw.GetDisplayNameForHeight(height, jugglers).Should().Be(expected);
+    }
+
+    /// <summary>
+    /// Property: for every juggler count and named throw,
+    /// throw → GetHeightForJugglers → GetDisplayNameForHeight must yield the same throw.
+    /// Digit-only labels (0, 3) are not names and are excluded.
+    /// </summary>
+    [Test]
+    public void Named_Throw_To_Height_To_Named_Throw_Is_Identity_For_All_Juggler_Counts()
+    {
+        var namedThrows = new[]
+        {
+            Throw.Zip,
+            Throw.Hold,
+            Throw.Zap,
+            Throw.Self,
+            Throw.SinglePass,
+            Throw.Heff,
+            Throw.DoublePass,
+            Throw.TripleSelf,
+            Throw.TriplePass,
+            Throw.Quad,
+            Throw.QuadPass,
+        };
+
+        foreach (var jugglers in Enumerable.Range(1, 8))
+        {
+            foreach (var named in namedThrows)
+            {
+                var heights = named.GetHeightForJugglers(jugglers, useLiteralValue: false).ToList();
+                if (heights.Count == 0)
+                {
+                    // Pass-style (odd) throws have no scaled heights for 1 juggler.
+                    continue;
+                }
+
+                foreach (var height in heights)
+                {
+                    Throw
+                        .GetDisplayNameForHeight(height, jugglers)
+                        .Should()
+                        .Be(
+                            named.DisplayValue,
+                            because: "throw {0} → height {1} → name must round-trip for {2} jugglers",
+                            named.DisplayValue,
+                            height,
+                            jugglers
+                        );
+                }
+            }
+        }
+    }
 }
 
 public class GenerateInputs : IEnumerable

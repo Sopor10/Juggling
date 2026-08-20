@@ -69,18 +69,7 @@
             return;
         }
 
-        var item = new Edge(from, to, data)
-        {
-            Label = data,
-            Arrows = new Arrows
-            {
-                To = new ArrowsOptions { Enabled = true }
-            },
-            Color = new ColorType()
-            {
-                Color = "black"
-            }
-        };
+        var item = DiagramStyle.CreateEdge(from, to, data);
         edges.Add(item);
     }
 
@@ -88,35 +77,10 @@
     {
         foreach (var node in fromGraph.Nodes)
         {
-            nodes.Add(new Node(node.ToString(), node.ToString(), 1, "circle"));
+            nodes.Add(DiagramStyle.CreateStateNode(node.ToString(), node.ToString()));
         }
     }
 
-    private NetworkOptions Options(Network arg)
-    {
-        return new NetworkOptions
-        {
-            Interaction = new InteractionOptions
-            {
-                DragNodes = true,
-                DragView = false,
-                ZoomView = true
-                
-                
-            },
-            Physics = new PhysicsOptions()
-            {
-                Enabled = false
-            }
-            ,
-            Edges = new EdgeOption()
-            {
-                Smooth = new EdgeSmoothOptions()
-                {
-                    Roundness = 2
-                }
-            }
-        };
-    }
+    private NetworkOptions Options(Network arg) => DiagramStyle.Options(arg);
 
 }

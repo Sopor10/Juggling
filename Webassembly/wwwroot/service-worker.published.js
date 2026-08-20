@@ -33,6 +33,8 @@ async function onInstall(event) {
 async function onActivate(event) {
     console.info('Service worker: Activate');
 
+    await self.clients.claim();
+
     // Delete unused caches
     const cacheKeys = await caches.keys();
     await Promise.all(cacheKeys
@@ -41,6 +43,13 @@ async function onActivate(event) {
 }
 
 async function onFetch(event) {
+    // PR previews live under /pr-preview/ on the same origin. Never intercept them —
+    // otherwise this root-scoped worker serves the production index.html for those URLs.
+    const requestUrl = new URL(event.request.url);
+    if (requestUrl.pathname.startsWith('/pr-preview/')) {
+        return fetch(event.request);
+    }
+
     let cachedResponse = null;
     if (event.request.method === 'GET') {
         // For all navigation requests, try to serve index.html from cache,

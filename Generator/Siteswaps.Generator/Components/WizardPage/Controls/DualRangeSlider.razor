@@ -1,0 +1,213 @@
+@using System.Globalization
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+
+<div class="wizard-dualrange" data-wizard-no-swipe>
+    <div class="wizard-dualrange-echo">
+        <span>@SortedMin</span> – <span>@SortedMax</span>
+    </div>
+    <div @ref="_trackWrapRef" class="wizard-dualrange-track-wrap">
+        <div class="wizard-dualrange-track">
+            <div class="wizard-dualrange-fill" style="@FillStyle"></div>
+        </div>
+        <label class="wizard-sr-only" for="@($"{Id}-a")">@MinLabel</label>
+        <input @ref="_aInputRef" id="@($"{Id}-a")" type="range"
+               class="wizard-dualrange-input @_aRoleClass"
+               min="@LowerBound" max="@UpperBound" step="1" value="@_a"
+               aria-label="@(_a <= _b ? MinLabel : MaxLabel)"
+               @onpointerdown:stopPropagation="true"
+               @oninput="OnAInput" />
+        <label class="wizard-sr-only" for="@($"{Id}-b")">@MaxLabel</label>
+        <input @ref="_bInputRef" id="@($"{Id}-b")" type="range"
+               class="wizard-dualrange-input wizard-dualrange-input-b @_bRoleClass"
+               min="@LowerBound" max="@UpperBound" step="1" value="@_b"
+               aria-label="@(_b < _a ? MinLabel : MaxLabel)"
+               @onpointerdown:stopPropagation="true"
+               @oninput="OnBInput" />
+    </div>
+    <div class="wizard-dualrange-bounds">
+        <span>@LowerBound</span><span>@UpperBound</span>
+    </div>
+</div>
+
+@code {
+    private static int _idCounter;
+    private readonly string Id = $"dualrange-{++_idCounter}";
+
+    private ElementReference _trackWrapRef;
+    private ElementReference _aInputRef;
+    private ElementReference _bInputRef;
+    private IJSObjectReference? _module;
+
+    private int _a;
+    private int _b;
+    private bool _initialized;
+
+    [Parameter]
+    public int LowerBound { get; set; } = WizardState.MinClubs;
+
+    [Parameter]
+    public int UpperBound { get; set; } = WizardState.MaxClubs;
+
+    [Parameter]
+    public string MinLabel { get; set; } = "Minimum";
+
+    [Parameter]
+    public string MaxLabel { get; set; } = "Maximum";
+
+    [Parameter]
+    public int Min { get; set; }
+
+    [Parameter]
+    public EventCallback<int> MinChanged { get; set; }
+
+    [Parameter]
+    public int Max { get; set; }
+
+    [Parameter]
+    public EventCallback<int> MaxChanged { get; set; }
+
+    private int SortedMin => Math.Min(_a, _b);
+
+    private int SortedMax => Math.Max(_a, _b);
+
+    private string _aRoleClass => _a <= _b ? "is-low" : "is-high";
+
+    private string _bRoleClass => _b < _a ? "is-low" : "is-high";
+
+    private string FillStyle
+    {
+        get
+        {
+            var (left, width) = DualRangeInclusive.Fill(
+                SortedMin,
+                SortedMax,
+                LowerBound,
+                UpperBound
+            );
+            var leftPercent = left.ToString("0.##", CultureInfo.InvariantCulture);
+            var widthPercent = width.ToString("0.##", CultureInfo.InvariantCulture);
+            return $"left:{leftPercent}%;width:{widthPercent}%";
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        var min = Math.Clamp(Math.Min(Min, Max), LowerBound, UpperBound);
+        var max = Math.Clamp(Math.Max(Min, Max), LowerBound, UpperBound);
+
+        if (!_initialized)
+        {
+            _a = min;
+            _b = max;
+            _initialized = true;
+            return;
+        }
+
+        if (min == SortedMin && max == SortedMax)
+        {
+            return;
+        }
+
+        if (_a <= _b)
+        {
+            _a = min;
+            _b = max;
+        }
+        else
+        {
+            _a = max;
+            _b = min;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _module = await JsRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Siteswaps.Generator/Components/WizardPage/Controls/DualRangeSlider.razor.js"
+        );
+        await _module.InvokeVoidAsync(
+            "initTrackTap",
+            _trackWrapRef,
+            _aInputRef,
+            _bInputRef,
+            LowerBound,
+            UpperBound
+        );
+    }
+
+    private Task OnAInput(ChangeEventArgs e) => OnHandleInput(e, isA: true);
+
+    private Task OnBInput(ChangeEventArgs e) => OnHandleInput(e, isA: false);
+
+    private async Task OnHandleInput(ChangeEventArgs e, bool isA)
+    {
+        if (!int.TryParse(e.Value?.ToString(), out var v))
+        {
+            return;
+        }
+
+        v = Math.Clamp(v, LowerBound, UpperBound);
+        if (isA)
+        {
+            if (v == _a)
+            {
+                return;
+            }
+
+            _a = v;
+        }
+        else
+        {
+            if (v == _b)
+            {
+                return;
+            }
+
+            _b = v;
+        }
+
+        await EmitSortedAsync();
+    }
+
+    private async Task EmitSortedAsync()
+    {
+        var min = SortedMin;
+        var max = SortedMax;
+
+        if (min != Min)
+        {
+            Min = min;
+            await MinChanged.InvokeAsync(min);
+        }
+
+        if (max != Max)
+        {
+            Max = max;
+            await MaxChanged.InvokeAsync(max);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.InvokeVoidAsync("dispose", _trackWrapRef);
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+    }
+}

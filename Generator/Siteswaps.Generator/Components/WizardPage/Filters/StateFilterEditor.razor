@@ -1,0 +1,73 @@
+@using Siteswaps.Generator.Components.Internal.EasyFilter
+@using Siteswaps.Generator.Core.Generator.Filter
+@inject IStringLocalizer<StateFilterEditor> L
+
+<p class="wizard-hint">@L["Which future throws are occupied?"]</p>
+<p class="wizard-state-notation" aria-live="polite" aria-atomic="true">@StateNotation</p>
+<div class="wizard-chip-grid wizard-state-grid" role="group" aria-label="@L["Which future throws are occupied?"]">
+    @for (var i = 0; i < Value.Items.Length; i++)
+    {
+        var index = i;
+        var state = Value.Items[index];
+        <button type="button" class="wizard-chip @(ChipClass(state))"
+                aria-pressed="@AriaPressed(state)"
+                aria-label="@L["Beat {0}: {1}", index + 1, StateLabel(state)]"
+                title="@L["Beat {0}: {1}", index + 1, StateLabel(state)]"
+                @onpointerdown:stopPropagation="true"
+                @onclick="() => Cycle(index)">
+            @(index + 1)
+        </button>
+    }
+</div>
+<p class="wizard-hint wizard-state-help">@L["Tap repeatedly to cycle: don't care, occupied, free."]</p>
+
+@code {
+    [Parameter, EditorRequired]
+    public EasyStateFilter.StateFilter Value { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<EasyStateFilter.StateFilter> ValueChanged { get; set; }
+
+    private string StateNotation => Value.Notation();
+
+    private async Task Cycle(int index)
+    {
+        var items = Value.Items.ToArray();
+        items[index] = items[index] switch
+        {
+            StateValue.DontCare => StateValue.Occupied,
+            StateValue.Occupied => StateValue.Free,
+            StateValue.Free => StateValue.DontCare,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+        var value = new EasyStateFilter.StateFilter([.. items]);
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private static string ChipClass(StateValue state) =>
+        state switch
+        {
+            StateValue.Occupied => "active",
+            StateValue.Free => "free",
+            StateValue.DontCare => "dont-care",
+            _ => "",
+        };
+
+    private static string AriaPressed(StateValue state) =>
+        state switch
+        {
+            StateValue.Occupied => "true",
+            StateValue.DontCare => "mixed",
+            _ => "false",
+        };
+
+    private string StateLabel(StateValue state) =>
+        state switch
+        {
+            StateValue.Occupied => L["occupied"].Value,
+            StateValue.Free => L["free"].Value,
+            StateValue.DontCare => L["don't care"].Value,
+            _ => "",
+        };
+}

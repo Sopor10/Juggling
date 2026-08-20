@@ -133,22 +133,33 @@ public class FilterCompiler(SiteswapGeneratorInput input, int? numberOfJugglers 
     private ISiteswapFilter CompileNoZerosFilter() => new FilterBuilder(input).MaximumOccurence([0], 0).Build();
     private ISiteswapFilter CompileHasZerosFilter() => new FilterBuilder(input).MinimumOccurence([0], 1).Build();
 
-    private static int GetNumber(Argument arg) => arg.Match(
-        number => number.Value,
-        _ => throw new InvalidOperationException("Argument muss eine Zahl sein")
-    );
+    private static int GetNumber(Argument arg) =>
+        arg.Match(
+            number => number.Value,
+            wildcard => throw new InvalidOperationException("Wildcard nicht erlaubt hier"),
+            numberList => throw new InvalidOperationException("NumberList nicht erlaubt hier"),
+            id => throw new InvalidOperationException("Identifier nicht erlaubt hier"),
+            pass => throw new InvalidOperationException("Pass nicht erlaubt hier"),
+            self => throw new InvalidOperationException("Self nicht erlaubt hier")
+        );
 
-    private static int[] GetNumbers(Argument arg) => arg.Match(
-        number => new[] { number.Value },
-        numberList => numberList.Values,
-        _ => throw new InvalidOperationException("Argument muss eine Zahl oder Zahlenliste sein")
-    );
+    private static int[] GetNumbers(Argument arg) =>
+        arg.Match(
+            number => new[] { number.Value },
+            wildcard => throw new InvalidOperationException("Wildcard nicht erlaubt hier"),
+            numberList => numberList.Values,
+            id => throw new InvalidOperationException("Identifier nicht erlaubt hier"),
+            pass => throw new InvalidOperationException("Pass nicht erlaubt hier"),
+            self => throw new InvalidOperationException("Self nicht erlaubt hier")
+        );
 
-    private static int GetPatternValue(Argument arg) => arg.Match(
-        number => number.Value,
-        wildcard => -1,
-        pass => -2,
-        self => -3,
-        _ => throw new InvalidOperationException("Ungültiger Pattern-Wert")
-    );
+    private static int GetPatternValue(Argument arg) =>
+        arg.Match(
+            number => number.Value,
+            wildcard => -1,
+            numberList => throw new InvalidOperationException("NumberList nicht erlaubt in Pattern"),
+            id => throw new InvalidOperationException("Identifier nicht erlaubt in Pattern"),
+            pass => -2,
+            self => -3
+        );
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="{0} clubs" xml:space="preserve"><value>{0} Keulen</value></data>
+  <data name="{0} jugglers" xml:space="preserve"><value>{0} Jongleure</value></data>
+  <data name="← Wizard" xml:space="preserve"><value>← Assistent</value></data>
+  <data name="Analysis" xml:space="preserve"><value>Analyse</value></data>
+  <data name="Detail variants" xml:space="preserve"><value>Detail-Varianten</value></data>
+  <data name="Diagrams" xml:space="preserve"><value>Diagramme</value></data>
+  <data name="Fewer jugglers" xml:space="preserve"><value>Weniger Jongleure</value></data>
+  <data name="Invalid siteswap" xml:space="preserve"><value>Kein gültiger Siteswap</value></data>
+  <data name="Jugglers and clubs" xml:space="preserve"><value>Jongleure und Keulen</value></data>
+  <data name="More jugglers" xml:space="preserve"><value>Mehr Jongleure</value></data>
+  <data name="Number of jugglers" xml:space="preserve"><value>Anzahl Jongleure</value></data>
+  <data name="Open a siteswap from the wizard or set ?s= and optionally &amp;n=." xml:space="preserve"><value>Öffne einen Siteswap aus dem Wizard oder setze ?s= und optional &amp;n=.</value></data>
+  <data name="Overview" xml:space="preserve"><value>Übersicht</value></data>
+  <data name="Rotate siteswap left" xml:space="preserve"><value>Siteswap nach links rotieren</value></data>
+  <data name="Rotate siteswap right" xml:space="preserve"><value>Siteswap nach rechts rotieren</value></data>
+  <data name="Siteswap rotation" xml:space="preserve"><value>Siteswap-Rotation</value></data>
+  <data name="Transitions" xml:space="preserve"><value>Transitions</value></data>
+</root>

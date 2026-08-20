@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Core.Generator;
+using SettingsDto = Siteswaps.Generator.Components.SettingsDto;
 
 namespace Siteswaps.Generator.Components.State;
 
@@ -28,7 +29,7 @@ public record GeneratorState
     public FilterTree FilterTree { get; init; } = new(new AndNode());
 
     public bool CreateFilterFromThrowList => true;
-    public Settings.SettingsDto Settings { get; set; } = new();
+    public SettingsDto Settings { get; set; } = new();
 }
 
 public record Between
@@ -76,6 +77,10 @@ public record Throw(string Name, int Height, string DisplayValue)
             QuadPass,
         };
 
+    /// <summary>Throws with real display names (not digit-only labels like 0/3).</summary>
+    private static IEnumerable<Throw> NamedDisplayThrows =>
+        NamedThrows.Where(t => t.DisplayValue.Any(c => !char.IsDigit(c)));
+
     public static IEnumerable<Throw> All(int height = 13)
     {
         foreach (var i in Enumerable.Range(0, height + 1))
@@ -86,7 +91,11 @@ public record Throw(string Name, int Height, string DisplayValue)
             }
             else
             {
-                yield return new Throw(i.ToString(), i, i.ToString());
+                yield return new Throw(
+                    i.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    i,
+                    i.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                );
             }
         }
     }
@@ -125,13 +134,35 @@ public record Throw(string Name, int Height, string DisplayValue)
         return result;
     }
 
+    /// <summary>
+    /// Display name for a global height at the given juggler count (inverse of
+    /// <see cref="GetHeightForJugglers"/> for named throws). Falls back to the
+    /// local height when no named throw matches. Digit-only labels are not names.
+    /// </summary>
+    public static string GetDisplayNameForHeight(int height, int amountOfJugglers)
+    {
+        var jugglers = Math.Max(1, amountOfJugglers);
+        foreach (var named in NamedDisplayThrows)
+        {
+            if (named.GetHeightForJugglers(jugglers, useLiteralValue: false).Contains(height))
+            {
+                return named.DisplayValue;
+            }
+        }
+
+        return (height * 1.0 / jugglers).ToString(
+            "0.##",
+            System.Globalization.CultureInfo.InvariantCulture
+        );
+    }
+
     public string GetDisplayValue(bool showName)
     {
         if (showName)
         {
             return DisplayValue;
         }
-        return Height.ToString();
+        return Height.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     public static Throw Parse(string s)

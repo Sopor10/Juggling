@@ -3,14 +3,15 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" />
     <PackageReference Include="ExhaustiveMatching.Analyzer" />
     <PackageReference Include="Fluxor" />
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="Microsoft.AspNetCore.Components" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="Microsoft.Extensions.Localization" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
     <PackageReference Include="VisNetwork.Blazor" />
-    <PackageReference Include="Radzen.Blazor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />

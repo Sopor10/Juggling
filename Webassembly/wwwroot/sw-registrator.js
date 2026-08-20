@@ -6,21 +6,29 @@
         return;
     }
 
-    navigator.serviceWorker.register('/service-worker.js')
+    const baseHref = document.querySelector('base')?.href || `${window.location.origin}/`;
+    // PR preview deploys share the production origin; keep them free of a root-scoped worker.
+    if (new URL(baseHref).pathname.includes('/pr-preview/')) {
+        resolve(false);
+        return;
+    }
+
+    const workerUrl = new URL('service-worker.js', baseHref).href;
+    navigator.serviceWorker.register(workerUrl, { updateViaCache: 'none' })
         .then(registration => {
             console.info(`Service worker registration successful (scope: ${registration.scope})`);
 
             setInterval(() => {
                 registration.update();
             }, 30 * 1000);
-            
+
             registration.onupdatefound = () => {
                 const installingServiceWorker = registration.installing;
                 installingServiceWorker.onstatechange = () => {
                     if (installingServiceWorker.state === 'installed') {
                         resolve(!!navigator.serviceWorker.controller);
                     }
-                }
+                };
             };
         })
         .catch(error => {

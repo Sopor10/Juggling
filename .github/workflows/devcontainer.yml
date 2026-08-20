@@ -1,0 +1,51 @@
+name: Dev Container
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Dev Container Aspire Start
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Free disk space
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc || true
+          df -h /
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Install Dev Container CLI
+        run: npm install -g @devcontainers/cli@0.87.0 --ignore-scripts
+
+      - name: Start Dev Container
+        run: |
+          set -euo pipefail
+          devcontainer up --workspace-folder . --remove-existing-container --log-level info
+
+      - name: Verify aspire start inside Dev Container
+        run: |
+          set -euo pipefail
+          # Run the full verify script in one exec so the supervising shell
+          # stays alive while Aspire resources become healthy.
+          devcontainer exec --workspace-folder . \
+            bash .devcontainer/ci-verify-aspire.sh

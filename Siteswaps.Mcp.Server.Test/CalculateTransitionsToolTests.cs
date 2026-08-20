@@ -198,7 +198,7 @@ public class CalculateTransitionsToolTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        var transitionsWithThrows = result.Data!.Where(t => t.Throws.Any()).ToList();
+        var transitionsWithThrows = result.Data!.Where(t => t.Throws.Count > 0).ToList();
         transitionsWithThrows.Should().NotBeEmpty();
         transitionsWithThrows
             .Should()
