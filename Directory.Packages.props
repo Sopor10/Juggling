@@ -17,7 +17,6 @@
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
     <PackageVersion Include="Reqnroll.xUnit" Version="3.3.4" />
     <PackageVersion Include="Sopor10.Analyzers" Version="1.1.56" />
-    <PackageVersion Include="Sopor10.ArchunitExtension" Version="1.1.56" />
     <PackageVersion Include="Sopor10.Playwright.Testing" Version="1.1.56" />
     <PackageVersion Include="SSH.NET" Version="2026.0.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.3" />
@@ -44,6 +43,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
+    <PackageVersion Include="TngTech.ArchUnitNET" Version="0.13.3" />
     <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.13.3" />
     <PackageVersion Include="Verify" Version="31.28.0" />
     <PackageVersion Include="Verify.Nunit" Version="31.28.0" />

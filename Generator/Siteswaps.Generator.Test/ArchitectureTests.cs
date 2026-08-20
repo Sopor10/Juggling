@@ -1,14 +1,17 @@
 using ArchUnitNET.Domain;
 using ArchUnitNET.Fluent;
+using ArchUnitNET.Fluent.Slices;
 using ArchUnitNET.Loader;
 using ArchUnitNET.NUnit;
-using ArchunitNetExtension;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 
 namespace Siteswaps.Generator.Test;
 
 public class ArchitectureTests
 {
+    private const string GeneratorNamespace = "Siteswaps.Generator.Core.Generator";
+    private const string ComponentsNamespace = "Siteswaps.Generator.Components";
+
     private readonly Architecture Architecture = new ArchLoader()
         .LoadAssemblies(
             typeof(Siteswaps.Generator.AssemblyInfo).Assembly,
@@ -19,26 +22,49 @@ public class ArchitectureTests
     [Test]
     public void Generator_Should_Not_Depend_On_Components()
     {
-        IArchRule rule = Types()
+        Types()
             .That()
-            .ResideInNamespace("Siteswaps.Generator.Core.Generator")
+            .ResideInNamespaceMatching($@"^{RegexEscape(GeneratorNamespace)}($|\.)")
             .Should()
-            .NotDependOnAny(Types().That().ResideInNamespace("Siteswaps.Generator.Components"));
-        rule.Check(Architecture);
+            .NotDependOnAny(
+                Types()
+                    .That()
+                    .ResideInNamespaceMatching($@"^{RegexEscape(ComponentsNamespace)}($|\.)")
+            )
+            .Check(Architecture);
     }
 
     [Test]
     public void Generator_Namespaces_Should_Not_Form_Cycles()
     {
-        IArchRule rule = new[]
-        {
-            Types().That().ResideInNamespace("Siteswaps.Generator.Core.Generator", true),
-            Types().That().ResideInNamespace("Siteswaps.Generator.Components", true),
-        }
-            .AsSlices()
-            .Should()
-            .BeFreeOfCycles();
+        var creator = new SliceRuleCreator();
+        creator.SetSliceAssignment(
+            new SliceAssignment(
+                type =>
+                {
+                    var ns = type.Namespace.FullName;
+                    if (IsInOrUnder(ns, GeneratorNamespace))
+                    {
+                        return SliceIdentifier.Of("Generator");
+                    }
 
-        rule.Check(Architecture);
+                    if (IsInOrUnder(ns, ComponentsNamespace))
+                    {
+                        return SliceIdentifier.Of("Components");
+                    }
+
+                    return SliceIdentifier.Ignore();
+                },
+                "Generator vs Components"
+            )
+        );
+
+        new GivenSlices(creator).Should().BeFreeOfCycles().Check(Architecture);
     }
+
+    private static bool IsInOrUnder(string ns, string root) =>
+        ns == root || ns.StartsWith(root + ".", StringComparison.Ordinal);
+
+    private static string RegexEscape(string value) =>
+        System.Text.RegularExpressions.Regex.Escape(value);
 }
