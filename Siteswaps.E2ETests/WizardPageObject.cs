@@ -164,14 +164,21 @@ public class WizardPageObject(IPage page)
     public async Task SelectJugglerChipAsync(int jugglers)
     {
         await page.Locator(".wizard-juggler-picker .wizard-chip")
-            .Filter(new LocatorFilterOptions { HasText = jugglers.ToString(CultureInfo.InvariantCulture) })
+            .Filter(
+                new LocatorFilterOptions
+                {
+                    HasText = jugglers.ToString(CultureInfo.InvariantCulture),
+                }
+            )
             .ClickAsync();
     }
 
     public async Task SetClubsRangeAsync(int min, int max)
     {
-        await page.Locator("input[aria-label='Keulen Minimum']").FillAsync(min.ToString(CultureInfo.InvariantCulture));
-        await page.Locator("input[aria-label='Keulen Maximum']").FillAsync(max.ToString(CultureInfo.InvariantCulture));
+        await page.Locator("input[aria-label='Keulen Minimum']")
+            .FillAsync(min.ToString(CultureInfo.InvariantCulture));
+        await page.Locator("input[aria-label='Keulen Maximum']")
+            .FillAsync(max.ToString(CultureInfo.InvariantCulture));
     }
 
     public async Task DeselectAllThrowsAsync()

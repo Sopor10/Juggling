@@ -8,10 +8,21 @@ namespace Siteswaps.Mcp.Server.Prompts;
 public class SiteswapPrompts
 {
     [McpServerPrompt]
-    [Description("Analyzes and explains a siteswap in detail. Uses the analyze_siteswap tool and relevant resources.")]
-    public static IEnumerable<PromptMessage> ExplainSiteswap([Description("The siteswap to explain (e.g., '531', '441', '97531')")] string siteswap)
+    [Description(
+        "Analyzes and explains a siteswap in detail. Uses the analyze_siteswap tool and relevant resources."
+    )]
+    public static IEnumerable<PromptMessage> ExplainSiteswap(
+        [Description("The siteswap to explain (e.g., '531', '441', '97531')")] string siteswap
+    )
     {
-        yield return new PromptMessage { Role = Role.User, Content = new TextContentBlock { Text = $"Analyze and explain the siteswap \"{siteswap}\" in detail." } };
+        yield return new PromptMessage
+        {
+            Role = Role.User,
+            Content = new TextContentBlock
+            {
+                Text = $"Analyze and explain the siteswap \"{siteswap}\" in detail.",
+            },
+        };
     }
 
     [McpServerPrompt]
@@ -29,14 +40,34 @@ public class SiteswapPrompts
             "advanced" => "longer periods (5-7), high throws, excited state patterns",
             _ => "medium difficulty",
         };
-        yield return new PromptMessage { Role = Role.User, Content = new TextContentBlock { Text = $"Generate suitable siteswaps for {numberOfObjects} objects at {level} ({levelDescription}). Preference: {preference}" } };
+        yield return new PromptMessage
+        {
+            Role = Role.User,
+            Content = new TextContentBlock
+            {
+                Text =
+                    $"Generate suitable siteswaps for {numberOfObjects} objects at {level} ({levelDescription}). Preference: {preference}",
+            },
+        };
     }
 
     [McpServerPrompt]
     [Description("Finds and explains transitions between two siteswaps.")]
-    public static IEnumerable<PromptMessage> FindTransitions(string fromSiteswap, string toSiteswap, int maxLength = 3)
+    public static IEnumerable<PromptMessage> FindTransitions(
+        string fromSiteswap,
+        string toSiteswap,
+        int maxLength = 3
+    )
     {
-        yield return new PromptMessage { Role = Role.User, Content = new TextContentBlock { Text = $"Find transitions from \"{fromSiteswap}\" to \"{toSiteswap}\" with maximum length {maxLength}." } };
+        yield return new PromptMessage
+        {
+            Role = Role.User,
+            Content = new TextContentBlock
+            {
+                Text =
+                    $"Find transitions from \"{fromSiteswap}\" to \"{toSiteswap}\" with maximum length {maxLength}.",
+            },
+        };
     }
 
     [McpServerPrompt]
@@ -53,20 +84,46 @@ public class SiteswapPrompts
             "sync" or "synchronous" => "siteswap:definition:synchronous-siteswap",
             _ => "siteswap:definition:siteswap (basics)",
         };
-        yield return new PromptMessage { Role = Role.User, Content = new TextContentBlock { Text = $"Explain the siteswap concept \"{concept}\". Recommended resource: {resourceSuggestion}." } };
+        yield return new PromptMessage
+        {
+            Role = Role.User,
+            Content = new TextContentBlock
+            {
+                Text =
+                    $"Explain the siteswap concept \"{concept}\". Recommended resource: {resourceSuggestion}.",
+            },
+        };
     }
 
     [McpServerPrompt]
     [Description("Creates a practice plan for learning a specific siteswap.")]
-    public static IEnumerable<PromptMessage> CreatePracticePlan(string targetSiteswap, string knownPatterns)
+    public static IEnumerable<PromptMessage> CreatePracticePlan(
+        string targetSiteswap,
+        string knownPatterns
+    )
     {
-        yield return new PromptMessage { Role = Role.User, Content = new TextContentBlock { Text = $"Create a practice plan to learn \"{targetSiteswap}\". Known patterns: {knownPatterns}." } };
+        yield return new PromptMessage
+        {
+            Role = Role.User,
+            Content = new TextContentBlock
+            {
+                Text =
+                    $"Create a practice plan to learn \"{targetSiteswap}\". Known patterns: {knownPatterns}.",
+            },
+        };
     }
 
     [McpServerPrompt]
     [Description("Compares multiple siteswaps and shows similarities/differences.")]
     public static IEnumerable<PromptMessage> CompareSiteswaps(string siteswaps)
     {
-        yield return new PromptMessage { Role = Role.User, Content = new TextContentBlock { Text = $"Compare the following siteswaps: {siteswaps}." } };
+        yield return new PromptMessage
+        {
+            Role = Role.User,
+            Content = new TextContentBlock
+            {
+                Text = $"Compare the following siteswaps: {siteswaps}.",
+            },
+        };
     }
 }

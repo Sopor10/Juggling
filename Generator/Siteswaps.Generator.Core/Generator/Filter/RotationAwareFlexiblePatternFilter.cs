@@ -11,45 +11,78 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
     private HashSet<int> SelfValues { get; }
     private int Juggler { get; }
     private readonly PatternRecord _pattern;
-    public RotationAwareFlexiblePatternFilter(List<List<int>> pattern, int numberOfJugglers, SiteswapGeneratorInput input, int juggler)
+
+    public RotationAwareFlexiblePatternFilter(
+        List<List<int>> pattern,
+        int numberOfJugglers,
+        SiteswapGeneratorInput input,
+        int juggler
+    )
     {
         Pattern = pattern;
         NumberOfJugglers = numberOfJugglers;
         Input = input;
         Juggler = juggler;
-        PassValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1).Where(x => x % NumberOfJugglers != 0).ToHashSet();
-        SelfValues = Enumerable.Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1).Where(x => x % NumberOfJugglers == 0).ToHashSet();
+        PassValues = Enumerable
+            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+            .Where(x => x % NumberOfJugglers != 0)
+            .ToHashSet();
+        SelfValues = Enumerable
+            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+            .Where(x => x % NumberOfJugglers == 0)
+            .ToHashSet();
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
-        for (var i = 0; i < Pattern.Count; i++) { var pos = (Juggler + i * NumberOfJugglers) % input.Period; p[pos] = Pattern[i]; }
+        for (var i = 0; i < Pattern.Count; i++)
+        {
+            var pos = (Juggler + i * NumberOfJugglers) % input.Period;
+            p[pos] = Pattern[i];
+        }
         _pattern = new PatternRecord(p, SelfValues, PassValues);
     }
-    public bool CanFulfill(PartialSiteswap value) => !value.IsFilled() || _pattern.Matches(value.Items);
+
+    public bool CanFulfill(PartialSiteswap value) =>
+        !value.IsFilled() || _pattern.Matches(value.Items);
+
     [DebuggerDisplay("{DebugDisplay}")]
-    private sealed record PatternRecord(List<List<int>> Value, HashSet<int> SelfValues, HashSet<int> PassValues)
+    private sealed record PatternRecord(
+        List<List<int>> Value,
+        HashSet<int> SelfValues,
+        HashSet<int> PassValues
+    )
     {
-        private string DebugDisplay => string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
+        private string DebugDisplay =>
+            string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
         private const int DontCare = -1;
         private const int Pass = -2;
         private const int Self = -3;
+
         public bool Matches(CyclicArray<int> value)
         {
-            for (var i = 0; i < Value.Count; i++) if (!RotationMatches(value, i)) return false;
+            for (var i = 0; i < Value.Count; i++)
+                if (!RotationMatches(value, i))
+                    return false;
             return true;
         }
+
         private bool RotationMatches(CyclicArray<int> siteswap, int i)
         {
             var singleMatch = false;
-            foreach (var patternValue in Value[i]) if (ValueSatisfiesPattern(siteswap[i], patternValue)) singleMatch = true;
+            foreach (var patternValue in Value[i])
+                if (ValueSatisfiesPattern(siteswap[i], patternValue))
+                    singleMatch = true;
             return singleMatch;
         }
-        private bool ValueSatisfiesPattern(int siteswapValue, int patternValue) => patternValue switch
-        {
-            DontCare => true,
-            Pass => PassValues.Contains(siteswapValue),
-            Self => SelfValues.Contains(siteswapValue),
-            _ => siteswapValue == patternValue,
-        };
+
+        private bool ValueSatisfiesPattern(int siteswapValue, int patternValue) =>
+            patternValue switch
+            {
+                DontCare => true,
+                Pass => PassValues.Contains(siteswapValue),
+                Self => SelfValues.Contains(siteswapValue),
+                _ => siteswapValue == patternValue,
+            };
     }
+
     public int Order => 10;
     public bool IsRotationAware => true;
 }

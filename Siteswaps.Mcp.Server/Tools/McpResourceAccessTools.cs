@@ -10,26 +10,45 @@ public class McpResourceAccessTools
 {
     private readonly IEnumerable<McpServerResource> _resources;
     private readonly IServiceProvider _serviceProvider;
-    private readonly Lazy<Dictionary<string, (MethodInfo Method, object? Instance)>> _resourceMethodCache;
+    private readonly Lazy<
+        Dictionary<string, (MethodInfo Method, object? Instance)>
+    > _resourceMethodCache;
 
-    public McpResourceAccessTools(IEnumerable<McpServerResource> resources, IServiceProvider serviceProvider)
+    public McpResourceAccessTools(
+        IEnumerable<McpServerResource> resources,
+        IServiceProvider serviceProvider
+    )
     {
         _resources = resources;
         _serviceProvider = serviceProvider;
-        _resourceMethodCache = new Lazy<Dictionary<string, (MethodInfo Method, object? Instance)>>(BuildResourceMethodCache);
+        _resourceMethodCache = new Lazy<Dictionary<string, (MethodInfo Method, object? Instance)>>(
+            BuildResourceMethodCache
+        );
     }
 
     private Dictionary<string, (MethodInfo Method, object? Instance)> BuildResourceMethodCache()
     {
-        var cache = new Dictionary<string, (MethodInfo Method, object? Instance)>(StringComparer.OrdinalIgnoreCase);
-        var resourceTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => t.GetCustomAttribute<McpServerResourceTypeAttribute>() != null);
+        var cache = new Dictionary<string, (MethodInfo Method, object? Instance)>(
+            StringComparer.OrdinalIgnoreCase
+        );
+        var resourceTypes = AppDomain
+            .CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => t.GetCustomAttribute<McpServerResourceTypeAttribute>() != null);
         foreach (var type in resourceTypes)
         {
             object? instance = null;
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).Where(m => m.GetCustomAttribute<McpServerResourceAttribute>() != null);
+            var methods = type.GetMethods(
+                    BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance
+                )
+                .Where(m => m.GetCustomAttribute<McpServerResourceAttribute>() != null);
             foreach (var method in methods)
             {
-                if (!method.IsStatic && instance == null) instance = ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, type);
+                if (!method.IsStatic && instance == null)
+                    instance = ActivatorUtilities.GetServiceOrCreateInstance(
+                        _serviceProvider,
+                        type
+                    );
                 var attr = method.GetCustomAttribute<McpServerResourceAttribute>();
                 var uri = attr?.UriTemplate ?? $"resource://mcp/{ConvertToSnakeCase(method.Name)}";
                 cache[uri] = (method, method.IsStatic ? null : instance);
@@ -52,8 +71,14 @@ public class McpResourceAccessTools
         return ToolResult.From(() =>
         {
             var query = _resources.Select(x => x.ProtocolResource).OfType<Resource>();
-            if (!string.IsNullOrWhiteSpace(contains)) query = query.Where(r => r.Uri.Contains(contains, StringComparison.OrdinalIgnoreCase));
-            return query.Select(r => new ResourceListItem(r.Uri, r.Name, r.Description ?? "")).OrderBy(r => r.Uri).ToList();
+            if (!string.IsNullOrWhiteSpace(contains))
+                query = query.Where(r =>
+                    r.Uri.Contains(contains, StringComparison.OrdinalIgnoreCase)
+                );
+            return query
+                .Select(r => new ResourceListItem(r.Uri, r.Name, r.Description ?? ""))
+                .OrderBy(r => r.Uri)
+                .ToList();
         });
     }
 
@@ -63,17 +88,24 @@ public class McpResourceAccessTools
     {
         return await ToolResult.FromAsync(async () =>
         {
-            if (string.IsNullOrWhiteSpace(uri)) throw new ArgumentException("URI cannot be empty", nameof(uri));
-            var resource = _resources.FirstOrDefault(r => r.ProtocolResource?.Uri.Equals(uri, StringComparison.OrdinalIgnoreCase) ?? false);
-            if (resource == null) throw new ArgumentException($"Resource with URI '{uri}' not found.", nameof(uri));
-            if (!_resourceMethodCache.Value.TryGetValue(uri, out var methodInfo)) throw new InvalidOperationException($"Could not find method for resource: {uri}");
+            if (string.IsNullOrWhiteSpace(uri))
+                throw new ArgumentException("URI cannot be empty", nameof(uri));
+            var resource = _resources.FirstOrDefault(r =>
+                r.ProtocolResource?.Uri.Equals(uri, StringComparison.OrdinalIgnoreCase) ?? false
+            );
+            if (resource == null)
+                throw new ArgumentException($"Resource with URI '{uri}' not found.", nameof(uri));
+            if (!_resourceMethodCache.Value.TryGetValue(uri, out var methodInfo))
+                throw new InvalidOperationException($"Could not find method for resource: {uri}");
             var (method, instance) = methodInfo;
             var result = method.Invoke(instance, null);
             return result switch
             {
                 string content => content,
                 Task<string> taskString => await taskString,
-                _ => throw new InvalidOperationException($"Resource method returned unexpected type: {result?.GetType().Name ?? "null"}"),
+                _ => throw new InvalidOperationException(
+                    $"Resource method returned unexpected type: {result?.GetType().Name ?? "null"}"
+                ),
             };
         });
     }

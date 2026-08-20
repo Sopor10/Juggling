@@ -96,4 +96,3 @@ public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 
     public int Length => Array.Length;
 }
-
