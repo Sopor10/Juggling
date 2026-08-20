@@ -16,6 +16,11 @@ runs:
     - name: Install workload
       run: dotnet workload install wasm-tools
       shell: bash
+    - name: Install Playwright browsers
+      run: |
+        dotnet build Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
+        pwsh Siteswaps.E2ETests/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
+      shell: bash
     - name: Test
       run: dotnet test
       shell: bash
