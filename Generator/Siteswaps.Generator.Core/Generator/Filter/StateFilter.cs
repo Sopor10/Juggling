@@ -2,7 +2,8 @@ using System.Diagnostics;
 
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal class StateFilter(SiteswapGeneratorInput generatorInput, State state) : ISiteswapFilter
+internal sealed class StateFilter(SiteswapGeneratorInput generatorInput, State state)
+    : ISiteswapFilter
 {
     private readonly int maxHeight = generatorInput.MaxHeight;
 

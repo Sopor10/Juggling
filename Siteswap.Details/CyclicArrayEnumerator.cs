@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics;
 
 namespace Siteswap.Details;
@@ -24,5 +24,8 @@ public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 
     object IEnumerator.Current => Current ?? throw new ArgumentNullException();
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
 }

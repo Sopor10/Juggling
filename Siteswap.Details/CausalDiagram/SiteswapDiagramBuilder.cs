@@ -23,10 +23,7 @@ public static class SiteswapDiagramBuilder
 
     public static DiagramSet Build(Siteswap siteswap, CyclicArray<Hand> hands, int steps)
     {
-        if (steps < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(steps));
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(steps, 1);
 
         var numberOfHands = hands.Length;
         var timeStretchFactor = numberOfHands / 2m;

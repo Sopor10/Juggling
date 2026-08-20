@@ -39,7 +39,6 @@ public class GenerateSiteswapsTool(ILogger<GenerateSiteswapsTool> logger)
         CancellationToken cancellationToken = default
     )
     {
-        // SiteswapGeneratorInput erstellen
         var input = new SiteswapGeneratorInput(
             period: period,
             numberOfObjects: numberOfObjects,
@@ -67,17 +66,12 @@ public class GenerateSiteswapsTool(ILogger<GenerateSiteswapsTool> logger)
         }
         else
         {
-            // Kein Filter angegeben - nur Default-Filter verwenden
             siteswapFilter = new FilterBuilder(input).WithDefault().Build();
         }
 
-        // SiteswapGenerator mit Filter erstellen und ausführen
         var generator = new SiteswapGenerator(siteswapFilter, input);
 
-        logger.LogInformation(
-            "Starting siteswap generation with specified parameters {input}",
-            input
-        );
+        GenerateSiteswapsLog.Starting(logger, input);
 
         var results = new List<string>();
         await foreach (var siteswap in generator.GenerateAsync(cancellationToken))
@@ -87,4 +81,14 @@ public class GenerateSiteswapsTool(ILogger<GenerateSiteswapsTool> logger)
 
         return results;
     }
+}
+
+internal static partial class GenerateSiteswapsLog
+{
+    [LoggerMessage(
+        EventId = 1,
+        Level = LogLevel.Information,
+        Message = "Starting siteswap generation with specified parameters {Input}"
+    )]
+    public static partial void Starting(ILogger logger, SiteswapGeneratorInput input);
 }

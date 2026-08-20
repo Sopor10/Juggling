@@ -9,10 +9,7 @@ public static class PassingHandOrder
 {
     public static CyclicArray<Hand> Create(int numberOfJugglers)
     {
-        if (numberOfJugglers < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(numberOfJugglers));
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(numberOfJugglers, 1);
 
         var limbs = new List<Hand>(numberOfJugglers * 2);
         for (var i = 0; i < 2 * numberOfJugglers; i++)

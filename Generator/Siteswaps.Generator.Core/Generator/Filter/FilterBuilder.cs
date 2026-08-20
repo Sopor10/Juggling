@@ -93,7 +93,7 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
         return this with
         {
             Filter = Filter
-                .Add(new PatternFilterHeuristicBuilder(this).Build(pattern))
+                .Add(PatternFilterHeuristicBuilder.Build(pattern))
                 .Add(
                     new FlexiblePatternFilter(
                         pattern.Select(x => new List<int>() { x }).ToList(),

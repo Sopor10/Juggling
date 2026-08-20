@@ -1,4 +1,6 @@
-﻿namespace Siteswap.Details;
+using System.Globalization;
+
+namespace Siteswap.Details;
 
 public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers)
 {
@@ -8,7 +10,7 @@ public record LocalSiteswap(Siteswap Siteswap, int Juggler, int NumberOfJugglers
             " ",
             GetLocalSiteswapReal()
                 .Select(x => x * 1.0 / NumberOfJugglers)
-                .Select(x => x.ToString("0.##"))
+                .Select(x => x.ToString("0.##", CultureInfo.InvariantCulture))
         );
 
     private List<int> GetLocalSiteswapReal()

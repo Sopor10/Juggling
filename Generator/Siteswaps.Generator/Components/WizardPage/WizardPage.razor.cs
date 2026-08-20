@@ -621,5 +621,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
 
         _selfReference?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

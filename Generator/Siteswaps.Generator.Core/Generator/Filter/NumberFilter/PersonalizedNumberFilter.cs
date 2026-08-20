@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
+namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
 public class PersonalizedNumberFilter(
     int numberOfJugglers,
@@ -33,7 +33,7 @@ public class PersonalizedNumberFilter(
             Type.Exact => countAndEmpty >= amount && count <= amount,
             Type.AtLeast => countAndEmpty >= amount,
             Type.AtMost => count <= amount,
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null),
+            _ => throw new InvalidOperationException($"Unsupported filter type: {type}"),
         };
     }
 

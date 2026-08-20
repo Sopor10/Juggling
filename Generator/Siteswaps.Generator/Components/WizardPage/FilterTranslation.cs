@@ -114,7 +114,7 @@ internal static class FilterTranslation
                 EasyStateFilter.StateFilter stateFilter => builder
                     .WithState(new StatePattern(stateFilter.Items))
                     .Build(),
-                _ => throw new ArgumentOutOfRangeException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(filterInformation)),
             };
         }
 
@@ -147,7 +147,7 @@ internal static class FilterTranslation
                     EasyNumberFilter.NumberFilterType.Maximum => PersonalizedNumberFilter
                         .Type
                         .AtMost,
-                    _ => throw new ArgumentOutOfRangeException(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(numberFilter)),
                 };
                 return new PersonalizedNumberFilter(
                     numberOfJugglers,
@@ -171,7 +171,7 @@ internal static class FilterTranslation
                 EasyNumberFilter.NumberFilterType.Maximum => builder
                     .MaximumOccurence(heights, numberFilter.Amount)
                     .Build(),
-                _ => throw new ArgumentOutOfRangeException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(numberFilter)),
             };
         }
 

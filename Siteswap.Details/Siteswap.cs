@@ -183,10 +183,12 @@ public record Siteswap(CyclicArray<int> Items)
         var siteswaps = Enumerable.Range(0, period).Select(Rotate).ToList();
         var dictionary = new Dictionary<State, List<Siteswap>>();
         foreach (var siteswap in siteswaps)
-            if (dictionary.ContainsKey(siteswap.State))
-                dictionary[siteswap.State].Add(siteswap);
+        {
+            if (dictionary.TryGetValue(siteswap.State, out var list))
+                list.Add(siteswap);
             else
                 dictionary[siteswap.State] = [siteswap];
+        }
 
         return dictionary;
     }
