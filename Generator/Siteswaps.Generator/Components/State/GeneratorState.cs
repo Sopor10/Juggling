@@ -40,8 +40,8 @@ public record Between
 
 public record Throw(string Name, int Height, string DisplayValue)
 {
-    public static Throw AnyPass => new("Any Self", -3, "S");
-    public static Throw AnySelf => new("Any Pass", -2, "P");
+    public static Throw AnySelf => new("Any Self", -3, "S");
+    public static Throw AnyPass => new("Any Pass", -2, "P");
     public static Throw Empty => new("Empty", -1, "_");
     public static Throw EmptyHand => new("0", 0, "0");
     public static Throw Zip => new("Zip", 2, "Zip");
@@ -108,6 +108,12 @@ public record Throw(string Name, int Height, string DisplayValue)
     public IEnumerable<int> GetHeightForJugglers(int amountOfJugglers, bool useLiteralValue)
     {
         if (useLiteralValue)
+        {
+            return [Height];
+        }
+
+        // Pattern wildcards are Core sentinels (-1/_ , -2/P, -3/S); never scale them by juggler count.
+        if (Height < 0)
         {
             return [Height];
         }
