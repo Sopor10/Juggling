@@ -27,12 +27,20 @@ Verify the target process before attaching:
 dotnet-trace ps
 ```
 
-For a running benchmark process, collect a short CPU/GC trace:
+For a running benchmark process, collect a short managed CPU trace:
 
 ```bash
 dotnet-trace collect -p <PID> \
-  --profile cpu-sampling \
+  --profile dotnet-sampled-thread-time \
   --output /tmp/siteswap-generation.nettrace
+```
+
+For Linux kernel CPU sampling (requires the corresponding container privileges):
+
+```bash
+dotnet-trace collect-linux -p <PID> \
+  --profile cpu-sampling \
+  --output /tmp/siteswap-generation-cpu.nettrace
 ```
 
 For GC/allocation investigation:
@@ -46,3 +54,4 @@ dotnet-trace collect -p <PID> \
 Use `dotnet-counters monitor -p <PID> --counters System.Runtime` for live signals such as allocation rate and GC counts. Capture the runtime version, container image, commit, PID, exact command, and artifact path with every trace.
 
 Do not treat a trace as proof of a speedup. Verify the candidate again with the deterministic benchmark and result-count gate after the change.
+
