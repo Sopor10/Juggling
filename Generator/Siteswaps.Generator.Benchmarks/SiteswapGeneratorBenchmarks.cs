@@ -18,14 +18,11 @@ public class SiteswapGeneratorBenchmarks
 {
     private Func<SiteswapGenerator> createGenerator = null!;
 
-    [Params(
-        GenerationScenario.LargeNoFilter,
-        GenerationScenario.PatternFilter,
-        GenerationScenario.NumberFilter,
-        GenerationScenario.StateDontCareFilter,
-        GenerationScenario.StateSelectiveFilter
-    )]
+    [ParamsSource(nameof(Scenarios))]
     public GenerationScenario Scenario { get; set; }
+
+    public static IEnumerable<GenerationScenario> Scenarios =>
+        GenerationScenarioFactory.AllScenarios;
 
     [GlobalSetup]
     public void Setup()

@@ -5,6 +5,15 @@ namespace Siteswaps.Generator.Benchmarks;
 
 internal static class GenerationScenarioFactory
 {
+    public static IReadOnlyList<GenerationScenario> AllScenarios { get; } =
+    [
+        GenerationScenario.LargeNoFilter,
+        GenerationScenario.PatternFilter,
+        GenerationScenario.NumberFilter,
+        GenerationScenario.StateDontCareFilter,
+        GenerationScenario.StateSelectiveFilter,
+    ];
+
     public static SiteswapGenerator Create(GenerationScenario scenario)
     {
         var input =
@@ -67,14 +76,35 @@ internal static class GenerationScenarioFactory
 
     public static void ValidateResultCount(GenerationScenario scenario, int resultCount)
     {
-        if (resultCount > 0)
-            return;
-
-        if (scenario is GenerationScenario.StateSelectiveFilter)
+        if (resultCount > 0 || scenario is GenerationScenario.StateSelectiveFilter)
             return;
 
         throw new InvalidOperationException(
             $"Benchmark scenario {scenario} must generate at least one Siteswap."
         );
+    }
+
+    public static void ValidateResultCounts(IReadOnlyDictionary<GenerationScenario, int> counts)
+    {
+        var missing = AllScenarios.Where(scenario => !counts.ContainsKey(scenario)).ToArray();
+        if (missing.Length > 0)
+        {
+            throw new InvalidOperationException(
+                $"Missing benchmark results for: {string.Join(", ", missing)}."
+            );
+        }
+
+        var empty = AllScenarios.Where(scenario => counts[scenario] == 0).ToArray();
+        if (empty.Length > 1)
+        {
+            throw new InvalidOperationException(
+                $"At most one benchmark may be empty; empty scenarios: {string.Join(", ", empty)}."
+            );
+        }
+
+        foreach (var scenario in AllScenarios)
+        {
+            ValidateResultCount(scenario, counts[scenario]);
+        }
     }
 }
