@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 
@@ -115,9 +115,7 @@ public class SiteswapGenerator
             {
                 if (PartialSiteswap.Items[^1] != uniqueMax)
                 {
-                    results.Add(
-                        Siteswap.CreateFromCorrect(PartialSiteswap.Items.AsSpan().ToArray())
-                    );
+                    results.Add(Siteswap.CreateFromGenerated(PartialSiteswap.AsSpan()));
                 }
                 PartialSiteswap.ResetCurrentPosition();
                 continue;

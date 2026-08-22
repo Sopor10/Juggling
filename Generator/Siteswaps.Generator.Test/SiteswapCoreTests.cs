@@ -24,6 +24,17 @@ public class SiteswapCoreTests
     }
 
     [Test]
+    public void Generated_Siteswap_Copies_Source_Items()
+    {
+        var source = new[] { 5, 3, 1 };
+
+        var siteswap = Siteswap.CreateFromGenerated(source);
+        source[0] = 0;
+
+        siteswap.Items.Should().Equal(5, 3, 1);
+    }
+
+    [Test]
     public void Siteswaps_With_The_Same_Notation_Are_Equal()
     {
         var first = Siteswap.CreateFromCorrect(10, 7, 2);
