@@ -36,6 +36,16 @@ public static class EasyStateFilter
 
     internal static StateFilter DefaultStateFilter(int maxThrowHeight) => NewDraft(maxThrowHeight);
 
+    /// <summary>Cycles don't-care to occupied, occupied to free, and free back to don't-care.</summary>
+    public static StateValue Cycle(StateValue state) =>
+        state switch
+        {
+            StateValue.DontCare => StateValue.Occupied,
+            StateValue.Occupied => StateValue.Free,
+            StateValue.Free => StateValue.DontCare,
+            _ => throw new ArgumentOutOfRangeException(nameof(state)),
+        };
+
     /// <summary>
     /// Resize to <paramref name="length"/>: pad with don't-care beats or truncate,
     /// keeping values that still fit.
