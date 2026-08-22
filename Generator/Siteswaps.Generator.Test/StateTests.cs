@@ -35,6 +35,14 @@ public class StateTests
     }
 
     [Test]
+    public void CalculateState_Uses_The_Current_Rotation()
+    {
+        var siteswap = new PartialSiteswap([3, 4, 3]) { RotationIndex = 1 };
+
+        State.CalculateState(siteswap, 4).ToString().Should().Be("011");
+    }
+
+    [Test]
     public void StateFilter_Advertises_Rotation_Awareness()
     {
         var input = new SiteswapGeneratorInput(3, 3, 0, 10);

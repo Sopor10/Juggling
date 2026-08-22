@@ -5,9 +5,11 @@ internal sealed class StatePatternFilter(
     StatePattern pattern
 ) : ISiteswapFilter
 {
+    private readonly bool isUnconstrained = pattern.Items.All(x => x is StateValue.DontCare);
+
     public bool CanFulfill(PartialSiteswap value)
     {
-        if (!value.IsFilled())
+        if (isUnconstrained || !value.IsFilled())
         {
             return true;
         }
@@ -16,5 +18,5 @@ internal sealed class StatePatternFilter(
     }
 
     public int Order => 5;
-    public bool IsRotationAware => true;
+    public bool IsRotationAware => !isUnconstrained;
 }

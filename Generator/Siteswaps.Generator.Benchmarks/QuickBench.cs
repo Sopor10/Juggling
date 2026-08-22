@@ -6,88 +6,162 @@ namespace Siteswaps.Generator.Benchmarks;
 
 public static class QuickBench
 {
-    public static async Task Run()
+    public static Task Run()
     {
-        Console.WriteLine("=== Quick Benchmark (nach Bounds-Optimierung) ===");
+        Console.WriteLine("=== Quick Benchmark (CPU-/Memory-Snapshot) ===");
         Console.WriteLine(
             $"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}"
         );
         Console.WriteLine();
 
-        await RunBench(
-            "Small  (Period=3, Balls=5, Height=0-10)",
-            new SiteswapGeneratorInput(3, 5, 0, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-            }
+        RunBench(
+            "Large / NoFilter",
+            () => CreateGenerator(GenerationScenario.LargeNoFilter)
+        );
+        RunBench(
+            "Medium / PatternFilter",
+            () => CreateGenerator(GenerationScenario.PatternFilter)
+        );
+        RunBench(
+            "Medium / NumberFilter",
+            () => CreateGenerator(GenerationScenario.NumberFilter)
+        );
+        RunBench(
+            "Medium / StateDontCare",
+            () => CreateGenerator(GenerationScenario.StateDontCareFilter)
+        );
+        RunBench(
+            "Medium / StateSelective",
+            () => CreateGenerator(GenerationScenario.StateSelectiveFilter)
         );
 
-        await RunBench(
-            "Medium (Period=5, Balls=7, Height=2-10)",
-            new SiteswapGeneratorInput(5, 7, 2, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-            }
-        );
-
-        await RunBench(
-            "Large  (Period=7, Balls=8, Height=2-13)",
-            new SiteswapGeneratorInput(7, 8, 2, 13)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-            }
-        );
-
-        await RunBench(
-            "Filter (Period=10, Pattern)",
-            new SiteswapGeneratorInput(10, 6, 2, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
-            },
-            new FilterBuilder(new SiteswapGeneratorInput(10, 6, 2, 10))
-                .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)
-                .Build()
-        );
+        return Task.CompletedTask;
     }
 
-    private static async Task RunBench(
-        string name,
-        SiteswapGeneratorInput input,
-        ISiteswapFilter? filter = null
-    )
+    private static void RunBench(string name, Func<SiteswapGenerator> createGenerator)
     {
-        for (int w = 0; w < 3; w++)
+        for (var warmup = 0; warmup < 2; warmup++)
         {
-            var warmGen =
-                filter != null
-                    ? new SiteswapGenerator(filter, input)
-                    : new SiteswapGenerator(input);
-            await foreach (var _ in warmGen.GenerateAsync(CancellationToken.None)) { }
+            foreach (var _ in createGenerator().Generate()) { }
         }
 
-        var times = new List<double>();
+        var samples = new List<Sample>();
         var resultCount = 0;
-        for (int run = 0; run < 5; run++)
+        for (var run = 0; run < 5; run++)
         {
-            var gen =
-                filter != null
-                    ? new SiteswapGenerator(filter, input)
-                    : new SiteswapGenerator(input);
-            var sw = Stopwatch.StartNew();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
+            using var process = Process.GetCurrentProcess();
+            process.Refresh();
+            var startCpu = process.TotalProcessorTime;
+            var startAllocated = GC.GetTotalAllocatedBytes(true);
+            var peakWorkingSet = process.WorkingSet64;
+            var stopwatch = Stopwatch.StartNew();
+
             var count = 0;
-            await foreach (var _ in gen.GenerateAsync(CancellationToken.None))
+            foreach (var _ in createGenerator().Generate())
+            {
                 count++;
-            sw.Stop();
-            times.Add(sw.Elapsed.TotalMilliseconds);
+                if ((count & 255) == 0)
+                {
+                    process.Refresh();
+                    peakWorkingSet = Math.Max(peakWorkingSet, process.WorkingSet64);
+                }
+            }
+
+            process.Refresh();
+            stopwatch.Stop();
+            peakWorkingSet = Math.Max(peakWorkingSet, process.WorkingSet64);
             resultCount = count;
+            samples.Add(
+                new Sample(
+                    stopwatch.Elapsed.TotalMilliseconds,
+                    (process.TotalProcessorTime - startCpu).TotalMilliseconds,
+                    GC.GetTotalAllocatedBytes(true) - startAllocated,
+                    peakWorkingSet
+                )
+            );
         }
 
-        times.Sort();
-        var median = times[times.Count / 2];
-        var avg = times.Average();
-        var min = times.Min();
+        samples.Sort((left, right) => left.WallMilliseconds.CompareTo(right.WallMilliseconds));
+        var median = samples[samples.Count / 2];
         Console.WriteLine(
-            $"  {name}: median={median:F1}ms, avg={avg:F1}ms, min={min:F1}ms ({resultCount} results) [{string.Join(", ", times.Select(t => $"{t:F1}ms"))}]"
+            $"  {name}: wall={median.WallMilliseconds:F1}ms, cpu={median.CpuMilliseconds:F1}ms, "
+                + $"allocated={median.AllocatedBytes / 1024d / 1024d:F1}MiB, "
+                + $"peak-working-set={median.PeakWorkingSetBytes / 1024d / 1024d:F1}MiB "
+                + $"({resultCount} results)"
         );
     }
+
+    private static SiteswapGenerator CreateGenerator(GenerationScenario scenario)
+    {
+        var input = scenario is GenerationScenario.LargeNoFilter
+            ? new SiteswapGeneratorInput(7, 8, 2, 13)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100_000),
+            }
+            : new SiteswapGeneratorInput(10, 6, 2, 10)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
+            };
+
+        var filter = scenario switch
+        {
+            GenerationScenario.LargeNoFilter => new NoFilter(),
+            GenerationScenario.PatternFilter => new FilterBuilder(input)
+                .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)
+                .Build(),
+            GenerationScenario.NumberFilter => new FilterBuilder(input)
+                .ExactOccurence([5], 2)
+                .Build(),
+            GenerationScenario.StateDontCareFilter => new FilterBuilder(input)
+                .WithState(
+                    new StatePattern(
+                        [
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                        ]
+                    )
+                )
+                .Build(),
+            GenerationScenario.StateSelectiveFilter => new FilterBuilder(input)
+                .WithState(
+                    new StatePattern(
+                        [
+                            StateValue.Occupied,
+                            StateValue.Free,
+                            StateValue.DontCare,
+                            StateValue.Occupied,
+                            StateValue.Free,
+                            StateValue.DontCare,
+                            StateValue.Occupied,
+                            StateValue.Free,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                        ]
+                    )
+                )
+                .Build(),
+            _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
+        };
+
+        return new SiteswapGenerator(filter, input);
+    }
+
+    private sealed record Sample(
+        double WallMilliseconds,
+        double CpuMilliseconds,
+        long AllocatedBytes,
+        long PeakWorkingSetBytes
+    );
 }

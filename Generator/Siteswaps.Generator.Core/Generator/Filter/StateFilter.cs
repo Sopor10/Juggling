@@ -56,52 +56,27 @@ public record State(uint Value)
 
     public bool IsOccupiedAt(int position) => IsBitSet(Value, position);
 
-    private static State CalculateState(int[] siteswap, int? length = null)
+    private static State CalculateState(PartialSiteswap siteswap)
     {
-        var stable = false;
-
-        var state = State.Empty();
-
-        while (stable is false)
+        uint state = 0;
+        while (true)
         {
             var previousState = state;
-            state = siteswap.Aggregate(state, (current, value) => current.Advance().Throw(value));
+            for (var index = 0; index < siteswap.Items.Length; index++)
+            {
+                state >>= 1;
+                state |= (uint)(1 << (siteswap.Items[index] - 1));
+            }
 
             if (state == previousState)
-                stable = true;
+            {
+                return new State(state);
+            }
         }
-
-        return state;
     }
 
-    private State Advance()
-    {
-        var advance = this with { Value = Value >> 1 };
-        return advance;
-    }
-
-    private State Throw(int i)
-    {
-        var state = this with { Value = Value | (uint)(1 << (i - 1)) };
-        return state;
-    }
-
-    private static State Empty()
-    {
-        return new((uint)0);
-    }
-
-    public static State CalculateState(PartialSiteswap siteswap, int maxHeight)
-    {
-        var length = siteswap.Items.Length;
-        var items = new int[length];
-        for (int i = 0; i < length; i++)
-        {
-            items[i] = siteswap.Items[i];
-        }
-
-        return CalculateState(items, maxHeight);
-    }
+    public static State CalculateState(PartialSiteswap siteswap, int maxHeight) =>
+        CalculateState(siteswap);
 
     public static State GroundState(int numberOfBalls)
     {

@@ -4,66 +4,99 @@ using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Benchmarks;
 
+public enum GenerationScenario
+{
+    LargeNoFilter,
+    PatternFilter,
+    NumberFilter,
+    StateDontCareFilter,
+    StateSelectiveFilter,
+}
+
 [MemoryDiagnoser]
 [ShortRunJob]
 public class SiteswapGeneratorBenchmarks
 {
-    [Benchmark]
-    public async Task<int> Small_Period3_Balls5()
+    private Func<SiteswapGenerator> createGenerator = null!;
+
+    [Params(
+        GenerationScenario.LargeNoFilter,
+        GenerationScenario.PatternFilter,
+        GenerationScenario.NumberFilter,
+        GenerationScenario.StateDontCareFilter,
+        GenerationScenario.StateSelectiveFilter
+    )]
+    public GenerationScenario Scenario { get; set; }
+
+    [GlobalSetup]
+    public void Setup()
     {
-        var input = new SiteswapGeneratorInput(3, 5, 0, 10)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-        };
-        var generator = new SiteswapGenerator(new NoFilter(), input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
+        createGenerator = () => CreateGenerator(Scenario);
     }
 
     [Benchmark]
-    public async Task<int> Medium_Period5_Balls7()
-    {
-        var input = new SiteswapGeneratorInput(5, 7, 2, 10)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-        };
-        var generator = new SiteswapGenerator(new NoFilter(), input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
-    }
+    public int GenerateSiteswaps() => createGenerator().Generate().Count();
 
-    [Benchmark]
-    public async Task<int> Large_Period7_Balls8()
+    private static SiteswapGenerator CreateGenerator(GenerationScenario scenario)
     {
-        var input = new SiteswapGeneratorInput(7, 8, 2, 13)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-        };
-        var generator = new SiteswapGenerator(new NoFilter(), input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
-    }
+        var input = scenario is GenerationScenario.LargeNoFilter
+            ? new SiteswapGeneratorInput(7, 8, 2, 13)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100_000),
+            }
+            : new SiteswapGeneratorInput(10, 6, 2, 10)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
+            };
 
-    [Benchmark]
-    public async Task<int> WithPatternFilter()
-    {
-        var input = new SiteswapGeneratorInput(10, 6, 2, 10)
+        var filter = scenario switch
         {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
+            GenerationScenario.LargeNoFilter => new NoFilter(),
+            GenerationScenario.PatternFilter => new FilterBuilder(input)
+                .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)
+                .Build(),
+            GenerationScenario.NumberFilter => new FilterBuilder(input)
+                .ExactOccurence([5], 2)
+                .Build(),
+            GenerationScenario.StateDontCareFilter => new FilterBuilder(input)
+                .WithState(
+                    new StatePattern(
+                        [
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                        ]
+                    )
+                )
+                .Build(),
+            GenerationScenario.StateSelectiveFilter => new FilterBuilder(input)
+                .WithState(
+                    new StatePattern(
+                        [
+                            StateValue.Occupied,
+                            StateValue.Free,
+                            StateValue.DontCare,
+                            StateValue.Occupied,
+                            StateValue.Free,
+                            StateValue.DontCare,
+                            StateValue.Occupied,
+                            StateValue.Free,
+                            StateValue.DontCare,
+                            StateValue.DontCare,
+                        ]
+                    )
+                )
+                .Build(),
+            _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
         };
-        var filter = new FilterBuilder(input)
-            .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)
-            .Build();
-        var generator = new SiteswapGenerator(filter, input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
+
+        return new SiteswapGenerator(filter, input);
     }
 }
