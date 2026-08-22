@@ -39,15 +39,16 @@ public class SiteswapGeneratorBenchmarks
 
     private static SiteswapGenerator CreateGenerator(GenerationScenario scenario)
     {
-        var input = scenario is GenerationScenario.LargeNoFilter
-            ? new SiteswapGeneratorInput(7, 8, 2, 13)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100_000),
-            }
-            : new SiteswapGeneratorInput(10, 6, 2, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
-            };
+        var input =
+            scenario is GenerationScenario.LargeNoFilter
+                ? new SiteswapGeneratorInput(7, 8, 2, 13)
+                {
+                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100_000),
+                }
+                : new SiteswapGeneratorInput(10, 6, 2, 10)
+                {
+                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
+                };
 
         var filter = scenario switch
         {
@@ -60,38 +61,34 @@ public class SiteswapGeneratorBenchmarks
                 .Build(),
             GenerationScenario.StateDontCareFilter => new FilterBuilder(input)
                 .WithState(
-                    new StatePattern(
-                        [
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                        ]
-                    )
+                    new StatePattern([
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                    ])
                 )
                 .Build(),
             GenerationScenario.StateSelectiveFilter => new FilterBuilder(input)
                 .WithState(
-                    new StatePattern(
-                        [
-                            StateValue.Occupied,
-                            StateValue.Free,
-                            StateValue.DontCare,
-                            StateValue.Occupied,
-                            StateValue.Free,
-                            StateValue.DontCare,
-                            StateValue.Occupied,
-                            StateValue.Free,
-                            StateValue.DontCare,
-                            StateValue.DontCare,
-                        ]
-                    )
+                    new StatePattern([
+                        StateValue.Occupied,
+                        StateValue.Free,
+                        StateValue.DontCare,
+                        StateValue.Occupied,
+                        StateValue.Free,
+                        StateValue.DontCare,
+                        StateValue.Occupied,
+                        StateValue.Free,
+                        StateValue.DontCare,
+                        StateValue.DontCare,
+                    ])
                 )
                 .Build(),
             _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
