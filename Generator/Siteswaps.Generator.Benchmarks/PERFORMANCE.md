@@ -45,24 +45,29 @@ StateSelective:         0 results
 
 ## BenchmarkDotNet comparison
 
-Values are the mean per generator operation. The baseline is `origin/main` with the benchmark harness corrected to create a fresh generator per operation. The current run includes the state-filter optimizations and the generated-result copy optimization.
+Values are the mean per generator operation. The baseline is `origin/main` with the same shared scenario harness and a fresh generator per operation. The current ShortRun run used .NET 10.0.11 in the Devcontainer.
 
-| Scenario | Baseline time | Current time | Baseline allocated | Current allocated |
-|---|---:|---:|---:|---:|
-| LargeNoFilter | 4.947 ms | 4.613 ms | 1,865.1 KiB | 956.55 KiB |
-| PatternFilter | 34.512 ms | 36.394 ms | 222.59 KiB | 113.21 KiB |
-| NumberFilter | 2.616 ms | 2.246 ms | 213.29 KiB | 103.91 KiB |
-| StateDontCareFilter | 695.1 µs | 338.2 µs | 1,236.65 KiB | 103.84 KiB |
-| StateSelectiveFilter | 191.025 ms | 73.608 ms | 660,006.46 KiB | 15,116.34 KiB |
+| Scenario | Baseline time | Current time | Speedup | Baseline allocated | Current allocated |
+|---|---:|---:|---:|---:|---:|
+| LargeNoFilter | 5.065 ms | 2.144 ms | **57.66%** | 1,865.1 KiB | 955.97 KiB |
+| PatternFilter | 33.071 ms | 13.006 ms | **60.67%** | 222.59 KiB | 112.8 KiB |
+| NumberFilter | 2.273 ms | 670.7 µs | **70.50%** | 213.29 KiB | 103.38 KiB |
+| StateDontCareFilter | 634.5 µs | 135.8 µs | **78.59%** | 1,236.65 KiB | 103.3 KiB |
+| StateSelectiveFilter | 175.830 ms | 37.910 ms | **78.44%** | 660,006.46 KiB | 15,115.79 KiB |
 
-The allocation reduction from the generated-result copy is approximately 49–51% for scenarios that produce Siteswaps. The selective state workload retains the earlier state optimizations and reduces time by about 61.5% and managed allocations by about 97.7% relative to the original baseline. Pattern-filter time remains a known mixed result; no pattern-specific optimization is claimed from this run.
+The sum of the five means fell from 216.873 ms to 53.867 ms (**75.16% faster**). Every individual benchmark is at least 50% faster; the slowest relative improvement is PatternFilter at 60.67%.
 
 ## Changes justified by data
 
-1. `State.CalculateState` updates the state bitmask directly while reading the current `PartialSiteswap` rotation. This removes the per-check integer-array copy, LINQ aggregation, and temporary `State` records.
-2. An all-`DontCare` state pattern is recognized once when the filter is created. It skips state calculation and does not advertise rotation awareness, avoiding a redundant rotation loop.
-3. Generated Siteswaps use a dedicated span-based construction path. The previous path created an array for `AsSpan().ToArray()` and then copied it again through `CreateFromCorrect(params ...)`; the new path performs one defensive copy.
-4. Scenario construction is centralized and result-count validation is performed in both QuickBench and BenchmarkDotNet.
+1. `CyclicArray` uses an in-range branch before modulo and correctly normalizes negative rotations.
+2. `PartialSiteswap` tracks landing occupancy in a `ulong` bitset for periods up to 64. Collision checks and bound searches avoid repeated cyclic-array reads; larger periods retain the safe fallback.
+3. `FillCurrentPosition` rejects landing collisions before mutating the partial state. Setter updates reuse the normalized landing index.
+4. `SiteswapGenerator` skips filter dispatch for `NoFilter`, performs the ball-count check only at completed leaves, and uses bitset-backed bound searches.
+5. `NumberFilter` is rotation-invariant and specializes the common single-number case to direct integer comparison. A single filter is no longer wrapped in an unnecessary `AndFilter`.
+6. Generated Siteswaps use a dedicated span-based construction path. The previous path created an array for `AsSpan().ToArray()` and then copied it again through `CreateFromCorrect(params ...)`; the new path performs one defensive copy.
+7. `State.CalculateState` updates the state bitmask directly while reading the current `PartialSiteswap` rotation. This removes the per-check integer-array copy, LINQ aggregation, and temporary `State` records.
+8. An all-`DontCare` state pattern is recognized once when the filter is created. It skips state calculation and does not advertise rotation awareness, avoiding a redundant rotation loop.
+9. Scenario construction is centralized, QuickBench emits JSON, `--scenario` isolates workloads for profiling, and result-count validation is performed in both QuickBench and BenchmarkDotNet.
 
 ## Optimization process
 
