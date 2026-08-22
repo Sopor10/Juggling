@@ -23,6 +23,14 @@ public class CyclicArrayTests
     }
 
     [Test]
+    public void Negative_Rotation_Uses_Cyclic_Order()
+    {
+        var sut = new CyclicArray<int>(new[] { 1, 2, 3 }).Rotate(-1);
+
+        sut.Should().Equal(3, 1, 2);
+    }
+
+    [Test]
     public void Rotate_Returns_The_Same_Array_With_Updated_Order()
     {
         var sut = new CyclicArray<int>(new[] { 1, 2, 3 });

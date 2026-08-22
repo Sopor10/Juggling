@@ -8,7 +8,7 @@ internal sealed class AtMostXXXTimesFilter(IEnumerable<int> number, int amount)
         int count = 0;
         foreach (var x in value.AsSpan())
         {
-            if (Number.Contains(x))
+            if (ContainsNumber(x))
             {
                 if (++count > Amount)
                     return false;

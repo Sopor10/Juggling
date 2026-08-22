@@ -1,21 +1,35 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
+﻿using System.Runtime.CompilerServices;
 
-public abstract class NumberFilter(IEnumerable<int> number, int amount) : ISiteswapFilter
+namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
+
+public abstract class NumberFilter : ISiteswapFilter
 {
+    protected NumberFilter(IEnumerable<int> number, int amount)
+    {
+        Number = number.ToHashSet();
+        Amount = amount;
+        HasSingleNumber = Number.Count == 1;
+        SingleNumber = HasSingleNumber ? Number.First() : 0;
+    }
+
+    protected bool HasSingleNumber { get; }
+    protected int SingleNumber { get; }
+
     public bool CanFulfill(PartialSiteswap value)
     {
-        if (value.RotationIndex != 0)
-        {
-            // we check every rotatition and succeed if one matches
-            return false;
-        }
-
         return CanFulfillNumberFilter(value);
     }
 
     private protected abstract bool CanFulfillNumberFilter(PartialSiteswap value);
-    protected HashSet<int> Number { get; } = number.ToHashSet();
-    protected int Amount { get; } = amount;
+    protected HashSet<int> Number { get; }
+    protected int Amount { get; }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected bool ContainsNumber(int value)
+    {
+        return HasSingleNumber ? value == SingleNumber : Number.Contains(value);
+    }
+
     public int Order => 0;
-    public bool IsRotationAware => true;
+    public bool IsRotationAware => false;
 }

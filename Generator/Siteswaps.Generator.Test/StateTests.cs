@@ -55,7 +55,7 @@ public class StateTests
     }
 
     [Test]
-    public void NumberFilter_Advertises_Rotation_Awareness()
+    public void NumberFilter_Is_Rotation_Invariant()
     {
         var input = new SiteswapGeneratorInput(3, 3, 0, 10);
 
@@ -63,6 +63,6 @@ public class StateTests
             .MinimumOccurence(new[] { 1 }, 1)
             .Build()
             .IsRotationAware.Should()
-            .BeTrue();
+            .BeFalse();
     }
 }

@@ -6,6 +6,14 @@ namespace Siteswaps.Generator.Test.Filter;
 public partial class FilterTestSuite
 {
     [Test]
+    public void Exact_Number_Filter_Is_Not_Rotation_Aware()
+    {
+        var sut = FilterBuilder.ExactOccurence(5, 2).Build();
+
+        sut.IsRotationAware.Should().BeFalse();
+    }
+
+    [Test]
     [TestCase(new[] { 8, 4, -1 })]
     [TestCase(new[] { 5, 4, 4 })]
     [TestCase(new[] { 5, 5, 5 })]

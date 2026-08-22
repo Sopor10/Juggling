@@ -8,7 +8,7 @@ internal sealed class AtLeastXXXTimesFilter(IEnumerable<int> number, int amount)
         int matches = 0;
         foreach (var x in value.AsSpan())
         {
-            if (x == -1 || Number.Contains(x))
+            if (x == -1 || ContainsNumber(x))
             {
                 if (++matches >= Amount)
                     return true;
