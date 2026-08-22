@@ -33,13 +33,7 @@
     private async Task Cycle(int index)
     {
         var items = Value.Items.ToArray();
-        items[index] = items[index] switch
-        {
-            StateValue.DontCare => StateValue.Occupied,
-            StateValue.Occupied => StateValue.Free,
-            StateValue.Free => StateValue.DontCare,
-            _ => throw new ArgumentOutOfRangeException(),
-        };
+        items[index] = EasyStateFilter.Cycle(items[index]);
         var value = new EasyStateFilter.StateFilter([.. items]);
         Value = value;
         await ValueChanged.InvokeAsync(value);
