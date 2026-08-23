@@ -14,3 +14,4 @@ fi
 
 dotnet restore
 aspire --version
+bash .devcontainer/install-pi.sh

@@ -6,8 +6,15 @@
       "moby": true,
       "dockerDashComposeVersion": "v2"
     },
-    "ghcr.io/devcontainers/features/powershell:2": {}
+    "ghcr.io/devcontainers/features/powershell:2": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
   },
+  "mounts": [
+    "source=${localEnv:HOME}/.codex,target=/host-codex,type=bind,readonly,consistency=cached",
+    "source=juggling-pi-agent,target=/home/vscode/.pi/agent,type=volume"
+  ],
   "forwardPorts": [7021, 5000, 5001],
   "hostRequirements": {
     "cpus": 4,
@@ -19,7 +26,9 @@
     "DOTNET_NOLOGO": "1",
     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
     "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
-    "SSL_CERT_DIR": "/home/vscode/.aspnet/dev-certs/trust:/etc/ssl/certs"
+    "SSL_CERT_DIR": "/home/vscode/.aspnet/dev-certs/trust:/etc/ssl/certs",
+    "PI_PROVIDER": "openai-codex",
+    "PI_MODEL": "gpt-5.6-luna"
   },
   "onCreateCommand": "bash .devcontainer/onCreate.sh",
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
