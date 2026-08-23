@@ -4,7 +4,7 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
 {
     private List<List<int>> Pattern { get; }
     private int NumberOfJugglers { get; }
-    private Siteswaps.Generator.Core.Generator.SiteswapGeneratorInput Input { get; }
+    private SiteswapGeneratorInput Input { get; }
     private NumberMask PassValues { get; }
     private NumberMask SelfValues { get; }
     private int Juggler { get; }
@@ -13,7 +13,7 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
     public RotationAwareFlexiblePatternFilter(
         List<List<int>> pattern,
         int numberOfJugglers,
-        Siteswaps.Generator.Core.Generator.SiteswapGeneratorInput input,
+        SiteswapGeneratorInput input,
         int juggler
     )
     {
@@ -21,15 +21,10 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         NumberOfJugglers = numberOfJugglers;
         Input = input;
         Juggler = juggler;
-        PassValues = new NumberMask(
-            Enumerable
-                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-                .Where(x => x % NumberOfJugglers != 0)
-        );
-        SelfValues = new NumberMask(
-            Enumerable
-                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-                .Where(x => x % NumberOfJugglers == 0)
+        (PassValues, SelfValues) = NumberMaskFactory.Create(
+            input.MinHeight,
+            input.MaxHeight,
+            NumberOfJugglers
         );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
         for (var i = 0; i < Pattern.Count; i++)

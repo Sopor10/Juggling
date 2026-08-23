@@ -16,15 +16,10 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
     )
     {
         NumberOfJuggler = numberOfJuggler;
-        PassValues = new NumberMask(
-            Enumerable
-                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-                .Where(x => x % NumberOfJuggler != 0)
-        );
-        SelfValues = new NumberMask(
-            Enumerable
-                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-                .Where(x => x % NumberOfJuggler == 0)
+        (PassValues, SelfValues) = NumberMaskFactory.Create(
+            input.MinHeight,
+            input.MaxHeight,
+            NumberOfJuggler
         );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
         for (var i = 0; i < pattern.Count; i++)
