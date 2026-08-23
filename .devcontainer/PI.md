@@ -4,11 +4,13 @@ Der Devcontainer installiert [Pi](https://pi.dev) mit dem OpenAI-Codex-Provider.
 
 ## Anmeldung ohne interaktiven Login im Container
 
-Voraussetzung ist eine bereits bestehende Hermes-Anmeldung auf dem Host:
+Voraussetzung ist eine bereits bestehende Hermes-Anmeldung auf dem Host, wenn Pi direkt mit der Subscription verwendet werden soll:
 
 ```text
 $HOME/.hermes/auth.json
 ```
+
+`initializeCommand` stellt für CI und neue Hosts automatisch eine leere Platzhalterdatei mit Berechtigung `0600` bereit; eine vorhandene echte Auth-Datei wird nicht überschrieben. Ohne echte Anmeldung wird Pi zwar installiert, aber ein Pi-Aufruf fordert nicht interaktiv zur Anmeldung auf und schlägt mit einem Auth-Fehler fehl.
 
 Die Devcontainer-Konfiguration bindet ausschließlich diese Hermes-Auth-Datei read-only nach `/host-hermes-auth.json` ein. Beim Erstellen des Containers konvertiert `.devcontainer/pi-codex-auth.mjs` den Hermes-`openai-codex`-OAuth-Eintrag in Pi's Format und legt ihn in einem separaten Docker-Volume (`juggling-pi-agent`) unter `/home/vscode/.pi/agent/auth.json` ab. Pi kann diesen lokalen Token bei Bedarf selbst refreshen; die Host-Datei wird nicht beschrieben.
 
@@ -39,4 +41,4 @@ Der Standard ist `openai-codex/gpt-5.6-luna`; er kann innerhalb von Pi weiterhin
 - Die Hermes-Auth-Datei ist im Container nur read-only sichtbar.
 - Die Pi-Credentials liegen im separaten Docker-Volume und nicht im Git-Workspace.
 - Der neue Worktree und der Volume-Name sind vom bestehenden Devcontainer unabhängig; bestehende Container werden nicht ersetzt oder neu gestartet.
-- Die Hermes-OpenAI-Codex-Anmeldung muss vor `devcontainer up` vorhanden sein. Fehlt sie, bricht die Container-Erstellung mit einer erklärenden Fehlermeldung statt mit einem interaktiven Login ab.
+- Die Hermes-OpenAI-Codex-Anmeldung muss vor `devcontainer up` vorhanden sein, wenn Pi direkt mit der Subscription verwendet werden soll. Fehlt sie lokal, bricht die Auth-Synchronisierung mit einer erklärenden Fehlermeldung statt mit einem interaktiven Login ab. CI kann Pi ohne Anmeldung installieren; dort wird der Auth-Sync übersprungen.
