@@ -114,5 +114,4 @@ internal static class NestedGenerationScenarioFactory
             input,
             0
         );
-    }
 }
