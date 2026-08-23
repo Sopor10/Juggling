@@ -6,9 +6,10 @@ internal sealed class AtMostXXXTimesFilter(IEnumerable<int> number, int amount)
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)
     {
         int count = 0;
-        foreach (var x in value.AsSpan())
+        for (var index = 0; index < value.Length; index++)
         {
-            if (Number.Contains(x))
+            var x = value.Items[index];
+            if (ContainsNumber(x))
             {
                 if (++count > Amount)
                     return false;

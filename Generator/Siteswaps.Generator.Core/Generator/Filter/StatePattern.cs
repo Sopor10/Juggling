@@ -14,20 +14,28 @@ public enum StateValue
 /// </summary>
 public record StatePattern(ImmutableArray<StateValue> Items)
 {
+    private readonly uint occupiedMask = CreateMask(Items, StateValue.Occupied);
+    private readonly uint freeMask = CreateMask(Items, StateValue.Free);
+
     public bool Matches(State state)
     {
-        for (var index = 0; index < Items.Length; index++)
+        return Matches(state.Value);
+    }
+
+    public bool Matches(uint stateValue)
+    {
+        return (stateValue & occupiedMask) == occupiedMask && (stateValue & freeMask) == 0;
+    }
+
+    private static uint CreateMask(ImmutableArray<StateValue> items, StateValue value)
+    {
+        uint mask = 0;
+        for (var index = 0; index < items.Length; index++)
         {
-            var isOccupied = state.IsOccupiedAt(index);
-            if (
-                Items[index] is StateValue.Occupied && !isOccupied
-                || Items[index] is StateValue.Free && isOccupied
-            )
-            {
-                return false;
-            }
+            if (items[index] == value)
+                mask |= 1u << index;
         }
 
-        return true;
+        return mask;
     }
 }

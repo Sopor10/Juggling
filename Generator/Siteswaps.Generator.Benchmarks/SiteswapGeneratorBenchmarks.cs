@@ -1,69 +1,52 @@
 using BenchmarkDotNet.Attributes;
 using Siteswaps.Generator.Core.Generator;
-using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Benchmarks;
+
+public enum GenerationScenario
+{
+    LargeNoFilter,
+    PatternFilter,
+    NumberFilter,
+    StateDontCareFilter,
+    StateSelectiveFilter,
+    NumberAtMostFilter,
+    ExactStateFilter,
+    NumberOfPassesFilter,
+    DefaultBallCountFilter,
+    PersonalizedNumberFilter,
+    RotationAwarePatternFilter,
+    LocallyValidFilter,
+    OrFilter,
+    NotFilter,
+    HighDimensionalFilteredStress,
+    HighDimensionalNoFilterStress,
+}
 
 [MemoryDiagnoser]
 [ShortRunJob]
 public class SiteswapGeneratorBenchmarks
 {
-    [Benchmark]
-    public async Task<int> Small_Period3_Balls5()
+    private Func<SiteswapGenerator> createGenerator = () =>
+        throw new InvalidOperationException("Benchmark setup has not run.");
+
+    [ParamsSource(nameof(Scenarios))]
+    public GenerationScenario Scenario { get; set; }
+
+    public static IEnumerable<GenerationScenario> Scenarios =>
+        GenerationScenarioFactory.AllScenarios;
+
+    [GlobalSetup]
+    public void Setup()
     {
-        var input = new SiteswapGeneratorInput(3, 5, 0, 10)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-        };
-        var generator = new SiteswapGenerator(new NoFilter(), input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
+        createGenerator = () => GenerationScenarioFactory.Create(Scenario);
     }
 
     [Benchmark]
-    public async Task<int> Medium_Period5_Balls7()
+    public int GenerateSiteswaps()
     {
-        var input = new SiteswapGeneratorInput(5, 7, 2, 10)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-        };
-        var generator = new SiteswapGenerator(new NoFilter(), input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
-    }
-
-    [Benchmark]
-    public async Task<int> Large_Period7_Balls8()
-    {
-        var input = new SiteswapGeneratorInput(7, 8, 2, 13)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-        };
-        var generator = new SiteswapGenerator(new NoFilter(), input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
-    }
-
-    [Benchmark]
-    public async Task<int> WithPatternFilter()
-    {
-        var input = new SiteswapGeneratorInput(10, 6, 2, 10)
-        {
-            StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
-        };
-        var filter = new FilterBuilder(input)
-            .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)
-            .Build();
-        var generator = new SiteswapGenerator(filter, input);
-        var count = 0;
-        await foreach (var _ in generator.GenerateAsync(CancellationToken.None))
-            count++;
-        return count;
+        var resultCount = createGenerator().Generate().Count();
+        GenerationScenarioFactory.ValidateResultCount(Scenario, resultCount);
+        return resultCount;
     }
 }
