@@ -38,19 +38,25 @@ public class SiteswapGeneratorBenchmarks
     public GenerationScenario Scenario { get; set; }
 
     public static IEnumerable<GenerationScenario> Scenarios =>
-        GenerationScenarioFactory.AllScenarios;
+        GenerationScenarioFactory.AllScenarios.Concat(NestedGenerationScenarioFactory.AllScenarios);
 
     [GlobalSetup]
     public void Setup()
     {
-        createGenerator = () => GenerationScenarioFactory.Create(Scenario);
+        createGenerator = () =>
+            NestedGenerationScenarioFactory.AllScenarios.Contains(Scenario)
+                ? NestedGenerationScenarioFactory.Create(Scenario)
+                : GenerationScenarioFactory.Create(Scenario);
     }
 
     [Benchmark]
     public int GenerateSiteswaps()
     {
         var resultCount = createGenerator().Generate().Count();
-        GenerationScenarioFactory.ValidateResultCount(Scenario, resultCount);
+        if (NestedGenerationScenarioFactory.AllScenarios.Contains(Scenario))
+            NestedGenerationScenarioFactory.ValidateResultCount(Scenario, resultCount);
+        else
+            GenerationScenarioFactory.ValidateResultCount(Scenario, resultCount);
         return resultCount;
     }
 }

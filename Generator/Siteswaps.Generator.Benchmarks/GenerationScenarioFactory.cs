@@ -26,11 +26,6 @@ internal static class GenerationScenarioFactory
         GenerationScenario.NotFilter,
         GenerationScenario.HighDimensionalFilteredStress,
         GenerationScenario.HighDimensionalNoFilterStress,
-        GenerationScenario.NestedAndNumberPattern,
-        GenerationScenario.NestedOrNotState,
-        GenerationScenario.NestedStateAndPattern,
-        GenerationScenario.NestedDeepMixed,
-        GenerationScenario.NestedNumberPassesPersonalized,
     ];
 
     public static SiteswapGenerator Create(GenerationScenario scenario)
@@ -106,112 +101,21 @@ internal static class GenerationScenarioFactory
             ),
             GenerationScenario.LocallyValidFilter => new LocallyValidFilter(2, 0),
             GenerationScenario.OrFilter => new FilterBuilder(input)
-                .Or([
+                .Or(
                     new FilterBuilder(input).ExactOccurence([6], 6).Build(),
-                    new FilterBuilder(input).MaximumOccurence([5], 2).Build(),
-                ])
+                    new FilterBuilder(input).MaximumOccurence([5], 2).Build()
+                )
                 .Build(),
             GenerationScenario.NotFilter => new FilterBuilder(input)
                 .Not(new FilterBuilder(input).MaximumOccurence([5], 0).Build())
                 .Build(),
             GenerationScenario.HighDimensionalFilteredStress => CreateHighDimensionalStress(input),
             GenerationScenario.HighDimensionalNoFilterStress => new NoFilter(),
-            GenerationScenario.NestedAndNumberPattern => CreateNestedAndNumberPattern(input),
-            GenerationScenario.NestedOrNotState => CreateNestedOrNotState(input),
-            GenerationScenario.NestedStateAndPattern => CreateNestedStateAndPattern(input),
-            GenerationScenario.NestedDeepMixed => CreateNestedDeepMixed(input),
-            GenerationScenario.NestedNumberPassesPersonalized =>
-                CreateNestedNumberPassesPersonalized(input),
             _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
         };
 
         return new SiteswapGenerator(filter, input);
     }
-
-    private static ISiteswapFilter DefaultFilter(SiteswapGeneratorInput input) =>
-        new FilterBuilder(input).WithDefault().Build();
-
-    private static ISiteswapFilter AtMost(
-        SiteswapGeneratorInput input,
-        IEnumerable<int> numbers,
-        int amount
-    ) => new FilterBuilder(input).MaximumOccurence(numbers, amount).Build();
-
-    private static ISiteswapFilter AtLeast(
-        SiteswapGeneratorInput input,
-        IEnumerable<int> numbers,
-        int amount
-    ) => new FilterBuilder(input).MinimumOccurence(numbers, amount).Build();
-
-    private static ISiteswapFilter ExactPasses(SiteswapGeneratorInput input) =>
-        new FilterBuilder(input).ExactNumberOfPasses(0, 2).Build();
-
-    private static PersonalizedNumberFilter Personalized(SiteswapGeneratorInput input) =>
-        new PersonalizedNumberFilter(
-            2,
-            input.MinHeight,
-            input.MaxHeight,
-            [6],
-            1,
-            PersonalizedNumberFilter.Type.AtLeast,
-            0
-        );
-
-    private static RotationAwareFlexiblePatternFilter CreateNestedPattern(
-        SiteswapGeneratorInput input
-    ) =>
-        new RotationAwareFlexiblePatternFilter(
-            Enumerable.Repeat(new List<int> { -1 }, 5).ToList(),
-            2,
-            input,
-            0
-        );
-
-    private static AndFilter CreateNestedAndNumberPattern(SiteswapGeneratorInput input) =>
-        new AndFilter(
-            DefaultFilter(input),
-            new AndFilter(AtMost(input, [5], 6), AtLeast(input, [3, 5, 7], 1)),
-            new NotFilter(AtMost(input, [5], 0)),
-            CreateNestedPattern(input)
-        );
-
-    private static OrFilter CreateNestedOrNotState(SiteswapGeneratorInput input) =>
-        new OrFilter(
-            new AndFilter(DefaultFilter(input), AtMost(input, [5], 6), CreateNestedPattern(input)),
-            new NotFilter(new AndFilter(AtMost(input, [5], 0), ExactPasses(input)))
-        );
-
-    private static AndFilter CreateNestedStateAndPattern(SiteswapGeneratorInput input) =>
-        new AndFilter(
-            new AndFilter(
-                new FilterBuilder(input).WithState(State.GroundState(6)).Build(),
-                DefaultFilter(input)
-            ),
-            new OrFilter(AtMost(input, [5], 6), new NotFilter(AtMost(input, [5], 0))),
-            CreateNestedPattern(input)
-        );
-
-    private static AndFilter CreateNestedDeepMixed(SiteswapGeneratorInput input) =>
-        new AndFilter(
-            new OrFilter(
-                new AndFilter(
-                    DefaultFilter(input),
-                    AtLeast(input, [3, 5, 7], 1),
-                    CreateNestedPattern(input)
-                ),
-                new NotFilter(new AndFilter(AtMost(input, [5], 0), ExactPasses(input)))
-            ),
-            new NotFilter(new AndFilter(AtMost(input, [5], 6), Personalized(input)))
-        );
-
-    private static AndFilter CreateNestedNumberPassesPersonalized(SiteswapGeneratorInput input) =>
-        new AndFilter(
-            new OrFilter(
-                new AndFilter(Personalized(input), AtLeast(input, [3, 5, 7], 1)),
-                new NotFilter(new AndFilter(ExactPasses(input), AtMost(input, [5], 0)))
-            ),
-            new AndFilter(DefaultFilter(input), CreateNestedPattern(input), AtMost(input, [5], 6))
-        );
 
     private static ISiteswapFilter CreateHighDimensionalStress(SiteswapGeneratorInput input)
     {
