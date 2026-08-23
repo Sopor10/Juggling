@@ -45,11 +45,8 @@ public class PersonalizedNumberFilter : ISiteswapFilter
         for (var index = from; index < value.Length; index += numberOfJugglers)
         {
             var throwHeight = value.Items[index];
-            if (throwHeight < 0 || numberValues.Contains(throwHeight))
-            {
-                if (++possible >= amount)
-                    return true;
-            }
+            if ((throwHeight < 0 || numberValues.Contains(throwHeight)) && ++possible >= amount)
+                return true;
         }
 
         return false;
@@ -61,11 +58,8 @@ public class PersonalizedNumberFilter : ISiteswapFilter
         for (var index = from; index < value.Length; index += numberOfJugglers)
         {
             var throwHeight = value.Items[index];
-            if (throwHeight >= 0 && numberValues.Contains(throwHeight))
-            {
-                if (++count > amount)
-                    return false;
-            }
+            if (throwHeight >= 0 && numberValues.Contains(throwHeight) && ++count > amount)
+                return false;
         }
 
         return count <= amount;
