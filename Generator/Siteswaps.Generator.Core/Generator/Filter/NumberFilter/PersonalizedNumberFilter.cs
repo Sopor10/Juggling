@@ -1,40 +1,96 @@
 namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
-public class PersonalizedNumberFilter(
-    int numberOfJugglers,
-    int minHeight,
-    int maxHeight,
-    IEnumerable<int> number,
-    int amount,
-    PersonalizedNumberFilter.Type type,
-    int from
-) : ISiteswapFilter
+public class PersonalizedNumberFilter : ISiteswapFilter
 {
-    private HashSet<int> PassValues { get; } =
-        Enumerable
-            .Range(minHeight, maxHeight - minHeight + 1)
-            .Where(x => x % numberOfJugglers != 0)
-            .ToHashSet();
+    private readonly int numberOfJugglers;
+    private readonly int from;
+    private readonly HashSet<int> numberValues;
+    private readonly int amount;
+    private readonly Type type;
 
-    private HashSet<int> SelfValues { get; } =
-        Enumerable
-            .Range(minHeight, maxHeight - minHeight + 1)
-            .Where(x => x % numberOfJugglers != 0)
-            .ToHashSet();
+    public PersonalizedNumberFilter(
+        int numberOfJugglers,
+        int minHeight,
+        int maxHeight,
+        IEnumerable<int> number,
+        int amount,
+        Type type,
+        int from
+    )
+    {
+        _ = minHeight;
+        _ = maxHeight;
+        this.numberOfJugglers = numberOfJugglers;
+        this.amount = amount;
+        this.type = type;
+        this.from = from;
+        numberValues = number.ToHashSet();
+    }
 
     public bool CanFulfill(PartialSiteswap value)
     {
-        var throwsFromJuggler = value.Items.Where((_, i) => i % numberOfJugglers == from).ToList();
-
-        var count = throwsFromJuggler.Count(number.Contains);
-        var countAndEmpty = count + throwsFromJuggler.Count(x => x < 0);
         return type switch
         {
-            Type.Exact => countAndEmpty >= amount && count <= amount,
-            Type.AtLeast => countAndEmpty >= amount,
-            Type.AtMost => count <= amount,
+            Type.Exact => CanFulfillExact(value),
+            Type.AtLeast => CanFulfillAtLeast(value),
+            Type.AtMost => CanFulfillAtMost(value),
             _ => throw new InvalidOperationException($"Unsupported filter type: {type}"),
         };
+    }
+
+    private bool CanFulfillAtLeast(PartialSiteswap value)
+    {
+        var possible = 0;
+        for (var index = from; index < value.Length; index += numberOfJugglers)
+        {
+            var throwHeight = value.Items[index];
+            if (throwHeight < 0 || numberValues.Contains(throwHeight))
+            {
+                if (++possible >= amount)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool CanFulfillAtMost(PartialSiteswap value)
+    {
+        var count = 0;
+        for (var index = from; index < value.Length; index += numberOfJugglers)
+        {
+            var throwHeight = value.Items[index];
+            if (throwHeight >= 0 && numberValues.Contains(throwHeight))
+            {
+                if (++count > amount)
+                    return false;
+            }
+        }
+
+        return count <= amount;
+    }
+
+    private bool CanFulfillExact(PartialSiteswap value)
+    {
+        var count = 0;
+        var possible = 0;
+        for (var index = from; index < value.Length; index += numberOfJugglers)
+        {
+            var throwHeight = value.Items[index];
+            if (throwHeight < 0)
+            {
+                possible++;
+            }
+            else if (numberValues.Contains(throwHeight))
+            {
+                count++;
+                possible++;
+                if (count > amount)
+                    return false;
+            }
+        }
+
+        return possible >= amount && count <= amount;
     }
 
     public enum Type
