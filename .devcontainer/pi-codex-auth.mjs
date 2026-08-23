@@ -3,7 +3,7 @@ import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSy
 import { dirname, join } from "node:path";
 import { homedir } from "node:os";
 
-const CODEX_AUTH_FILE = process.env.CODEX_AUTH_FILE || "/host-codex/auth.json";
+const HOST_AUTH_FILE = process.env.HOST_AUTH_FILE || "/host-hermes-auth.json";
 const PI_AUTH_FILE = process.env.PI_AUTH_FILE || join(homedir(), ".pi", "agent", "auth.json");
 const force = process.argv.includes("--force");
 
@@ -43,9 +43,9 @@ function readExistingAuth() {
   return value;
 }
 
-if (!existsSync(PI_AUTH_FILE) && !existsSync(CODEX_AUTH_FILE)) {
+if (!existsSync(PI_AUTH_FILE) && !existsSync(HOST_AUTH_FILE)) {
   fail(
-    `no host Codex login found. Expected ${CODEX_AUTH_FILE}; log in on the host with Codex first, then recreate the container`,
+    `no host OpenAI Codex OAuth login found. Expected ${HOST_AUTH_FILE}; log in with Hermes on the host first, then recreate the container`,
   );
 }
 
@@ -56,14 +56,20 @@ if (!force && existing["openai-codex"]?.type === "oauth") {
   process.exit(0);
 }
 
-if (!existsSync(CODEX_AUTH_FILE)) {
-  fail(`host Codex auth is missing at ${CODEX_AUTH_FILE}`);
+if (!existsSync(HOST_AUTH_FILE)) {
+  fail(`host Hermes auth is missing at ${HOST_AUTH_FILE}`);
 }
 
-const codex = readJson(CODEX_AUTH_FILE, "host Codex auth");
-const tokens = codex?.tokens;
+const hostAuth = readJson(HOST_AUTH_FILE, "host Hermes auth");
+const hermesCredentials = hostAuth?.credential_pool?.["openai-codex"];
+const hostCredential = Array.isArray(hermesCredentials)
+  ? [...hermesCredentials].sort((a, b) => (a?.priority ?? 999) - (b?.priority ?? 999))[0]
+  : undefined;
+const tokens = hostCredential?.access_token
+  ? hostCredential
+  : hostAuth?.tokens;
 if (!tokens || typeof tokens !== "object") {
-  fail("host Codex auth has no tokens object; an interactive/API-key login is not supported");
+  fail("host Hermes auth has no openai-codex OAuth credential; an interactive/API-key login is not supported");
 }
 
 const access = stringValue(tokens.access_token, tokens.access);
@@ -75,7 +81,7 @@ const accountId = stringValue(
   accessPayload?.["https://api.openai.com/auth"]?.chatgpt_account_id,
 );
 if (!access || !refresh || !accountId) {
-  fail("host Codex auth is missing access token, refresh token, or account id");
+  fail("host Hermes auth is missing access token, refresh token, or account id");
 }
 
 const exp = Number(accessPayload?.exp);

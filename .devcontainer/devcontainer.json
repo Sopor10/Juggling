@@ -12,7 +12,7 @@
     }
   },
   "mounts": [
-    "source=${localEnv:HOME}/.codex,target=/host-codex,type=bind,readonly,consistency=cached",
+    "source=${localEnv:HOME}/.hermes/auth.json,target=/host-hermes-auth.json,type=bind,readonly,consistency=cached",
     "source=juggling-pi-agent,target=/home/vscode/.pi/agent,type=volume"
   ],
   "forwardPorts": [7021, 5000, 5001],
