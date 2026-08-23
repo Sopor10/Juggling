@@ -27,21 +27,50 @@ The benchmark creates a fresh, stateful `SiteswapGenerator` for every operation.
 
 ## Workloads and result-count rule
 
-- `LargeNoFilter`: period 7, 8 objects, heights 2–13, up to 100,000 results
-- `PatternFilter`: period 10, 6 objects, heights 2–10, pattern filter, up to 1,000 results
-- `NumberFilter`: period 10, 6 objects, exactly two throws of height 5, up to 1,000 results
-- `StateDontCareFilter`: period 10, 6 objects, entirely unconstrained state pattern
-- `StateSelectiveFilter`: period 10, 6 objects, selective occupied/free state pattern
+Every scenario consumes real `Generate()` output and reports its result count. The factory rejects a zero-result scenario unless it is the explicitly documented `StateSelectiveFilter`; therefore at most one benchmark may generate zero Siteswaps.
 
-Every scenario consumes `Generate()` and reports its result count. The factory rejects a zero-result scenario unless it is the explicitly documented `StateSelectiveFilter`; therefore at most one benchmark may generate zero Siteswaps. The current quick run produced:
+The scenario catalog is shared by QuickBench and BenchmarkDotNet. The latest QuickBench run produced:
 
-```text
-Large / NoFilter:       8946 results
-PatternFilter:          1000 results
-NumberFilter:           1000 results
-StateDontCare:          1000 results
-StateSelective:         0 results
-```
+| Scenario | Input | Filter coverage | Results |
+|---|---|---|---:|
+| `LargeNoFilter` | period 7, 8 objects, heights 2–13, max 100,000 | `NoFilter` | 8,946 |
+| `PatternFilter` | period 10, 6 objects, heights 2–10, max 1,000 | `AndFilter`, `AtLeastXXXTimesFilter`, `FlexiblePatternFilter` | 1,000 |
+| `NumberFilter` | period 10, 6 objects, heights 2–10, exactly two 5s | `ExactlyXXXTimesFilter` | 1,000 |
+| `StateDontCareFilter` | period 10, 6 objects, unconstrained state | `StatePatternFilter` | 1,000 |
+| `StateSelectiveFilter` | period 10, 6 objects, selective occupied/free state | `StatePatternFilter` | 0 |
+| `NumberAtMostFilter` | period 10, 6 objects, at most two 5s | `AtMostXXXTimesFilter` | 1,000 |
+| `ExactStateFilter` | period 10, 6 objects, `GroundState(6)` | `StateFilter` | 1,000 |
+| `NumberOfPassesFilter` | period 10, 6 objects, exactly zero passes for two jugglers | `NumberOfPassesFilter` | 564 |
+| `DefaultBallCountFilter` | period 10, 6 objects, heights 2–10 | `RightAmountOfBallsFilter` | 1,000 |
+| `PersonalizedNumberFilter` | period 10, 6 objects, at least one 6 from juggler 0 | `PersonalizedNumberFilter` | 1,000 |
+| `RotationAwarePatternFilter` | period 10, 6 objects, unconstrained five-position pattern | `RotationAwareFlexiblePatternFilter` | 1,000 |
+| `LocallyValidFilter` | period 6, 6 objects, heights 0–10 | `LocallyValidFilter` | 225 |
+| `OrFilter` | period 10, 6 objects, exact-six or at-most-two-fives | `OrFilter` | 1,000 |
+| `NotFilter` | period 10, 6 objects, not at-most-zero-fives | `NotFilter` | 1,000 |
+
+The five original performance-comparison scenarios remain the primary before/after gate. The additional nine scenarios extend filter coverage and are measured as real generation workloads; their baseline comparison is maintained separately from the original optimization table.
+
+## Filter coverage matrix
+
+| Filter class | Scenario | Coverage |
+|---|---|---|
+| `NoFilter` | `LargeNoFilter` | direct |
+| `AtLeastXXXTimesFilter` | `PatternFilter` | indirect through `PatternFilterHeuristicBuilder` |
+| `ExactlyXXXTimesFilter` | `NumberFilter` | direct |
+| `AtMostXXXTimesFilter` | `NumberAtMostFilter` | direct |
+| `PersonalizedNumberFilter` | `PersonalizedNumberFilter` | direct |
+| `StateFilter` | `ExactStateFilter` | direct |
+| `StatePatternFilter` | `StateDontCareFilter`, `StateSelectiveFilter` | direct, unconstrained and selective |
+| `FlexiblePatternFilter` | `PatternFilter` | indirect through `FilterBuilder.Pattern` |
+| `RotationAwareFlexiblePatternFilter` | `RotationAwarePatternFilter` | direct |
+| `NumberOfPassesFilter` | `NumberOfPassesFilter` | direct |
+| `RightAmountOfBallsFilter` | `DefaultBallCountFilter` | direct through `WithDefault()` |
+| `LocallyValidFilter` | `LocallyValidFilter` | direct |
+| `AndFilter` | `PatternFilter` | indirect composition |
+| `OrFilter` | `OrFilter` | direct composition |
+| `NotFilter` | `NotFilter` | direct composition |
+
+This covers every concrete `ISiteswapFilter` implementation in `Generator/Siteswaps.Generator.Core/Generator/Filter`. `NumberFilter` itself is abstract; `State`, `StatePattern`, and `PatternFilterHeuristicBuilder` are supporting types rather than additional filter implementations.
 
 ## BenchmarkDotNet comparison
 

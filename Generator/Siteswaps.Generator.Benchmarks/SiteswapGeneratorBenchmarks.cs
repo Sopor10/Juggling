@@ -10,6 +10,15 @@ public enum GenerationScenario
     NumberFilter,
     StateDontCareFilter,
     StateSelectiveFilter,
+    NumberAtMostFilter,
+    ExactStateFilter,
+    NumberOfPassesFilter,
+    DefaultBallCountFilter,
+    PersonalizedNumberFilter,
+    RotationAwarePatternFilter,
+    LocallyValidFilter,
+    OrFilter,
+    NotFilter,
 }
 
 [MemoryDiagnoser]
