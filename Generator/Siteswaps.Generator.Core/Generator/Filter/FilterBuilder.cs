@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
@@ -38,7 +38,7 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
     public IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers) =>
         this with
         {
-            Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers, Input)),
+            Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers)),
         };
 
     public IFilterBuilder And(params IEnumerable<ISiteswapFilter> filter) =>
@@ -58,6 +58,11 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
     public IFilterBuilder WithState(State state)
     {
         return this with { Filter = Filter.Add(new StateFilter(Input, state)) };
+    }
+
+    public IFilterBuilder WithState(StatePattern pattern)
+    {
+        return this with { Filter = Filter.Add(new StatePatternFilter(Input, pattern)) };
     }
 
     public IFilterBuilder FlexiblePattern(
@@ -80,7 +85,13 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
             Filter = Filter.Add(new RightAmountOfBallsFilter(Input)),
         };
 
-    public ISiteswapFilter Build() => new AndFilter(Filter);
+    public ISiteswapFilter Build() =>
+        Filter.Count switch
+        {
+            0 => new AndFilter(),
+            1 => Filter[0],
+            _ => new AndFilter(Filter),
+        };
 
     public IFilterBuilder Pattern(IEnumerable<int> pattern, int numberOfJuggler)
     {
@@ -88,7 +99,7 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
         return this with
         {
             Filter = Filter
-                .Add(new PatternFilterHeuristicBuilder(this).Build(pattern))
+                .Add(PatternFilterHeuristicBuilder.Build(pattern))
                 .Add(
                     new FlexiblePatternFilter(
                         pattern.Select(x => new List<int>() { x }).ToList(),

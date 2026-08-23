@@ -12,6 +12,8 @@
     <link href="_content/Z.Blazor.Diagrams/style.min.css" rel="stylesheet" />
     <link href="_content/Z.Blazor.Diagrams/default.styles.min.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
+    <meta name="theme-color" content="#03173d" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/custom.css" rel="stylesheet" />
@@ -54,6 +56,8 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script src="pwa-install.js"></script>
+    <script src="sw-registrator.js"></script>
     <script>
         window.blazorIsLocalDevelopment = ['localhost', '127.0.0.1', '[::1]']
             .includes(window.location.hostname);
@@ -73,7 +77,6 @@
     </script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
-    <script src="sw-registrator.js"></script>
 </body>
 
 </html>

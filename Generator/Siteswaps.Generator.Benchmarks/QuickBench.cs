@@ -1,93 +1,188 @@
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Siteswaps.Generator.Core.Generator;
-using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Benchmarks;
 
 public static class QuickBench
 {
-    public static async Task Run()
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        Console.WriteLine("=== Quick Benchmark (nach Bounds-Optimierung) ===");
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() },
+    };
+
+    public static Task<int> Run(string[] args)
+    {
+        Console.WriteLine("=== Quick Benchmark (CPU-/Memory-Snapshot) ===");
         Console.WriteLine(
             $"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}"
         );
         Console.WriteLine();
 
-        await RunBench(
-            "Small  (Period=3, Balls=5, Height=0-10)",
-            new SiteswapGeneratorInput(3, 5, 0, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-            }
-        );
+        var reports = new List<ScenarioReport>();
+        foreach (var scenario in GetScenarios(args))
+        {
+            reports.Add(RunBench(scenario));
+        }
 
-        await RunBench(
-            "Medium (Period=5, Balls=7, Height=2-10)",
-            new SiteswapGeneratorInput(5, 7, 2, 10)
+        if (reports.Count == GenerationScenarioFactory.AllScenarios.Count)
+        {
+            GenerationScenarioFactory.ValidateResultCounts(
+                reports.ToDictionary(report => report.Scenario, report => report.ResultCount)
+            );
+        }
+        else
+        {
+            foreach (var report in reports)
             {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
+                GenerationScenarioFactory.ValidateResultCount(report.Scenario, report.ResultCount);
             }
-        );
+        }
 
-        await RunBench(
-            "Large  (Period=7, Balls=8, Height=2-13)",
-            new SiteswapGeneratorInput(7, 8, 2, 13)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100000),
-            }
-        );
+        var jsonPath = GetJsonPath(args);
+        if (jsonPath is not null)
+        {
+            var report = new QuickBenchReport(
+                Environment.GetEnvironmentVariable("BENCHMARK_COMMIT"),
+                System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+                reports
+            );
+            File.WriteAllText(jsonPath, JsonSerializer.Serialize(report, JsonOptions));
+            Console.WriteLine($"JSON report: {jsonPath}");
+        }
 
-        await RunBench(
-            "Filter (Period=10, Pattern)",
-            new SiteswapGeneratorInput(10, 6, 2, 10)
-            {
-                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1000),
-            },
-            new FilterBuilder(new SiteswapGeneratorInput(10, 6, 2, 10))
-                .Pattern([2, -1, 6, -1, 5, -1, -1, -1, -1, -1], 2)
-                .Build()
-        );
+        return Task.FromResult(0);
     }
 
-    private static async Task RunBench(
-        string name,
-        SiteswapGeneratorInput input,
-        ISiteswapFilter? filter = null
-    )
+    private static ScenarioReport RunBench(GenerationScenario scenario)
     {
-        for (int w = 0; w < 3; w++)
+        for (var warmup = 0; warmup < 2; warmup++)
         {
-            var warmGen =
-                filter != null
-                    ? new SiteswapGenerator(filter, input)
-                    : new SiteswapGenerator(input);
-            await foreach (var _ in warmGen.GenerateAsync(CancellationToken.None)) { }
+            _ = GenerationScenarioFactory.Create(scenario).Generate().Count();
         }
 
-        var times = new List<double>();
-        var resultCount = 0;
-        for (int run = 0; run < 5; run++)
+        var samples = new List<Sample>();
+        var sampleResultCounts = new List<int>();
+        var resultCount = -1;
+        for (var run = 0; run < 5; run++)
         {
-            var gen =
-                filter != null
-                    ? new SiteswapGenerator(filter, input)
-                    : new SiteswapGenerator(input);
-            var sw = Stopwatch.StartNew();
+            using var process = Process.GetCurrentProcess();
+            process.Refresh();
+            var startCpu = process.TotalProcessorTime;
+            var startAllocated = GC.GetTotalAllocatedBytes(true);
+            var peakWorkingSet = process.WorkingSet64;
+            var stopwatch = Stopwatch.StartNew();
+
             var count = 0;
-            await foreach (var _ in gen.GenerateAsync(CancellationToken.None))
+            foreach (var _ in GenerationScenarioFactory.Create(scenario).Generate())
+            {
                 count++;
-            sw.Stop();
-            times.Add(sw.Elapsed.TotalMilliseconds);
+                if ((count & 255) == 0)
+                {
+                    process.Refresh();
+                    peakWorkingSet = Math.Max(peakWorkingSet, process.WorkingSet64);
+                }
+            }
+
+            process.Refresh();
+            stopwatch.Stop();
+            peakWorkingSet = Math.Max(peakWorkingSet, process.WorkingSet64);
+            if (
+                !GenerationScenarioFactory.IsTimeBound(scenario)
+                && resultCount >= 0
+                && resultCount != count
+            )
+            {
+                throw new InvalidOperationException(
+                    $"Benchmark scenario {scenario} is not deterministic: "
+                        + $"sample counts were {resultCount} and {count}."
+                );
+            }
+
             resultCount = count;
+            sampleResultCounts.Add(count);
+            samples.Add(
+                new Sample(
+                    stopwatch.Elapsed.TotalMilliseconds,
+                    (process.TotalProcessorTime - startCpu).TotalMilliseconds,
+                    GC.GetTotalAllocatedBytes(true) - startAllocated,
+                    peakWorkingSet
+                )
+            );
         }
 
-        times.Sort();
-        var median = times[times.Count / 2];
-        var avg = times.Average();
-        var min = times.Min();
-        Console.WriteLine(
-            $"  {name}: median={median:F1}ms, avg={avg:F1}ms, min={min:F1}ms ({resultCount} results) [{string.Join(", ", times.Select(t => $"{t:F1}ms"))}]"
+        samples.Sort((left, right) => left.WallMilliseconds.CompareTo(right.WallMilliseconds));
+        var median = samples[samples.Count / 2];
+        if (GenerationScenarioFactory.IsTimeBound(scenario))
+            resultCount = sampleResultCounts.Min();
+        var report = new ScenarioReport(
+            scenario,
+            median.WallMilliseconds,
+            median.CpuMilliseconds,
+            median.AllocatedBytes,
+            median.PeakWorkingSetBytes,
+            resultCount
         );
+        Console.WriteLine(
+            $"  {scenario}: wall={report.WallMilliseconds:F1}ms, "
+                + $"cpu={report.CpuMilliseconds:F1}ms, "
+                + $"allocated={report.AllocatedBytes / 1024d / 1024d:F1}MiB, "
+                + $"peak-working-set={report.PeakWorkingSetBytes / 1024d / 1024d:F1}MiB "
+                + $"({report.ResultCount} results)"
+        );
+        return report;
     }
+
+    private static IEnumerable<GenerationScenario> GetScenarios(string[] args)
+    {
+        var index = Array.FindIndex(
+            args,
+            arg => arg.Equals("--scenario", StringComparison.OrdinalIgnoreCase)
+        );
+        if (index < 0)
+            return GenerationScenarioFactory.AllScenarios;
+        if (
+            index + 1 >= args.Length
+            || !Enum.TryParse(args[index + 1], true, out GenerationScenario scenario)
+        )
+            throw new ArgumentException("--scenario requires a valid GenerationScenario name.");
+        return [scenario];
+    }
+
+    private static string? GetJsonPath(string[] args)
+    {
+        var index = Array.FindIndex(
+            args,
+            arg => arg.Equals("--json", StringComparison.OrdinalIgnoreCase)
+        );
+        if (index < 0)
+            return null;
+        if (index + 1 >= args.Length || string.IsNullOrWhiteSpace(args[index + 1]))
+            throw new ArgumentException("--json requires a file path.");
+        return args[index + 1];
+    }
+
+    private sealed record Sample(
+        double WallMilliseconds,
+        double CpuMilliseconds,
+        long AllocatedBytes,
+        long PeakWorkingSetBytes
+    );
 }
+
+public sealed record QuickBenchReport(
+    string? Commit,
+    string Runtime,
+    IReadOnlyList<ScenarioReport> Scenarios
+);
+
+public sealed record ScenarioReport(
+    GenerationScenario Scenario,
+    double WallMilliseconds,
+    double CpuMilliseconds,
+    long AllocatedBytes,
+    long PeakWorkingSetBytes,
+    int ResultCount
+);

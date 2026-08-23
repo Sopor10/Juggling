@@ -91,7 +91,11 @@ public record Throw(string Name, int Height, string DisplayValue)
             }
             else
             {
-                yield return new Throw(i.ToString(), i, i.ToString());
+                yield return new Throw(
+                    i.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    i,
+                    i.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                );
             }
         }
     }
@@ -164,7 +168,7 @@ public record Throw(string Name, int Height, string DisplayValue)
         {
             return DisplayValue;
         }
-        return Height.ToString();
+        return Height.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     public static Throw Parse(string s)

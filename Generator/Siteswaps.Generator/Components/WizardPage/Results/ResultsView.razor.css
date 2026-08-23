@@ -1,0 +1,29 @@
+.wizard-results-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.wizard-results-header .wizard-chip.wizard-results-dense-toggle {
+    min-height: 36px;
+    min-width: unset;
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.wizard-results-grid.dense {
+    gap: 8px;
+}
+
+.wizard-results.dense ::deep .pz-siteswap-card {
+    padding: 8px 14px;
+}
+
+.wizard-results.dense ::deep .pz-siteswap-card-title {
+    margin-bottom: 0;
+}
+
+.wizard-results.dense ::deep .pz-siteswap-card-clubs {
+    padding-top: 6px;
+}

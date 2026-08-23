@@ -22,7 +22,7 @@
         <ConfiguredGenerationWorkflow Config="_wizardHostConfig">
             <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
-            <div @ref="_stepsElement" class="wizard-steps">
+            <div @ref="_swipeHost" class="wizard-steps">
 
                 <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
                     <div class="wizard-measure">
@@ -90,9 +90,9 @@
 
             <FilterBottomSheet @ref="_filterSheet"
                                 AllowedThrows="State.AllowedThrows"
-                                MaxThrowHeight="State.MaxThrowHeight"
                                 Period="State.Period.Value"
                                 NumberOfJugglers="State.NumberOfJugglers"
+                                ShowThrowNames="State.ShowThrowNames"
                                 FilterAdded="OnFilterAdded"
                                 FilterEdited="OnFilterEdited"
                                 FilterDeleted="RemoveFilter" />
@@ -101,7 +101,7 @@
     else
     {
         <div class="wizard-sr-only" aria-live="polite">@L["Step {0} / {1}: Results", WizardState.ResultsStepIndex + 1, WizardState.ProgressStepCount]</div>
-        <div id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
+        <div @ref="_swipeHost" id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
             <ResultsView @ref="_resultsView"
                          Results="State.Results"
                          IsGenerating="State.Phase == WizardPhase.Generating"

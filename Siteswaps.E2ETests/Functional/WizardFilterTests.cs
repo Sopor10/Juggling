@@ -29,33 +29,9 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
         await Assertions.Expect(wizard.FiltersEmptyMessage).ToBeVisibleAsync();
     }
 
-    /// <summary>Summary: Pattern palette must offer don't-care ("frei") and new sequences default to all frei.</summary>
+    /// <summary>Summary: State filter beat buttons cycle from don't-care through occupied and free back to don't-care.</summary>
     [Fact]
-    public async Task Pattern_Filter_Defaults_To_Frei_And_Exposes_DontCare_Palette()
-    {
-        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
-        var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
-        var page = session.Page;
-        await wizard.WaitUntilLoadedAsync();
-        await wizard.AdvanceToFiltersAsync();
-        await wizard.OpenAddFilterSheetAsync();
-        await page.Locator("#wizard-filter-tab-pattern").ClickAsync();
-
-        var palette = page.Locator(".wizard-pattern-palette .wizard-chip");
-        await Assertions.Expect(palette.Filter(new() { HasText = "frei" })).ToHaveCountAsync(1);
-
-        var slots = page.Locator(".wizard-pattern-slots .wizard-pattern-slot");
-        await Assertions.Expect(slots).Not.ToHaveCountAsync(0);
-        await Assertions
-            .Expect(
-                page.Locator(".wizard-pattern-slots .wizard-pattern-slot:not(:text-is(\"frei\"))")
-            )
-            .ToHaveCountAsync(0);
-    }
-
-    /// <summary>Summary: State filter must show classic x/_ notation that updates with beat toggles.</summary>
-    [Fact]
-    public async Task State_Filter_Shows_Occupied_Free_Notation()
+    public async Task State_Filter_Cycles_To_DontCare()
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
@@ -66,11 +42,11 @@ public class WizardFilterTests(SharedBlazorFixture host) : IClassFixture<SharedB
         await page.Locator("#wizard-filter-tab-state").ClickAsync();
 
         var notation = page.Locator(".wizard-state-notation");
-        await Assertions.Expect(notation).ToBeVisibleAsync();
-        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^[\s_]+$"));
-
         var firstBeat = page.Locator(".wizard-state-grid .wizard-chip").First;
         await firstBeat.ClickAsync();
-        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*x"));
+        await firstBeat.ClickAsync();
+        await firstBeat.ClickAsync();
+
+        await Assertions.Expect(notation).ToHaveTextAsync(new Regex(@"^\s*\*"));
     }
 }

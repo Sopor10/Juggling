@@ -35,10 +35,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private bool _isStartingGeneration;
     private IJSObjectReference? _jsModule;
     private DotNetObjectReference<WizardPage>? _selfReference;
-    private ElementReference _stepsElement;
     private ElementReference _stepHeading0;
     private ElementReference _stepHeading1;
     private ElementReference _stepHeading2;
+    private ElementReference _swipeHost;
+    private bool? _swipeBoundToResults;
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
@@ -174,8 +175,26 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             );
             _selfReference = DotNetObjectReference.Create(this);
             await _jsModule.InvokeVoidAsync("initHistory", _selfReference, State.CurrentStep);
-            await _jsModule.InvokeVoidAsync("initTouchSwipe", _stepsElement, _selfReference);
         }
+
+        await EnsureTouchSwipeAsync();
+    }
+
+    private async Task EnsureTouchSwipeAsync()
+    {
+        if (_jsModule is null || _selfReference is null || _swipeHost.Context is null)
+        {
+            return;
+        }
+
+        var swipeOnResults = State.Phase is WizardPhase.Results or WizardPhase.Generating;
+        if (_swipeBoundToResults == swipeOnResults)
+        {
+            return;
+        }
+
+        await _jsModule.InvokeVoidAsync("initTouchSwipe", _swipeHost, _selfReference);
+        _swipeBoundToResults = swipeOnResults;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -383,6 +402,16 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     {
         if (_isStepTransitioning)
         {
+            return;
+        }
+
+        if (State.Phase is WizardPhase.Results or WizardPhase.Generating)
+        {
+            if (!next)
+            {
+                await BackToEditing();
+            }
+
             return;
         }
 
@@ -663,7 +692,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                     await _jsModule.InvokeVoidAsync("disposeHistory", _selfReference);
                 }
 
-                await _jsModule.InvokeVoidAsync("disposeTouchSwipe", _stepsElement);
+                await _jsModule.InvokeVoidAsync("disposeTouchSwipe", _swipeHost);
                 await _jsModule.DisposeAsync();
             }
         }
@@ -673,5 +702,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
 
         _selfReference?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

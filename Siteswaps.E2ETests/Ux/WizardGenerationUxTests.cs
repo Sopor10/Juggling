@@ -103,4 +103,48 @@ public class WizardGenerationUxTests(SharedBlazorFixture host) : IClassFixture<S
         var covers = await WizardUxGeometry.ResultsActionsCoverLastCardAsync(page);
         covers.Should().BeFalse("results actions must sit below the last card, not overlap it");
     }
+
+    /// <summary>Summary: Result cards keep detail links inside the current base path, including PR previews.</summary>
+    [Fact]
+    public async Task Result_Card_Detail_Link_Is_Base_Relative()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await WizardUxGeometry.EnsureMobileViewportAsync(page);
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        await wizard.WaitUntilLoadedAsync();
+        await wizard.AdvanceToGenerateAsync();
+        await wizard.WaitForResultsAsync();
+
+        var href = await wizard.SiteswapCards.First.Locator("a").GetAttributeAsync("href");
+
+        href.Should().NotBeNull();
+        href.Should().StartWith("details?s=");
+        href.Should().NotStartWith("/");
+    }
+
+    /// <summary>Summary: Dense mode hides juggler sequence preview on result cards.</summary>
+    [Fact]
+    public async Task Dense_Mode_Hides_Juggler_Preview()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await WizardUxGeometry.EnsureMobileViewportAsync(page);
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        await wizard.WaitUntilLoadedAsync();
+        await wizard.AdvanceToGenerateAsync();
+        await wizard.WaitForResultsAsync();
+
+        await Assertions.Expect(wizard.SiteswapCardJugglers).Not.ToHaveCountAsync(0);
+        await wizard.DenseModeToggle.ClickAsync();
+        await Assertions.Expect(wizard.SiteswapCardJugglers).ToHaveCountAsync(0);
+        await Assertions
+            .Expect(wizard.DenseModeToggle)
+            .ToHaveAttributeAsync("aria-pressed", "true");
+        await wizard.DenseModeToggle.ClickAsync();
+        await Assertions.Expect(wizard.SiteswapCardJugglers).Not.ToHaveCountAsync(0);
+        await Assertions
+            .Expect(wizard.DenseModeToggle)
+            .ToHaveAttributeAsync("aria-pressed", "false");
+    }
 }

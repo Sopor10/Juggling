@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Playwright;
 
 namespace Siteswaps.E2ETests;
@@ -27,6 +28,10 @@ public class WizardPageObject(IPage page)
     public ILocator ResultsEmptyMessage => page.Locator(".wizard-results .wizard-filters-empty");
 
     public ILocator SiteswapCards => page.Locator(".pz-siteswap-card");
+
+    public ILocator SiteswapCardJugglers => page.Locator(".pz-siteswap-card-jugglers");
+
+    public ILocator DenseModeToggle => page.GetByTestId("wizard-dense-mode");
 
     public ILocator GenerateButton => page.Locator(".wizard-btn-generate");
 
@@ -146,27 +151,34 @@ public class WizardPageObject(IPage page)
 
     public async Task SetPeriodAsync(int period)
     {
-        await PeriodInput.FillAsync(period.ToString());
+        await PeriodInput.FillAsync(period.ToString(CultureInfo.InvariantCulture));
         await PeriodInput.PressAsync("Tab");
     }
 
     public async Task SetExactJugglersAsync(int jugglers)
     {
-        await JugglerExactInput.FillAsync(jugglers.ToString());
+        await JugglerExactInput.FillAsync(jugglers.ToString(CultureInfo.InvariantCulture));
         await JugglerExactInput.PressAsync("Tab");
     }
 
     public async Task SelectJugglerChipAsync(int jugglers)
     {
         await page.Locator(".wizard-juggler-picker .wizard-chip")
-            .Filter(new LocatorFilterOptions { HasText = jugglers.ToString() })
+            .Filter(
+                new LocatorFilterOptions
+                {
+                    HasText = jugglers.ToString(CultureInfo.InvariantCulture),
+                }
+            )
             .ClickAsync();
     }
 
     public async Task SetClubsRangeAsync(int min, int max)
     {
-        await page.Locator("input[aria-label='Keulen Minimum']").FillAsync(min.ToString());
-        await page.Locator("input[aria-label='Keulen Maximum']").FillAsync(max.ToString());
+        await page.Locator("input[aria-label='Keulen Minimum']")
+            .FillAsync(min.ToString(CultureInfo.InvariantCulture));
+        await page.Locator("input[aria-label='Keulen Maximum']")
+            .FillAsync(max.ToString(CultureInfo.InvariantCulture));
     }
 
     public async Task DeselectAllThrowsAsync()
@@ -199,7 +211,7 @@ public class WizardPageObject(IPage page)
     {
         await OpenAddFilterSheetAsync();
         await SelectWizardOptionAsync("numComparison", comparison);
-        await page.Locator("#numAmount").FillAsync(amount.ToString());
+        await page.Locator("#numAmount").FillAsync(amount.ToString(CultureInfo.InvariantCulture));
         await SelectWizardOptionAsync("numThrow", throwName);
         await page.Locator(".wizard-btn-filter-primary").ClickAsync();
         await Assertions.Expect(FilterSheet).ToBeHiddenAsync();

@@ -9,6 +9,8 @@ namespace Siteswaps.Mcp.Server.Tools;
 [McpServerToolType]
 public class GenerateCausalDiagramTool
 {
+    private static readonly string[] HandNames = ["R", "L"];
+
     [McpServerTool]
     [Description(
         "Generates a causal diagram representation of a siteswap showing ball movements between hands. Returns nodes (throws) and transitions (ball paths)."
@@ -44,15 +46,13 @@ public class GenerateCausalDiagramTool
             // Create hands for a single juggler
             var hands = new List<Hand>();
             var person = new Person("A");
-            var handNames = new[] { "R", "L" };
             for (var i = 0; i < numberOfHands; i++)
             {
-                var handName = i < handNames.Length ? handNames[i] : $"H{i + 1}";
+                var handName = i < HandNames.Length ? HandNames[i] : $"H{i + 1}";
                 hands.Add(new Hand(handName, person));
             }
 
-            var generator = new CausalDiagramGenerator();
-            var diagram = generator.Generate(siteswapObj, hands.ToCyclicArray());
+            var diagram = CausalDiagramGenerator.Generate(siteswapObj, hands.ToCyclicArray());
 
             return new CausalDiagramInfo
             {

@@ -34,7 +34,7 @@
 
 @code {
 
-    [Parameter] public CausalDiagram Value { get; set; } = new CausalDiagramGenerator().Generate(new Siteswap(5,3,1), new CyclicArray<Hand>(new Hand("R", new Person("A")), new Hand("L", new Person("A"))));
+    [Parameter] public CausalDiagram Value { get; set; } = CausalDiagramGenerator.Generate(new Siteswap(5,3,1), new CyclicArray<Hand>(new Hand("R", new Person("A")), new Hand("L", new Person("A"))));
 
     private List<Person> Persons => Value.Throws.Select(x => x.Hand.Person).Distinct().ToList();
 

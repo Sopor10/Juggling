@@ -15,6 +15,46 @@ internal static class WizardUxGeometry
         await page.SetViewportSizeAsync(390, 844);
     }
 
+    public static async Task SwipeHorizontallyAsync(ILocator locator, int deltaX)
+    {
+        await locator.EvaluateAsync(
+            @"((el, dx) => {
+                const rect = el.getBoundingClientRect();
+                const y = rect.top + Math.min(40, Math.max(8, rect.height / 2));
+                const startX = dx < 0
+                    ? rect.left + Math.min(rect.width - 8, Math.max(80, rect.width * 0.8))
+                    : rect.left + Math.min(rect.width - 80, Math.max(8, rect.width * 0.2));
+                const endX = startX + dx;
+                const fire = (type, x, touchesAlive) => {
+                    const touch = new Touch({
+                        identifier: 1,
+                        target: el,
+                        clientX: x,
+                        clientY: y,
+                        pageX: x,
+                        pageY: y,
+                        radiusX: 2.5,
+                        radiusY: 2.5,
+                        rotationAngle: 0,
+                        force: 1
+                    });
+                    el.dispatchEvent(new TouchEvent(type, {
+                        bubbles: true,
+                        cancelable: true,
+                        touches: touchesAlive ? [touch] : [],
+                        targetTouches: touchesAlive ? [touch] : [],
+                        changedTouches: [touch]
+                    }));
+                };
+                fire('touchstart', startX, true);
+                fire('touchmove', startX + dx * 0.4, true);
+                fire('touchmove', endX, true);
+                fire('touchend', endX, false);
+            })",
+            deltaX
+        );
+    }
+
     public static async Task AssertMinTouchTargetAsync(ILocator locator, string controlName)
     {
         var box = await locator.BoundingBoxAsync();

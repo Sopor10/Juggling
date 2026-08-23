@@ -10,7 +10,7 @@ namespace Siteswaps.Generator.Test.Components.State;
 [TestFixture]
 public class FilterTreeTests
 {
-    private static IFilterInformation PatternFilter(int numberOfPasses = 0)
+    private static NewPatternFilterInformation PatternFilter(int numberOfPasses = 0)
     {
         return new PatternFilterInformationFaker()
             .RuleFor(

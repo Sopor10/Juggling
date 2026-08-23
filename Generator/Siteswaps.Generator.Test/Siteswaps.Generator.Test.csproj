@@ -8,7 +8,6 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="Sopor10.ArchunitExtension" />
     <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="TngTech.ArchUnitNET.NUnit" />
     <PackageReference Include="Verify" />

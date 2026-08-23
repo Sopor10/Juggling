@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
+namespace Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 
 public class AndFilter : ISiteswapFilter
 {
@@ -25,6 +25,41 @@ public class AndFilter : ISiteswapFilter
         }
 
         return true;
+    }
+
+    public bool CanFulfillAnyRotation(PartialSiteswap value)
+    {
+        foreach (var filter in Filters)
+        {
+            if (!filter.IsRotationAware && !filter.CanFulfill(value))
+            {
+                return false;
+            }
+        }
+
+        var originalRotation = value.RotationIndex;
+        for (var rotation = 0; rotation < value.Length; rotation++)
+        {
+            value.RotationIndex = rotation;
+            var rotationMatches = true;
+            foreach (var filter in Filters)
+            {
+                if (filter.IsRotationAware && !filter.CanFulfill(value))
+                {
+                    rotationMatches = false;
+                    break;
+                }
+            }
+
+            if (rotationMatches)
+            {
+                value.RotationIndex = originalRotation;
+                return true;
+            }
+        }
+
+        value.RotationIndex = originalRotation;
+        return false;
     }
 
     public int Order => 0;

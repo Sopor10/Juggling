@@ -1,26 +1,29 @@
-﻿@inject IStringLocalizer<SiteswapCard> L
+@inject IStringLocalizer<SiteswapCard> L
 
 @if (Data is null)
 {
     return;
 }
 
-<article @key="Data.DisplayValue" data-testid="generated-siteswap-@Data.DisplayValue" class="pz-siteswap-card">
+<article @key="Data.DisplayValue" data-testid="generated-siteswap-@Data.DisplayValue" class="pz-siteswap-card @(DenseMode ? "dense" : "")">
     <a class="pz-siteswap-card-title" href="@Data.InternalDetailView">@Data.DisplayValue</a>
 
-    <div class="pz-siteswap-card-jugglers">
-        @foreach (var juggler in Enumerable.Range(0, Data.NumberOfJugglers))
-        {
-            <p class="pz-siteswap-card-line">
-                <span class="pz-siteswap-card-label">@((char)(juggler + 'A')):</span>
-                <span class="pz-siteswap-card-notation">@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).LocalNotation</span>
-                @if (Data.Value.Period.Value % Data.NumberOfJugglers == 0)
-                {
-                    <span class="pz-siteswap-card-avg">(@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).Average().ToString("0.##"))</span>
-                }
-            </p>
-        }
-    </div>
+    @if (!DenseMode)
+    {
+        <div class="pz-siteswap-card-jugglers">
+            @foreach (var juggler in Enumerable.Range(0, Data.NumberOfJugglers))
+            {
+                <p class="pz-siteswap-card-line">
+                    <span class="pz-siteswap-card-label">@((char)(juggler + 'A')):</span>
+                    <span class="pz-siteswap-card-notation">@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).LocalNotation</span>
+                    @if (Data.Value.Period.Value % Data.NumberOfJugglers == 0)
+                    {
+                        <span class="pz-siteswap-card-avg">(@Data.Value.GetLocalSiteswap(juggler, Data.NumberOfJugglers).Average().ToString("0.##"))</span>
+                    }
+                </p>
+            }
+        </div>
+    }
 
     <p class="pz-siteswap-card-clubs">
         <span class="pz-siteswap-card-clubs-label">@L["Clubs"]</span>
@@ -32,6 +35,7 @@
 
     [Parameter] public Siteswap? Siteswap { get; set; }
     [Parameter] public int NumberOfJugglers { get; set; }
+    [Parameter] public bool DenseMode { get; set; }
 
     private SiteswapView? Data { get; set; }
 

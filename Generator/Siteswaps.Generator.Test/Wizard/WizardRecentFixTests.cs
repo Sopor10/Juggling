@@ -3,6 +3,7 @@ using Siteswaps.Generator.Components.Internal.EasyFilter;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.WizardPage;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
 
 namespace Siteswaps.Generator.Test.Wizard;
 
@@ -56,6 +57,16 @@ public class WizardPatternFilterUiTests
 [TestFixture]
 public class WizardStateFilterNotationTests
 {
+    /// <summary>Summary: New state filters must start with all positions set to don't care.</summary>
+    [Test]
+    public void DefaultStateDraft_Uses_DontCare_For_All_Positions()
+    {
+        var filter = EasyStateFilter.DefaultStateFilter(5);
+
+        filter.Items.Should().HaveCount(5);
+        filter.Items.Should().OnlyContain(item => item == StateValue.DontCare);
+    }
+
     /// <summary>Summary: State filters must render classic occupied/free notation (x / _).</summary>
     [Test]
     public void Notation_Uses_X_And_Underscore()
@@ -63,6 +74,55 @@ public class WizardStateFilterNotationTests
         var filter = new EasyStateFilter.StateFilter([true, true, false, false, false]);
 
         filter.Notation().Should().Be("x x _ _ _");
+    }
+}
+
+[TestFixture]
+public class WizardStateFilterBeatBoundTests
+{
+    /// <summary>Summary: State chip count follows AllowedThrows heights, not Settings MaxHeight.</summary>
+    [Test]
+    public void MaxBeat_Uses_AllowedThrows_Not_Settings_Ceiling()
+    {
+        var allowed = new List<Throw> { Throw.Zip, Throw.Hold, Throw.Self };
+
+        var beats = EasyStateFilter.MaxBeatFromAllowedThrows(
+            allowed,
+            numberOfJugglers: 2,
+            showThrowNames: false
+        );
+
+        beats.Should().Be(Throw.Self.Height);
+        beats.Should().BeLessThan(13);
+    }
+
+    /// <summary>Summary: With throw names, beat bound uses juggler-scaled heights like the generator.</summary>
+    [Test]
+    public void MaxBeat_Uses_Juggler_Scaled_Heights_When_Named()
+    {
+        var allowed = new List<Throw> { Throw.Heff };
+        var expected = Throw.Heff.GetHeightForJugglers(3, useLiteralValue: false).Max();
+
+        var beats = EasyStateFilter.MaxBeatFromAllowedThrows(
+            allowed,
+            numberOfJugglers: 3,
+            showThrowNames: true
+        );
+
+        beats.Should().Be(expected);
+    }
+
+    /// <summary>Summary: Longer existing state filters must clamp without losing in-range occupied beats.</summary>
+    [Test]
+    public void FitToLength_Keeps_Occupied_Bits_Within_New_Length()
+    {
+        var longer = new EasyStateFilter.StateFilter([true, false, true, true, false, true]);
+
+        var fitted = EasyStateFilter.FitToLength(longer, 4);
+
+        fitted
+            .Items.Should()
+            .Equal(StateValue.Occupied, StateValue.Free, StateValue.Occupied, StateValue.Occupied);
     }
 }
 

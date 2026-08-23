@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Siteswaps.Generator.Core.Generator;
 
@@ -14,10 +15,25 @@ public record CyclicArray<T> : IEnumerable<T>
     private T[] Items { get; }
     public int Length => Items.Length;
 
+    internal void SetStorage(int index, T value) => Items[index] = value;
+
     public T this[int i]
     {
-        get => Items[(i + RotationIndex) % Items.Length];
-        set => Items[(i + RotationIndex) % Items.Length] = value;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Items[GetStorageIndex(i)];
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        set => Items[GetStorageIndex(i)] = value;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int GetStorageIndex(int index)
+    {
+        index += RotationIndex;
+        if (index >= 0 && index < Items.Length)
+            return index;
+
+        index %= Items.Length;
+        return index < 0 ? index + Items.Length : index;
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -89,7 +105,10 @@ public class CyclicArrayEnumerator<T>(CyclicArray<T> array) : IEnumerator<T>
 
     object IEnumerator.Current => Current ?? throw new ArgumentNullException();
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
 
     public int Length => Array.Length;
 }

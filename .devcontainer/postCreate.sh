@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export PATH="$HOME/.dotnet/tools:$PATH"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=export-dotnet.sh
+source "${SCRIPT_DIR}/export-dotnet.sh"
 
 # Match AppHost Aspire major (see Juggling.AppHost.csproj Aspire.AppHost.Sdk).
 if ! command -v aspire >/dev/null 2>&1; then

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
@@ -7,13 +7,9 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
     private List<List<int>> Pattern { get; }
     private int NumberOfJugglers { get; }
     private SiteswapGeneratorInput Input { get; }
-
-    private HashSet<int> PassValues { get; }
-
-    private HashSet<int> SelfValues { get; }
-
+    private NumberMask PassValues { get; }
+    private NumberMask SelfValues { get; }
     private int Juggler { get; }
-
     private readonly PatternRecord _pattern;
 
     public RotationAwareFlexiblePatternFilter(
@@ -27,16 +23,16 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         NumberOfJugglers = numberOfJugglers;
         Input = input;
         Juggler = juggler;
-
-        PassValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJugglers != 0)
-            .ToHashSet();
-        SelfValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJugglers == 0)
-            .ToHashSet();
-
+        PassValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJugglers != 0)
+        );
+        SelfValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJugglers == 0)
+        );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
         for (var i = 0; i < Pattern.Count; i++)
         {
@@ -46,24 +42,18 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         _pattern = new PatternRecord(p, SelfValues, PassValues);
     }
 
-    public bool CanFulfill(PartialSiteswap value)
-    {
-        if (!value.IsFilled())
-            return true;
-
-        return _pattern.Matches(value.Items);
-    }
+    public bool CanFulfill(PartialSiteswap value) =>
+        !value.IsFilled() || _pattern.Matches(value.Items);
 
     [DebuggerDisplay("{DebugDisplay}")]
-    private record PatternRecord(
+    private sealed record PatternRecord(
         List<List<int>> Value,
-        HashSet<int> SelfValues,
-        HashSet<int> PassValues
+        NumberMask SelfValues,
+        NumberMask PassValues
     )
     {
         private string DebugDisplay =>
             string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
-
         private const int DontCare = -1;
         private const int Pass = -2;
         private const int Self = -3;
@@ -71,11 +61,8 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         public bool Matches(CyclicArray<int> value)
         {
             for (var i = 0; i < Value.Count; i++)
-            {
                 if (!RotationMatches(value, i))
                     return false;
-            }
-
             return true;
         }
 
@@ -83,13 +70,8 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         {
             var singleMatch = false;
             foreach (var patternValue in Value[i])
-            {
                 if (ValueSatisfiesPattern(siteswap[i], patternValue))
-                {
                     singleMatch = true;
-                }
-            }
-
             return singleMatch;
         }
 

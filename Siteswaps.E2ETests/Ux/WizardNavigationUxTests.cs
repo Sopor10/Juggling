@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using FluentAssertions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
@@ -62,6 +63,32 @@ public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<S
         await Assertions.Expect(wizard.Root).ToBeVisibleAsync();
         await Assertions.Expect(page).ToHaveURLAsync(WizardRootPath);
         await Assertions.Expect(wizard.ActiveProgressDot).ToBeVisibleAsync();
+        await wizard.ExpectStepAsync(2);
+        await Assertions.Expect(wizard.Results).ToBeHiddenAsync();
+    }
+
+    /// <summary>Summary: Horizontal swipe on the results list must return to the filter step.</summary>
+    [Fact]
+    public async Task Swipe_Right_On_Results_Restores_Filter_Step()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await WizardUxGeometry.EnsureMobileViewportAsync(page);
+        var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
+        await wizard.WaitUntilLoadedAsync();
+        await wizard.AdvanceToGenerateAsync();
+        await wizard.WaitForResultsAsync();
+
+        var resultsPanel = page.Locator("#wizard-panel-3");
+        await Assertions.Expect(resultsPanel).ToBeVisibleAsync();
+        var touchAction = await resultsPanel.EvaluateAsync<string>(
+            "el => getComputedStyle(el).touchAction"
+        );
+        touchAction
+            .Should()
+            .Be("pan-y", "results panel must yield horizontal gestures to wizard swipe");
+
+        await WizardUxGeometry.SwipeHorizontallyAsync(wizard.ResultsTitle, 160);
         await wizard.ExpectStepAsync(2);
         await Assertions.Expect(wizard.Results).ToBeHiddenAsync();
     }

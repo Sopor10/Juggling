@@ -1,20 +1,18 @@
-﻿using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
+using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 using Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal class PatternFilterHeuristicBuilder(IFilterBuilder filterBuilder)
+internal static class PatternFilterHeuristicBuilder
 {
-    private IFilterBuilder Builder { get; } = filterBuilder;
-
-    public ISiteswapFilter Build(IEnumerable<int> pattern)
+    public static ISiteswapFilter Build(IEnumerable<int> pattern)
     {
         var filter = GenerateAtLeastNumberFilter(pattern);
 
         return filter;
     }
 
-    private ISiteswapFilter GenerateAtLeastNumberFilter(IEnumerable<int> pattern)
+    private static AndFilter GenerateAtLeastNumberFilter(IEnumerable<int> pattern)
     {
         var result = new List<ISiteswapFilter>();
         foreach (

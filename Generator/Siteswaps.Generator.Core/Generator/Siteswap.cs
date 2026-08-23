@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Siteswaps.Generator.Core.Generator;
@@ -50,6 +50,8 @@ public record Siteswap
     {
         return ToString(Items).GetHashCode();
     }
+
+    internal static Siteswap CreateFromGenerated(ReadOnlySpan<int> items) => new(items.ToArray());
 
     public static Siteswap CreateFromCorrect(params int[] partialSiteswapItems) =>
         new(partialSiteswapItems.Select(x => (int)x).ToArray());

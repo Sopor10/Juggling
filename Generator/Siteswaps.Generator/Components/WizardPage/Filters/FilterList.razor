@@ -140,7 +140,10 @@ else
             EasyNumberFilter.NumberFilterType.AtLeast => L["At least"].Value,
             _ => "",
         };
-        return $"{comparison} {filter.Amount}× {filter.Throw.GetDisplayValue(true)}";
+        var core = $"{comparison} {filter.Amount}× {filter.Throw.GetDisplayValue(true)}";
+        return filter.JugglerIndex is { } juggler
+            ? L["{0} · juggler {1}", core, (char)('A' + juggler)].Value
+            : core;
     }
 
     private string DescribePattern(NewPatternFilterInformation filter)

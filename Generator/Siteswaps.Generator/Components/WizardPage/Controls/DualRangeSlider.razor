@@ -1,3 +1,4 @@
+@using System.Globalization
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 @inject IJSRuntime JsRuntime
@@ -13,14 +14,14 @@
         <label class="wizard-sr-only" for="@($"{Id}-a")">@MinLabel</label>
         <input @ref="_aInputRef" id="@($"{Id}-a")" type="range"
                class="wizard-dualrange-input @_aRoleClass"
-               min="@LowerBound" max="@UpperBound" value="@_a"
+               min="@LowerBound" max="@UpperBound" step="1" value="@_a"
                aria-label="@(_a <= _b ? MinLabel : MaxLabel)"
                @onpointerdown:stopPropagation="true"
                @oninput="OnAInput" />
         <label class="wizard-sr-only" for="@($"{Id}-b")">@MaxLabel</label>
         <input @ref="_bInputRef" id="@($"{Id}-b")" type="range"
                class="wizard-dualrange-input wizard-dualrange-input-b @_bRoleClass"
-               min="@LowerBound" max="@UpperBound" value="@_b"
+               min="@LowerBound" max="@UpperBound" step="1" value="@_b"
                aria-label="@(_b < _a ? MinLabel : MaxLabel)"
                @onpointerdown:stopPropagation="true"
                @oninput="OnBInput" />
@@ -80,14 +81,17 @@
     {
         get
         {
-            var lowP = ToPercent(SortedMin);
-            var highP = ToPercent(SortedMax);
-            return $"left:{lowP:0.##}%;width:{Math.Max(0, highP - lowP):0.##}%";
+            var (left, width) = DualRangeInclusive.Fill(
+                SortedMin,
+                SortedMax,
+                LowerBound,
+                UpperBound
+            );
+            var leftPercent = left.ToString("0.##", CultureInfo.InvariantCulture);
+            var widthPercent = width.ToString("0.##", CultureInfo.InvariantCulture);
+            return $"left:{leftPercent}%;width:{widthPercent}%";
         }
     }
-
-    private double ToPercent(int v) =>
-        UpperBound == LowerBound ? 0 : Math.Clamp((v - LowerBound) * 100.0 / (UpperBound - LowerBound), 0, 100);
 
     protected override void OnParametersSet()
     {

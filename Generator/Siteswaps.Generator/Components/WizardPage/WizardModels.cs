@@ -53,7 +53,7 @@ public sealed class WizardState
     public const int AbsoluteMaxThrowHeight = 50;
 
     /// <summary>
-    /// Highest throw height offered in the chip grid and state filter.
+    /// Highest throw height offered in the throws chip grid.
     /// Loaded from Settings (localStorage key "settings"); default matches SettingsDto.
     /// </summary>
     public int MaxThrowHeight { get; set; } = 13;

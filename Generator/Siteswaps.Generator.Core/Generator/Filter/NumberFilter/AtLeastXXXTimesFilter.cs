@@ -1,14 +1,15 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
+namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
-internal class AtLeastXXXTimesFilter(IEnumerable<int> number, int amount)
+internal sealed class AtLeastXXXTimesFilter(IEnumerable<int> number, int amount)
     : NumberFilter(number, amount)
 {
     private protected override bool CanFulfillNumberFilter(PartialSiteswap value)
     {
         int matches = 0;
-        foreach (var x in value.AsSpan())
+        for (var index = 0; index < value.Length; index++)
         {
-            if (x == -1 || Number.Contains(x))
+            var x = value.Items[index];
+            if (x == -1 || ContainsNumber(x))
             {
                 if (++matches >= Amount)
                     return true;

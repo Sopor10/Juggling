@@ -1,18 +1,14 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
-internal class FlexiblePatternFilter : ISiteswapFilter
+internal sealed class FlexiblePatternFilter : ISiteswapFilter
 {
-    //each position in a pattern can have multiple possible values
     private PatternRecord Pattern { get; }
     private List<PatternRecord> Patterns { get; }
-
     private int NumberOfJuggler { get; }
-
-    private HashSet<int> PassValues { get; }
-
-    private HashSet<int> SelfValues { get; }
+    private NumberMask PassValues { get; }
+    private NumberMask SelfValues { get; }
 
     public FlexiblePatternFilter(
         List<List<int>> pattern,
@@ -22,58 +18,47 @@ internal class FlexiblePatternFilter : ISiteswapFilter
     )
     {
         NumberOfJuggler = numberOfJuggler;
-        PassValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJuggler != 0)
-            .ToHashSet();
-        SelfValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJuggler == 0)
-            .ToHashSet();
-
+        PassValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJuggler != 0)
+        );
+        SelfValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJuggler == 0)
+        );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
-
         for (var i = 0; i < pattern.Count; i++)
         {
             var pos = isGlobalPattern ? i : i * numberOfJuggler % input.Period;
             p[pos] = pattern[i];
         }
-
         Pattern = new PatternRecord(p, SelfValues, PassValues);
         Patterns = new List<PatternRecord>();
-
         for (var i = 0; i < input.Period; i++)
-        {
-            var rotate = new PatternRecord(p.Rotate(i), SelfValues, PassValues);
-            Patterns.Add(rotate);
-        }
+            Patterns.Add(new PatternRecord(p.Rotate(i), SelfValues, PassValues));
     }
 
     public bool CanFulfill(PartialSiteswap value)
     {
         if (!value.IsFilled())
-        {
             return true;
-        }
-
-        for (int i = 0; i < Patterns.Count; i++)
-        {
+        for (var i = 0; i < Patterns.Count; i++)
             if (Patterns[i].Matches(value.Items))
                 return true;
-        }
         return false;
     }
 
     [DebuggerDisplay("{DebugDisplay}")]
-    private record PatternRecord(
+    private sealed record PatternRecord(
         List<List<int>> Value,
-        HashSet<int> SelfValues,
-        HashSet<int> PassValues
+        NumberMask SelfValues,
+        NumberMask PassValues
     )
     {
         private string DebugDisplay =>
             string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
-
         private const int DontCare = -1;
         private const int Pass = -2;
         private const int Self = -3;
@@ -81,11 +66,8 @@ internal class FlexiblePatternFilter : ISiteswapFilter
         public bool Matches(CyclicArray<int> value)
         {
             for (var i = 0; i < Value.Count; i++)
-            {
                 if (!RotationMatches(value, i))
                     return false;
-            }
-
             return true;
         }
 
@@ -93,13 +75,8 @@ internal class FlexiblePatternFilter : ISiteswapFilter
         {
             var singleMatch = false;
             foreach (var patternValue in Value[i])
-            {
                 if (ValueSatisfiesPattern(siteswap[i], patternValue))
-                {
                     singleMatch = true;
-                }
-            }
-
             return singleMatch;
         }
 
