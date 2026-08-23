@@ -6,10 +6,7 @@ internal sealed class StateFilter(SiteswapGeneratorInput generatorInput, State s
     : ISiteswapFilter
 {
     private readonly int maxHeight = generatorInput.MaxHeight;
-    private PartialSiteswap? cachedSiteswap;
-    private int cachedMutationVersion = -1;
-    private ulong cachedMatchMask;
-    private bool[]? cachedMatches;
+    private readonly StateMatchCache cachedMatches = new();
 
     public bool CanFulfill(PartialSiteswap value)
     {
@@ -18,8 +15,7 @@ internal sealed class StateFilter(SiteswapGeneratorInput generatorInput, State s
             return true;
         }
 
-        EnsureCachedMatches(value);
-        return IsMatch(value.RotationIndex);
+        return cachedMatches.IsMatch(value, value.RotationIndex, maxHeight, state.Value);
     }
 
     public bool CanFulfillAnyRotation(PartialSiteswap value)
@@ -29,50 +25,8 @@ internal sealed class StateFilter(SiteswapGeneratorInput generatorInput, State s
             return true;
         }
 
-        EnsureCachedMatches(value);
-        return cachedMatches is null
-            ? cachedMatchMask != 0
-            : Array.Exists(cachedMatches, match => match);
+        return cachedMatches.AnyRotation(value, maxHeight, state.Value);
     }
-
-    private void EnsureCachedMatches(PartialSiteswap value)
-    {
-        if (
-            ReferenceEquals(cachedSiteswap, value)
-            && cachedMutationVersion == value.MutationVersion
-        )
-        {
-            return;
-        }
-
-        var stateValue = State.CalculateStateValue(value, maxHeight);
-        ulong matchMask = 0;
-        bool[]? matches = value.Length > sizeof(ulong) * 8 ? new bool[value.Length] : null;
-        for (var rotation = 0; rotation < value.Length; rotation++)
-        {
-            var matchesState = state.Value == stateValue;
-            if (matches is null)
-            {
-                if (matchesState)
-                    matchMask |= 1UL << rotation;
-            }
-            else
-            {
-                matches[rotation] = matchesState;
-            }
-            stateValue = State.Advance(stateValue, value.Items[rotation]);
-        }
-
-        cachedSiteswap = value;
-        cachedMutationVersion = value.MutationVersion;
-        cachedMatchMask = matchMask;
-        cachedMatches = matches;
-    }
-
-    private bool IsMatch(int rotation) =>
-        cachedMatches is null
-            ? (cachedMatchMask & (1UL << rotation)) != 0
-            : cachedMatches[rotation];
 
     public int Order => 5;
     public bool CanRejectPartial => false;
