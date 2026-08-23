@@ -247,9 +247,7 @@ internal static class GenerationScenarioFactory
             }
         );
 
-    private static AndFilter CreateNestedNumberPassesPersonalized(
-        SiteswapGeneratorInput input
-    ) =>
+    private static AndFilter CreateNestedNumberPassesPersonalized(SiteswapGeneratorInput input) =>
         new AndFilter(
             new ISiteswapFilter[]
             {
