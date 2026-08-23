@@ -48,7 +48,26 @@ The scenario catalog is shared by QuickBench and BenchmarkDotNet. The latest Qui
 | `OrFilter` | period 10, 6 objects, exact-six or at-most-two-fives | `OrFilter` | 1,000 |
 | `NotFilter` | period 10, 6 objects, not at-most-zero-fives | `NotFilter` | 1,000 |
 
-The five original performance-comparison scenarios remain the primary before/after gate. The additional nine scenarios extend filter coverage and are measured as real generation workloads; their baseline comparison is maintained separately from the original optimization table.
+The five original performance-comparison scenarios remain the primary optimization gate. A complete 14-scenario baseline/current comparison is stored in `PERFORMANCE-baseline.json` and was measured with the same `ShortRun` configuration and the same scenario catalog:
+
+| Scenario | Baseline | Current | Speedup | Results |
+|---|---:|---:|---:|---:|
+| `LargeNoFilter` | 4.846 ms | 1.861 ms | **61.60%** | 8,946 |
+| `PatternFilter` | 33.844 ms | 14.870 ms | **56.06%** | 1,000 |
+| `NumberFilter` | 2.219 ms | 642.1 µs | **71.06%** | 1,000 |
+| `StateDontCareFilter` | 694.3 µs | 119.3 µs | **82.82%** | 1,000 |
+| `StateSelectiveFilter` | 194.960 ms | 38.356 ms | **80.33%** | 0 |
+| `NumberAtMostFilter` | 517.6 µs | 170.2 µs | **67.12%** | 1,000 |
+| `ExactStateFilter` | 1.452 ms | 297.4 µs | **79.51%** | 1,000 |
+| `NumberOfPassesFilter` | 805.8 µs | 536.6 µs | **33.41%** | 564 |
+| `DefaultBallCountFilter` | 388.7 µs | 125.6 µs | **67.69%** | 1,000 |
+| `PersonalizedNumberFilter` | 1.481 ms | 992.3 µs | **33.01%** | 1,000 |
+| `RotationAwarePatternFilter` | 430.7 µs | 167.6 µs | **61.09%** | 1,000 |
+| `LocallyValidFilter` | 745.7 µs | 686.7 µs | **7.91%** | 225 |
+| `OrFilter` | 777.7 µs | 288.3 µs | **62.93%** | 1,000 |
+| `NotFilter` | 427.3 µs | 183.5 µs | **57.06%** | 1,000 |
+
+The original five-scenario aggregate remains **75.16% faster**. The complete filter-coverage catalog is not yet a 50%-faster gate: `NumberOfPassesFilter`, `PersonalizedNumberFilter`, and `LocallyValidFilter` require separate optimization work. The baseline JSON also records error, standard deviation, managed allocations, runtime, runner, commits, and result counts for reproducible future comparisons.
 
 ## Filter coverage matrix
 
@@ -109,3 +128,4 @@ Each candidate follows the same loop:
 5. Keep the change only when the intended workload improves without unacceptable regressions; otherwise revert it.
 
 A lazy recursive generator was tested as a main-flow improvement. It was rejected because iterator state-machine allocations caused a large regression in `PatternFilter`, despite helping one state scenario. Reordering the object-count filter was also rejected after an identical-condition BDN comparison increased the selective workload from 77.61 ms to 81.51 ms. These rejected experiments are intentionally not part of the final code.
+
