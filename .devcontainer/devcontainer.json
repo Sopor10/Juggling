@@ -30,7 +30,7 @@
     "PI_PROVIDER": "openai-codex",
     "PI_MODEL": "gpt-5.6-luna"
   },
-  "initializeCommand": "install -D -m 600 /dev/null \"${localEnv:HOME}/.hermes/auth.json\"",
+  "initializeCommand": "test -e \"${localEnv:HOME}/.hermes/auth.json\" || install -D -m 600 /dev/null \"${localEnv:HOME}/.hermes/auth.json\"",
   "onCreateCommand": "bash .devcontainer/onCreate.sh",
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
   "postStartCommand": "bash .devcontainer/postStart.sh",
