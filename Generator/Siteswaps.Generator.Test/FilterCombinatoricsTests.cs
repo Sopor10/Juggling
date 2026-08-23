@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 
 namespace Siteswaps.Generator.Test;
@@ -92,5 +93,35 @@ public class FilterCombinatoricsTests
         var sut = new NotFilter(new RecordingFilter(false, isRotationAware: true));
 
         sut.IsRotationAware.Should().BeTrue();
+    }
+
+    [Test]
+    public void AndFilter_Queries_A_RotationAware_Filter_That_Can_Reject_Partial()
+    {
+        var sut = new AndFilter(new RecordingFilter(false, isRotationAware: true));
+
+        sut.CanFulfillAnyRotation(new PartialSiteswap(new[] { -1 })).Should().BeFalse();
+    }
+
+    [Test]
+    public void AndFilter_Skips_A_RotationAware_Filter_That_Cannot_Reject_Partial()
+    {
+        var sut = new AndFilter(new PartialSafeRotationFilter());
+
+        sut.CanFulfillAnyRotation(new PartialSiteswap(new[] { -1 })).Should().BeTrue();
+    }
+
+    private sealed class PartialSafeRotationFilter : ISiteswapFilter
+    {
+        public bool CanFulfill(PartialSiteswap value)
+        {
+            if (!value.IsFilled())
+                throw new InvalidOperationException("Partial values must be skipped.");
+
+            return true;
+        }
+
+        public bool IsRotationAware => true;
+        public bool CanRejectPartial => false;
     }
 }

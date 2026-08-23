@@ -96,4 +96,5 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
     }
 
     public int Order => 10;
+    public bool CanRejectPartial => false;
 }

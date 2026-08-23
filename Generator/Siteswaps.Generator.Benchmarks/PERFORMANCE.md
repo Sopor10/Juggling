@@ -97,10 +97,11 @@ Die frühere `CollectionsMarshal.AsSpan`-Variante bleibt verworfen: der vergleic
 
 ## Follow-up optimization in the separate PR
 
-This follow-up is based on the current PR head but is intentionally kept on a separate branch and pull request. Two measured hot-loop changes were retained:
+This follow-up is based on the current PR head but is intentionally kept on a separate branch and pull request. Three measured hot-loop changes were retained:
 
 1. `AndFilter` partitions rotation-invariant and rotation-aware filters once in its constructor. `CanFulfillAnyRotation` no longer checks `IsRotationAware` for every filter on every rotation.
 2. `FlexiblePatternFilter` and `RotationAwareFlexiblePatternFilter` skip the common singleton `DontCare` pattern position directly in their existing loop. No additional per-filter position array is allocated.
+3. An explicit `CanRejectPartial` capability allows filters that cannot reject a partial prefix to be skipped safely until the Siteswap is filled. Unknown/custom filters retain the conservative default and are still evaluated.
 
 On the identical fixed-count stress profile (period 30, 30 objects, heights 0–40, 2,000 filters, 300 results), the measured means were:
 
@@ -108,9 +109,10 @@ On the identical fixed-count stress profile (period 30, 30 objects, heights 0–
 |---|---:|---:|
 | Existing PR baseline | 4.756 s | approximately 1.9 MB |
 | Filter-list partitioning | 3.604 s | 1.93 MB |
-| Plus singleton `DontCare` skip | **3.361 s** | **1.93 MB** |
+| Plus singleton `DontCare` skip | 3.361 s | 1.93 MB |
+| Plus safe partial-prefix capability | **673.1 ms** | **1.92 MB** |
 
-This is a measured **29.33%** improvement over the existing PR baseline. The final time-bound profile remains intact: Benchmark.NET measured **6.005 s** with the six-second stop criterion, and the latest full QuickBench catalog produced **5,184 filtered results** while all existing result counts remained unchanged. The new wildcard behavior is covered by a regression test; the full test run passed **240 tests** with **3 skips**.
+This is a measured **85.85%** improvement over the existing PR baseline. The final time-bound profile remains intact: Benchmark.NET measured **6.005 s** with the six-second stop criterion, and the latest full QuickBench catalog produced **14,225 filtered results** while all existing result counts remained unchanged. Capability-specific tests cover both filters that must still be queried on partial values and filters that explicitly opt into the safe skip. The full test run passed **242 tests** with **3 skips**.
 
 ## Filter coverage matrix
 

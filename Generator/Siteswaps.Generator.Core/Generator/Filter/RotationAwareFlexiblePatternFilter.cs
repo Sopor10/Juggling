@@ -91,5 +91,6 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
     }
 
     public int Order => 10;
+    public bool CanRejectPartial => false;
     public bool IsRotationAware => true;
 }
