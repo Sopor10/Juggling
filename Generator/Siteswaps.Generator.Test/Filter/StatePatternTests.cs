@@ -25,6 +25,16 @@ public class StatePatternTests
     }
 
     [Test]
+    public void An_Unconstrained_State_Pattern_Does_Not_Require_Rotations()
+    {
+        var filter = new FilterBuilder(new SiteswapGeneratorInput(3, 2, 1, 3))
+            .WithState(new StatePattern([StateValue.DontCare, StateValue.DontCare]))
+            .Build();
+
+        filter.IsRotationAware.Should().BeFalse();
+    }
+
+    [Test]
     public void Builder_Uses_DontCare_State_Patterns()
     {
         var pattern = new StatePattern([

@@ -35,6 +35,24 @@ public class StateTests
     }
 
     [Test]
+    public void CalculateState_Uses_The_Current_Rotation()
+    {
+        var siteswap = new PartialSiteswap([3, 4, 3]) { RotationIndex = 1 };
+
+        State.CalculateState(siteswap, 4).ToString().Should().Be("011");
+    }
+
+    [TestCase(new[] { 5, 4, 5, 4 }, "0101")]
+    [TestCase(new[] { 2, 5, 3, 4, 2 }, "111")]
+    public void CalculateState_Reaches_Stable_State_For_Multiple_Height_Classes(
+        int[] siteswap,
+        string expected
+    )
+    {
+        State.CalculateState(new PartialSiteswap(siteswap), 10).ToString().Should().Be(expected);
+    }
+
+    [Test]
     public void StateFilter_Advertises_Rotation_Awareness()
     {
         var input = new SiteswapGeneratorInput(3, 3, 0, 10);
@@ -47,7 +65,7 @@ public class StateTests
     }
 
     [Test]
-    public void NumberFilter_Advertises_Rotation_Awareness()
+    public void NumberFilter_Is_Rotation_Invariant()
     {
         var input = new SiteswapGeneratorInput(3, 3, 0, 10);
 
@@ -55,6 +73,6 @@ public class StateTests
             .MinimumOccurence(new[] { 1 }, 1)
             .Build()
             .IsRotationAware.Should()
-            .BeTrue();
+            .BeFalse();
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Siteswaps.Generator.Core.Generator.Filter;
 using Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 
@@ -11,12 +11,14 @@ public class SiteswapGenerator
 
     public SiteswapGenerator(ISiteswapFilter filter, SiteswapGeneratorInput input)
     {
-        Filter = new AndFilter(filter, new RightAmountOfBallsFilter(input));
+        Filter = filter;
+        FilterAlwaysAccepts = filter is NoFilter;
         Input = input;
         PartialSiteswap = PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
     }
 
     private ISiteswapFilter Filter { get; }
+    private bool FilterAlwaysAccepts { get; }
     private SiteswapGeneratorInput Input { get; }
     private PartialSiteswap PartialSiteswap { get; }
 
@@ -87,19 +89,13 @@ public class SiteswapGenerator
                 continue;
 
             bool canFulfill;
-            if (Filter.IsRotationAware)
+            if (FilterAlwaysAccepts)
             {
-                canFulfill = false;
-                for (int j = 0; j < PartialSiteswap.LastFilledPosition + 1; j++)
-                {
-                    PartialSiteswap.RotationIndex = j;
-                    if (Filter.CanFulfill(PartialSiteswap))
-                    {
-                        canFulfill = true;
-                        break;
-                    }
-                }
-                PartialSiteswap.RotationIndex = 0;
+                canFulfill = true;
+            }
+            else if (Filter.IsRotationAware)
+            {
+                canFulfill = Filter.CanFulfillAnyRotation(PartialSiteswap);
             }
             else
             {
@@ -113,11 +109,15 @@ public class SiteswapGenerator
 
             if (PartialSiteswap.IsFilled())
             {
+                if (PartialSiteswap.PartialSum != targetSum)
+                {
+                    PartialSiteswap.ResetCurrentPosition();
+                    continue;
+                }
+
                 if (PartialSiteswap.Items[^1] != uniqueMax)
                 {
-                    results.Add(
-                        Siteswap.CreateFromCorrect(PartialSiteswap.Items.AsSpan().ToArray())
-                    );
+                    results.Add(Siteswap.CreateFromGenerated(PartialSiteswap.AsSpan()));
                 }
                 PartialSiteswap.ResetCurrentPosition();
                 continue;
@@ -135,13 +135,11 @@ public class SiteswapGenerator
         int interfaceIndex = Input.Period + Input.MaxHeight - 2;
         for (int i = Input.Period - 1; i >= fromIndex; i--)
         {
-            while (PartialSiteswap.Interface[interfaceIndex] != -1)
-            {
-                interfaceIndex--;
-                if (interfaceIndex < i)
-                    return 0;
-            }
-            maxSum += (interfaceIndex - i);
+            interfaceIndex = PartialSiteswap.FindFreeLandingAtOrBefore(interfaceIndex, i);
+            if (interfaceIndex < i)
+                return 0;
+
+            maxSum += interfaceIndex - i;
             interfaceIndex--;
         }
         return maxSum;
@@ -153,13 +151,14 @@ public class SiteswapGenerator
         int interfaceIndex = fromIndex + Input.MinHeight;
         for (int i = fromIndex; i < Input.Period; i++)
         {
-            while (PartialSiteswap.Interface[interfaceIndex] != -1)
-            {
-                interfaceIndex++;
-                if ((interfaceIndex - i) > Input.MaxHeight)
-                    return int.MaxValue;
-            }
-            minSum += (interfaceIndex - i);
+            interfaceIndex = PartialSiteswap.FindFreeLandingAtOrAfter(
+                interfaceIndex,
+                i + Input.MaxHeight
+            );
+            if (interfaceIndex == int.MaxValue)
+                return int.MaxValue;
+
+            minSum += interfaceIndex - i;
             interfaceIndex++;
         }
         return minSum;
