@@ -38,7 +38,7 @@ public record FilterBuilder(SiteswapGeneratorInput Input) : IFilterBuilder
     public IFilterBuilder ExactNumberOfPasses(int numberOfPasses, int numberOfJugglers) =>
         this with
         {
-            Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers)),
+            Filter = Filter.Add(new NumberOfPassesFilter(numberOfPasses, numberOfJugglers, Input)),
         };
 
     public IFilterBuilder And(params IEnumerable<ISiteswapFilter> filter) =>

@@ -102,6 +102,19 @@ public class GeneratorFilterBoundaryTests
     }
 
     [Test]
+    public void Rotation_Aware_Flexible_Pattern_Accepts_A_DontCare_Position()
+    {
+        var sut = new RotationAwareFlexiblePatternFilter(
+            new List<List<int>> { new() { -1 } },
+            2,
+            new SiteswapGeneratorInput(2, 3, 1, 70),
+            0
+        );
+
+        sut.CanFulfill(new PartialSiteswap(new[] { 65, 66 })).Should().BeTrue();
+    }
+
+    [Test]
     public void Rotation_Aware_Flexible_Pattern_Accepts_The_Juggler_Position()
     {
         var sut = new RotationAwareFlexiblePatternFilter(

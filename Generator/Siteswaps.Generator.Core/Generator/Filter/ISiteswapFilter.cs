@@ -8,6 +8,8 @@ public interface ISiteswapFilter
 
     public bool IsRotationAware => false;
 
+    public bool CanRejectPartial => true;
+
     public bool CanFulfillAnyRotation(PartialSiteswap value)
     {
         if (!IsRotationAware)

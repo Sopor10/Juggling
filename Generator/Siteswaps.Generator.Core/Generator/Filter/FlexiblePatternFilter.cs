@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Siteswaps.Generator.Core.Generator.Filter;
 
 internal sealed class FlexiblePatternFilter : ISiteswapFilter
@@ -18,15 +16,10 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
     )
     {
         NumberOfJuggler = numberOfJuggler;
-        PassValues = new NumberMask(
-            Enumerable
-                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-                .Where(x => x % NumberOfJuggler != 0)
-        );
-        SelfValues = new NumberMask(
-            Enumerable
-                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-                .Where(x => x % NumberOfJuggler == 0)
+        (PassValues, SelfValues) = NumberMaskFactory.Create(
+            input.MinHeight,
+            input.MaxHeight,
+            NumberOfJuggler
         );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
         for (var i = 0; i < pattern.Count; i++)
@@ -50,45 +43,6 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
         return false;
     }
 
-    [DebuggerDisplay("{DebugDisplay}")]
-    private sealed record PatternRecord(
-        List<List<int>> Value,
-        NumberMask SelfValues,
-        NumberMask PassValues
-    )
-    {
-        private string DebugDisplay =>
-            string.Join(" ", Value.Select(x => "{" + string.Join(",", x) + "}"));
-        private const int DontCare = -1;
-        private const int Pass = -2;
-        private const int Self = -3;
-
-        public bool Matches(CyclicArray<int> value)
-        {
-            for (var i = 0; i < Value.Count; i++)
-                if (!RotationMatches(value, i))
-                    return false;
-            return true;
-        }
-
-        private bool RotationMatches(CyclicArray<int> siteswap, int i)
-        {
-            var singleMatch = false;
-            foreach (var patternValue in Value[i])
-                if (ValueSatisfiesPattern(siteswap[i], patternValue))
-                    singleMatch = true;
-            return singleMatch;
-        }
-
-        private bool ValueSatisfiesPattern(int siteswapValue, int patternValue) =>
-            patternValue switch
-            {
-                DontCare => true,
-                Pass => PassValues.Contains(siteswapValue),
-                Self => SelfValues.Contains(siteswapValue),
-                _ => siteswapValue == patternValue,
-            };
-    }
-
     public int Order => 10;
+    public bool CanRejectPartial => false;
 }
