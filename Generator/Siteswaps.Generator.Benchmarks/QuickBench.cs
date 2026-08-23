@@ -60,7 +60,7 @@ public static class QuickBench
     {
         for (var warmup = 0; warmup < 2; warmup++)
         {
-            foreach (var _ in GenerationScenarioFactory.Create(scenario).Generate()) { }
+            _ = GenerationScenarioFactory.Create(scenario).Generate().Count();
         }
 
         var samples = new List<Sample>();
@@ -68,10 +68,6 @@ public static class QuickBench
         var resultCount = -1;
         for (var run = 0; run < 5; run++)
         {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
             using var process = Process.GetCurrentProcess();
             process.Refresh();
             var startCpu = process.TotalProcessorTime;

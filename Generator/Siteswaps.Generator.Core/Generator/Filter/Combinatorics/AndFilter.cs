@@ -31,7 +31,7 @@ public class AndFilter : ISiteswapFilter
     {
         foreach (var filter in Filters)
         {
-            if (!filter.IsRotationAware && filter.CanFulfill(value) is false)
+            if (!filter.IsRotationAware && !filter.CanFulfill(value))
             {
                 return false;
             }
@@ -44,7 +44,7 @@ public class AndFilter : ISiteswapFilter
             var rotationMatches = true;
             foreach (var filter in Filters)
             {
-                if (filter.IsRotationAware && filter.CanFulfill(value) is false)
+                if (filter.IsRotationAware && !filter.CanFulfill(value))
                 {
                     rotationMatches = false;
                     break;

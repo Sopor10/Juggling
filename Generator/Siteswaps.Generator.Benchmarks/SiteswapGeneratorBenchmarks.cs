@@ -27,7 +27,8 @@ public enum GenerationScenario
 [ShortRunJob]
 public class SiteswapGeneratorBenchmarks
 {
-    private Func<SiteswapGenerator> createGenerator = null!;
+    private Func<SiteswapGenerator> createGenerator = () =>
+        throw new InvalidOperationException("Benchmark setup has not run.");
 
     [ParamsSource(nameof(Scenarios))]
     public GenerationScenario Scenario { get; set; }

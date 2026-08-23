@@ -101,10 +101,10 @@ internal static class GenerationScenarioFactory
             ),
             GenerationScenario.LocallyValidFilter => new LocallyValidFilter(2, 0),
             GenerationScenario.OrFilter => new FilterBuilder(input)
-                .Or([
+                .Or(
                     new FilterBuilder(input).ExactOccurence([6], 6).Build(),
-                    new FilterBuilder(input).MaximumOccurence([5], 2).Build(),
-                ])
+                    new FilterBuilder(input).MaximumOccurence([5], 2).Build()
+                )
                 .Build(),
             GenerationScenario.NotFilter => new FilterBuilder(input)
                 .Not(new FilterBuilder(input).MaximumOccurence([5], 0).Build())
@@ -231,26 +231,30 @@ internal static class GenerationScenarioFactory
 
     private static SiteswapGeneratorInput CreateInput(GenerationScenario scenario)
     {
-        return scenario is GenerationScenario.LargeNoFilter
-                ? new SiteswapGeneratorInput(7, 8, 2, 13)
-                {
-                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100_000),
-                }
-            : scenario is GenerationScenario.LocallyValidFilter
-                ? new SiteswapGeneratorInput(6, 6, 0, 10)
-                {
-                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
-                }
-            : scenario
-                is GenerationScenario.HighDimensionalFilteredStress
-                    or GenerationScenario.HighDimensionalNoFilterStress
-                ? new SiteswapGeneratorInput(30, 30, 0, 40)
-                {
-                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(6), 14_000_000),
-                }
-            : new SiteswapGeneratorInput(10, 6, 2, 10)
+        return scenario switch
+        {
+            GenerationScenario.LargeNoFilter => new SiteswapGeneratorInput(7, 8, 2, 13)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 100_000),
+            },
+            GenerationScenario.LocallyValidFilter => new SiteswapGeneratorInput(6, 6, 0, 10)
             {
                 StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
-            };
+            },
+            GenerationScenario.HighDimensionalFilteredStress
+            or GenerationScenario.HighDimensionalNoFilterStress => new SiteswapGeneratorInput(
+                30,
+                30,
+                0,
+                40
+            )
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(6), 14_000_000),
+            },
+            _ => new SiteswapGeneratorInput(10, 6, 2, 10)
+            {
+                StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
+            },
+        };
     }
 }

@@ -29,7 +29,7 @@ public record CyclicArray<T> : IEnumerable<T>
     private int GetStorageIndex(int index)
     {
         index += RotationIndex;
-        if ((uint)index < (uint)Items.Length)
+        if (index >= 0 && index < Items.Length)
             return index;
 
         index %= Items.Length;
