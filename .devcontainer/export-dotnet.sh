@@ -1,4 +1,3 @@
-# Shared by Dev Container lifecycle scripts. dotnetup cannot write to
-# /usr/share/dotnet (system-managed), so the SDK lives in $HOME/.dotnet.
-export DOTNET_ROOT="${HOME}/.dotnet"
+# The lifecycle installs the pinned SDK in the image's shared directory.
+export DOTNET_ROOT="/usr/share/dotnet"
 export PATH="${DOTNET_ROOT}:${HOME}/.dotnet/tools:${PATH}"
