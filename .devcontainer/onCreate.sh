@@ -30,4 +30,4 @@ bash "${DOTNET_INSTALL_SCRIPT}" \
 
 export PATH="${DOTNET_ROOT}:${HOME}/.dotnet/tools:${PATH}"
 dotnet --info
-dotnet workload restore || true
+ dotnet workload restore || true
