@@ -29,7 +29,12 @@ sudo install -m 0755 .devcontainer/pi-wrapper.sh "${PI_WRAPPER}"
 sudo install -m 0755 .devcontainer/pi-codex-sync.sh /usr/local/bin/pi-codex-sync
 sudo ln -sfn "${PI_REAL_BIN}" /usr/local/bin/pi-agent
 
-# Convert the host's Codex login into Pi's auth format. No login prompt is used.
-pi-codex-sync
+# Convert the host's Hermes Codex login into Pi's auth format when one is available.
+# CI creates an empty placeholder for the read-only mount but has no login.
+if [[ -s /host-hermes-auth.json ]]; then
+  pi-codex-sync
+else
+  echo "No host Hermes Codex auth found; skipping Pi auth sync (Pi remains installed)."
+fi
 
-pi --version
+"${PI_REAL_BIN}" --version
