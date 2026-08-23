@@ -111,6 +111,14 @@ public class FilterCombinatoricsTests
         sut.CanFulfillAnyRotation(new PartialSiteswap(new[] { -1 })).Should().BeTrue();
     }
 
+    [Test]
+    public void OrFilter_Cannot_Reject_Partial_When_One_Child_Cannot()
+    {
+        var sut = new OrFilter(new PartialSafeRotationFilter(), new RecordingFilter(false));
+
+        sut.CanRejectPartial.Should().BeFalse();
+    }
+
     private sealed class PartialSafeRotationFilter : ISiteswapFilter
     {
         public bool CanFulfill(PartialSiteswap value)

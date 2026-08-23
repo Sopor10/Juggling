@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
+namespace Siteswaps.Generator.Core.Generator.Filter.Combinatorics;
 
 public class OrFilter : ISiteswapFilter
 {
@@ -14,5 +14,6 @@ public class OrFilter : ISiteswapFilter
     public bool CanFulfill(PartialSiteswap value) => Filters.Any(x => x.CanFulfill(value));
 
     public int Order => 0;
+    public bool CanRejectPartial => Filters.All(filter => filter.CanRejectPartial);
     public bool IsRotationAware => _isRotationAware;
 }

@@ -49,6 +49,11 @@ The scenario catalog is shared by QuickBench and BenchmarkDotNet. The latest Qui
 | `NotFilter` | period 10, 6 objects, not at-most-zero-fives | `NotFilter` | 1,000 |
 | `HighDimensionalFilteredStress` | period 30, 30 objects, heights 0–40, 2 jugglers, 2,000 rotation-aware filters, time-bound 6 s | `FlexiblePatternFilter`, Number filters, `StatePatternFilter`, `PersonalizedNumberFilter`, `NotFilter`, `RotationAwareFlexiblePatternFilter`, `WithDefault()` | minimum 300 |
 | `HighDimensionalNoFilterStress` | period 30, 30 objects, heights 0–40, no filters, time-bound 6 s | `NoFilter` | minimum 300,000 |
+| `NestedAndNumberPattern` | period 10, 6 objects, five nested leaves | nested `And`, Number, Pattern, Default, Not | 1,000 |
+| `NestedOrNotState` | period 10, 6 objects, five nested leaves | nested `Or`, `And`, `Not`, Number, Pattern, Default | 1,000 |
+| `NestedStateAndPattern` | period 10, 6 objects, five nested leaves | nested `And`, `Or`, State, Pattern, Number, Default | 1,000 |
+| `NestedDeepMixed` | period 10, 6 objects, seven nested leaves | deep `And`, `Or`, `Not`, Number, Passes, Pattern, Default | 1,000 |
+| `NestedNumberPassesPersonalized` | period 10, 6 objects, seven nested leaves | nested Number, Passes, Personalized, Pattern, Default, Not | 1,000 |
 
 The five original performance-comparison scenarios remain the primary optimization gate. A complete 14-scenario baseline/current comparison is stored in `PERFORMANCE-baseline.json` and was measured with the same `ShortRun` configuration and the same scenario catalog:
 
@@ -114,6 +119,22 @@ On the identical fixed-count stress profile (period 30, 30 objects, heights 0–
 
 This is a measured **85.85%** improvement over the existing PR baseline. The final time-bound profile remains intact: Benchmark.NET measured **6.005 s** with the six-second stop criterion, and the latest full QuickBench catalog produced **14,225 filtered results** while all existing result counts remained unchanged. Capability-specific tests cover both filters that must still be queried on partial values and filters that explicitly opt into the safe skip. The full test run passed **242 tests** with **3 skips**.
 
+## Nested-filter bottleneck analysis
+
+Five additional scenarios use only 5–7 leaf filters but deliberately nest `And`, `Or`, and `Not` compositions. All produce exactly 1,000 results. Benchmark.NET measurements on .NET 10.0.11 were:
+
+| Scenario | Mean | Allocated |
+|---|---:|---:|
+| `NestedAndNumberPattern` | 487.0 µs | 106.99 KB |
+| `NestedOrNotState` | 295.9 µs | 358.54 KB |
+| `NestedStateAndPattern` | 457.5 µs | 378.02 KB |
+| `NestedDeepMixed` | 480.1 µs | 136.3 KB |
+| `NestedNumberPassesPersonalized` | **587.3 µs** | 370.44 KB |
+
+The current CPU bottleneck among typical nested compositions is `NestedNumberPassesPersonalized`. The largest allocation signal is `NestedStateAndPattern`, followed by `NestedNumberPassesPersonalized` and `NestedOrNotState`. The `OrFilter` partial-capability fix reduced `NestedDeepMixed` from roughly 772 µs / 529.79 KB to 480.1 µs / 136.3 KB.
+
+This points to two next investigation areas: safe early exits inside Number/Passes/Personalized leaves, and repeated allocation/dispatch in nested State/Number compositions. Broad filter fusion and automatic tree flattening remain out of scope because earlier experiments regressed the measured catalog and can change short-circuit semantics.
+
 ## Filter coverage matrix
 
 | Filter class | Scenario | Coverage |
@@ -154,7 +175,7 @@ The sum of the five means fell from 216.873 ms to 53.867 ms (**75.16% faster**).
 
 1. `CyclicArray` uses an in-range branch before modulo and correctly normalizes negative rotations.
 2. `PartialSiteswap` tracks landing occupancy in a `ulong` bitset for periods up to 64. Collision checks and bound searches avoid repeated cyclic-array reads; larger periods retain the safe fallback.
-3. `FillCurrentPosition` rejects landing collisions before mutating the partial state. Setter updates reuse the normalized landing index.
+3. `FillCurrentPosition` rejects landing collisions before mutating the partial state. Setter updates reuse the normalized landing indexes.
 4. `SiteswapGenerator` skips filter dispatch for `NoFilter`, performs the ball-count check only at completed leaves, and uses bitset-backed bound searches.
 5. `NumberFilter` is rotation-invariant and specializes the common single-number case to direct integer comparison. A single filter is no longer wrapped in an unnecessary `AndFilter`.
 6. Generated Siteswaps use a dedicated span-based construction path. The previous path created an array for `AsSpan().ToArray()` and then copied it again through `CreateFromCorrect(params ...)`; the new path performs one defensive copy.
