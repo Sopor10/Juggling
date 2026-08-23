@@ -47,7 +47,8 @@ The scenario catalog is shared by QuickBench and BenchmarkDotNet. The latest Qui
 | `LocallyValidFilter` | period 6, 6 objects, heights 0–10 | `LocallyValidFilter` | 225 |
 | `OrFilter` | period 10, 6 objects, exact-six or at-most-two-fives | `OrFilter` | 1,000 |
 | `NotFilter` | period 10, 6 objects, not at-most-zero-fives | `NotFilter` | 1,000 |
-| `HighDimensionalFilteredStress` | period 30, 30 objects, heights 0–40, 2 jugglers, 2,500 rotation-aware filters | `FlexiblePatternFilter`, Number filters, `StatePatternFilter`, `PersonalizedNumberFilter`, `NotFilter`, `RotationAwareFlexiblePatternFilter`, `WithDefault()` | 300 |
+| `HighDimensionalFilteredStress` | period 30, 30 objects, heights 0–40, 2 jugglers, 2,000 rotation-aware filters, time-bound 6 s | `FlexiblePatternFilter`, Number filters, `StatePatternFilter`, `PersonalizedNumberFilter`, `NotFilter`, `RotationAwareFlexiblePatternFilter`, `WithDefault()` | minimum 300 |
+| `HighDimensionalNoFilterStress` | period 30, 30 objects, heights 0–40, no filters, time-bound 6 s | `NoFilter` | minimum 300,000 |
 
 The five original performance-comparison scenarios remain the primary optimization gate. A complete 14-scenario baseline/current comparison is stored in `PERFORMANCE-baseline.json` and was measured with the same `ShortRun` configuration and the same scenario catalog:
 
@@ -70,21 +71,29 @@ The five original performance-comparison scenarios remain the primary optimizati
 
 The original five-scenario aggregate remains **75.16% faster**. The complete filter-coverage catalog is not yet a 50%-faster gate: `NumberOfPassesFilter`, `PersonalizedNumberFilter`, and `LocallyValidFilter` require separate optimization work. The baseline JSON also records error, standard deviation, managed allocations, runtime, runner, commits, and result counts for reproducible future comparisons.
 
-## High-dimensional stress workload
+## High-dimensional stress workloads
 
-`HighDimensionalFilteredStress` is the long-running stress gate. It deliberately uses a period and ball count of 30, maximum height 40, and person-aware filters configured for 2 jugglers. Position 0 allows only even throws, so not all throws are allowed. The filter composition includes Number, Pattern, State, Personalized, Default, Not, and 2,500 independent rotation-aware pattern filters. The stop criterion is exactly 300 generated Siteswaps; the factory rejects fewer than 300 results.
+Both long-running stress scenarios use period 30, 30 objects, heights 0–40, `StopCriteria.TimeOut = 6 s`, and `MaxNumberOfResults = 14,000,000`.
 
-Run only this workload with QuickBench:
+`HighDimensionalFilteredStress` verwendet zusätzlich personenspezifische Filter für 2 Jugglers, erlaubt an Position 0 nur gerade Würfe und wertet 2.000 rotationsbewusste Pattern-Filter sowie Number-, State-, Personalized-, Default- und Not-Filter aus. Es muss mindestens 300 Ergebnisse erzeugen. Der letzte vollständige QuickBench-Katalog erzeugte konservativ mindestens **1.590 Ergebnisse** über fünf Samples in **6,007 s** Wall time und allokierte **2,3 MiB** verwalteten Speicher. Benchmark.NET maß **6,006 s** pro `Generate()` und **2,25 MB** Allokationen.
+
+`HighDimensionalNoFilterStress` verwendet dieselbe hochdimensionale Eingabe ohne Filter. Es muss mindestens 300.000 Ergebnisse erzeugen. Der letzte vollständige QuickBench-Katalog erzeugte konservativ mindestens **12.663.839 Ergebnisse** in **10,554 s** Median-Wall-time, allokierte **3,41 GiB** und erreichte einen Peak-Working-Set von **2,49 GiB**. Benchmark.NET erreichte den Zeitstopp bei **6,000 s**, allokierte **2,23 GB** und erzeugte vor dem Zeitlimit deutlich mehr als die Mindestzahl von 300.000 Ergebnissen.
+
+QuickBench does not require identical result counts for these time-bound scenarios because the exact count depends on scheduling and machine load. It validates the minimum count and reports the minimum count across the five samples. All non-time-bound scenarios retain the exact result-count determinism gate.
+
+Run either workload with:
 
 ```bash
 dotnet run -c Release --no-restore \
   --project Generator/Siteswaps.Generator.Benchmarks/Siteswaps.Generator.Benchmarks.csproj \
   -- --quick --scenario HighDimensionalFilteredStress
+
+dotnet run -c Release --no-restore \
+  --project Generator/Siteswaps.Generator.Benchmarks/Siteswaps.Generator.Benchmarks.csproj \
+  -- --quick --scenario HighDimensionalNoFilterStress
 ```
 
-The final QuickBench run produced 300 results in **5.998 s** wall time (6.098 s process CPU time) and allocated **2.4 MiB**. The final BenchmarkDotNet `ShortRun` measured **5.563 s** per `Generate()` and **2.38 MB** managed allocation. The exact same final scenario with HashSet-backed Self/Pass membership measured **6.509 s** and **8.56 MB**. The `NumberMask` change therefore improved this stress workload by **14.5%** and reduced managed allocation by about **72%**, while preserving the result count.
-
-A `CollectionsMarshal.AsSpan` experiment based on GitHub examples was also tested in the pattern loop. It was rejected: the comparable Benchmark.NET run regressed to **7.432 s** with unchanged results.
+Die frühere `CollectionsMarshal.AsSpan`-Variante bleibt verworfen: der vergleichbare Benchmark.NET-Lauf regressierte auf **7,432 s**. Die `NumberMask`-Optimierung bleibt dagegen übernommen, weil sie im gefilterten Stressfall nachweislich Allokationen und Laufzeit reduziert.
 
 ## Filter coverage matrix
 

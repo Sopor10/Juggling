@@ -20,6 +20,7 @@ public enum GenerationScenario
     OrFilter,
     NotFilter,
     HighDimensionalFilteredStress,
+    HighDimensionalNoFilterStress,
 }
 
 [MemoryDiagnoser]

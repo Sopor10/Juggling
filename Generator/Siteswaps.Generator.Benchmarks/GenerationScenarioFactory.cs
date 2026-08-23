@@ -25,6 +25,7 @@ internal static class GenerationScenarioFactory
         GenerationScenario.OrFilter,
         GenerationScenario.NotFilter,
         GenerationScenario.HighDimensionalFilteredStress,
+        GenerationScenario.HighDimensionalNoFilterStress,
     ];
 
     public static SiteswapGenerator Create(GenerationScenario scenario)
@@ -109,6 +110,7 @@ internal static class GenerationScenarioFactory
                 .Not(new FilterBuilder(input).MaximumOccurence([5], 0).Build())
                 .Build(),
             GenerationScenario.HighDimensionalFilteredStress => CreateHighDimensionalStress(input),
+            GenerationScenario.HighDimensionalNoFilterStress => new NoFilter(),
             _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
         };
 
@@ -146,7 +148,7 @@ internal static class GenerationScenarioFactory
         };
         stressFilters.AddRange(
             Enumerable
-                .Range(0, 2_500)
+                .Range(0, 2_000)
                 .Select(_ =>
                     (ISiteswapFilter)
                         new RotationAwareFlexiblePatternFilter(rotationPattern, 2, input, 0)
@@ -169,12 +171,29 @@ internal static class GenerationScenarioFactory
         return broadFilters;
     }
 
+    public static bool IsTimeBound(GenerationScenario scenario) =>
+        scenario
+            is GenerationScenario.HighDimensionalFilteredStress
+                or GenerationScenario.HighDimensionalNoFilterStress;
+
+    public static int MinimumResultCount(GenerationScenario scenario) =>
+        scenario switch
+        {
+            GenerationScenario.HighDimensionalFilteredStress => 300,
+            GenerationScenario.HighDimensionalNoFilterStress => 300_000,
+            _ => 1,
+        };
+
     public static void ValidateResultCount(GenerationScenario scenario, int resultCount)
     {
-        if (scenario is GenerationScenario.HighDimensionalFilteredStress && resultCount < 300)
+        if (scenario is GenerationScenario.StateSelectiveFilter)
+            return;
+
+        var minimumResultCount = MinimumResultCount(scenario);
+        if (resultCount < minimumResultCount)
         {
             throw new InvalidOperationException(
-                $"Stress scenario {scenario} must generate at least 300 Siteswaps; got {resultCount}."
+                $"Benchmark scenario {scenario} must generate at least {minimumResultCount} Siteswaps; got {resultCount}."
             );
         }
 
@@ -222,10 +241,12 @@ internal static class GenerationScenarioFactory
                 {
                     StopCriteria = new StopCriteria(TimeSpan.FromSeconds(60), 1_000),
                 }
-            : scenario is GenerationScenario.HighDimensionalFilteredStress
+            : scenario
+                is GenerationScenario.HighDimensionalFilteredStress
+                    or GenerationScenario.HighDimensionalNoFilterStress
                 ? new SiteswapGeneratorInput(30, 30, 0, 40)
                 {
-                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(30), 300),
+                    StopCriteria = new StopCriteria(TimeSpan.FromSeconds(6), 14_000_000),
                 }
             : new SiteswapGeneratorInput(10, 6, 2, 10)
             {

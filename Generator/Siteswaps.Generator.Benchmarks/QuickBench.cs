@@ -64,6 +64,7 @@ public static class QuickBench
         }
 
         var samples = new List<Sample>();
+        var sampleResultCounts = new List<int>();
         var resultCount = -1;
         for (var run = 0; run < 5; run++)
         {
@@ -92,7 +93,11 @@ public static class QuickBench
             process.Refresh();
             stopwatch.Stop();
             peakWorkingSet = Math.Max(peakWorkingSet, process.WorkingSet64);
-            if (resultCount >= 0 && resultCount != count)
+            if (
+                !GenerationScenarioFactory.IsTimeBound(scenario)
+                && resultCount >= 0
+                && resultCount != count
+            )
             {
                 throw new InvalidOperationException(
                     $"Benchmark scenario {scenario} is not deterministic: "
@@ -101,6 +106,7 @@ public static class QuickBench
             }
 
             resultCount = count;
+            sampleResultCounts.Add(count);
             samples.Add(
                 new Sample(
                     stopwatch.Elapsed.TotalMilliseconds,
@@ -113,6 +119,8 @@ public static class QuickBench
 
         samples.Sort((left, right) => left.WallMilliseconds.CompareTo(right.WallMilliseconds));
         var median = samples[samples.Count / 2];
+        if (GenerationScenarioFactory.IsTimeBound(scenario))
+            resultCount = sampleResultCounts.Min();
         var report = new ScenarioReport(
             scenario,
             median.WallMilliseconds,
