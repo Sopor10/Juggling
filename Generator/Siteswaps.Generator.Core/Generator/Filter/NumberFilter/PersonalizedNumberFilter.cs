@@ -20,6 +20,7 @@ public class PersonalizedNumberFilter : ISiteswapFilter
     {
         _ = minHeight;
         _ = maxHeight;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(numberOfJugglers);
         this.numberOfJugglers = numberOfJugglers;
         this.amount = amount;
         this.type = type;

@@ -6,10 +6,19 @@ internal sealed class NumberOfPassesFilter(
     SiteswapGeneratorInput generatorInput
 ) : ISiteswapFilter
 {
-    private readonly HashSet<int> _passValues = Enumerable
-        .Range(0, generatorInput.MaxHeight)
-        .Where(x => x % numberOfJugglers != 0)
-        .ToHashSet();
+    private readonly HashSet<int> _passValues = CreatePassValues(generatorInput, numberOfJugglers);
+
+    private static HashSet<int> CreatePassValues(
+        SiteswapGeneratorInput generatorInput,
+        int numberOfJugglers
+    )
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(numberOfJugglers);
+        return Enumerable
+            .Range(0, generatorInput.MaxHeight)
+            .Where(x => x % numberOfJugglers != 0)
+            .ToHashSet();
+    }
 
     public bool CanFulfill(PartialSiteswap value)
     {
