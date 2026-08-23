@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace Siteswaps.Generator.Core.Generator.Filter.NumberFilter;
 
@@ -10,13 +10,14 @@ public class ExactlyXXXTimesFilter(IEnumerable<int> number, int amount)
     {
         if (HasSingleNumber)
         {
-            return CanFulfillSingleNumber(value.AsSpan());
+            return CanFulfillSingleNumber(value);
         }
 
         int exactCount = 0;
         int possibleCount = 0;
-        foreach (var x in value.AsSpan())
+        for (var index = 0; index < value.Length; index++)
         {
+            var x = value.Items[index];
             if (ContainsNumber(x))
             {
                 exactCount++;
@@ -30,12 +31,13 @@ public class ExactlyXXXTimesFilter(IEnumerable<int> number, int amount)
         return exactCount <= Amount && possibleCount >= Amount;
     }
 
-    private bool CanFulfillSingleNumber(Span<int> values)
+    private bool CanFulfillSingleNumber(PartialSiteswap value)
     {
         int exactCount = 0;
         int possibleCount = 0;
-        foreach (var x in values)
+        for (var index = 0; index < value.Length; index++)
         {
+            var x = value.Items[index];
             if (x == SingleNumber)
             {
                 exactCount++;

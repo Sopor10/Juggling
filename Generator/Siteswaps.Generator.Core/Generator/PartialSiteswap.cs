@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace Siteswaps.Generator.Core.Generator;
 
@@ -24,6 +24,8 @@ public class PartialSiteswap
     public CyclicArray<int> Interface { get; }
 
     public int PartialSum { get; private set; }
+
+    internal int MutationVersion { get; private set; }
 
     private int this[int i]
     {
@@ -90,6 +92,7 @@ public class PartialSiteswap
 
         ResetCurrentPosition();
         this[LastFilledPosition] = throwHeight;
+        MutationVersion++;
         return true;
     }
 

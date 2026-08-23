@@ -42,6 +42,16 @@ public class StateTests
         State.CalculateState(siteswap, 4).ToString().Should().Be("011");
     }
 
+    [TestCase(new[] { 5, 4, 5, 4 }, "0101")]
+    [TestCase(new[] { 2, 5, 3, 4, 2 }, "111")]
+    public void CalculateState_Reaches_Stable_State_For_Multiple_Height_Classes(
+        int[] siteswap,
+        string expected
+    )
+    {
+        State.CalculateState(new PartialSiteswap(siteswap), 10).ToString().Should().Be(expected);
+    }
+
     [Test]
     public void StateFilter_Advertises_Rotation_Awareness()
     {

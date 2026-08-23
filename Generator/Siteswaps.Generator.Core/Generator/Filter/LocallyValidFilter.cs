@@ -1,4 +1,4 @@
-﻿namespace Siteswaps.Generator.Core.Generator.Filter;
+namespace Siteswaps.Generator.Core.Generator.Filter;
 
 public class LocallyValidFilter(int numberOfJugglers, int juggler) : ISiteswapFilter
 {
@@ -12,13 +12,24 @@ public class LocallyValidFilter(int numberOfJugglers, int juggler) : ISiteswapFi
             return true;
         }
 
-        var items = new int[value.Length];
-        for (int i = 0; i < value.Length; i++)
-            items[i] = value.Items[i];
+        var localLength =
+            value.Length % NumberOfJugglers == 0 ? value.Length / NumberOfJugglers : value.Length;
+        Span<bool> landings =
+            localLength <= 128 ? stackalloc bool[localLength] : new bool[localLength];
 
-        var siteswap = Siteswap.CreateFromCorrect(items);
-        var localSiteswap = siteswap.GetLocalSiteswap(Juggler, NumberOfJugglers);
-        return localSiteswap.IsValidAsGlobalSiteswap();
+        for (var index = 0; index < localLength; index++)
+        {
+            var throwHeight = value.Items[Juggler + index * NumberOfJugglers];
+            var landing = (throwHeight + index) % localLength;
+            if (landings[landing])
+            {
+                return false;
+            }
+
+            landings[landing] = true;
+        }
+
+        return true;
     }
 
     public int Order => 2;

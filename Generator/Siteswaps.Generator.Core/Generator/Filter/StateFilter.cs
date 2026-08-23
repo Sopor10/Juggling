@@ -6,6 +6,10 @@ internal sealed class StateFilter(SiteswapGeneratorInput generatorInput, State s
     : ISiteswapFilter
 {
     private readonly int maxHeight = generatorInput.MaxHeight;
+    private PartialSiteswap? cachedSiteswap;
+    private int cachedMutationVersion = -1;
+    private ulong cachedMatchMask;
+    private bool[]? cachedMatches;
 
     public bool CanFulfill(PartialSiteswap value)
     {
@@ -14,8 +18,61 @@ internal sealed class StateFilter(SiteswapGeneratorInput generatorInput, State s
             return true;
         }
 
-        return state == State.CalculateState(value, maxHeight);
+        EnsureCachedMatches(value);
+        return IsMatch(value.RotationIndex);
     }
+
+    public bool CanFulfillAnyRotation(PartialSiteswap value)
+    {
+        if (!value.IsFilled())
+        {
+            return true;
+        }
+
+        EnsureCachedMatches(value);
+        return cachedMatches is null
+            ? cachedMatchMask != 0
+            : Array.Exists(cachedMatches, match => match);
+    }
+
+    private void EnsureCachedMatches(PartialSiteswap value)
+    {
+        if (
+            ReferenceEquals(cachedSiteswap, value)
+            && cachedMutationVersion == value.MutationVersion
+        )
+        {
+            return;
+        }
+
+        var stateValue = State.CalculateStateValue(value, maxHeight);
+        ulong matchMask = 0;
+        bool[]? matches = value.Length > sizeof(ulong) * 8 ? new bool[value.Length] : null;
+        for (var rotation = 0; rotation < value.Length; rotation++)
+        {
+            var matchesState = state.Value == stateValue;
+            if (matches is null)
+            {
+                if (matchesState)
+                    matchMask |= 1UL << rotation;
+            }
+            else
+            {
+                matches[rotation] = matchesState;
+            }
+            stateValue = State.Advance(stateValue, value.Items[rotation]);
+        }
+
+        cachedSiteswap = value;
+        cachedMutationVersion = value.MutationVersion;
+        cachedMatchMask = matchMask;
+        cachedMatches = matches;
+    }
+
+    private bool IsMatch(int rotation) =>
+        cachedMatches is null
+            ? (cachedMatchMask & (1UL << rotation)) != 0
+            : cachedMatches[rotation];
 
     public int Order => 5;
     public bool IsRotationAware => true;
@@ -56,27 +113,36 @@ public record State(uint Value)
 
     public bool IsOccupiedAt(int position) => IsBitSet(Value, position);
 
-    private static State CalculateState(PartialSiteswap siteswap)
+    private static uint CalculateStateValue(PartialSiteswap siteswap)
     {
         uint state = 0;
-        while (true)
+        for (var index = 0; index < siteswap.Items.Length; index++)
         {
-            var previousState = state;
-            for (var index = 0; index < siteswap.Items.Length; index++)
-            {
-                state >>= 1;
-                state |= (uint)(1 << (siteswap.Items[index] - 1));
-            }
-
-            if (state == previousState)
-            {
-                return new State(state);
-            }
+            state >>= 1;
+            state |= (uint)(1 << (siteswap.Items[index] - 1));
         }
+
+        var stableState = state;
+        for (
+            var shift = siteswap.Items.Length;
+            shift < sizeof(uint) * 8;
+            shift += siteswap.Items.Length
+        )
+        {
+            stableState |= state >> shift;
+        }
+
+        return stableState;
     }
 
+    public static uint CalculateStateValue(PartialSiteswap siteswap, int maxHeight) =>
+        CalculateStateValue(siteswap);
+
     public static State CalculateState(PartialSiteswap siteswap, int maxHeight) =>
-        CalculateState(siteswap);
+        new(CalculateStateValue(siteswap, maxHeight));
+
+    public static uint Advance(uint state, int throwHeight) =>
+        (state >> 1) | (uint)(1 << (throwHeight - 1));
 
     public static State GroundState(int numberOfBalls)
     {

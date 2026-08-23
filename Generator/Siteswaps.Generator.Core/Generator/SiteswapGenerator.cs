@@ -95,17 +95,7 @@ public class SiteswapGenerator
             }
             else if (Filter.IsRotationAware)
             {
-                canFulfill = false;
-                for (int j = 0; j < PartialSiteswap.LastFilledPosition + 1; j++)
-                {
-                    PartialSiteswap.RotationIndex = j;
-                    if (Filter.CanFulfill(PartialSiteswap))
-                    {
-                        canFulfill = true;
-                        break;
-                    }
-                }
-                PartialSiteswap.RotationIndex = 0;
+                canFulfill = Filter.CanFulfillAnyRotation(PartialSiteswap);
             }
             else
             {
