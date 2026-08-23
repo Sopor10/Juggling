@@ -7,8 +7,8 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
     private PatternRecord Pattern { get; }
     private List<PatternRecord> Patterns { get; }
     private int NumberOfJuggler { get; }
-    private HashSet<int> PassValues { get; }
-    private HashSet<int> SelfValues { get; }
+    private NumberMask PassValues { get; }
+    private NumberMask SelfValues { get; }
 
     public FlexiblePatternFilter(
         List<List<int>> pattern,
@@ -18,14 +18,16 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
     )
     {
         NumberOfJuggler = numberOfJuggler;
-        PassValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJuggler != 0)
-            .ToHashSet();
-        SelfValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJuggler == 0)
-            .ToHashSet();
+        PassValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJuggler != 0)
+        );
+        SelfValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJuggler == 0)
+        );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
         for (var i = 0; i < pattern.Count; i++)
         {
@@ -51,8 +53,8 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
     [DebuggerDisplay("{DebugDisplay}")]
     private sealed record PatternRecord(
         List<List<int>> Value,
-        HashSet<int> SelfValues,
-        HashSet<int> PassValues
+        NumberMask SelfValues,
+        NumberMask PassValues
     )
     {
         private string DebugDisplay =>
@@ -64,15 +66,20 @@ internal sealed class FlexiblePatternFilter : ISiteswapFilter
         public bool Matches(CyclicArray<int> value)
         {
             for (var i = 0; i < Value.Count; i++)
-                if (!RotationMatches(value, i))
+            {
+                var patternValues = Value[i];
+                if (patternValues.Count == 1 && patternValues[0] == DontCare)
+                    continue;
+                if (!RotationMatches(value, patternValues, i))
                     return false;
+            }
             return true;
         }
 
-        private bool RotationMatches(CyclicArray<int> siteswap, int i)
+        private bool RotationMatches(CyclicArray<int> siteswap, List<int> patternValues, int i)
         {
             var singleMatch = false;
-            foreach (var patternValue in Value[i])
+            foreach (var patternValue in patternValues)
                 if (ValueSatisfiesPattern(siteswap[i], patternValue))
                     singleMatch = true;
             return singleMatch;

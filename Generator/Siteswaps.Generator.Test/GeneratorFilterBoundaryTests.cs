@@ -66,6 +66,24 @@ public class GeneratorFilterBoundaryTests
     }
 
     [Test]
+    public void Flexible_Pattern_Handles_Throws_Above_The_NumberMask_Range()
+    {
+        var sut = new FilterBuilder(new SiteswapGeneratorInput(2, 3, 1, 70))
+            .FlexiblePattern(
+                new List<List<int>>
+                {
+                    new() { -2 },
+                    new() { -3 },
+                },
+                2,
+                true
+            )
+            .Build();
+
+        sut.CanFulfill(new PartialSiteswap(new[] { 65, 66 })).Should().BeTrue();
+    }
+
+    [Test]
     public void Flexible_Pattern_Rejects_An_Unexpected_Self_Throw()
     {
         var sut = new FilterBuilder(new SiteswapGeneratorInput(2, 3, 1, 4))
@@ -81,6 +99,19 @@ public class GeneratorFilterBoundaryTests
             .Build();
 
         sut.CanFulfill(new PartialSiteswap(new[] { 2, 2 })).Should().BeFalse();
+    }
+
+    [Test]
+    public void Rotation_Aware_Flexible_Pattern_Accepts_A_DontCare_Position()
+    {
+        var sut = new RotationAwareFlexiblePatternFilter(
+            new List<List<int>> { new() { -1 } },
+            2,
+            new SiteswapGeneratorInput(2, 3, 1, 70),
+            0
+        );
+
+        sut.CanFulfill(new PartialSiteswap(new[] { 65, 66 })).Should().BeTrue();
     }
 
     [Test]

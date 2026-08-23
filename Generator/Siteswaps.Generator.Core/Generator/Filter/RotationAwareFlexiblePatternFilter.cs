@@ -7,8 +7,8 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
     private List<List<int>> Pattern { get; }
     private int NumberOfJugglers { get; }
     private SiteswapGeneratorInput Input { get; }
-    private HashSet<int> PassValues { get; }
-    private HashSet<int> SelfValues { get; }
+    private NumberMask PassValues { get; }
+    private NumberMask SelfValues { get; }
     private int Juggler { get; }
     private readonly PatternRecord _pattern;
 
@@ -23,14 +23,16 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         NumberOfJugglers = numberOfJugglers;
         Input = input;
         Juggler = juggler;
-        PassValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJugglers != 0)
-            .ToHashSet();
-        SelfValues = Enumerable
-            .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
-            .Where(x => x % NumberOfJugglers == 0)
-            .ToHashSet();
+        PassValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJugglers != 0)
+        );
+        SelfValues = new NumberMask(
+            Enumerable
+                .Range(input.MinHeight, input.MaxHeight - input.MinHeight + 1)
+                .Where(x => x % NumberOfJugglers == 0)
+        );
         var p = Enumerable.Repeat(new List<int> { -1 }, input.Period).ToList();
         for (var i = 0; i < Pattern.Count; i++)
         {
@@ -46,8 +48,8 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
     [DebuggerDisplay("{DebugDisplay}")]
     private sealed record PatternRecord(
         List<List<int>> Value,
-        HashSet<int> SelfValues,
-        HashSet<int> PassValues
+        NumberMask SelfValues,
+        NumberMask PassValues
     )
     {
         private string DebugDisplay =>
@@ -59,15 +61,20 @@ public class RotationAwareFlexiblePatternFilter : ISiteswapFilter
         public bool Matches(CyclicArray<int> value)
         {
             for (var i = 0; i < Value.Count; i++)
-                if (!RotationMatches(value, i))
+            {
+                var patternValues = Value[i];
+                if (patternValues.Count == 1 && patternValues[0] == DontCare)
+                    continue;
+                if (!RotationMatches(value, patternValues, i))
                     return false;
+            }
             return true;
         }
 
-        private bool RotationMatches(CyclicArray<int> siteswap, int i)
+        private bool RotationMatches(CyclicArray<int> siteswap, List<int> patternValues, int i)
         {
             var singleMatch = false;
-            foreach (var patternValue in Value[i])
+            foreach (var patternValue in patternValues)
                 if (ValueSatisfiesPattern(siteswap[i], patternValue))
                     singleMatch = true;
             return singleMatch;
