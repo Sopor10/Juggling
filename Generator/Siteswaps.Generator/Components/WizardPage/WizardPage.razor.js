@@ -153,6 +153,14 @@ export function activateFocusTrap(element) {
   }
 
   const onKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      const backdrop = element.previousElementSibling;
+      if (backdrop instanceof HTMLElement && backdrop.classList.contains('wizard-sheet-backdrop')) {
+        backdrop.click();
+      }
+      return;
+    }
+
     if (event.key !== 'Tab') {
       return;
     }
