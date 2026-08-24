@@ -1,5 +1,5 @@
-@import '_content/Siteswaps.Components/Siteswaps.Components.smouq1e868.bundle.scp.css';
-@import '_content/Siteswaps.Generator/Siteswaps.Generator.887jhitoge.bundle.scp.css';
+@import '_content/Siteswaps.Components/Siteswaps.Components.osbhft9kes.bundle.scp.css';
+@import '_content/Siteswaps.Generator/Siteswaps.Generator.zcs4lpzyoc.bundle.scp.css';
 
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-eywtt48i3v] {
@@ -87,7 +87,8 @@ main[b-eywtt48i3v] {
     flex: 1 1 8rem;
     min-width: 0;
     max-width: 16rem;
-    height: 2.4rem;
+    min-height: 44px;
+    height: auto;
     border-radius: 10px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.12);
@@ -124,7 +125,9 @@ main[b-eywtt48i3v] {
 
 .pznav-search-submit[b-qldtb9oj5f] {
     flex: 0 0 auto;
-    width: 2.4rem;
+    width: 2.75rem;
+    min-width: 44px;
+    min-height: 44px;
     border: none;
     background: rgba(255, 255, 255, 0.14);
     color: white;
@@ -210,7 +213,7 @@ main[b-eywtt48i3v] {
     font-size: 0.95rem;
     text-decoration: none;
     border-radius: 999px;
-    min-height: 2.75rem;
+    min-height: 44px;
     display: flex;
     align-items: center;
     padding: 0 16px;
@@ -267,6 +270,45 @@ main[b-eywtt48i3v] {
     }
 
     .pznav-link[b-qldtb9oj5f] {
+        min-height: 44px;
+        padding: 0 14px;
+        font-size: 0.9rem;
+    }
+}
+/* /Shared/PwaInstallButton.razor.rz.scp.css */
+.pwa-install[b-pwv0az68n3] {
+    --pwa-purple-950: #241a3d;
+    --pwa-orange: #f9a500;
+    --pwa-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    color: var(--pwa-purple-950);
+    background: linear-gradient(180deg, #ffb838, var(--pwa-orange));
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: none;
+    border-radius: 999px;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px -2px rgba(249, 165, 0, 0.5);
+    white-space: nowrap;
+}
+
+.pwa-install:hover[b-pwv0az68n3] {
+    filter: brightness(1.05);
+}
+
+.pwa-install:active[b-pwv0az68n3] {
+    transform: scale(0.97);
+}
+
+@media (min-width: 718px) {
+    .pwa-install[b-pwv0az68n3] {
         min-height: 2.4rem;
         padding: 0 14px;
         font-size: 0.9rem;

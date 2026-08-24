@@ -8,6 +8,7 @@ export function scrollIntoView(selector) {
 const historyHandlers = new WeakMap();
 const focusTrapHandlers = new WeakMap();
 const touchSwipeHandlers = new WeakMap();
+let lastSwipeElement = null;
 let previousActiveElement = null;
 
 const SWIPE_DIRECTION_THRESHOLD = 10;
@@ -23,7 +24,16 @@ function isSwipeBlockedTarget(target) {
 }
 
 export function initTouchSwipe(element, dotnetHelper) {
-  if (!element || touchSwipeHandlers.has(element)) {
+  if (!element) {
+    return;
+  }
+
+  if (lastSwipeElement && lastSwipeElement !== element) {
+    disposeTouchSwipe(lastSwipeElement);
+  }
+
+  if (touchSwipeHandlers.has(element)) {
+    lastSwipeElement = element;
     return;
   }
 
@@ -95,13 +105,14 @@ export function initTouchSwipe(element, dotnetHelper) {
   const onTouchCancel = () => reset();
 
   element.addEventListener('touchstart', onTouchStart, { passive: true });
-  element.addEventListener('touchmove', onTouchMove, { passive: false });
+  element.addEventListener('touchmove', onTouchMove, { passive: false, capture: true });
   element.addEventListener('touchend', onTouchEnd, { passive: true });
   element.addEventListener('touchcancel', onTouchCancel, { passive: true });
 
+  lastSwipeElement = element;
   touchSwipeHandlers.set(element, () => {
     element.removeEventListener('touchstart', onTouchStart);
-    element.removeEventListener('touchmove', onTouchMove);
+    element.removeEventListener('touchmove', onTouchMove, true);
     element.removeEventListener('touchend', onTouchEnd);
     element.removeEventListener('touchcancel', onTouchCancel);
     reset();
@@ -113,6 +124,9 @@ export function disposeTouchSwipe(element) {
   if (cleanup) {
     cleanup();
     touchSwipeHandlers.delete(element);
+  }
+  if (lastSwipeElement === element) {
+    lastSwipeElement = null;
   }
 }
 
@@ -193,7 +207,12 @@ export function initHistory(dotnetHelper, step) {
 
   const onPopState = (event) => {
     const path = location.pathname.replace(/\/+$/, '').toLowerCase();
-    if (path !== '' && path !== '/wizard') {
+    const isWizardPath =
+      path === '' ||
+      path === '/' ||
+      path === '/wizard' ||
+      path.endsWith('/wizard');
+    if (!isWizardPath) {
       return;
     }
 
