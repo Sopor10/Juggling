@@ -26,9 +26,7 @@ public class WizardNavigationTests(SharedBlazorFixture host) : IClassFixture<Sha
         await wizard.ExpectStepAsync(0);
 
         await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("7");
-        await Assertions
-            .Expect(page.Locator(".wizard-juggler-picker .wizard-chip.active"))
-            .ToHaveTextAsync("3");
+        await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("3");
     }
 
     /// <summary>Summary: Full reload must open a coherent editing session at step 1 with default inputs.</summary>
@@ -50,9 +48,7 @@ public class WizardNavigationTests(SharedBlazorFixture host) : IClassFixture<Sha
 
         await wizard.ExpectStepAsync(0);
         await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("5");
-        await Assertions
-            .Expect(page.Locator(".wizard-juggler-picker .wizard-chip.active"))
-            .ToHaveTextAsync("2");
+        await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("2");
         await Assertions.Expect(wizard.Results).ToBeHiddenAsync();
     }
 }

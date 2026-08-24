@@ -103,10 +103,14 @@
     public string? ExtraClass { get; set; }
 
     private int? SelectedBeatFor(string role) =>
-        _selectedLanding?.SourceRole == role ? _selectedLanding.SourceLocalBeat : null;
+        _selectedLanding is { SourceRole: var sourceRole } && sourceRole == role
+            ? _selectedLanding.SourceLocalBeat
+            : null;
 
     private int? LandingBeatFor(string role) =>
-        _selectedLanding?.TargetRole == role ? _selectedLanding.TargetLocalBeat : null;
+        _selectedLanding is { TargetRole: var targetRole } && targetRole == role
+            ? _selectedLanding.TargetLocalBeat
+            : null;
 
     private void SelectThrow(string role, int localBeat)
     {

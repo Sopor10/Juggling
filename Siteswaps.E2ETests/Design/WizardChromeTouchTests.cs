@@ -37,27 +37,21 @@ public class WizardChromeTouchTests(SharedBlazorFixture host) : IClassFixture<Sh
             .BeTrue($"active progress dot must be {DesignColor.BrandOrange}, got {background}");
     }
 
-    /// <summary>Summary: Active juggler chip must use brand purple-700 tile fill, not Material #8E44AD.</summary>
+    /// <summary>Summary: Stepper value inputs must use Baloo display typography, not body Nunito.</summary>
     [Fact]
-    public async Task Wizard_ActiveChip_UsesBrandPurpleTileNotMaterial()
+    public async Task Wizard_StepperValue_UsesBalooDisplayFont()
     {
         await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
-        var chip = design.ActiveJugglerChip;
-        await Assertions.Expect(chip).ToBeVisibleAsync();
+        var input = design.DisplaySample;
+        await Assertions.Expect(input).ToBeVisibleAsync();
 
-        var background = await design.StyleAsync(chip, "background-color");
+        var font = await design.StyleAsync(input, "font-family");
         var radius = DesignColor.ParseCssPx(
-            await design.StyleAsync(chip, "border-top-left-radius")
+            await design.StyleAsync(input, "border-top-left-radius")
         );
-        var font = await design.StyleAsync(chip, "font-family");
 
-        DesignColor
-            .EqualsHex(background, DesignColor.BrandPurple700)
-            .Should()
-            .BeTrue($"active chip must be {DesignColor.BrandPurple700}, got {background}");
-        DesignColor.EqualsHex(background, DesignColor.LegacyMaterialPurple).Should().BeFalse();
-        radius.Should().BeGreaterThanOrEqualTo(8);
         font.Should().ContainEquivalentOf("Baloo");
+        radius.Should().BeGreaterThanOrEqualTo(8);
     }
 
     /// <summary>Summary: Primary CTA height ≥48px and progress-dot hit target ≥40px (chips/steppers covered by Ux).</summary>

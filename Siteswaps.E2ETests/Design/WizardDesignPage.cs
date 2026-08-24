@@ -25,7 +25,11 @@ public sealed class WizardDesignPage : IAsyncDisposable
 
     public ILocator StepSheet => _page.Locator(".wizard-steps");
 
-    public ILocator DisplaySample => _page.Locator(".wizard-period-value");
+    public ILocator DisplaySample =>
+        _page.GetByRole(AriaRole.Spinbutton, new() { Name = "Periode exakt eingeben" });
+
+    public ILocator JugglerValueInput =>
+        _page.GetByRole(AriaRole.Spinbutton, new() { Name = "Jongleuranzahl exakt eingeben" });
 
     public ILocator PrimaryForwardButton =>
         _page.Locator(
@@ -39,9 +43,6 @@ public sealed class WizardDesignPage : IAsyncDisposable
     public ILocator ActiveProgressDot => _page.Locator(".wizard-dot.active");
 
     public ILocator SwipeHint => _page.Locator(".wizard-swipe-hint");
-
-    public ILocator ActiveJugglerChip =>
-        _page.Locator(".wizard-juggler-picker .wizard-chip.active");
 
     public ILocator BottomSheet => _page.Locator(".wizard-bottom-sheet");
 

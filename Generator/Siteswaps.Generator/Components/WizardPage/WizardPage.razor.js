@@ -139,6 +139,14 @@ const focusableSelector = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
+function getFocusableWithin(element) {
+  return [...element.querySelectorAll(focusableSelector)].filter(
+    (candidate) =>
+      candidate instanceof HTMLElement &&
+      candidate.getClientRects().length > 0,
+  );
+}
+
 export function activateFocusTrap(element) {
   if (!element || focusTrapHandlers.has(element)) {
     return;
@@ -149,11 +157,7 @@ export function activateFocusTrap(element) {
       return;
     }
 
-    const focusable = [...element.querySelectorAll(focusableSelector)].filter(
-      (candidate) =>
-        candidate instanceof HTMLElement &&
-        candidate.getClientRects().length > 0,
-    );
+    const focusable = getFocusableWithin(element);
 
     if (focusable.length === 0) {
       event.preventDefault();
@@ -163,23 +167,31 @@ export function activateFocusTrap(element) {
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
+    const active = document.activeElement;
+
+    if (!(active instanceof Node) || !element.contains(active)) {
+      event.preventDefault();
+      first.focus();
+      return;
+    }
+
+    if (event.shiftKey && active === first) {
       event.preventDefault();
       last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
+    } else if (!event.shiftKey && active === last) {
       event.preventDefault();
       first.focus();
     }
   };
 
-  element.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keydown', onKeyDown, true);
   focusTrapHandlers.set(element, onKeyDown);
 }
 
 export function deactivateFocusTrap(element) {
   const handler = focusTrapHandlers.get(element);
   if (handler) {
-    element.removeEventListener('keydown', handler);
+    document.removeEventListener('keydown', handler, true);
     focusTrapHandlers.delete(element);
   }
 }

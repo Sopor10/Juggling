@@ -12,7 +12,7 @@ namespace Siteswaps.Generator.Components.GenerationWorkflow;
 /// via <see cref="OnResultsReady"/>; does not render a results list or siteswap selection.
 /// When <see cref="ChildContent"/> is set (e.g. Wizard embed), only that content is rendered.
 /// </summary>
-public partial class ConfiguredGenerationWorkflow : ComponentBase
+public partial class ConfiguredGenerationWorkflow : ComponentBase, IDisposable
 {
     private GenerationWorkflowSession _session = GenerationWorkflowSession.Create(
         new GenerationWorkflowConfig()
@@ -87,7 +87,7 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase
             }
 
             var results = await session.GenerateAsync(token);
-            if (epoch != _generationEpoch || token.IsCancellationRequested)
+            if (epoch != _generationEpoch || token.IsCancellationRequested || session != _session)
             {
                 await OnCancelled.InvokeAsync();
                 return;
@@ -107,6 +107,12 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase
 
     public void CancelGeneration() => CancelInFlightGeneration();
 
+    public void Dispose()
+    {
+        CancelInFlightGeneration();
+        GC.SuppressFinalize(this);
+    }
+
     private void CancelInFlightGeneration()
     {
         if (_generationCts is null)
@@ -114,13 +120,19 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase
             return;
         }
 
+        var cts = _generationCts;
+        _generationCts = null;
         try
         {
-            _generationCts.Cancel();
+            cts.Cancel();
         }
         catch (ObjectDisposedException)
         {
             // Generation already finished.
+        }
+        finally
+        {
+            cts.Dispose();
         }
     }
 
@@ -171,5 +183,5 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase
         State.FilterTree = WizardFilterTree.ReplaceLeaf(State.FilterTree, args.Id, args.Filter);
     }
 
-    private async Task OnGenerateClicked() => await GenerateAsync();
+    private async Task OnGenerateClicked() => await GenerateAsync(CancellationToken.None);
 }

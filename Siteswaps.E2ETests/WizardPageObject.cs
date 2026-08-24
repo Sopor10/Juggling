@@ -6,6 +6,11 @@ namespace Siteswaps.E2ETests;
 /// <summary>Page object for the wizard Blazor route at <c>/</c> (<c>.wizard-page</c> UI).</summary>
 public class WizardPageObject(IPage page)
 {
+    private const string JugglerCountSpinbutton = "Jongleuranzahl exakt eingeben";
+    private const string PeriodSpinbutton = "Periode exakt eingeben";
+    private const string JugglersHeading = "Jongleure";
+    private const string PeriodHeading = "Periode";
+
     public IPage Page => page;
 
     public ILocator Root => page.Locator(".wizard-page");
@@ -35,9 +40,11 @@ public class WizardPageObject(IPage page)
 
     public ILocator GenerateButton => page.Locator(".wizard-btn-generate");
 
-    public ILocator PeriodInput => page.Locator("#periodExactInput");
+    public ILocator PeriodInput =>
+        page.GetByRole(AriaRole.Spinbutton, new() { Name = PeriodSpinbutton });
 
-    public ILocator JugglerExactInput => page.Locator("#jugglerExactInput");
+    public ILocator JugglerExactInput =>
+        page.GetByRole(AriaRole.Spinbutton, new() { Name = JugglerCountSpinbutton });
 
     public ILocator FilterSheet => page.Locator(".wizard-bottom-sheet.open");
 
@@ -52,9 +59,10 @@ public class WizardPageObject(IPage page)
 
     public ILocator ValidationAlert => page.Locator("[role='alert']");
 
-    public ILocator PeriodStepperButtons => page.Locator(".wizard-stepper-btn");
+    public ILocator PeriodStepperButtons => StepField(PeriodHeading).Locator(".wizard-stepper-btn");
 
-    public ILocator JugglerChips => page.Locator(".wizard-juggler-picker .wizard-chip");
+    public ILocator JugglerStepperButtons =>
+        StepField(JugglersHeading).Locator(".wizard-stepper-btn");
 
     public ILocator DualRangeTrackWrap => page.Locator(".wizard-dualrange-track-wrap");
 
@@ -76,7 +84,7 @@ public class WizardPageObject(IPage page)
 
     public ILocator ValueClampFeedback =>
         page.Locator(
-            ".wizard-period [role='status'], .wizard-period [role='alert'], .wizard-juggler-picker [role='status'], .wizard-juggler-picker [role='alert'], .wizard-clamp-feedback, .wizard-validation"
+            ".wizard-period [role='status'], .wizard-period [role='alert'], .wizard-clamp-feedback, .wizard-validation"
         );
 
     public async Task WaitUntilLoadedAsync(float timeoutMs = 60_000)
@@ -161,17 +169,7 @@ public class WizardPageObject(IPage page)
         await JugglerExactInput.PressAsync("Tab");
     }
 
-    public async Task SelectJugglerChipAsync(int jugglers)
-    {
-        await page.Locator(".wizard-juggler-picker .wizard-chip")
-            .Filter(
-                new LocatorFilterOptions
-                {
-                    HasText = jugglers.ToString(CultureInfo.InvariantCulture),
-                }
-            )
-            .ClickAsync();
-    }
+    public async Task SelectJugglerChipAsync(int jugglers) => await SetExactJugglersAsync(jugglers);
 
     public async Task SetClubsRangeAsync(int min, int max)
     {
@@ -216,6 +214,15 @@ public class WizardPageObject(IPage page)
         await page.Locator(".wizard-btn-filter-primary").ClickAsync();
         await Assertions.Expect(FilterSheet).ToBeHiddenAsync();
     }
+
+    private ILocator StepField(string heading) =>
+        page.Locator(".wizard-field")
+            .Filter(
+                new LocatorFilterOptions
+                {
+                    Has = page.GetByRole(AriaRole.Heading, new() { Name = heading }),
+                }
+            );
 
     private async Task SelectWizardOptionAsync(string selectId, string label)
     {
