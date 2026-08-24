@@ -1,5 +1,5 @@
 @import '_content/Siteswaps.Components/Siteswaps.Components.puij8nbrfn.bundle.scp.css';
-@import '_content/Siteswaps.Generator/Siteswaps.Generator.ugckfo8ehd.bundle.scp.css';
+@import '_content/Siteswaps.Generator/Siteswaps.Generator.6bla8oyydh.bundle.scp.css';
 
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-eywtt48i3v] {
@@ -252,7 +252,9 @@ main[b-eywtt48i3v] {
     .pznav-links-collapsed[b-qldtb9oj5f] {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
+        justify-content: flex-end;
         width: auto;
         margin-left: auto;
         margin-right: 0;

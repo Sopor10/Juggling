@@ -2367,20 +2367,24 @@
 }
 
 .lab-timezones[b-2dl09w6mtv] {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 6px;
+    max-width: 100%;
     margin: 14px 0 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
 }
 
 .lab-timezones h3[b-2dl09w6mtv] {
-    grid-column: 1 / -1;
+    width: 100%;
     margin: 0;
     font-size: 1rem;
 }
 
 .lab-timezone-hint[b-2dl09w6mtv] {
-    grid-column: 1 / -1;
+    width: 100%;
     margin: -2px 0 2px;
     color: var(--lab-purple-500);
     font-size: .72rem;
@@ -2389,6 +2393,10 @@
 .lab-timezone-card[b-2dl09w6mtv] {
     appearance: none;
     display: flex;
+    width: min(100%, 240px);
+    max-width: calc(
+        100% - var(--lab-phase, 0) * (44px + 8px) / var(--lab-phase-count, 1)
+    );
     min-height: 44px;
     align-items: baseline;
     justify-content: space-between;
@@ -2400,6 +2408,9 @@
     font: inherit;
     text-align: left;
     cursor: pointer;
+    transform: translateX(
+        calc(var(--lab-phase, 0) * (44px + 8px) / var(--lab-phase-count, 1))
+    );
 }
 
 .lab-timezone-card strong[b-2dl09w6mtv] {
@@ -2412,6 +2423,27 @@
     font-size: .68rem;
     font-weight: 800;
     white-space: nowrap;
+}
+
+.lab-timezone-assignment[b-2dl09w6mtv] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+}
+
+.lab-timezone-person[b-2dl09w6mtv] {
+    color: var(--lab-purple-950);
+    font-size: .95rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.lab-timezone-shared[b-2dl09w6mtv] {
+    color: var(--lab-purple-500);
+    font-size: .62rem;
+    font-weight: 800;
+    line-height: 1.1;
 }
 
 .lab-overview-toolbar[b-2dl09w6mtv] {
@@ -2474,20 +2506,15 @@
 
 .lab-overview-person[b-2dl09w6mtv] {
     display: flex;
-    width: 3.25rem;
-    min-width: 3.25rem;
-    flex-direction: column;
+    width: 1.5rem;
+    min-width: 1.5rem;
+    justify-content: center;
     color: var(--lab-purple-500);
 }
 
 .lab-overview-person strong[b-2dl09w6mtv] {
     font-size: 1rem;
     line-height: 1;
-}
-
-.lab-overview-person small[b-2dl09w6mtv] {
-    font-size: .68rem;
-    font-weight: 800;
 }
 
 .lab-overview-throws[b-2dl09w6mtv] {
@@ -2608,12 +2635,6 @@
     gap: 5px;
 }
 
-.lab-target-hint[b-2dl09w6mtv] {
-    color: var(--lab-purple-500);
-    font-size: .68rem;
-    font-weight: 700;
-}
-
 .lab-selected-cell .lab-palette[b-2dl09w6mtv] {
     grid-template-columns: repeat(10, minmax(36px, 1fr));
 }
@@ -2705,6 +2726,10 @@ button:disabled[b-2dl09w6mtv] {
 
     .lab-selected-cell .lab-palette[b-2dl09w6mtv] {
         grid-template-columns: repeat(5, 1fr);
+    }
+
+    .lab-timezone-card[b-2dl09w6mtv] {
+        width: min(100%, 200px);
     }
 
 }
