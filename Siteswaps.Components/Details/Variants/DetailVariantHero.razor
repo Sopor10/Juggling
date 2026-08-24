@@ -13,22 +13,24 @@
     @if (Model.CanCreateThreePersonFeed)
     {
         <section class="sdv-continue" aria-labelledby="sdv-continue-heading">
-            <h2 id="sdv-continue-heading" class="sdv-continue-heading">@L["Continue with this siteswap"]</h2>
-            <p class="sdv-continue-lead">
+            <h2 id="sdv-continue-heading" class="sdv-section-title sdv-continue-heading">@L["Continue with this siteswap"]</h2>
+            <p class="sdv-muted sdv-continue-lead">
                 @L["Turn this two-person pattern into a normal three-person feed by assigning A's passes to B1 and B2."]
             </p>
-            <a class="sdv-continue-primary"
-               href="@Model.ThreePersonFeedHref"
-               target="_blank"
-               rel="noopener">
-                @L["Create 3-person feed"]
-            </a>
-            <a class="sdv-continue-secondary"
-               href="@Model.PassistLink"
-               target="_blank"
-               rel="noopener">
-                @L["Open in Passist ↗"]
-            </a>
+            <div class="sdv-continue-actions">
+                <a class="sdv-continue-primary"
+                   href="@Model.ThreePersonFeedHref"
+                   target="_blank"
+                   rel="noopener">
+                    @L["Create 3-person feed"]
+                </a>
+                <a class="sdv-continue-secondary"
+                   href="@Model.PassistLink"
+                   target="_blank"
+                   rel="noopener">
+                    @L["Open in Passist ↗"]
+                </a>
+            </div>
         </section>
     }
 </section>

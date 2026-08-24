@@ -1,32 +1,12 @@
 @inject IStringLocalizer<JugglerPicker> L
 
-<div class="wizard-juggler-picker">
-    <div class="wizard-chip-row" role="radiogroup" aria-label="@L["Jugglers"]">
-        @foreach (var v in Options)
-        {
-            var isActive = v == Value;
-            <button type="button"
-                    class="wizard-chip wizard-chip-round @(isActive ? "active" : "")"
-                    role="radio"
-                    aria-checked="@(isActive ? "true" : "false")"
-                    @onpointerdown:stopPropagation="true"
-                    @onclick="() => Select(v)">
-                @v
-            </button>
-        }
-    </div>
-    <div class="wizard-juggler-exact-row">
-        <label class="wizard-juggler-exact-label" for="jugglerExactInput">@L["or exact count"]</label>
-        <input id="jugglerExactInput" type="number" inputmode="numeric" class="wizard-input-number"
-               min="@MinOption" max="@MaxExact" value="@Value"
-               @onpointerdown:stopPropagation="true"
-               @onchange="OnExactInput" />
-    </div>
-    @if (_clampMessage is not null)
-    {
-        <p class="wizard-clamp-feedback" role="status">@_clampMessage</p>
-    }
-</div>
+<PeriodStepper Value="Value"
+               ValueChanged="ValueChanged"
+               Min="Min"
+               Max="Max"
+               DecreaseLabel="@L["Decrease jugglers"]"
+               IncreaseLabel="@L["Increase jugglers"]"
+               ValueLabel="@L["Enter juggler count exactly"]" />
 
 @code {
     [Parameter]
@@ -36,42 +16,8 @@
     public EventCallback<int> ValueChanged { get; set; }
 
     [Parameter]
-    public int MinOption { get; set; } = WizardState.MinJugglers;
+    public int Min { get; set; } = WizardState.MinJugglers;
 
     [Parameter]
-    public int MaxOption { get; set; } = WizardState.MaxJugglers;
-
-    /// <summary>Upper bound for the exact-value number input, independent of the visible pills.</summary>
-    [Parameter]
-    public int MaxExact { get; set; } = WizardState.MaxJugglersExact;
-
-    private string? _clampMessage;
-
-    private IEnumerable<int> Options => Enumerable.Range(MinOption, MaxOption - MinOption + 1);
-
-    private async Task Select(int v) => await SetValue(v);
-
-    private async Task OnExactInput(ChangeEventArgs e)
-    {
-        if (int.TryParse(e.Value?.ToString(), out var v))
-        {
-            await SetValue(v);
-        }
-    }
-
-    private async Task SetValue(int requested)
-    {
-        var v = Math.Clamp(requested, MinOption, MaxExact);
-        _clampMessage = v != requested
-            ? L["Value limited to {0} (allowed: {1}–{2}).", v, MinOption, MaxExact].Value
-            : null;
-
-        if (v == Value)
-        {
-            return;
-        }
-
-        Value = v;
-        await ValueChanged.InvokeAsync(v);
-    }
+    public int Max { get; set; } = WizardState.MaxJugglersExact;
 }

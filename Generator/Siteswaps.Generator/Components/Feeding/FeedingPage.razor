@@ -1,109 +1,140 @@
 @page "/feeding"
+@using Microsoft.AspNetCore.Components.Sections
 @using Siteswaps.Generator.Components.GenerationWorkflow
+@using Siteswaps.Generator.Components.Layout
 
 <PageTitle>@L["3-person feed"]</PageTitle>
 
-<div class="feeding-page">
-    <header class="feeding-header">
-        <a class="feeding-back" href="@DetailsBackHref">@L["← Details"]</a>
-        <h1 id="feeding-title" @ref="_setupTitle" class="feeding-title" tabindex="-1">@HeaderTitle</h1>
-    </header>
+<SectionContent SectionName="@WizardShellSections.Header">
+    <a class="feeding-back" href="@DetailsBackHref">@L["← Details"]</a>
+    <h1 id="feeding-title" @ref="_setupTitle" class="feeding-title" tabindex="-1">@HeaderTitle</h1>
+</SectionContent>
 
+<SectionContent SectionName="@WizardShellSections.Body">
     @if (_loadError is not null)
     {
-        <div class="feeding-empty" role="alert" aria-live="assertive"><p>@_loadError</p></div>
+        <div class="wizard-steps feeding-steps">
+            <div class="feeding-empty wizard-step active" role="alert" aria-live="assertive">
+                <div class="wizard-measure"><p>@_loadError</p></div>
+            </div>
+        </div>
     }
     else if (_session is not null)
     {
         @if (_phase is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2)
         {
-            <section class="feeding-sheet feeding-sheet-step" aria-labelledby="feeding-title">
-                <FeedingInterfaceOccupancy Session="_session"
-                                           Role="_activeRole"
-                                           MoveRole="@InterfaceMoveRole"
-                                           MoveTargets="_interfaceMoveTargets"
-                                           MoveRequested="MoveB1PassInterface" />
-                <ConfiguredGenerationWorkflow Config="_workflowConfig"
-                                              OnResultsReady="OnWorkflowResults"
-                                              OnCancelled="BackToSetup" />
-                <button type="button" class="feeding-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
-            </section>
+            <div class="wizard-steps feeding-steps">
+                <section class="wizard-step active feeding-sheet-step" aria-labelledby="feeding-title">
+                    <div class="wizard-measure">
+                        <FeedingInterfaceOccupancy Session="_session"
+                                                   Role="_activeRole"
+                                                   MoveRole="@InterfaceMoveRole"
+                                                   MoveTargets="_interfaceMoveTargets"
+                                                   MoveRequested="MoveB1PassInterface" />
+                        <ConfiguredGenerationWorkflow Config="_workflowConfig"
+                                                      OnResultsReady="OnWorkflowResults"
+                                                      OnCancelled="BackToSetup" />
+                    </div>
+                </section>
+            </div>
         }
         else if (_phase is FeedingPhase.SelectB1 or FeedingPhase.SelectB2)
         {
             var selectingB1 = _phase == FeedingPhase.SelectB1;
-            <section class="feeding-sheet feeding-sheet-results" aria-labelledby="feeding-title">
-                <FeedingLocalResultsView @ref="_resultsView"
-                                         Title="@(selectingB1 ? L["B1 local results"].Value : L["B2 local results"].Value)"
-                                         ShowVisibleTitle="false"
-                                         Locals="@(selectingB1 ? _b1Locals : _b2Locals)"
-                                         Selected="@_session.SelectedSiteswap(selectingB1 ? PartnerB1 : PartnerB2)"
-                                         EmptyHint="@(selectingB1 ? null : DescribeEmptyB2())"
-                                         Juggler="@_session.Topology[selectingB1 ? PartnerB1 : PartnerB2].TimeZone"
-                                         NumberOfJugglers="2"
-                                         Select="OnSelectFromResults"
-                                         Confirm="ConfirmResultsSelection"
-                                         Back="BackFromResultsSelection" />
-            </section>
+            <div class="wizard-steps feeding-steps">
+                <section class="wizard-step active feeding-sheet-results" aria-labelledby="feeding-title">
+                    <FeedingLocalResultsView @ref="_resultsView"
+                                             Title="@(selectingB1 ? L["B1 local results"].Value : L["B2 local results"].Value)"
+                                             ShowVisibleTitle="false"
+                                             Locals="@(selectingB1 ? _b1Locals : _b2Locals)"
+                                             Selected="@_session.SelectedSiteswap(selectingB1 ? PartnerB1 : PartnerB2)"
+                                             EmptyHint="@(selectingB1 ? null : DescribeEmptyB2())"
+                                             Juggler="@_session.Topology[selectingB1 ? PartnerB1 : PartnerB2].TimeZone"
+                                             NumberOfJugglers="2"
+                                             Select="OnSelectFromResults"
+                                             Confirm="ConfirmResultsSelection"
+                                             Back="BackFromResultsSelection" />
+                </section>
+            </div>
         }
         else if (_phase == FeedingPhase.Results)
         {
-            <section class="feeding-sheet feeding-sheet-step" aria-labelledby="feeding-title">
-                <FeedingCombinationView Session="_session" ShowBack="false" />
-                <button type="button" class="feeding-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
-            </section>
+            <div class="wizard-steps feeding-steps">
+                <section class="wizard-step active feeding-sheet-step" aria-labelledby="feeding-title">
+                    <div class="wizard-measure">
+                        <FeedingCombinationView Session="_session" ShowBack="false" />
+                    </div>
+                </section>
+            </div>
         }
         else
         {
-            <section class="feeding-sheet" aria-labelledby="feeding-title">
-                <p class="feeding-lead">@SetupLeadText</p>
+            <div class="wizard-steps feeding-steps">
+                <section class="wizard-step active feeding-setup-step" aria-labelledby="feeding-title">
+                    <div class="wizard-measure">
+                        <p class="feeding-lead">@SetupLeadText</p>
 
-                <p class="feeding-section-label" id="feeding-pass-label">@L["Pass assignments"]</p>
-                <div class="feeding-digit-row" role="list" aria-labelledby="feeding-pass-label">
-                    @for (var i = 0; i < _session.FeederSiteswap.Items.Length; i++)
-                    {
-                        var beatIndex = i;
-                        var height = _session.FeederSiteswap.Items[beatIndex];
-                        var isPass = _session.ThrowKinds[beatIndex] == PassOrSelf.Pass;
-                        var assigned = isPass ? _session.PassAssignments[beatIndex] : null;
-                        <div class="feeding-digit-cell @(isPass ? "is-pass" : "is-self")" role="listitem" @key="beatIndex">
-                            <span class="feeding-digit" aria-hidden="true">@FormatThrowDigit(height)</span>
-                            @if (isPass)
+                        <p class="feeding-section-label" id="feeding-pass-label">@L["Pass assignments"]</p>
+                        <div class="feeding-digit-row" role="list" aria-labelledby="feeding-pass-label">
+                            @for (var i = 0; i < _session.FeederSiteswap.Items.Length; i++)
                             {
-                                <div class="feeding-pass-actions" role="group"
-                                     aria-label="@L["Pass partner for beat {0}", beatIndex + 1]">
-                                    @foreach (var partner in new[] { PartnerB1, PartnerB2 })
+                                var beatIndex = i;
+                                var height = _session.FeederSiteswap.Items[beatIndex];
+                                var isPass = _session.ThrowKinds[beatIndex] == PassOrSelf.Pass;
+                                var assigned = isPass ? _session.PassAssignments[beatIndex] : null;
+                                <div class="feeding-digit-cell @(isPass ? "is-pass" : "is-self")" role="listitem" @key="beatIndex">
+                                    <span class="feeding-digit" aria-hidden="true">@FormatThrowDigit(height)</span>
+                                    @if (isPass)
                                     {
-                                        var partnerLabel = partner;
-                                        <button type="button"
-                                                class="feeding-chip @(assigned == partnerLabel ? "active" : null)"
-                                                aria-pressed="@(assigned == partnerLabel)"
-                                                aria-label="@L["Assign beat {0} to {1}", beatIndex + 1, partnerLabel]"
-                                                @onclick="() => AssignPass(beatIndex, partnerLabel)">@partnerLabel</button>
+                                        <div class="feeding-pass-actions" role="group"
+                                             aria-label="@L["Pass partner for beat {0}", beatIndex + 1]">
+                                            @foreach (var partner in new[] { PartnerB1, PartnerB2 })
+                                            {
+                                                var partnerLabel = partner;
+                                                <button type="button"
+                                                        class="feeding-chip @(assigned == partnerLabel ? "active" : null)"
+                                                        aria-pressed="@(assigned == partnerLabel)"
+                                                        aria-label="@L["Assign beat {0} to {1}", beatIndex + 1, partnerLabel]"
+                                                        @onclick="() => AssignPass(beatIndex, partnerLabel)">@partnerLabel</button>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="feeding-self-hint">@L["Self"]</span>
+                                        <span class="feeding-sr-only">@L["Beat {0} self throw", beatIndex + 1]</span>
                                     }
                                 </div>
                             }
-                            else
-                            {
-                                <span class="feeding-self-hint">@L["Self"]</span>
-                                <span class="feeding-sr-only">@L["Beat {0} self throw", beatIndex + 1]</span>
-                            }
                         </div>
-                    }
-                </div>
 
-                @if (LocalizedBlockReason is { } reason)
-                {
-                    <p class="feeding-block" role="alert" aria-live="polite">@reason</p>
-                }
+                        @if (LocalizedBlockReason is { } reason)
+                        {
+                            <p class="feeding-block" role="alert" aria-live="polite">@reason</p>
+                        }
 
-                <div class="feeding-actions">
-                    <button type="button" class="feeding-btn-primary"
-                            disabled="@(!_session.CanGenerate)" @onclick="StartGenerateB1">
-                        @L["Generate B1"]
-                    </button>
-                </div>
-            </section>
+                        <div class="feeding-actions">
+                            <button type="button" class="feeding-btn-primary"
+                                    disabled="@(!_session.CanGenerate)" @onclick="StartGenerateB1">
+                                @L["Generate B1"]
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
         }
     }
-</div>
+</SectionContent>
+
+@if (_session is not null && _phase is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2 or FeedingPhase.Results)
+{
+    <SectionContent SectionName="@WizardShellSections.Footer">
+        <div class="wizard-nav">
+            <div class="wizard-measure">
+                <div class="wizard-nav-buttons">
+                    <button type="button" class="wizard-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
+                </div>
+            </div>
+        </div>
+    </SectionContent>
+}

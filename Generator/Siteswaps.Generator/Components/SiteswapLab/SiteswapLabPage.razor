@@ -1,5 +1,7 @@
 @page "/siteswap-lab"
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Sections
+@using Siteswaps.Generator.Components.Layout
 @using Siteswaps.Generator.Components.Feeding
 @using Siteswaps.Generator.Components.WizardPage.Controls
 @using Siteswaps.Generator.Core.Generator
@@ -8,37 +10,32 @@
 
 <PageTitle>@L["Siteswap lab"]</PageTitle>
 
-<main class="siteswap-lab">
-    <header class="lab-header">
-        <a class="lab-back" href="/">@L["← Generator"]</a>
-        <p class="lab-eyebrow">@L["Siteswap editor"]</p>
-        <h1>@L["Build a siteswap your way"]</h1>
-        <p>@L["Configure people and phases, then build and validate every throw. Nothing is saved."]</p>
-    </header>
+<SectionContent SectionName="@WizardShellSections.Header">
+    <a class="lab-back" href="/">@L["← Generator"]</a>
+    <ProgressDots Total="2"
+                  Current="_cellsStep"
+                  Visited="_visitedCellsSteps"
+                  StepSelected="SelectCellsStep" />
+    <p class="lab-step-hint" aria-live="polite">
+        @L["Step {0} of 2", _cellsStep + 1] ·
+        @(_cellsStep == 0 ? L["People + TimeZones"] : L["Throws"])
+    </p>
+</SectionContent>
 
-    <section class="lab-card">
-            <div class="lab-card-heading">
-                <div>
-                    <p class="lab-kicker">@L["Direct manipulation"]</p>
-                    <h2>@L["Build throws across people and phases"]</h2>
-                </div>
-                <span class="lab-concept">@L["Precise"]</span>
+<SectionContent SectionName="@WizardShellSections.Body">
+    <div class="siteswap-lab">
+        <div class="lab-card-heading">
+            <div>
+                <p class="lab-kicker">@L["Direct manipulation"]</p>
+                <h2>@L["Build throws across people and phases"]</h2>
             </div>
+            <span class="lab-concept">@L["Precise"]</span>
+        </div>
 
-            <div class="lab-wizard-progress">
-                <ProgressDots Total="2"
-                              Current="_cellsStep"
-                              Visited="_visitedCellsSteps"
-                              StepSelected="SelectCellsStep" />
-                <p aria-live="polite">
-                    @L["Step {0} of 2", _cellsStep + 1] ·
-                    @(_cellsStep == 0 ? L["People + TimeZones"] : L["Throws"])
-                </p>
-            </div>
-
+        <div class="wizard-steps lab-steps">
             @if (_cellsStep == 0)
             {
-                <section id="wizard-panel-0" class="lab-wizard-step" aria-labelledby="wizard-step-tab-0">
+                <WizardStepPanel StepIndex="0" IsActive="true">
                     <div class="lab-config" aria-label="@L["Passing configuration"]">
                         <div class="lab-config-field">
                             <span>@L["People"]</span>
@@ -92,11 +89,11 @@
                             @L["Next: Throws"]
                         </button>
                     </div>
-                </section>
+                </WizardStepPanel>
             }
             else
             {
-                <section id="wizard-panel-1" class="lab-wizard-step" aria-labelledby="wizard-step-tab-1">
+                <WizardStepPanel StepIndex="1" IsActive="true">
                     <div class="lab-overview-toolbar">
                         <span>@L["Throw display"]</span>
                         <FeedingThrowDisplayModeToggle @bind-Mode="_throwDisplayMode" />
@@ -211,10 +208,11 @@
                             @L["Back"]
                         </button>
                     </div>
-                </section>
+                </WizardStepPanel>
             }
-    </section>
-</main>
+        </div>
+    </div>
+</SectionContent>
 
 @code {
     private PassingEditorState _direct = new();

@@ -25,7 +25,7 @@ public class GenerationWorkflowRound3RetestReproTests
             )
         );
         var wizardCss = ReadGeneratorSource(
-            Path.Combine("Components", "WizardPage", "WizardPage.razor.css")
+            Path.Combine("Components", "Layout", "WizardShell.razor.css")
         );
 
         var hostColumns = ExtractChipGridColumns(hostCss, preferHostScoped: true);

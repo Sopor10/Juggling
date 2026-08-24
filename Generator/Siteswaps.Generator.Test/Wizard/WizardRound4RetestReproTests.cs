@@ -49,7 +49,7 @@ public class WizardRound4RetestReproTests
     public void Wizard_ProgressDots_Meet_44px_Touch_Target()
     {
         var css = ReadGeneratorSource(
-            Path.Combine("Components", "WizardPage", "WizardPage.razor.css")
+            Path.Combine("Components", "Layout", "WizardShell.razor.css")
         );
 
         var dotRule = ExtractRuleBody(css, @"\.wizard-page\s+::deep\s+\.wizard-dot\b(?![-\w.])");
@@ -75,7 +75,7 @@ public class WizardRound4RetestReproTests
     public void Wizard_SiteswapCard_Title_Meets_44px_Touch_Target()
     {
         var css = ReadGeneratorSource(
-            Path.Combine("Components", "WizardPage", "WizardPage.razor.css")
+            Path.Combine("Components", "Layout", "WizardShell.razor.css")
         );
 
         var titleRule = ExtractRuleBody(

@@ -28,7 +28,8 @@
                 <ul class="feeding-results" role="list">
                     @foreach (var local in Locals.Take(_visibleCount))
                     {
-                        var selected = Selected is not null && Equals(Selected, local.Global);
+                        var selected = Selected is not null
+                            && FeedSiteswapRotation.IsRotationOf(Selected, local.Global);
                         var localSiteswap = local.Global.GetLocalSiteswap(Juggler, NumberOfJugglers);
                         var clubs = FeedingThrowDisplay.FormatAverage(localSiteswap.Average());
                         var clubsLabel = L["{0} clubs", clubs].Value;

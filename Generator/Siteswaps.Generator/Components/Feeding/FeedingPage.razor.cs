@@ -286,6 +286,8 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             RefreshInterfaceMoveTargets();
             _b2Locals = [];
         }
+
+        StateHasChanged();
     }
 
     private void ConfirmResultsSelection()

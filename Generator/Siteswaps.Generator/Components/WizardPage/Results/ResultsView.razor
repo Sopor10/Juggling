@@ -1,5 +1,7 @@
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Sections
 @using Siteswaps.Generator.Components.Internal
+@using Siteswaps.Generator.Components.Layout
 @using Microsoft.JSInterop
 @implements IDisposable
 @inject IStringLocalizer<ResultsView> L
@@ -73,9 +75,11 @@
             }
         }
     </div>
+</div>
 
-    @if (!IsGenerating)
-    {
+@if (!IsGenerating)
+{
+    <SectionContent SectionName="@WizardShellSections.Footer">
         <div class="wizard-results-actions">
             <div class="wizard-measure">
                 <div class="wizard-nav-buttons">
@@ -84,8 +88,8 @@
                 </div>
             </div>
         </div>
-    }
-</div>
+    </SectionContent>
+}
 
 @code {
     [Parameter, EditorRequired]

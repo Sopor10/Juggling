@@ -177,7 +177,10 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await _jsModule.InvokeVoidAsync("initHistory", _selfReference, State.CurrentStep);
         }
 
-        await EnsureTouchSwipeAsync();
+        if (_swipeHost.Context is not null)
+        {
+            await EnsureTouchSwipeAsync();
+        }
     }
 
     private async Task EnsureTouchSwipeAsync()

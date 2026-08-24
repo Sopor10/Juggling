@@ -38,7 +38,7 @@ public sealed class WizardState
     public const int MinJugglers = 2;
     public const int MaxJugglers = 8;
 
-    /// <summary>Upper bound for the exact-value juggler number input (beyond the quick-pick pills).</summary>
+    /// <summary>Upper bound for the juggler count stepper (beyond the typical 2–8 range).</summary>
     public const int MaxJugglersExact = 20;
 
     public const int MinPeriod = 1;

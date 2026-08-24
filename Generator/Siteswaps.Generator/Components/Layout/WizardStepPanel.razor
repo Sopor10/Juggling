@@ -1,0 +1,34 @@
+<section id="@PanelId"
+         class="@StepClass"
+         aria-hidden="@AriaHiddenValue"
+         aria-labelledby="@LabelledBy">
+    @ChildContent
+</section>
+
+@code {
+    [Parameter]
+    public int StepIndex { get; set; }
+
+    [Parameter]
+    public bool IsActive { get; set; }
+
+    [Parameter]
+    public string? AdditionalClass { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private string PanelId => $"wizard-panel-{StepIndex}";
+
+    private string LabelledBy => $"wizard-step-tab-{StepIndex}";
+
+    private string StepClass =>
+        string.Join(
+            " ",
+            new[] { "wizard-step", IsActive ? "active" : null, AdditionalClass }.Where(static s =>
+                !string.IsNullOrEmpty(s)
+            )
+        );
+
+    private string? AriaHiddenValue => IsActive ? null : "true";
+}

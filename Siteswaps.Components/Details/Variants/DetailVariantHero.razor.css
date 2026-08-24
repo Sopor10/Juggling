@@ -1,23 +1,35 @@
-/* Hero variant currently inherits shared styles from DetailPage / JugglerBeatRows. */
+.sdv-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .sdv-continue {
-    margin-top: 20px;
-    padding: 16px 14px 18px;
-    border-radius: 14px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
+    width: min(100%, 42rem);
+    box-sizing: border-box;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 2px solid var(--sd-purple-100);
 }
 
 .sdv-continue-heading {
-    margin: 0 0 8px;
-    font-size: 1.05rem;
-    font-weight: 800;
+    margin-bottom: 8px;
+    text-align: center;
 }
 
 .sdv-continue-lead {
-    margin: 0 0 14px;
-    line-height: 1.4;
-    font-size: 0.95rem;
+    margin: 0 0 16px;
+    text-align: center;
+    line-height: 1.45;
+    max-width: 34rem;
+    margin-inline: auto;
+}
+
+.sdv-continue-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 12px;
 }
 
 .sdv-continue-primary,
@@ -25,20 +37,44 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-weight: 800;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: none;
+    font-family: var(--sd-font-display);
+    font-weight: 700;
+    font-size: 15px;
     text-decoration: none;
-    margin: 0 10px 8px 0;
+    cursor: pointer;
+    transition: transform 0.12s ease;
 }
 
 .sdv-continue-primary {
-    background: #472779;
-    color: #ffffff;
+    background: linear-gradient(180deg, #ffb838, var(--sd-orange));
+    color: var(--sd-purple-950);
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+}
+
+.sdv-continue-primary:active {
+    transform: scale(0.97);
 }
 
 .sdv-continue-secondary {
-    background: #e8e1f7;
-    color: #2c1f52;
+    background: var(--sd-purple-100);
+    color: var(--sd-purple-700);
+}
+
+.sdv-continue-secondary:active {
+    transform: scale(0.97);
+}
+
+@media (min-width: 640px) {
+    .sdv-continue-actions {
+        justify-content: flex-start;
+    }
+
+    .sdv-continue-heading,
+    .sdv-continue-lead {
+        text-align: left;
+    }
 }

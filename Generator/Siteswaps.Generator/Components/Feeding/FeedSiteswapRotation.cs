@@ -23,6 +23,29 @@ internal static class FeedSiteswapRotation
         return Siteswap.CreateFromCorrect(rotated);
     }
 
+    /// <summary>
+    /// Whether <paramref name="reference"/> equals some rotation of <paramref name="candidate"/>.
+    /// Used when the session stores an interface-aligned rotation while lists keep canonical globals.
+    /// </summary>
+    public static bool IsRotationOf(Siteswap reference, Siteswap candidate)
+    {
+        var period = candidate.Items.Length;
+        if (reference.Items.Length != period)
+        {
+            return false;
+        }
+
+        for (var offset = 0; offset < period; offset++)
+        {
+            if (reference.Equals(Rotate(candidate, offset)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static void RotateInPlace<T>(T[] values, int steps)
     {
         var period = values.Length;

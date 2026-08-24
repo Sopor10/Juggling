@@ -10,14 +10,21 @@ namespace Siteswaps.Generator.Test.Wizard;
 public class WizardRound2RetestReproTests
 {
     /// <summary>
-    /// Finding (Medium): JugglerPicker hardcodes German UI/ARIA strings — visible under EN locale.
+    /// Finding (Medium): JugglerPicker must delegate to PeriodStepper with localized ARIA labels.
     /// </summary>
     [Test]
-    public void JugglerPicker_Uses_Localizer_Instead_Of_German_Hardcodes()
+    public void JugglerPicker_Uses_PeriodStepper_With_Localized_Labels()
     {
         var razor = ReadGeneratorSource(
             Path.Combine("Components", "WizardPage", "Controls", "JugglerPicker.razor")
         );
+
+        razor
+            .Should()
+            .Contain(
+                "PeriodStepper",
+                "juggler selection must use the same stepper control as period"
+            );
 
         var usesLocalizer =
             razor.Contains("IStringLocalizer", StringComparison.Ordinal)
@@ -29,10 +36,14 @@ public class WizardRound2RetestReproTests
             || razor.Contains("Wert auf", StringComparison.Ordinal)
             || razor.Contains("begrenzt", StringComparison.Ordinal);
 
-        (usesLocalizer && !hasGermanHardcodes)
+        var usesChipPicker =
+            razor.Contains("wizard-chip-row", StringComparison.Ordinal)
+            || razor.Contains("or exact count", StringComparison.Ordinal);
+
+        (usesLocalizer && !hasGermanHardcodes && !usesChipPicker)
             .Should()
             .BeTrue(
-                "JugglerPicker must localize radiogroup label, exact-count label, and clamp feedback (no DE hardcodes under EN)"
+                "JugglerPicker must wrap PeriodStepper with localized stepper labels (no chip picker or DE hardcodes under EN)"
             );
     }
 

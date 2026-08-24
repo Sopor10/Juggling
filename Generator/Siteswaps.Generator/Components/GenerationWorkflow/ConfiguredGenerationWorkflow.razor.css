@@ -1,13 +1,6 @@
 /* Hosted outside .wizard-page (e.g. /feeding): chip + generate touch targets
    must not depend on WizardPage's .wizard-page ::deep rules. */
 
-.configured-generation-workflow ::deep .wizard-chip-row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
 .configured-generation-workflow ::deep .wizard-chip {
     border-radius: 10px;
     font-weight: 800;
@@ -34,16 +27,6 @@
 
 .configured-generation-workflow ::deep .wizard-chip:active {
     transform: scale(0.94);
-}
-
-.configured-generation-workflow ::deep .wizard-chip-round {
-    width: 56px;
-    height: 56px;
-    border-radius: 999px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .configured-generation-workflow ::deep .wizard-chip-grid {
@@ -105,20 +88,6 @@
 
 .configured-generation-workflow ::deep .wizard-field + .wizard-field {
     margin-top: 1.5rem;
-}
-
-.configured-generation-workflow ::deep .wizard-juggler-exact-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 14px;
-}
-
-.configured-generation-workflow ::deep .wizard-juggler-exact-label {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: #6b41a8;
 }
 
 .configured-generation-workflow ::deep .wizard-input-number {

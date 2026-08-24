@@ -1,7 +1,7 @@
 ﻿<Fluxor.Blazor.Web.StoreInitializer/>
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@(new[]{typeof(Siteswaps.Generator.AssemblyInfo).Assembly, typeof(Siteswaps.Components.Assembly).Assembly})">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <RouteView RouteData="@routeData" DefaultLayout="@SelectLayout(routeData)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>
@@ -11,3 +11,10 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    private static Type SelectLayout(RouteData routeData) =>
+        routeData.PageType.Assembly == typeof(Siteswaps.Generator.AssemblyInfo).Assembly
+            ? typeof(WizardShellLayout)
+            : typeof(MainLayout);
+}

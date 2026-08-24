@@ -4,7 +4,7 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Jugglers" xml:space="preserve"><value>Jongleure</value></data>
-  <data name="or exact count" xml:space="preserve"><value>oder genaue Anzahl</value></data>
-  <data name="Value limited to {0} (allowed: {1}–{2})." xml:space="preserve"><value>Wert auf {0} begrenzt (erlaubt: {1}–{2}).</value></data>
+  <data name="Decrease jugglers" xml:space="preserve"><value>Jongleure verringern</value></data>
+  <data name="Increase jugglers" xml:space="preserve"><value>Jongleure erhöhen</value></data>
+  <data name="Enter juggler count exactly" xml:space="preserve"><value>Jongleuranzahl exakt eingeben</value></data>
 </root>
