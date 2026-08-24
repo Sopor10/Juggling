@@ -1,5 +1,5 @@
-@import '_content/Siteswaps.Components/Siteswaps.Components.smouq1e868.bundle.scp.css';
-@import '_content/Siteswaps.Generator/Siteswaps.Generator.64s7shifnl.bundle.scp.css';
+@import '_content/Siteswaps.Components/Siteswaps.Components.puij8nbrfn.bundle.scp.css';
+@import '_content/Siteswaps.Generator/Siteswaps.Generator.mamjnpawpx.bundle.scp.css';
 
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-eywtt48i3v] {
@@ -87,7 +87,8 @@ main[b-eywtt48i3v] {
     flex: 1 1 8rem;
     min-width: 0;
     max-width: 16rem;
-    height: 2.4rem;
+    min-height: 44px;
+    height: auto;
     border-radius: 10px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.12);
@@ -124,7 +125,9 @@ main[b-eywtt48i3v] {
 
 .pznav-search-submit[b-qldtb9oj5f] {
     flex: 0 0 auto;
-    width: 2.4rem;
+    width: 2.75rem;
+    min-width: 44px;
+    min-height: 44px;
     border: none;
     background: rgba(255, 255, 255, 0.14);
     color: white;
@@ -210,7 +213,7 @@ main[b-eywtt48i3v] {
     font-size: 0.95rem;
     text-decoration: none;
     border-radius: 999px;
-    min-height: 2.75rem;
+    min-height: 44px;
     display: flex;
     align-items: center;
     padding: 0 16px;
@@ -249,7 +252,9 @@ main[b-eywtt48i3v] {
     .pznav-links-collapsed[b-qldtb9oj5f] {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
+        justify-content: flex-end;
         width: auto;
         margin-left: auto;
         margin-right: 0;
@@ -267,7 +272,7 @@ main[b-eywtt48i3v] {
     }
 
     .pznav-link[b-qldtb9oj5f] {
-        min-height: 2.4rem;
+        min-height: 44px;
         padding: 0 14px;
         font-size: 0.9rem;
     }
