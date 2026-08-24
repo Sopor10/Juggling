@@ -1,113 +1,96 @@
 @page "/feeding"
 @using Siteswaps.Generator.Components.GenerationWorkflow
-@using Siteswaps.Generator.Components.WizardPage
-@using Siteswaps.Generator.Components.WizardPage.Controls
 
 <PageTitle>@L["3-person feed"]</PageTitle>
 
 <div class="feeding-page">
     <header class="feeding-header">
-        <a class="feeding-back" href="">@L["← Wizard"]</a>
-        <h1 @ref="_setupTitle" class="feeding-title" tabindex="-1">@L["3-person feed"]</h1>
+        <a class="feeding-back" href="@DetailsBackHref">@L["← Details"]</a>
+        <h1 id="feeding-title" @ref="_setupTitle" class="feeding-title" tabindex="-1">@HeaderTitle</h1>
     </header>
 
     @if (_loadError is not null)
     {
-        <div class="feeding-empty" role="alert" aria-live="assertive">
-            <p>@_loadError</p>
-        </div>
+        <div class="feeding-empty" role="alert" aria-live="assertive"><p>@_loadError</p></div>
     }
     else if (_session is not null)
     {
         @if (_phase is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2)
         {
-            <section class="feeding-sheet">
-                <p class="feeding-section-label">
-                    @L["Generate pattern for {0}", _activeRole ?? ""]
-                </p>
+            <section class="feeding-sheet feeding-sheet-step" aria-labelledby="feeding-title">
+                <FeedingInterfaceOccupancy Session="_session"
+                                           Role="_activeRole"
+                                           MoveRole="@InterfaceMoveRole"
+                                           MoveTargets="_interfaceMoveTargets"
+                                           MoveRequested="MoveB1PassInterface" />
                 <ConfiguredGenerationWorkflow Config="_workflowConfig"
                                               OnResultsReady="OnWorkflowResults"
                                               OnCancelled="BackToSetup" />
                 <button type="button" class="feeding-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
             </section>
         }
+        else if (_phase is FeedingPhase.SelectB1 or FeedingPhase.SelectB2)
+        {
+            var selectingB1 = _phase == FeedingPhase.SelectB1;
+            <section class="feeding-sheet feeding-sheet-results" aria-labelledby="feeding-title">
+                <FeedingLocalResultsView @ref="_resultsView"
+                                         Title="@(selectingB1 ? L["B1 local results"].Value : L["B2 local results"].Value)"
+                                         ShowVisibleTitle="false"
+                                         Locals="@(selectingB1 ? _b1Locals : _b2Locals)"
+                                         Selected="@_session.SelectedSiteswap(selectingB1 ? PartnerB1 : PartnerB2)"
+                                         EmptyHint="@(selectingB1 ? null : DescribeEmptyB2())"
+                                         Juggler="@_session.Topology[selectingB1 ? PartnerB1 : PartnerB2].TimeZone"
+                                         NumberOfJugglers="2"
+                                         Select="OnSelectFromResults"
+                                         Confirm="ConfirmResultsSelection"
+                                         Back="BackFromResultsSelection" />
+            </section>
+        }
         else if (_phase == FeedingPhase.Results)
         {
-            <section class="feeding-sheet">
-                <p class="feeding-section-label">@L["Feed combination"]</p>
-                <p class="feeding-feeder">A: @_session.FeederSiteswap</p>
-                @if (_session.SelectedSiteswap("B1") is { } b1)
-                {
-                    <p>B1: @_session.ProjectLocalResults("B1", [b1]).FirstOrDefault()?.LocalNotation</p>
-                    @if (_session.TryStartingClubs("B1", out var clubsB1))
-                    {
-                        <p class="feeding-clubs">@L["B1 starting clubs: L{0} R{1}", clubsB1.Left, clubsB1.Right]</p>
-                    }
-                }
-                @if (_session.SelectedSiteswap("B2") is { } b2)
-                {
-                    <p>B2: @_session.ProjectLocalResults("B2", [b2]).FirstOrDefault()?.LocalNotation</p>
-                    @if (_session.TryStartingClubs("B2", out var clubsB2))
-                    {
-                        <p class="feeding-clubs">@L["B2 starting clubs: L{0} R{1}", clubsB2.Left, clubsB2.Right]</p>
-                    }
-                }
-                <div class="feeding-rotate">
-                    <button type="button"
-                            class="feeding-btn-ghost"
-                            aria-label="@L["Rotate pattern left"]"
-                            @onclick="() => Rotate(-1)">◄</button>
-                    <button type="button"
-                            class="feeding-btn-ghost"
-                            aria-label="@L["Rotate pattern right"]"
-                            @onclick="() => Rotate(1)">►</button>
-                </div>
+            <section class="feeding-sheet feeding-sheet-step" aria-labelledby="feeding-title">
+                <FeedingCombinationView Session="_session" ShowBack="false" />
                 <button type="button" class="feeding-btn-ghost" @onclick="BackToSetup">@L["Back"]</button>
             </section>
         }
         else
         {
-            <section class="feeding-sheet">
-                <p class="feeding-lead">
-                    @SetupLeadText
-                </p>
-                <p class="feeding-feeder">A: @_session.FeederSiteswap</p>
+            <section class="feeding-sheet" aria-labelledby="feeding-title">
+                <p class="feeding-lead">@SetupLeadText</p>
 
-                <p class="feeding-section-label">@L["Pass assignments"]</p>
-                <ul class="feeding-passes">
-                    @foreach (var beat in _session.PassBeatIndexes)
+                <p class="feeding-section-label" id="feeding-pass-label">@L["Pass assignments"]</p>
+                <div class="feeding-digit-row" role="list" aria-labelledby="feeding-pass-label">
+                    @for (var i = 0; i < _session.FeederSiteswap.Items.Length; i++)
                     {
-                        var beatIndex = beat;
-                        var assigned = _session.PassAssignments[beatIndex];
-                        <li class="feeding-pass" @key="beatIndex">
-                            <span>@L["Beat {0}", beatIndex] (@_session.FeederSiteswap.Items[beatIndex])</span>
-                            <div class="feeding-pass-actions" role="group" aria-label="@L["Pass partner for beat {0}", beatIndex]">
-                                <button type="button"
-                                        class="feeding-chip @(assigned == PartnerB1 ? "active" : null)"
-                                        aria-pressed="@(assigned == PartnerB1 ? "true" : "false")"
-                                        aria-label="@L["Assign beat {0} to B1", beatIndex]"
-                                        @onclick="() => AssignPass(beatIndex, PartnerB1)">B1</button>
-                                <button type="button"
-                                        class="feeding-chip @(assigned == PartnerB2 ? "active" : null)"
-                                        aria-pressed="@(assigned == PartnerB2 ? "true" : "false")"
-                                        aria-label="@L["Assign beat {0} to B2", beatIndex]"
-                                        @onclick="() => AssignPass(beatIndex, PartnerB2)">B2</button>
-                            </div>
-                        </li>
+                        var beatIndex = i;
+                        var height = _session.FeederSiteswap.Items[beatIndex];
+                        var isPass = _session.ThrowKinds[beatIndex] == PassOrSelf.Pass;
+                        var assigned = isPass ? _session.PassAssignments[beatIndex] : null;
+                        <div class="feeding-digit-cell @(isPass ? "is-pass" : "is-self")" role="listitem" @key="beatIndex">
+                            <span class="feeding-digit" aria-hidden="true">@FormatThrowDigit(height)</span>
+                            @if (isPass)
+                            {
+                                <div class="feeding-pass-actions" role="group"
+                                     aria-label="@L["Pass partner for beat {0}", beatIndex + 1]">
+                                    @foreach (var partner in new[] { PartnerB1, PartnerB2 })
+                                    {
+                                        var partnerLabel = partner;
+                                        <button type="button"
+                                                class="feeding-chip @(assigned == partnerLabel ? "active" : null)"
+                                                aria-pressed="@(assigned == partnerLabel)"
+                                                aria-label="@L["Assign beat {0} to {1}", beatIndex + 1, partnerLabel]"
+                                                @onclick="() => AssignPass(beatIndex, partnerLabel)">@partnerLabel</button>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="feeding-self-hint">@L["Self"]</span>
+                                <span class="feeding-sr-only">@L["Beat {0} self throw", beatIndex + 1]</span>
+                            }
+                        </div>
                     }
-                </ul>
-
-                <p class="feeding-section-label">@L["Clubs B1"]</p>
-                <DualRangeSlider Min="_session.ClubsB1.MinNumber" MinChanged="OnClubsB1MinChanged"
-                                  Max="_session.ClubsB1.MaxNumber" MaxChanged="OnClubsB1MaxChanged"
-                                  LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                  MinLabel="@L["B1 clubs minimum"]" MaxLabel="@L["B1 clubs maximum"]" />
-
-                <p class="feeding-section-label">@L["Clubs B2"]</p>
-                <DualRangeSlider Min="_session.ClubsB2.MinNumber" MinChanged="OnClubsB2MinChanged"
-                                  Max="_session.ClubsB2.MaxNumber" MaxChanged="OnClubsB2MaxChanged"
-                                  LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                  MinLabel="@L["B2 clubs minimum"]" MaxLabel="@L["B2 clubs maximum"]" />
+                </div>
 
                 @if (LocalizedBlockReason is { } reason)
                 {
@@ -115,63 +98,11 @@
                 }
 
                 <div class="feeding-actions">
-                    <button type="button"
-                            class="feeding-btn-primary"
-                            disabled="@(!_session.CanGenerate)"
-                            @onclick="StartGenerateB1">
+                    <button type="button" class="feeding-btn-primary"
+                            disabled="@(!_session.CanGenerate)" @onclick="StartGenerateB1">
                         @L["Generate B1"]
                     </button>
-                    @if (_b1Locals.Count > 0)
-                    {
-                        <button type="button"
-                                class="feeding-btn-primary"
-                                disabled="@(!_session.CanGenerate)"
-                                @onclick="StartGenerateB2">
-                            @L["Generate B2"]
-                        </button>
-                    }
                 </div>
-
-                @if (_b1Locals.Count > 0)
-                {
-                    <p class="feeding-section-label">@L["B1 local results"]</p>
-                    <ul class="feeding-results">
-                        @foreach (var local in _b1Locals.Take(40))
-                        {
-                            var b1Selected = Equals(_session.SelectedSiteswap(PartnerB1), local.Global);
-                            <li>
-                                <button type="button"
-                                        class="feeding-result @(b1Selected ? "active" : null)"
-                                        aria-pressed="@(b1Selected ? "true" : "false")"
-                                        @onclick="() => SelectLocal(PartnerB1, local)">
-                                    @local.LocalNotation
-                                </button>
-                            </li>
-                        }
-                    </ul>
-                }
-
-                @if (_b2Locals.Count > 0)
-                {
-                    <p class="feeding-section-label">@L["B2 local results"]</p>
-                    <ul class="feeding-results">
-                        @foreach (var local in _b2Locals.Take(40))
-                        {
-                            var b2Selected = Equals(_session.SelectedSiteswap(PartnerB2), local.Global);
-                            <li>
-                                <button type="button"
-                                        class="feeding-result @(b2Selected ? "active" : null)"
-                                        aria-pressed="@(b2Selected ? "true" : "false")"
-                                        @onclick="() => SelectLocal(PartnerB2, local)">
-                                    @local.LocalNotation
-                                </button>
-                            </li>
-                        }
-                    </ul>
-                    <button type="button" class="feeding-btn-primary" @onclick="ShowCombination">
-                        @L["Show combination"]
-                    </button>
-                }
             </section>
         }
     }

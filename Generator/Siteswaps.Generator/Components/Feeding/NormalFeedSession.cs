@@ -9,6 +9,39 @@ public sealed record LocalFeedSiteswap(Siteswap Global, string LocalNotation);
 
 public readonly record struct ClubHands(int Left, int Right);
 
+/// <summary>Who currently constrains one beat of A's landing interface.</summary>
+public enum FeedInterfaceOwner
+{
+    Free,
+    Self,
+    B1,
+    B2,
+}
+
+public sealed record FeedInterfaceBeat(int Beat, FeedInterfaceOwner Owner);
+
+/// <summary>One interface slot placed on A's visible local timeline.</summary>
+public sealed record FeedInterfaceTimelineBeat(
+    int LocalBeat,
+    int GlobalBeat,
+    FeedInterfaceOwner Owner
+);
+
+/// <summary>One valid phase of a fedee pattern and the interface beats it claims.</summary>
+public sealed record FeedInterfaceOption(int RotationSteps, IReadOnlyList<int> PassBeats);
+
+/// <summary>The source and destination of one displayed throw in the normal-feed topology.</summary>
+public sealed record FeedingThrowLanding(
+    string SourceRole,
+    int SourceLocalBeat,
+    int SourceGlobalBeat,
+    string TargetRole,
+    int TargetLocalBeat,
+    int TargetGlobalBeat,
+    int Height,
+    PassOrSelf Kind
+);
+
 /// <summary>
 /// Orchestrates a normal three-person feed built from a fixed two-person feeder siteswap.
 /// Partner assignment, P/S interface translation, local projection, shared rotation, and
@@ -17,6 +50,7 @@ public readonly record struct ClubHands(int Left, int Right);
 public sealed class NormalFeedSession
 {
     private const int NumberOfJugglersInPair = 2;
+    private static readonly string[] FedeeOrder = ["B1", "B2"];
 
     private readonly Siteswap _originalFeeder;
     private readonly string?[] _passAssignments;
@@ -207,7 +241,8 @@ public sealed class NormalFeedSession
         {
             Period = FeederSiteswap.Items.Length,
             NumberOfJugglers = 2,
-            PassSelfInterface = InterfaceFor(role).ToList(),
+            PassSelfInterface = PartialInterfaceFor(role),
+            ThrowInterface = ThrowTimeInterfaceFor(role).ToList(),
             Clubs = role switch
             {
                 "B1" => ClubsB1,
@@ -219,6 +254,116 @@ public sealed class NormalFeedSession
                 ),
             },
         };
+
+    public IReadOnlyList<int> OpenPassInterfaceBeats()
+    {
+        var forcedSelf = SelfInterfaceBeats();
+        return Enumerable
+            .Range(0, FeederSiteswap.Items.Length)
+            .Where(beat => !forcedSelf.Contains(beat))
+            .ToList();
+    }
+
+    public IReadOnlyList<int> PassInterfaceBeatsOf(Siteswap siteswap)
+    {
+        ArgumentNullException.ThrowIfNull(siteswap);
+
+        if (siteswap.Items.Length != FeederSiteswap.Items.Length)
+        {
+            throw new ArgumentException(
+                "Siteswap period must match the feeder interface.",
+                nameof(siteswap)
+            );
+        }
+
+        var period = siteswap.Items.Length;
+        return Enumerable
+            .Range(0, period)
+            .Where(i => ToPassOrSelf(siteswap.Items[i]) == PassOrSelf.Pass)
+            .Select(i => (i + siteswap.Items[i]) % period)
+            .Distinct()
+            .Order()
+            .ToList();
+    }
+
+    public IReadOnlyList<int> ForcedSelfInterfaceBeatsFor(string role)
+    {
+        EnsureFedeeRole(role);
+
+        var forced = new SortedSet<int>(SelfInterfaceBeats());
+        foreach (var earlier in FedeeOrder.TakeWhile(name => name != role))
+        {
+            if (!_selected.TryGetValue(earlier, out var siteswap))
+            {
+                continue;
+            }
+
+            foreach (var beat in PassInterfaceBeatsOf(siteswap))
+            {
+                forced.Add(beat);
+            }
+        }
+
+        return forced.ToList();
+    }
+
+    public IReadOnlyList<Throw> PartialInterfaceFor(string role)
+    {
+        var forcedSelf = ForcedSelfInterfaceBeatsFor(role);
+        return Enumerable
+            .Range(0, FeederSiteswap.Items.Length)
+            .Select(beat => forcedSelf.Contains(beat) ? Throw.AnySelf : Throw.Empty)
+            .ToList();
+    }
+
+    public IReadOnlyList<FeedInterfaceBeat> FeederInterfaceOccupancy()
+    {
+        var period = FeederSiteswap.Items.Length;
+        var selfBeats = SelfInterfaceBeats().ToHashSet();
+        var claims = new Dictionary<int, FeedInterfaceOwner>();
+
+        foreach (var role in FedeeOrder)
+        {
+            if (!_selected.TryGetValue(role, out var siteswap))
+            {
+                continue;
+            }
+
+            var owner = role == "B1" ? FeedInterfaceOwner.B1 : FeedInterfaceOwner.B2;
+            foreach (var beat in PassInterfaceBeatsOf(siteswap))
+            {
+                claims.TryAdd(beat, owner);
+            }
+        }
+
+        return Enumerable
+            .Range(0, period)
+            .Select(beat => new FeedInterfaceBeat(beat, OwnerOf(beat)))
+            .ToList();
+
+        FeedInterfaceOwner OwnerOf(int beat) =>
+            selfBeats.Contains(beat) ? FeedInterfaceOwner.Self
+            : claims.TryGetValue(beat, out var owner) ? owner
+            : FeedInterfaceOwner.Free;
+    }
+
+    public IReadOnlyList<FeedInterfaceTimelineBeat> FeederInterfaceTimeline()
+    {
+        var occupancy = FeederInterfaceOccupancy().ToDictionary(beat => beat.Beat);
+        var localPeriod = FeederSiteswap.Period.GetLocalPeriod(NumberOfJugglersInPair).Value;
+        return Enumerable
+            .Range(0, localPeriod)
+            .Select(localBeat =>
+            {
+                var globalBeat = GlobalBeatFor("A", localBeat, FeederSiteswap.Items.Length);
+                return new FeedInterfaceTimelineBeat(
+                    localBeat,
+                    globalBeat,
+                    occupancy[globalBeat].Owner
+                );
+            })
+            .ToList();
+    }
 
     public IReadOnlyList<Throw> InterfaceFor(string role)
     {
@@ -298,13 +443,9 @@ public sealed class NormalFeedSession
         return result;
     }
 
-    public void SelectSiteswap(string role, Siteswap siteswap)
+    public void SelectSiteswap(string role, Siteswap siteswap, int? passInterfaceBeat = null)
     {
-        if (role is not ("B1" or "B2"))
-        {
-            throw new ArgumentOutOfRangeException(nameof(role), role, "Unknown feed role.");
-        }
-
+        EnsureFedeeRole(role);
         ArgumentNullException.ThrowIfNull(siteswap);
 
         if (!ArePassAssignmentsComplete)
@@ -322,13 +463,168 @@ public sealed class NormalFeedSession
             );
         }
 
-        EnsureSelectionMatchesLandingInterface(role, siteswap);
+        if (!siteswap.IsValid())
+        {
+            throw new ArgumentException(
+                "Selection must be a valid siteswap; its Interface is undefined otherwise.",
+                nameof(siteswap)
+            );
+        }
 
-        _selected[role] = siteswap;
+        if (
+            !TryAlignToFeedInterface(
+                role,
+                siteswap,
+                passInterfaceBeat,
+                out var aligned,
+                out var failure
+            )
+        )
+        {
+            throw new ArgumentException(failure, nameof(siteswap));
+        }
+
+        _selected[role] = aligned;
+        DropSelectionsIncompatibleWith(role);
+    }
+
+    public IReadOnlyList<FeedInterfaceOption> InterfaceOptionsFor(string role, Siteswap siteswap)
+    {
+        EnsureFedeeRole(role);
+        ArgumentNullException.ThrowIfNull(siteswap);
+
+        if (
+            !ArePassAssignmentsComplete
+            || siteswap.Items.Length != FeederSiteswap.Items.Length
+            || !siteswap.IsValid()
+        )
+        {
+            return [];
+        }
+
+        var throwTime = ThrowTimeInterfaceFor(role);
+        var forcedSelf = ForcedSelfInterfaceBeatsFor(role);
+        var options = new List<FeedInterfaceOption>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        for (var offset = 0; offset < siteswap.Items.Length; offset++)
+        {
+            var candidate = FeedSiteswapRotation.Rotate(siteswap, offset);
+            if (
+                !MatchesThrowInterface(throwTime, candidate)
+                || ClaimsForcedSelfBeat(candidate, forcedSelf)
+            )
+            {
+                continue;
+            }
+
+            var passBeats = PassInterfaceBeatsOf(candidate);
+            if (seen.Add(string.Join(",", passBeats)))
+            {
+                options.Add(new FeedInterfaceOption(offset, passBeats));
+            }
+        }
+
+        return options;
+    }
+
+    public IReadOnlyList<int> SelectablePassInterfaceBeatsFor(
+        string role,
+        IEnumerable<Siteswap> candidates
+    )
+    {
+        ArgumentNullException.ThrowIfNull(candidates);
+
+        var beats = new SortedSet<int>();
+        foreach (var candidate in candidates)
+        {
+            foreach (var beat in InterfaceOptionsFor(role, candidate).SelectMany(o => o.PassBeats))
+            {
+                beats.Add(beat);
+            }
+        }
+
+        return beats.ToList();
+    }
+
+    public bool TrySelectPassInterfaceBeat(string role, int beat, IEnumerable<Siteswap> candidates)
+    {
+        EnsureFedeeRole(role);
+        ArgumentNullException.ThrowIfNull(candidates);
+
+        var ordered = candidates.ToList();
+        if (SelectedSiteswap(role) is { } current)
+        {
+            ordered.Insert(0, current);
+        }
+
+        foreach (var candidate in ordered)
+        {
+            if (InterfaceOptionsFor(role, candidate).Any(option => option.PassBeats.Contains(beat)))
+            {
+                SelectSiteswap(role, candidate, beat);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void DropSelectionsIncompatibleWith(string changedRole)
+    {
+        foreach (var role in _selected.Keys.Where(key => key != changedRole).ToList())
+        {
+            if (ClaimsForcedSelfBeat(_selected[role], ForcedSelfInterfaceBeatsFor(role)))
+            {
+                _selected.Remove(role);
+            }
+        }
     }
 
     public Siteswap? SelectedSiteswap(string role) =>
         _selected.TryGetValue(role, out var siteswap) ? siteswap : null;
+
+    public FeedingThrowLanding LandingFor(string role, int localBeat)
+    {
+        var siteswap =
+            role == "A"
+                ? FeederSiteswap
+                : SelectedSiteswap(role)
+                    ?? throw new InvalidOperationException($"No siteswap selected for {role}.");
+        var localPeriod = siteswap.Period.GetLocalPeriod(NumberOfJugglersInPair).Value;
+        if (localBeat < 0 || localBeat >= localPeriod)
+        {
+            throw new ArgumentOutOfRangeException(nameof(localBeat));
+        }
+
+        var period = siteswap.Items.Length;
+        var sourceGlobalBeat = GlobalBeatFor(role, localBeat, period);
+        var height = siteswap.Items[sourceGlobalBeat];
+        var kind = ToPassOrSelf(height);
+        var targetRole =
+            kind == PassOrSelf.Self
+                ? role
+                : PassingPartnerFor(role, Throw.AnyPass, sourceGlobalBeat);
+        var targetGlobalBeat = PositiveModulo(sourceGlobalBeat + height, period);
+        var targetTimeZone = Topology[targetRole].TimeZone;
+        var targetLocalBeat = Enumerable
+            .Range(0, localPeriod)
+            .Single(beat =>
+                PositiveModulo(targetTimeZone + beat * NumberOfJugglersInPair, period)
+                == targetGlobalBeat
+            );
+
+        return new FeedingThrowLanding(
+            role,
+            localBeat,
+            sourceGlobalBeat,
+            targetRole,
+            targetLocalBeat,
+            targetGlobalBeat,
+            height,
+            kind
+        );
+    }
 
     public void Rotate(int steps)
     {
@@ -385,7 +681,7 @@ public sealed class NormalFeedSession
         return true;
     }
 
-    private IReadOnlyList<Throw> BuildThrowTimeInterface(string role)
+    private List<Throw> BuildThrowTimeInterface(string role)
     {
         if (!ArePassAssignmentsComplete)
         {
@@ -413,23 +709,83 @@ public sealed class NormalFeedSession
             .ToList();
     }
 
-    private void EnsureSelectionMatchesLandingInterface(string role, Siteswap siteswap)
+    private bool TryAlignToFeedInterface(
+        string role,
+        Siteswap siteswap,
+        int? passInterfaceBeat,
+        out Siteswap aligned,
+        out string? failure
+    )
     {
-        var landing = InterfaceFor(role);
-        for (var i = 0; i < landing.Count; i++)
+        var throwTime = ThrowTimeInterfaceFor(role);
+        var forcedSelf = ForcedSelfInterfaceBeatsFor(role);
+        var matchedThrowTime = false;
+        var matchedOpenInterface = false;
+
+        for (var offset = 0; offset < siteswap.Items.Length; offset++)
+        {
+            var candidate = FeedSiteswapRotation.Rotate(siteswap, offset);
+            if (!MatchesThrowInterface(throwTime, candidate))
+            {
+                continue;
+            }
+
+            matchedThrowTime = true;
+            if (ClaimsForcedSelfBeat(candidate, forcedSelf))
+            {
+                continue;
+            }
+
+            matchedOpenInterface = true;
+            if (passInterfaceBeat is { } beat && !PassInterfaceBeatsOf(candidate).Contains(beat))
+            {
+                continue;
+            }
+
+            aligned = candidate;
+            failure = null;
+            return true;
+        }
+
+        aligned = siteswap;
+        failure =
+            !matchedThrowTime
+                ? "Selection must pass on the beats the feeder throws to this fedee on."
+            : !matchedOpenInterface
+                ? "Selection places a Pass on an Interface beat of A that is already forced to Self."
+            : $"Selection cannot place a Pass on Interface beat {passInterfaceBeat}.";
+        return false;
+    }
+
+    private static bool MatchesThrowInterface(IReadOnlyList<Throw> throwTime, Siteswap siteswap)
+    {
+        for (var i = 0; i < throwTime.Count; i++)
         {
             var required =
-                landing[i].Height == Throw.AnyPass.Height ? PassOrSelf.Pass : PassOrSelf.Self;
-            var actual = ToPassOrSelf(siteswap.Items[i]);
-            if (required != actual)
+                throwTime[i].Height == Throw.AnyPass.Height ? PassOrSelf.Pass : PassOrSelf.Self;
+            if (ToPassOrSelf(siteswap.Items[i]) != required)
             {
-                throw new ArgumentException(
-                    "Selection must place passes on the landing beats required by the interface.",
-                    nameof(siteswap)
-                );
+                return false;
             }
         }
+
+        return true;
     }
+
+    private List<int> SelfInterfaceBeats()
+    {
+        var period = FeederSiteswap.Items.Length;
+        return Enumerable
+            .Range(0, period)
+            .Where(i => ToPassOrSelf(FeederSiteswap.Items[i]) == PassOrSelf.Self)
+            .Select(i => (i + FeederSiteswap.Items[i]) % period)
+            .Distinct()
+            .Order()
+            .ToList();
+    }
+
+    private bool ClaimsForcedSelfBeat(Siteswap siteswap, IReadOnlyList<int> forcedSelfBeats) =>
+        forcedSelfBeats.Count > 0 && PassInterfaceBeatsOf(siteswap).Any(forcedSelfBeats.Contains);
 
     private bool BothFedeesReceiveAtLeastOnePass()
     {
@@ -473,7 +829,21 @@ public sealed class NormalFeedSession
         }
     }
 
+    private static void EnsureFedeeRole(string role)
+    {
+        if (role is not ("B1" or "B2"))
+        {
+            throw new ArgumentOutOfRangeException(nameof(role), role, "Unknown feed role.");
+        }
+    }
+
     private void InvalidateSelections() => _selected.Clear();
+
+    private int GlobalBeatFor(string role, int localBeat, int period) =>
+        PositiveModulo(Topology[role].TimeZone + localBeat * NumberOfJugglersInPair, period);
+
+    private static int PositiveModulo(int value, int modulus) =>
+        ((value % modulus) + modulus) % modulus;
 
     private static PassOrSelf ToPassOrSelf(int height) =>
         height % NumberOfJugglersInPair == 0 ? PassOrSelf.Self : PassOrSelf.Pass;

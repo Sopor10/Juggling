@@ -122,8 +122,8 @@ public class FeedingRound5RetestReproTests
             .BeTrue(
                 "feeding-btn-primary must match wizard-btn-generate min-height (≥48) and "
                     + "font-family (display stack, not inherit). "
-                    + $"feeding min-height={feedingMinHeight?.ToString() ?? "missing"}px, "
-                    + $"wizard min-height={wizardMinHeight?.ToString() ?? "missing"}px, "
+                    + $"feeding min-height={feedingMinHeight?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "missing"}px, "
+                    + $"wizard min-height={wizardMinHeight?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "missing"}px, "
                     + $"feeding font='{feedingFont}', wizard font='{wizardFont}'"
             );
     }

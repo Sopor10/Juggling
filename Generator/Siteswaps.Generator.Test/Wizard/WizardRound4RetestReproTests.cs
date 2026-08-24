@@ -62,8 +62,8 @@ public class WizardRound4RetestReproTests
             .Should()
             .BeTrue(
                 ".wizard-dot must expose ≥44px touch target "
-                    + $"(min-height={minHeight?.ToString() ?? "missing"}px, "
-                    + $"min-width={minWidth?.ToString() ?? "missing"}px)"
+                    + $"(min-height={minHeight?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "missing"}px, "
+                    + $"min-width={minWidth?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "missing"}px)"
             );
     }
 
@@ -92,7 +92,7 @@ public class WizardRound4RetestReproTests
             .Should()
             .BeTrue(
                 ".pz-siteswap-card-title must declare min-height ≥ 44px "
-                    + $"(found {minHeight?.ToString() ?? "none"})"
+                    + $"(found {minHeight?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "none"})"
             );
     }
 

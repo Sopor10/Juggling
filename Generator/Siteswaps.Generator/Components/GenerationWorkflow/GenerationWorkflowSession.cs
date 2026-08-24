@@ -52,6 +52,11 @@ public sealed class GenerationWorkflowSession
             config = config with { PassSelfInterface = pattern.ToList() };
         }
 
+        if (config.ThrowInterface is { } throwPattern)
+        {
+            config = config with { ThrowInterface = throwPattern.ToList() };
+        }
+
         if (config.PassSelfInterface is { Count: > 0 } && config.Period is null)
         {
             throw new ArgumentException(
@@ -70,6 +75,15 @@ public sealed class GenerationWorkflowSession
                 "PassSelfInterface length must match Period.",
                 nameof(config)
             );
+        }
+
+        if (
+            config.ThrowInterface is { Count: > 0 }
+            && config.Period is { } throwPeriod
+            && config.ThrowInterface.Count != throwPeriod
+        )
+        {
+            throw new ArgumentException("ThrowInterface length must match Period.", nameof(config));
         }
 
         var inner = new WizardState();
@@ -140,7 +154,7 @@ public sealed class GenerationWorkflowSession
 
         if (Config.PassSelfInterface is { Count: > 0 } pattern)
         {
-            InjectOrReplaceLockedInterface(pattern);
+            InjectOrReplaceLockedInterface(pattern, Config.ThrowInterface);
         }
     }
 
@@ -158,18 +172,19 @@ public sealed class GenerationWorkflowSession
 
         if (Config.PassSelfInterface is { Count: > 0 } pattern)
         {
-            InjectOrReplaceLockedInterface(pattern);
+            InjectOrReplaceLockedInterface(pattern, Config.ThrowInterface);
         }
     }
 
-    private void InjectOrReplaceLockedInterface(IReadOnlyList<Throw> pattern)
+    private void InjectOrReplaceLockedInterface(
+        IReadOnlyList<Throw> pattern,
+        IReadOnlyList<Throw>? throwPattern
+    )
     {
-        // Absolute beats: SelectSiteswap validates landing at fixed indices (not Global cyclic / juggler remap).
-        var filter = new NewPatternFilterInformation(
+        var filter = new InterfaceFilterInformation(
             pattern.ToList(),
-            PatternRotation.Absolute,
-            IsIncludePattern: true,
-            IsValidLocally: false
+            AllowRotation: true,
+            throwPattern?.ToList()
         );
 
         if (LockedInterfaceFilterId is { } lockedId)

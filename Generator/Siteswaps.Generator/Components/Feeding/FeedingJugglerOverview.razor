@@ -1,0 +1,186 @@
+@namespace Siteswaps.Generator.Components.Feeding
+@using Siteswaps.Generator.Core.Generator
+@inject IStringLocalizer<FeedingJugglerOverview> L
+
+@if (Rows.Count == 0)
+{
+    return;
+}
+
+<div class="feeding-jugglers @ExtraClass">
+    <div class="feeding-jugglers-body">
+        @foreach (var row in Rows)
+        {
+            var chips = FeedingThrowDisplay.ChipsFor(row.Siteswap, row.Juggler, row.NumberOfJugglers, Mode);
+            <div class="feeding-juggler">
+                <div class="feeding-juggler-beats">
+                    <div class="feeding-juggler-id">
+                        <span class="feeding-juggler-label">@row.Label</span>
+                        @if (row.ShowAverage)
+                        {
+                            <span class="feeding-juggler-avg">Ø @FeedingThrowDisplay.FormatAverage(row.Average)</span>
+                        }
+                    </div>
+                    @if (row.StartingClubs is { } clubs)
+                    {
+                        <div class="feeding-start-props"
+                             title="@L["Starting club distribution (L / R)"]"
+                             aria-label="@L["Start clubs {0}: left {1}, right {2}", row.Label, clubs.Left, clubs.Right]">
+                            <span class="feeding-start-props-hand">@clubs.Left</span>
+                            <span class="feeding-start-props-hand">@clubs.Right</span>
+                        </div>
+                    }
+                    <div class="feeding-juggler-throws"
+                         style="@($"--feeding-stagger:{row.Juggler};--feeding-jugglers:{row.NumberOfJugglers}")">
+                        <FeedingThrowChipRow Chips="chips"
+                                             AriaLabel="@L["Throws {0}", row.Label]"
+                                             SelectedLocalBeat="SelectedBeatFor(row.Label)"
+                                             LandingLocalBeat="LandingBeatFor(row.Label)"
+                                             ChipClicked="beat => SelectThrow(row.Label, beat)"
+                                             AccessibleName="@(chip => ChipAccessibleName(row, chip))"
+                                             KindName="KindName" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <p class="feeding-sr-only" role="status" aria-live="polite">@SelectionStatus</p>
+
+        <div class="feeding-jugglers-footer">
+            @if (ShowLegend)
+            {
+                <div class="feeding-beat-legend" aria-label="@L["Legend"]">
+                    <span class="feeding-start-props feeding-start-props-legend" aria-hidden="true">
+                        <span class="feeding-start-props-hand">L</span>
+                        <span class="feeding-start-props-hand">R</span>
+                    </span>
+                    <span class="feeding-muted">@L["Start clubs"]</span>
+                    <span class="feeding-beat pass"><span class="feeding-beat-throw">·</span></span>
+                    <span class="feeding-muted">Pass</span>
+                    <span class="feeding-beat self"><span class="feeding-beat-throw">·</span></span>
+                    <span class="feeding-muted">Self</span>
+                </div>
+            }
+            else
+            {
+                <span></span>
+            }
+
+            <FeedingThrowDisplayModeToggle Mode="Mode" ModeChanged="ModeChanged" />
+        </div>
+    </div>
+</div>
+
+@code {
+    public sealed record Row(
+        string Label,
+        Siteswap Siteswap,
+        int Juggler,
+        int NumberOfJugglers,
+        double Average,
+        bool ShowAverage,
+        ClubHands? StartingClubs
+    );
+
+    private FeedingThrowLanding? _selectedLanding;
+
+    [Parameter, EditorRequired]
+    public NormalFeedSession Session { get; set; } = null!;
+
+    [Parameter]
+    public IReadOnlyList<Row> Rows { get; set; } = [];
+
+    [Parameter]
+    public FeedingThrowDisplay.Mode Mode { get; set; } = FeedingThrowDisplay.Mode.Global;
+
+    [Parameter]
+    public EventCallback<FeedingThrowDisplay.Mode> ModeChanged { get; set; }
+
+    [Parameter]
+    public bool ShowLegend { get; set; } = true;
+
+    [Parameter]
+    public string? ExtraClass { get; set; }
+
+    private int? SelectedBeatFor(string role) =>
+        _selectedLanding?.SourceRole == role ? _selectedLanding.SourceLocalBeat : null;
+
+    private int? LandingBeatFor(string role) =>
+        _selectedLanding?.TargetRole == role ? _selectedLanding.TargetLocalBeat : null;
+
+    private void SelectThrow(string role, int localBeat)
+    {
+        if (
+            _selectedLanding is { } selected
+            && selected.SourceRole == role
+            && selected.SourceLocalBeat == localBeat
+        )
+        {
+            _selectedLanding = null;
+            return;
+        }
+
+        _selectedLanding = Session.LandingFor(role, localBeat);
+    }
+
+    private string ChipAccessibleName(Row row, FeedingThrowDisplay.Chip chip)
+    {
+        var kind = KindName(chip.Kind);
+        if (
+            _selectedLanding is { } selected
+            && selected.SourceRole == row.Label
+            && selected.SourceLocalBeat == chip.LocalBeat
+        )
+        {
+            return L[
+                "Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear.",
+                chip.Display,
+                kind,
+                row.Label,
+                chip.LocalBeat + 1,
+                selected.TargetRole,
+                selected.TargetLocalBeat + 1
+            ].Value;
+        }
+
+        if (
+            _selectedLanding is { } landing
+            && landing.TargetRole == row.Label
+            && landing.TargetLocalBeat == chip.LocalBeat
+        )
+        {
+            return L[
+                "{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}.",
+                chip.Display,
+                kind,
+                row.Label,
+                chip.LocalBeat + 1,
+                landing.SourceRole,
+                landing.SourceLocalBeat + 1
+            ].Value;
+        }
+
+        return L[
+            "{0} {1}, {2} beat {3}. Press to show landing.",
+            chip.Display,
+            kind,
+            row.Label,
+            chip.LocalBeat + 1
+        ].Value;
+    }
+
+    private string KindName(PassOrSelf kind) =>
+        kind == PassOrSelf.Pass ? L["Pass"].Value : L["Self"].Value;
+
+    private string SelectionStatus =>
+        _selectedLanding is not { } landing
+            ? L["No throw selected."].Value
+            : L[
+                "Selected {0} from {1} beat {2}; landing on {3} beat {4}.",
+                FeedingThrowDisplay.Format(landing.Height, 2, Mode),
+                landing.SourceRole,
+                landing.SourceLocalBeat + 1,
+                landing.TargetRole,
+                landing.TargetLocalBeat + 1
+            ].Value;
+}

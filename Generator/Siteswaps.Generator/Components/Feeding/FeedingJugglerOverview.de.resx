@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Starting club distribution (L / R)" xml:space="preserve"><value>Startkeulen-Verteilung (L / R)</value></data>
+  <data name="Start clubs {0}: left {1}, right {2}" xml:space="preserve"><value>Startkeulen {0}: links {1}, rechts {2}</value></data>
+  <data name="Throws {0}" xml:space="preserve"><value>Würfe {0}</value></data>
+  <data name="Legend" xml:space="preserve"><value>Legende</value></data>
+  <data name="Start clubs" xml:space="preserve"><value>Startkeulen</value></data>
+  <data name="Pass" xml:space="preserve"><value>Pass</value></data>
+  <data name="Self" xml:space="preserve"><value>Self</value></data>
+  <data name="{0} {1}, {2} beat {3}. Press to show landing." xml:space="preserve"><value>{0} {1}, {2} Beat {3}. Drücken, um die Landung anzuzeigen.</value></data>
+  <data name="Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear." xml:space="preserve"><value>Ausgewählter Wurf {0} {1}, {2} Beat {3}. Landet bei {4} auf Beat {5}. Drücken zum Aufheben.</value></data>
+  <data name="{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} Beat {3}. Landung des ausgewählten Wurfs von {4} Beat {5}.</value></data>
+  <data name="No throw selected." xml:space="preserve"><value>Kein Wurf ausgewählt.</value></data>
+  <data name="Selected {0} from {1} beat {2}; landing on {3} beat {4}." xml:space="preserve"><value>{0} von {1} Beat {2} ausgewählt; Landung bei {3} auf Beat {4}.</value></data>
+</root>

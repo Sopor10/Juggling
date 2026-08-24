@@ -8,13 +8,14 @@ public static class StartingClubDistribution
 {
     public static ClubHands ForJuggler(IReadOnlyList<int> heights, int juggler)
     {
-        var positions = StableStatePositions(heights).Reverse().ToList();
+        var positions = StableStatePositions(heights);
+        positions.Reverse();
         var right = positions.Where((_, i) => Mod(i - juggler, 4) == 0).Count(x => x);
         var left = positions.Where((_, i) => Mod(i + 2 - juggler, 4) == 0).Count(x => x);
         return new ClubHands(left, right);
     }
 
-    private static IReadOnlyList<bool> StableStatePositions(IReadOnlyList<int> heights)
+    private static List<bool> StableStatePositions(IReadOnlyList<int> heights)
     {
         var state = 0u;
         var stable = false;

@@ -99,6 +99,11 @@ internal static class FilterTranslation
             var builder = new FilterBuilder(input);
             return filterInformation switch
             {
+                InterfaceFilterInformation interfaceFilter => BuildInterfaceFilter(
+                    interfaceFilter,
+                    numberOfJugglers,
+                    useLiteralValue
+                ),
                 NewPatternFilterInformation patternFilterInformation => BuildPatternFilter(
                     patternFilterInformation,
                     numberOfJugglers,
@@ -117,6 +122,38 @@ internal static class FilterTranslation
                 _ => throw new ArgumentOutOfRangeException(nameof(filterInformation)),
             };
         }
+
+        private ISiteswapFilter BuildInterfaceFilter(
+            InterfaceFilterInformation information,
+            int numberOfJugglers,
+            bool useLiteralValue
+        ) =>
+            new InterfaceFilter(
+                ToFlexiblePattern(information.Landing, numberOfJugglers, useLiteralValue),
+                numberOfJugglers,
+                input,
+                information.AllowRotation,
+                information.Throws is { } throws
+                    ? ToFlexiblePattern(throws, numberOfJugglers, useLiteralValue)
+                    : null
+            );
+
+        private static List<List<int>> ToFlexiblePattern(
+            IEnumerable<Throw> pattern,
+            int numberOfJugglers,
+            bool useLiteralValue
+        ) =>
+            pattern
+                .Select(t =>
+                    t.Height switch
+                    {
+                        -1 => new List<int> { -1 },
+                        -2 => new List<int> { -2 },
+                        -3 => new List<int> { -3 },
+                        _ => t.GetHeightForJugglers(numberOfJugglers, useLiteralValue).ToList(),
+                    }
+                )
+                .ToList();
 
         private ISiteswapFilter BuildNumberFilter(
             EasyNumberFilter.NumberFilter numberFilter,

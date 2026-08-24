@@ -1,0 +1,55 @@
+@namespace Siteswaps.Generator.Components.Feeding
+
+@if (Chips is null || Chips.Count == 0)
+{
+    return;
+}
+
+<div class="feeding-beat-row" aria-label="@AriaLabel">
+    @foreach (var chip in Chips)
+    {
+        var kindClass = chip.Kind == PassOrSelf.Pass ? "pass" : "self";
+        var kindTitle = KindName?.Invoke(chip.Kind) ?? (chip.Kind == PassOrSelf.Pass ? "Pass" : "Self");
+        var stateClass = $"{(SelectedLocalBeat == chip.LocalBeat ? "is-selected" : null)} {(LandingLocalBeat == chip.LocalBeat ? "is-landing" : null)}";
+        @if (ChipClicked.HasDelegate)
+        {
+            <button type="button"
+                    class="feeding-beat @kindClass @stateClass"
+                    title="@kindTitle"
+                    aria-label="@(AccessibleName?.Invoke(chip) ?? $"{chip.Display} {kindTitle}")"
+                    aria-pressed="@(SelectedLocalBeat == chip.LocalBeat ? "true" : "false")"
+                    @onclick="() => ChipClicked.InvokeAsync(chip.LocalBeat)">
+                <span class="feeding-beat-throw" aria-hidden="true">@chip.Display</span>
+            </button>
+        }
+        else
+        {
+            <div class="feeding-beat @kindClass" title="@kindTitle" aria-label="@($"{chip.Display} {kindTitle}")">
+                <span class="feeding-beat-throw">@chip.Display</span>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<FeedingThrowDisplay.Chip>? Chips { get; set; }
+
+    [Parameter]
+    public string AriaLabel { get; set; } = "Throws";
+
+    [Parameter]
+    public int? SelectedLocalBeat { get; set; }
+
+    [Parameter]
+    public int? LandingLocalBeat { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ChipClicked { get; set; }
+
+    [Parameter]
+    public Func<FeedingThrowDisplay.Chip, string>? AccessibleName { get; set; }
+
+    [Parameter]
+    public Func<PassOrSelf, string>? KindName { get; set; }
+}

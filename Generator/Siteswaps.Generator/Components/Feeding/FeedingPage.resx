@@ -5,7 +5,7 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="3-person feed" xml:space="preserve"><value>3-person feed</value></data>
-  <data name="← Wizard" xml:space="preserve"><value>← Wizard</value></data>
+  <data name="← Details" xml:space="preserve"><value>← Details</value></data>
   <data name="Open Feeding from a two-person siteswap on the details page." xml:space="preserve"><value>Open Feeding from a two-person siteswap on the details page.</value></data>
   <data name="Invalid siteswap." xml:space="preserve"><value>Invalid siteswap.</value></data>
   <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees.</value></data>
@@ -17,6 +17,9 @@
   <data name="Pass partner for beat {0}" xml:space="preserve"><value>Pass partner for beat {0}</value></data>
   <data name="Assign beat {0} to B1" xml:space="preserve"><value>Assign beat {0} to B1</value></data>
   <data name="Assign beat {0} to B2" xml:space="preserve"><value>Assign beat {0} to B2</value></data>
+  <data name="Assign beat {0} to {1}" xml:space="preserve"><value>Assign beat {0} to {1}</value></data>
+  <data name="Beat {0} self throw" xml:space="preserve"><value>Beat {0} self throw</value></data>
+  <data name="Self" xml:space="preserve"><value>Self</value></data>
   <data name="Clubs B1" xml:space="preserve"><value>Clubs B1</value></data>
   <data name="Clubs B2" xml:space="preserve"><value>Clubs B2</value></data>
   <data name="B1 clubs minimum" xml:space="preserve"><value>B1 clubs minimum</value></data>
@@ -40,4 +43,6 @@
   <data name="Rotate pattern left" xml:space="preserve"><value>Rotate pattern left</value></data>
   <data name="Rotate pattern right" xml:space="preserve"><value>Rotate pattern right</value></data>
   <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="A's Interface is fully constrained after B1." xml:space="preserve"><value>A's Interface is fully constrained after B1.</value></data>
+  <data name="Still free after B1: {0}" xml:space="preserve"><value>Still free after B1: {0}</value></data>
 </root>

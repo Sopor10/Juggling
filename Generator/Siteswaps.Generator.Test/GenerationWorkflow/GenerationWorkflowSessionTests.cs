@@ -240,15 +240,15 @@ public class GenerationWorkflowGenerateTests
         return found;
     }
 
-    private static bool MatchesCyclicPassSelf(IReadOnlyList<int> heights, PassKind[] required)
+    private static bool MatchesCyclicPassSelf(int[] heights, PassKind[] required)
     {
-        for (var offset = 0; offset < heights.Count; offset++)
+        for (var offset = 0; offset < heights.Length; offset++)
         {
             var ok = true;
             for (var i = 0; i < required.Length; i++)
             {
                 var kind =
-                    heights[(i + offset) % heights.Count] % 2 == 0 ? PassKind.Self : PassKind.Pass;
+                    heights[(i + offset) % heights.Length] % 2 == 0 ? PassKind.Self : PassKind.Pass;
                 if (kind != required[i])
                 {
                     ok = false;

@@ -1,0 +1,448 @@
+/* Own scope: Feeding hosts FilterBottomSheet outside .wizard-page via
+   ConfiguredGenerationWorkflow, so WizardPage's .wizard-page ::deep rules
+   do not apply there. Tokens live on the sheet so editors inherit them. */
+
+.wizard-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(36, 26, 61, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    z-index: 110;
+}
+
+.wizard-sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.wizard-bottom-sheet {
+    --wizard-purple-950: #241a3d;
+    --wizard-purple-900: #2c1f52;
+    --wizard-purple-800: #33225d;
+    --wizard-purple-700: #3c286d;
+    --wizard-purple-600: #472779;
+    --wizard-purple-500: #552f8c;
+    --wizard-purple-400: #6b41a8;
+    --wizard-purple-300: #8a63c4;
+    --wizard-purple-100: #e8e1f7;
+    --wizard-orange: #f9a500;
+    --wizard-card: #ffffff;
+    --wizard-shadow: 0 8px 24px -8px rgba(44, 31, 82, 0.35);
+    --wizard-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 480px;
+    transform: translate(-50%, 100%);
+    background: white;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 30px -10px rgba(36, 26, 61, 0.35);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 85vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 120;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--wizard-purple-900);
+    box-sizing: border-box;
+}
+
+.wizard-bottom-sheet.open {
+    transform: translate(-50%, 0);
+}
+
+.wizard-sheet-handle {
+    width: 40px;
+    height: 6px;
+    background: var(--wizard-purple-100);
+    border-radius: 999px;
+    margin: 0 auto 16px;
+}
+
+.wizard-sheet-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.wizard-sheet-title {
+    font-family: var(--wizard-font-display);
+    font-size: 18px;
+    color: var(--wizard-purple-800);
+    margin: 0 0 12px;
+}
+
+.wizard-tabs {
+    display: flex;
+    gap: 0;
+    margin: 0 0 16px;
+    border-bottom: 2px solid var(--wizard-purple-100);
+}
+
+.wizard-tab {
+    flex: 1;
+    text-align: center;
+    appearance: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 0;
+    background: transparent;
+    color: var(--wizard-purple-400);
+    font-family: var(--wizard-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    min-height: 44px;
+    padding: 10px 8px 12px;
+    cursor: pointer;
+    box-shadow: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.wizard-tab:hover {
+    color: var(--wizard-purple-700);
+}
+
+.wizard-tab.active {
+    color: var(--wizard-purple-800);
+    border-bottom-color: var(--wizard-orange);
+    background: transparent;
+    box-shadow: none;
+}
+
+.wizard-sheet-body {
+    display: grid;
+    min-height: 0;
+    overflow: visible;
+    padding-bottom: 12px;
+}
+
+.wizard-sheet-panel {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.wizard-sheet-panel.active {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.wizard-sheet-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-shrink: 0;
+    background: white;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.wizard-flex-1 {
+    flex: 1;
+}
+
+.wizard-btn-filter-primary,
+.wizard-btn-ghost {
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-family: var(--wizard-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.wizard-btn-filter-primary {
+    font-size: 16px;
+    background: linear-gradient(180deg, #ffb838, var(--wizard-orange));
+    color: var(--wizard-purple-950);
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+}
+
+.wizard-btn-filter-primary:active {
+    transform: scale(0.97);
+}
+
+.wizard-btn-ghost {
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+}
+
+.wizard-validation {
+    color: #b42318;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 8px 0 0;
+}
+
+/* ---------- filter editors (child components) ---------- */
+.wizard-bottom-sheet ::deep .wizard-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.wizard-bottom-sheet ::deep .wizard-hint {
+    font-size: 13px;
+    color: var(--wizard-purple-400);
+    margin: 0 0 14px;
+}
+
+.wizard-bottom-sheet ::deep .wizard-number-row,
+.wizard-bottom-sheet ::deep .wizard-pattern-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    z-index: 1;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select.open {
+    z-index: 30;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-dismiss {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 12px;
+    padding: 10px 26px 10px 8px;
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    min-height: 44px;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b41a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    color: var(--wizard-purple-800);
+    cursor: pointer;
+    text-align: left;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select.open .wizard-select-trigger {
+    border-color: var(--wizard-purple-400);
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 2;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: white;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 14px;
+    box-shadow: var(--wizard-shadow);
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-option {
+    width: 100%;
+    display: block;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--wizard-purple-800);
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    min-height: 40px;
+    padding: 8px 10px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-option:hover,
+.wizard-bottom-sheet ::deep .wizard-select-option:focus-visible {
+    background: var(--wizard-purple-100);
+}
+
+.wizard-bottom-sheet ::deep .wizard-select-option.active {
+    background: var(--wizard-purple-700);
+    color: white;
+}
+
+.wizard-bottom-sheet ::deep .wizard-input-number {
+    flex: 0 0 64px;
+    width: 64px;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-weight: 700;
+    font-size: 13px;
+    min-height: 44px;
+    text-align: center;
+}
+
+.wizard-bottom-sheet ::deep .wizard-segmented {
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--wizard-purple-100);
+}
+
+.wizard-bottom-sheet ::deep .wizard-segment {
+    border: none;
+    border-radius: 0;
+    font-size: 11px;
+    padding: 0 10px;
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-sequence {
+    margin: 4px 0 14px;
+    padding: 10px;
+    border-radius: 16px;
+    background: var(--wizard-purple-100);
+    border: 2px solid transparent;
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-sequence-label {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wizard-purple-500);
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-palette + .wizard-checkbox-row,
+.wizard-bottom-sheet ::deep .wizard-pattern-sequence + .wizard-pattern-sequence-label {
+    margin-top: 0;
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-slot {
+    flex: 1 1 0;
+    min-width: 48px;
+    min-height: 44px;
+    padding: 8px 4px;
+    border: 2px dashed var(--wizard-purple-300);
+    border-radius: 12px;
+    background: white;
+    color: var(--wizard-purple-700);
+    font-family: var(--wizard-font-display);
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-slot.active {
+    border-style: solid;
+    border-color: var(--wizard-orange);
+    background: var(--wizard-purple-700);
+    color: white;
+    box-shadow: 0 0 0 3px rgba(249, 165, 0, 0.28);
+}
+
+.wizard-bottom-sheet ::deep .wizard-pattern-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    gap: 8px;
+    margin: 0 0 14px;
+}
+
+.wizard-bottom-sheet ::deep .wizard-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wizard-purple-700);
+}
+
+.wizard-bottom-sheet ::deep .wizard-state-notation {
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--wizard-purple-100);
+    font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+    color: var(--wizard-purple-900);
+    text-align: center;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.wizard-bottom-sheet ::deep .wizard-state-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wizard-bottom-sheet ::deep .wizard-chip {
+    border-radius: 10px;
+    font-weight: 800;
+    font-family: var(--wizard-font-display);
+    font-size: 13px;
+    border: 2px solid var(--wizard-purple-100);
+    background: white;
+    color: var(--wizard-purple-500);
+    padding: 10px 4px;
+    min-height: 44px;
+    min-width: 0;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.wizard-bottom-sheet ::deep .wizard-chip.active {
+    background: var(--wizard-purple-700);
+    border-color: var(--wizard-purple-700);
+    color: white;
+}
+
+.wizard-bottom-sheet ::deep .wizard-chip:active {
+    transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wizard-sheet-backdrop,
+    .wizard-bottom-sheet,
+    .wizard-bottom-sheet ::deep * {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}

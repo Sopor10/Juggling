@@ -21,11 +21,14 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     private GenerationWorkflowConfig _workflowConfig = new();
     private IReadOnlyList<LocalFeedSiteswap> _b1Locals = [];
     private IReadOnlyList<LocalFeedSiteswap> _b2Locals = [];
+    private IReadOnlyList<Siteswap> _b1Results = [];
+    private IReadOnlyList<int> _interfaceMoveTargets = [];
     private string? _activeRole;
     private IJSObjectReference? _jsModule;
     private DotNetObjectReference<FeedingPage>? _selfReference;
     private bool _historyReady;
     private ElementReference _setupTitle;
+    private FeedingLocalResultsView? _resultsView;
 
     [Parameter, SupplyParameterFromQuery(Name = "s")]
     public string? SiteswapNotation { get; set; }
@@ -41,8 +44,31 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         Setup,
         GenerateB1,
         GenerateB2,
+        SelectB1,
+        SelectB2,
         Results,
     }
+
+    private string DetailsBackHref =>
+        string.IsNullOrWhiteSpace(SiteswapNotation)
+            ? "details"
+            : $"details?s={Uri.EscapeDataString(SiteswapNotation)}";
+
+    private string HeaderTitle =>
+        _phase switch
+        {
+            FeedingPhase.GenerateB1 => L["Generate pattern for {0}", PartnerB1].Value,
+            FeedingPhase.GenerateB2 => L["Generate pattern for {0}", PartnerB2].Value,
+            FeedingPhase.SelectB1 => L["B1 local results"].Value,
+            FeedingPhase.SelectB2 => L["B2 local results"].Value,
+            FeedingPhase.Results => L["Feed combination"].Value,
+            _ => L["3-person feed"].Value,
+        };
+
+    private string? InterfaceMoveRole =>
+        _b1Results.Count > 0 && _session?.SelectedSiteswap(PartnerB1) is not null
+            ? PartnerB1
+            : null;
 
     private string? LocalizedBlockReason =>
         _session?.GenerationBlockCode switch
@@ -108,6 +134,8 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         _phase = FeedingPhase.Setup;
         _b1Locals = [];
         _b2Locals = [];
+        _b1Results = [];
+        _interfaceMoveTargets = [];
 
         if (string.IsNullOrWhiteSpace(SiteswapNotation))
         {
@@ -141,6 +169,10 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.AssignPass(beatIndex, partner);
+        _b1Locals = [];
+        _b2Locals = [];
+        _b1Results = [];
+        _interfaceMoveTargets = [];
     }
 
     private void OnClubsB1MinChanged(int value)
@@ -217,14 +249,16 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         var locals = _session.ProjectLocalResults(_activeRole, results);
         if (_activeRole == "B1")
         {
+            _b1Results = results;
             _b1Locals = locals;
             if (locals.Count > 0)
             {
                 _session.SelectSiteswap("B1", locals[0].Global);
             }
 
-            _ = SetPhaseAsync(FeedingPhase.Setup, push: false);
-            _ = RestoreSetupFocusAsync();
+            RefreshInterfaceMoveTargets();
+            _ = SetPhaseAsync(FeedingPhase.SelectB1, push: true);
+            _ = RestoreResultsFocusAsync();
             return;
         }
 
@@ -234,16 +268,80 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _session.SelectSiteswap("B2", locals[0].Global);
         }
 
-        _ = SetPhaseAsync(FeedingPhase.Setup, push: false);
-        _ = RestoreSetupFocusAsync();
+        _ = SetPhaseAsync(FeedingPhase.SelectB2, push: true);
+        _ = RestoreResultsFocusAsync();
     }
 
-    private void SelectLocal(string role, LocalFeedSiteswap local)
+    private void OnSelectFromResults(LocalFeedSiteswap local)
     {
-        _session?.SelectSiteswap(role, local.Global);
+        if (_session is null)
+        {
+            return;
+        }
+
+        var role = _phase == FeedingPhase.SelectB1 ? PartnerB1 : PartnerB2;
+        _session.SelectSiteswap(role, local.Global);
+        if (role == PartnerB1)
+        {
+            RefreshInterfaceMoveTargets();
+            _b2Locals = [];
+        }
     }
 
-    private void Rotate(int steps) => _session?.Rotate(steps);
+    private void ConfirmResultsSelection()
+    {
+        if (_phase == FeedingPhase.SelectB1)
+        {
+            StartGenerateB2();
+            return;
+        }
+
+        if (_phase == FeedingPhase.SelectB2)
+        {
+            ShowCombination();
+        }
+    }
+
+    private void BackFromResultsSelection() => BackToSetup();
+
+    private void RefreshInterfaceMoveTargets()
+    {
+        _interfaceMoveTargets =
+            _session?.SelectablePassInterfaceBeatsFor(PartnerB1, _b1Results) ?? [];
+    }
+
+    private void MoveB1PassInterface(int beat)
+    {
+        if (_session?.TrySelectPassInterfaceBeat(PartnerB1, beat, _b1Results) != true)
+        {
+            return;
+        }
+
+        _b2Locals = [];
+        RefreshInterfaceMoveTargets();
+    }
+
+    private string? DescribeEmptyB2()
+    {
+        if (_session is null || _b2Locals.Count > 0)
+        {
+            return null;
+        }
+
+        var free = _session
+            .FeederInterfaceOccupancy()
+            .Where(slot => slot.Owner == FeedInterfaceOwner.Free)
+            .Select(slot => L["Beat {0}", slot.Beat + 1].Value)
+            .ToList();
+        return free.Count == 0
+            ? L["A's Interface is fully constrained after B1."].Value
+            : L["Still free after B1: {0}", string.Join(", ", free)].Value;
+    }
+
+    private static string FormatThrowDigit(int height) =>
+        height < 10 ? height.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        : height < 36 ? ((char)('a' + height - 10)).ToString()
+        : height.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
     private void BackToSetup()
     {
@@ -265,7 +363,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             parsed = FeedingPhase.Setup;
         }
 
-        if (parsed == FeedingPhase.Results && (_session is null || _b2Locals.Count == 0))
+        if (
+            parsed is FeedingPhase.SelectB1 && (_session is null || _b1Locals.Count == 0)
+            || parsed is FeedingPhase.SelectB2 or FeedingPhase.Results
+                && (_session is null || _b2Locals.Count == 0)
+        )
         {
             parsed = FeedingPhase.Setup;
         }
@@ -306,6 +408,14 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         {
             await Task.Delay(150);
             await FocusSetupHeadingAsync();
+        }
+        else if (parsed is FeedingPhase.SelectB1 or FeedingPhase.SelectB2)
+        {
+            await Task.Delay(150);
+            if (_resultsView is not null)
+            {
+                await _resultsView.FocusTitleAsync();
+            }
         }
     }
 
@@ -352,6 +462,16 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         await InvokeAsync(StateHasChanged);
         await Task.Delay(150);
         await FocusSetupHeadingAsync();
+    }
+
+    private async Task RestoreResultsFocusAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(150);
+        if (_resultsView is not null)
+        {
+            await _resultsView.FocusTitleAsync();
+        }
     }
 
     private async Task NavigateBackOrSetSetupAsync()
@@ -412,5 +532,6 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _selfReference?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

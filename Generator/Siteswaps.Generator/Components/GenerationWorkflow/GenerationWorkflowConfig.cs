@@ -19,6 +19,12 @@ public sealed record GenerationWorkflowConfig
     /// </summary>
     public IReadOnlyList<Throw>? PassSelfInterface { get; init; }
 
+    /// <summary>
+    /// Optional mask for throws made on each beat. It is evaluated at the same cyclic phase as
+    /// <see cref="PassSelfInterface"/>.
+    /// </summary>
+    public IReadOnlyList<Throw>? ThrowInterface { get; init; }
+
     /// <summary>Optional initial club bounds applied on session create.</summary>
     public Between? Clubs { get; init; }
 
@@ -43,7 +49,8 @@ public sealed record GenerationWorkflowConfig
         return Period == other.Period
             && NumberOfJugglers == other.NumberOfJugglers
             && Clubs == other.Clubs
-            && PassSelfInterfaceEqual(PassSelfInterface, other.PassSelfInterface);
+            && InterfaceEqual(PassSelfInterface, other.PassSelfInterface)
+            && InterfaceEqual(ThrowInterface, other.ThrowInterface);
     }
 
     public override int GetHashCode()
@@ -60,13 +67,18 @@ public sealed record GenerationWorkflowConfig
             }
         }
 
+        if (ThrowInterface is not null)
+        {
+            foreach (var item in ThrowInterface)
+            {
+                hash.Add(item);
+            }
+        }
+
         return hash.ToHashCode();
     }
 
-    private static bool PassSelfInterfaceEqual(
-        IReadOnlyList<Throw>? left,
-        IReadOnlyList<Throw>? right
-    )
+    private static bool InterfaceEqual(IReadOnlyList<Throw>? left, IReadOnlyList<Throw>? right)
     {
         if (ReferenceEquals(left, right))
         {
