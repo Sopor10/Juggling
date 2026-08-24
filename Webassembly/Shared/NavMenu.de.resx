@@ -9,6 +9,9 @@
   <data name="Open details" xml:space="preserve"><value>Details öffnen</value></data>
   <data name="Open siteswap" xml:space="preserve"><value>Siteswap öffnen</value></data>
   <data name="Passing Zone – Siteswap Generator" xml:space="preserve"><value>Passing Zone – Siteswap Generator</value></data>
+  <data name="Generator" xml:space="preserve"><value>Generator</value></data>
+  <data name="Feeding" xml:space="preserve"><value>Feeding</value></data>
+  <data name="Siteswap lab" xml:space="preserve"><value>Siteswap-Labor</value></data>
   <data name="Settings" xml:space="preserve"><value>Einstellungen</value></data>
   <data name="Siteswap…" xml:space="preserve"><value>Siteswap…</value></data>
 </root>

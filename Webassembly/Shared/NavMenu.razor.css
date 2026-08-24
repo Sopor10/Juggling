@@ -209,7 +209,9 @@
     .pznav-links-collapsed {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
+        justify-content: flex-end;
         width: auto;
         margin-left: auto;
         margin-right: 0;
