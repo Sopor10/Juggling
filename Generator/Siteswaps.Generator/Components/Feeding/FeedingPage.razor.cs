@@ -257,7 +257,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             }
 
             RefreshInterfaceMoveTargets();
-            _ = SetPhaseAsync(FeedingPhase.SelectB1, push: true);
+            _ = SetPhaseAsync(FeedingPhase.SelectB1, push: false);
             _ = RestoreResultsFocusAsync();
             return;
         }
@@ -268,7 +268,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _session.SelectSiteswap("B2", locals[0].Global);
         }
 
-        _ = SetPhaseAsync(FeedingPhase.SelectB2, push: true);
+        _ = SetPhaseAsync(FeedingPhase.SelectB2, push: false);
         _ = RestoreResultsFocusAsync();
     }
 

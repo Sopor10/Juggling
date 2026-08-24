@@ -181,7 +181,7 @@ public class FeedSessionInvariantReproTests
         session.AssignPass(0, "B1");
         session.AssignPass(4, "B2");
         // Landing interface B1 = S,S,P,S,S
-        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(6, 6, 7, 6, 6));
+        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(1, 2, 0, 2, 0));
 
         session.AssignPass(0, "B2");
         session.AssignPass(4, "B1");
@@ -199,12 +199,12 @@ public class FeedSessionInvariantReproTests
         session.AssignPass(0, "B1");
         session.AssignPass(1, "B2");
         // B1 landing interface S,P,S
-        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(6, 7, 6));
+        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(1, 2, 0));
 
         session.Rotate(1);
 
         session.FeederSiteswap.Items.Should().Equal(5, 6, 7);
-        session.SelectedSiteswap("B1")!.Items.Should().Equal(7, 6, 6);
+        session.SelectedSiteswap("B1")!.Items.Should().Equal(2, 0, 1);
         session.SelectedSiteswap("B1").Should().NotBeNull();
     }
 
@@ -295,7 +295,7 @@ public class FeedSessionInvariantReproTests
         var session = NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(7, 5, 6));
         session.AssignPass(0, "B1");
         session.AssignPass(1, "B2");
-        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(6, 7, 6));
+        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(1, 2, 0));
         session.ClearPass(0);
 
         var tryMethod = typeof(NormalFeedSession).GetMethod(

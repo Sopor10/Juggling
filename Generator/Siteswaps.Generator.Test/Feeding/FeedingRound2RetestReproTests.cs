@@ -52,11 +52,13 @@ public class FeedingRound2RetestReproTests
     [Test]
     public void Feeding_Local_Result_Buttons_Expose_Active_And_AriaPressed()
     {
-        var razor = ReadGeneratorSource(Path.Combine("Components", "Feeding", "FeedingPage.razor"));
+        var razor = ReadGeneratorSource(
+            Path.Combine("Components", "Feeding", "FeedingLocalResultsView.razor")
+        );
 
         foreach (var labelKey in new[] { "B1 local results", "B2 local results" })
         {
-            var listMarkup = ExtractResultsListAfterLabel(razor, labelKey);
+            var listMarkup = ExtractResultsListMarkup(razor);
             listMarkup
                 .Should()
                 .NotBeNullOrWhiteSpace($"FeedingPage must render a results list for {labelKey}");
@@ -75,6 +77,16 @@ public class FeedingRound2RetestReproTests
                 .Should()
                 .BeTrue($"{labelKey} selection must toggle an active class for visual selection");
         }
+    }
+
+    private static string? ExtractResultsListMarkup(string razor)
+    {
+        var match = Regex.Match(
+            razor,
+            """<ul class="feeding-results"[^>]*>([\s\S]*?)</ul>""",
+            RegexOptions.IgnoreCase
+        );
+        return match.Success ? match.Groups[1].Value : null;
     }
 
     private static string? ExtractResultsListAfterLabel(string razor, string labelKey)

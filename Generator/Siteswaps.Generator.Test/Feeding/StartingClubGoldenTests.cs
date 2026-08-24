@@ -39,7 +39,7 @@ public class StartingClubGoldenTests
         session.AssignPass(0, "B1");
         session.AssignPass(4, "B2");
         // Landing interface B1 = S,S,P,S,S (not feeder 78627 throw pattern).
-        var selected = Siteswap.CreateFromCorrect(6, 6, 7, 6, 6);
+        var selected = Siteswap.CreateFromCorrect(1, 2, 0, 2, 0);
         session.SelectSiteswap("B1", selected);
 
         session

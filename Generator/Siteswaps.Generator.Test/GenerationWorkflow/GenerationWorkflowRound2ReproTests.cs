@@ -129,8 +129,14 @@ public class GenerationWorkflowRound2ReproTests
         config
             .PassSelfInterface.Should()
             .Equal(
-                landing,
-                "ToGenerationWorkflowConfig must lock the landing interface that SelectSiteswap validates"
+                feed.PartialInterfaceFor("B1"),
+                "ToGenerationWorkflowConfig must lock forced-self landing beats"
+            );
+        config
+            .ThrowInterface.Should()
+            .Equal(
+                feed.ThrowTimeInterfaceFor("B1"),
+                "throw-time mask must align with SelectSiteswap validation"
             );
     }
 
@@ -337,9 +343,9 @@ public class GenerationWorkflowRound2ReproTests
             session.State.FilterTree,
             session.LockedInterfaceFilterId!.Value
         );
-        var pattern = (NewPatternFilterInformation)WizardFilterTree.Unwrap(leaf!.Filter);
+        var pattern = (InterfaceFilterInformation)WizardFilterTree.Unwrap(leaf!.Filter);
         pattern
-            .Pattern.Should()
+            .Landing.Should()
             .Equal(
                 [Throw.AnyPass, Throw.AnySelf, Throw.AnySelf],
                 "Create must snapshot PassSelfInterface; caller mutations must not affect locked filter"

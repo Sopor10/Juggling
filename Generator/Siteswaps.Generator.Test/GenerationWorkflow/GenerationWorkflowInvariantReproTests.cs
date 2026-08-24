@@ -33,11 +33,9 @@ public class GenerationWorkflowInvariantReproTests
         session.State.FilterTree = WizardFilterTree.ReplaceLeaf(
             session.State.FilterTree,
             lockedId,
-            new NewPatternFilterInformation(
+            new InterfaceFilterInformation(
                 [Throw.AnyPass, Throw.AnyPass, Throw.AnyPass],
-                PatternRotation.Global,
-                IsIncludePattern: true,
-                IsValidLocally: false
+                AllowRotation: true
             )
         );
 
@@ -48,10 +46,10 @@ public class GenerationWorkflowInvariantReproTests
         var pattern = WizardFilterTree
             .Unwrap(leaf!.Filter)
             .Should()
-            .BeOfType<NewPatternFilterInformation>()
+            .BeOfType<InterfaceFilterInformation>()
             .Subject;
         pattern
-            .Pattern.Should()
+            .Landing.Should()
             .Equal(
                 interfacePattern,
                 "locked Pass/Self interface content must be restored before generate"
@@ -61,7 +59,7 @@ public class GenerationWorkflowInvariantReproTests
     [Test]
     public async Task EnforceLocks_Restores_Locked_Interface_After_InPlace_Pattern_Mutation()
     {
-        // Finding #1 (variant): NewPatternFilterInformation.Pattern is a mutable list.
+        // Finding #1 (variant): InterfaceFilterInformation.Landing is a mutable list.
         var interfacePattern = new[] { Throw.AnySelf, Throw.AnyPass, Throw.AnySelf };
         var session = GenerationWorkflowSession.Create(
             new GenerationWorkflowConfig
@@ -75,18 +73,18 @@ public class GenerationWorkflowInvariantReproTests
 
         var lockedId = session.LockedInterfaceFilterId!.Value;
         var leaf = WizardFilterTree.FindLeaf(session.State.FilterTree, lockedId)!;
-        var pattern = (NewPatternFilterInformation)WizardFilterTree.Unwrap(leaf.Filter);
-        pattern.Pattern.Clear();
-        pattern.Pattern.AddRange([Throw.AnyPass, Throw.AnyPass, Throw.AnyPass]);
+        var pattern = (InterfaceFilterInformation)WizardFilterTree.Unwrap(leaf.Filter);
+        pattern.Landing.Clear();
+        pattern.Landing.AddRange([Throw.AnyPass, Throw.AnyPass, Throw.AnyPass]);
 
         await session.GenerateAsync();
 
-        var after = (NewPatternFilterInformation)
+        var after = (InterfaceFilterInformation)
             WizardFilterTree.Unwrap(
                 WizardFilterTree.FindLeaf(session.State.FilterTree, lockedId)!.Filter
             );
         after
-            .Pattern.Should()
+            .Landing.Should()
             .Equal(interfacePattern, "in-place mutation of locked interface must not stick");
     }
 
@@ -153,8 +151,14 @@ public class GenerationWorkflowInvariantReproTests
         config
             .PassSelfInterface!.Should()
             .Equal(
-                feed.InterfaceFor("B1"),
-                "factory should lock the fedee landing Pass/Self interface"
+                feed.PartialInterfaceFor("B1"),
+                "factory should lock forced-self landing beats for the fedee"
+            );
+        config
+            .ThrowInterface.Should()
+            .Equal(
+                feed.ThrowTimeInterfaceFor("B1"),
+                "factory should lock throw-time interface for the fedee"
             );
     }
 

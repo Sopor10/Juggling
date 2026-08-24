@@ -182,17 +182,17 @@ public class SharedRotationTests
     [Test]
     public void Rotate_Also_Rotates_Selected_Role_Siteswaps()
     {
-        // Period + landing-interface aligned (B1=S,P,S → 676; B2=P,S,S → 766).
+        // Period + landing-interface aligned (B1=P,S,S → 720; B2=S,P,S → 252).
         var session = NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(7, 5, 6));
         session.AssignPass(0, "B1");
         session.AssignPass(1, "B2");
-        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(6, 7, 6));
-        session.SelectSiteswap("B2", Siteswap.CreateFromCorrect(7, 6, 6));
+        session.SelectSiteswap("B1", Siteswap.CreateFromCorrect(7, 2, 0));
+        session.SelectSiteswap("B2", Siteswap.CreateFromCorrect(2, 5, 2));
 
         session.Rotate(1);
 
-        session.SelectedSiteswap("B1")!.Items.Should().Equal(7, 6, 6);
-        session.SelectedSiteswap("B2")!.Items.Should().Equal(6, 6, 7);
+        session.SelectedSiteswap("B1")!.Items.Should().Equal(2, 0, 7);
+        session.SelectedSiteswap("B2")!.Items.Should().Equal(5, 2, 2);
     }
 }
 
@@ -202,11 +202,11 @@ public class StartingClubsTests
     [Test]
     public void Starting_Clubs_Split_Left_And_Right_And_Pair_Sums_To_Objects()
     {
-        // Period + landing-interface aligned for B1 on 756 (S,P,S → 676).
+        // Period + landing-interface aligned for B1 on 756 (P,S,S → 120).
         var session = NormalFeedSession.FromFeederSiteswap(Siteswap.CreateFromCorrect(7, 5, 6));
         session.AssignPass(0, "B1");
         session.AssignPass(1, "B2");
-        var b1Siteswap = Siteswap.CreateFromCorrect(6, 7, 6);
+        var b1Siteswap = Siteswap.CreateFromCorrect(7, 2, 0);
         session.SelectSiteswap("B1", b1Siteswap);
 
         var b1 = session.StartingClubs("B1");

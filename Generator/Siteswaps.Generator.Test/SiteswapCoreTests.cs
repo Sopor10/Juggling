@@ -8,19 +8,19 @@ public class SiteswapCoreTests
     [Test]
     public void String_Notation_Parses_Extended_Heights()
     {
-        Siteswap.CreateFromCorrect("a72").Items.Should().Equal(10, 7, 2);
+        Siteswap.CreateFromCorrect("a74").Items.Should().Equal(10, 7, 4);
     }
 
     [Test]
     public void String_Notation_Renders_Extended_Heights()
     {
-        Siteswap.CreateFromCorrect("a72").ToString().Should().Be("a72");
+        Siteswap.CreateFromCorrect("a74").ToString().Should().Be("a74");
     }
 
     [Test]
     public void String_Notation_Exposes_The_Period()
     {
-        Siteswap.CreateFromCorrect("a72").Period.Value.Should().Be(3);
+        Siteswap.CreateFromCorrect("a74").Period.Value.Should().Be(3);
     }
 
     [Test]
@@ -37,8 +37,8 @@ public class SiteswapCoreTests
     [Test]
     public void Siteswaps_With_The_Same_Notation_Are_Equal()
     {
-        var first = Siteswap.CreateFromCorrect(10, 7, 2);
-        var same = Siteswap.CreateFromCorrect("a72");
+        var first = Siteswap.CreateFromCorrect(10, 7, 4);
+        var same = Siteswap.CreateFromCorrect("a74");
 
         first.Equals(same).Should().BeTrue();
     }

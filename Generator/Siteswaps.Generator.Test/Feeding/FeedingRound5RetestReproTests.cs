@@ -131,8 +131,8 @@ public class FeedingRound5RetestReproTests
     private static bool UsesHistoryReplaceToSetup(string methodBody) =>
         Regex.IsMatch(
             methodBody,
-            @"ReplaceHistoryPhaseAsync\s*\(\s*FeedingPhase\.Setup|replacePhaseState|"
-                + @"SetPhaseAsync\s*\(\s*FeedingPhase\.Setup\s*,\s*(?:false|push\s*:\s*false)",
+            @"ReplaceHistoryPhaseAsync\s*\(\s*FeedingPhase\.(Setup|SelectB1|SelectB2)|replacePhaseState|"
+                + @"SetPhaseAsync\s*\(\s*FeedingPhase\.(Setup|SelectB1|SelectB2)\s*,\s*(?:false|push\s*:\s*false)",
             RegexOptions.IgnoreCase
         );
 

@@ -1,7 +1,5 @@
-using System.Reflection;
 using System.Text.RegularExpressions;
 using FluentAssertions;
-using Microsoft.AspNetCore.Components;
 using Siteswaps.Generator.Components.WizardPage.Filters;
 
 namespace Siteswaps.Generator.Test.GenerationWorkflow;
@@ -13,8 +11,8 @@ namespace Siteswaps.Generator.Test.GenerationWorkflow;
 public class GenerationWorkflowRound1RetestReproTests
 {
     /// <summary>
-    /// Finding (Critical): Host passes MaxHeight= but FilterBottomSheet declares MaxThrowHeight
-    /// → Blazor crash when Feeding opens Generate (ConfiguredGenerationWorkflow renders the sheet).
+    /// Finding (Critical): Host passed MaxHeight= while FilterBottomSheet no longer declares it.
+    /// Soll: host markup must not bind a stale height parameter name.
     /// </summary>
     [Test]
     public void ConfiguredGenerationWorkflow_Binds_FilterBottomSheet_Height_With_Declared_Parameter_Name()
@@ -28,32 +26,22 @@ public class GenerationWorkflowRound1RetestReproTests
             .Should()
             .NotBeNullOrWhiteSpace("ConfiguredGenerationWorkflow must host FilterBottomSheet");
 
-        var declaredHeightParams = typeof(FilterBottomSheet)
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(p => p.IsDefined(typeof(ParameterAttribute), inherit: true))
+        sheetBlock!
+            .Should()
+            .NotMatch(
+                """\bMaxHeight\s*=""",
+                "FilterBottomSheet no longer declares MaxHeight; a stale bind crashes at runtime"
+            );
+
+        typeof(FilterBottomSheet)
+            .GetProperties(
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public
+            )
             .Select(p => p.Name)
-            .Where(n => n.Contains("Height", StringComparison.OrdinalIgnoreCase))
-            .ToHashSet(StringComparer.Ordinal);
-
-        declaredHeightParams
             .Should()
-            .NotBeEmpty("FilterBottomSheet must declare a height Parameter");
-
-        var boundHeight = Regex.Match(
-            sheetBlock!,
-            """\b(Max(?:Throw)?Height)\s*=""",
-            RegexOptions.IgnoreCase
-        );
-        boundHeight
-            .Success.Should()
-            .BeTrue("FilterBottomSheet host markup must bind a height parameter");
-
-        var boundName = boundHeight.Groups[1].Value;
-        declaredHeightParams
-            .Should()
-            .Contain(
-                boundName,
-                "Host must use the FilterBottomSheet parameter name (wrong name → runtime crash)"
+            .NotContain(
+                "MaxHeight",
+                "height is derived from allowed throws now, not a separate bottom-sheet parameter"
             );
     }
 

@@ -91,9 +91,9 @@ public class GenerationWorkflowConfigTests
         var pattern = WizardFilterTree
             .Unwrap(leaf!.Filter)
             .Should()
-            .BeOfType<NewPatternFilterInformation>()
+            .BeOfType<InterfaceFilterInformation>()
             .Subject;
-        pattern.Pattern.Should().Equal(interfacePattern);
+        pattern.Landing.Should().Equal(interfacePattern);
 
         var act = () => session.RemoveFilter(session.LockedInterfaceFilterId.Value);
         act.Should().Throw<InvalidOperationException>();
