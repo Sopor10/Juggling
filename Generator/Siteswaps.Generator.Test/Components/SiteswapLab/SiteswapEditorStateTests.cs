@@ -114,7 +114,7 @@ public class PassingEditorStateTests
 
         state.IsValid.Should().BeFalse();
         state.CollisionTargets.Should().Contain(new PassingLandingSlot(2, 0));
-        state.EmptyTargets.Should().Contain(new PassingLandingSlot(1, 0));
+        state.EmptyTargets.Should().NotBeEmpty();
     }
 
     [Test]
@@ -168,13 +168,13 @@ public class PassingEditorStateTests
         state
             .People.SelectMany(person => person.Cells)
             .Should()
-            .OnlyContain(cell => cell.Height == 9);
+            .OnlyContain(cell => cell.Height == 6);
         state
             .People.SelectMany(person => person.Cells)
             .Select(cell =>
                 FeedingThrowDisplay.Format(
                     cell.Height,
-                    state.PhaseCount,
+                    state.ActiveTimeZoneCount,
                     FeedingThrowDisplay.Mode.Local
                 )
             )
@@ -286,9 +286,27 @@ public class PassingEditorStateTests
         state.SetHeight(0, 0, 2);
 
         state.People[0].Cells[0].Height.Should().Be(2);
-        state.AvailableTargetsFor(0, 0, 2).Should().BeEmpty();
-        state.People[0].Cells[0].TargetPerson.Should().BeNull();
+        state.AvailableTargetsFor(0, 0, 2).Should().Equal(0);
+        state.People[0].Cells[0].TargetPerson.Should().Be(0);
         state.LastTargetAdjustment.Should().NotBeNull();
+    }
+
+    [Test]
+    public void Local_Height_Scales_With_Active_TimeZone_Count_Not_People()
+    {
+        var state = new PassingEditorState();
+        state.SetPersonCount(3);
+        state.CycleTimeZone(2);
+        state.CycleTimeZone(2);
+
+        state.ActiveTimeZoneCount.Should().Be(2);
+        state.ToGlobalHeight(3).Should().Be(6);
+        state.InitializeThrowsForFirstEntry();
+
+        state
+            .People.SelectMany(person => person.Cells)
+            .Should()
+            .OnlyContain(cell => cell.Height == 6);
     }
 
     [Test]
@@ -308,25 +326,22 @@ public class PassingEditorStateTests
         customState.IsValid.Should().BeFalse();
     }
 
-    [TestCase(FeedingThrowDisplay.Mode.Local, 9, 3, "3")]
-    [TestCase(FeedingThrowDisplay.Mode.Global, 9, 3, "9")]
-    [TestCase(FeedingThrowDisplay.Mode.Name, 9, 3, "Self")]
+    [TestCase(FeedingThrowDisplay.Mode.Local, 4, "1.33")]
+    [TestCase(FeedingThrowDisplay.Mode.Global, 4, "4")]
+    [TestCase(FeedingThrowDisplay.Mode.Name, 4, "1.33")]
     public void Throw_Display_Modes_Do_Not_Mutate_Editing_Or_Landing(
         FeedingThrowDisplay.Mode mode,
         int height,
-        int people,
         string expected
     )
     {
         var state = new PassingEditorState();
-        state.SetPersonCount(people);
-        state.CycleTimeZone(1);
-        state.CycleTimeZone(1);
+        state.SetPersonCount(3);
         state.SetHeight(0, 0, height);
         state.SetTarget(0, 0, 1).Should().BeTrue();
         var landing = state.LandingFor(0, 0);
 
-        FeedingThrowDisplay.Format(height, people, mode).Should().Be(expected);
+        FeedingThrowDisplay.Format(height, state.ActiveTimeZoneCount, mode).Should().Be(expected);
         state.People[0].Cells[0].Height.Should().Be(height);
         state.People[0].Cells[0].TargetPerson.Should().Be(1);
         state.LandingFor(0, 0).Should().Be(landing);

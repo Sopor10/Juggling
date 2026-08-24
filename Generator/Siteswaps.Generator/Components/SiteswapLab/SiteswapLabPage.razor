@@ -111,7 +111,7 @@
                                     <small>@L["TZ {0}", _direct.People[person].TimeZone]</small>
                                 </div>
                                 <div class="lab-overview-throws"
-                                     style="@($"--lab-phase:{_direct.TimelinePhaseFor(person)};--lab-phase-count:{_direct.PhaseCount}")">
+                                     style="@($"--lab-phase:{_direct.TimelinePhaseFor(person)};--lab-phase-count:{_direct.ActiveTimeZoneCount}")">
                                     <FeedingThrowChipRow Chips="PassingChipsFor(personIndex)"
                                                          AriaLabel="@L["Throws {0}", _direct.People[person].Name]"
                                                          SelectedLocalBeat="@(_direct.SelectedPerson == person ? _direct.SelectedBeat : (int?)null)"
@@ -314,7 +314,7 @@
                     new FeedingThrowDisplay.Chip(
                         FeedingThrowDisplay.Format(
                             cell.Height,
-                            _direct.PhaseCount,
+                            _direct.ActiveTimeZoneCount,
                             _throwDisplayMode
                         ),
                         cell.TargetPerson == person ? PassOrSelf.Self : PassOrSelf.Pass,

@@ -127,7 +127,7 @@ public class SiteswapLabPageTests
 
         page.Should().Contain("data-timezone=\"@_direct.TimelinePhaseFor(person)\"");
         page.Should().Contain("--lab-phase:{_direct.TimelinePhaseFor(person)}");
-        page.Should().Contain("--lab-phase-count:{_direct.PhaseCount}");
+        page.Should().Contain("--lab-phase-count:{_direct.ActiveTimeZoneCount}");
         page.Should().NotContain("--lab-stagger:{person}");
         css.Should().Contain("var(--lab-phase, 0)");
         css.Should().Contain("var(--lab-phase-count, 1)");

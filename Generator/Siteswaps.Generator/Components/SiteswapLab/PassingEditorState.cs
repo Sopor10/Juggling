@@ -30,6 +30,9 @@ public sealed class PassingEditorState
 
     public int PhaseCount => _people.Count;
 
+    public int ActiveTimeZoneCount =>
+        Math.Max(1, _people.Select(person => person.TimeZone).Distinct().Count());
+
     public bool ThrowsInitialized { get; private set; }
 
     public int MaxThrowHeight { get; private set; }
@@ -124,7 +127,7 @@ public sealed class PassingEditorState
             " ",
             _people[person]
                 .Cells.Select(cell =>
-                    (cell.Height / (double)PhaseCount).ToString(
+                    (cell.Height / (double)ActiveTimeZoneCount).ToString(
                         "0.##",
                         CultureInfo.InvariantCulture
                     )
@@ -150,17 +153,17 @@ public sealed class PassingEditorState
         while (_people.Count < count)
         {
             var index = _people.Count;
-            var newPhaseCount = index + 1;
+            var defaultHeight = DefaultHeight(
+                ProspectiveActiveTimeZoneCount(index),
+                MaxThrowHeight
+            );
             _people.Add(
                 new PassingEditorPerson(
                     DefaultName(index),
                     index,
                     Enumerable
                         .Range(0, Period)
-                        .Select(_ => new PassingEditorCell(
-                            DefaultHeight(newPhaseCount, MaxThrowHeight),
-                            index
-                        ))
+                        .Select(_ => new PassingEditorCell(defaultHeight, index))
                         .ToList()
                 )
             );
@@ -251,7 +254,10 @@ public sealed class PassingEditorState
             return [];
         }
 
-        var landingTimeZone = PositiveModulo(_people[sourcePerson].TimeZone + height, PhaseCount);
+        var landingTimeZone = PositiveModulo(
+            _people[sourcePerson].TimeZone + height,
+            ActiveTimeZoneCount
+        );
         return _people
             .Select((person, index) => (person, index))
             .Where(item => item.person.TimeZone == landingTimeZone)
@@ -262,12 +268,12 @@ public sealed class PassingEditorState
     public int LandingTimeZoneFor(int person, int beat)
     {
         var source = _people[person];
-        return PositiveModulo(source.TimeZone + source.Cells[beat].Height, PhaseCount);
+        return PositiveModulo(source.TimeZone + source.Cells[beat].Height, ActiveTimeZoneCount);
     }
 
     public int TimelinePhaseFor(int person) => _people[person].TimeZone;
 
-    public int ToGlobalHeight(int localHeight) => localHeight * PhaseCount;
+    public int ToGlobalHeight(int localHeight) => localHeight * ActiveTimeZoneCount;
 
     public void InitializeThrowsForFirstEntry()
     {
@@ -323,7 +329,7 @@ public sealed class PassingEditorState
                     new PassingEditorCell(
                         ThrowsInitialized
                             ? ToGlobalHeight(3)
-                            : DefaultHeight(PhaseCount, MaxThrowHeight),
+                            : DefaultHeight(ActiveTimeZoneCount, MaxThrowHeight),
                         person
                     )
                 );
@@ -413,7 +419,7 @@ public sealed class PassingEditorState
     {
         var source = _people[person];
         var elapsedPhases = source.TimeZone + source.Cells[beat].Height;
-        return PositiveModulo(beat + elapsedPhases / PhaseCount, Period);
+        return PositiveModulo(beat + elapsedPhases / ActiveTimeZoneCount, Period);
     }
 
     private string FormatCell(int person, int beat, PassingEditorCell cell)
@@ -453,6 +459,12 @@ public sealed class PassingEditorState
 
     private static int DefaultHeight(int phaseCount, int maxThrowHeight) =>
         Math.Min(maxThrowHeight, phaseCount * 3);
+
+    private int ProspectiveActiveTimeZoneCount(int additionalTimeZone) =>
+        Math.Max(
+            1,
+            _people.Select(person => person.TimeZone).Append(additionalTimeZone).Distinct().Count()
+        );
 
     private static int PositiveModulo(int value, int modulus) =>
         (value % modulus + modulus) % modulus;
