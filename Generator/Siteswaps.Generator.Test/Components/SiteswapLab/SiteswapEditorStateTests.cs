@@ -9,6 +9,20 @@ namespace Siteswaps.Generator.Test.Components.SiteswapLab;
 public class PassingEditorStateTests
 {
     [Test]
+    public void SelectCell_Can_Reset_Selection_After_Period_Change()
+    {
+        var state = new PassingEditorState();
+
+        state.AddBeat();
+        state.SelectedBeat.Should().Be(state.Period - 1);
+
+        state.SelectCell(0, 0);
+
+        state.SelectedPerson.Should().Be(0);
+        state.SelectedBeat.Should().Be(0);
+    }
+
+    [Test]
     public void Passing_Period_Extension_Preserves_Throws_And_Appends_Self_Defaults()
     {
         var state = new PassingEditorState();

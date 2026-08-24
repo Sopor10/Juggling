@@ -131,7 +131,7 @@
                                        @onchange="args => SetPassingHeight(_direct.SelectedPerson, _direct.SelectedBeat, args)" />
                                 <button type="button" aria-label="@L["Increase throw"]" @onclick="() => AdjustPassingHeight(1)">+</button>
                             </div>
-                            <label class="lab-target-editor">
+                            <div class="lab-target-editor">
                                 <span>
                                     @L["Target"] · @(
                                         SelectedPassingCell.TargetPerson is null
@@ -152,16 +152,22 @@
                                 }
                                 else
                                 {
-                                    <select value="@SelectedPassingCell.TargetPerson"
-                                            aria-label="@L["Choose landing slot on beat {0}", SelectedPassingLanding.TargetBeat + 1]"
-                                            @onchange="args => SetPassingTarget(_direct.SelectedPerson, _direct.SelectedBeat, args)">
+                                    <div class="feeding-throw-mode"
+                                         role="radiogroup"
+                                         aria-label="@L["Choose landing slot on beat {0}", SelectedPassingLanding.TargetBeat + 1]">
                                         @foreach (var target in SelectedAvailableTargets)
                                         {
-                                            <option value="@target">@_direct.People[target].Name</option>
+                                            <button type="button"
+                                                    role="radio"
+                                                    class="@(SelectedPassingCell.TargetPerson == target ? "active" : null)"
+                                                    aria-checked="@(SelectedPassingCell.TargetPerson == target)"
+                                                    @onclick="() => SetPassingTarget(_direct.SelectedPerson, _direct.SelectedBeat, target)">
+                                                @_direct.People[target].Name
+                                            </button>
                                         }
-                                    </select>
+                                    </div>
                                 }
-                            </label>
+                            </div>
                         </div>
                         <p class="lab-selected-landing">
                             @L["Selected landing"]: @SelectedLandingLabel
@@ -249,6 +255,7 @@
         }
 
         _direct.InitializeThrowsForFirstEntry();
+        _direct.SelectCell(0, 0);
         _visitedCellsSteps.Add(1);
         _cellsStep = 1;
     }
@@ -277,13 +284,8 @@
         }
     }
 
-    private void SetPassingTarget(int person, int beat, ChangeEventArgs args)
-    {
-        if (int.TryParse(args.Value?.ToString(), out var target))
-        {
-            _direct.SetTarget(person, beat, target);
-        }
-    }
+    private void SetPassingTarget(int person, int beat, int target) =>
+        _direct.SetTarget(person, beat, target);
 
     private PassingEditorCell SelectedPassingCell =>
         _direct.People[_direct.SelectedPerson].Cells[_direct.SelectedBeat];

@@ -75,6 +75,16 @@
     box-shadow: 0 0 0 3px rgba(195, 62, 74, .18);
 }
 
+::deep .feeding-beat.is-landing.collision {
+    border-color: var(--wizard-orange);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent 0 5px,
+        rgba(195, 62, 74, .25) 5px 9px
+    );
+}
+
 ::deep .feeding-beat.unfilled {
     border: 2px dashed #b16a00;
     background-image: radial-gradient(circle, rgba(177, 106, 0, .2) 1px, transparent 1px);
@@ -161,6 +171,7 @@
     width: 100%;
     margin: 0;
     font-size: 1rem;
+    text-align: center;
 }
 
 .lab-timezone-hint {
@@ -168,6 +179,7 @@
     margin: -2px 0 2px;
     color: var(--wizard-purple-500);
     font-size: .72rem;
+    text-align: center;
 }
 
 .lab-timezone-card {
@@ -340,10 +352,56 @@
     font-weight: 900;
 }
 
+.lab-chip-legend .feeding-beat.pass {
+    border-color: color-mix(in srgb, var(--wizard-orange) 55%, white);
+    background: color-mix(in srgb, var(--wizard-orange) 28%, white);
+}
+
+.lab-chip-legend .feeding-beat.self {
+    background: var(--wizard-purple-100);
+}
+
+.lab-chip-legend .feeding-beat.is-selected {
+    border-color: var(--wizard-purple-700);
+    background: var(--wizard-purple-700);
+    color: white;
+}
+
+.lab-chip-legend .feeding-beat.is-landing {
+    border-color: var(--wizard-orange);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+}
+
+.lab-chip-legend .feeding-beat.collision {
+    border-color: #c33e4a;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent 0 5px,
+        rgba(195, 62, 74, .2) 5px 9px
+    );
+    box-shadow: 0 0 0 3px rgba(195, 62, 74, .18);
+}
+
+.lab-chip-legend .feeding-beat.is-landing.collision {
+    border-color: var(--wizard-orange);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent 0 5px,
+        rgba(195, 62, 74, .25) 5px 9px
+    );
+}
+
+.lab-chip-legend .feeding-beat.unfilled {
+    border: 2px dashed #b16a00;
+    background-image: radial-gradient(circle, rgba(177, 106, 0, .2) 1px, transparent 1px);
+    background-size: 5px 5px;
+}
+
 .lab-selected-cell {
     display: grid;
     gap: 12px;
-    margin-top: 6px;
+    margin-top: 18px;
     padding: 14px;
     border: 2px solid var(--wizard-purple-100);
     border-radius: 12px;
@@ -390,7 +448,6 @@
 }
 
 .lab-height-editor input,
-.lab-target-editor select,
 .lab-target-output {
     min-width: 0;
     min-height: 44px;
@@ -416,6 +473,16 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.lab-target-editor .feeding-throw-mode {
+    display: flex;
+    width: 100%;
+}
+
+.lab-target-editor .feeding-throw-mode button {
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .lab-selected-landing {

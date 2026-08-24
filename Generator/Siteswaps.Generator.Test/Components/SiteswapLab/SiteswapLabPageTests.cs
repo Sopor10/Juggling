@@ -109,6 +109,11 @@ public class SiteswapLabPageTests
         page.Should().Contain("class=\"lab-selected-cell\"");
         page.Should().NotContain("class=\"lab-palette\"");
         page.Split("class=\"lab-target-editor\"").Should().HaveCount(2);
+        page.Should().NotContain("<select");
+        page.Should().Contain("class=\"feeding-throw-mode\"");
+        page.Should().Contain("role=\"radiogroup\"");
+        page.Should()
+            .Contain("SetPassingTarget(_direct.SelectedPerson, _direct.SelectedBeat, target)");
     }
 
     [Test]
@@ -136,6 +141,7 @@ public class SiteswapLabPageTests
             .NotContain("@if (_cellsStep == 0)\n            {\n                <WizardStepPanel");
         page.Should().Contain("EnterThrowsStep");
         page.Should().Contain("_direct.InitializeThrowsForFirstEntry()");
+        page.Should().Contain("_direct.SelectCell(0, 0)");
         page.Should().Contain("ReturnToPeopleStep");
         page.Should().NotContain("_cellsStep == 1 ? \"wizard-invisible\"");
         page.Should().NotContain("lab-step-hint");
