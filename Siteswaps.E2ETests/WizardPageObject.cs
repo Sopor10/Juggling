@@ -22,7 +22,7 @@ public class WizardPageObject(IPage page)
             ".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate"
         );
 
-    public ILocator BackButton => page.GetByRole(AriaRole.Button, new() { Name = "Zurück" });
+    public ILocator BackButton => page.Locator(".wizard-nav-buttons .wizard-back-btn");
 
     public ILocator AddFilterButton => page.Locator(".wizard-add-filter-btn");
 
