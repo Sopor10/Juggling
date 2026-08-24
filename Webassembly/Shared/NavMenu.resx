@@ -4,4 +4,14 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Main navigation" xml:space="preserve"><value>Main navigation</value></data>
+  <data name="Navigation menu" xml:space="preserve"><value>Navigation menu</value></data>
+  <data name="Open details" xml:space="preserve"><value>Open details</value></data>
+  <data name="Open siteswap" xml:space="preserve"><value>Open siteswap</value></data>
+  <data name="Passing Zone – Siteswap Generator" xml:space="preserve"><value>Passing Zone – Siteswap Generator</value></data>
+  <data name="Generator" xml:space="preserve"><value>Generator</value></data>
+  <data name="Feeding" xml:space="preserve"><value>Feeding</value></data>
+  <data name="Siteswap lab" xml:space="preserve"><value>Siteswap lab</value></data>
+  <data name="Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Siteswap…" xml:space="preserve"><value>Siteswap…</value></data>
 </root>

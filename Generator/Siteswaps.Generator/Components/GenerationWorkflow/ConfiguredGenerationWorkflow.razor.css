@@ -1,0 +1,107 @@
+/* Hosted outside .wizard-page (e.g. /feeding): chip + generate touch targets
+   must not depend on WizardPage's .wizard-page ::deep rules. */
+
+.configured-generation-workflow ::deep .wizard-chip {
+    border-radius: 10px;
+    font-weight: 800;
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-size: 13px;
+    border: 2px solid #e8e1f7;
+    background: white;
+    color: #6b41a8;
+    padding: 10px 4px;
+    min-height: 44px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.configured-generation-workflow ::deep .wizard-chip.active {
+    background: #3c286d;
+    border-color: #3c286d;
+    color: white;
+}
+
+.configured-generation-workflow ::deep .wizard-chip:active {
+    transform: scale(0.94);
+}
+
+.configured-generation-workflow ::deep .wizard-chip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.configured-generation-workflow ::deep .wizard-btn-generate {
+    min-height: 48px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: none;
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    background: linear-gradient(180deg, #ffb838, #f9a500);
+    color: #241a3d;
+    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    cursor: pointer;
+}
+
+.configured-generation-workflow ::deep .wizard-btn-generate:active {
+    transform: scale(0.97);
+}
+
+.configured-generation-workflow ::deep .wizard-btn-generate:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.configured-generation-workflow ::deep .wizard-btn-ghost {
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: none;
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    background: #e8e1f7;
+    color: #3c286d;
+    cursor: pointer;
+}
+
+.configured-generation-workflow ::deep .wizard-add-filter-btn {
+    min-height: 44px;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border: 2px dashed #e8e1f7;
+    border-radius: 10px;
+    background: transparent;
+    color: #6b41a8;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+}
+
+.configured-generation-workflow ::deep .wizard-field + .wizard-field {
+    margin-top: 1.5rem;
+}
+
+.configured-generation-workflow ::deep .wizard-input-number {
+    width: 4.5rem;
+    min-height: 44px;
+    text-align: center;
+    font-weight: 700;
+    border: 2px solid #e8e1f7;
+    border-radius: 10px;
+}
+
+.configured-generation-workflow ::deep .wizard-clamp-feedback {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #6b41a8;
+    margin: 8px 0 0;
+}

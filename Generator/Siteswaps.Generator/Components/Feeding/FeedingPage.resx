@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="3-person feed" xml:space="preserve"><value>3-person feed</value></data>
+  <data name="← Details" xml:space="preserve"><value>← Details</value></data>
+  <data name="Open Feeding from a two-person siteswap on the details page." xml:space="preserve"><value>Open Feeding from a two-person siteswap on the details page.</value></data>
+  <data name="Invalid siteswap." xml:space="preserve"><value>Invalid siteswap.</value></data>
+  <data name="A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees." xml:space="preserve"><value>A keeps this two-person pattern. Assign each pass to B1 or B2, then generate both fedees.</value></data>
+  <data name="B1 is ready. Pick a local pattern, then generate B2." xml:space="preserve"><value>B1 is ready. Pick a local pattern, then generate B2.</value></data>
+  <data name="B1 is ready. A local pattern is selected — generate B2." xml:space="preserve"><value>B1 is ready. A local pattern is selected — generate B2.</value></data>
+  <data name="Both fedees are ready. Review the local patterns, then show the combination." xml:space="preserve"><value>Both fedees are ready. Review the local patterns, then show the combination.</value></data>
+  <data name="Pass assignments" xml:space="preserve"><value>Pass assignments</value></data>
+  <data name="Beat {0}" xml:space="preserve"><value>Beat {0}</value></data>
+  <data name="Pass partner for beat {0}" xml:space="preserve"><value>Pass partner for beat {0}</value></data>
+  <data name="Assign beat {0} to B1" xml:space="preserve"><value>Assign beat {0} to B1</value></data>
+  <data name="Assign beat {0} to B2" xml:space="preserve"><value>Assign beat {0} to B2</value></data>
+  <data name="Assign beat {0} to {1}" xml:space="preserve"><value>Assign beat {0} to {1}</value></data>
+  <data name="Beat {0} self throw" xml:space="preserve"><value>Beat {0} self throw</value></data>
+  <data name="Self" xml:space="preserve"><value>Self</value></data>
+  <data name="Clubs B1" xml:space="preserve"><value>Clubs B1</value></data>
+  <data name="Clubs B2" xml:space="preserve"><value>Clubs B2</value></data>
+  <data name="B1 clubs minimum" xml:space="preserve"><value>B1 clubs minimum</value></data>
+  <data name="B1 clubs maximum" xml:space="preserve"><value>B1 clubs maximum</value></data>
+  <data name="B2 clubs minimum" xml:space="preserve"><value>B2 clubs minimum</value></data>
+  <data name="B2 clubs maximum" xml:space="preserve"><value>B2 clubs maximum</value></data>
+  <data name="Feeder has no passes." xml:space="preserve"><value>Feeder has no passes.</value></data>
+  <data name="Pass assignments are incomplete." xml:space="preserve"><value>Pass assignments are incomplete.</value></data>
+  <data name="Each fedee must receive at least one pass." xml:space="preserve"><value>Each fedee must receive at least one pass.</value></data>
+  <data name="Club bounds for B1 and B2 must be set." xml:space="preserve"><value>Club bounds for B1 and B2 must be set.</value></data>
+  <data name="Generation is blocked." xml:space="preserve"><value>Generation is blocked.</value></data>
+  <data name="Generate B1" xml:space="preserve"><value>Generate B1</value></data>
+  <data name="Generate B2" xml:space="preserve"><value>Generate B2</value></data>
+  <data name="Generate pattern for {0}" xml:space="preserve"><value>Generate pattern for {0}</value></data>
+  <data name="B1 local results" xml:space="preserve"><value>B1 local results</value></data>
+  <data name="B2 local results" xml:space="preserve"><value>B2 local results</value></data>
+  <data name="Show combination" xml:space="preserve"><value>Show combination</value></data>
+  <data name="Feed combination" xml:space="preserve"><value>Feed combination</value></data>
+  <data name="B1 starting clubs: L{0} R{1}" xml:space="preserve"><value>B1 starting clubs: L{0} R{1}</value></data>
+  <data name="B2 starting clubs: L{0} R{1}" xml:space="preserve"><value>B2 starting clubs: L{0} R{1}</value></data>
+  <data name="Rotate pattern left" xml:space="preserve"><value>Rotate pattern left</value></data>
+  <data name="Rotate pattern right" xml:space="preserve"><value>Rotate pattern right</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="A's Interface is fully constrained after B1." xml:space="preserve"><value>A's Interface is fully constrained after B1.</value></data>
+  <data name="Still free after B1: {0}" xml:space="preserve"><value>Still free after B1: {0}</value></data>
+</root>

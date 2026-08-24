@@ -1,5 +1,8 @@
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Sections
 @using Siteswaps.Generator.Components.Internal
+@using Siteswaps.Generator.Components.Layout
+@using Microsoft.JSInterop
 @implements IDisposable
 @inject IStringLocalizer<ResultsView> L
 @inject ILocalStorageService LocalStorage
@@ -7,7 +10,7 @@
 <div class="wizard-results @(_denseMode ? "dense" : "")">
     <div class="wizard-results-scroll">
         <div class="wizard-results-header">
-            <h2 class="wizard-results-title">
+            <h2 @ref="_titleHeading" class="wizard-results-title" tabindex="-1">
                 @if (IsGenerating)
                 {
                     <text>@L["Generating…"]</text>
@@ -72,19 +75,21 @@
             }
         }
     </div>
+</div>
 
-    @if (!IsGenerating)
-    {
+@if (!IsGenerating)
+{
+    <SectionContent SectionName="@WizardShellSections.Footer">
         <div class="wizard-results-actions">
             <div class="wizard-measure">
                 <div class="wizard-nav-buttons">
-                    <button type="button" class="wizard-btn-ghost" @onclick="BackToEditing">@L["Adjust filters"]</button>
+                    <button type="button" class="wizard-btn-ghost wizard-back-btn" @onclick="BackToEditing">@L["Back"]</button>
                     <button type="button" class="wizard-btn-primary wizard-flex-1" @onclick="StartOver">@L["New search"]</button>
                 </div>
             </div>
         </div>
-    }
-</div>
+    </SectionContent>
+}
 
 @code {
     [Parameter, EditorRequired]
@@ -105,14 +110,28 @@
     [Parameter]
     public EventCallback StartOverRequested { get; set; }
 
+    private ElementReference _titleHeading;
+    private int _visibleResultCount = BatchSize;
+    private const int BatchSize = 40;
+
     private Task Cancel() => CancelRequested.InvokeAsync();
 
     private Task BackToEditing() => BackToEditingRequested.InvokeAsync();
 
     private Task StartOver() => StartOverRequested.InvokeAsync();
 
-    private int _visibleResultCount = BatchSize;
-    private const int BatchSize = 40;
+    public async Task FocusTitleAsync()
+    {
+        try
+        {
+            await _titleHeading.FocusAsync();
+        }
+        catch (JSException)
+        {
+            // Heading may not be attached yet during teardown / phase switches.
+        }
+    }
+
     private const string DenseModeStorageKey = "wizard-dense-mode";
     private bool _denseMode;
     private readonly CancellationTokenSource _cts = new();

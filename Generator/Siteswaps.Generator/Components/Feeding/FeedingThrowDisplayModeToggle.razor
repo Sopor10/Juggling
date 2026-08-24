@@ -1,0 +1,71 @@
+@namespace Siteswaps.Generator.Components.Feeding
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+@inject IStringLocalizer<FeedingThrowDisplayModeToggle> L
+
+<div class="feeding-throw-mode" role="radiogroup" aria-label="@L["Throw display"]">
+    <button type="button"
+            role="radio"
+            class="@ModeClass(FeedingThrowDisplay.Mode.Local)"
+            aria-checked="@(_mode == FeedingThrowDisplay.Mode.Local)"
+            @onclick="() => SetModeAsync(FeedingThrowDisplay.Mode.Local)">
+        @L["Local"]
+    </button>
+    <button type="button"
+            role="radio"
+            class="@ModeClass(FeedingThrowDisplay.Mode.Global)"
+            aria-checked="@(_mode == FeedingThrowDisplay.Mode.Global)"
+            @onclick="() => SetModeAsync(FeedingThrowDisplay.Mode.Global)">
+        @L["Global"]
+    </button>
+    <button type="button"
+            role="radio"
+            class="@ModeClass(FeedingThrowDisplay.Mode.Name)"
+            aria-checked="@(_mode == FeedingThrowDisplay.Mode.Name)"
+            @onclick="() => SetModeAsync(FeedingThrowDisplay.Mode.Name)">
+        @L["Names"]
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public FeedingThrowDisplay.Mode Mode { get; set; } = FeedingThrowDisplay.Mode.Global;
+
+    [Parameter]
+    public EventCallback<FeedingThrowDisplay.Mode> ModeChanged { get; set; }
+
+    private FeedingThrowDisplay.Mode _mode = FeedingThrowDisplay.Mode.Global;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings");
+        _mode = FeedingThrowDisplay.ParseMode(settings?.ThrowDisplayMode);
+        if (_mode != Mode)
+        {
+            await ModeChanged.InvokeAsync(_mode);
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        _mode = Mode;
+    }
+
+    private async Task SetModeAsync(FeedingThrowDisplay.Mode mode)
+    {
+        if (_mode == mode)
+        {
+            return;
+        }
+
+        _mode = mode;
+        await ModeChanged.InvokeAsync(mode);
+
+        var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings") ?? new SettingsDto();
+        settings.ThrowDisplayMode = mode.ToString();
+        await LocalStorage.SetItemAsync("settings", settings);
+    }
+
+    private string? ModeClass(FeedingThrowDisplay.Mode mode) =>
+        _mode == mode ? "active" : null;
+}

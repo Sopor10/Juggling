@@ -58,7 +58,23 @@
     </div>
     <script src="pwa-install.js"></script>
     <script src="sw-registrator.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.blazorIsLocalDevelopment = ['localhost', '127.0.0.1', '[::1]']
+            .includes(window.location.hostname);
+    </script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        Blazor.start({
+            loadBootResource: (type, name, defaultUri, integrity) => {
+                if (!window.blazorIsLocalDevelopment || !defaultUri.startsWith(window.location.origin)) {
+                    return defaultUri;
+                }
+
+                const separator = defaultUri.includes('?') ? '&' : '?';
+                return `${defaultUri}${separator}dev=${Date.now()}`;
+            }
+        });
+    </script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
 </body>

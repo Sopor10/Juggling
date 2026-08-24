@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Interface at A" xml:space="preserve"><value>Interface at A</value></data>
+  <data name="Beat {0}" xml:space="preserve"><value>Beat {0}</value></data>
+  <data name="Self" xml:space="preserve"><value>Self</value></data>
+  <data name="Free" xml:space="preserve"><value>Free</value></data>
+  <data name="Still free for {0}: {1}" xml:space="preserve"><value>Still free for {0}: {1}</value></data>
+  <data name="Nothing left for {0} — A's Interface is fully constrained." xml:space="preserve"><value>Nothing left for {0} — A's Interface is fully constrained.</value></data>
+  <data name="{0} passes to A on beat {1}." xml:space="preserve"><value>{0} passes to A on beat {1}.</value></data>
+  <data name="Let {0} pass to A on beat {1}." xml:space="preserve"><value>Let {0} pass to A on beat {1}.</value></data>
+  <data name="Pick the Interface beat where {0} passes to A — the pattern is rotated to match." xml:space="preserve"><value>Pick the Interface beat where {0} passes to A — the pattern is rotated to match.</value></data>
+</root>

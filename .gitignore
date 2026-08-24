@@ -15,3 +15,7 @@ node_modules
 
 # Local agent/review scratch (e.g. .tmp-review-1, .tmp-e2e-run2.txt)
 .tmp*
+.playwright-cli
+.playwright-mcp
+
+review-artifacts

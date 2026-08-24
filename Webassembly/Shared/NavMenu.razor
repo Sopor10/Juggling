@@ -28,6 +28,15 @@
         </button>
         <div class="@NavMenuCssClass pznav-links">
             <PwaInstallButton OnClicked="CloseNavMenu" />
+            <NavLink class="pznav-link" href="" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                @L["Generator"]
+            </NavLink>
+            <NavLink class="pznav-link" href="feeding" @onclick="CloseNavMenu">
+                @L["Feeding"]
+            </NavLink>
+            <NavLink class="pznav-link" href="siteswap-lab" @onclick="CloseNavMenu">
+                @L["Siteswap lab"]
+            </NavLink>
             <NavLink class="pznav-link" href="Settings" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
                 @L["Settings"]
             </NavLink>
@@ -57,6 +66,7 @@
 
         _invalid = false;
         CloseNavMenu();
+        // App-relative (no leading '/'): respects <base href> / PathBase in PR previews.
         Navigation.NavigateTo($"details?s={Uri.EscapeDataString(query)}");
     }
 }

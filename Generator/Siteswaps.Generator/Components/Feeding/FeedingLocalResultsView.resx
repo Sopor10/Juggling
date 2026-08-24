@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="No matching patterns found." xml:space="preserve"><value>No matching patterns found.</value></data>
+  <data name="Load more ({0} of {1})" xml:space="preserve"><value>Load more ({0} of {1})</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="{0} clubs" xml:space="preserve"><value>{0} clubs</value></data>
+</root>

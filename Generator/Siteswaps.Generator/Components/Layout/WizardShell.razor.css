@@ -1,13 +1,8 @@
 /* ==========================================================================
-   Design tokens - a small, independent copy of the palette/spacing ideas
-   from the Passing Zone brand palette (colors extracted from the
-   mockups). Intentionally duplicated (not shared/imported) so this page has
-   zero coupling to the parallel "card stack" page or the mockup files.
-   Defined on the page's own root element; CSS custom properties inherit
-   through the DOM to every child component regardless of Blazor's CSS
-   isolation scoping, so descendants can reference var(--wizard-*) freely.
-   ========================================================================== */
-.wizard-page {
+   Shared wizard shell (WizardShell layout component). Design tokens are
+   defined on .wizard-page so CSS custom properties inherit through the DOM
+   to every child component regardless of Blazor CSS isolation scoping.
+   ========================================================================== */.wizard-page {
     --wizard-purple-950: #241a3d;
     --wizard-purple-900: #2c1f52;
     --wizard-purple-800: #33225d;
@@ -64,7 +59,18 @@
     flex-shrink: 0;
 }
 
-.wizard-swipe-hint {
+.wizard-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.wizard-footer {
+    flex-shrink: 0;
+}
+
+.wizard-page ::deep .wizard-swipe-hint {
     text-align: center;
     color: rgba(255, 255, 255, 0.92);
     font-size: 12px;
@@ -102,9 +108,9 @@
        out the actual hit target closer to a comfortable touch size. */
     width: 20px;
     height: 20px;
-    min-height: 40px;
-    min-width: 40px;
-    padding: 10px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
     background-clip: content-box;
     border: none;
     border-radius: 50%;
@@ -131,7 +137,7 @@
    corners peek in front of the header's flat bottom edge instead of
    meeting it as a hard rectangular seam - the same "sheet over header"
    treatment used by .wizard-bottom-sheet, just permanently docked. */
-.wizard-steps {
+.wizard-page ::deep .wizard-steps {
     flex: 1;
     position: relative;
     overflow: hidden;
@@ -142,13 +148,13 @@
     box-shadow: var(--wizard-shadow);
 }
 
-.wizard-steps.wizard-swipe-active,
-.wizard-results-panel.wizard-swipe-active {
+.wizard-page ::deep .wizard-steps.wizard-swipe-active,
+.wizard-page ::deep .wizard-results-panel.wizard-swipe-active {
     user-select: none;
     -webkit-user-select: none;
 }
 
-.wizard-step {
+.wizard-page ::deep .wizard-step {
     display: none;
     flex-direction: column;
     height: 100%;
@@ -156,29 +162,30 @@
     overflow-y: auto;
 }
 
-.wizard-step.active {
+.wizard-page ::deep .wizard-step.active {
     display: flex;
 }
 
-.wizard-measure {
+/* Shared centered content column for all wizard-shell pages. */
+.wizard-page ::deep .wizard-measure {
     width: 100%;
     max-width: 480px;
     margin-inline: auto;
     box-sizing: border-box;
 }
 
-.wizard-step-filters .wizard-measure {
+.wizard-page ::deep .wizard-step-filters .wizard-measure {
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
 }
 
-.wizard-field + .wizard-field {
+.wizard-page ::deep .wizard-field + .wizard-field {
     margin-top: 1.5rem;
 }
 
-.wizard-section-label {
+.wizard-page ::deep .wizard-section-label {
     text-align: center;
     font-size: 0.8125rem;
     font-weight: 800;
@@ -188,11 +195,16 @@
     margin: 0 0 0.65rem;
 }
 
-.wizard-mt {
+.wizard-page ::deep h2.wizard-section-label {
+    /* Keep visual parity with former paragraph labels; not in sequential tab order. */
+    outline: none;
+}
+
+.wizard-page ::deep .wizard-mt {
     margin-top: 24px;
 }
 
-.wizard-filters-scroll {
+.wizard-page ::deep .wizard-filters-scroll {
     flex: 1;
     overflow-y: auto;
 }
@@ -381,13 +393,13 @@
 }
 
 /* ---------- nav ---------- */
-.wizard-nav {
+.wizard-page ::deep .wizard-nav {
     padding: 10px 20px 18px;
     background: var(--wizard-bg);
     flex-shrink: 0;
 }
 
-.wizard-next-preview {
+.wizard-page ::deep .wizard-next-preview {
     text-align: center;
     font-size: 11px;
     font-weight: 600;
@@ -396,13 +408,13 @@
     margin: 0 0 8px;
 }
 
-.wizard-nav-buttons {
+.wizard-page ::deep .wizard-nav-buttons {
     display: flex;
     align-items: stretch;
     gap: 12px;
 }
 
-.wizard-flex-1 {
+.wizard-page ::deep .wizard-flex-1 {
     flex: 1;
 }
 
@@ -444,7 +456,7 @@
     color: var(--wizard-purple-700);
 }
 
-.wizard-back-btn.wizard-invisible {
+.wizard-page ::deep .wizard-back-btn.wizard-invisible {
     display: none;
 }
 
@@ -613,7 +625,7 @@
     cursor: pointer;
 }
 
-.wizard-add-filter-btn {
+.wizard-page ::deep .wizard-add-filter-btn {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -979,7 +991,7 @@
 }
 
 /* ---------- results ---------- */
-.wizard-results-panel {
+.wizard-page ::deep .wizard-results-panel {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -1071,7 +1083,9 @@
 }
 
 .wizard-page ::deep .pz-siteswap-card-title {
-    display: block;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     font-family: var(--wizard-font-display);
     font-size: 18px;
     font-weight: 800;

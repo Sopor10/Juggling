@@ -1,0 +1,139 @@
+@namespace Siteswaps.Generator.Components.Feeding
+@using Microsoft.JSInterop
+@using Siteswaps.Generator.Core.Generator
+@inject IStringLocalizer<FeedingLocalResultsView> L
+
+<div class="feeding-results-wizard">
+    <div class="feeding-results-scroll">
+        <div class="feeding-results-measure">
+            <div class="feeding-results-header">
+                <h2 @ref="_titleHeading"
+                    class="feeding-results-title @(ShowVisibleTitle ? null : "feeding-sr-only")"
+                    tabindex="-1">
+                    @Title
+                </h2>
+                <FeedingThrowDisplayModeToggle @bind-Mode="_mode" />
+            </div>
+
+            @if (Locals.Count == 0)
+            {
+                <p class="feeding-results-empty">@L["No matching patterns found."]</p>
+                @if (!string.IsNullOrEmpty(EmptyHint))
+                {
+                    <p class="feeding-results-empty-hint">@EmptyHint</p>
+                }
+            }
+            else
+            {
+                <ul class="feeding-results" role="list">
+                    @foreach (var local in Locals.Take(_visibleCount))
+                    {
+                        var selected = Selected is not null
+                            && FeedSiteswapRotation.IsRotationOf(Selected, local.Global);
+                        var localSiteswap = local.Global.GetLocalSiteswap(Juggler, NumberOfJugglers);
+                        var clubs = FeedingThrowDisplay.FormatAverage(localSiteswap.Average());
+                        var clubsLabel = L["{0} clubs", clubs].Value;
+                        var chips = FeedingThrowDisplay.ChipsFor(
+                            local.Global,
+                            Juggler,
+                            NumberOfJugglers,
+                            _mode);
+                        <li>
+                            <button type="button"
+                                    class="feeding-result @(selected ? "active" : null)"
+                                    aria-pressed="@(selected ? "true" : "false")"
+                                    aria-label="@($"{local.LocalNotation}, {clubsLabel}")"
+                                    @onclick="() => Select.InvokeAsync(local)">
+                                <span class="feeding-result-notation" aria-hidden="true">@local.LocalNotation</span>
+                                <div class="feeding-result-body">
+                                    <FeedingThrowChipRow Chips="chips" AriaLabel="@local.LocalNotation" />
+                                    <span class="feeding-result-clubs" aria-hidden="true">@clubsLabel</span>
+                                </div>
+                            </button>
+                        </li>
+                    }
+                </ul>
+                @if (_visibleCount < Locals.Count)
+                {
+                    <button type="button" class="feeding-btn-ghost feeding-load-more" @onclick="LoadMore">
+                        @L["Load more ({0} of {1})", Math.Min(_visibleCount, Locals.Count), Locals.Count]
+                    </button>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="feeding-results-actions">
+        <div class="feeding-results-measure">
+            <button type="button" class="feeding-btn-ghost" @onclick="Back">@L["Back"]</button>
+            <button type="button"
+                    class="feeding-btn-primary feeding-flex-1"
+                    disabled="@(Selected is null)"
+                    @onclick="Confirm">
+                @L["Confirm"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private const int BatchSize = 40;
+    private FeedingThrowDisplay.Mode _mode = FeedingThrowDisplay.Mode.Global;
+    private int _visibleCount = BatchSize;
+    private ElementReference _titleHeading;
+
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    /// <summary>When false, title stays for focus/a11y but the feeding header owns the visible label.</summary>
+    [Parameter]
+    public bool ShowVisibleTitle { get; set; } = true;
+
+    [Parameter]
+    public IReadOnlyList<LocalFeedSiteswap> Locals { get; set; } = [];
+
+    [Parameter]
+    public Siteswap? Selected { get; set; }
+
+    /// <summary>Host explanation for an empty list — why nothing survived the constraints.</summary>
+    [Parameter]
+    public string? EmptyHint { get; set; }
+
+    [Parameter]
+    public int Juggler { get; set; }
+
+    [Parameter]
+    public int NumberOfJugglers { get; set; } = 2;
+
+    [Parameter]
+    public EventCallback<LocalFeedSiteswap> Select { get; set; }
+
+    [Parameter]
+    public EventCallback Confirm { get; set; }
+
+    [Parameter]
+    public EventCallback Back { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (_visibleCount == 0 || Locals.Count <= BatchSize || _visibleCount > Locals.Count)
+        {
+            _visibleCount = Math.Min(BatchSize, Locals.Count);
+        }
+    }
+
+    private void LoadMore() =>
+        _visibleCount = Math.Min(_visibleCount + BatchSize, Locals.Count);
+
+    public async Task FocusTitleAsync()
+    {
+        try
+        {
+            await _titleHeading.FocusAsync();
+        }
+        catch (JSException)
+        {
+            // Heading may not be attached yet during teardown / phase switches.
+        }
+    }
+}

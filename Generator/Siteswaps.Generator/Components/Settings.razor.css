@@ -1,42 +1,3 @@
-.settings-page {
-    --wizard-purple-950: #241a3d;
-    --wizard-purple-900: #2c1f52;
-    --wizard-purple-800: #33225d;
-    --wizard-purple-700: #3c286d;
-    --wizard-purple-600: #472779;
-    --wizard-purple-500: #552f8c;
-    --wizard-purple-400: #6b41a8;
-    --wizard-purple-100: #e8e1f7;
-    --wizard-orange: #f9a500;
-    --wizard-bg: #f5f3fb;
-    --wizard-radius-sm: 10px;
-    --wizard-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
-
-    width: 100%;
-    min-height: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    background: var(--wizard-bg);
-    font-family: 'Nunito', system-ui, sans-serif;
-    color: var(--wizard-purple-900);
-    -webkit-tap-highlight-color: transparent;
-}
-
-.settings-page button:focus-visible,
-.settings-page input:focus-visible {
-    outline: 3px solid #00b3ff;
-    outline-offset: 2px;
-    border-radius: 8px;
-}
-
-.settings-header {
-    background: radial-gradient(120% 140% at 20% 0%, var(--wizard-purple-600) 0%, var(--wizard-purple-800) 45%, var(--wizard-purple-950) 100%);
-    color: white;
-    padding: 18px 20px 22px;
-    flex-shrink: 0;
-}
-
 .settings-title {
     margin: 0;
     text-align: center;
@@ -45,17 +6,12 @@
     font-size: 1.5rem;
 }
 
-.settings-body {
+.settings-steps {
     flex: 1;
-    padding: 24px 20px 32px;
-    box-sizing: border-box;
 }
 
 .settings-measure {
-    width: 100%;
-    max-width: 480px;
-    margin-inline: auto;
-    box-sizing: border-box;
+    padding-top: 4px;
 }
 
 .settings-field + .settings-field {

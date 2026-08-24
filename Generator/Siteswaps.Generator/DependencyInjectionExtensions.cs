@@ -15,7 +15,10 @@ public static class DependencyInjectionExtensions
         services.AddFluxor(options =>
         {
             options.ScanAssemblies(typeof(AssemblyInfo).Assembly);
-#if DEBUG
+#if DEBUG && FLUXOR_REDUX_DEVTOOLS
+            // Optional: build with -p:DefineConstants=FLUXOR_REDUX_DEVTOOLS for Chrome/Edge + extension.
+            // Cursor's embedded Electron browser has no Redux DevTools extension and Fluxor's
+            // middleware uses eval — leaving it enabled keeps the app stuck on the boot splash.
             options.UseReduxDevTools();
 #endif
         });

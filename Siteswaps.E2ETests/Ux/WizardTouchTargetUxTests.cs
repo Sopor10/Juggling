@@ -30,9 +30,9 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
         }
     }
 
-    /// <summary>Summary: Juggler quick-pick chips must remain comfortably tappable on mobile.</summary>
+    /// <summary>Summary: Juggler stepper +/- controls must remain comfortably tappable on mobile.</summary>
     [Fact]
-    public async Task Juggler_Chips_Meet_Minimum_Touch_Target()
+    public async Task Juggler_Stepper_Buttons_Meet_Minimum_Touch_Target()
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var page = session.Page;
@@ -40,13 +40,13 @@ public class WizardTouchTargetUxTests(SharedBlazorFixture host) : IClassFixture<
         var wizard = await page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
         await wizard.WaitUntilLoadedAsync();
 
-        await Assertions.Expect(wizard.JugglerChips.First).ToBeVisibleAsync();
-        var count = await wizard.JugglerChips.CountAsync();
+        await Assertions.Expect(wizard.JugglerStepperButtons.First).ToBeVisibleAsync();
+        var count = await wizard.JugglerStepperButtons.CountAsync();
         for (var i = 0; i < count; i++)
         {
             await WizardUxGeometry.AssertMinTouchTargetAsync(
-                wizard.JugglerChips.Nth(i),
-                $"juggler chip[{i}]"
+                wizard.JugglerStepperButtons.Nth(i),
+                $"juggler stepper button[{i}]"
             );
         }
     }

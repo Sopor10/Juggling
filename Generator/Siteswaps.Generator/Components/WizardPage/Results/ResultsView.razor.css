@@ -13,10 +13,17 @@
 }
 
 .wizard-results-grid.dense {
+    width: 100%;
+    max-width: 720px;
+    margin-inline: auto;
     gap: 8px;
 }
 
 .wizard-results.dense ::deep .pz-siteswap-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
     padding: 8px 14px;
 }
 
@@ -25,5 +32,7 @@
 }
 
 .wizard-results.dense ::deep .pz-siteswap-card-clubs {
-    padding-top: 6px;
+    padding-top: 0;
+    border-top: 0;
+    white-space: nowrap;
 }

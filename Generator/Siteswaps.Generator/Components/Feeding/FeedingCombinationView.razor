@@ -1,0 +1,82 @@
+@namespace Siteswaps.Generator.Components.Feeding
+@inject IStringLocalizer<FeedingCombinationView> L
+
+<section class="feeding-combination" aria-labelledby="feeding-title">
+    <FeedingJugglerOverview Session="Session"
+                            Rows="BuildRows()"
+                            Mode="_mode"
+                            ModeChanged="OnModeChanged" />
+
+    <FeedingInterfaceOccupancy Session="Session" />
+
+    @if (ShowBack)
+    {
+        <button type="button" class="feeding-btn-ghost" @onclick="Back">@L["Back"]</button>
+    }
+</section>
+
+@code {
+    private FeedingThrowDisplay.Mode _mode = FeedingThrowDisplay.Mode.Global;
+
+    [Parameter, EditorRequired]
+    public NormalFeedSession Session { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback Back { get; set; }
+
+    /// <summary>When false, host owns Back in a sticky footer (FeedingPage).</summary>
+    [Parameter]
+    public bool ShowBack { get; set; } = true;
+
+    private Task OnModeChanged(FeedingThrowDisplay.Mode mode)
+    {
+        _mode = mode;
+        return Task.CompletedTask;
+    }
+
+    private IReadOnlyList<FeedingJugglerOverview.Row> BuildRows()
+    {
+        const int pairJugglers = 2;
+        var rows = new List<FeedingJugglerOverview.Row>(3);
+        var feeder = Session.FeederSiteswap;
+        var aLocal = feeder.GetLocalSiteswap(Session.Topology.A.TimeZone, pairJugglers);
+        ClubHands? aClubs = Session.TryStartingClubs("A", out var clubsA) ? clubsA : null;
+        rows.Add(
+            new FeedingJugglerOverview.Row(
+                "A",
+                feeder,
+                Session.Topology.A.TimeZone,
+                pairJugglers,
+                aLocal.Average(),
+                ShowAverage: feeder.Period.Value % pairJugglers == 0,
+                aClubs
+            )
+        );
+
+        AddPartner("B1", Session.Topology.B1.TimeZone);
+        AddPartner("B2", Session.Topology.B2.TimeZone);
+        return rows;
+
+        void AddPartner(string role, int timeZone)
+        {
+            if (Session.SelectedSiteswap(role) is not { } siteswap)
+            {
+                return;
+            }
+
+            var local = siteswap.GetLocalSiteswap(timeZone, pairJugglers);
+            ClubHands? clubs = Session.TryStartingClubs(role, out var c) ? c : null;
+            rows.Add(
+                new FeedingJugglerOverview.Row(
+                    role,
+                    siteswap,
+                    timeZone,
+                    pairJugglers,
+                    local.Average(),
+                    ShowAverage: siteswap.Period.Value % pairJugglers == 0,
+                    clubs
+                )
+            );
+        }
+    }
+}

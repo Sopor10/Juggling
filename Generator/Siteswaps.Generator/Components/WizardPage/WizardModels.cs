@@ -38,7 +38,7 @@ public sealed class WizardState
     public const int MinJugglers = 2;
     public const int MaxJugglers = 8;
 
-    /// <summary>Upper bound for the exact-value juggler number input (beyond the quick-pick pills).</summary>
+    /// <summary>Upper bound for the juggler count stepper (beyond the typical 2–8 range).</summary>
     public const int MaxJugglersExact = 20;
 
     public const int MinPeriod = 1;
@@ -50,7 +50,7 @@ public sealed class WizardState
     /// <summary>
     /// Absolute ceiling for Settings MaxHeight (matches Settings.razor Max="50").
     /// </summary>
-    public const int AbsoluteMaxThrowHeight = 50;
+    public const int AbsoluteMaxThrowHeight = SettingsDto.MaxMaxHeight;
 
     /// <summary>
     /// Highest throw height offered in the throws chip grid.
@@ -110,7 +110,7 @@ public sealed class WizardState
 
     public void ApplyMaxThrowHeight(int maxHeight)
     {
-        MaxThrowHeight = Math.Clamp(maxHeight, 1, AbsoluteMaxThrowHeight);
+        MaxThrowHeight = SettingsDto.ClampMaxHeight(maxHeight);
         AllowedThrows.RemoveAll(t => t.Height > MaxThrowHeight);
     }
 

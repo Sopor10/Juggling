@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="+ Add filter" xml:space="preserve"><value>+ Add filter</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Clubs maximum" xml:space="preserve"><value>Clubs maximum</value></data>
+  <data name="Clubs minimum" xml:space="preserve"><value>Clubs minimum</value></data>
+  <data name="Generate" xml:space="preserve"><value>Generate</value></data>
+  <data name="Generating…" xml:space="preserve"><value>Generating…</value></data>
+</root>

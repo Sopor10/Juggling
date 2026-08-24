@@ -1,0 +1,138 @@
+@namespace Siteswaps.Generator.Components.Feeding
+@inject IStringLocalizer<FeedingInterfaceOccupancy> L
+
+<div class="feeding-interface">
+    <p class="feeding-section-label">@L["Interface at A"]</p>
+    <ol class="feeding-interface-row" role="list" aria-label="@AriaSummary">
+        @foreach (var beat in Beats)
+        {
+            <li class="feeding-interface-cell @OwnerClass(beat.Owner) @(CanPick(beat) ? "is-choosable" : null)" @key="beat.GlobalBeat">
+                @if (CanPick(beat))
+                {
+                    <button type="button"
+                            class="feeding-interface-pick"
+                            aria-pressed="@(IsMoveOwner(beat) ? "true" : "false")"
+                            aria-label="@PickLabel(beat)"
+                            @onclick="() => MoveRequested.InvokeAsync(beat.GlobalBeat)">
+                        <span class="feeding-interface-owner">@OwnerLabel(beat.Owner)</span>
+                        <span class="feeding-interface-beat">@BeatLabel(beat)</span>
+                    </button>
+                }
+                else
+                {
+                    <span class="feeding-interface-owner">@OwnerLabel(beat.Owner)</span>
+                    <span class="feeding-interface-beat">@BeatLabel(beat)</span>
+                }
+            </li>
+        }
+    </ol>
+    @if (MoveHint is { } hint)
+    {
+        <p class="feeding-interface-summary">@hint</p>
+    }
+    @if (RoleSummary is { } summary)
+    {
+        <p class="feeding-interface-summary">@summary</p>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public NormalFeedSession Session { get; set; } = null!;
+
+    /// <summary>Fedee the summary line is written for. Null shows the occupancy alone.</summary>
+    [Parameter]
+    public string? Role { get; set; }
+
+    /// <summary>
+    /// Fedee whose pass-to-A the row lets the user move to another Interface beat. Null keeps the
+    /// row read-only.
+    /// </summary>
+    [Parameter]
+    public string? MoveRole { get; set; }
+
+    /// <summary>Beats <see cref="MoveRole"/> can actually reach — everything else stays static.</summary>
+    [Parameter]
+    public IReadOnlyList<int> MoveTargets { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<int> MoveRequested { get; set; }
+
+    private IReadOnlyList<FeedInterfaceTimelineBeat> Beats => Session.FeederInterfaceTimeline();
+
+    private string AriaSummary =>
+        string.Join(" ", Beats.Select(beat => OwnerLabel(beat.Owner)));
+
+    /// <summary>Beats count from 1 in the UI; the session indexes them from 0.</summary>
+    private string BeatLabel(FeedInterfaceTimelineBeat beat) => L["Beat {0}", beat.LocalBeat + 1].Value;
+
+    private bool CanPick(FeedInterfaceTimelineBeat beat) =>
+        MoveRole is not null && MoveTargets.Contains(beat.GlobalBeat);
+
+    private bool IsMoveOwner(FeedInterfaceTimelineBeat beat) =>
+        MoveRole switch
+        {
+            "B1" => beat.Owner == FeedInterfaceOwner.B1,
+            "B2" => beat.Owner == FeedInterfaceOwner.B2,
+            _ => false,
+        };
+
+    private string PickLabel(FeedInterfaceTimelineBeat beat) =>
+        IsMoveOwner(beat)
+            ? L["{0} passes to A on beat {1}.", MoveRole!, beat.LocalBeat + 1].Value
+            : L["Let {0} pass to A on beat {1}.", MoveRole!, beat.LocalBeat + 1].Value;
+
+    private string? MoveHint
+    {
+        get
+        {
+            if (MoveRole is null || MoveTargets.Count < 2)
+            {
+                return null;
+            }
+
+            return L[
+                "Pick the Interface beat where {0} passes to A — the pattern is rotated to match.",
+                MoveRole
+            ].Value;
+        }
+    }
+
+    private string? RoleSummary
+    {
+        get
+        {
+            if (Role is not ("B1" or "B2"))
+            {
+                return null;
+            }
+
+            var free = Beats.Where(beat => beat.Owner == FeedInterfaceOwner.Free).ToList();
+            return free.Count == 0
+                ? L["Nothing left for {0} — A's Interface is fully constrained.", Role].Value
+                : L[
+                    "Still free for {0}: {1}",
+                    Role,
+                    string.Join(", ", free.Select(BeatLabel))
+                ].Value;
+        }
+    }
+
+    private string OwnerLabel(FeedInterfaceOwner owner) =>
+        owner switch
+        {
+            FeedInterfaceOwner.Self => L["Self"].Value,
+            FeedInterfaceOwner.B1 => "B1",
+            FeedInterfaceOwner.B2 => "B2",
+            _ => L["Free"].Value,
+        };
+
+    private static string OwnerClass(FeedInterfaceOwner owner) =>
+        owner switch
+        {
+            FeedInterfaceOwner.Self => "is-self",
+            FeedInterfaceOwner.B1 => "is-b1",
+            FeedInterfaceOwner.B2 => "is-b2",
+            _ => "is-free",
+        };
+}

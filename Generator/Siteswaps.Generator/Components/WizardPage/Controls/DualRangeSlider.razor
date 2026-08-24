@@ -43,6 +43,7 @@
     private int _a;
     private int _b;
     private bool _initialized;
+    private bool _needsInitialEmit;
 
     [Parameter]
     public int LowerBound { get; set; } = WizardState.MinClubs;
@@ -102,6 +103,11 @@
             _a = min;
             _b = max;
             _initialized = true;
+            if (min != Min || max != Max)
+            {
+                _needsInitialEmit = true;
+            }
+
             return;
         }
 
@@ -124,6 +130,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_needsInitialEmit)
+        {
+            _needsInitialEmit = false;
+            await EmitSortedAsync();
+        }
+
         if (!firstRender)
         {
             return;

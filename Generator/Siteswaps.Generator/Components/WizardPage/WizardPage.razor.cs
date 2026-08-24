@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Siteswaps.Generator.Components;
+using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;
+using Siteswaps.Generator.Components.WizardPage.Results;
 using Siteswaps.Generator.Core.Generator;
 
 namespace Siteswaps.Generator.Components.WizardPage;
@@ -24,12 +26,18 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     private readonly WizardState State = new();
 
+    private readonly GenerationWorkflowConfig _wizardHostConfig = new();
+
     private FilterBottomSheet? _filterSheet;
+    private ResultsView? _resultsView;
 
     private bool _isStepTransitioning;
     private bool _isStartingGeneration;
     private IJSObjectReference? _jsModule;
     private DotNetObjectReference<WizardPage>? _selfReference;
+    private ElementReference _stepHeading0;
+    private ElementReference _stepHeading1;
+    private ElementReference _stepHeading2;
     private ElementReference _swipeHost;
     private bool? _swipeBoundToResults;
 
@@ -92,13 +100,55 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         L[
             "Step {0} / {1}: {2}",
             State.CurrentStep + 1,
-            WizardState.TotalSteps,
+            WizardState.ProgressStepCount,
             StepTitle(State.CurrentStep)
         ];
 
     private static string? AriaHidden(bool isActive) => isActive ? null : "true";
 
     private string? AriaHidden(int step) => AriaHidden(IsStepActive(step));
+
+    private async Task FocusActiveStepHeadingAsync()
+    {
+        if (State.Phase != WizardPhase.Editing)
+        {
+            return;
+        }
+
+        var heading = State.CurrentStep switch
+        {
+            0 => _stepHeading0,
+            1 => _stepHeading1,
+            2 => _stepHeading2,
+            _ => default,
+        };
+
+        try
+        {
+            await heading.FocusAsync();
+        }
+        catch (JSException)
+        {
+            // Heading may not be attached yet during teardown / phase switches.
+        }
+    }
+
+    private async Task FocusResultsHeadingAsync()
+    {
+        if (_resultsView is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _resultsView.FocusTitleAsync();
+        }
+        catch (JSException)
+        {
+            // Results heading may not be attached yet during teardown / phase switches.
+        }
+    }
 
     protected override void OnInitialized()
     {
@@ -127,7 +177,10 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await _jsModule.InvokeVoidAsync("initHistory", _selfReference, State.CurrentStep);
         }
 
-        await EnsureTouchSwipeAsync();
+        if (_swipeHost.Context is not null)
+        {
+            await EnsureTouchSwipeAsync();
+        }
     }
 
     private async Task EnsureTouchSwipeAsync()
@@ -182,6 +235,15 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         State.Phase =
             isResults && State.Results.Count > 0 ? WizardPhase.Results : WizardPhase.Editing;
         await InvokeAsync(StateHasChanged);
+        await Task.Delay(150);
+        if (State.Phase == WizardPhase.Editing)
+        {
+            await FocusActiveStepHeadingAsync();
+        }
+        else if (State.Phase == WizardPhase.Results)
+        {
+            await FocusResultsHeadingAsync();
+        }
     }
 
     private void OnPeriodChanged(int value) => State.Period = new Period(value);
@@ -223,7 +285,9 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             State.MarkVisited(State.CurrentStep);
             StateHasChanged();
             await PushEditorHistoryStateAsync();
+            _isStepTransitioning = false;
             await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
         finally
         {
@@ -242,17 +306,16 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         _isStepTransitioning = true;
         try
         {
+            State.CurrentStep--;
+            StateHasChanged();
             if (_jsModule is not null)
             {
-                await _jsModule.InvokeVoidAsync("back");
-            }
-            else
-            {
-                State.CurrentStep--;
-                StateHasChanged();
+                await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep);
             }
 
+            _isStepTransitioning = false;
             await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
         finally
         {
@@ -280,6 +343,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             StateHasChanged();
             await PushEditorHistoryStateAsync();
             await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
         finally
         {
@@ -318,6 +382,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                 await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
             }
 
+            await FocusResultsHeadingAsync();
             return;
         }
 
@@ -329,6 +394,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             State.MarkVisited(step);
             await PushEditorHistoryStateAsync();
             await InvokeAsync(StateHasChanged);
+            await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
             return;
         }
 
@@ -435,6 +502,18 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                 await Task.Delay(remaining);
             }
 
+            if (cts.IsCancellationRequested || State.Phase != WizardPhase.Generating)
+            {
+                _isStartingGeneration = false;
+                if (State.Phase == WizardPhase.Generating)
+                {
+                    State.Phase = WizardPhase.Results;
+                    await InvokeAsync(StateHasChanged);
+                }
+
+                return;
+            }
+
             State.Phase = WizardPhase.Results;
             _isStartingGeneration = false;
             await InvokeAsync(StateHasChanged);
@@ -443,44 +522,35 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                 await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
             }
 
+            await FocusResultsHeadingAsync();
             return;
         }
 
         await Task.Delay(1);
 
-        var generators = FilterTranslation.CreateGenerators(State);
         var buffer = new List<Siteswap>();
 
         try
         {
-            foreach (var generator in generators)
+            await foreach (
+                var siteswap in SiteswapListGeneration.GenerateStreamAsync(State, cts.Token)
+            )
             {
                 if (cts.IsCancellationRequested)
                 {
                     break;
                 }
 
-                await foreach (var siteswap in generator.GenerateAsync(cts.Token))
+                buffer.Add(siteswap);
+                if (buffer.Count < 10 || Environment.TickCount64 - startedAt < MinSpinnerVisibleMs)
                 {
-                    if (cts.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-                    buffer.Add(siteswap);
-                    if (
-                        buffer.Count < 10
-                        || Environment.TickCount64 - startedAt < MinSpinnerVisibleMs
-                    )
-                    {
-                        continue;
-                    }
-
-                    State.Results.AddRange(buffer);
-                    buffer.Clear();
-                    await InvokeAsync(StateHasChanged);
-                    await Task.Delay(1, CancellationToken.None);
+                    continue;
                 }
+
+                State.Results.AddRange(buffer);
+                buffer.Clear();
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(1, CancellationToken.None);
             }
         }
         catch (OperationCanceledException)
@@ -494,24 +564,34 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await Task.Delay((int)(MinSpinnerVisibleMs - elapsed));
         }
 
-        if (cts.IsCancellationRequested)
-        {
-            State.WasCancelled = true;
-        }
-        else
+        if (!cts.IsCancellationRequested && State.Phase == WizardPhase.Generating)
         {
             State.Results.AddRange(buffer);
             await SaveCachedResultsAsync(cacheKey, State.Results);
+
+            State.Phase = WizardPhase.Results;
+            _isStartingGeneration = false;
+            await InvokeAsync(StateHasChanged);
+
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
+            }
+
+            await FocusResultsHeadingAsync();
+            return;
         }
 
-        State.Phase = WizardPhase.Results;
         _isStartingGeneration = false;
-        await InvokeAsync(StateHasChanged);
-
-        if (_jsModule is not null)
+        if (State.Phase == WizardPhase.Generating)
         {
-            await _jsModule.InvokeVoidAsync("scrollIntoView", ".wizard-results");
+            State.Results.AddRange(buffer);
+            State.Phase = WizardPhase.Results;
+            await InvokeAsync(StateHasChanged);
+            return;
         }
+
+        State.WasCancelled = true;
     }
 
     private async Task<bool> TryLoadCachedResultsAsync(string cacheKey)
@@ -538,7 +618,10 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                     continue;
                 }
 
-                State.Results.Add(Siteswap.CreateFromCorrect(value));
+                if (Siteswap.TryCreate(value, out var siteswap) && siteswap is not null)
+                {
+                    State.Results.Add(siteswap);
+                }
             }
 
             return true;
@@ -577,6 +660,9 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             State.Phase = WizardPhase.Editing;
             State.CurrentStep = WizardState.TotalSteps - 1;
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
         }
     }
 

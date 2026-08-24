@@ -1,0 +1,15 @@
+@using Microsoft.AspNetCore.Components.Sections
+
+<div class="wizard-page">
+    <header class="wizard-header">
+        <SectionOutlet SectionName="@WizardShellSections.Header" />
+    </header>
+
+    <div class="wizard-body">
+        <SectionOutlet SectionName="@WizardShellSections.Body" />
+    </div>
+
+    <div class="wizard-footer">
+        <SectionOutlet SectionName="@WizardShellSections.Footer" />
+    </div>
+</div>

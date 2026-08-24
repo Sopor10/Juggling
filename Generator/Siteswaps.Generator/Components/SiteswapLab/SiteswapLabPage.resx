@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Siteswap lab" xml:space="preserve"><value>Siteswap lab</value></data>
+  <data name="← Generator" xml:space="preserve"><value>← Generator</value></data>
+  <data name="← swipe left/right →" xml:space="preserve"><value>← swipe left/right →</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Next: {0}" xml:space="preserve"><value>Next: {0}</value></data>
+  <data name="People + TimeZones" xml:space="preserve"><value>People + TimeZones</value></data>
+  <data name="Throws" xml:space="preserve"><value>Throws</value></data>
+  <data name="Step {0} / {1}: {2}" xml:space="preserve"><value>Step {0} / {1}: {2}</value></data>
+  <data name="Siteswap editor" xml:space="preserve"><value>Siteswap editor</value></data>
+  <data name="Build a siteswap your way" xml:space="preserve"><value>Build a siteswap your way</value></data>
+  <data name="Configure people and phases, then build and validate every throw. Nothing is saved." xml:space="preserve"><value>Configure people and phases, then build and validate every throw. Nothing is saved.</value></data>
+  <data name="Throw value" xml:space="preserve"><value>Throw value</value></data>
+  <data name="Decrease throw" xml:space="preserve"><value>Decrease throw</value></data>
+  <data name="Throw at beat {0}" xml:space="preserve"><value>Throw at beat {0}</value></data>
+  <data name="Increase throw" xml:space="preserve"><value>Increase throw</value></data>
+  <data name="Throw" xml:space="preserve"><value>Throw</value></data>
+  <data name="Beat {0}" xml:space="preserve"><value>Beat {0}</value></data>
+  <data name="Collision" xml:space="preserve"><value>Collision</value></data>
+  <data name="Throw state legend" xml:space="preserve"><value>Throw state legend</value></data>
+  <data name="Landing target" xml:space="preserve"><value>Landing target</value></data>
+  <data name="No incoming throw" xml:space="preserve"><value>No incoming throw</value></data>
+  <data name="Remove person" xml:space="preserve"><value>Remove person</value></data>
+  <data name="Add person" xml:space="preserve"><value>Add person</value></data>
+  <data name="Remove person, People" xml:space="preserve"><value>Remove person, People</value></data>
+  <data name="Add person, People" xml:space="preserve"><value>Add person, People</value></data>
+  <data name="Remove last beat, Period" xml:space="preserve"><value>Remove last beat, Period</value></data>
+  <data name="Append beat, Period" xml:space="preserve"><value>Append beat, Period</value></data>
+  <data name="Pass" xml:space="preserve"><value>Pass</value></data>
+  <data name="Self" xml:space="preserve"><value>Self</value></data>
+  <data name="Selected throw" xml:space="preserve"><value>Selected throw</value></data>
+  <data name="Throws {0}" xml:space="preserve"><value>Throws {0}</value></data>
+  <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}</value></data>
+  <data name="People in the same timezone throw synchronously" xml:space="preserve"><value>People in the same timezone throw synchronously</value></data>
+  <data name="{0}. Tap for next phase." xml:space="preserve"><value>{0}. Tap for next phase.</value></data>
+  <data name="Throw display" xml:space="preserve"><value>Throw display</value></data>
+  <data name="No landing slot on beat {0}" xml:space="preserve"><value>No landing slot on beat {0}</value></data>
+  <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Choose landing slot on beat {0}</value></data>
+  <data name="Unavailable" xml:space="preserve"><value>Unavailable</value></data>
+  <data name="{0} clubs" xml:space="preserve"><value>{0} clubs</value></data>
+</root>

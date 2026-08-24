@@ -53,6 +53,7 @@
     {
         public string DisplayValue => Value.ToString();
 
+        // App-relative (no leading '/'): respects <base href> / PathBase in PR previews.
         public string InternalDetailView => $"details?s={Value}&n={NumberOfJugglers}";
 
         public int NumberOfClubs => (int)Value.Average;

@@ -1,0 +1,86 @@
+@using Siteswaps.Generator.Components.WizardPage
+@using Siteswaps.Generator.Components.WizardPage.Controls
+@using Siteswaps.Generator.Components.WizardPage.Filters
+@using Siteswaps.Generator.Components.State.FilterTrees
+@inject IStringLocalizer<ConfiguredGenerationWorkflow> L
+
+@if (ChildContent is not null)
+{
+    @ChildContent
+}
+else
+{
+    <div class="configured-generation-workflow">
+        @if (!IsGenerating)
+        {
+            @if (IsJugglersVisible)
+            {
+                <div class="wizard-field">
+                    <JugglerPicker Value="State.NumberOfJugglers" ValueChanged="OnJugglersChanged" />
+                </div>
+            }
+
+            @if (IsPeriodVisible)
+            {
+                <div class="wizard-field">
+                    <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+                </div>
+            }
+
+            <div class="wizard-field">
+                <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
+                                  Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
+                                  LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                  MinLabel="@L["Clubs minimum"]" MaxLabel="@L["Clubs maximum"]" />
+            </div>
+
+            <div class="wizard-field">
+                <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
+            </div>
+
+            <div class="wizard-field">
+                <FilterList Tree="Session.EditableFilterTree"
+                            Edit="OpenEditFilterSheet"
+                            RemoveRequested="OnRemoveFilter"
+                            AddInGroup="OpenAddFilterInGroup"
+                            TreeChanged="OnFilterTreeChanged" />
+                <button type="button"
+                        class="wizard-add-filter-btn"
+                        @onclick="OpenAddFilterSheet">@L["+ Add filter"]</button>
+            </div>
+        }
+
+        @if (IsGenerating)
+        {
+            <div class="wizard-spinner" role="status" aria-live="polite" aria-busy="true" aria-label="@L["Generating…"]">
+                <div class="wizard-spinner-dot"></div>
+                <div class="wizard-spinner-dot"></div>
+                <div class="wizard-spinner-dot"></div>
+            </div>
+            <p>@L["Generating…"]</p>
+            <button type="button"
+                    class="wizard-btn-ghost"
+                    @onclick="CancelGeneration">
+                @L["Cancel"]
+            </button>
+        }
+        else
+        {
+            <button type="button"
+                    class="wizard-btn-generate"
+                    disabled="@IsGenerating"
+                    @onclick="OnGenerateClicked">
+                @L["Generate"]
+            </button>
+        }
+
+        <FilterBottomSheet @ref="_filterSheet"
+                            AllowedThrows="State.AllowedThrows"
+                            Period="State.Period.Value"
+                            NumberOfJugglers="State.NumberOfJugglers"
+                            ShowThrowNames="State.ShowThrowNames"
+                            FilterAdded="OnFilterAdded"
+                            FilterEdited="OnFilterEdited"
+                            FilterDeleted="OnRemoveFilter" />
+    </div>
+}

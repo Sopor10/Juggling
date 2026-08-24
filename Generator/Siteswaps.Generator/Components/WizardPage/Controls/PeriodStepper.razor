@@ -1,77 +1,168 @@
-@* Single primary control: editable stepper (+/-, direct number entry) -
-   matches the Card Stack decision to not show a redundant slider for the
-   same value at the same time.
-
-   The exact-value input intentionally reacts only to @onchange (commit on
-   blur/Enter), not @oninput: with @oninput, every keystroke round-trips
-   through Blazor to re-render the input's `value` attribute while the
-   browser is still mutating the same DOM node from the next keystroke.
-   Typing very quickly (e.g. "123456789") can race these two writers and
-   leave a corrupted, concatenated digit string in the box that briefly
-   exceeds Max and could otherwise be used to start a generation. Reacting
-   only on change lets the browser own the field's value undisturbed while
-   the user types, and Blazor only reads/clamps the final string once. *@
-@inject IStringLocalizer<PeriodStepper> L
-
-<div class="wizard-period">
-    <div class="wizard-stepper-row">
-        <button type="button" class="wizard-stepper-btn" aria-label="@L["Decrease period"]"
-                @onpointerdown:stopPropagation="true"
-                @onclick="() => ChangeBy(-1)">-</button>
-        <label class="wizard-sr-only" for="periodExactInput">@L["Enter period exactly"]</label>
-        <input id="periodExactInput" type="number" inputmode="numeric" class="wizard-period-value wizard-period-value-input"
-               min="@Min" max="@Max" value="@Value"
-               @onpointerdown:stopPropagation="true"
-               @onchange="OnExactInput" />
-        <button type="button" class="wizard-stepper-btn" aria-label="@L["Increase period"]"
-                @onpointerdown:stopPropagation="true"
-                @onclick="() => ChangeBy(1)">+</button>
-    </div>
-    @if (_clampMessage is not null)
-    {
-        <p class="wizard-clamp-feedback" role="status">@_clampMessage</p>
-    }
-</div>
-
-@code {
-    [Parameter]
-    public int Value { get; set; }
-
-    [Parameter]
-    public EventCallback<int> ValueChanged { get; set; }
-
-    [Parameter]
-    public int Min { get; set; } = WizardState.MinPeriod;
-
-    [Parameter]
-    public int Max { get; set; } = WizardState.MaxPeriod;
-
-    private string? _clampMessage;
-
-    private async Task ChangeBy(int delta) => await SetValue(Value + delta);
-
-    private async Task OnExactInput(ChangeEventArgs e)
-    {
-        // int.TryParse deliberately rejects overlong / non-numeric strings (e.g. a
-        // still-corrupted value from a race elsewhere) instead of silently truncating
-        // them - falls back to re-asserting the current, known-valid Value.
-        var parsed = int.TryParse(e.Value?.ToString(), out var v) ? v : Value;
-        await SetValue(parsed);
-    }
-
-    private async Task SetValue(int requested)
-    {
-        var v = Math.Clamp(requested, Min, Max);
-        _clampMessage = v != requested
-            ? L["Value limited to {0} (allowed: {1}–{2}).", v, Min, Max].Value
-            : null;
-
-        if (v == Value)
-        {
-            return;
-        }
-
-        Value = v;
-        await ValueChanged.InvokeAsync(v);
-    }
-}
+@* Single primary control: editable stepper (+/-, direct number entry) -
+
+   matches the Card Stack decision to not show a redundant slider for the
+
+   same value at the same time.
+
+
+
+   The exact-value input intentionally reacts only to @onchange (commit on
+
+   blur/Enter), not @oninput: with @oninput, every keystroke round-trips
+
+   through Blazor to re-render the input's `value` attribute while the
+
+   browser is still mutating the same DOM node from the next keystroke.
+
+   Typing very quickly (e.g. "123456789") can race these two writers and
+
+   leave a corrupted, concatenated digit string in the box that briefly
+
+   exceeds Max and could otherwise be used to start a generation. Reacting
+
+   only on change lets the browser own the field's value undisturbed while
+
+   the user types, and Blazor only reads/clamps the final string once. *@
+
+@inject IStringLocalizer<PeriodStepper> L
+
+
+
+<div class="wizard-period">
+
+    <div class="wizard-stepper-row">
+
+        <button type="button" class="wizard-stepper-btn" aria-label="@DecreaseAccessibleName"
+                disabled="@(Value <= Min)"
+
+                @onpointerdown:stopPropagation="true"
+
+                @onclick="() => ChangeBy(-1)">-</button>
+
+        <label class="wizard-sr-only" for="@_inputId">@ValueAccessibleName</label>
+
+        <input id="@_inputId" type="number" inputmode="numeric" class="wizard-period-value wizard-period-value-input"
+               min="@Min" max="@Max" value="@Value"
+
+               @onpointerdown:stopPropagation="true"
+
+               @onchange="OnExactInput" />
+
+        <button type="button" class="wizard-stepper-btn" aria-label="@IncreaseAccessibleName"
+                disabled="@(Value >= Max)"
+
+                @onpointerdown:stopPropagation="true"
+
+                @onclick="() => ChangeBy(1)">+</button>
+
+    </div>
+
+    @if (_clampMessage is not null)
+
+    {
+
+        <p class="wizard-clamp-feedback" role="status">@_clampMessage</p>
+
+    }
+
+</div>
+
+
+
+@code {
+
+    [Parameter]
+
+    public int Value { get; set; }
+
+
+
+    [Parameter]
+
+    public EventCallback<int> ValueChanged { get; set; }
+
+
+
+    [Parameter]
+
+    public int Min { get; set; } = WizardState.MinPeriod;
+
+
+
+    [Parameter]
+
+    public int Max { get; set; } = WizardState.MaxPeriod;
+
+    [Parameter]
+    public string? DecreaseLabel { get; set; }
+
+    [Parameter]
+    public string? IncreaseLabel { get; set; }
+
+    [Parameter]
+    public string? ValueLabel { get; set; }
+
+
+
+    private string? _clampMessage;
+    private readonly string _inputId = $"stepper-{Guid.NewGuid():N}";
+    private string DecreaseAccessibleName => DecreaseLabel ?? L["Decrease period"];
+    private string IncreaseAccessibleName => IncreaseLabel ?? L["Increase period"];
+    private string ValueAccessibleName => ValueLabel ?? L["Enter period exactly"];
+
+
+
+    private async Task ChangeBy(int delta) => await SetValue(Value + delta);
+
+
+
+    private async Task OnExactInput(ChangeEventArgs e)
+
+    {
+
+        // int.TryParse deliberately rejects overlong / non-numeric strings (e.g. a
+
+        // still-corrupted value from a race elsewhere) instead of silently truncating
+
+        // them - falls back to re-asserting the current, known-valid Value.
+
+        var parsed = int.TryParse(e.Value?.ToString(), out var v) ? v : Value;
+
+        await SetValue(parsed);
+
+    }
+
+
+
+    private async Task SetValue(int requested)
+
+    {
+
+        var v = Math.Clamp(requested, Min, Max);
+
+        _clampMessage = v != requested
+
+            ? L["Value limited to {0} (allowed: {1}–{2}).", v, Min, Max].Value
+
+            : null;
+
+
+
+        if (v == Value)
+
+        {
+
+            return;
+
+        }
+
+
+
+        Value = v;
+
+        await ValueChanged.InvokeAsync(v);
+
+    }
+
+}
+

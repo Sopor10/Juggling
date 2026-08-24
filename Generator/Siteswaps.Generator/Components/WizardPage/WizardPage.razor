@@ -1,72 +1,90 @@
 @page "/"
 @page "/wizard"
+@using Microsoft.AspNetCore.Components.Sections
+@using Siteswaps.Generator.Components.GenerationWorkflow
+@using Siteswaps.Generator.Components.Layout
 
 <PageTitle>@L["Wizard – Siteswap Generator"]</PageTitle>
 
-<div class="wizard-page">
-
-    <header class="wizard-header">
-        <ProgressDots Total="WizardState.ProgressStepCount"
-                      Current="HeaderStep"
-                      Visited="HeaderVisitedSteps"
-                      StepSelected="OnProgressStepSelectedAsync" />
-        @if (State.Phase == WizardPhase.Editing)
-        {
-            <p class="wizard-swipe-hint">@(IsLastStep ? L["← swipe to generate →"] : L["← swipe left/right →"])</p>
-        }
-    </header>
-
-    @if (State.Phase == WizardPhase.Editing)
+<SectionContent SectionName="@WizardShellSections.Header">
+    <ProgressDots Total="WizardState.ProgressStepCount"
+                  Current="HeaderStep"
+                  Visited="HeaderVisitedSteps"
+                  StepSelected="OnProgressStepSelectedAsync" />
+    <p class="wizard-swipe-hint @(State.Phase == WizardPhase.Editing ? null : "wizard-invisible")"
+       aria-hidden="@(State.Phase == WizardPhase.Editing ? null : "true")">
+        @(IsLastStep ? L["← swipe to generate →"] : L["← swipe left/right →"])
+    </p>
+    @if (State.Phase != WizardPhase.Editing)
     {
-        <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
+        <div class="wizard-sr-only" aria-live="polite">@L["Step {0} / {1}: Results", WizardState.ResultsStepIndex + 1, WizardState.ProgressStepCount]</div>
+    }
+</SectionContent>
 
-        <div @ref="_swipeHost" class="wizard-steps">
+@if (State.Phase == WizardPhase.Editing)
+{
+    <SectionContent SectionName="@WizardShellSections.Body">
+        <ConfiguredGenerationWorkflow Config="_wizardHostConfig">
+            <div @ref="_swipeHost" class="wizard-steps">
+                <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
-            <section id="wizard-panel-0" class="wizard-step @(IsStepActive(0) ? "active" : "")" aria-hidden="@AriaHidden(0)" aria-labelledby="wizard-step-tab-0">
-                <div class="wizard-measure">
-                    <div class="wizard-field">
-                        <p class="wizard-section-label">@L["Jugglers"]</p>
-                        <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+                <WizardStepPanel StepIndex="0" IsActive="@IsStepActive(0)">
+                    <div class="wizard-measure">
+                        <div class="wizard-field">
+                            <h2 @ref="_stepHeading0" class="wizard-section-label" tabindex="-1">@L["Jugglers"]</h2>
+                            <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+                        </div>
+
+                        <div class="wizard-field">
+                            <h2 class="wizard-section-label">@L["Period"]</h2>
+                            <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+                        </div>
                     </div>
+                </WizardStepPanel>
 
-                    <div class="wizard-field">
-                        <p class="wizard-section-label">@L["Period"]</p>
-                        <PeriodStepper Value="State.Period.Value" ValueChanged="OnPeriodChanged" />
+                <WizardStepPanel StepIndex="1" IsActive="@IsStepActive(1)">
+                    <div class="wizard-measure">
+                        <div class="wizard-field">
+                            <h2 @ref="_stepHeading1" class="wizard-section-label" tabindex="-1">@L["Number of clubs"]</h2>
+                            <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
+                                              Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
+                                              LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
+                                              MinLabel="@L["Clubs minimum"]" MaxLabel="@L["Clubs maximum"]" />
+                        </div>
+
+                        <div class="wizard-field">
+                            <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
+                        </div>
                     </div>
-                </div>
-            </section>
+                </WizardStepPanel>
 
-            <section id="wizard-panel-1" class="wizard-step @(IsStepActive(1) ? "active" : "")" aria-hidden="@AriaHidden(1)" aria-labelledby="wizard-step-tab-1">
-                <div class="wizard-measure">
-                    <div class="wizard-field">
-                        <p class="wizard-section-label">@L["Number of clubs"]</p>
-                        <DualRangeSlider Min="State.Clubs.MinNumber" MinChanged="OnClubsMinChanged"
-                                          Max="State.Clubs.MaxNumber" MaxChanged="OnClubsMaxChanged"
-                                          LowerBound="WizardState.MinClubs" UpperBound="WizardState.MaxClubs"
-                                          MinLabel="@L["Clubs minimum"]" MaxLabel="@L["Clubs maximum"]" />
+                <WizardStepPanel StepIndex="2" IsActive="@IsStepActive(2)" AdditionalClass="wizard-step-filters">
+                    <div class="wizard-measure">
+                        <h2 @ref="_stepHeading2" class="wizard-section-label" tabindex="-1">@L["Any filters?"]</h2>
+                        <div class="wizard-filters-scroll">
+                            <FilterList Tree="State.FilterTree"
+                                        Edit="OpenEditFilterSheet"
+                                        RemoveRequested="RemoveFilter"
+                                        AddInGroup="OpenAddFilterInGroup"
+                                        TreeChanged="OnFilterTreeChanged" />
+                            <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">@L["+ Add filter"]</button>
+                        </div>
                     </div>
+                </WizardStepPanel>
+            </div>
 
-                    <div class="wizard-field">
-                        <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
-                    </div>
-                </div>
-            </section>
+            <FilterBottomSheet @ref="_filterSheet"
+                                AllowedThrows="State.AllowedThrows"
+                                Period="State.Period.Value"
+                                NumberOfJugglers="State.NumberOfJugglers"
+                                ShowThrowNames="State.ShowThrowNames"
+                                FilterAdded="OnFilterAdded"
+                                FilterEdited="OnFilterEdited"
+                                FilterDeleted="RemoveFilter" />
+        </ConfiguredGenerationWorkflow>
+    </SectionContent>
 
-            <section id="wizard-panel-2" class="wizard-step wizard-step-filters @(IsStepActive(2) ? "active" : "")" aria-hidden="@AriaHidden(2)" aria-labelledby="wizard-step-tab-2">
-                <div class="wizard-measure">
-                    <div class="wizard-filters-scroll">
-                        <FilterList Tree="State.FilterTree"
-                                    Edit="OpenEditFilterSheet"
-                                    RemoveRequested="RemoveFilter"
-                                    AddInGroup="OpenAddFilterInGroup"
-                                    TreeChanged="OnFilterTreeChanged" />
-                        <button type="button" class="wizard-add-filter-btn" @onpointerdown:stopPropagation="true" @onclick="OpenAddFilterSheet">@L["+ Add filter"]</button>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-
+    <SectionContent SectionName="@WizardShellSections.Footer">
         <div class="wizard-nav">
             <div class="wizard-measure">
                 @if (NextPreviewText is not null)
@@ -75,7 +93,7 @@
                 }
                 <div class="wizard-nav-buttons">
                     <button type="button" class="wizard-btn-ghost wizard-back-btn @(State.CurrentStep == 0 ? "wizard-invisible" : "")"
-                            disabled="@(State.CurrentStep == 0 || _isStepTransitioning)"
+                            disabled="@(State.CurrentStep == 0)"
                             @onclick="GoBackAsync">@L["Back"]</button>
                     <button type="button"
                             class="wizard-flex-1 @(IsLastStep ? "wizard-btn-generate" : "wizard-btn-primary")"
@@ -84,27 +102,19 @@
                 </div>
             </div>
         </div>
-
-        <FilterBottomSheet @ref="_filterSheet"
-                            AllowedThrows="State.AllowedThrows"
-                            Period="State.Period.Value"
-                            NumberOfJugglers="State.NumberOfJugglers"
-                            ShowThrowNames="State.ShowThrowNames"
-                            FilterAdded="OnFilterAdded"
-                            FilterEdited="OnFilterEdited"
-                            FilterDeleted="RemoveFilter" />
-    }
-    else
-    {
-        <div class="wizard-sr-only" aria-live="polite">@L["Step {0} / {1}: Results", WizardState.ResultsStepIndex + 1, WizardState.ProgressStepCount]</div>
+    </SectionContent>
+}
+else
+{
+    <SectionContent SectionName="@WizardShellSections.Body">
         <div @ref="_swipeHost" id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
-            <ResultsView Results="State.Results"
+            <ResultsView @ref="_resultsView"
+                         Results="State.Results"
                          IsGenerating="State.Phase == WizardPhase.Generating"
                          NumberOfJugglers="State.NumberOfJugglers"
                          CancelRequested="CancelGeneration"
                          BackToEditingRequested="BackToEditing"
                          StartOverRequested="StartOver" />
         </div>
-    }
-
-</div>
+    </SectionContent>
+}
