@@ -89,7 +89,10 @@ public class SiteswapLabPageTests
         );
 
         page.Should().Contain("<button type=\"button\"");
-        page.Should().Contain("class=\"lab-timezone-card\"");
+        page.Should().Contain("class=\"lab-timezone-table\"");
+        page.Should().Contain("class=\"lab-timezone-token\"");
+        page.Should().Contain("class=\"lab-timezone-row-label\"");
+        page.Should().NotContain("class=\"lab-timezone-card\"");
         page.Should().NotContain("@L[\"TimeZone {0}\", timeZoneIndex]");
         page.Should().Contain("People in the same timezone throw synchronously");
         page.Should().Contain("@onclick=\"() => _direct.CycleTimeZone(personIndex)\"");
@@ -97,6 +100,8 @@ public class SiteswapLabPageTests
         page.Should().NotContain("lab-timezone-arrows");
         page.Should().NotContain("LabTimeZoneArrowPath");
         page.Should().Contain("lab-timezone-person");
+        page.Should().Contain("class=\"lab-timezone-cell\"");
+        page.Should().Contain("class=\"lab-timezone-phase-marker\"");
         page.Should().NotContain("CyclePersonForTimeZone");
         page.Should().NotContain("DisplayedPersonForTimeZone");
         page.Should().NotContain("PeopleInTimeZone");
@@ -112,8 +117,17 @@ public class SiteswapLabPageTests
         page.Should().NotContain("<select");
         page.Should().Contain("class=\"feeding-throw-mode\"");
         page.Should().Contain("role=\"radiogroup\"");
+        page.Should().Contain("OnChipClicked");
+        page.Should().Contain("ToggleCellSelection");
+        page.Should().Contain("HasSelection");
+        page.Should().Contain("AdjustPassingHeightByPeriod");
+        page.Should().Contain("class=\"lab-period-height-editor\"");
+        page.Should().Contain("No throw selected.");
+        page.Should().Contain("lab-selected-empty");
+        page.Should().NotContain("ChipClicked=\"beat => _direct.SelectCell");
         page.Should()
             .Contain("SetPassingTarget(_direct.SelectedPerson, _direct.SelectedBeat, target)");
+        page.Should().Contain("SetLandingTarget");
     }
 
     [Test]
@@ -160,10 +174,13 @@ public class SiteswapLabPageTests
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
         );
 
-        page.Should().Contain("data-timezone=\"@_direct.TimelinePhaseFor(person)\"");
-        page.Should().Contain("--lab-phase:{_direct.TimelinePhaseFor(person)}");
+        page.Should().Contain("data-timezone=\"@phase\"");
+        page.Should().Contain("data-timezone=\"@personTimeZone\"");
+        page.Should().Contain("--lab-phase:{phase}");
         page.Should().Contain("--lab-phase-count:{_direct.PhaseCount}");
         page.Should().NotContain("--lab-stagger:{person}");
+        css.Should().Contain(".lab-timezone-table");
+        css.Should().Contain(".lab-timezone-phase-marker");
         css.Should().Contain("var(--lab-phase, 0)");
         css.Should().Contain("var(--lab-phase-count, 1)");
         css.Should().NotContain("var(--lab-stagger");
@@ -179,21 +196,45 @@ public class SiteswapLabPageTests
         page.Should().NotContain("Passing notation");
         page.Should().NotContain("<h3>Landings</h3>");
         page.Should().NotContain("<h3>Notation</h3>");
-        page.Should().Contain("class=\"lab-selected-landing\"");
+        page.Should().NotContain("class=\"lab-selected-landing\"");
     }
 
     [Test]
-    public void Throws_Step_Shows_Compact_Club_Count_Without_Statusbar()
+    public void Throws_Step_Toolbar_Shows_Clubs_Rotation_And_Display()
     {
         var page = ReadGeneratorSource(
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
         );
 
         page.Should().Contain("class=\"lab-overview-clubs\"");
+        page.Should().Contain("ClubsLabel");
         page.Should().Contain("FeedingThrowDisplay.FormatAverage(_direct.Average)");
-        page.Should().Contain("{0} clubs");
+        page.Should().Contain("class=\"lab-overview-rotation\"");
+        page.Should().Contain("@L[\"Throw display\"]");
+        page.Should().Contain("FeedingThrowDisplayModeToggle");
         page.Should().NotContain("lab-statusbar");
         page.Should().NotContain("Clubs / average");
+    }
+
+    [Test]
+    public void Throws_Step_Shows_Starting_Clubs_And_Rotation_Controls()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var css = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
+        );
+
+        page.Should().Contain("class=\"lab-overview-rotation\"");
+        page.Should().Contain("@onclick=\"() => _direct.Rotate(-1)\"");
+        page.Should().Contain("@onclick=\"() => _direct.Rotate(1)\"");
+        page.Should().Contain("Rotate starting position");
+        page.Should().Contain("class=\"lab-start-props\"");
+        page.Should().Contain("_direct.StartingClubsFor(personIndex)");
+        page.Should().Contain("Start clubs");
+        css.Should().Contain(".lab-start-props");
+        css.Should().Contain(".lab-rotate");
     }
 
     [Test]

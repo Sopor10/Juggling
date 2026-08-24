@@ -155,16 +155,20 @@
 .lab-timezones {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 6px;
-    width: min(
-        100%,
-        calc(240px + var(--lab-phase-count, 1) * (44px + 8px) / var(--lab-phase-count, 1))
-    );
+    width: 100%;
     max-width: 100%;
     margin-block: 26px 10px;
-    overflow-x: auto;
+    margin-inline: auto;
     padding-bottom: 4px;
+    text-align: center;
+}
+
+.lab-timezones > * {
+    align-self: center;
+    max-width: 100%;
 }
 
 .lab-timezones h3 {
@@ -176,70 +180,190 @@
 
 .lab-timezone-hint {
     width: 100%;
-    margin: -2px 0 2px;
+    margin: -2px 0 6px;
     color: var(--wizard-purple-500);
     font-size: .72rem;
     text-align: center;
 }
 
-.lab-timezone-card {
-    appearance: none;
+.lab-timezone-table-wrap {
     display: flex;
-    width: min(100%, 240px);
-    max-width: calc(
-        100% - var(--lab-phase, 0) * (44px + 8px) / var(--lab-phase-count, 1)
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.lab-timezone-table {
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    border-collapse: separate;
+    border-spacing: 4px;
+    table-layout: fixed;
+}
+
+.lab-timezone-corner {
+    width: 2.5rem;
+    padding: 0;
+}
+
+.lab-timezone-phase {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0 0 2px;
+    vertical-align: bottom;
+}
+
+.lab-timezone-phase-marker {
+    display: block;
+    width: 10px;
+    height: 4px;
+    margin-inline: auto;
+    border-radius: 999px;
+    background: var(--wizard-purple-300);
+    transform: translateX(
+        calc(var(--lab-phase, 0) * 6px / var(--lab-phase-count, 1))
     );
-    min-height: 44px;
+}
+
+.lab-timezone-row-label {
+    padding: 0 4px;
+    color: var(--wizard-purple-950);
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.lab-timezone-cell {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.lab-timezone-cell[data-timezone] {
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--wizard-purple-100) 55%, transparent);
+}
+
+.lab-timezone-token {
+    appearance: none;
+    display: inline-flex;
+    width: 100%;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
     align-items: center;
-    justify-content: flex-start;
-    gap: 5px;
-    padding: 7px 12px;
+    justify-content: center;
+    padding: 4px;
     border: 2px solid transparent;
     border-radius: 10px;
     background: var(--wizard-card);
     font: inherit;
-    text-align: left;
     cursor: pointer;
-    transform: translateX(
-        calc(var(--lab-phase, 0) * (44px + 8px) / var(--lab-phase-count, 1))
-    );
+}
+
+.lab-timezone-token:focus-visible {
+    outline: 2px solid var(--wizard-purple-500);
+    outline-offset: 2px;
 }
 
 .lab-timezone-person {
     color: var(--wizard-purple-950);
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 900;
     line-height: 1;
 }
 
 .lab-overview-toolbar {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-top: 12px;
 }
 
-.lab-overview-clubs {
+.lab-overview-rotation {
+    display: inline-flex;
     flex-shrink: 0;
-    color: var(--wizard-purple-950);
-    font-size: .82rem;
-    font-weight: 800;
-    white-space: nowrap;
+    gap: 4px;
+}
+
+.lab-rotate {
+    appearance: none;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 10px;
+    background: white;
+    color: var(--wizard-purple-700);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.lab-rotate:disabled {
+    opacity: .45;
+    cursor: not-allowed;
 }
 
 .lab-overview-display {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     min-width: 0;
-    align-items: center;
-    justify-content: flex-end;
     gap: 8px;
 }
 
-.lab-overview-display > span {
-    color: var(--wizard-purple-500);
-    font-size: .72rem;
+.lab-overview-display-heading {
+    margin: 0;
+    color: var(--wizard-purple-950);
+    font-size: 1rem;
     font-weight: 900;
+    line-height: 1.1;
+    text-align: right;
+}
+
+.lab-start-props {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 4px 8px;
+    border: 2px dashed color-mix(in srgb, var(--wizard-purple-400) 40%, white);
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--wizard-purple-100) 55%, white);
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.lab-start-props-hand {
+    color: var(--wizard-purple-700);
+    font-size: .88rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.lab-start-props-legend {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 2px 6px;
+}
+
+.lab-start-props-legend .lab-start-props-hand {
+    font-size: .68rem;
 }
 
 ::deep .feeding-throw-mode {
@@ -280,6 +404,7 @@
         100%,
         calc(
             1.5rem + 8px
+            + 44px + 8px
             + var(--lab-period, 3) * 44px
             + max(0px, (var(--lab-period, 3) - 1) * 8px)
             + (44px + 8px)
@@ -429,7 +554,14 @@
     gap: 5px;
 }
 
+.lab-period-height-editor {
+    display: grid;
+    grid-template-columns: 44px minmax(60px, 1fr) 44px;
+    gap: 5px;
+}
+
 .lab-height-editor > span,
+.lab-period-height-editor > span,
 .lab-target-editor > span {
     grid-column: 1 / -1;
     color: var(--wizard-purple-500);
@@ -445,6 +577,36 @@
     color: var(--wizard-purple-700);
     font-weight: 900;
     cursor: pointer;
+}
+
+.lab-period-height-editor button {
+    min-height: 44px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.lab-period-height-editor output {
+    min-width: 0;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 9px;
+    background: white;
+    color: var(--wizard-purple-950);
+    font: 900 1rem/1 inherit;
+    text-align: center;
+}
+
+.lab-selected-empty {
+    margin: 0;
+    color: var(--wizard-purple-500);
+    font-size: .95rem;
+    font-weight: 800;
 }
 
 .lab-height-editor input,
@@ -485,13 +647,6 @@
     min-width: 0;
 }
 
-.lab-selected-landing {
-    margin: 0;
-    color: var(--wizard-purple-500);
-    font-size: .82rem;
-    font-weight: 800;
-}
-
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
@@ -511,7 +666,18 @@ button:disabled {
         grid-template-columns: 1fr;
     }
 
-    .lab-timezone-card {
-        width: min(100%, 200px);
+    .lab-timezone-table {
+        border-spacing: 3px;
+    }
+
+    .lab-timezone-phase,
+    .lab-timezone-cell,
+    .lab-timezone-token {
+        min-width: 2.5rem;
+        width: 2.5rem;
+    }
+
+    .lab-timezone-token {
+        min-height: 2.75rem;
     }
 }

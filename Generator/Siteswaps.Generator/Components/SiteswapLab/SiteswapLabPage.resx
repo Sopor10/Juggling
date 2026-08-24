@@ -44,4 +44,16 @@
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Choose landing slot on beat {0}</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Unavailable</value></data>
   <data name="{0} clubs" xml:space="preserve"><value>{0} clubs</value></data>
+  <data name="Rotate starting position" xml:space="preserve"><value>Rotate starting position</value></data>
+  <data name="Rotate pattern left" xml:space="preserve"><value>Rotate pattern left</value></data>
+  <data name="Rotate pattern right" xml:space="preserve"><value>Rotate pattern right</value></data>
+  <data name="Starting club distribution (L / R)" xml:space="preserve"><value>Starting club distribution (L / R)</value></data>
+  <data name="Start clubs {0}: left {1}, right {2}" xml:space="preserve"><value>Start clubs {0}: left {1}, right {2}</value></data>
+  <data name="Start clubs" xml:space="preserve"><value>Start clubs</value></data>
+  <data name="No throw selected." xml:space="preserve"><value>No throw selected.</value></data>
+  <data name="Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear." xml:space="preserve"><value>Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear.</value></data>
+  <data name="{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}.</value></data>
+  <data name="Decrease throw by period" xml:space="preserve"><value>Decrease throw by period</value></data>
+  <data name="Increase throw by period" xml:space="preserve"><value>Increase throw by period</value></data>
+  <data name="Period step size" xml:space="preserve"><value>Period step size</value></data>
 </root>

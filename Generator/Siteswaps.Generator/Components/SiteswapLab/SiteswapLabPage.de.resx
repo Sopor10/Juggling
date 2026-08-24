@@ -48,10 +48,7 @@
   <data name="Throw for {0}, beat {1}" xml:space="preserve"><value>Wurf für {0}, Beat {1}</value></data>
   <data name="Target for {0}, beat {1}" xml:space="preserve"><value>Ziel für {0}, Beat {1}</value></data>
   <data name="No compatible target" xml:space="preserve"><value>Kein kompatibles Ziel</value></data>
-  <data name="Selected landing" xml:space="preserve"><value>Ausgewählte Landung</value></data>
   <data name="local" xml:space="preserve"><value>lokal</value></data>
-  <data name="no target" xml:space="preserve"><value>kein Ziel</value></data>
-  <data name="{0}, beat {1}" xml:space="preserve"><value>{0}, Beat {1}</value></data>
   <data name="Selected throw" xml:space="preserve"><value>Ausgewählter Wurf</value></data>
   <data name="Throws {0}" xml:space="preserve"><value>Würfe {0}</value></data>
   <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, Beat {1}: Wurf {2} {3}, landet bei {4}, Beat {5}</value></data>
@@ -62,4 +59,16 @@
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Landungs-Slot auf Beat {0} wählen</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Nicht verfügbar</value></data>
   <data name="{0} clubs" xml:space="preserve"><value>{0} Keulen</value></data>
+  <data name="Rotate starting position" xml:space="preserve"><value>Startposition rotieren</value></data>
+  <data name="Rotate pattern left" xml:space="preserve"><value>Muster nach links rotieren</value></data>
+  <data name="Rotate pattern right" xml:space="preserve"><value>Muster nach rechts rotieren</value></data>
+  <data name="Starting club distribution (L / R)" xml:space="preserve"><value>Startkeulen-Verteilung (L / R)</value></data>
+  <data name="Start clubs {0}: left {1}, right {2}" xml:space="preserve"><value>Startkeulen {0}: links {1}, rechts {2}</value></data>
+  <data name="Start clubs" xml:space="preserve"><value>Startkeulen</value></data>
+  <data name="No throw selected." xml:space="preserve"><value>Kein Wurf ausgewählt.</value></data>
+  <data name="Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear." xml:space="preserve"><value>Ausgewählter Wurf {0} {1}, {2} Beat {3}. Landet bei {4} auf Beat {5}. Drücken zum Aufheben.</value></data>
+  <data name="{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} Beat {3}. Landung des ausgewählten Wurfs von {4} Beat {5}.</value></data>
+  <data name="Decrease throw by period" xml:space="preserve"><value>Wurf um Periode verringern</value></data>
+  <data name="Increase throw by period" xml:space="preserve"><value>Wurf um Periode erhöhen</value></data>
+  <data name="Period step size" xml:space="preserve"><value>Periodenschrittweite</value></data>
 </root>
