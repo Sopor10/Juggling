@@ -18,8 +18,51 @@ public class PassingEditorStateTests
 
         state.SelectCell(0, 0);
 
+        state.HasSelection.Should().BeTrue();
         state.SelectedPerson.Should().Be(0);
         state.SelectedBeat.Should().Be(0);
+    }
+
+    [Test]
+    public void ToggleCellSelection_Deselects_When_Clicking_Selected_Cell_Again()
+    {
+        var state = new PassingEditorState();
+        state.InitializeThrowsForFirstEntry();
+        state.SelectCell(0, 0);
+
+        state.ToggleCellSelection(0, 0);
+
+        state.HasSelection.Should().BeFalse();
+    }
+
+    [Test]
+    public void SetLandingTarget_Computes_Height_For_Clicked_Landing_Slot()
+    {
+        var state = new PassingEditorState();
+        state.SetPersonCount(2);
+        state.InitializeThrowsForFirstEntry();
+        state.SelectCell(0, 0);
+        var landingBeat = state.LandingFor(0, 0).TargetBeat;
+
+        state.SetLandingTarget(0, 0, 1, landingBeat).Should().BeTrue();
+
+        state.People[0].Cells[0].TargetPerson.Should().Be(1);
+        state.LandingFor(0, 0).TargetBeat.Should().Be(landingBeat);
+        state.LandingFor(0, 0).TargetPerson.Should().Be(1);
+    }
+
+    [Test]
+    public void AdjustHeightByPeriod_Keeps_Landing_Beat()
+    {
+        var state = new PassingEditorState("531");
+        state.SelectCell(0, 0);
+        var landing = state.LandingFor(0, 0);
+
+        state.AdjustHeightByPeriod(0, 0, 1);
+
+        state.People[0].Cells[0].Height.Should().Be(5 + state.HeightPeriodStep);
+        state.LandingFor(0, 0).TargetBeat.Should().Be(landing.TargetBeat);
+        state.LandingFor(0, 0).TargetPerson.Should().Be(landing.TargetPerson);
     }
 
     [Test]
@@ -359,5 +402,39 @@ public class PassingEditorStateTests
         state.People[0].Cells[0].Height.Should().Be(height);
         state.People[0].Cells[0].TargetPerson.Should().Be(1);
         state.LandingFor(0, 0).Should().Be(landing);
+    }
+
+    [Test]
+    public void StartingClubs_Match_StartingClubDistribution()
+    {
+        var state = new PassingEditorState("78627");
+        var heights = state.People[0].Cells.Select(cell => cell.Height).ToArray();
+
+        state
+            .StartingClubsFor(0)
+            .Should()
+            .Be(StartingClubDistribution.ForJuggler(heights, state.People[0].TimeZone));
+    }
+
+    [Test]
+    public void Rotate_Shifts_Every_Person_Throws_And_Updates_Selected_Beat()
+    {
+        var state = new PassingEditorState("531");
+        state.SelectCell(0, 1);
+
+        state.Rotate(1);
+
+        state.People[0].Cells.Select(cell => cell.Height).Should().Equal(3, 1, 5);
+        state.SelectedBeat.Should().Be(0);
+    }
+
+    [Test]
+    public void Rotate_Supports_Negative_Steps()
+    {
+        var state = new PassingEditorState("531");
+
+        state.Rotate(-1);
+
+        state.People[0].Cells.Select(cell => cell.Height).Should().Equal(1, 5, 3);
     }
 }

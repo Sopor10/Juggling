@@ -46,6 +46,10 @@ public sealed class PassingEditorState
 
     public int SelectedBeat { get; private set; }
 
+    public bool HasSelection { get; private set; }
+
+    public int HeightPeriodStep => Period * ActiveTimeZoneCount;
+
     public PassingEditorLanding SelectedLanding => LandingFor(SelectedPerson, SelectedBeat);
 
     public double Average =>
@@ -134,11 +138,22 @@ public sealed class PassingEditorState
                 )
         );
 
-    public void SelectCell(int person, int beat)
+    public void SelectCell(int person, int beat) => SetSelection(person, beat);
+
+    public void ToggleCellSelection(int person, int beat)
     {
-        SelectedPerson = Math.Clamp(person, 0, _people.Count - 1);
-        SelectedBeat = Math.Clamp(beat, 0, Period - 1);
+        person = Math.Clamp(person, 0, _people.Count - 1);
+        beat = Math.Clamp(beat, 0, Period - 1);
+        if (HasSelection && SelectedPerson == person && SelectedBeat == beat)
+        {
+            ClearSelection();
+            return;
+        }
+
+        SetSelection(person, beat);
     }
+
+    public void ClearSelection() => HasSelection = false;
 
     public void ApplyMaxThrowHeight(int maxThrowHeight)
     {
@@ -203,13 +218,118 @@ public sealed class PassingEditorState
         NormalizeTargets();
     }
 
+    public ClubHands StartingClubsFor(int person)
+    {
+        person = Math.Clamp(person, 0, _people.Count - 1);
+        var source = _people[person];
+        var heights = source.Cells.Select(cell => cell.Height).ToArray();
+        return StartingClubDistribution.ForJuggler(heights, source.TimeZone);
+    }
+
+    public void Rotate(int steps)
+    {
+        if (steps == 0 || Period <= 1)
+        {
+            return;
+        }
+
+        LastTargetAdjustment = null;
+        foreach (var person in _people)
+        {
+            RotateCellsInPlace(person.MutableCells, steps);
+        }
+
+        var offset = PositiveModulo(steps, Period);
+        if (HasSelection)
+        {
+            SelectedBeat = PositiveModulo(SelectedBeat - offset, Period);
+        }
+    }
+
     public void SetHeight(int person, int beat, int height)
     {
         LastTargetAdjustment = null;
         var cell = _people[person].Cells[beat];
         cell.Height = Math.Clamp(height, 0, MaxThrowHeight);
-        SelectCell(person, beat);
+        SetSelection(person, beat);
         NormalizeTarget(person, beat);
+    }
+
+    public void AdjustHeightByPeriod(int person, int beat, int direction)
+    {
+        if (direction == 0)
+        {
+            return;
+        }
+
+        var cell = _people[person].Cells[beat];
+        SetHeight(person, beat, cell.Height + direction * HeightPeriodStep);
+    }
+
+    public bool SetLandingTarget(int sourcePerson, int sourceBeat, int targetPerson, int targetBeat)
+    {
+        if (
+            sourcePerson < 0
+            || sourcePerson >= _people.Count
+            || sourceBeat < 0
+            || sourceBeat >= Period
+            || targetPerson < 0
+            || targetPerson >= _people.Count
+            || targetBeat < 0
+            || targetBeat >= Period
+        )
+        {
+            return false;
+        }
+
+        var source = _people[sourcePerson];
+        var sourceTimeZone = source.TimeZone;
+        var targetTimeZone = _people[targetPerson].TimeZone;
+        var deltaBeats = PositiveModulo(targetBeat - sourceBeat, Period);
+        var timeZoneOffset = PositiveModulo(targetTimeZone - sourceTimeZone, ActiveTimeZoneCount);
+
+        for (var span = deltaBeats; span < deltaBeats + Period * 8; span += Period)
+        {
+            var minHeight = span * ActiveTimeZoneCount - sourceTimeZone;
+            var remainder = PositiveModulo(minHeight, ActiveTimeZoneCount);
+            if (remainder != timeZoneOffset)
+            {
+                minHeight += PositiveModulo(timeZoneOffset - remainder, ActiveTimeZoneCount);
+            }
+
+            for (
+                var height = Math.Max(0, minHeight);
+                height <= MaxThrowHeight;
+                height += ActiveTimeZoneCount
+            )
+            {
+                if (LandingBeatForHeight(sourcePerson, sourceBeat, height) != targetBeat)
+                {
+                    continue;
+                }
+
+                if (!AvailableTargetsFor(sourcePerson, sourceBeat, height).Contains(targetPerson))
+                {
+                    continue;
+                }
+
+                var cell = source.Cells[sourceBeat];
+                cell.Height = height;
+                cell.TargetPerson = targetPerson;
+                SetSelection(sourcePerson, sourceBeat);
+                LastTargetAdjustment = null;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int LandingBeatForHeight(int person, int beat, int height)
+    {
+        var source = _people[person];
+        var elapsedPhases = source.TimeZone + height;
+        return PositiveModulo(beat + elapsedPhases / ActiveTimeZoneCount, Period);
     }
 
     public bool SetTarget(int person, int beat, int targetPerson)
@@ -234,7 +354,7 @@ public sealed class PassingEditorState
 
         var cell = _people[person].Cells[beat];
         cell.TargetPerson = targetPerson;
-        SelectCell(person, beat);
+        SetSelection(person, beat);
         return true;
     }
 
@@ -415,11 +535,14 @@ public sealed class PassingEditorState
         );
     }
 
-    private int LandingBeatFor(int person, int beat)
+    private int LandingBeatFor(int person, int beat) =>
+        LandingBeatForHeight(person, beat, _people[person].Cells[beat].Height);
+
+    private void SetSelection(int person, int beat)
     {
-        var source = _people[person];
-        var elapsedPhases = source.TimeZone + source.Cells[beat].Height;
-        return PositiveModulo(beat + elapsedPhases / ActiveTimeZoneCount, Period);
+        SelectedPerson = Math.Clamp(person, 0, _people.Count - 1);
+        SelectedBeat = Math.Clamp(beat, 0, Period - 1);
+        HasSelection = true;
     }
 
     private string FormatCell(int person, int beat, PassingEditorCell cell)
@@ -468,6 +591,22 @@ public sealed class PassingEditorState
 
     private static int PositiveModulo(int value, int modulus) =>
         (value % modulus + modulus) % modulus;
+
+    private static void RotateCellsInPlace(List<PassingEditorCell> cells, int steps)
+    {
+        var period = cells.Count;
+        if (period == 0 || steps % period == 0)
+        {
+            return;
+        }
+
+        var offset = PositiveModulo(steps, period);
+        var copy = cells.ToArray();
+        for (var i = 0; i < period; i++)
+        {
+            cells[i] = copy[(i + offset) % period];
+        }
+    }
 }
 
 public sealed class PassingEditorPerson(string name, int timeZone, List<PassingEditorCell> cells)
