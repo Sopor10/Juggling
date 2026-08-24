@@ -10,7 +10,7 @@
     {
         var kindClass = chip.Kind == PassOrSelf.Pass ? "pass" : "self";
         var kindTitle = KindName?.Invoke(chip.Kind) ?? (chip.Kind == PassOrSelf.Pass ? "Pass" : "Self");
-        var stateClass = $"{(SelectedLocalBeat == chip.LocalBeat ? "is-selected" : null)} {(LandingLocalBeat == chip.LocalBeat ? "is-landing" : null)}";
+        var stateClass = $"{(SelectedLocalBeat == chip.LocalBeat ? "is-selected" : null)} {(LandingLocalBeat == chip.LocalBeat ? "is-landing" : null)} {StateClass?.Invoke(chip)}";
         @if (ChipClicked.HasDelegate)
         {
             <button type="button"
@@ -52,4 +52,7 @@
 
     [Parameter]
     public Func<PassOrSelf, string>? KindName { get; set; }
+
+    [Parameter]
+    public Func<FeedingThrowDisplay.Chip, string>? StateClass { get; set; }
 }

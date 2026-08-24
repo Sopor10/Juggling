@@ -1,0 +1,11 @@
+/* Keep the associated input label available to assistive technology wherever
+   this reusable control is hosted; parent CSS-isolation scopes cannot reliably
+   reach child-component markup. */
+.wizard-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}

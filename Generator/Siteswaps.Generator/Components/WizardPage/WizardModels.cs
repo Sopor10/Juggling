@@ -50,7 +50,7 @@ public sealed class WizardState
     /// <summary>
     /// Absolute ceiling for Settings MaxHeight (matches Settings.razor Max="50").
     /// </summary>
-    public const int AbsoluteMaxThrowHeight = 50;
+    public const int AbsoluteMaxThrowHeight = SettingsDto.MaxMaxHeight;
 
     /// <summary>
     /// Highest throw height offered in the throws chip grid.
@@ -110,7 +110,7 @@ public sealed class WizardState
 
     public void ApplyMaxThrowHeight(int maxHeight)
     {
-        MaxThrowHeight = Math.Clamp(maxHeight, 1, AbsoluteMaxThrowHeight);
+        MaxThrowHeight = SettingsDto.ClampMaxHeight(maxHeight);
         AllowedThrows.RemoveAll(t => t.Height > MaxThrowHeight);
     }
 

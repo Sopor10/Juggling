@@ -32,23 +32,24 @@
 
     <div class="wizard-stepper-row">
 
-        <button type="button" class="wizard-stepper-btn" aria-label="@L["Decrease period"]"
+        <button type="button" class="wizard-stepper-btn" aria-label="@DecreaseAccessibleName"
+                disabled="@(Value <= Min)"
 
                 @onpointerdown:stopPropagation="true"
 
                 @onclick="() => ChangeBy(-1)">-</button>
 
-        <label class="wizard-sr-only" for="periodExactInput">@L["Enter period exactly"]</label>
+        <label class="wizard-sr-only" for="@_inputId">@ValueAccessibleName</label>
 
-        <input id="periodExactInput" type="number" inputmode="numeric" class="wizard-period-value wizard-period-value-input"
-
+        <input id="@_inputId" type="number" inputmode="numeric" class="wizard-period-value wizard-period-value-input"
                min="@Min" max="@Max" value="@Value"
 
                @onpointerdown:stopPropagation="true"
 
                @onchange="OnExactInput" />
 
-        <button type="button" class="wizard-stepper-btn" aria-label="@L["Increase period"]"
+        <button type="button" class="wizard-stepper-btn" aria-label="@IncreaseAccessibleName"
+                disabled="@(Value >= Max)"
 
                 @onpointerdown:stopPropagation="true"
 
@@ -92,9 +93,22 @@
 
     public int Max { get; set; } = WizardState.MaxPeriod;
 
+    [Parameter]
+    public string? DecreaseLabel { get; set; }
+
+    [Parameter]
+    public string? IncreaseLabel { get; set; }
+
+    [Parameter]
+    public string? ValueLabel { get; set; }
+
 
 
     private string? _clampMessage;
+    private readonly string _inputId = $"stepper-{Guid.NewGuid():N}";
+    private string DecreaseAccessibleName => DecreaseLabel ?? L["Decrease period"];
+    private string IncreaseAccessibleName => IncreaseLabel ?? L["Increase period"];
+    private string ValueAccessibleName => ValueLabel ?? L["Enter period exactly"];
 
 
 

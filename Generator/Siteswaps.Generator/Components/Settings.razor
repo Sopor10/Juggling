@@ -131,7 +131,7 @@
     private async Task SaveSettings()
     {
         Value.Culture = AppCultures.Normalize(Value.Culture);
-        Value.MaxHeight = Math.Clamp(Value.MaxHeight, 1, 50);
+        Value.MaxHeight = SettingsDto.ClampMaxHeight(Value.MaxHeight);
         await LocalStorage.SetItemAsync("settings", Value);
         await JsRuntime.InvokeVoidAsync("blazorCulture.set", Value.Culture);
 

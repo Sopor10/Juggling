@@ -3,6 +3,9 @@ namespace Siteswaps.Generator.Components;
 /// <summary>Persisted user preferences (localStorage key "settings").</summary>
 public record SettingsDto
 {
+    public const int MinMaxHeight = 1;
+    public const int MaxMaxHeight = 50;
+
     public bool ShowThrowNames { get; set; } = true;
     public int MaxHeight { get; set; } = 13;
 
@@ -14,4 +17,7 @@ public record SettingsDto
     /// the runtime then follows the browser language.
     /// </summary>
     public string Culture { get; set; } = "";
+
+    public static int ClampMaxHeight(int maxHeight) =>
+        Math.Clamp(maxHeight, MinMaxHeight, MaxMaxHeight);
 }
