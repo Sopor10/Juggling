@@ -13,8 +13,10 @@ public class SiteswapLabPageTests
         );
 
         page.Should().Contain("@page \"/siteswap-lab\"");
-        page.Should().Contain("Direct manipulation");
-        page.Should().Contain("Build throws across people and phases");
+        page.Should().NotContain("lab-card-heading");
+        page.Should().NotContain("Direct manipulation");
+        page.Should().NotContain("Precise");
+        page.Should().NotContain("lab-concept");
         page.Should().NotContain("Landing first");
         page.Should().NotContain("Sequence first");
         page.Should().NotContain("role=\"tablist\"");
@@ -51,7 +53,8 @@ public class SiteswapLabPageTests
         page.Should().NotContain("role=\"alert\"");
         page.Should().NotContain("lab-diagnostics");
         page.Should().NotContain("Pattern needs attention");
-        page.Should().Contain("Clubs / average");
+        page.Should().NotContain("lab-statusbar");
+        page.Should().NotContain("Clubs / average");
     }
 
     [Test]
@@ -87,17 +90,24 @@ public class SiteswapLabPageTests
 
         page.Should().Contain("<button type=\"button\"");
         page.Should().Contain("class=\"lab-timezone-card\"");
-        page.Should().Contain("@L[\"TimeZone {0}\", timeZoneIndex]");
-        page.Should().Contain("@onclick=\"() => _direct.CyclePersonForTimeZone(timeZoneIndex)\"");
-        page.Should().Contain("DisplayedPersonForTimeZone(timeZoneIndex)");
-        page.Should().Contain("PeopleInTimeZone(timeZoneIndex)");
+        page.Should().NotContain("@L[\"TimeZone {0}\", timeZoneIndex]");
+        page.Should().Contain("People in the same timezone throw synchronously");
+        page.Should().Contain("@onclick=\"() => _direct.CycleTimeZone(personIndex)\"");
+        page.Should().Contain("class=\"lab-timezones\"");
+        page.Should().NotContain("lab-timezone-arrows");
+        page.Should().NotContain("LabTimeZoneArrowPath");
         page.Should().Contain("lab-timezone-person");
+        page.Should().NotContain("CyclePersonForTimeZone");
+        page.Should().NotContain("DisplayedPersonForTimeZone");
+        page.Should().NotContain("PeopleInTimeZone");
+        page.Should().NotContain("lab-timezone-shared");
         page.Should().Contain("<FeedingThrowChipRow");
         page.Should().Contain("<FeedingThrowDisplayModeToggle @bind-Mode=\"_throwDisplayMode\" />");
         page.Should().Contain("FeedingThrowDisplay.Format(");
         page.Should().Contain("GetItemAsync<SettingsDto>(\"settings\")");
-        page.Should().Contain("height <= _direct.MaxThrowHeight");
+        page.Should().Contain("class=\"lab-height-editor\"");
         page.Should().Contain("class=\"lab-selected-cell\"");
+        page.Should().NotContain("class=\"lab-palette\"");
         page.Split("class=\"lab-target-editor\"").Should().HaveCount(2);
     }
 
@@ -109,11 +119,27 @@ public class SiteswapLabPageTests
         );
 
         page.Should().Contain("<ProgressDots Total=\"2\"");
+        page.Should().Contain("wizard-swipe-hint");
+        page.Should().Contain("wizard-sr-only");
+        page.Should().Contain("Step {0} / {1}: {2}");
         page.Should().Contain("People + TimeZones");
-        page.Should().Contain("Next: Throws");
+        page.Should().Contain("Next: {0}");
+        page.Should().Contain("wizard-next-preview");
+        page.Should().Contain("WizardShellSections.Footer");
+        page.Should().Contain("<WizardStepPanel StepIndex=\"0\" IsActive=\"@IsStepActive(0)\">");
+        page.Should().Contain("<WizardStepPanel StepIndex=\"1\" IsActive=\"@IsStepActive(1)\">");
+        page.Should().Contain("class=\"wizard-steps\"");
+        page.Should().NotContain("class=\"siteswap-lab\"");
+        page.Should().NotContain("lab-steps");
+        page.Should().Contain("IsStepActive");
+        page.Should()
+            .NotContain("@if (_cellsStep == 0)\n            {\n                <WizardStepPanel");
         page.Should().Contain("EnterThrowsStep");
         page.Should().Contain("_direct.InitializeThrowsForFirstEntry()");
         page.Should().Contain("ReturnToPeopleStep");
+        page.Should().NotContain("_cellsStep == 1 ? \"wizard-invisible\"");
+        page.Should().NotContain("lab-step-hint");
+        page.Should().NotContain("lab-wizard-nav");
         page.Should().NotContain("Reset to 3-person local-3 feed");
         page.Should().NotContain("ApplyNormalFeedPreset");
     }
@@ -128,8 +154,8 @@ public class SiteswapLabPageTests
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
         );
 
-        page.Should().Contain("data-timezone=\"@timeZoneIndex\"");
-        page.Should().Contain("--lab-phase:{timeZoneIndex}");
+        page.Should().Contain("data-timezone=\"@_direct.TimelinePhaseFor(person)\"");
+        page.Should().Contain("--lab-phase:{_direct.TimelinePhaseFor(person)}");
         page.Should().Contain("--lab-phase-count:{_direct.PhaseCount}");
         page.Should().NotContain("--lab-stagger:{person}");
         css.Should().Contain("var(--lab-phase, 0)");
@@ -148,6 +174,20 @@ public class SiteswapLabPageTests
         page.Should().NotContain("<h3>Landings</h3>");
         page.Should().NotContain("<h3>Notation</h3>");
         page.Should().Contain("class=\"lab-selected-landing\"");
+    }
+
+    [Test]
+    public void Throws_Step_Shows_Compact_Club_Count_Without_Statusbar()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+
+        page.Should().Contain("class=\"lab-overview-clubs\"");
+        page.Should().Contain("FeedingThrowDisplay.FormatAverage(_direct.Average)");
+        page.Should().Contain("{0} clubs");
+        page.Should().NotContain("lab-statusbar");
+        page.Should().NotContain("Clubs / average");
     }
 
     [Test]

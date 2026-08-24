@@ -155,26 +155,6 @@ public class PassingEditorStateTests
     }
 
     [Test]
-    public void CyclePersonForTimeZone_Assigns_Next_Person_And_Allows_Shared_TimeZones()
-    {
-        var state = new PassingEditorState();
-        state.SetPersonCount(3);
-
-        state.DisplayedPersonForTimeZone(0).Should().Be(0);
-        state.People.Select(person => person.TimeZone).Should().Equal(0, 1, 2);
-
-        state.CyclePersonForTimeZone(0);
-        state.DisplayedPersonForTimeZone(0).Should().Be(1);
-        state.People.Select(person => person.TimeZone).Should().Equal(0, 0, 2);
-        state.PeopleInTimeZone(0).Should().Equal(0, 1);
-
-        state.CyclePersonForTimeZone(0);
-        state.DisplayedPersonForTimeZone(0).Should().Be(2);
-        state.People.Select(person => person.TimeZone).Should().Equal(0, 0, 0);
-        state.PeopleInTimeZone(0).Should().Equal(0, 1, 2);
-    }
-
-    [Test]
     public void First_Throw_Step_Initializes_Every_Cell_As_Local_Three_Once()
     {
         var state = new PassingEditorState();

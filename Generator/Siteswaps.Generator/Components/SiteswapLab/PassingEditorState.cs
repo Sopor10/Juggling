@@ -10,7 +10,6 @@ public sealed class PassingEditorState
     public const int MaxPeople = 8;
 
     private readonly List<PassingEditorPerson> _people = [];
-    private readonly Dictionary<int, int> _timeZonePersonCycle = [];
 
     public PassingEditorState(string notation = "531", int? maxThrowHeight = null)
     {
@@ -192,44 +191,6 @@ public sealed class PassingEditorState
         }
 
         SelectedPerson = Math.Min(SelectedPerson, _people.Count - 1);
-        _timeZonePersonCycle.Clear();
-        NormalizeTargets();
-    }
-
-    public int DisplayedPersonForTimeZone(int timeZone)
-    {
-        timeZone = Math.Clamp(timeZone, 0, PhaseCount - 1);
-        if (!_timeZonePersonCycle.TryGetValue(timeZone, out var person))
-        {
-            var match = _people
-                .Select((candidate, index) => (candidate, index))
-                .FirstOrDefault(item => item.candidate.TimeZone == timeZone);
-
-            person = match.candidate is not null
-                ? match.index
-                : Math.Min(timeZone, Math.Max(0, _people.Count - 1));
-
-            _timeZonePersonCycle[timeZone] = person;
-        }
-
-        return person;
-    }
-
-    public IReadOnlyList<int> PeopleInTimeZone(int timeZone) =>
-        _people
-            .Select((person, index) => (person, index))
-            .Where(item => item.person.TimeZone == timeZone)
-            .Select(item => item.index)
-            .ToArray();
-
-    public void CyclePersonForTimeZone(int timeZone)
-    {
-        LastTargetAdjustment = null;
-        timeZone = Math.Clamp(timeZone, 0, PhaseCount - 1);
-        var current = DisplayedPersonForTimeZone(timeZone);
-        var next = (current + 1) % PhaseCount;
-        _timeZonePersonCycle[timeZone] = next;
-        _people[next].TimeZone = timeZone;
         NormalizeTargets();
     }
 

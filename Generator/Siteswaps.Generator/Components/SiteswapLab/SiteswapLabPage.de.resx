@@ -6,16 +6,21 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Siteswap lab" xml:space="preserve"><value>Siteswap-Labor</value></data>
   <data name="← Generator" xml:space="preserve"><value>← Generator</value></data>
+  <data name="← swipe left/right →" xml:space="preserve"><value>← nach links/rechts wischen →</value></data>
+  <data name="Back" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Next" xml:space="preserve"><value>Weiter</value></data>
+  <data name="Next: {0}" xml:space="preserve"><value>Weiter: {0}</value></data>
+  <data name="People + TimeZones" xml:space="preserve"><value>Personen + TimeZones</value></data>
+  <data name="Throws" xml:space="preserve"><value>Würfe</value></data>
+  <data name="Step {0} / {1}: {2}" xml:space="preserve"><value>Schritt {0} / {1}: {2}</value></data>
   <data name="Siteswap editor" xml:space="preserve"><value>Siteswap-Editor</value></data>
   <data name="Build a siteswap your way" xml:space="preserve"><value>Baue deinen Siteswap auf deine Art</value></data>
   <data name="Configure people and phases, then build and validate every throw. Nothing is saved." xml:space="preserve"><value>Konfiguriere Personen und Phasen und baue und prüfe anschließend jeden Wurf. Es wird nichts gespeichert.</value></data>
-  <data name="Direct manipulation" xml:space="preserve"><value>Direkte Bearbeitung</value></data>
-  <data name="Precise" xml:space="preserve"><value>Präzise</value></data>
-  <data name="Selected throw height" xml:space="preserve"><value>Höhe des gewählten Wurfs</value></data>
-  <data name="Decrease height" xml:space="preserve"><value>Höhe verringern</value></data>
-  <data name="Height at beat {0}" xml:space="preserve"><value>Höhe bei Beat {0}</value></data>
-  <data name="Increase height" xml:space="preserve"><value>Höhe erhöhen</value></data>
-  <data name="Throw height palette" xml:space="preserve"><value>Palette der Wurfhöhen</value></data>
+  <data name="Throw value" xml:space="preserve"><value>Wurfwert</value></data>
+  <data name="Decrease throw" xml:space="preserve"><value>Wurf verringern</value></data>
+  <data name="Throw at beat {0}" xml:space="preserve"><value>Wurf bei Beat {0}</value></data>
+  <data name="Increase throw" xml:space="preserve"><value>Wurf erhöhen</value></data>
+  <data name="Throw" xml:space="preserve"><value>Wurf</value></data>
   <data name="Beat {0}" xml:space="preserve"><value>Beat {0}</value></data>
   <data name="Collision" xml:space="preserve"><value>Kollision</value></data>
   <data name="Throw state legend" xml:space="preserve"><value>Legende der Wurfzustände</value></data>
@@ -29,22 +34,18 @@
   <data name="Append beat, Period" xml:space="preserve"><value>Schlag anhängen, Periode</value></data>
   <data name="Pass" xml:space="preserve"><value>Pass</value></data>
   <data name="Self" xml:space="preserve"><value>Self</value></data>
-  <data name="Clubs / average" xml:space="preserve"><value>Keulen / Durchschnitt</value></data>
-  <data name="Build throws across people and phases" xml:space="preserve"><value>Würfe über Personen und Phasen bauen</value></data>
   <data name="Passing configuration" xml:space="preserve"><value>Passing-Konfiguration</value></data>
   <data name="People" xml:space="preserve"><value>Personen</value></data>
   <data name="Period" xml:space="preserve"><value>Periode</value></data>
   <data name="Remove last beat" xml:space="preserve"><value>Letzten Beat entfernen</value></data>
   <data name="Append beat" xml:space="preserve"><value>Beat anhängen</value></data>
-  <data name="Removing a beat only removes the final column. Existing throws stay unchanged when extending the period." xml:space="preserve"><value>Beim Verkürzen wird nur die letzte Spalte entfernt. Beim Verlängern bleiben bestehende Würfe unverändert.</value></data>
   <data name="People and TimeZones" xml:space="preserve"><value>Personen und TimeZones</value></data>
   <data name="TimeZone / phase" xml:space="preserve"><value>TimeZone / Phase</value></data>
   <data name="TimeZone for {0}" xml:space="preserve"><value>TimeZone für {0}</value></data>
   <data name="TimeZone {0}" xml:space="preserve"><value>TimeZone {0}</value></data>
   <data name="TimeZone {0} is shared by {1}; simultaneous throws are allowed." xml:space="preserve"><value>TimeZone {0} wird von {1} geteilt; gleichzeitige Würfe sind erlaubt.</value></data>
-  <data name="Height" xml:space="preserve"><value>Höhe</value></data>
   <data name="Target" xml:space="preserve"><value>Ziel</value></data>
-  <data name="Height for {0}, beat {1}" xml:space="preserve"><value>Höhe für {0}, Beat {1}</value></data>
+  <data name="Throw for {0}, beat {1}" xml:space="preserve"><value>Wurf für {0}, Beat {1}</value></data>
   <data name="Target for {0}, beat {1}" xml:space="preserve"><value>Ziel für {0}, Beat {1}</value></data>
   <data name="No compatible target" xml:space="preserve"><value>Kein kompatibles Ziel</value></data>
   <data name="Selected landing" xml:space="preserve"><value>Ausgewählte Landung</value></data>
@@ -54,12 +55,11 @@
   <data name="Selected throw" xml:space="preserve"><value>Ausgewählter Wurf</value></data>
   <data name="Throws {0}" xml:space="preserve"><value>Würfe {0}</value></data>
   <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, Beat {1}: Wurf {2} {3}, landet bei {4}, Beat {5}</value></data>
-  <data name="Tap a TimeZone to cycle people into it. People may share a TimeZone." xml:space="preserve"><value>TimeZone antippen, um Personen hinein zu schalten. Personen dürfen eine TimeZone teilen.</value></data>
-  <data name="TimeZone {0}, person {1}. Tap for next person." xml:space="preserve"><value>TimeZone {0}, Person {1}. Antippen für nächste Person.</value></data>
-  <data name="TimeZone {0}, person {1}. Also {2}. Tap for next person." xml:space="preserve"><value>TimeZone {0}, Person {1}. Auch {2}. Antippen für nächste Person.</value></data>
-  <data name="Also {0}" xml:space="preserve"><value>Auch {0}</value></data>
+  <data name="People in the same timezone throw synchronously" xml:space="preserve"><value>Personen in derselben TimeZone werfen synchron</value></data>
+  <data name="{0}. Tap for next phase." xml:space="preserve"><value>{0}. Antippen für nächste Phase.</value></data>
   <data name="Throw display" xml:space="preserve"><value>Wurfanzeige</value></data>
   <data name="No landing slot on beat {0}" xml:space="preserve"><value>Kein Landungs-Slot auf Beat {0}</value></data>
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Landungs-Slot auf Beat {0} wählen</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Nicht verfügbar</value></data>
+  <data name="{0} clubs" xml:space="preserve"><value>{0} Keulen</value></data>
 </root>

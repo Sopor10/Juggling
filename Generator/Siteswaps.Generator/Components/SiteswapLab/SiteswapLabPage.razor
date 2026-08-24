@@ -16,27 +16,16 @@
                   Current="_cellsStep"
                   Visited="_visitedCellsSteps"
                   StepSelected="SelectCellsStep" />
-    <p class="lab-step-hint" aria-live="polite">
-        @L["Step {0} of 2", _cellsStep + 1] ·
-        @(_cellsStep == 0 ? L["People + TimeZones"] : L["Throws"])
-    </p>
+    <p class="wizard-swipe-hint">@L["← swipe left/right →"]</p>
 </SectionContent>
 
 <SectionContent SectionName="@WizardShellSections.Body">
-    <div class="siteswap-lab">
-        <div class="lab-card-heading">
-            <div>
-                <p class="lab-kicker">@L["Direct manipulation"]</p>
-                <h2>@L["Build throws across people and phases"]</h2>
-            </div>
-            <span class="lab-concept">@L["Precise"]</span>
-        </div>
+    <div class="wizard-steps">
+        <div class="wizard-sr-only" aria-live="polite">@StepAnnouncement</div>
 
-        <div class="wizard-steps lab-steps">
-            @if (_cellsStep == 0)
-            {
-                <WizardStepPanel StepIndex="0" IsActive="true">
-                    <div class="lab-config" aria-label="@L["Passing configuration"]">
+        <WizardStepPanel StepIndex="0" IsActive="@IsStepActive(0)">
+            <div class="wizard-measure">
+                <div class="lab-config" aria-label="@L["Passing configuration"]">
                         <div class="lab-config-field">
                             <span>@L["People"]</span>
                             <PeriodStepper Value="_direct.People.Count"
@@ -59,69 +48,40 @@
                         </div>
                     </div>
 
-                    <p class="lab-hint">@L["Removing a beat only removes the final column. Existing throws stay unchanged when extending the period."]</p>
-
-                    <div class="lab-timezones">
+                    <div class="lab-timezones"
+                         style="@($"--lab-phase-count:{_direct.PhaseCount}")">
                         <h3>@L["People and TimeZones"]</h3>
-                        <p class="lab-timezone-hint">@L["Tap a TimeZone to cycle people into it. People may share a TimeZone."]</p>
-                        @for (var timeZone = 0; timeZone < _direct.PhaseCount; timeZone++)
+                        <p class="lab-timezone-hint">@L["People in the same timezone throw synchronously"]</p>
+                        @for (var person = 0; person < _direct.People.Count; person++)
                         {
-                            var timeZoneIndex = timeZone;
-                            var displayedPerson = _direct.DisplayedPersonForTimeZone(timeZoneIndex);
-                            var peopleInTimeZone = _direct.PeopleInTimeZone(timeZoneIndex);
-                            var sharedPeople = peopleInTimeZone
-                                .Where(person => person != displayedPerson)
-                                .Select(person => _direct.People[person].Name)
-                                .ToArray();
+                            var personIndex = person;
                             <button type="button"
                                     class="lab-timezone-card"
-                                    data-timezone="@timeZoneIndex"
-                                    style="@($"--lab-phase:{timeZoneIndex};--lab-phase-count:{_direct.PhaseCount}")"
-                                    aria-label="@(
-                                        sharedPeople.Length == 0
-                                            ? L[
-                                                "TimeZone {0}, person {1}. Tap for next person.",
-                                                timeZoneIndex,
-                                                _direct.People[displayedPerson].Name
-                                            ]
-                                            : L[
-                                                "TimeZone {0}, person {1}. Also {2}. Tap for next person.",
-                                                timeZoneIndex,
-                                                _direct.People[displayedPerson].Name,
-                                                string.Join(", ", sharedPeople)
-                                            ]
-                                    )"
-                                    @onclick="() => _direct.CyclePersonForTimeZone(timeZoneIndex)">
-                                <strong>@L["TimeZone {0}", timeZoneIndex]</strong>
-                                <span class="lab-timezone-assignment">
-                                    <span class="lab-timezone-person">@_direct.People[displayedPerson].Name</span>
-                                    @if (sharedPeople.Length > 0)
-                                    {
-                                        <small class="lab-timezone-shared">@L["Also {0}", string.Join(", ", sharedPeople)]</small>
-                                    }
-                                </span>
+                                    data-timezone="@_direct.TimelinePhaseFor(person)"
+                                    style="@($"--lab-phase:{_direct.TimelinePhaseFor(person)};--lab-phase-count:{_direct.PhaseCount}")"
+                                    aria-label="@L[
+                                        "{0}. Tap for next phase.",
+                                        _direct.People[person].Name
+                                    ]"
+                                    @onclick="() => _direct.CycleTimeZone(personIndex)">
+                                <strong class="lab-timezone-person" aria-hidden="true">@_direct.People[person].Name</strong>
                             </button>
                         }
-                    </div>
+                </div>
+            </div>
+        </WizardStepPanel>
 
-                    <div class="lab-wizard-nav">
-                        <button type="button"
-                                class="lab-next"
-                                disabled="@(!CanEnterThrows)"
-                                @onclick="EnterThrowsStep">
-                            @L["Next: Throws"]
-                        </button>
+        <WizardStepPanel StepIndex="1" IsActive="@IsStepActive(1)">
+            <div class="wizard-measure">
+                <div class="lab-overview-toolbar">
+                        <span class="lab-overview-clubs">@ClubsLabel</span>
+                        <div class="lab-overview-display">
+                            <span>@L["Throw display"]</span>
+                            <FeedingThrowDisplayModeToggle @bind-Mode="_throwDisplayMode" />
+                        </div>
                     </div>
-                </WizardStepPanel>
-            }
-            else
-            {
-                <WizardStepPanel StepIndex="1" IsActive="true">
-                    <div class="lab-overview-toolbar">
-                        <span>@L["Throw display"]</span>
-                        <FeedingThrowDisplayModeToggle @bind-Mode="_throwDisplayMode" />
-                    </div>
-                    <div class="lab-passing-overview">
+                    <div class="lab-passing-overview"
+                         style="@($"--lab-period:{_direct.Period}")">
                         @for (var person = 0; person < _direct.People.Count; person++)
                         {
                             var personIndex = person;
@@ -163,13 +123,13 @@
                         </div>
                         <div class="lab-cell-controls">
                             <div class="lab-height-editor">
-                                <span>@L["Height"]</span>
-                                <button type="button" aria-label="@L["Decrease height"]" @onclick="() => AdjustPassingHeight(-1)">−</button>
+                                <span>@L["Throw"]</span>
+                                <button type="button" aria-label="@L["Decrease throw"]" @onclick="() => AdjustPassingHeight(-1)">−</button>
                                 <input type="number" min="0" max="@_direct.MaxThrowHeight"
                                        value="@SelectedPassingCell.Height"
-                                       aria-label="@L["Selected throw height"]"
+                                       aria-label="@L["Throw value"]"
                                        @onchange="args => SetPassingHeight(_direct.SelectedPerson, _direct.SelectedBeat, args)" />
-                                <button type="button" aria-label="@L["Increase height"]" @onclick="() => AdjustPassingHeight(1)">+</button>
+                                <button type="button" aria-label="@L["Increase throw"]" @onclick="() => AdjustPassingHeight(1)">+</button>
                             </div>
                             <label class="lab-target-editor">
                                 <span>
@@ -203,38 +163,41 @@
                                 }
                             </label>
                         </div>
-                        <div class="lab-palette" role="group" aria-label="@L["Throw height palette"]">
-                            @for (var height = 0; height <= _direct.MaxThrowHeight; height++)
-                            {
-                                var paletteHeight = height;
-                                <button type="button"
-                                        class="@(SelectedPassingCell.Height == height ? "active" : null)"
-                                        @onclick="() => _direct.SetHeight(_direct.SelectedPerson, _direct.SelectedBeat, paletteHeight)">
-                                    @PassingEditorState.HeightLabel(height)
-                                </button>
-                            }
-                        </div>
                         <p class="lab-selected-landing">
                             @L["Selected landing"]: @SelectedLandingLabel
                         </p>
-                    </section>
+                </section>
+            </div>
+        </WizardStepPanel>
+    </div>
+</SectionContent>
 
-                    <div class="lab-statusbar">
-                        <span><strong>@L["Clubs / average"]:</strong> @_direct.AverageLabel</span>
-                    </div>
-
-                    <div class="lab-wizard-nav">
-                        <button type="button" class="lab-back-step" @onclick="ReturnToPeopleStep">
-                            @L["Back"]
-                        </button>
-                    </div>
-                </WizardStepPanel>
+<SectionContent SectionName="@WizardShellSections.Footer">
+    <div class="wizard-nav">
+        <div class="wizard-measure">
+            @if (NextPreviewText is not null)
+            {
+                <p class="wizard-next-preview">@NextPreviewText</p>
             }
+            <div class="wizard-nav-buttons">
+                <button type="button"
+                        class="wizard-btn-ghost wizard-back-btn @(_cellsStep == 0 ? "wizard-invisible" : "")"
+                        disabled="@(_cellsStep == 0)"
+                        @onclick="ReturnToPeopleStep">@L["Back"]</button>
+                @if (_cellsStep == 0)
+                {
+                    <button type="button"
+                            class="wizard-flex-1 wizard-btn-primary"
+                            disabled="@(!CanEnterThrows)"
+                            @onclick="EnterThrowsStep">@L["Next"]</button>
+                }
+            </div>
         </div>
     </div>
 </SectionContent>
 
 @code {
+    private const int CellsStepCount = 2;
     private PassingEditorState _direct = new();
     private FeedingThrowDisplay.Mode _throwDisplayMode = FeedingThrowDisplay.Mode.Global;
     private readonly HashSet<int> _visitedCellsSteps = [0];
@@ -261,6 +224,22 @@
     }
 
     private bool CanEnterThrows => _direct.People.Count >= PassingEditorState.MinPeople;
+
+    private string StepTitle(int step) =>
+        step switch
+        {
+            0 => L["People + TimeZones"],
+            1 => L["Throws"],
+            _ => string.Empty,
+        };
+
+    private bool IsStepActive(int step) => _cellsStep == step;
+
+    private string StepAnnouncement =>
+        L["Step {0} / {1}: {2}", _cellsStep + 1, CellsStepCount, StepTitle(_cellsStep)];
+
+    private string? NextPreviewText =>
+        _cellsStep == 0 ? L["Next: {0}", StepTitle(1)].Value : null;
 
     private void EnterThrowsStep()
     {
@@ -393,4 +372,8 @@
             return L["{0}, beat {1}", target, landing.TargetBeat + 1];
         }
     }
+
+    private string ClubsLabel =>
+        L["{0} clubs", FeedingThrowDisplay.FormatAverage(_direct.Average)];
+
 }
