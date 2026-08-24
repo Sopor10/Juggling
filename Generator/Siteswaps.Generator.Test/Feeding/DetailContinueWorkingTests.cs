@@ -9,7 +9,7 @@ namespace Siteswaps.Generator.Test.Feeding;
 public class DetailContinueWorkingTests
 {
     [Test]
-    public void DetailVariantHero_Offers_Three_Person_Feed_In_New_Tab()
+    public void DetailVariantHero_Offers_Three_Person_Feed_As_Relative_Link()
     {
         var hero = ReadComponentsSource(
             Path.Combine("Details", "Variants", "DetailVariantHero.razor")
@@ -17,13 +17,21 @@ public class DetailContinueWorkingTests
 
         hero.Should().Contain("Continue with this siteswap");
         hero.Should().Contain("Create 3-person feed");
-        hero.Should().Contain("target=\"_blank\"");
-        hero.Should().Contain("rel=\"noopener\"");
 
         hero.Should().Contain("ThreePersonFeedHref");
         // App-relative: no leading slash on feeding path in markup or helper usage.
         hero.Should().NotContain("href=\"/feeding");
         hero.Should().NotContain("href='/feeding");
+
+        var primaryStart = hero.IndexOf("sdv-continue-primary", StringComparison.Ordinal);
+        var primaryEnd = hero.IndexOf(
+            "sdv-continue-secondary",
+            primaryStart,
+            StringComparison.Ordinal
+        );
+        var primaryBlock = hero[primaryStart..primaryEnd];
+        primaryBlock.Should().NotContain("target=\"_blank\"");
+        primaryBlock.Should().NotContain("rel=\"noopener\"");
     }
 
     [Test]
