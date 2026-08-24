@@ -42,7 +42,6 @@
   <data name="TimeZone for {0}" xml:space="preserve"><value>TimeZone für {0}</value></data>
   <data name="TimeZone {0}" xml:space="preserve"><value>TimeZone {0}</value></data>
   <data name="TimeZone {0} is shared by {1}; simultaneous throws are allowed." xml:space="preserve"><value>TimeZone {0} wird von {1} geteilt; gleichzeitige Würfe sind erlaubt.</value></data>
-  <data name="TZ {0}" xml:space="preserve"><value>TZ {0}</value></data>
   <data name="Height" xml:space="preserve"><value>Höhe</value></data>
   <data name="Target" xml:space="preserve"><value>Ziel</value></data>
   <data name="Height for {0}, beat {1}" xml:space="preserve"><value>Höhe für {0}, Beat {1}</value></data>
@@ -55,11 +54,12 @@
   <data name="Selected throw" xml:space="preserve"><value>Ausgewählter Wurf</value></data>
   <data name="Throws {0}" xml:space="preserve"><value>Würfe {0}</value></data>
   <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, Beat {1}: Wurf {2} {3}, landet bei {4}, Beat {5}</value></data>
-  <data name="Tap a person to cycle its TimeZone. People may share a TimeZone." xml:space="preserve"><value>Person antippen, um ihre TimeZone weiterzuschalten. Personen dürfen eine TimeZone teilen.</value></data>
-  <data name="{0}, TimeZone {1}. Activate for next TimeZone." xml:space="preserve"><value>{0}, TimeZone {1}. Aktivieren für die nächste TimeZone.</value></data>
+  <data name="Tap a TimeZone to cycle people into it. People may share a TimeZone." xml:space="preserve"><value>TimeZone antippen, um Personen hinein zu schalten. Personen dürfen eine TimeZone teilen.</value></data>
+  <data name="TimeZone {0}, person {1}. Tap for next person." xml:space="preserve"><value>TimeZone {0}, Person {1}. Antippen für nächste Person.</value></data>
+  <data name="TimeZone {0}, person {1}. Also {2}. Tap for next person." xml:space="preserve"><value>TimeZone {0}, Person {1}. Auch {2}. Antippen für nächste Person.</value></data>
+  <data name="Also {0}" xml:space="preserve"><value>Auch {0}</value></data>
   <data name="Throw display" xml:space="preserve"><value>Wurfanzeige</value></data>
   <data name="No landing slot on beat {0}" xml:space="preserve"><value>Kein Landungs-Slot auf Beat {0}</value></data>
-  <data name="Only {0} has a slot on beat {1}." xml:space="preserve"><value>Nur {0} hat einen Slot auf Beat {1}.</value></data>
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Landungs-Slot auf Beat {0} wählen</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Nicht verfügbar</value></data>
 </root>

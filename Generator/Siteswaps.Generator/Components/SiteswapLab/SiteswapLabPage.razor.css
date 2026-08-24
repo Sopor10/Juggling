@@ -229,20 +229,24 @@
 }
 
 .lab-timezones {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 6px;
+    max-width: 100%;
     margin: 14px 0 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
 }
 
 .lab-timezones h3 {
-    grid-column: 1 / -1;
+    width: 100%;
     margin: 0;
     font-size: 1rem;
 }
 
 .lab-timezone-hint {
-    grid-column: 1 / -1;
+    width: 100%;
     margin: -2px 0 2px;
     color: var(--lab-purple-500);
     font-size: .72rem;
@@ -251,6 +255,10 @@
 .lab-timezone-card {
     appearance: none;
     display: flex;
+    width: min(100%, 240px);
+    max-width: calc(
+        100% - var(--lab-phase, 0) * (44px + 8px) / var(--lab-phase-count, 1)
+    );
     min-height: 44px;
     align-items: baseline;
     justify-content: space-between;
@@ -262,6 +270,9 @@
     font: inherit;
     text-align: left;
     cursor: pointer;
+    transform: translateX(
+        calc(var(--lab-phase, 0) * (44px + 8px) / var(--lab-phase-count, 1))
+    );
 }
 
 .lab-timezone-card strong {
@@ -274,6 +285,27 @@
     font-size: .68rem;
     font-weight: 800;
     white-space: nowrap;
+}
+
+.lab-timezone-assignment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+}
+
+.lab-timezone-person {
+    color: var(--lab-purple-950);
+    font-size: .95rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.lab-timezone-shared {
+    color: var(--lab-purple-500);
+    font-size: .62rem;
+    font-weight: 800;
+    line-height: 1.1;
 }
 
 .lab-overview-toolbar {
@@ -336,20 +368,15 @@
 
 .lab-overview-person {
     display: flex;
-    width: 3.25rem;
-    min-width: 3.25rem;
-    flex-direction: column;
+    width: 1.5rem;
+    min-width: 1.5rem;
+    justify-content: center;
     color: var(--lab-purple-500);
 }
 
 .lab-overview-person strong {
     font-size: 1rem;
     line-height: 1;
-}
-
-.lab-overview-person small {
-    font-size: .68rem;
-    font-weight: 800;
 }
 
 .lab-overview-throws {
@@ -470,12 +497,6 @@
     gap: 5px;
 }
 
-.lab-target-hint {
-    color: var(--lab-purple-500);
-    font-size: .68rem;
-    font-weight: 700;
-}
-
 .lab-selected-cell .lab-palette {
     grid-template-columns: repeat(10, minmax(36px, 1fr));
 }
@@ -567,6 +588,10 @@ button:disabled {
 
     .lab-selected-cell .lab-palette {
         grid-template-columns: repeat(5, 1fr);
+    }
+
+    .lab-timezone-card {
+        width: min(100%, 200px);
     }
 
 }

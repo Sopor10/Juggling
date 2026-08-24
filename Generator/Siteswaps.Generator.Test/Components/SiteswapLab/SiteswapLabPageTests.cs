@@ -87,8 +87,11 @@ public class SiteswapLabPageTests
 
         page.Should().Contain("<button type=\"button\"");
         page.Should().Contain("class=\"lab-timezone-card\"");
-        page.Should().Contain("@L[\"TimeZone {0}\", _direct.People[person].TimeZone]");
-        page.Should().Contain("@onclick=\"() => _direct.CycleTimeZone(personIndex)\"");
+        page.Should().Contain("@L[\"TimeZone {0}\", timeZoneIndex]");
+        page.Should().Contain("@onclick=\"() => _direct.CyclePersonForTimeZone(timeZoneIndex)\"");
+        page.Should().Contain("DisplayedPersonForTimeZone(timeZoneIndex)");
+        page.Should().Contain("PeopleInTimeZone(timeZoneIndex)");
+        page.Should().Contain("lab-timezone-person");
         page.Should().Contain("<FeedingThrowChipRow");
         page.Should().Contain("<FeedingThrowDisplayModeToggle @bind-Mode=\"_throwDisplayMode\" />");
         page.Should().Contain("FeedingThrowDisplay.Format(");
@@ -125,9 +128,9 @@ public class SiteswapLabPageTests
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
         );
 
-        page.Should().Contain("data-timezone=\"@_direct.TimelinePhaseFor(person)\"");
-        page.Should().Contain("--lab-phase:{_direct.TimelinePhaseFor(person)}");
-        page.Should().Contain("--lab-phase-count:{_direct.ActiveTimeZoneCount}");
+        page.Should().Contain("data-timezone=\"@timeZoneIndex\"");
+        page.Should().Contain("--lab-phase:{timeZoneIndex}");
+        page.Should().Contain("--lab-phase-count:{_direct.PhaseCount}");
         page.Should().NotContain("--lab-stagger:{person}");
         css.Should().Contain("var(--lab-phase, 0)");
         css.Should().Contain("var(--lab-phase-count, 1)");

@@ -63,20 +63,43 @@
 
                     <div class="lab-timezones">
                         <h3>@L["People and TimeZones"]</h3>
-                        <p class="lab-timezone-hint">@L["Tap a person to cycle its TimeZone. People may share a TimeZone."]</p>
-                        @for (var person = 0; person < _direct.People.Count; person++)
+                        <p class="lab-timezone-hint">@L["Tap a TimeZone to cycle people into it. People may share a TimeZone."]</p>
+                        @for (var timeZone = 0; timeZone < _direct.PhaseCount; timeZone++)
                         {
-                            var personIndex = person;
+                            var timeZoneIndex = timeZone;
+                            var displayedPerson = _direct.DisplayedPersonForTimeZone(timeZoneIndex);
+                            var peopleInTimeZone = _direct.PeopleInTimeZone(timeZoneIndex);
+                            var sharedPeople = peopleInTimeZone
+                                .Where(person => person != displayedPerson)
+                                .Select(person => _direct.People[person].Name)
+                                .ToArray();
                             <button type="button"
                                     class="lab-timezone-card"
-                                    aria-label="@L[
-                                        "{0}, TimeZone {1}. Activate for next TimeZone.",
-                                        _direct.People[person].Name,
-                                        _direct.People[person].TimeZone
-                                    ]"
-                                    @onclick="() => _direct.CycleTimeZone(personIndex)">
-                                <strong>@_direct.People[person].Name</strong>
-                                <span>@L["TimeZone {0}", _direct.People[person].TimeZone]</span>
+                                    data-timezone="@timeZoneIndex"
+                                    style="@($"--lab-phase:{timeZoneIndex};--lab-phase-count:{_direct.PhaseCount}")"
+                                    aria-label="@(
+                                        sharedPeople.Length == 0
+                                            ? L[
+                                                "TimeZone {0}, person {1}. Tap for next person.",
+                                                timeZoneIndex,
+                                                _direct.People[displayedPerson].Name
+                                            ]
+                                            : L[
+                                                "TimeZone {0}, person {1}. Also {2}. Tap for next person.",
+                                                timeZoneIndex,
+                                                _direct.People[displayedPerson].Name,
+                                                string.Join(", ", sharedPeople)
+                                            ]
+                                    )"
+                                    @onclick="() => _direct.CyclePersonForTimeZone(timeZoneIndex)">
+                                <strong>@L["TimeZone {0}", timeZoneIndex]</strong>
+                                <span class="lab-timezone-assignment">
+                                    <span class="lab-timezone-person">@_direct.People[displayedPerson].Name</span>
+                                    @if (sharedPeople.Length > 0)
+                                    {
+                                        <small class="lab-timezone-shared">@L["Also {0}", string.Join(", ", sharedPeople)]</small>
+                                    }
+                                </span>
                             </button>
                         }
                     </div>
@@ -103,9 +126,9 @@
                         {
                             var personIndex = person;
                             <div class="lab-overview-row" data-timezone="@_direct.TimelinePhaseFor(person)">
-                                <div class="lab-overview-person">
-                                    <strong>@_direct.People[person].Name</strong>
-                                    <small>@L["TZ {0}", _direct.People[person].TimeZone]</small>
+                                <div class="lab-overview-person"
+                                     aria-label="@($"{_direct.People[person].Name}, {L["TimeZone {0}", _direct.People[person].TimeZone]}")">
+                                    <strong aria-hidden="true">@_direct.People[person].Name</strong>
                                 </div>
                                 <div class="lab-overview-throws"
                                      style="@($"--lab-phase:{_direct.TimelinePhaseFor(person)};--lab-phase-count:{_direct.ActiveTimeZoneCount}")">
@@ -166,9 +189,6 @@
                                 {
                                     var onlyTarget = SelectedAvailableTargets[0];
                                     <output class="lab-target-output">@_direct.People[onlyTarget].Name</output>
-                                    <small class="lab-target-hint">
-                                        @L["Only {0} has a slot on beat {1}.", _direct.People[onlyTarget].Name, SelectedPassingLanding.TargetBeat + 1]
-                                    </small>
                                 }
                                 else
                                 {

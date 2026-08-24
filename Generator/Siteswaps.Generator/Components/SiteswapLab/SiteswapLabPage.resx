@@ -33,11 +33,12 @@
   <data name="Selected throw" xml:space="preserve"><value>Selected throw</value></data>
   <data name="Throws {0}" xml:space="preserve"><value>Throws {0}</value></data>
   <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}</value></data>
-  <data name="Tap a person to cycle its TimeZone. People may share a TimeZone." xml:space="preserve"><value>Tap a person to cycle its TimeZone. People may share a TimeZone.</value></data>
-  <data name="{0}, TimeZone {1}. Activate for next TimeZone." xml:space="preserve"><value>{0}, TimeZone {1}. Activate for next TimeZone.</value></data>
+  <data name="Tap a TimeZone to cycle people into it. People may share a TimeZone." xml:space="preserve"><value>Tap a TimeZone to cycle people into it. People may share a TimeZone.</value></data>
+  <data name="TimeZone {0}, person {1}. Tap for next person." xml:space="preserve"><value>TimeZone {0}, person {1}. Tap for next person.</value></data>
+  <data name="TimeZone {0}, person {1}. Also {2}. Tap for next person." xml:space="preserve"><value>TimeZone {0}, person {1}. Also {2}. Tap for next person.</value></data>
+  <data name="Also {0}" xml:space="preserve"><value>Also {0}</value></data>
   <data name="Throw display" xml:space="preserve"><value>Throw display</value></data>
   <data name="No landing slot on beat {0}" xml:space="preserve"><value>No landing slot on beat {0}</value></data>
-  <data name="Only {0} has a slot on beat {1}." xml:space="preserve"><value>Only {0} has a slot on beat {1}.</value></data>
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Choose landing slot on beat {0}</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Unavailable</value></data>
 </root>
