@@ -20,6 +20,8 @@ public class WizardNavigationTests(SharedBlazorFixture host) : IClassFixture<Sha
 
         await wizard.SelectJugglerChipAsync(3);
         await wizard.SetPeriodAsync(7);
+        await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("3");
+        await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("7");
         await wizard.ClickNextAsync();
         await wizard.ExpectStepAsync(1);
         await wizard.ClickBackAsync();

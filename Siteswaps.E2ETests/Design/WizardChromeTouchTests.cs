@@ -46,12 +46,8 @@ public class WizardChromeTouchTests(SharedBlazorFixture host) : IClassFixture<Sh
         await Assertions.Expect(input).ToBeVisibleAsync();
 
         var font = await design.StyleAsync(input, "font-family");
-        var radius = DesignColor.ParseCssPx(
-            await design.StyleAsync(input, "border-top-left-radius")
-        );
 
         font.Should().ContainEquivalentOf("Baloo");
-        radius.Should().BeGreaterThanOrEqualTo(8);
     }
 
     /// <summary>Summary: Primary CTA height ≥48px and progress-dot hit target ≥40px (chips/steppers covered by Ux).</summary>

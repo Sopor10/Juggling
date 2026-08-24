@@ -22,7 +22,8 @@ public class WizardPageObject(IPage page)
             ".wizard-nav-buttons .wizard-btn-primary, .wizard-nav-buttons .wizard-btn-generate"
         );
 
-    public ILocator BackButton => page.Locator(".wizard-back-btn");
+    public ILocator BackButton =>
+        page.GetByRole(AriaRole.Button, new() { Name = "Zurück" });
 
     public ILocator AddFilterButton => page.Locator(".wizard-add-filter-btn");
 
@@ -160,13 +161,13 @@ public class WizardPageObject(IPage page)
     public async Task SetPeriodAsync(int period)
     {
         await PeriodInput.FillAsync(period.ToString(CultureInfo.InvariantCulture));
-        await PeriodInput.PressAsync("Tab");
+        await PeriodInput.PressAsync("Enter");
     }
 
     public async Task SetExactJugglersAsync(int jugglers)
     {
         await JugglerExactInput.FillAsync(jugglers.ToString(CultureInfo.InvariantCulture));
-        await JugglerExactInput.PressAsync("Tab");
+        await JugglerExactInput.PressAsync("Enter");
     }
 
     public async Task SelectJugglerChipAsync(int jugglers) => await SetExactJugglersAsync(jugglers);

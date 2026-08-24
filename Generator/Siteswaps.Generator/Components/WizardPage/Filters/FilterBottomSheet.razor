@@ -7,6 +7,8 @@
 @inject IJSRuntime JsRuntime
 @inject IStringLocalizer<FilterBottomSheet> L
 
+@onkeydown:window="OnWindowKeyDown"
+
 @if (_isOpen)
 {
 <div class="wizard-sheet-backdrop open" @onclick="Close"></div>
@@ -212,6 +214,8 @@
             await Close();
         }
     }
+
+    private Task OnWindowKeyDown(KeyboardEventArgs e) => _isOpen ? OnKeyDown(e) : Task.CompletedTask;
 
     private async Task OnTabKeyDown(KeyboardEventArgs e, FilterTabKind current)
     {
