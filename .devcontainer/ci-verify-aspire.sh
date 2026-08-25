@@ -88,16 +88,7 @@ fi
 if kill -0 "${direct_pid}" 2>/dev/null; then
   signal_tree KILL "${direct_pid}"
 fi
-set +e
-wait "${direct_pid}"
-direct_exit=$?
-set -e
 direct_pid=""
-if [[ "${direct_exit}" -ne 0 && "${direct_exit}" -ne 130 && "${direct_exit}" -ne 143 ]]; then
-  cat "${prewarm_output}" >&2
-  dump_aspire_logs
-  exit 1
-fi
 cat "${prewarm_output}"
 rm -f "${prewarm_output}"
 
