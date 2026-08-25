@@ -121,3 +121,53 @@
 .settings-btn-primary:active {
     transform: scale(0.97);
 }
+
+.settings-update-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--wizard-purple-100);
+}
+
+.settings-update-hint {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--wizard-purple-600);
+}
+
+.settings-update-status {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--wizard-purple-700);
+}
+
+.settings-update-section .settings-actions {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.settings-update-section .settings-btn-primary,
+.settings-update-section .settings-btn-secondary {
+    flex: 1 1 12rem;
+    width: auto;
+}
+
+.settings-btn-secondary {
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-family: var(--wizard-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    border: 2px solid var(--wizard-purple-100);
+    cursor: pointer;
+    background: white;
+    color: var(--wizard-purple-700);
+}
+
+.settings-btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

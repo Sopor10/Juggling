@@ -210,7 +210,11 @@ public class StartingClubsTests
         session.SelectSiteswap("B1", b1Siteswap);
 
         var b1 = session.StartingClubs("B1");
-        var expected = StartingClubDistribution.ForJuggler(b1Siteswap.Items, juggler: 1);
+        var expected = StartingClubDistribution.ForJuggler(
+            b1Siteswap.Items,
+            juggler: 1,
+            numberOfJugglers: 2
+        );
 
         b1.Should().Be(expected);
         (b1.Left + b1.Right).Should().BeGreaterThan(0);
