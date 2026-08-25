@@ -227,7 +227,12 @@ export function restoreActiveElement() {
 }
 
 export function focusElement(id) {
-  document.getElementById(id)?.focus();
+  requestAnimationFrame(() => {
+    const element = document.getElementById(id);
+    if (element instanceof HTMLElement) {
+      element.focus();
+    }
+  });
 }
 
 export function initHistory(dotnetHelper, step) {
