@@ -1,4 +1,4 @@
-/* Manifest version: 9OQqhXXU */
+/* Manifest version: yHBpZ0S1 */
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
@@ -6,6 +6,11 @@ self.importScripts('./service-worker-assets.js');
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
+self.addEventListener('message', event => {
+    if (event.data?.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
 
 const cacheNamePrefix = 'offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
@@ -20,10 +25,8 @@ const manifestUrlList = self.assetsManifest.assets.map(asset => new URL(asset.ur
 async function onInstall(event) {
     console.info('Service worker: Install');
 
-    // Activate the new service worker as soon as the old one is retired.
-    await self.skipWaiting();
-    
-    // Fetch and cache all matching items from the assets manifest
+    // Fetch and cache all matching items from the assets manifest.
+    // Activation waits for user confirmation via SKIP_WAITING.
     const assetsRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
@@ -43,6 +46,32 @@ async function onActivate(event) {
         .map(key => caches.delete(key)));
 }
 
+function shouldUseNetworkFirst(request, requestUrl) {
+    if (request.mode === 'navigate') {
+        return true;
+    }
+
+    const path = requestUrl.pathname;
+    return path.endsWith('/index.html')
+        || path.endsWith('index.html')
+        || path.endsWith('blazor.boot.json')
+        || path.includes('/_framework/');
+}
+
+async function networkFirst(cache, cacheKey, networkRequest) {
+    try {
+        const networkResponse = await fetch(networkRequest);
+        if (networkResponse?.ok) {
+            await cache.put(cacheKey, networkResponse.clone());
+            return networkResponse;
+        }
+    } catch (error) {
+        console.warn('Service worker: network-first fetch failed, using cache', error);
+    }
+
+    return cache.match(cacheKey);
+}
+
 async function onFetch(event) {
     // PR previews live under /pr-preview/ on the same origin. Never intercept them —
     // otherwise this root-scoped worker serves the production index.html for those URLs.
@@ -51,18 +80,30 @@ async function onFetch(event) {
         return fetch(event.request);
     }
 
-    let cachedResponse = null;
-    if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache,
-        // unless that request is for an offline resource.
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate'
-            && !manifestUrlList.some(url => url === event.request.url);
-
-        const request = shouldServeIndexHtml ? 'index.html' : event.request;
-        const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
+    if (event.request.method !== 'GET') {
+        return fetch(event.request);
     }
 
-    return cachedResponse || fetch(event.request);
+    const shouldServeIndexHtml = event.request.mode === 'navigate'
+        && !manifestUrlList.some(url => url === event.request.url);
+
+    const cache = await caches.open(cacheName);
+    const cacheKey = shouldServeIndexHtml ? 'index.html' : event.request;
+    const networkRequest = shouldServeIndexHtml
+        ? new Request(new URL('index.html', baseUrl).href, { cache: 'no-cache' })
+        : event.request;
+
+    if (shouldUseNetworkFirst(event.request, requestUrl) || shouldServeIndexHtml) {
+        const networkFirstResponse = await networkFirst(cache, cacheKey, networkRequest);
+        if (networkFirstResponse) {
+            return networkFirstResponse;
+        }
+    } else {
+        const cachedResponse = await cache.match(cacheKey);
+        if (cachedResponse) {
+            return cachedResponse;
+        }
+    }
+
+    return fetch(event.request);
 }
