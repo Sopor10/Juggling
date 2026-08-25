@@ -20,6 +20,13 @@ public class WizardFilterSheetUxTests(SharedBlazorFixture host) : IClassFixture<
         await wizard.WaitUntilLoadedAsync();
         await wizard.AdvanceToFiltersAsync();
         await wizard.OpenAddFilterSheetAsync();
+        var numberTab = page.Locator("#wizard-filter-tab-number");
+        await numberTab.FocusAsync();
+        await page.WaitForFunctionAsync(
+            @"() => document.activeElement instanceof HTMLElement
+                && document.activeElement.closest('.wizard-bottom-sheet.open')",
+            new PageWaitForFunctionOptions { Timeout = 15_000 }
+        );
 
         for (var i = 0; i < 12; i++)
         {

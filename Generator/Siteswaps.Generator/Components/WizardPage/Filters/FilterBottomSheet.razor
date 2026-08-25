@@ -114,6 +114,8 @@
 
     private string SheetTitle => _editingId is null ? L["Add filter"] : L["Edit filter"];
 
+    private string ActiveTabElementId => $"wizard-filter-tab-{_activeTab.ToString().ToLowerInvariant()}";
+
     public void OpenForNew()
     {
         _editingId = null;
@@ -192,8 +194,8 @@
                 await _jsModule.InvokeVoidAsync("captureActiveElement");
                 await _jsModule.InvokeVoidAsync("activateFocusTrap", _sheetElement);
                 _focusTrapActive = true;
+                await _jsModule.InvokeVoidAsync("focusElement", ActiveTabElementId);
             }
-            await _sheetElement.FocusAsync();
         }
         else if (!_isOpen && _restoreFocusPending)
         {
