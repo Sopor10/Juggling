@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
 using Xunit;
@@ -24,10 +23,7 @@ public class WizardFilterSheetUxTests(SharedBlazorFixture host) : IClassFixture<
         for (var i = 0; i < 12; i++)
         {
             await page.Keyboard.PressAsync("Tab");
-            var summary = await WizardUxGeometry.ActiveElementSummaryAsync(page);
-            summary
-                .Should()
-                .EndWith(":true", because: "focus must stay inside the open filter sheet");
+            await WizardUxGeometry.WaitForActiveElementInsideFilterSheetAsync(page);
         }
     }
 

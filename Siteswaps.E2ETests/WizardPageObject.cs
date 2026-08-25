@@ -1,5 +1,6 @@
 using System.Globalization;
 using Microsoft.Playwright;
+using Siteswaps.E2ETests.Ux;
 
 namespace Siteswaps.E2ETests;
 
@@ -150,6 +151,7 @@ public class WizardPageObject(IPage page)
     {
         await AddFilterButton.ClickAsync();
         await Assertions.Expect(FilterSheet).ToBeVisibleAsync();
+        await WizardUxGeometry.WaitForActiveElementInsideFilterSheetAsync(page);
     }
 
     public async Task JumpToStepAsync(int stepIndex)

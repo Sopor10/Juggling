@@ -227,4 +227,19 @@ internal static class WizardUxGeometry
             }"
         );
     }
+
+    /// <summary>Waits until focus is inside an open filter bottom sheet (focus trap ready).</summary>
+    public static async Task WaitForActiveElementInsideFilterSheetAsync(
+        IPage page,
+        float timeoutMs = 15_000
+    )
+    {
+        await page.WaitForFunctionAsync(
+            @"() => {
+                const el = document.activeElement;
+                return el instanceof HTMLElement && el.closest('.wizard-bottom-sheet.open');
+            }",
+            new PageWaitForFunctionOptions { Timeout = timeoutMs }
+        );
+    }
 }
