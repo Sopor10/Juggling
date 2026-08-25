@@ -1,0 +1,16 @@
+{
+  "id": "pi-coding-agent",
+  "version": "0.1.0",
+  "name": "Pi Coding Agent",
+  "description": "Installs the pinned Pi coding agent after the Node.js feature.",
+  "options": {
+    "version": {
+      "type": "string",
+      "default": "0.84.2",
+      "description": "Pi coding agent version"
+    }
+  },
+  "installsAfter": [
+    "ghcr.io/devcontainers/features/node"
+  ]
+}
