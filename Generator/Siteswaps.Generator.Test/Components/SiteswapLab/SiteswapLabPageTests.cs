@@ -88,19 +88,23 @@ public class SiteswapLabPageTests
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
         );
 
-        page.Should().Contain("<button type=\"button\"");
         page.Should().Contain("class=\"lab-timezone-table\"");
-        page.Should().Contain("class=\"lab-timezone-token\"");
+        page.Should().Contain("class=\"lab-timezone-row\"");
+        page.Should().Contain("class=\"lab-timezone-marker\"");
+        page.Should().Contain("lab-timezone-cell-active");
         page.Should().Contain("class=\"lab-timezone-row-label\"");
         page.Should().NotContain("class=\"lab-timezone-card\"");
         page.Should().NotContain("@L[\"TimeZone {0}\", timeZoneIndex]");
         page.Should().Contain("People in the same timezone throw synchronously");
         page.Should().Contain("@onclick=\"() => _direct.CycleTimeZone(personIndex)\"");
+        page.Should().Contain("OnTimeZoneRowKeyDown");
+        page.Should().Contain("{0}, TimeZone {1}. Tap for next phase.");
         page.Should().Contain("class=\"lab-timezones\"");
         page.Should().NotContain("lab-timezone-arrows");
         page.Should().NotContain("LabTimeZoneArrowPath");
-        page.Should().Contain("lab-timezone-person");
-        page.Should().Contain("class=\"lab-timezone-cell\"");
+        page.Should().NotContain("lab-timezone-token");
+        page.Should().NotContain("lab-timezone-person");
+        page.Should().Contain("lab-timezone-cell lab-timezone-cell-active");
         page.Should().Contain("class=\"lab-timezone-phase-marker\"");
         page.Should().NotContain("CyclePersonForTimeZone");
         page.Should().NotContain("DisplayedPersonForTimeZone");
@@ -118,16 +122,22 @@ public class SiteswapLabPageTests
         page.Should().Contain("class=\"feeding-throw-mode\"");
         page.Should().Contain("role=\"radiogroup\"");
         page.Should().Contain("OnChipClicked");
-        page.Should().Contain("ToggleCellSelection");
+        page.Should().Contain("ApplyChipDrop");
         page.Should().Contain("HasSelection");
         page.Should().Contain("AdjustPassingHeightByPeriod");
-        page.Should().Contain("class=\"lab-period-height-editor\"");
-        page.Should().Contain("No throw selected.");
+        page.Should().Contain("class=\"lab-height-editor-controls\"");
+        page.Should().Contain("class=\"lab-height-step-period\"");
+        page.Should().Contain("±{0} = one pattern period");
+        page.Should().NotContain("class=\"lab-period-height-editor\"");
+        page.Should().NotContain("Period step size");
+        page.Should().Contain("Select a throw above to see where it lands and edit it.");
         page.Should().Contain("lab-selected-empty");
+        page.Should().Contain("Tap a throw to select it. Drag to change where it lands.");
+        page.Should().Contain("class=\"lab-throws-hint\"");
         page.Should().NotContain("ChipClicked=\"beat => _direct.SelectCell");
         page.Should()
             .Contain("SetPassingTarget(_direct.SelectedPerson, _direct.SelectedBeat, target)");
-        page.Should().Contain("SetLandingTarget");
+        page.Should().Contain("ApplyChipDrop");
     }
 
     [Test]
@@ -175,12 +185,16 @@ public class SiteswapLabPageTests
         );
 
         page.Should().Contain("data-timezone=\"@phase\"");
-        page.Should().Contain("data-timezone=\"@personTimeZone\"");
+        page.Should().NotContain("data-timezone=\"@personTimeZone\"");
         page.Should().Contain("--lab-phase:{phase}");
         page.Should().Contain("--lab-phase-count:{_direct.PhaseCount}");
         page.Should().NotContain("--lab-stagger:{person}");
         css.Should().Contain(".lab-timezone-table");
         css.Should().Contain(".lab-timezone-phase-marker");
+        css.Should().Contain(".lab-timezone-row");
+        css.Should().Contain(".lab-timezone-marker");
+        css.Should().Contain(".lab-timezone-cell-active");
+        css.Should().NotContain(".lab-timezone-token");
         css.Should().Contain("var(--lab-phase, 0)");
         css.Should().Contain("var(--lab-phase-count, 1)");
         css.Should().NotContain("var(--lab-stagger");
@@ -200,18 +214,24 @@ public class SiteswapLabPageTests
     }
 
     [Test]
-    public void Throws_Step_Toolbar_Shows_Clubs_Rotation_And_Display()
+    public void Throws_Step_Toolbar_Shows_Rotation_Only()
     {
         var page = ReadGeneratorSource(
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
         );
+        var toolbar = page.Split("class=\"lab-overview-toolbar\"", 2)[1]
+            .Split("class=\"lab-passing-overview\"", 2)[0];
 
-        page.Should().Contain("class=\"lab-overview-clubs\"");
-        page.Should().Contain("ClubsLabel");
-        page.Should().Contain("FeedingThrowDisplay.FormatAverage(_direct.Average)");
-        page.Should().Contain("class=\"lab-overview-rotation\"");
-        page.Should().Contain("@L[\"Throw display\"]");
-        page.Should().Contain("FeedingThrowDisplayModeToggle");
+        page.Should().Contain("class=\"lab-overview-toolbar\"");
+        page.Should().Contain("class=\"lab-overview-toolbar-group\"");
+        page.Should().Contain("class=\"lab-overview-toolbar-label\"");
+        page.Should().NotContain("class=\"lab-overview-clubs\"");
+        page.Should().NotContain("ClubsLabel");
+        page.Should().NotContain("FeedingThrowDisplay.FormatAverage(_direct.Average)");
+        toolbar.Should().Contain("class=\"lab-overview-rotation\"");
+        toolbar.Should().Contain("Rotate starting position");
+        toolbar.Should().NotContain("FeedingThrowDisplayModeToggle");
+        toolbar.Should().NotContain("@L[\"Throw display\"]");
         page.Should().NotContain("lab-statusbar");
         page.Should().NotContain("Clubs / average");
     }
@@ -227,14 +247,118 @@ public class SiteswapLabPageTests
         );
 
         page.Should().Contain("class=\"lab-overview-rotation\"");
-        page.Should().Contain("@onclick=\"() => _direct.Rotate(-1)\"");
         page.Should().Contain("@onclick=\"() => _direct.Rotate(1)\"");
+        page.Should().Contain("@onclick=\"() => _direct.Rotate(-1)\"");
         page.Should().Contain("Rotate starting position");
         page.Should().Contain("class=\"lab-start-props\"");
         page.Should().Contain("_direct.StartingClubsFor(personIndex)");
         page.Should().Contain("Start clubs");
         css.Should().Contain(".lab-start-props");
         css.Should().Contain(".lab-rotate");
+    }
+
+    [Test]
+    public void LandingBeatFor_Marks_Only_Target_Person_Not_Entire_Beat_Column()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+
+        page.Should().Contain("SelectedPassingLanding.TargetPerson == person");
+        page.Should().Contain("SelectedPassingLanding.TargetBeat");
+        page.Should().NotContain("LandingBeatFor(int _)");
+    }
+
+    [Test]
+    public void OnChipClicked_Only_Selects_Or_Deselects()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var chipClicked = page.Split("private void OnChipClicked", 2)[1]
+            .Split("private void OnChipDragStarted", 2)[0];
+
+        chipClicked.Should().Contain("ToggleCellSelection");
+        chipClicked.Should().Contain("SelectCell");
+        chipClicked.Should().Contain("_direct.HasSelection");
+        chipClicked.Should().NotContain("ApplyChipDrop");
+        chipClicked.Should().NotContain("SetLandingTarget");
+        chipClicked.Should().NotContain("CycleTarget");
+    }
+
+    [Test]
+    public void PassingChipAccessibleName_Describes_Drag_And_Drop_Targets()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var accessibleName = page.Split("private string PassingChipAccessibleName", 2)[1]
+            .Split("private string LandingSlotStateClass", 2)[0];
+
+        accessibleName.Should().Contain("_dragSourcePerson");
+        accessibleName.Should().Contain("CanSetLandingTarget");
+        accessibleName.Should().Contain("Drop on another cell to set landing target.");
+        accessibleName
+            .Should()
+            .Contain("Drop to land dragged throw from {0} beat {1} on {2} beat {3}.");
+    }
+
+    [Test]
+    public void PassingChipAccessibleName_Does_Not_Suggest_Landing_On_Click()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var accessibleName = page.Split("private string PassingChipAccessibleName", 2)[1]
+            .Split("private string LandingSlotStateClass", 2)[0];
+
+        accessibleName.Should().Contain("Landing of selected throw from");
+        accessibleName.Should().NotContain("Press to land");
+    }
+
+    [Test]
+    public void Throws_Step_Enables_Drag_And_Drop_On_Chip_Rows()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var chipRow = ReadGeneratorSource(
+            Path.Combine("Components", "Feeding", "FeedingThrowChipRow.razor")
+        );
+        var css = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
+        );
+
+        page.Should().Contain("EnableDragDrop=\"true\"");
+        page.Should().Contain("RowPersonIndex=\"@personIndex\"");
+        page.Should().Contain("ActiveDragSourcePerson=\"@_dragSourcePerson\"");
+        page.Should().Contain("ActiveDragSourceBeat=\"@_dragSourceBeat\"");
+        page.Should().Contain("IsValidDropTarget=");
+        page.Should().Contain("IsValidDropTargetForDrag");
+        page.Should().Contain("ChipDragStarted=");
+        page.Should().Contain("ChipDragEntered=");
+        page.Should().Contain("ChipDropped=");
+        page.Should().Contain("ChipDragEnded=");
+        page.Should().Contain("OnChipDragStarted");
+        page.Should().Contain("ApplyChipDrop");
+        chipRow.Should().Contain("draggable=\"@(EnableDragDrop");
+        chipRow.Should().Contain("@ondragover:preventDefault");
+        chipRow.Should().Contain("@ondrop:preventDefault");
+        chipRow.Should().Contain("is-dragging");
+        chipRow.Should().Contain("is-drop-target");
+        chipRow.Should().Contain("is-drop-invalid");
+        chipRow.Should().Contain("IsValidDropTarget");
+        chipRow.Should().Contain("ActiveDragSourcePerson");
+        chipRow.Should().Contain("RowPersonIndex");
+        chipRow.Should().Contain("aria-grabbed");
+        chipRow.Should().Contain("@onpointerdown");
+        chipRow.Should().Contain("@onpointermove");
+        chipRow.Should().Contain("@onpointerup");
+        chipRow.Should().Contain("FeedingThrowChipPointerDrag");
+        css.Should().Contain("touch-action: none");
+        css.Should().Contain(".feeding-beat.is-dragging");
+        css.Should().Contain(".feeding-beat.is-drop-target");
+        css.Should().Contain(".feeding-beat.is-drop-invalid");
     }
 
     [Test]
@@ -249,11 +373,45 @@ public class SiteswapLabPageTests
         page.Should().Contain("feeding-beat pass");
         page.Should().Contain("is-selected");
         page.Should().Contain("is-landing");
+        page.Should().Contain("is-incoming");
         page.Should().Contain("collision");
         page.Should().Contain("unfilled");
         page.Should().Contain("No incoming throw");
-        page.Should().Contain("StateClass=\"chip => LandingSlotStateClass");
+        page.Should().Contain("Incoming throw");
+        page.Should().Contain("StateClass=\"chip => PassingChipStateClass");
         page.Should().NotContain("<button class=\"feeding-beat self\"");
+
+        var legend = page.Split("class=\"lab-chip-legend\"", 2)[1].Split("</ul>", 2)[0];
+        legend.Should().Contain("class=\"lab-chip-legend-throw-display\"");
+        legend.Should().NotContain("@L[\"Throw display\"]");
+        legend
+            .Should()
+            .Contain("<FeedingThrowDisplayModeToggle @bind-Mode=\"_throwDisplayMode\" />");
+    }
+
+    [Test]
+    public void Selected_Throw_Shows_Incoming_Sources_In_Panel_And_Grid()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var css = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
+        );
+
+        page.Should().Contain("SourcesLandingAt(_direct.SelectedPerson, _direct.SelectedBeat)");
+        page.Should().Contain("SelectedIncomingLandings");
+        page.Should().Contain("IsIncomingSourceForSelection");
+        page.Should().Contain("class=\"lab-incoming-throws\"");
+        page.Should().Contain("class=\"lab-incoming-list\"");
+        page.Should().Contain("Lands from");
+        page.Should().Contain("No throws land here.");
+        page.Should().Contain("Lands on selected cell at {4} beat {5}.");
+        page.Should().Contain("PassingChipStateClass");
+
+        css.Should().Contain(".feeding-beat.is-incoming");
+        css.Should().Contain(".lab-incoming-throws");
+        css.Should().Contain(".lab-incoming-list");
     }
 
     [Test]

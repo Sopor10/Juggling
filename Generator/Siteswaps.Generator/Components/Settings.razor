@@ -4,6 +4,8 @@
 @inject ILocalStorageService LocalStorage
 @inject IJSRuntime JsRuntime
 @inject NavigationManager Navigation
+@using Siteswaps.Generator.Services
+@inject AppUpdateService AppUpdate
 @inject IStringLocalizer<Settings> L
 
 <PageTitle>@L["Settings"]</PageTitle>
@@ -102,6 +104,31 @@
                         <button type="submit" class="settings-btn-primary">@L["Save settings"]</button>
                     </div>
                 </EditForm>
+
+                <div class="settings-field settings-update-section">
+                    <p class="settings-section-label">@L["App updates"]</p>
+                    <p class="settings-update-hint">@L["App updates hint"]</p>
+                    @if (!string.IsNullOrEmpty(_updateStatusMessage))
+                    {
+                        <p class="settings-update-status" role="status">@_updateStatusMessage</p>
+                    }
+                    <div class="settings-actions">
+                        <button type="button"
+                                class="settings-btn-secondary"
+                                disabled="@_updateCheckInProgress"
+                                @onclick="CheckForUpdatesAsync">
+                            @(_updateCheckInProgress ? L["Checking for updates…"] : L["Check for updates"])
+                        </button>
+                        @if (_updateAvailable)
+                        {
+                            <button type="button"
+                                    class="settings-btn-primary"
+                                    @onclick="ApplyUpdateAsync">
+                                @L["Install update and reload"]
+                            </button>
+                        }
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -110,6 +137,9 @@
 @code {
     private SettingsDto Value { get; set; } = new();
     private string _cultureWhenOpened = AppCultures.Default;
+    private bool _updateCheckInProgress;
+    private bool _updateAvailable;
+    private string? _updateStatusMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -142,4 +172,31 @@
             Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
         }
     }
+
+    private async Task CheckForUpdatesAsync()
+    {
+        _updateCheckInProgress = true;
+        _updateStatusMessage = null;
+        _updateAvailable = false;
+
+        try
+        {
+            var result = await AppUpdate.CheckForUpdatesAsync();
+            _updateAvailable = result.Status == AppUpdateStatus.UpdateAvailable;
+            _updateStatusMessage = result.Status switch
+            {
+                AppUpdateStatus.UpToDate => L["App is up to date"].Value,
+                AppUpdateStatus.UpdateAvailable => L["Update available"].Value,
+                AppUpdateStatus.Unsupported => L["Updates not available here"].Value,
+                AppUpdateStatus.CheckFailed => result.Message ?? L["Update check failed"].Value,
+                _ => null,
+            };
+        }
+        finally
+        {
+            _updateCheckInProgress = false;
+        }
+    }
+
+    private Task ApplyUpdateAsync() => AppUpdate.ApplyUpdateAsync();
 }

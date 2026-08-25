@@ -5,7 +5,6 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Siteswap lab" xml:space="preserve"><value>Siteswap lab</value></data>
-  <data name="← Generator" xml:space="preserve"><value>← Generator</value></data>
   <data name="← swipe left/right →" xml:space="preserve"><value>← swipe left/right →</value></data>
   <data name="Back" xml:space="preserve"><value>Back</value></data>
   <data name="Next" xml:space="preserve"><value>Next</value></data>
@@ -38,7 +37,7 @@
   <data name="Throws {0}" xml:space="preserve"><value>Throws {0}</value></data>
   <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}</value></data>
   <data name="People in the same timezone throw synchronously" xml:space="preserve"><value>People in the same timezone throw synchronously</value></data>
-  <data name="{0}. Tap for next phase." xml:space="preserve"><value>{0}. Tap for next phase.</value></data>
+  <data name="{0}, TimeZone {1}. Tap for next phase." xml:space="preserve"><value>{0}, TimeZone {1}. Tap for next phase.</value></data>
   <data name="Throw display" xml:space="preserve"><value>Throw display</value></data>
   <data name="No landing slot on beat {0}" xml:space="preserve"><value>No landing slot on beat {0}</value></data>
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Choose landing slot on beat {0}</value></data>
@@ -50,10 +49,18 @@
   <data name="Starting club distribution (L / R)" xml:space="preserve"><value>Starting club distribution (L / R)</value></data>
   <data name="Start clubs {0}: left {1}, right {2}" xml:space="preserve"><value>Start clubs {0}: left {1}, right {2}</value></data>
   <data name="Start clubs" xml:space="preserve"><value>Start clubs</value></data>
-  <data name="No throw selected." xml:space="preserve"><value>No throw selected.</value></data>
+  <data name="Select a throw above to see where it lands and edit it." xml:space="preserve"><value>Select a throw above to see where it lands and edit it.</value></data>
+  <data name="Tap a throw to select it. Drag to change where it lands." xml:space="preserve"><value>Tap a throw to select it. Drag to change where it lands.</value></data>
   <data name="Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear." xml:space="preserve"><value>Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear.</value></data>
   <data name="{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}.</value></data>
+  <data name="Dragging {0} {1}, {2} beat {3}. Drop on another cell to set landing target." xml:space="preserve"><value>Dragging {0} {1}, {2} beat {3}. Drop on another cell to set landing target.</value></data>
+  <data name="Drop to land dragged throw from {0} beat {1} on {2} beat {3}." xml:space="preserve"><value>Drop to land dragged throw from {0} beat {1} on {2} beat {3}.</value></data>
   <data name="Decrease throw by period" xml:space="preserve"><value>Decrease throw by period</value></data>
   <data name="Increase throw by period" xml:space="preserve"><value>Increase throw by period</value></data>
   <data name="Period step size" xml:space="preserve"><value>Period step size</value></data>
+  <data name="±{0} = one pattern period" xml:space="preserve"><value>±{0} = one pattern period</value></data>
+  <data name="Incoming throw" xml:space="preserve"><value>Incoming throw</value></data>
+  <data name="Lands from" xml:space="preserve"><value>Lands from</value></data>
+  <data name="No throws land here." xml:space="preserve"><value>No throws land here.</value></data>
+  <data name="{0} {1}, {2} beat {3}. Lands on selected cell at {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} beat {3}. Lands on selected cell at {4} beat {5}.</value></data>
 </root>

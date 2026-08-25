@@ -1,24 +1,47 @@
 @namespace Siteswaps.Generator.Components.Feeding
+@using Microsoft.AspNetCore.Components.Web
 
 @if (Chips is null || Chips.Count == 0)
 {
     return;
 }
 
-<div class="feeding-beat-row" aria-label="@AriaLabel">
+<div class="feeding-beat-row"
+     aria-label="@AriaLabel"
+     @onpointerup="OnRowPointerUp"
+     @onpointercancel="OnRowPointerCancel">
     @foreach (var chip in Chips)
     {
         var kindClass = chip.Kind == PassOrSelf.Pass ? "pass" : "self";
         var kindTitle = KindName?.Invoke(chip.Kind) ?? (chip.Kind == PassOrSelf.Pass ? "Pass" : "Self");
         var stateClass = $"{(SelectedLocalBeat == chip.LocalBeat ? "is-selected" : null)} {(LandingLocalBeat == chip.LocalBeat ? "is-landing" : null)} {StateClass?.Invoke(chip)}";
+        var isDragging = IsDragSource(chip.LocalBeat);
+        var isDropTarget = IsDropTarget(chip.LocalBeat);
+        var isInvalidDropTarget = IsInvalidDropTarget(chip.LocalBeat);
+        var dragClass = $"{(isDragging ? "is-dragging" : null)} {(isDropTarget ? "is-drop-target" : null)} {(isInvalidDropTarget ? "is-drop-invalid" : null)}";
         @if (ChipClicked.HasDelegate)
         {
             <button type="button"
-                    class="feeding-beat @kindClass @stateClass"
+                    class="feeding-beat @kindClass @stateClass @dragClass"
                     title="@kindTitle"
                     aria-label="@(AccessibleName?.Invoke(chip) ?? $"{chip.Display} {kindTitle}")"
                     aria-pressed="@(SelectedLocalBeat == chip.LocalBeat ? "true" : "false")"
-                    @onclick="() => ChipClicked.InvokeAsync(chip.LocalBeat)">
+                    aria-grabbed="@(isDragging ? "true" : "false")"
+                    draggable="@(EnableDragDrop ? "true" : "false")"
+                    @onclick="() => OnChipClicked(chip.LocalBeat)"
+                    @ondragstart="e => OnDragStart(e, chip.LocalBeat)"
+                    @ondragenter="() => OnDragEnter(chip.LocalBeat)"
+                    @ondragleave="() => OnDragLeave(chip.LocalBeat)"
+                    @ondragover:preventDefault="@EnableDragDrop"
+                    @ondrop:preventDefault="@EnableDragDrop"
+                    @ondrop="e => OnDrop(e, chip.LocalBeat)"
+                    @ondragend="OnDragEnd"
+                    @onpointerdown="e => OnChipPointerDown(e, chip.LocalBeat)"
+                    @onpointermove="e => OnChipPointerMove(e, chip.LocalBeat)"
+                    @onpointermove:preventDefault="@EnableDragDrop"
+                    @onpointerup="e => OnChipPointerUp(e, chip.LocalBeat)"
+                    @onpointerleave="() => OnChipPointerLeave(chip.LocalBeat)"
+                    @onpointercancel="OnChipPointerCancel">
                 <span class="feeding-beat-throw" aria-hidden="true">@chip.Display</span>
             </button>
         }
@@ -55,4 +78,257 @@
 
     [Parameter]
     public Func<FeedingThrowDisplay.Chip, string>? StateClass { get; set; }
+
+    [Parameter]
+    public bool EnableDragDrop { get; set; }
+
+    [Parameter]
+    public int? DragSourceBeat { get; set; }
+
+    [Parameter]
+    public int RowPersonIndex { get; set; }
+
+    [Parameter]
+    public int? ActiveDragSourcePerson { get; set; }
+
+    [Parameter]
+    public int? ActiveDragSourceBeat { get; set; }
+
+    [Parameter]
+    public int? DropTargetBeat { get; set; }
+
+    [Parameter]
+    public Func<int, bool>? IsValidDropTarget { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ChipDragStarted { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ChipDragEntered { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ChipDropped { get; set; }
+
+    [Parameter]
+    public EventCallback ChipDragEnded { get; set; }
+
+    private int? _pointerPendingBeat;
+    private double _pointerStartX;
+    private double _pointerStartY;
+    private long _pointerId;
+    private bool _pointerDragStarted;
+    private bool _suppressClick;
+
+    private bool IsDragSource(int beat) => EnableDragDrop && DragSourceBeat == beat;
+
+    private bool IsDraggingActive =>
+        EnableDragDrop && ActiveDragSourcePerson is not null && ActiveDragSourceBeat is not null;
+
+    private bool IsSourceCell(int beat) =>
+        ActiveDragSourcePerson == RowPersonIndex && ActiveDragSourceBeat == beat;
+
+    private bool IsDropTarget(int beat)
+    {
+        if (!IsDraggingActive || IsSourceCell(beat))
+        {
+            return false;
+        }
+
+        return IsValidDropTarget?.Invoke(beat) ?? false;
+    }
+
+    private bool IsInvalidDropTarget(int beat)
+    {
+        if (!IsDraggingActive || IsSourceCell(beat))
+        {
+            return false;
+        }
+
+        return !(IsValidDropTarget?.Invoke(beat) ?? false);
+    }
+
+    private async Task OnChipClicked(int beat)
+    {
+        if (_suppressClick)
+        {
+            _suppressClick = false;
+            return;
+        }
+
+        await ChipClicked.InvokeAsync(beat);
+    }
+
+    private async Task OnDragStart(DragEventArgs e, int beat)
+    {
+        if (!EnableDragDrop)
+        {
+            return;
+        }
+
+        if (e.DataTransfer is not null)
+        {
+            e.DataTransfer.EffectAllowed = "move";
+        }
+
+        await ChipDragStarted.InvokeAsync(beat);
+    }
+
+    private Task OnDragEnter(int beat) =>
+        EnableDragDrop ? ChipDragEntered.InvokeAsync(beat) : Task.CompletedTask;
+
+    private Task OnDragLeave(int beat) =>
+        EnableDragDrop && DropTargetBeat == beat
+            ? ChipDragEntered.InvokeAsync(-1)
+            : Task.CompletedTask;
+
+    private async Task OnDrop(DragEventArgs e, int beat)
+    {
+        if (!EnableDragDrop)
+        {
+            return;
+        }
+
+        await ChipDropped.InvokeAsync(beat);
+    }
+
+    private Task OnDragEnd() => EnableDragDrop ? ChipDragEnded.InvokeAsync() : Task.CompletedTask;
+
+    private void OnChipPointerDown(PointerEventArgs e, int beat)
+    {
+        if (!EnableDragDrop || !FeedingThrowChipPointerDrag.IsTouchLikePointer(e.PointerType))
+        {
+            return;
+        }
+
+        _pointerPendingBeat = beat;
+        _pointerStartX = e.ClientX;
+        _pointerStartY = e.ClientY;
+        _pointerId = e.PointerId;
+        _pointerDragStarted = false;
+        _suppressClick = false;
+    }
+
+    private async Task OnChipPointerMove(PointerEventArgs e, int beat)
+    {
+        if (!EnableDragDrop || e.PointerId != _pointerId)
+        {
+            return;
+        }
+
+        if (!FeedingThrowChipPointerDrag.IsTouchLikePointer(e.PointerType))
+        {
+            return;
+        }
+
+        if (_pointerPendingBeat is not null && !_pointerDragStarted && !IsDraggingActive)
+        {
+            if (
+                !FeedingThrowChipPointerDrag.ExceedsStartThreshold(
+                    _pointerStartX,
+                    _pointerStartY,
+                    e.ClientX,
+                    e.ClientY
+                )
+            )
+            {
+                return;
+            }
+
+            await ChipDragStarted.InvokeAsync(_pointerPendingBeat.Value);
+            _pointerDragStarted = true;
+            _suppressClick = true;
+        }
+
+        if (IsDraggingActive || _pointerDragStarted)
+        {
+            await ChipDragEntered.InvokeAsync(beat);
+        }
+    }
+
+    private async Task OnChipPointerUp(PointerEventArgs e, int beat)
+    {
+        if (!EnableDragDrop || e.PointerId != _pointerId)
+        {
+            return;
+        }
+
+        if (!FeedingThrowChipPointerDrag.IsTouchLikePointer(e.PointerType))
+        {
+            return;
+        }
+
+        if (IsDraggingActive || _pointerDragStarted)
+        {
+            await ChipDropped.InvokeAsync(beat);
+            await ChipDragEnded.InvokeAsync();
+            _suppressClick = true;
+        }
+
+        ClearPointerState();
+    }
+
+    private Task OnChipPointerLeave(int beat)
+    {
+        if (!EnableDragDrop || (!IsDraggingActive && !_pointerDragStarted))
+        {
+            return Task.CompletedTask;
+        }
+
+        return DropTargetBeat == beat ? ChipDragEntered.InvokeAsync(-1) : Task.CompletedTask;
+    }
+
+    private async Task OnRowPointerUp(PointerEventArgs e)
+    {
+        if (!EnableDragDrop || e.PointerId != _pointerId)
+        {
+            return;
+        }
+
+        if (!FeedingThrowChipPointerDrag.IsTouchLikePointer(e.PointerType))
+        {
+            return;
+        }
+
+        if (!_pointerDragStarted && !IsDraggingActive)
+        {
+            ClearPointerState();
+            return;
+        }
+
+        if (DropTargetBeat is int targetBeat)
+        {
+            await ChipDropped.InvokeAsync(targetBeat);
+        }
+
+        await ChipDragEnded.InvokeAsync();
+        _suppressClick = true;
+        ClearPointerState();
+    }
+
+    private Task OnChipPointerCancel(PointerEventArgs e) => EndPointerDragFromCancel(e.PointerId);
+
+    private Task OnRowPointerCancel(PointerEventArgs e) => EndPointerDragFromCancel(e.PointerId);
+
+    private async Task EndPointerDragFromCancel(long pointerId)
+    {
+        if (pointerId != _pointerId)
+        {
+            return;
+        }
+
+        if (IsDraggingActive || _pointerDragStarted)
+        {
+            await ChipDragEnded.InvokeAsync();
+        }
+
+        ClearPointerState();
+        _suppressClick = false;
+    }
+
+    private void ClearPointerState()
+    {
+        _pointerPendingBeat = null;
+        _pointerDragStarted = false;
+        _pointerId = 0;
+    }
 }
