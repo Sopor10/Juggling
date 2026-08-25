@@ -53,7 +53,8 @@ function shouldUseNetworkFirst(request, requestUrl) {
     const path = requestUrl.pathname;
     return path.endsWith('/index.html')
         || path.endsWith('index.html')
-        || path.endsWith('blazor.boot.json')
+        || path.endsWith('service-worker-assets.js')
+        || path.endsWith('dotnet.js')
         || path.includes('/_framework/');
 }
 
