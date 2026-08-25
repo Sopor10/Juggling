@@ -28,6 +28,21 @@ dump_aspire_logs() {
       done
 }
 
+echo "==> prewarm Aspire CLI bundle"
+prewarm_output="$(mktemp)"
+if ! aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach >"${prewarm_output}" 2>&1; then
+  cat "${prewarm_output}" >&2
+  dump_aspire_logs
+  exit 1
+fi
+if ! aspire stop --apphost "${APPHOST}" --non-interactive >>"${prewarm_output}" 2>&1; then
+  cat "${prewarm_output}" >&2
+  dump_aspire_logs
+  exit 1
+fi
+cat "${prewarm_output}"
+rm -f "${prewarm_output}"
+
 echo "==> aspire start"
 # Keep a supervising shell process for the duration of this script so orphan
 # detection does not race the short-lived `aspire start` parent.
