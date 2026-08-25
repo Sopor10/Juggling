@@ -13,7 +13,7 @@ TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
 POLL_SECS=5
 
 cleanup() {
-  aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
+  timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
