@@ -183,6 +183,17 @@ export function activateFocusTrap(element) {
       return;
     }
 
+    const activeIndex = focusable.indexOf(active);
+    if (activeIndex === -1) {
+      event.preventDefault();
+      if (event.shiftKey) {
+        last.focus();
+      } else {
+        first.focus();
+      }
+      return;
+    }
+
     if (event.shiftKey && active === first) {
       event.preventDefault();
       last.focus();
