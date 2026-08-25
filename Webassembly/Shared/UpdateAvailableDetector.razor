@@ -1,37 +1,51 @@
-﻿@inject IJSRuntime _jsRuntime
+﻿@inject AppUpdateService AppUpdate
+@inject IStringLocalizer<UpdateAvailableDetector> L
+@implements IAsyncDisposable
 
 @if (_newVersionAvailable)
 {
-    <button type="button" class="btn btn-warning shadow floating-update-button" onclick="window.location.reload()">
-        A new version of the application is available. Click here to reload.
+    <button type="button"
+            class="btn btn-warning shadow floating-update-button"
+            @onclick="ApplyUpdateAsync">
+        @L["Update available – reload"]
     </button>
 }
 
 @code {
+    private DotNetObjectReference<UpdateAvailableDetector>? _self;
+    private bool _newVersionAvailable;
 
-    private bool _newVersionAvailable = false;
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await RegisterForUpdateAvailableNotification();
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _self = DotNetObjectReference.Create(this);
+        await AppUpdate.SubscribeAsync(_self);
     }
 
-    private async Task RegisterForUpdateAvailableNotification()
-    {
-        await _jsRuntime.InvokeAsync<object>(
-            identifier: "registerForUpdateAvailableNotification",
-            DotNetObjectReference.Create(this),
-            nameof(OnUpdateAvailable));
-    }
-
-    [JSInvokable(nameof(OnUpdateAvailable))]
+    [JSInvokable]
     public Task OnUpdateAvailable()
     {
         _newVersionAvailable = true;
-
-        StateHasChanged();
-
-        return Task.CompletedTask;
+        return InvokeAsync(StateHasChanged);
     }
 
+    private async Task ApplyUpdateAsync() => await AppUpdate.ApplyUpdateAsync();
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_self is not null)
+        {
+            try
+            {
+                await AppUpdate.UnsubscribeAsync(_self);
+            }
+            catch (JSDisconnectedException) { }
+
+            _self.Dispose();
+        }
+    }
 }

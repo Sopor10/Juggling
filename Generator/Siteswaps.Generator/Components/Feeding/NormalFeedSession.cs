@@ -667,7 +667,11 @@ public sealed class NormalFeedSession
 
         if (role == "A")
         {
-            clubs = StartingClubDistribution.ForJuggler(FeederSiteswap.Items, Topology.A.TimeZone);
+            clubs = StartingClubDistribution.ForJuggler(
+                FeederSiteswap.Items,
+                Topology.A.TimeZone,
+                NumberOfJugglersInPair
+            );
             return true;
         }
 
@@ -677,7 +681,11 @@ public sealed class NormalFeedSession
             return false;
         }
 
-        clubs = StartingClubDistribution.ForJuggler(siteswap.Items, Topology[role].TimeZone);
+        clubs = StartingClubDistribution.ForJuggler(
+            siteswap.Items,
+            Topology[role].TimeZone,
+            NumberOfJugglersInPair
+        );
         return true;
     }
 

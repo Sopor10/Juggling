@@ -51,6 +51,12 @@ jobs:
           cat > publish/wwwroot/sw-registrator.js <<'EOF'
           window.updateAvailable = Promise.resolve(false);
           window.registerForUpdateAvailableNotification = () => {};
+          window.appUpdate = {
+            checkForUpdates: async () => ({ status: 'Unsupported' }),
+            applyUpdate: async () => {},
+            subscribe: () => {},
+            unsubscribe: () => {}
+          };
           EOF
           rm -f publish/wwwroot/service-worker.js \
                 publish/wwwroot/service-worker.js.br \
