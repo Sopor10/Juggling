@@ -1,0 +1,16 @@
+{
+  "id": "aspire-cli",
+  "version": "0.1.0",
+  "name": "Aspire CLI",
+  "description": "Installs the pinned Aspire CLI after the .NET feature.",
+  "options": {
+    "version": {
+      "type": "string",
+      "default": "13.5.2",
+      "description": "Aspire CLI version"
+    }
+  },
+  "installsAfter": [
+    "ghcr.io/devcontainers/features/dotnet"
+  ]
+}

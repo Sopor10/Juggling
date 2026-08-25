@@ -19,5 +19,3 @@ if [[ -s /host-hermes-auth.json ]]; then
 else
   echo "No host Hermes Codex auth found; skipping Pi auth sync (Pi remains installed)."
 fi
-
-pi --version

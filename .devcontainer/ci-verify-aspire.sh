@@ -3,7 +3,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-eval "$(dotnetup env script --shell bash --dotnet --dotnetup | sed '/^hash -d /d')"
 export SSL_CERT_DIR="${SSL_CERT_DIR:-${HOME}/.aspnet/dev-certs/trust:/etc/ssl/certs}"
 
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -12,9 +11,6 @@ cd "${ROOT}"
 APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
 POLL_SECS=5
-
-echo "==> aspire version"
-aspire --version
 
 echo "==> aspire start"
 # Keep a supervising shell process for the duration of this script so orphan

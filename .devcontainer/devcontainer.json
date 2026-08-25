@@ -1,13 +1,14 @@
 {
   "name": "Siteswaps",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
-  },
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "10.0.400"
+    },
     "ghcr.io/devcontainers/features/node:2": {
       "version": "22"
     },
+    "./features/aspire-cli": {},
     "./features/pi-coding-agent": {},
     "ghcr.io/devcontainers/features/powershell:2": {}
   },
