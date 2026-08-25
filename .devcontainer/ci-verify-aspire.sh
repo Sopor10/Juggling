@@ -12,15 +12,33 @@ APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
 POLL_SECS=5
 
-echo "==> aspire start"
-# Keep a supervising shell process for the duration of this script so orphan
-# detection does not race the short-lived `aspire start` parent.
-aspire start --apphost "${APPHOST}" --non-interactive --nologo --format Json
-
 cleanup() {
   aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
+
+dump_aspire_logs() {
+  echo "==> Aspire CLI logs" >&2
+  find "${HOME}/.aspire/logs" -maxdepth 1 -type f -printf "%T@ %p\n" 2>/dev/null \
+    | sort -nr \
+    | cut -d' ' -f2- \
+    | while IFS= read -r log_file; do
+        echo "--- ${log_file} (last 200 lines)" >&2
+        tail -200 "${log_file}" >&2 || true
+      done
+}
+
+echo "==> aspire start"
+# Keep a supervising shell process for the duration of this script so orphan
+# detection does not race the short-lived `aspire start` parent.
+start_output="$(mktemp)"
+if ! aspire start --apphost "${APPHOST}" --non-interactive --nologo --format Json 2>&1 | tee "${start_output}"; then
+  echo "Failed to start the Aspire AppHost." >&2
+  cat "${start_output}" >&2
+  dump_aspire_logs
+  exit 1
+fi
+rm -f "${start_output}"
 
 echo "==> waiting for AppHost (timeout ${TIMEOUT_SECS}s)"
 deadline=$((SECONDS + TIMEOUT_SECS))
