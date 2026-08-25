@@ -5,10 +5,6 @@
     "context": ".."
   },
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:4": {
-      "moby": true,
-      "dockerDashComposeVersion": "v2"
-    },
     "ghcr.io/devcontainers/features/node:2": {
       "version": "22"
     },
