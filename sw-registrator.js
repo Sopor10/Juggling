@@ -42,23 +42,29 @@
     }
 
     function getBaseHref() {
-        return document.querySelector('base')?.href || `${window.location.origin}/`;
+        const href = document.querySelector('base')?.href || `${window.location.origin}/`;
+        return href.endsWith('/') ? href : `${href}/`;
     }
 
-    function getBootJsonUrl() {
-        const url = new URL('_framework/blazor.boot.json', getBaseHref());
+    function getAssetsManifestUrl() {
+        const url = new URL('service-worker-assets.js', getBaseHref());
         url.searchParams.set('_', Date.now().toString());
         return url;
     }
 
     async function fetchBootFingerprint() {
-        const response = await fetch(getBootJsonUrl(), { cache: 'no-store' });
+        const response = await fetch(getAssetsManifestUrl(), { cache: 'no-store' });
         if (!response.ok) {
-            throw new Error(`blazor.boot.json fetch failed: ${response.status}`);
+            throw new Error(`service-worker-assets.js fetch failed: ${response.status}`);
         }
 
-        const boot = await response.json();
-        return boot?.resources?.hash ?? JSON.stringify(boot?.resources ?? boot);
+        const text = await response.text();
+        const versionMatch = text.match(/"version"\s*:\s*"([^"]+)"/);
+        if (versionMatch) {
+            return versionMatch[1];
+        }
+
+        throw new Error('service-worker-assets.js missing version fingerprint');
     }
 
     async function captureCurrentBootFingerprint() {

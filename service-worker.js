@@ -1,4 +1,4 @@
-/* Manifest version: yHBpZ0S1 */
+/* Manifest version: TyH7XMSw */
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
@@ -54,7 +54,8 @@ function shouldUseNetworkFirst(request, requestUrl) {
     const path = requestUrl.pathname;
     return path.endsWith('/index.html')
         || path.endsWith('index.html')
-        || path.endsWith('blazor.boot.json')
+        || path.endsWith('service-worker-assets.js')
+        || path.endsWith('dotnet.js')
         || path.includes('/_framework/');
 }
 
