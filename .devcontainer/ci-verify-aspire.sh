@@ -28,14 +28,72 @@ dump_aspire_logs() {
       done
 }
 
-echo "==> prewarm Aspire CLI bundle"
+echo "==> prewarm Aspire CLI bundle via direct AppHost run"
 prewarm_output="$(mktemp)"
-if ! aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach >"${prewarm_output}" 2>&1; then
+direct_pid=""
+signal_tree() {
+  local signal="$1"
+  local pid="$2"
+  local child
+  for child in $(pgrep -P "${pid}" 2>/dev/null || true); do
+    signal_tree "${signal}" "${child}"
+  done
+  kill -"${signal}" "${pid}" 2>/dev/null || true
+}
+cleanup_direct() {
+  if [[ -n "${direct_pid}" ]] && kill -0 "${direct_pid}" 2>/dev/null; then
+    signal_tree INT "${direct_pid}"
+    sleep 2
+    signal_tree TERM "${direct_pid}"
+    sleep 2
+    signal_tree KILL "${direct_pid}"
+  fi
+}
+trap 'cleanup_direct; cleanup' EXIT
+
+ASPIRE_SUPPRESS_CLI_RUN_HOOK=true dotnet run \
+  --project "${APPHOST}" \
+  --no-launch-profile \
+  >"${prewarm_output}" 2>&1 &
+direct_pid=$!
+prewarm_deadline=$((SECONDS + 60))
+prewarm_started=false
+while kill -0 "${direct_pid}" 2>/dev/null; do
+  if grep -q "Distributed application started\." "${prewarm_output}"; then
+    prewarm_started=true
+    break
+  fi
+  if (( SECONDS >= prewarm_deadline )); then
+    break
+  fi
+  sleep 1
+done
+if [[ "${prewarm_started}" != true ]]; then
+  wait "${direct_pid}" 2>/dev/null || true
   cat "${prewarm_output}" >&2
   dump_aspire_logs
   exit 1
 fi
-if ! aspire stop --apphost "${APPHOST}" --non-interactive >>"${prewarm_output}" 2>&1; then
+signal_tree INT "${direct_pid}"
+for _ in {1..10}; do
+  if ! kill -0 "${direct_pid}" 2>/dev/null; then
+    break
+  fi
+  sleep 1
+done
+if kill -0 "${direct_pid}" 2>/dev/null; then
+  signal_tree TERM "${direct_pid}"
+  sleep 2
+fi
+if kill -0 "${direct_pid}" 2>/dev/null; then
+  signal_tree KILL "${direct_pid}"
+fi
+set +e
+wait "${direct_pid}"
+direct_exit=$?
+set -e
+direct_pid=""
+if [[ "${direct_exit}" -ne 0 && "${direct_exit}" -ne 130 && "${direct_exit}" -ne 143 ]]; then
   cat "${prewarm_output}" >&2
   dump_aspire_logs
   exit 1
@@ -43,6 +101,7 @@ fi
 cat "${prewarm_output}"
 rm -f "${prewarm_output}"
 
+trap cleanup EXIT
 echo "==> aspire start"
 # Keep a supervising shell process for the duration of this script so orphan
 # detection does not race the short-lived `aspire start` parent.
