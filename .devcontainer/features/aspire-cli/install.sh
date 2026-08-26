@@ -14,6 +14,10 @@ dotnet tool install --tool-path "${ASPIRE_TOOL_PATH}" Aspire.Cli --version "${AS
 chmod 0755 "$(readlink -f "${ASPIRE_TOOL_PATH}/aspire")"
 ln -sfn "${ASPIRE_TOOL_PATH}/aspire" /usr/local/bin/aspire
 
+# Materialize the embedded bundle during the serialized feature build. The
+# runtime verification keeps its setup call as a defensive idempotent check.
+aspire setup --non-interactive --nologo
+
 REMOTE_USER="${_REMOTE_USER:-vscode}"
 REMOTE_GROUP="$(id -gn "${REMOTE_USER}")"
 chown -R "${REMOTE_USER}:${REMOTE_GROUP}" "${ASPIRE_TOOL_PATH}"
