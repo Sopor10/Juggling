@@ -56,6 +56,8 @@
   <data name="Throw display" xml:space="preserve"><value>Wurfanzeige</value></data>
   <data name="No landing slot on beat {0}" xml:space="preserve"><value>Kein Landungs-Slot auf Beat {0}</value></data>
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Landungs-Slot auf Beat {0} wählen</value></data>
+  <data name="Choose landing target" xml:space="preserve"><value>Landungsziel wählen</value></data>
+  <data name="Land on {0}" xml:space="preserve"><value>Auf {0} landen</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Nicht verfügbar</value></data>
   <data name="{0} clubs" xml:space="preserve"><value>{0} Keulen</value></data>
   <data name="Rotate starting position" xml:space="preserve"><value>Startposition rotieren</value></data>
@@ -65,7 +67,7 @@
   <data name="Start clubs {0}: left {1}, right {2}" xml:space="preserve"><value>Startkeulen {0}: links {1}, rechts {2}</value></data>
   <data name="Start clubs" xml:space="preserve"><value>Startkeulen</value></data>
   <data name="Select a throw above to see where it lands and edit it." xml:space="preserve"><value>Wähle oben einen Wurf aus, um zu sehen, wo er landet, und ihn zu bearbeiten.</value></data>
-  <data name="Tap a throw to select it. Drag to change where it lands." xml:space="preserve"><value>Tippe einen Wurf an, um ihn auszuwählen. Ziehe, um das Landungsziel zu ändern.</value></data>
+  <data name="Tap a throw to select it. Drag to change where it lands." xml:space="preserve"><value>Tippe einen Wurf an. Mit +/− und Ziel-Buttons bearbeiten. Ziehen ändert den Landungs-Beat.</value></data>
   <data name="Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear." xml:space="preserve"><value>Ausgewählter Wurf {0} {1}, {2} Beat {3}. Landet bei {4} auf Beat {5}. Drücken zum Abwählen.</value></data>
   <data name="{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} Beat {3}. Landung des ausgewählten Wurfs von {4} Beat {5}.</value></data>
   <data name="Dragging {0} {1}, {2} beat {3}. Drop on another cell to set landing target." xml:space="preserve"><value>Ziehe {0} {1}, {2} Beat {3}. Auf eine andere Zelle ablegen, um das Landungsziel zu setzen.</value></data>

@@ -184,11 +184,7 @@ public sealed class PassingEditorState
     {
         if (sourcePerson == targetPerson && sourceBeat == targetBeat)
         {
-            if (HasSelection && SelectedPerson == sourcePerson && SelectedBeat == sourceBeat)
-            {
-                ToggleCellSelection(sourcePerson, sourceBeat);
-            }
-
+            SetSelection(sourcePerson, sourceBeat);
             return;
         }
 
@@ -197,7 +193,7 @@ public sealed class PassingEditorState
             return;
         }
 
-        SelectCell(targetPerson, targetBeat);
+        SetSelection(sourcePerson, sourceBeat);
     }
 
     public void ToggleCellSelection(int person, int beat)

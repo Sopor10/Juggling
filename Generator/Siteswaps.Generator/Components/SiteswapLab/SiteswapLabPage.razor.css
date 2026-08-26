@@ -15,6 +15,15 @@
 .lab-passing-overview {
     --lab-chip-size: 48px;
     --lab-chip-gap: 10px;
+    --lab-throw-step-height: 32px;
+    --lab-throw-target-height: 28px;
+    --lab-throw-editor-gap: 4px;
+    --lab-throw-editor-chip-offset: calc(
+        var(--lab-throw-step-height)
+        + var(--lab-throw-editor-gap)
+        + var(--lab-throw-target-height)
+        + var(--lab-throw-editor-gap)
+    );
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -31,12 +40,14 @@
     max-width: 100%;
     overflow-x: auto;
     padding: 8px 2px 12px;
+    touch-action: none;
 }
 
 ::deep .feeding-beat-row {
     display: flex;
     gap: var(--lab-chip-gap, 10px);
     width: max-content;
+    touch-action: none;
 }
 
 ::deep .feeding-beat {
@@ -93,6 +104,109 @@
     box-shadow:
         0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent),
         inset 0 0 0 2px color-mix(in srgb, var(--wizard-purple-500) 40%, transparent);
+}
+
+::deep .feeding-beat-row-editing {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+::deep .feeding-beat-step-row,
+::deep .feeding-beat-chip-row {
+    display: flex;
+    gap: var(--lab-chip-gap, 10px);
+    width: max-content;
+}
+
+::deep .feeding-beat-step,
+::deep .feeding-beat-step-spacer {
+    box-sizing: border-box;
+    width: var(--lab-chip-size, 48px);
+    min-width: var(--lab-chip-size, 48px);
+}
+
+::deep .feeding-beat-step-spacer {
+    min-height: 32px;
+}
+
+::deep .feeding-beat-step {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+::deep .feeding-beat-step:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+::deep .feeding-beat-target-row,
+::deep .feeding-beat-target-group {
+    display: flex;
+    gap: 4px;
+    width: max-content;
+}
+
+::deep .feeding-beat-target-row {
+    gap: var(--lab-chip-gap, 10px);
+    min-height: 28px;
+}
+
+::deep .feeding-beat-target-spacer {
+    min-height: 28px;
+}
+
+::deep .feeding-beat-target-placeholder {
+    display: block;
+    width: 100%;
+    min-height: 28px;
+}
+
+::deep .feeding-beat-target-group {
+    box-sizing: border-box;
+    width: var(--lab-chip-size, 48px);
+    min-width: var(--lab-chip-size, 48px);
+    justify-content: center;
+}
+
+::deep .feeding-beat-target-pill {
+    display: inline-flex;
+    min-width: 20px;
+    min-height: 28px;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--wizard-purple-200);
+    border-radius: 8px;
+    background: white;
+    color: var(--wizard-purple-700);
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-size: .82rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+::deep .feeding-beat-target-pill.active {
+    border-color: var(--wizard-orange);
+    background: color-mix(in srgb, var(--wizard-orange) 22%, white);
+    color: var(--wizard-purple-950);
+}
+
+::deep .feeding-beat-target-pill:disabled {
+    opacity: 1;
+    cursor: default;
 }
 
 ::deep .feeding-beat[draggable="true"] {
@@ -448,6 +562,32 @@
     align-items: center;
     gap: var(--lab-chip-gap, 10px);
     margin-bottom: 8px;
+}
+
+.lab-overview-row.is-editing-throw {
+    align-items: flex-start;
+}
+
+.lab-overview-meta {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--lab-chip-gap, 10px);
+}
+
+.lab-overview-row.is-editing-throw .lab-overview-meta {
+    height: var(--lab-chip-size, 48px);
+    margin-top: var(--lab-throw-editor-chip-offset);
+}
+
+.lab-overview-row.is-editing-throw .lab-overview-person {
+    align-self: stretch;
+    align-items: center;
+}
+
+.lab-overview-row.is-editing-throw .lab-start-props {
+    height: var(--lab-chip-size, 48px);
+    min-height: var(--lab-chip-size, 48px);
 }
 
 .lab-overview-person {

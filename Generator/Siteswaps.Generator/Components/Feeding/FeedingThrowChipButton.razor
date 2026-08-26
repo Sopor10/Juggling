@@ -1,0 +1,124 @@
+@namespace Siteswaps.Generator.Components.Feeding
+@using Microsoft.AspNetCore.Components.Web
+
+@if (ChipClicked.HasDelegate)
+{
+    <button type="button"
+            class="feeding-beat @KindClass @StateClass @DragClass"
+            title="@KindTitle"
+            aria-label="@AccessibleName"
+            aria-pressed="@(IsSelected ? "true" : "false")"
+            aria-grabbed="@(IsDragging ? "true" : "false")"
+            draggable="@(EnableDragDrop ? "true" : "false")"
+            data-chip-beat="@(EnableDragDrop ? Chip.LocalBeat : null)"
+            @onclick="OnClick"
+            @ondragstart="OnDragStart"
+            @ondragenter="OnDragEnter"
+            @ondragleave="OnDragLeave"
+            @ondragover:preventDefault="@EnableDragDrop"
+            @ondrop:preventDefault="@EnableDragDrop"
+            @ondrop="OnDrop"
+            @ondragend="OnDragEnd"
+            @onpointerdown="OnPointerDown"
+            @onpointermove="OnPointerMove"
+            @onpointermove:preventDefault="@PreventPointerMoveDefault"
+            @onpointerup="OnPointerUp"
+            @onpointerup:stopPropagation="true"
+            @onpointerleave="OnPointerLeave"
+            @onpointercancel="OnPointerCancel">
+        <span class="feeding-beat-throw" aria-hidden="true">@Chip.Display</span>
+    </button>
+}
+else
+{
+    <div class="feeding-beat @KindClass" title="@KindTitle" aria-label="@AccessibleName">
+        <span class="feeding-beat-throw">@Chip.Display</span>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public FeedingThrowDisplay.Chip Chip { get; set; }
+
+    [Parameter]
+    public string KindClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public string KindTitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public string StateClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public string DragClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public string AccessibleName { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool IsSelected { get; set; }
+
+    [Parameter]
+    public bool IsDragging { get; set; }
+
+    [Parameter]
+    public bool EnableDragDrop { get; set; }
+
+    [Parameter]
+    public bool PreventPointerMoveDefault { get; set; }
+
+    [Parameter]
+    public EventCallback ChipClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<DragEventArgs> DragStart { get; set; }
+
+    [Parameter]
+    public EventCallback DragEnter { get; set; }
+
+    [Parameter]
+    public EventCallback DragLeave { get; set; }
+
+    [Parameter]
+    public EventCallback<DragEventArgs> Drop { get; set; }
+
+    [Parameter]
+    public EventCallback DragEnd { get; set; }
+
+    [Parameter]
+    public EventCallback<PointerEventArgs> PointerDown { get; set; }
+
+    [Parameter]
+    public EventCallback<PointerEventArgs> PointerMove { get; set; }
+
+    [Parameter]
+    public EventCallback<PointerEventArgs> PointerUp { get; set; }
+
+    [Parameter]
+    public EventCallback PointerLeave { get; set; }
+
+    [Parameter]
+    public EventCallback<PointerEventArgs> PointerCancel { get; set; }
+
+    private Task OnClick() => ChipClicked.InvokeAsync();
+
+    private Task OnDragStart(DragEventArgs e) => DragStart.InvokeAsync(e);
+
+    private Task OnDragEnter() => DragEnter.InvokeAsync();
+
+    private Task OnDragLeave() => DragLeave.InvokeAsync();
+
+    private Task OnDrop(DragEventArgs e) => Drop.InvokeAsync(e);
+
+    private Task OnDragEnd() => DragEnd.InvokeAsync();
+
+    private Task OnPointerDown(PointerEventArgs e) => PointerDown.InvokeAsync(e);
+
+    private Task OnPointerMove(PointerEventArgs e) => PointerMove.InvokeAsync(e);
+
+    private Task OnPointerUp(PointerEventArgs e) => PointerUp.InvokeAsync(e);
+
+    private Task OnPointerLeave() => PointerLeave.InvokeAsync();
+
+    private Task OnPointerCancel(PointerEventArgs e) => PointerCancel.InvokeAsync(e);
+}
