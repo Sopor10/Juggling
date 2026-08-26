@@ -139,12 +139,37 @@ const focusableSelector = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
-function getFocusableWithin(element) {
-  return [...element.querySelectorAll(focusableSelector)].filter(
-    (candidate) =>
-      candidate instanceof HTMLElement &&
-      candidate.getClientRects().length > 0,
+function isFocusableCandidate(candidate) {
+  return (
+    candidate instanceof HTMLElement &&
+    candidate.getClientRects().length > 0 &&
+    !candidate.closest('[aria-hidden="true"]')
   );
+}
+
+function getFocusableWithin(element) {
+  return [...element.querySelectorAll(focusableSelector)].filter(isFocusableCandidate);
+}
+
+function setWizardBackgroundInert(inert) {
+  const selectors = [
+    '.wizard-steps',
+    '.wizard-nav',
+    '.wizard-dots',
+    '.wizard-swipe-hint',
+  ];
+
+  for (const selector of selectors) {
+    document.querySelectorAll(selector).forEach((el) => {
+      if (el instanceof HTMLElement) {
+        if (inert) {
+          el.setAttribute('inert', '');
+        } else {
+          el.removeAttribute('inert');
+        }
+      }
+    });
+  }
 }
 
 export function activateFocusTrap(element) {
@@ -184,33 +209,39 @@ export function activateFocusTrap(element) {
     }
 
     const activeIndex = focusable.indexOf(active);
-    if (activeIndex === -1) {
+
+    if (event.shiftKey) {
       event.preventDefault();
-      if (event.shiftKey) {
+      if (activeIndex <= 0) {
         last.focus();
       } else {
-        first.focus();
+        focusable[activeIndex - 1].focus();
       }
       return;
     }
 
-    if (event.shiftKey && active === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault();
+    event.preventDefault();
+    if (activeIndex === -1 || activeIndex >= focusable.length - 1) {
       first.focus();
+    } else {
+      focusable[activeIndex + 1].focus();
     }
   };
 
   document.addEventListener('keydown', onKeyDown, true);
-  focusTrapHandlers.set(element, onKeyDown);
+  element.addEventListener('keydown', onKeyDown, true);
+  setWizardBackgroundInert(true);
+  focusTrapHandlers.set(element, () => {
+    document.removeEventListener('keydown', onKeyDown, true);
+    element.removeEventListener('keydown', onKeyDown, true);
+    setWizardBackgroundInert(false);
+  });
 }
 
 export function deactivateFocusTrap(element) {
-  const handler = focusTrapHandlers.get(element);
-  if (handler) {
-    document.removeEventListener('keydown', handler, true);
+  const cleanup = focusTrapHandlers.get(element);
+  if (cleanup) {
+    cleanup();
     focusTrapHandlers.delete(element);
   }
 }
