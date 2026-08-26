@@ -184,22 +184,22 @@ export function activateFocusTrap(element) {
     }
 
     const activeIndex = focusable.indexOf(active);
-    if (activeIndex === -1) {
+
+    if (event.shiftKey) {
       event.preventDefault();
-      if (event.shiftKey) {
+      if (activeIndex <= 0) {
         last.focus();
       } else {
-        first.focus();
+        focusable[activeIndex - 1].focus();
       }
       return;
     }
 
-    if (event.shiftKey && active === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault();
+    event.preventDefault();
+    if (activeIndex === -1 || activeIndex >= focusable.length - 1) {
       first.focus();
+    } else {
+      focusable[activeIndex + 1].focus();
     }
   };
 
