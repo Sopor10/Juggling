@@ -110,7 +110,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     private async Task FocusActiveStepHeadingAsync()
     {
-        if (State.Phase != WizardPhase.Editing)
+        if (State.Phase != WizardPhase.Editing || _filterSheet?.IsOpen == true)
         {
             return;
         }

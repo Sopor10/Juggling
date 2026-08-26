@@ -65,17 +65,20 @@ public class FeedingBeatStaggerTests
     [Test]
     public void Throw_Chips_Expose_Button_Selection_And_Landing_Status()
     {
-        var razor = ReadGeneratorSource(
+        var chipRow = ReadGeneratorSource(
             Path.Combine("Components", "Feeding", "FeedingThrowChipRow.razor")
+        );
+        var chipButton = ReadGeneratorSource(
+            Path.Combine("Components", "Feeding", "FeedingThrowChipButton.razor")
         );
         var overview = ReadGeneratorSource(
             Path.Combine("Components", "Feeding", "FeedingJugglerOverview.razor")
         );
 
-        razor.Should().Contain("<button type=\"button\"");
-        razor.Should().Contain("aria-pressed=");
-        razor.Should().Contain("is-selected");
-        razor.Should().Contain("is-landing");
+        chipButton.Should().Contain("<button type=\"button\"");
+        chipButton.Should().Contain("aria-pressed=");
+        chipRow.Should().Contain("is-selected");
+        chipRow.Should().Contain("is-landing");
         overview.Should().Contain("role=\"status\"");
         overview.Should().Contain("aria-live=\"polite\"");
     }

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Siteswaps.Generator.Components.Feeding;
 using Siteswaps.Generator.Components.SiteswapLab;
 
 namespace Siteswaps.Generator.Test.Components.SiteswapLab;
@@ -33,11 +34,54 @@ public class PassingEditorRotationClubCountTests
         }
     }
 
-    [Test]
-    public void Rotate_Keeps_Total_Starting_Clubs_For_Default_Three_Person_Before_Init()
+    private static void AssertPersonAHasTwoTwoStartingClubsThroughFullRotation(
+        PassingEditorState state
+    )
+    {
+        state.IsValid.Should().BeTrue("pattern must be valid before A start-club invariant check");
+
+        for (var step = 0; step < state.Period; step++)
+        {
+            state
+                .StartingClubsFor(0)
+                .Should()
+                .Be(
+                    new ClubHands(2, 2),
+                    $"person A must keep 2/2 start clubs at rotation step {step}"
+                );
+            state.Rotate(1);
+        }
+
+        state.IsValid.Should().BeTrue("rotation must preserve a valid pattern");
+    }
+
+    /// <summary>
+    /// Three-person feed with person A juggling four clubs (local height 4, all self throws).
+    /// Matches Siteswap Lab screenshot: A shows 2/2 start clubs and five purple "4" cells.
+    /// </summary>
+    private static PassingEditorState CreateThreePersonAFourClubSelfPattern()
     {
         var state = new PassingEditorState();
-        AssertTotalClubsInvariantThroughFullRotation(state, requireValid: false);
+        state.InitializeThrowsForFirstEntry();
+
+        for (var beat = 0; beat < state.Period; beat++)
+        {
+            state.SetHeight(0, beat, state.ToGlobalHeight(4));
+            state.SetTarget(0, beat, 0);
+        }
+
+        state.IsValid.Should().BeTrue("four-club A self pattern must be valid");
+        state.StartingClubsFor(0).Should().Be(new ClubHands(2, 2), "A starts with four clubs");
+
+        return state;
+    }
+
+    [Test]
+    public void Rotate_Keeps_Person_A_Two_Two_Starting_Clubs_For_Three_Person_A_Four_Club_Self_Pattern()
+    {
+        AssertPersonAHasTwoTwoStartingClubsThroughFullRotation(
+            CreateThreePersonAFourClubSelfPattern()
+        );
     }
 
     [Test]

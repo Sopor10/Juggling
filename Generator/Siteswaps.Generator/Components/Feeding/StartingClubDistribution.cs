@@ -116,7 +116,6 @@ public static class StartingClubDistribution
 
         var tzCount = state.ActiveTimeZoneCount;
         var globalPeriod = period * tzCount;
-        var beatOriginOffset = state.BeatOriginOffset;
         var totalObjects =
             people.SelectMany(person => person.Cells).Sum(cell => cell.Height) / globalPeriod;
 
@@ -129,7 +128,7 @@ public static class StartingClubDistribution
         while (missing > 0)
         {
             var phase = globalBeat % tzCount;
-            var patternBeat = PositiveModulo((globalBeat / tzCount) - beatOriginOffset, period);
+            var patternBeat = PositiveModulo(globalBeat / tzCount, period);
 
             for (var personIndex = 0; personIndex < personCount; personIndex++)
             {

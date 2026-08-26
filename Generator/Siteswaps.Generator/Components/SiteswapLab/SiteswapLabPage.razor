@@ -137,23 +137,27 @@
                 </div>
                     <p class="lab-throws-hint">@L["Tap a throw to select it. Drag to change where it lands."]</p>
                     <div class="lab-passing-overview"
+                         @ref="_dragScope"
                          style="@($"--lab-period:{_direct.Period}")">
                         @for (var person = 0; person < _direct.People.Count; person++)
                         {
                             var personIndex = person;
-                            <div class="lab-overview-row" data-timezone="@_direct.TimelinePhaseFor(person)">
-                                <div class="lab-overview-person"
-                                     aria-label="@($"{_direct.People[person].Name}, {L["TimeZone {0}", _direct.People[person].TimeZone]}")">
-                                    <strong aria-hidden="true">@_direct.People[person].Name</strong>
-                                </div>
-                                @{
-                                    var clubs = _direct.StartingClubsFor(personIndex);
-                                }
-                                <div class="lab-start-props"
-                                     title="@L["Starting club distribution (L / R)"]"
-                                     aria-label="@L["Start clubs {0}: left {1}, right {2}", _direct.People[person].Name, clubs.Left, clubs.Right]">
-                                    <span class="lab-start-props-hand">@clubs.Left</span>
-                                    <span class="lab-start-props-hand">@clubs.Right</span>
+                            <div class="lab-overview-row @(_direct.HasSelection && _direct.SelectedPerson == personIndex ? "is-editing-throw" : null)"
+                                 data-timezone="@_direct.TimelinePhaseFor(person)">
+                                <div class="lab-overview-meta">
+                                    <div class="lab-overview-person"
+                                         aria-label="@($"{_direct.People[person].Name}, {L["TimeZone {0}", _direct.People[person].TimeZone]}")">
+                                        <strong aria-hidden="true">@_direct.People[person].Name</strong>
+                                    </div>
+                                    @{
+                                        var clubs = _direct.StartingClubsFor(personIndex);
+                                    }
+                                    <div class="lab-start-props"
+                                         title="@L["Starting club distribution (L / R)"]"
+                                         aria-label="@L["Start clubs {0}: left {1}, right {2}", _direct.People[person].Name, clubs.Left, clubs.Right]">
+                                        <span class="lab-start-props-hand">@clubs.Left</span>
+                                        <span class="lab-start-props-hand">@clubs.Right</span>
+                                    </div>
                                 </div>
                                 <div class="lab-overview-throws"
                                      style="@($"--lab-phase:{_direct.TimelinePhaseFor(person)};--lab-phase-count:{_direct.ActiveTimeZoneCount}")">
@@ -163,6 +167,19 @@
                                                          LandingLocalBeat="@LandingBeatFor(person)"
                                                          EnableDragDrop="true"
                                                          RowPersonIndex="@personIndex"
+                                                         DragScope="_dragScope"
+                                                         ShowHeightSteppers="@(_direct.HasSelection && _direct.SelectedPerson == personIndex)"
+                                                         CanIncreaseHeight="@CanIncreaseSelectedHeight(personIndex)"
+                                                         CanDecreaseHeight="@CanDecreaseSelectedHeight(personIndex)"
+                                                         HeightIncreaseAriaLabel="@L["Increase throw"].Value"
+                                                         HeightDecreaseAriaLabel="@L["Decrease throw"].Value"
+                                                         HeightIncreaseRequested="IncreaseSelectedHeight"
+                                                         HeightDecreaseRequested="DecreaseSelectedHeight"
+                                                         TargetPills="SelectedTargetPillsFor(personIndex)"
+                                                         SelectedTargetPerson="@SelectedTargetPersonFor(personIndex)"
+                                                         TargetGroupAriaLabel="@SelectedTargetGroupAriaLabel(personIndex)"
+                                                         TargetPillAriaLabel="SelectedTargetPillAriaLabel"
+                                                         TargetPersonSelected="OnSelectedTargetPersonChanged"
                                                          DragSourceBeat="@DragSourceBeatFor(personIndex)"
                                                          ActiveDragSourcePerson="@_dragSourcePerson"
                                                          ActiveDragSourceBeat="@_dragSourceBeat"
@@ -171,7 +188,9 @@
                                                          ChipClicked="beat => OnChipClicked(personIndex, beat)"
                                                          ChipDragStarted="beat => OnChipDragStarted(personIndex, beat)"
                                                          ChipDragEntered="beat => OnChipDragEntered(personIndex, beat)"
+                                                         ChipDragTargetEntered="OnChipDragTargetEntered"
                                                          ChipDropped="beat => OnChipDropped(personIndex, beat)"
+                                                         ChipDragTargetDropped="OnChipDragTargetDropped"
                                                          ChipDragEnded="OnChipDragEnded"
                                                          AccessibleName="chip => PassingChipAccessibleName(personIndex, chip)"
                                                          StateClass="chip => PassingChipStateClass(personIndex, chip.LocalBeat)"
@@ -200,110 +219,6 @@
                             <FeedingThrowDisplayModeToggle @bind-Mode="_throwDisplayMode" />
                         </li>
                     </ul>
-
-                    <section class="lab-selected-cell" aria-labelledby="selected-cell-heading">
-                        @if (_direct.HasSelection)
-                        {
-                            <div>
-                                <p class="lab-kicker">@L["Selected throw"]</p>
-                                <h3 id="selected-cell-heading">
-                                    @_direct.People[_direct.SelectedPerson].Name · @L["Beat {0}", _direct.SelectedBeat + 1]
-                                </h3>
-                            </div>
-                            <div class="lab-cell-controls">
-                                <div class="lab-height-editor"
-                                     role="group"
-                                     aria-labelledby="throw-editor-label">
-                                    <span id="throw-editor-label" class="lab-height-editor-label">@L["Throw"]</span>
-                                    <span class="lab-height-editor-hint">@L["±{0} = one pattern period", _direct.HeightPeriodStep]</span>
-                                    <div class="lab-height-editor-controls">
-                                        <button type="button"
-                                                class="lab-height-step-period"
-                                                aria-label="@L["Decrease throw by period"]"
-                                                disabled="@(SelectedPassingCell.Height < _direct.HeightPeriodStep)"
-                                                @onclick="() => AdjustPassingHeightByPeriod(-1)">−@_direct.HeightPeriodStep</button>
-                                        <button type="button"
-                                                aria-label="@L["Decrease throw"]"
-                                                @onclick="() => AdjustPassingHeight(-1)">−</button>
-                                        <input type="number" min="0" max="@_direct.MaxThrowHeight"
-                                               value="@SelectedPassingCell.Height"
-                                               aria-label="@L["Throw value"]"
-                                               @onchange="args => SetPassingHeight(_direct.SelectedPerson, _direct.SelectedBeat, args)" />
-                                        <button type="button"
-                                                aria-label="@L["Increase throw"]"
-                                                @onclick="() => AdjustPassingHeight(1)">+</button>
-                                        <button type="button"
-                                                class="lab-height-step-period"
-                                                aria-label="@L["Increase throw by period"]"
-                                                disabled="@(SelectedPassingCell.Height + _direct.HeightPeriodStep > _direct.MaxThrowHeight)"
-                                                @onclick="() => AdjustPassingHeightByPeriod(1)">+@_direct.HeightPeriodStep</button>
-                                    </div>
-                                </div>
-                                <div class="lab-target-editor">
-                                    <span>
-                                        @L["Target"] · @(
-                                            SelectedPassingCell.TargetPerson is null
-                                                ? L["Unavailable"]
-                                                : SelectedPassingLanding.Kind == PassOrSelf.Self
-                                                    ? L["Self"]
-                                                    : L["Pass"]
-                                        )
-                                    </span>
-                                    @if (SelectedAvailableTargets.Count == 0)
-                                    {
-                                        <output class="lab-target-output invalid">@L["No landing slot on beat {0}", SelectedPassingLanding.TargetBeat + 1]</output>
-                                    }
-                                    else if (SelectedAvailableTargets.Count == 1)
-                                    {
-                                        var onlyTarget = SelectedAvailableTargets[0];
-                                        <output class="lab-target-output">@_direct.People[onlyTarget].Name</output>
-                                    }
-                                    else
-                                    {
-                                        <div class="feeding-throw-mode"
-                                             role="radiogroup"
-                                             aria-label="@L["Choose landing slot on beat {0}", SelectedPassingLanding.TargetBeat + 1]">
-                                            @foreach (var target in SelectedAvailableTargets)
-                                            {
-                                                <button type="button"
-                                                        role="radio"
-                                                        class="@(SelectedPassingCell.TargetPerson == target ? "active" : null)"
-                                                        aria-checked="@(SelectedPassingCell.TargetPerson == target)"
-                                                        @onclick="() => SetPassingTarget(_direct.SelectedPerson, _direct.SelectedBeat, target)">
-                                                    @_direct.People[target].Name
-                                                </button>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                                <div class="lab-incoming-throws">
-                                    <span class="lab-incoming-label">@L["Lands from"]</span>
-                                    @if (SelectedIncomingLandings.Count == 0)
-                                    {
-                                        <output class="lab-incoming-output lab-incoming-empty">@L["No throws land here."]</output>
-                                    }
-                                    else
-                                    {
-                                        <ul class="lab-incoming-list" aria-label="@L["Lands from"]">
-                                            @foreach (var incoming in SelectedIncomingLandings)
-                                            {
-                                                <li>
-                                                    @_direct.People[incoming.SourcePerson].Name · @L["Beat {0}", incoming.SourceBeat + 1]
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div>
-                                <p class="lab-kicker">@L["Selected throw"]</p>
-                                <p id="selected-cell-heading" class="lab-selected-empty">@L["Select a throw above to see where it lands and edit it."]</p>
-                            </div>
-                        }
-                </section>
             </div>
         </WizardStepPanel>
     </div>
@@ -339,6 +254,7 @@
     private FeedingThrowDisplay.Mode _throwDisplayMode = FeedingThrowDisplay.Mode.Global;
     private readonly HashSet<int> _visitedCellsSteps = [0];
     private int _cellsStep;
+    private ElementReference _dragScope;
     private int? _dragSourcePerson;
     private int? _dragSourceBeat;
     private int? _dropTargetPerson;
@@ -411,17 +327,6 @@
         }
     }
 
-    private void SetPassingHeight(int person, int beat, ChangeEventArgs args)
-    {
-        if (int.TryParse(args.Value?.ToString(), out var height))
-        {
-            _direct.SetHeight(person, beat, height);
-        }
-    }
-
-    private void SetPassingTarget(int person, int beat, int target) =>
-        _direct.SetTarget(person, beat, target);
-
     private void OnChipClicked(int person, int beat)
     {
         if (
@@ -439,14 +344,29 @@
 
     private void OnChipDragStarted(int person, int beat)
     {
+        if (_dragSourcePerson == person && _dragSourceBeat == beat)
+        {
+            return;
+        }
+
+        if (_dragSourcePerson is not null && _dragSourceBeat is not null)
+        {
+            return;
+        }
+
         _dragSourcePerson = person;
         _dragSourceBeat = beat;
         _dropTargetPerson = null;
         _dropTargetBeat = null;
-        _direct.SelectCell(person, beat);
     }
 
-    private void OnChipDragEntered(int person, int beat)
+    private void OnChipDragEntered(int person, int beat) =>
+        ApplyDragTarget(person, beat);
+
+    private void OnChipDragTargetEntered(FeedingThrowChipDragTarget target) =>
+        ApplyDragTarget(target.Person, target.Beat);
+
+    private void ApplyDragTarget(int person, int beat)
     {
         if (_dragSourcePerson is null || _dragSourceBeat is null)
         {
@@ -455,7 +375,7 @@
 
         if (beat < 0)
         {
-            if (_dropTargetPerson == person)
+            if (person < 0 || _dropTargetPerson == person)
             {
                 _dropTargetPerson = null;
                 _dropTargetBeat = null;
@@ -468,6 +388,9 @@
         _dropTargetBeat = beat;
     }
 
+    private void OnChipDragTargetDropped(FeedingThrowChipDragTarget target) =>
+        OnChipDropped(target.Person, target.Beat);
+
     private void OnChipDropped(int person, int beat)
     {
         if (_dragSourcePerson is not int sourcePerson || _dragSourceBeat is not int sourceBeat)
@@ -479,7 +402,15 @@
         ClearDragState();
     }
 
-    private void OnChipDragEnded() => ClearDragState();
+    private void OnChipDragEnded()
+    {
+        if (_dragSourcePerson is int sourcePerson && _dragSourceBeat is int sourceBeat)
+        {
+            _direct.SelectCell(sourcePerson, sourceBeat);
+        }
+
+        ClearDragState();
+    }
 
     private void ClearDragState()
     {
@@ -513,17 +444,55 @@
 
     private PassingEditorLanding SelectedPassingLanding => _direct.SelectedLanding;
 
-    private IReadOnlyList<int> SelectedAvailableTargets =>
-        _direct.AvailableTargetsFor(
-            _direct.SelectedPerson,
-            _direct.SelectedBeat,
-            SelectedPassingCell.Height
-        );
+    private void IncreaseSelectedHeight() => AdjustPassingHeight(1);
 
-    private IReadOnlyList<PassingEditorLanding> SelectedIncomingLandings =>
+    private void DecreaseSelectedHeight() => AdjustPassingHeight(-1);
+
+    private void OnSelectedTargetPersonChanged(int target) =>
+        _direct.SetTarget(_direct.SelectedPerson, _direct.SelectedBeat, target);
+
+    private IReadOnlyList<FeedingThrowChipTargetPill> SelectedTargetPillsFor(int person)
+    {
+        if (!_direct.HasSelection || _direct.SelectedPerson != person)
+        {
+            return [];
+        }
+
+        return _direct
+            .AvailableTargetsFor(
+                _direct.SelectedPerson,
+                _direct.SelectedBeat,
+                SelectedPassingCell.Height
+            )
+            .Select(index => new FeedingThrowChipTargetPill(index, _direct.People[index].Name))
+            .ToArray();
+    }
+
+    private int? SelectedTargetPersonFor(int person) =>
+        _direct.HasSelection && _direct.SelectedPerson == person
+            ? SelectedPassingCell.TargetPerson
+            : null;
+
+    private string? SelectedTargetGroupAriaLabel(int person)
+    {
+        if (!_direct.HasSelection || _direct.SelectedPerson != person)
+        {
+            return null;
+        }
+
+        return L["Choose landing target"].Value;
+    }
+
+    private string SelectedTargetPillAriaLabel(FeedingThrowChipTargetPill pill) =>
+        L["Land on {0}", pill.Label].Value;
+
+    private bool CanIncreaseSelectedHeight(int person) =>
         _direct.HasSelection
-            ? _direct.SourcesLandingAt(_direct.SelectedPerson, _direct.SelectedBeat)
-            : [];
+        && _direct.SelectedPerson == person
+        && SelectedPassingCell.Height < _direct.MaxThrowHeight;
+
+    private bool CanDecreaseSelectedHeight(int person) =>
+        _direct.HasSelection && _direct.SelectedPerson == person && SelectedPassingCell.Height > 0;
 
     private void AdjustPassingHeight(int delta) =>
         _direct.SetHeight(
@@ -531,9 +500,6 @@
             _direct.SelectedBeat,
             SelectedPassingCell.Height + delta
         );
-
-    private void AdjustPassingHeightByPeriod(int direction) =>
-        _direct.AdjustHeightByPeriod(_direct.SelectedPerson, _direct.SelectedBeat, direction);
 
     private IReadOnlyList<FeedingThrowDisplay.Chip> PassingChipsFor(int person) =>
         _direct.People[person]
@@ -668,9 +634,9 @@
 
     private bool IsIncomingSourceForSelection(int person, int beat) =>
         _direct.HasSelection
-        && SelectedIncomingLandings.Any(
-            landing => landing.SourcePerson == person && landing.SourceBeat == beat
-        );
+        && _direct
+            .SourcesLandingAt(_direct.SelectedPerson, _direct.SelectedBeat)
+            .Any(landing => landing.SourcePerson == person && landing.SourceBeat == beat);
 
     private string LandingSlotStateClass(int person, int beat)
     {

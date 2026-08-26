@@ -495,7 +495,7 @@ public class PassingEditorStateTests
     }
 
     [Test]
-    public void ApplyChipDrop_Deselects_When_Dropping_On_Source_Cell()
+    public void ApplyChipDrop_Keeps_Source_Selected_When_Dropping_On_Source_Cell()
     {
         var state = new PassingEditorState();
         state.InitializeThrowsForFirstEntry();
@@ -503,7 +503,9 @@ public class PassingEditorStateTests
 
         state.ApplyChipDrop(0, 0, 0, 0);
 
-        state.HasSelection.Should().BeFalse();
+        state.HasSelection.Should().BeTrue();
+        state.SelectedPerson.Should().Be(0);
+        state.SelectedBeat.Should().Be(0);
     }
 
     [Test]
@@ -630,13 +632,27 @@ public class PassingEditorStateTests
     }
 
     [Test]
-    public void ApplyChipDrop_Selects_Target_When_Landing_Cannot_Be_Set()
+    public void ApplyChipDrop_Keeps_Source_Selected_When_Landing_Cannot_Be_Set()
     {
         var state = new PassingEditorState(maxThrowHeight: 0);
         state.InitializeThrowsForFirstEntry();
         state.SelectCell(0, 0);
 
         state.ApplyChipDrop(0, 0, 0, 1);
+
+        state.HasSelection.Should().BeTrue();
+        state.SelectedPerson.Should().Be(0);
+        state.SelectedBeat.Should().Be(0);
+    }
+
+    [Test]
+    public void ApplyChipDrop_Keeps_Dragged_Source_Selected_When_Landing_Cannot_Be_Set()
+    {
+        var state = new PassingEditorState(maxThrowHeight: 0);
+        state.InitializeThrowsForFirstEntry();
+        state.SelectCell(0, 0);
+
+        state.ApplyChipDrop(0, 1, 0, 0);
 
         state.HasSelection.Should().BeTrue();
         state.SelectedPerson.Should().Be(0);

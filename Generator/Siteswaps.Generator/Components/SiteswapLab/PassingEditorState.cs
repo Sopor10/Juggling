@@ -11,8 +11,6 @@ public sealed class PassingEditorState
 
     private readonly List<PassingEditorPerson> _people = [];
 
-    private int _beatOriginOffset;
-
     public PassingEditorState(int? maxThrowHeight = null)
     {
         MaxThrowHeight = SettingsDto.ClampMaxHeight(maxThrowHeight ?? new SettingsDto().MaxHeight);
@@ -91,8 +89,6 @@ public sealed class PassingEditorState
     public bool HasSelection { get; private set; }
 
     public int HeightPeriodStep => Period * ActiveTimeZoneCount;
-
-    internal int BeatOriginOffset => _beatOriginOffset;
 
     public PassingEditorLanding SelectedLanding => LandingFor(SelectedPerson, SelectedBeat);
 
@@ -188,11 +184,7 @@ public sealed class PassingEditorState
     {
         if (sourcePerson == targetPerson && sourceBeat == targetBeat)
         {
-            if (HasSelection && SelectedPerson == sourcePerson && SelectedBeat == sourceBeat)
-            {
-                ToggleCellSelection(sourcePerson, sourceBeat);
-            }
-
+            SetSelection(sourcePerson, sourceBeat);
             return;
         }
 
@@ -201,7 +193,7 @@ public sealed class PassingEditorState
             return;
         }
 
-        SelectCell(targetPerson, targetBeat);
+        SetSelection(sourcePerson, sourceBeat);
     }
 
     public void ToggleCellSelection(int person, int beat)
@@ -298,11 +290,9 @@ public sealed class PassingEditorState
             RotateCellsInPlace(person.MutableCells, steps);
         }
 
-        var offset = PositiveModulo(steps, Period);
-        _beatOriginOffset = PositiveModulo(_beatOriginOffset + steps, Period);
-
         if (HasSelection)
         {
+            var offset = PositiveModulo(steps, Period);
             SelectedBeat = PositiveModulo(SelectedBeat - offset, Period);
         }
     }
@@ -520,7 +510,6 @@ public sealed class PassingEditorState
         }
 
         SelectedBeat = Period - 1;
-        _beatOriginOffset = 0;
     }
 
     public void RemoveBeat()
@@ -536,7 +525,6 @@ public sealed class PassingEditorState
         }
 
         SelectedBeat = Math.Min(SelectedBeat, Period - 1);
-        _beatOriginOffset = 0;
     }
 
     private void InitializeLocalThreeCell(int person, int beat)
