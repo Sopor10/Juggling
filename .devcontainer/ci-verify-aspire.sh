@@ -28,26 +28,6 @@ dump_aspire_logs() {
       done
 }
 
-echo "==> prewarm Aspire CLI bundle via direct AppHost run"
-prewarm_output="$(mktemp)"
-prewarm_exit=0
-timeout --signal=INT --kill-after=10s 90s \
-  env ASPIRE_SUPPRESS_CLI_RUN_HOOK=true \
-  dotnet run --project "${APPHOST}" --no-launch-profile \
-  >"${prewarm_output}" 2>&1 || prewarm_exit=$?
-if ! grep -q "Distributed application started\." "${prewarm_output}"; then
-  cat "${prewarm_output}" >&2
-  dump_aspire_logs
-  exit 1
-fi
-if [[ "${prewarm_exit}" -ne 0 && "${prewarm_exit}" -ne 124 && "${prewarm_exit}" -ne 130 && "${prewarm_exit}" -ne 143 ]]; then
-  cat "${prewarm_output}" >&2
-  dump_aspire_logs
-  exit 1
-fi
-cat "${prewarm_output}"
-rm -f "${prewarm_output}"
-
 echo "==> aspire start"
 # Keep a supervising shell process for the duration of this script so orphan
 # detection does not race the short-lived `aspire start` parent.
