@@ -10,6 +10,7 @@ cd "${ROOT}"
 
 APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
+PREWARM_TIMEOUT_SECS="${ASPIRE_VERIFY_PREWARM_TIMEOUT_SECS:-90}"
 POLL_SECS=5
 
 cleanup() {
@@ -27,6 +28,22 @@ dump_aspire_logs() {
         tail -200 "${log_file}" >&2 || true
       done
 }
+
+echo "==> aspire prewarm"
+prewarm_output="$(mktemp)"
+if ! timeout "${PREWARM_TIMEOUT_SECS}s" aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach 2>&1 | tee "${prewarm_output}"; then
+  echo "Failed to prewarm the Aspire AppHost." >&2
+  cat "${prewarm_output}" >&2
+  dump_aspire_logs
+  exit 1
+fi
+rm -f "${prewarm_output}"
+
+if ! timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1; then
+  echo "Failed to stop the prewarmed Aspire AppHost." >&2
+  dump_aspire_logs
+  exit 1
+fi
 
 echo "==> aspire start"
 # Keep a supervising shell process for the duration of this script so orphan
