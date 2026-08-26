@@ -9,16 +9,21 @@ if ! command -v dotnet >/dev/null 2>&1; then
   exit 1
 fi
 
+REMOTE_USER="${_REMOTE_USER:-vscode}"
+REMOTE_GROUP="$(id -gn "${REMOTE_USER}")"
+REMOTE_HOME="$(getent passwd "${REMOTE_USER}" | cut -d: -f6)"
+if [[ -z "${REMOTE_HOME}" ]]; then
+  echo "Could not determine the home directory for ${REMOTE_USER}." >&2
+  exit 1
+fi
+
 install -d -m 0755 "${ASPIRE_TOOL_PATH}"
 dotnet tool install --tool-path "${ASPIRE_TOOL_PATH}" Aspire.Cli --version "${ASPIRE_VERSION}"
 chmod 0755 "$(readlink -f "${ASPIRE_TOOL_PATH}/aspire")"
 ln -sfn "${ASPIRE_TOOL_PATH}/aspire" /usr/local/bin/aspire
+chown -R "${REMOTE_USER}:${REMOTE_GROUP}" "${ASPIRE_TOOL_PATH}"
 
-# Materialize the embedded bundle during the serialized feature build. The
-# runtime verification keeps its setup call as a defensive idempotent check.
-aspire setup --non-interactive --nologo
+runuser -u "${REMOTE_USER}" -- env HOME="${REMOTE_HOME}" /usr/local/bin/aspire setup --non-interactive --nologo
 
-REMOTE_USER="${_REMOTE_USER:-vscode}"
-REMOTE_GROUP="$(id -gn "${REMOTE_USER}")"
 chown -R "${REMOTE_USER}:${REMOTE_GROUP}" "${ASPIRE_TOOL_PATH}"
 ln -sfn "${ASPIRE_TOOL_PATH}/aspire" /usr/local/bin/aspire
