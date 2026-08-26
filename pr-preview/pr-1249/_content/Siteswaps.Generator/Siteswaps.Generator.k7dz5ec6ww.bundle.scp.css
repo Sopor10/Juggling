@@ -2203,6 +2203,15 @@
 .lab-passing-overview[b-2dl09w6mtv] {
     --lab-chip-size: 48px;
     --lab-chip-gap: 10px;
+    --lab-throw-step-height: 32px;
+    --lab-throw-target-height: 28px;
+    --lab-throw-editor-gap: 4px;
+    --lab-throw-editor-chip-offset: calc(
+        var(--lab-throw-step-height)
+        + var(--lab-throw-editor-gap)
+        + var(--lab-throw-target-height)
+        + var(--lab-throw-editor-gap)
+    );
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -2219,12 +2228,14 @@
     max-width: 100%;
     overflow-x: auto;
     padding: 8px 2px 12px;
+    touch-action: none;
 }
 
 [b-2dl09w6mtv] .feeding-beat-row {
     display: flex;
     gap: var(--lab-chip-gap, 10px);
     width: max-content;
+    touch-action: none;
 }
 
 [b-2dl09w6mtv] .feeding-beat {
@@ -2281,6 +2292,109 @@
     box-shadow:
         0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent),
         inset 0 0 0 2px color-mix(in srgb, var(--wizard-purple-500) 40%, transparent);
+}
+
+[b-2dl09w6mtv] .feeding-beat-row-editing {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+[b-2dl09w6mtv] .feeding-beat-step-row,
+[b-2dl09w6mtv] .feeding-beat-chip-row {
+    display: flex;
+    gap: var(--lab-chip-gap, 10px);
+    width: max-content;
+}
+
+[b-2dl09w6mtv] .feeding-beat-step,
+[b-2dl09w6mtv] .feeding-beat-step-spacer {
+    box-sizing: border-box;
+    width: var(--lab-chip-size, 48px);
+    min-width: var(--lab-chip-size, 48px);
+}
+
+[b-2dl09w6mtv] .feeding-beat-step-spacer {
+    min-height: 32px;
+}
+
+[b-2dl09w6mtv] .feeding-beat-step {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: var(--wizard-purple-100);
+    color: var(--wizard-purple-700);
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+[b-2dl09w6mtv] .feeding-beat-step:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-row,
+[b-2dl09w6mtv] .feeding-beat-target-group {
+    display: flex;
+    gap: 4px;
+    width: max-content;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-row {
+    gap: var(--lab-chip-gap, 10px);
+    min-height: 28px;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-spacer {
+    min-height: 28px;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-placeholder {
+    display: block;
+    width: 100%;
+    min-height: 28px;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-group {
+    box-sizing: border-box;
+    width: var(--lab-chip-size, 48px);
+    min-width: var(--lab-chip-size, 48px);
+    justify-content: center;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-pill {
+    display: inline-flex;
+    min-width: 20px;
+    min-height: 28px;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--wizard-purple-200);
+    border-radius: 8px;
+    background: white;
+    color: var(--wizard-purple-700);
+    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-size: .82rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-pill.active {
+    border-color: var(--wizard-orange);
+    background: color-mix(in srgb, var(--wizard-orange) 22%, white);
+    color: var(--wizard-purple-950);
+}
+
+[b-2dl09w6mtv] .feeding-beat-target-pill:disabled {
+    opacity: 1;
+    cursor: default;
 }
 
 [b-2dl09w6mtv] .feeding-beat[draggable="true"] {
@@ -2636,6 +2750,32 @@
     align-items: center;
     gap: var(--lab-chip-gap, 10px);
     margin-bottom: 8px;
+}
+
+.lab-overview-row.is-editing-throw[b-2dl09w6mtv] {
+    align-items: flex-start;
+}
+
+.lab-overview-meta[b-2dl09w6mtv] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--lab-chip-gap, 10px);
+}
+
+.lab-overview-row.is-editing-throw .lab-overview-meta[b-2dl09w6mtv] {
+    height: var(--lab-chip-size, 48px);
+    margin-top: var(--lab-throw-editor-chip-offset);
+}
+
+.lab-overview-row.is-editing-throw .lab-overview-person[b-2dl09w6mtv] {
+    align-self: stretch;
+    align-items: center;
+}
+
+.lab-overview-row.is-editing-throw .lab-start-props[b-2dl09w6mtv] {
+    height: var(--lab-chip-size, 48px);
+    min-height: var(--lab-chip-size, 48px);
 }
 
 .lab-overview-person[b-2dl09w6mtv] {
