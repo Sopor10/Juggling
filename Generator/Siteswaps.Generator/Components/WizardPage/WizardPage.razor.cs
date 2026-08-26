@@ -110,7 +110,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     private async Task FocusActiveStepHeadingAsync()
     {
-        if (State.Phase != WizardPhase.Editing)
+        if (State.Phase != WizardPhase.Editing || _filterSheet?.IsOpen == true)
         {
             return;
         }
@@ -285,7 +285,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             State.MarkVisited(State.CurrentStep);
             StateHasChanged();
             await PushEditorHistoryStateAsync();
-            _isStepTransitioning = false;
             await Task.Delay(150);
             await FocusActiveStepHeadingAsync();
         }
@@ -313,7 +312,6 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                 await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep);
             }
 
-            _isStepTransitioning = false;
             await Task.Delay(150);
             await FocusActiveStepHeadingAsync();
         }

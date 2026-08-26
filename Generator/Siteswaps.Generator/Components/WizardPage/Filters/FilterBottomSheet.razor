@@ -116,6 +116,8 @@
 
     private string ActiveTabElementId => $"wizard-filter-tab-{_activeTab.ToString().ToLowerInvariant()}";
 
+    public bool IsOpen => _isOpen;
+
     public void OpenForNew()
     {
         _editingId = null;
