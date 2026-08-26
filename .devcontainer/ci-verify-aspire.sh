@@ -28,6 +28,12 @@ dump_aspire_logs() {
       done
 }
 
+echo "==> aspire setup"
+# Initialize the embedded bundle before start can spawn its child CLI. This
+# keeps bundle extraction serialized instead of making the parent and child
+# compete for the bundle lock on first use.
+aspire setup --non-interactive --nologo
+
 echo "==> aspire start"
 # Keep a supervising shell process for the duration of this script so orphan
 # detection does not race the short-lived `aspire start` parent.
