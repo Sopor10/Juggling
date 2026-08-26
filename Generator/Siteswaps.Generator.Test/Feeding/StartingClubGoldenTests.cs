@@ -12,8 +12,14 @@ public class StartingClubGoldenTests
     {
         var heights = new[] { 7, 8, 6, 2, 7 };
 
-        StartingClubDistribution.ForJuggler(heights, juggler: 0).Should().Be(new ClubHands(2, 2));
-        StartingClubDistribution.ForJuggler(heights, juggler: 1).Should().Be(new ClubHands(1, 1));
+        StartingClubDistribution
+            .ForJuggler(heights, juggler: 0, numberOfJugglers: 2)
+            .Should()
+            .Be(new ClubHands(2, 2));
+        StartingClubDistribution
+            .ForJuggler(heights, juggler: 1, numberOfJugglers: 2)
+            .Should()
+            .Be(new ClubHands(1, 1));
     }
 
     [Test]
@@ -45,6 +51,8 @@ public class StartingClubGoldenTests
         session
             .StartingClubs("B1")
             .Should()
-            .Be(StartingClubDistribution.ForJuggler(selected.Items, juggler: 1));
+            .Be(
+                StartingClubDistribution.ForJuggler(selected.Items, juggler: 1, numberOfJugglers: 2)
+            );
     }
 }

@@ -46,8 +46,8 @@
     </PackageVersion>
     <PackageVersion Include="TngTech.ArchUnitNET" Version="0.13.4" />
     <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.13.4" />
-    <PackageVersion Include="Verify" Version="31.28.0" />
-    <PackageVersion Include="Verify.Nunit" Version="31.28.0" />
+    <PackageVersion Include="Verify" Version="32.0.0" />
+    <PackageVersion Include="Verify.Nunit" Version="32.0.0" />
     <PackageVersion Include="Verify.ImageMagick" Version="3.10.0" />
     <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
     <PackageVersion Include="Fluxor" Version="6.11.0" />

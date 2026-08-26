@@ -17,4 +17,13 @@
   <data name="Settings" xml:space="preserve"><value>Einstellungen</value></data>
   <data name="Throw display (details)" xml:space="preserve"><value>Wurf-Anzeige (Details)</value></data>
   <data name="Use throw names" xml:space="preserve"><value>Wurfnamen verwenden</value></data>
+  <data name="App updates" xml:space="preserve"><value>App-Updates</value></data>
+  <data name="App updates hint" xml:space="preserve"><value>Prüft, ob eine neuere Version verfügbar ist, und lädt sie bei Bedarf neu.</value></data>
+  <data name="Check for updates" xml:space="preserve"><value>Auf Updates prüfen</value></data>
+  <data name="Checking for updates…" xml:space="preserve"><value>Suche nach Updates…</value></data>
+  <data name="Install update and reload" xml:space="preserve"><value>Update installieren und neu laden</value></data>
+  <data name="App is up to date" xml:space="preserve"><value>Die App ist auf dem neuesten Stand.</value></data>
+  <data name="Update available" xml:space="preserve"><value>Eine neue Version ist verfügbar.</value></data>
+  <data name="Updates not available here" xml:space="preserve"><value>Updates sind in dieser Umgebung nicht verfügbar.</value></data>
+  <data name="Update check failed" xml:space="preserve"><value>Update-Prüfung fehlgeschlagen.</value></data>
 </root>

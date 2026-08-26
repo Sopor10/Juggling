@@ -5,7 +5,6 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Siteswap lab" xml:space="preserve"><value>Siteswap-Labor</value></data>
-  <data name="← Generator" xml:space="preserve"><value>← Generator</value></data>
   <data name="← swipe left/right →" xml:space="preserve"><value>← nach links/rechts wischen →</value></data>
   <data name="Back" xml:space="preserve"><value>Zurück</value></data>
   <data name="Next" xml:space="preserve"><value>Weiter</value></data>
@@ -48,18 +47,35 @@
   <data name="Throw for {0}, beat {1}" xml:space="preserve"><value>Wurf für {0}, Beat {1}</value></data>
   <data name="Target for {0}, beat {1}" xml:space="preserve"><value>Ziel für {0}, Beat {1}</value></data>
   <data name="No compatible target" xml:space="preserve"><value>Kein kompatibles Ziel</value></data>
-  <data name="Selected landing" xml:space="preserve"><value>Ausgewählte Landung</value></data>
   <data name="local" xml:space="preserve"><value>lokal</value></data>
-  <data name="no target" xml:space="preserve"><value>kein Ziel</value></data>
-  <data name="{0}, beat {1}" xml:space="preserve"><value>{0}, Beat {1}</value></data>
   <data name="Selected throw" xml:space="preserve"><value>Ausgewählter Wurf</value></data>
   <data name="Throws {0}" xml:space="preserve"><value>Würfe {0}</value></data>
   <data name="{0}, beat {1}: throw {2} {3}, lands on {4}, beat {5}" xml:space="preserve"><value>{0}, Beat {1}: Wurf {2} {3}, landet bei {4}, Beat {5}</value></data>
   <data name="People in the same timezone throw synchronously" xml:space="preserve"><value>Personen in derselben TimeZone werfen synchron</value></data>
-  <data name="{0}. Tap for next phase." xml:space="preserve"><value>{0}. Antippen für nächste Phase.</value></data>
+  <data name="{0}, TimeZone {1}. Tap for next phase." xml:space="preserve"><value>{0}, TimeZone {1}. Antippen für nächste Phase.</value></data>
   <data name="Throw display" xml:space="preserve"><value>Wurfanzeige</value></data>
   <data name="No landing slot on beat {0}" xml:space="preserve"><value>Kein Landungs-Slot auf Beat {0}</value></data>
   <data name="Choose landing slot on beat {0}" xml:space="preserve"><value>Landungs-Slot auf Beat {0} wählen</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Nicht verfügbar</value></data>
   <data name="{0} clubs" xml:space="preserve"><value>{0} Keulen</value></data>
+  <data name="Rotate starting position" xml:space="preserve"><value>Startposition rotieren</value></data>
+  <data name="Rotate pattern left" xml:space="preserve"><value>Muster nach links rotieren</value></data>
+  <data name="Rotate pattern right" xml:space="preserve"><value>Muster nach rechts rotieren</value></data>
+  <data name="Starting club distribution (L / R)" xml:space="preserve"><value>Startkeulen-Verteilung (L / R)</value></data>
+  <data name="Start clubs {0}: left {1}, right {2}" xml:space="preserve"><value>Startkeulen {0}: links {1}, rechts {2}</value></data>
+  <data name="Start clubs" xml:space="preserve"><value>Startkeulen</value></data>
+  <data name="Select a throw above to see where it lands and edit it." xml:space="preserve"><value>Wähle oben einen Wurf aus, um zu sehen, wo er landet, und ihn zu bearbeiten.</value></data>
+  <data name="Tap a throw to select it. Drag to change where it lands." xml:space="preserve"><value>Tippe einen Wurf an, um ihn auszuwählen. Ziehe, um das Landungsziel zu ändern.</value></data>
+  <data name="Selected throw {0} {1}, {2} beat {3}. Lands on {4} beat {5}. Press to clear." xml:space="preserve"><value>Ausgewählter Wurf {0} {1}, {2} Beat {3}. Landet bei {4} auf Beat {5}. Drücken zum Abwählen.</value></data>
+  <data name="{0} {1}, {2} beat {3}. Landing of selected throw from {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} Beat {3}. Landung des ausgewählten Wurfs von {4} Beat {5}.</value></data>
+  <data name="Dragging {0} {1}, {2} beat {3}. Drop on another cell to set landing target." xml:space="preserve"><value>Ziehe {0} {1}, {2} Beat {3}. Auf eine andere Zelle ablegen, um das Landungsziel zu setzen.</value></data>
+  <data name="Drop to land dragged throw from {0} beat {1} on {2} beat {3}." xml:space="preserve"><value>Ablegen, um den gezogenen Wurf von {0} Beat {1} auf {2} Beat {3} landen zu lassen.</value></data>
+  <data name="Decrease throw by period" xml:space="preserve"><value>Wurf um Periode verringern</value></data>
+  <data name="Increase throw by period" xml:space="preserve"><value>Wurf um Periode erhöhen</value></data>
+  <data name="Period step size" xml:space="preserve"><value>Periodenschrittweite</value></data>
+  <data name="±{0} = one pattern period" xml:space="preserve"><value>±{0} = eine Musterperiode</value></data>
+  <data name="Incoming throw" xml:space="preserve"><value>Ankommender Wurf</value></data>
+  <data name="Lands from" xml:space="preserve"><value>Landet von</value></data>
+  <data name="No throws land here." xml:space="preserve"><value>Kein Wurf landet hier.</value></data>
+  <data name="{0} {1}, {2} beat {3}. Lands on selected cell at {4} beat {5}." xml:space="preserve"><value>{0} {1}, {2} Beat {3}. Landet auf der ausgewählten Zelle bei {4} Beat {5}.</value></data>
 </root>
