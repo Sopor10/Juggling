@@ -15,6 +15,5 @@ for cache_dir in "${NUGET_PACKAGES}" "${NUGET_HTTP_CACHE_PATH}"; do
   fi
 done
 
-export ASPIRE_SUPPRESS_CLI_RUN_HOOK="${ASPIRE_SUPPRESS_CLI_RUN_HOOK-true}"
-dotnet restore
+dotnet restore -p:AspireUseCliBundle=false
 bash .devcontainer/install-pi.sh
