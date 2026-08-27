@@ -10,10 +10,60 @@ cd "${ROOT}"
 
 APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
-PREWARM_TIMEOUT_SECS="${ASPIRE_VERIFY_PREWARM_TIMEOUT_SECS:-90}"
+PREWARM_TIMEOUT_SECS=60
 POLL_SECS=5
+prewarm_pid=""
+
+process_tree() {
+  local pid="$1"
+  local child
+
+  printf '%s\n' "${pid}"
+  while IFS= read -r child; do
+    process_tree "${child}"
+  done < <(pgrep -P "${pid}" 2>/dev/null || true)
+}
+
+terminate_process_tree() {
+  local root_pid="$1"
+  local signal
+  local pid
+  local end
+  local any_alive
+  local -a pids
+
+  mapfile -t pids < <(process_tree "${root_pid}")
+  for signal in INT TERM KILL; do
+    for pid in "${pids[@]}"; do
+      kill -"${signal}" "${pid}" 2>/dev/null || true
+    done
+
+    if [[ "${signal}" == KILL ]]; then
+      break
+    fi
+
+    end=$((SECONDS + 5))
+    while (( SECONDS < end )); do
+      any_alive=false
+      for pid in "${pids[@]}"; do
+        if kill -0 "${pid}" 2>/dev/null; then
+          any_alive=true
+          break
+        fi
+      done
+      if [[ "${any_alive}" == false ]]; then
+        return 0
+      fi
+      sleep 1
+    done
+  done
+}
 
 cleanup() {
+  if [[ -n "${prewarm_pid}" ]] && kill -0 "${prewarm_pid}" 2>/dev/null; then
+    terminate_process_tree "${prewarm_pid}" || true
+    wait "${prewarm_pid}" 2>/dev/null || true
+  fi
   timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
@@ -29,14 +79,74 @@ dump_aspire_logs() {
       done
 }
 
-echo "==> aspire prewarm"
+echo "==> Aspire AppHost prewarm"
 prewarm_output="$(mktemp)"
-if ! timeout "${PREWARM_TIMEOUT_SECS}s" aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach 2>&1 | tee "${prewarm_output}"; then
-  echo "Failed to prewarm the Aspire AppHost." >&2
+ASPIRE_SUPPRESS_CLI_RUN_HOOK=true dotnet run --project "${APPHOST}" --no-launch-profile >"${prewarm_output}" 2>&1 &
+prewarm_pid=$!
+prewarm_deadline=$((SECONDS + PREWARM_TIMEOUT_SECS))
+prewarm_message_found=false
+prewarm_timed_out=false
+prewarm_exit=0
+
+while true; do
+  if grep -Fq 'Distributed application started. Press Ctrl+C to shut down.' "${prewarm_output}"; then
+    prewarm_message_found=true
+    break
+  fi
+  if ! kill -0 "${prewarm_pid}" 2>/dev/null; then
+    if wait "${prewarm_pid}"; then
+      prewarm_exit=$?
+    else
+      prewarm_exit=$?
+    fi
+    break
+  fi
+  if (( SECONDS >= prewarm_deadline )); then
+    prewarm_timed_out=true
+    prewarm_exit=124
+    break
+  fi
+  sleep 1
+done
+
+if [[ -n "${prewarm_pid}" ]] && kill -0 "${prewarm_pid}" 2>/dev/null; then
+  terminate_process_tree "${prewarm_pid}" || true
+fi
+if [[ "${prewarm_timed_out}" == true ]]; then
+  prewarm_exit=124
+elif kill -0 "${prewarm_pid}" 2>/dev/null; then
+  if wait "${prewarm_pid}"; then
+    prewarm_exit=$?
+  else
+    prewarm_exit=$?
+  fi
+elif [[ "${prewarm_message_found}" == true ]]; then
+  if wait "${prewarm_pid}"; then
+    prewarm_exit=$?
+  else
+    prewarm_exit=$?
+  fi
+fi
+prewarm_pid=""
+
+cat "${prewarm_output}"
+if [[ "${prewarm_message_found}" != true ]]; then
+  echo "Timed out waiting for the Aspire AppHost startup message." >&2
   cat "${prewarm_output}" >&2
   dump_aspire_logs
+  rm -f "${prewarm_output}"
   exit 1
 fi
+case "${prewarm_exit}" in
+  0|124|130|143) ;;
+  *)
+    echo "Aspire AppHost prewarm exited with unexpected status ${prewarm_exit}." >&2
+    cat "${prewarm_output}" >&2
+    dump_aspire_logs
+    rm -f "${prewarm_output}"
+    exit 1
+    ;;
+esac
 rm -f "${prewarm_output}"
 
 if ! timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1; then
