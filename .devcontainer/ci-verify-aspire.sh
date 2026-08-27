@@ -69,28 +69,18 @@ while true; do
     else
       aspire_run_status=$?
     fi
-    fail_startup "Aspire run exited before the AppHost became running (status ${aspire_run_status})."
+    fail_startup "Aspire run exited before the AppHost became ready (status ${aspire_run_status})."
     exit 1
   fi
 
-  ps_output="$(aspire ps --format Json 2>/dev/null || true)"
-  if ! kill -0 "${run_pid}" 2>/dev/null; then
-    if wait "${run_pid}"; then
-      aspire_run_status=0
-    else
-      aspire_run_status=$?
-    fi
-    fail_startup "Aspire run exited while waiting for the AppHost to become running (status ${aspire_run_status})."
-    exit 1
-  fi
-  if grep -q '"status": "running"' <<<"${ps_output}"; then
+  if grep -qE 'Dashboard:|Press CTRL\+C to stop the AppHost' "${run_output}"; then
     echo "AppHost is running"
     break
   fi
   if (( SECONDS >= deadline )); then
     fail_startup "Timed out waiting for AppHost"
     echo "==> aspire ps" >&2
-    echo "${ps_output}" >&2
+    aspire ps --format Json 2>/dev/null || true
     ls -lt "${HOME}/.aspire/logs" 2>/dev/null | head -20 || true
     exit 1
   fi
