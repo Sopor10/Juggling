@@ -14,26 +14,10 @@ export ASPIRE_CLI_START_TIMEOUT="${ASPIRE_CLI_START_TIMEOUT:-${TIMEOUT_SECS}}"
 export features__updateNotificationsEnabled="${features__updateNotificationsEnabled:-false}"
 POLL_SECS=5
 
-run_pid=""
 run_output=""
 
 cleanup() {
   timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
-
-  if [[ -n "${run_pid}" ]]; then
-    if kill -0 "${run_pid}" 2>/dev/null; then
-      kill "${run_pid}" 2>/dev/null || true
-      for _ in {1..30}; do
-        if ! kill -0 "${run_pid}" 2>/dev/null; then
-          break
-        fi
-        sleep 1
-      done
-      kill -KILL "${run_pid}" 2>/dev/null || true
-    fi
-    wait "${run_pid}" 2>/dev/null || true
-  fi
-
   [[ -z "${run_output}" ]] || rm -f "${run_output}" || true
 }
 trap cleanup EXIT
@@ -59,35 +43,12 @@ fail_startup() {
 echo "==> aspire run"
 run_output="$(mktemp)"
 aspire_run_status=0
-aspire run --apphost "${APPHOST}" --non-interactive --nologo >"${run_output}" 2>&1 &
-run_pid=$!
-
-echo "==> waiting for AppHost (timeout ${TIMEOUT_SECS}s)"
-deadline=$((SECONDS + TIMEOUT_SECS))
-while true; do
-  if ! kill -0 "${run_pid}" 2>/dev/null; then
-    if wait "${run_pid}"; then
-      aspire_run_status=0
-    else
-      aspire_run_status=$?
-    fi
-    fail_startup "Aspire run exited before the AppHost became ready (status ${aspire_run_status})."
-    exit 1
-  fi
-
-  if grep -qE 'Dashboard:|Press CTRL\+C to stop the AppHost' "${run_output}"; then
-    echo "AppHost is running"
-    break
-  fi
-  if (( SECONDS >= deadline )); then
-    fail_startup "Timed out waiting for AppHost"
-    echo "==> aspire ps" >&2
-    aspire ps --format Json 2>/dev/null || true
-    ls -lt "${HOME}/.aspire/logs" 2>/dev/null | head -20 || true
-    exit 1
-  fi
-  sleep "${POLL_SECS}"
-done
+timeout "${TIMEOUT_SECS}s" aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach --format Json >"${run_output}" 2>&1 || aspire_run_status=$?
+cat "${run_output}"
+if (( aspire_run_status != 0 )); then
+  fail_startup "Aspire run failed (status ${aspire_run_status})."
+  exit 1
+fi
 
 echo "==> waiting for Healthy resources"
 deadline=$((SECONDS + TIMEOUT_SECS))
