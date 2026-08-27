@@ -10,6 +10,7 @@ cd "${ROOT}"
 
 APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
+export ASPIRE_CLI_START_TIMEOUT="${ASPIRE_CLI_START_TIMEOUT:-${TIMEOUT_SECS}}"
 POLL_SECS=5
 
 run_pid=""
