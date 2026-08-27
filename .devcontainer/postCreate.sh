@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-eval "$(dotnetup env script --shell bash --dotnet --dotnetup | sed '/^hash -d /d')"
-
-# Match AppHost Aspire major (see Juggling.AppHost.csproj Aspire.AppHost.Sdk).
-if ! command -v aspire >/dev/null 2>&1; then
-  dotnet tool install -g Aspire.Cli
-else
-  dotnet tool update -g Aspire.Cli
+if ! mkdir -p "${HOME}/.nuget/NuGet" 2>/dev/null; then
+  sudo mkdir -p "${HOME}/.nuget/NuGet"
 fi
+sudo chown "$(id -u):$(id -g)" "${HOME}/.nuget" "${HOME}/.nuget/NuGet"
 
-dotnet restore
-aspire --version
+for cache_dir in "${NUGET_PACKAGES}" "${NUGET_HTTP_CACHE_PATH}"; do
+  if ! mkdir -p "${cache_dir}" 2>/dev/null; then
+    sudo mkdir -p "${cache_dir}"
+  fi
+  if [[ ! -w "${cache_dir}" ]]; then
+    sudo chown -R "$(id -u):$(id -g)" "${cache_dir}"
+  fi
+done
+
+dotnet restore -p:AspireUseCliBundle=false
 bash .devcontainer/install-pi.sh

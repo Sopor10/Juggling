@@ -3,7 +3,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-eval "$(dotnetup env script --shell bash --dotnet --dotnetup | sed '/^hash -d /d')"
 export SSL_CERT_DIR="${SSL_CERT_DIR:-${HOME}/.aspnet/dev-certs/trust:/etc/ssl/certs}"
 
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -11,32 +10,67 @@ cd "${ROOT}"
 
 APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
+export ASPIRE_CLI_START_TIMEOUT="${ASPIRE_CLI_START_TIMEOUT:-${TIMEOUT_SECS}}"
+export features__updateNotificationsEnabled="${features__updateNotificationsEnabled:-false}"
 POLL_SECS=5
 
-echo "==> aspire version"
-aspire --version
-
-echo "==> aspire start"
-# Keep a supervising shell process for the duration of this script so orphan
-# detection does not race the short-lived `aspire start` parent.
-aspire start --apphost "${APPHOST}" --non-interactive --nologo --format Json
+run_output=""
+run_pid=""
 
 cleanup() {
-  aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
+  timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
+  if [[ -n "${run_pid}" ]]; then
+    kill "${run_pid}" 2>/dev/null || true
+    wait "${run_pid}" 2>/dev/null || true
+  fi
+  [[ -z "${run_output}" ]] || rm -f "${run_output}" || true
 }
 trap cleanup EXIT
 
-echo "==> waiting for AppHost (timeout ${TIMEOUT_SECS}s)"
+dump_aspire_logs() {
+  echo "==> Aspire CLI logs" >&2
+  find "${HOME}/.aspire/logs" -maxdepth 1 -type f -printf "%T@ %p\n" 2>/dev/null \
+    | sort -nr \
+    | cut -d' ' -f2- \
+    | while IFS= read -r log_file; do
+        echo "--- ${log_file} (last 200 lines)" >&2
+        tail -200 "${log_file}" >&2 || true
+      done
+}
+
+fail_startup() {
+  echo "$1" >&2
+  echo "==> aspire run output" >&2
+  cat "${run_output}" >&2 || true
+  dump_aspire_logs || true
+}
+
+echo "==> dotnet build"
+if ! dotnet build "${APPHOST}" --no-restore; then
+  echo "dotnet build failed." >&2
+  exit 1
+fi
+
+echo "==> dotnet run AppHost"
+run_output="$(mktemp)"
+dotnet run --no-build --no-restore -p:AspireUseCliBundle=false --project "${APPHOST}" >"${run_output}" 2>&1 &
+run_pid=$!
+
+echo "==> waiting for Aspire dashboard"
 deadline=$((SECONDS + TIMEOUT_SECS))
 while true; do
-  if aspire ps --format Json 2>/dev/null | grep -q '"status": "running"'; then
-    echo "AppHost is running"
+  if curl -ksf https://localhost:17063 >/dev/null; then
+    cat "${run_output}"
     break
   fi
+  if ! kill -0 "${run_pid}" 2>/dev/null; then
+    run_status=0
+    wait "${run_pid}" || run_status=$?
+    fail_startup "AppHost failed (status ${run_status})."
+    exit 1
+  fi
   if (( SECONDS >= deadline )); then
-    echo "Timed out waiting for AppHost" >&2
-    aspire ps --format Json || true
-    ls -lt "${HOME}/.aspire/logs" 2>/dev/null | head -20 || true
+    fail_startup "Timed out waiting for Aspire dashboard."
     exit 1
   fi
   sleep "${POLL_SECS}"
