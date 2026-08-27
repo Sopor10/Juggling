@@ -25,5 +25,6 @@ chown -R "${REMOTE_USER}:${REMOTE_GROUP}" "${ASPIRE_TOOL_PATH}"
 
 runuser -u "${REMOTE_USER}" -- env HOME="${REMOTE_HOME}" /usr/local/bin/aspire setup --non-interactive --nologo
 
+find "${ASPIRE_TOOL_PATH}" -type f \( -name dcp -o -name aspire-managed \) -exec chmod 0755 {} +
 chown -R "${REMOTE_USER}:${REMOTE_GROUP}" "${ASPIRE_TOOL_PATH}"
 ln -sfn "${ASPIRE_TOOL_PATH}/aspire" /usr/local/bin/aspire
