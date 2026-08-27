@@ -51,22 +51,22 @@ if ! dotnet build "${APPHOST}" --no-restore; then
   exit 1
 fi
 
-echo "==> aspire run"
+echo "==> dotnet run AppHost"
 run_output="$(mktemp)"
-aspire run --apphost "${APPHOST}" --no-build --non-interactive --nologo >"${run_output}" 2>&1 &
+dotnet run --no-build --no-restore -p:AspireUseCliBundle=false --project "${APPHOST}" >"${run_output}" 2>&1 &
 run_pid=$!
 
 echo "==> waiting for Aspire dashboard"
 deadline=$((SECONDS + TIMEOUT_SECS))
 while true; do
-  if grep -Eq 'Dashboard:|Press CTRL\+C to stop the AppHost' "${run_output}"; then
+  if curl -ksf https://localhost:17063 >/dev/null; then
     cat "${run_output}"
     break
   fi
   if ! kill -0 "${run_pid}" 2>/dev/null; then
-    aspire_run_status=0
-    wait "${run_pid}" || aspire_run_status=$?
-    fail_startup "Aspire run failed (status ${aspire_run_status})."
+    run_status=0
+    wait "${run_pid}" || run_status=$?
+    fail_startup "AppHost failed (status ${run_status})."
     exit 1
   fi
   if (( SECONDS >= deadline )); then
