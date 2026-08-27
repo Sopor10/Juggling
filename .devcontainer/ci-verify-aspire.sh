@@ -155,11 +155,11 @@ if ! timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null
   exit 1
 fi
 
-echo "==> aspire start"
+echo "==> aspire run"
 # Keep a supervising shell process for the duration of this script so orphan
-# detection does not race the short-lived `aspire start` parent.
+# detection does not race the short-lived `aspire run` parent.
 start_output="$(mktemp)"
-if ! aspire start --apphost "${APPHOST}" --non-interactive --nologo --format Json 2>&1 | tee "${start_output}"; then
+if ! aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach --format Json 2>&1 | tee "${start_output}"; then
   echo "Failed to start the Aspire AppHost." >&2
   cat "${start_output}" >&2
   dump_aspire_logs
