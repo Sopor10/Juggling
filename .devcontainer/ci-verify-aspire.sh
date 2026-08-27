@@ -15,9 +15,14 @@ export features__updateNotificationsEnabled="${features__updateNotificationsEnab
 POLL_SECS=5
 
 run_output=""
+run_pid=""
 
 cleanup() {
   timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
+  if [[ -n "${run_pid}" ]]; then
+    kill "${run_pid}" 2>/dev/null || true
+    wait "${run_pid}" 2>/dev/null || true
+  fi
   [[ -z "${run_output}" ]] || rm -f "${run_output}" || true
 }
 trap cleanup EXIT
@@ -40,15 +45,36 @@ fail_startup() {
   dump_aspire_logs || true
 }
 
-echo "==> aspire run"
-run_output="$(mktemp)"
-aspire_run_status=0
-timeout "${TIMEOUT_SECS}s" aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach --format Json >"${run_output}" 2>&1 || aspire_run_status=$?
-cat "${run_output}"
-if (( aspire_run_status != 0 )); then
-  fail_startup "Aspire run failed (status ${aspire_run_status})."
+echo "==> dotnet build"
+if ! dotnet build "${APPHOST}" --no-restore; then
+  echo "dotnet build failed." >&2
   exit 1
 fi
+
+echo "==> aspire run"
+run_output="$(mktemp)"
+aspire run --apphost "${APPHOST}" --no-build --non-interactive --nologo >"${run_output}" 2>&1 &
+run_pid=$!
+
+echo "==> waiting for Aspire dashboard"
+deadline=$((SECONDS + TIMEOUT_SECS))
+while true; do
+  if grep -Eq 'Dashboard:|Press CTRL\+C to stop the AppHost' "${run_output}"; then
+    cat "${run_output}"
+    break
+  fi
+  if ! kill -0 "${run_pid}" 2>/dev/null; then
+    aspire_run_status=0
+    wait "${run_pid}" || aspire_run_status=$?
+    fail_startup "Aspire run failed (status ${aspire_run_status})."
+    exit 1
+  fi
+  if (( SECONDS >= deadline )); then
+    fail_startup "Timed out waiting for Aspire dashboard."
+    exit 1
+  fi
+  sleep "${POLL_SECS}"
+done
 
 echo "==> waiting for Healthy resources"
 deadline=$((SECONDS + TIMEOUT_SECS))
