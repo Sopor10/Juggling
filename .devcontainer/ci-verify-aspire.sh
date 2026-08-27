@@ -12,8 +12,27 @@ APPHOST="./Juggling.AppHost/Juggling.AppHost.csproj"
 TIMEOUT_SECS="${ASPIRE_VERIFY_TIMEOUT_SECS:-480}"
 POLL_SECS=5
 
+run_pid=""
+run_output=""
+
 cleanup() {
   timeout 30s aspire stop --apphost "${APPHOST}" --non-interactive >/dev/null 2>&1 || true
+
+  if [[ -n "${run_pid}" ]]; then
+    if kill -0 "${run_pid}" 2>/dev/null; then
+      kill "${run_pid}" 2>/dev/null || true
+      for _ in {1..30}; do
+        if ! kill -0 "${run_pid}" 2>/dev/null; then
+          break
+        fi
+        sleep 1
+      done
+      kill -KILL "${run_pid}" 2>/dev/null || true
+    fi
+    wait "${run_pid}" 2>/dev/null || true
+  fi
+
+  [[ -z "${run_output}" ]] || rm -f "${run_output}" || true
 }
 trap cleanup EXIT
 
@@ -28,28 +47,50 @@ dump_aspire_logs() {
       done
 }
 
+fail_startup() {
+  echo "$1" >&2
+  echo "==> aspire run output" >&2
+  cat "${run_output}" >&2 || true
+  dump_aspire_logs || true
+}
+
 echo "==> aspire run"
-# Keep a supervising shell process for the duration of this script so orphan
-# detection does not race the short-lived `aspire run` parent.
-start_output="$(mktemp)"
-if ! aspire run --apphost "${APPHOST}" --non-interactive --nologo --detach --format Json 2>&1 | tee "${start_output}"; then
-  echo "Failed to start the Aspire AppHost." >&2
-  cat "${start_output}" >&2
-  dump_aspire_logs
-  exit 1
-fi
-rm -f "${start_output}"
+run_output="$(mktemp)"
+aspire_run_status=0
+aspire run --apphost "${APPHOST}" --non-interactive --nologo >"${run_output}" 2>&1 &
+run_pid=$!
 
 echo "==> waiting for AppHost (timeout ${TIMEOUT_SECS}s)"
 deadline=$((SECONDS + TIMEOUT_SECS))
 while true; do
-  if aspire ps --format Json 2>/dev/null | grep -q '"status": "running"'; then
+  if ! kill -0 "${run_pid}" 2>/dev/null; then
+    if wait "${run_pid}"; then
+      aspire_run_status=0
+    else
+      aspire_run_status=$?
+    fi
+    fail_startup "Aspire run exited before the AppHost became running (status ${aspire_run_status})."
+    exit 1
+  fi
+
+  ps_output="$(aspire ps --format Json 2>/dev/null || true)"
+  if ! kill -0 "${run_pid}" 2>/dev/null; then
+    if wait "${run_pid}"; then
+      aspire_run_status=0
+    else
+      aspire_run_status=$?
+    fi
+    fail_startup "Aspire run exited while waiting for the AppHost to become running (status ${aspire_run_status})."
+    exit 1
+  fi
+  if grep -q '"status": "running"' <<<"${ps_output}"; then
     echo "AppHost is running"
     break
   fi
   if (( SECONDS >= deadline )); then
-    echo "Timed out waiting for AppHost" >&2
-    aspire ps --format Json || true
+    fail_startup "Timed out waiting for AppHost"
+    echo "==> aspire ps" >&2
+    echo "${ps_output}" >&2
     ls -lt "${HOME}/.aspire/logs" 2>/dev/null | head -20 || true
     exit 1
   fi
