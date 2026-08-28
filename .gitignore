@@ -20,3 +20,4 @@ node_modules
 .playwright-mcp
 
 review-artifacts
+artifact-diffs/
