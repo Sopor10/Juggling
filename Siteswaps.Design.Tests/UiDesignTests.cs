@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.Playwright;
@@ -22,11 +23,6 @@ public sealed class UiDesignTests
     {
         VerifyImageMagick.Initialize();
         VerifyImageMagick.RegisterComparers(DefaultThreshold);
-
-        if (Environment.GetEnvironmentVariable("AutoVerify") == "1")
-        {
-            VerifierSettings.AutoVerify();
-        }
     }
 
     [OneTimeSetUp]
@@ -48,6 +44,7 @@ public sealed class UiDesignTests
 
         foreach (var type in components)
         {
+            var attribute = type.GetCustomAttribute<DesignTestComponentAttribute>()!;
             var fullName = type.FullName!;
             var relative = fullName
                 .Replace(FixtureRootNamespace, string.Empty, StringComparison.Ordinal)
@@ -60,10 +57,22 @@ public sealed class UiDesignTests
                 );
             }
 
-            var directory = Path.Combine(["Tests", .. relative[..^1]]);
-            var fileName = relative[^1];
-            var displayName = string.Join('/', relative);
-            yield return new TestCaseData(fullName, directory, fileName).SetName(displayName);
+            // Tests/{Area}/{Component}/{width}.verified.png
+            var directory = Path.Combine(["Tests", .. relative]);
+            var fixturePath = string.Join('/', relative);
+
+            foreach (var width in attribute.ResolveWidths())
+            {
+                var height = DesignTestComponentAttribute.HeightForWidth(width);
+                var displayName = $"{fixturePath}/{width}";
+                yield return new TestCaseData(
+                    fullName,
+                    directory,
+                    width.ToString(CultureInfo.InvariantCulture),
+                    width,
+                    height
+                ).SetName(displayName);
+            }
         }
     }
 
@@ -72,10 +81,14 @@ public sealed class UiDesignTests
     public async Task DesignFixture_MatchesVerifiedScreenshot(
         string typeName,
         string verifyDirectory,
-        string verifyFileName
+        string verifyFileName,
+        int viewportWidth,
+        int viewportHeight
     )
     {
-        var context = await _host.Browser.NewContextAsync(DesignCulture.NewContextOptions());
+        var context = await _host.Browser.NewContextAsync(
+            DesignCulture.NewContextOptions(viewportWidth, viewportHeight)
+        );
         await DesignCulture.InstallAsync(context);
 
         var page = await context.NewPageAsync();
@@ -116,7 +129,8 @@ public sealed class UiDesignTests
                 );
                 await File.WriteAllTextAsync(path, html);
                 throw new TimeoutException(
-                    $"usedForTest not visible for {typeName} at {uri}. Console errors:{Environment.NewLine}"
+                    $"usedForTest not visible for {typeName} @{viewportWidth}x{viewportHeight} at {uri}. "
+                        + $"Console errors:{Environment.NewLine}"
                         + string.Join(Environment.NewLine, consoleErrors)
                         + $"{Environment.NewLine}HTML dumped to {path}",
                     ex
@@ -132,7 +146,7 @@ public sealed class UiDesignTests
 
             var screenshotPath = Path.Combine(
                 Path.GetTempPath(),
-                $"{verifyFileName}_{Guid.NewGuid():N}.png"
+                $"{verifyFileName}_{viewportWidth}_{Guid.NewGuid():N}.png"
             );
             try
             {

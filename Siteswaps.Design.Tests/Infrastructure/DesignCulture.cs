@@ -11,11 +11,11 @@ internal static class DesignCulture
 
     private const string InitScript = "window.localStorage.setItem('BlazorCulture', 'de');";
 
-    public static BrowserNewContextOptions NewContextOptions() =>
+    public static BrowserNewContextOptions NewContextOptions(int width, int height) =>
         new()
         {
             Locale = Locale,
-            ViewportSize = new ViewportSize { Width = 1280, Height = 720 },
+            ViewportSize = new ViewportSize { Width = width, Height = height },
         };
 
     public static Task InstallAsync(IBrowserContext context) =>
