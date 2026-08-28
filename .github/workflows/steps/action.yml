@@ -24,3 +24,13 @@ runs:
     - name: Test
       run: dotnet test
       shell: bash
+    - name: Upload design screenshot diffs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: design-screenshot-diffs
+        path: |
+          Siteswaps.Design.Tests/Tests/**/*.received.*
+          Siteswaps.Design.Tests/Tests/**/*.verified.png
+        if-no-files-found: ignore
+        retention-days: 14

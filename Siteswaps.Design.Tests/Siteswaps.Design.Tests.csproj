@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.Playwright" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Testcontainers" />
+    <PackageReference Include="Verify" />
+    <PackageReference Include="Verify.ImageMagick" />
+    <PackageReference Include="Verify.NUnit" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.E2ETests.Server\Siteswaps.E2ETests.Server.csproj" />
+    <ProjectReference Include="..\Webassembly\Webassembly.csproj" />
+  </ItemGroup>
+</Project>

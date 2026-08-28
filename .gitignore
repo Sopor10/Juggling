@@ -4,6 +4,7 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 *.received.txt
+*.received.*
 **/.idea
 **/*Dotsettings*
 **/.vs
@@ -19,3 +20,4 @@ node_modules
 .playwright-mcp
 
 review-artifacts
+artifact-diffs/

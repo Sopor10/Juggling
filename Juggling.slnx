@@ -15,6 +15,7 @@
   <Folder Name="/E2E/">
     <Project Path="Siteswaps.E2ETests/Siteswaps.E2ETests.csproj" />
     <Project Path="Siteswaps.E2ETests.Server/Siteswaps.E2ETests.Server.csproj" />
+    <Project Path="Siteswaps.Design.Tests/Siteswaps.Design.Tests.csproj" />
   </Folder>
   <Project Path="Webassembly/Webassembly.csproj" />
 </Solution>
