@@ -49,16 +49,31 @@ public sealed class UiDesignTests
         foreach (var type in components)
         {
             var fullName = type.FullName!;
-            var displayName = fullName
+            var relative = fullName
                 .Replace(FixtureRootNamespace, string.Empty, StringComparison.Ordinal)
-                .Replace('.', '_');
-            yield return new TestCaseData(fullName, displayName).SetName(displayName);
+                .Split('.', StringSplitOptions.RemoveEmptyEntries);
+            if (relative.Length < 2)
+            {
+                throw new InvalidOperationException(
+                    $"Design fixture '{fullName}' must live under at least one folder namespace "
+                        + $"(e.g. {FixtureRootNamespace}Home.BrandMark)."
+                );
+            }
+
+            var directory = Path.Combine(["Tests", .. relative[..^1]]);
+            var fileName = relative[^1];
+            var displayName = string.Join('/', relative);
+            yield return new TestCaseData(fullName, directory, fileName).SetName(displayName);
         }
     }
 
     [Test]
     [TestCaseSource(nameof(GetTestCases))]
-    public async Task DesignFixture_MatchesVerifiedScreenshot(string typeName, string displayName)
+    public async Task DesignFixture_MatchesVerifiedScreenshot(
+        string typeName,
+        string verifyDirectory,
+        string verifyFileName
+    )
     {
         var context = await _host.Browser.NewContextAsync(DesignCulture.NewContextOptions());
         await DesignCulture.InstallAsync(context);
@@ -97,11 +112,11 @@ public sealed class UiDesignTests
                 var html = await page.ContentAsync();
                 var path = Path.Combine(
                     Path.GetTempPath(),
-                    $"design-fail-{displayName}-{Guid.NewGuid():N}.html"
+                    $"design-fail-{verifyFileName}-{Guid.NewGuid():N}.html"
                 );
                 await File.WriteAllTextAsync(path, html);
                 throw new TimeoutException(
-                    $"usedForTest not visible for {displayName} at {uri}. Console errors:{Environment.NewLine}"
+                    $"usedForTest not visible for {typeName} at {uri}. Console errors:{Environment.NewLine}"
                         + string.Join(Environment.NewLine, consoleErrors)
                         + $"{Environment.NewLine}HTML dumped to {path}",
                     ex
@@ -117,14 +132,16 @@ public sealed class UiDesignTests
 
             var screenshotPath = Path.Combine(
                 Path.GetTempPath(),
-                $"{displayName}_{Guid.NewGuid():N}.png"
+                $"{verifyFileName}_{Guid.NewGuid():N}.png"
             );
             try
             {
                 await element.ScreenshotAsync(
                     new LocatorScreenshotOptions { Path = screenshotPath }
                 );
-                await VerifyFile(screenshotPath).UseFileName(displayName);
+                await VerifyFile(screenshotPath)
+                    .UseDirectory(verifyDirectory)
+                    .UseFileName(verifyFileName);
             }
             finally
             {
