@@ -1,0 +1,28 @@
+@page "/test"
+@layout DesignTestLayout
+
+<style>
+    /* Stabilize visual snapshots: no motion between Docker Chromium runs. */
+    [usedForTest='true'],
+    [usedForTest='true'] *,
+    [usedForTest='true'] *::before,
+    [usedForTest='true'] *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+</style>
+
+<div usedForTest="true" class="design-test-host">
+    @if (ComponentType is not null)
+    {
+        <DynamicComponent Type="ComponentType" />
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "type")]
+    public string TypeName { get; set; } = "";
+
+    private Type? ComponentType =>
+        typeof(DesignTestComponentAttribute).Assembly.GetType(TypeName);
+}

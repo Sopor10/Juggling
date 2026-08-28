@@ -4,6 +4,7 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 *.received.txt
+*.received.*
 **/.idea
 **/*Dotsettings*
 **/.vs

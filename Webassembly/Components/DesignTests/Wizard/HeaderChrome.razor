@@ -1,0 +1,16 @@
+@attribute [DesignTestComponent]
+@using Microsoft.AspNetCore.Components.Sections
+@using Siteswaps.Generator.Components.Layout
+@using Siteswaps.Generator.Components.WizardPage.Controls
+
+@* Static wizard header chrome for visual regression (fixed copy, no live wizard state). *@
+<WizardShell />
+
+<SectionContent SectionName="@WizardShellSections.Header">
+    <ProgressDots Total="4" Current="0" Visited="_visited" />
+    <p class="wizard-swipe-hint">← swipe left/right →</p>
+</SectionContent>
+
+@code {
+    private static readonly IReadOnlySet<int> _visited = new HashSet<int> { 0 };
+}
