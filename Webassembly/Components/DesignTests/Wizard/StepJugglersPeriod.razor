@@ -1,0 +1,45 @@
+@attribute [DesignTestComponent]
+@using Microsoft.AspNetCore.Components.Sections
+@using Siteswaps.Generator.Components.Layout
+@using Siteswaps.Generator.Components.WizardPage.Controls
+
+@* Wizard step 0 composition: jugglers + period with chrome (static props). *@
+<WizardShell />
+
+<SectionContent SectionName="@WizardShellSections.Header">
+    <ProgressDots Total="4" Current="0" Visited="_visited" />
+    <p class="wizard-swipe-hint">← swipe left/right →</p>
+</SectionContent>
+
+<SectionContent SectionName="@WizardShellSections.Body">
+    <div class="wizard-steps">
+        <WizardStepPanel StepIndex="0" IsActive="true">
+            <div class="wizard-measure">
+                <div class="wizard-field">
+                    <h2 class="wizard-section-label">Jugglers</h2>
+                    <JugglerPicker Value="2" />
+                </div>
+                <div class="wizard-field">
+                    <h2 class="wizard-section-label">Period</h2>
+                    <PeriodStepper Value="5" />
+                </div>
+            </div>
+        </WizardStepPanel>
+    </div>
+</SectionContent>
+
+<SectionContent SectionName="@WizardShellSections.Footer">
+    <div class="wizard-nav">
+        <div class="wizard-measure">
+            <p class="wizard-next-preview">Next: Clubs &amp; throws</p>
+            <div class="wizard-nav-buttons">
+                <button type="button" class="wizard-btn-ghost wizard-back-btn wizard-invisible" disabled>Back</button>
+                <button type="button" class="wizard-flex-1 wizard-btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+</SectionContent>
+
+@code {
+    private static readonly IReadOnlySet<int> _visited = new HashSet<int> { 0 };
+}

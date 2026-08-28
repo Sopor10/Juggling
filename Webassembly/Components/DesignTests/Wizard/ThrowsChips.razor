@@ -1,0 +1,21 @@
+@attribute [DesignTestComponent]
+@using Siteswaps.Generator.Components.State
+@using Siteswaps.Generator.Components.WizardPage.Controls
+
+@* Allowed-throws chip grid with default selection. *@
+<div class="design-test-frame" style="padding: 1rem; max-width: 28rem; background: #f5f3fb;">
+    <ThrowsChipGrid Selected="_throws" MaxHeight="13" />
+</div>
+
+@code {
+    private readonly List<Throw> _throws =
+    [
+        Throw.Zip,
+        Throw.Hold,
+        Throw.Zap,
+        Throw.Self,
+        Throw.SinglePass,
+        Throw.Heff,
+        Throw.DoublePass,
+    ];
+}

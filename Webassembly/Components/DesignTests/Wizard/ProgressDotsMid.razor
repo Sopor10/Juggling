@@ -1,0 +1,11 @@
+@attribute [DesignTestComponent]
+@using Siteswaps.Generator.Components.WizardPage.Controls
+
+@* Mid-progress dots: done + active + reachable + disabled. *@
+<div class="design-test-frame" style="padding: 1rem; background: #f5f3fb;">
+    <ProgressDots Total="4" Current="2" Visited="_visited" />
+</div>
+
+@code {
+    private static readonly IReadOnlySet<int> _visited = new HashSet<int> { 0, 1, 2 };
+}

@@ -1,0 +1,30 @@
+@attribute [DesignTestComponent]
+@using Microsoft.AspNetCore.Components.Sections
+@using Siteswaps.Generator.Components.Layout
+@using Siteswaps.Generator.Components.WizardPage.Controls
+@using Siteswaps.Generator.Components.WizardPage.Results
+@using Siteswaps.Generator.Core.Generator
+
+@* Wizard results panel with a few fixed siteswaps (no generation). *@
+<WizardShell />
+
+<SectionContent SectionName="@WizardShellSections.Header">
+    <ProgressDots Total="4" Current="3" Visited="_visited" />
+</SectionContent>
+
+<SectionContent SectionName="@WizardShellSections.Body">
+    <div id="wizard-panel-3" class="wizard-results-panel" aria-labelledby="wizard-step-tab-3">
+        <ResultsView Results="_results" IsGenerating="false" NumberOfJugglers="2" />
+    </div>
+</SectionContent>
+
+@code {
+    private static readonly IReadOnlySet<int> _visited = new HashSet<int> { 0, 1, 2, 3 };
+
+    private readonly List<Siteswap> _results =
+    [
+        Siteswap.CreateFromCorrect("777"),
+        Siteswap.CreateFromCorrect("975"),
+        Siteswap.CreateFromCorrect("966"),
+    ];
+}

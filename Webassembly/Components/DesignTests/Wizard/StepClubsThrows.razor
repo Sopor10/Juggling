@@ -1,0 +1,62 @@
+@attribute [DesignTestComponent]
+@using Microsoft.AspNetCore.Components.Sections
+@using Siteswaps.Generator.Components.Layout
+@using Siteswaps.Generator.Components.State
+@using Siteswaps.Generator.Components.WizardPage
+@using Siteswaps.Generator.Components.WizardPage.Controls
+
+@* Wizard step 1: clubs dual-range + allowed throws (static defaults). *@
+<WizardShell />
+
+<SectionContent SectionName="@WizardShellSections.Header">
+    <ProgressDots Total="4" Current="1" Visited="_visited" />
+    <p class="wizard-swipe-hint">← swipe left/right →</p>
+</SectionContent>
+
+<SectionContent SectionName="@WizardShellSections.Body">
+    <div class="wizard-steps">
+        <WizardStepPanel StepIndex="1" IsActive="true">
+            <div class="wizard-measure">
+                <div class="wizard-field">
+                    <h2 class="wizard-section-label">Number of clubs</h2>
+                    <DualRangeSlider Min="5"
+                                     Max="7"
+                                     LowerBound="WizardState.MinClubs"
+                                     UpperBound="WizardState.MaxClubs"
+                                     MinLabel="Clubs minimum"
+                                     MaxLabel="Clubs maximum" />
+                </div>
+                <div class="wizard-field">
+                    <ThrowsChipGrid Selected="_throws" MaxHeight="13" />
+                </div>
+            </div>
+        </WizardStepPanel>
+    </div>
+</SectionContent>
+
+<SectionContent SectionName="@WizardShellSections.Footer">
+    <div class="wizard-nav">
+        <div class="wizard-measure">
+            <p class="wizard-next-preview">Next: Filters</p>
+            <div class="wizard-nav-buttons">
+                <button type="button" class="wizard-btn-ghost wizard-back-btn">Back</button>
+                <button type="button" class="wizard-flex-1 wizard-btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+</SectionContent>
+
+@code {
+    private static readonly IReadOnlySet<int> _visited = new HashSet<int> { 0, 1 };
+
+    private readonly List<Throw> _throws =
+    [
+        Throw.Zip,
+        Throw.Hold,
+        Throw.Zap,
+        Throw.Self,
+        Throw.SinglePass,
+        Throw.Heff,
+        Throw.DoublePass,
+    ];
+}
