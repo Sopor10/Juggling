@@ -23,6 +23,24 @@ public sealed class UiDesignTests
     {
         VerifyImageMagick.Initialize();
         VerifyImageMagick.RegisterComparers(DefaultThreshold);
+
+        // Surface mismatch pairs in test results / CI logs for easier triage.
+        VerifierSettings.OnVerifyMismatch(
+            (filePair, _) =>
+            {
+                if (File.Exists(filePair.ReceivedPath))
+                {
+                    TestContext.AddTestAttachment(filePair.ReceivedPath);
+                }
+
+                if (File.Exists(filePair.VerifiedPath))
+                {
+                    TestContext.AddTestAttachment(filePair.VerifiedPath);
+                }
+
+                return Task.CompletedTask;
+            }
+        );
     }
 
     [OneTimeSetUp]
