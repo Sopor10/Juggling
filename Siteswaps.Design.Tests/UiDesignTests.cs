@@ -26,7 +26,7 @@ public sealed class UiDesignTests
 
         // Surface mismatch pairs in test results / CI logs for easier triage.
         VerifierSettings.OnVerifyMismatch(
-            (filePair, _) =>
+            (filePair, _, _) =>
             {
                 if (File.Exists(filePair.ReceivedPath))
                 {
