@@ -6,7 +6,7 @@ runs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.0.x
+        dotnet-version: 11.0.100-preview.7.26381.103
     - name: Restore tools
       run: dotnet tool restore
       shell: bash
@@ -19,7 +19,7 @@ runs:
     - name: Install Playwright browsers
       run: |
         dotnet build Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
-        pwsh Siteswaps.E2ETests/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
+        pwsh Siteswaps.E2ETests/bin/Debug/net11.0/playwright.ps1 install --with-deps chromium
       shell: bash
     - name: Test
       run: dotnet test
