@@ -1,0 +1,14 @@
+@using Microsoft.AspNetCore.Components.Routing
+@using Webassembly.Components.DesignTests
+
+<Router AppAssembly="typeof(Program).Assembly"
+        AdditionalAssemblies="@(new[] { typeof(DesignTestComponentAttribute).Assembly })">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(DesignTestLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="typeof(DesignTestLayout)">
+            <p role="alert">Not found</p>
+        </LayoutView>
+    </NotFound>
+</Router>

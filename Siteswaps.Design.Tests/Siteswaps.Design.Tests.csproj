@@ -12,7 +12,7 @@
     <PackageReference Include="coverlet.collector" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Siteswaps.E2ETests.Server\Siteswaps.E2ETests.Server.csproj" />
-    <ProjectReference Include="..\Webassembly\Webassembly.csproj" />
+    <ProjectReference Include="..\Siteswaps.Design.TestHost\Siteswaps.Design.TestHost.csproj" />
+    <ProjectReference Include="..\Siteswaps.Design.Fixtures\Siteswaps.Design.Fixtures.csproj" />
   </ItemGroup>
 </Project>

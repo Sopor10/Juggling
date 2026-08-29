@@ -1,0 +1,6 @@
+# Applied automatically by MSBuild / dotnet build (not by Visual Studio IDE builds).
+#
+# Do not enable -mt (multithreaded MSBuild) here: the WebAssembly SDK's
+# JsonToItemsTaskFactory / ReadWasmProps task fails under -mt on Linux CI
+# ("does not support out of process TaskHost execution"). Pass -mt explicitly
+# for non-WASM local builds if desired (e.g. Design.Tests).

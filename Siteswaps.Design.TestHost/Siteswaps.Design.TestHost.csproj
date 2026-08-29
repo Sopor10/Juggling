@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\Siteswaps.Design.Fixtures\Siteswaps.Design.Fixtures.csproj" />
+    <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" />
+  </ItemGroup>
+</Project>
