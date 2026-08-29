@@ -2,6 +2,7 @@
   "name": "Siteswaps",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
+    "./features/host-ca": {},
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "11.0.100-preview.7.26381.103"
     },
@@ -12,8 +13,17 @@
     "./features/pi-coding-agent": {},
     "ghcr.io/devcontainers/features/powershell:2": {}
   },
+  "overrideFeatureInstallOrder": [
+    "./features/host-ca",
+    "ghcr.io/devcontainers/features/dotnet",
+    "ghcr.io/devcontainers/features/node",
+    "./features/aspire-cli",
+    "./features/pi-coding-agent",
+    "ghcr.io/devcontainers/features/powershell"
+  ],
   "mounts": [
     "source=${localEnv:HOME}/.hermes/auth.json,target=/host-hermes-auth.json,type=bind,readonly,consistency=cached",
+    "source=${localWorkspaceFolder}/.devcontainer/ca-runtime,target=/.msb/tls,type=bind,readonly,consistency=cached",
     "source=juggling-pi-agent,target=/home/vscode/.pi/agent,type=volume",
     "source=juggling-nuget-packages,target=/home/vscode/.nuget/packages,type=volume",
     "source=juggling-nuget-http-cache,target=/home/vscode/.local/share/NuGet/http-cache,type=volume"
@@ -35,7 +45,7 @@
     "PI_PROVIDER": "openai-codex",
     "PI_MODEL": "gpt-5.6-luna"
   },
-  "initializeCommand": "test -e \"${localEnv:HOME}/.hermes/auth.json\" || install -D -m 600 /dev/null \"${localEnv:HOME}/.hermes/auth.json\"",
+  "initializeCommand": "bash .devcontainer/initialize-host.sh",
   "onCreateCommand": "bash .devcontainer/onCreate.sh",
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
   "postStartCommand": "bash .devcontainer/postStart.sh",
