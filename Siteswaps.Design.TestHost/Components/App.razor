@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <base href="/" />
+    @* Load display fonts via <link> (not nested @import) so Playwright fonts.ready waits on them. *@
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"
+          rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="@Assets["Siteswaps.Design.TestHost.styles.css"]" rel="stylesheet" />
+    <HeadOutlet />
+</head>
+
+<body>
+    <Routes />
+</body>
+
+</html>

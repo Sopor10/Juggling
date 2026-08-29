@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Playwright;
-using Program = Siteswaps.E2ETests.Server.Program;
+using Program = Siteswaps.Design.TestHost.Program;
 
 namespace Siteswaps.Design.Tests.Infrastructure;
 
 /// <summary>
-/// Blazor WASM host on real Kestrel (so Docker Chromium can navigate without RouteAsync proxy)
+/// Blazor static SSR design host on real Kestrel (so Docker Chromium can navigate without RouteAsync proxy)
 /// plus Playwright connected to a version-pinned Docker browser.
 /// RootUri is immutable after <see cref="InitializeAsync"/>; concurrent page navigations are safe.
 /// </summary>
@@ -51,7 +51,7 @@ public sealed class DesignTestHostFixture
             );
 
         _webApplicationFactory = factory;
-        Timing.Log(sw, "host.kestrel-webassembly-start");
+        Timing.Log(sw, "host.kestrel-ssr-start");
         Timing.Log(total, "host.total");
         if (timing)
         {

@@ -161,9 +161,10 @@ public sealed class UiDesignTests
                 );
             }
 
-            // Prefer fonts.ready over NetworkIdle — Blazor WASM + Google Fonts rarely go fully idle.
             sw?.Restart();
-            await page.EvaluateAsync("() => document.fonts.ready");
+            await page.EvaluateAsync(
+                "async () => { await document.fonts.ready; await Promise.all([document.fonts.load(\"700 16px 'Baloo 2'\"), document.fonts.load(\"800 16px 'Baloo 2'\"), document.fonts.load(\"400 16px 'Nunito'\"), document.fonts.load(\"600 16px 'Nunito'\"), document.fonts.load(\"700 16px 'Nunito'\"), document.fonts.load(\"800 16px 'Nunito'\")]); await document.fonts.ready; }"
+            );
             await WaitForStableBoundingBoxAsync(element);
             Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].fonts+stable-bbox");
 

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Generator\Siteswaps.Generator\Siteswaps.Generator.csproj" />
     <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
+    <ProjectReference Include="..\Siteswaps.Design.Fixtures\Siteswaps.Design.Fixtures.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ServiceWorker
