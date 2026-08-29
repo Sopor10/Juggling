@@ -1,4 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
+
+[assembly: LevelOfParallelism(6)]
 
 [assembly: SuppressMessage(
     "Naming",
@@ -18,4 +21,11 @@ using System.Diagnostics.CodeAnalysis;
     Justification = "PlaywrightDockerFixture lifetime is owned by DesignTestHostFixture DisposeAsync.",
     Scope = "type",
     Target = "~T:Siteswaps.Design.Tests.Infrastructure.PlaywrightDockerFixture"
+)]
+[assembly: SuppressMessage(
+    "Design",
+    "CA1001",
+    Justification = "BrowserContextPool lifetime is owned by DesignTestHostFixture DisposeAsync.",
+    Scope = "type",
+    Target = "~T:Siteswaps.Design.Tests.Infrastructure.BrowserContextPool"
 )]

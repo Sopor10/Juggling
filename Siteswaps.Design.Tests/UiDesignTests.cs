@@ -9,7 +9,7 @@ using Webassembly.Components.DesignTests;
 namespace Siteswaps.Design.Tests;
 
 [TestFixture]
-[Parallelizable(ParallelScope.None)]
+[Parallelizable(ParallelScope.Children)]
 public sealed class UiDesignTests
 {
     private const double DefaultThreshold = 0.0055;
@@ -104,32 +104,37 @@ public sealed class UiDesignTests
         int viewportHeight
     )
     {
-        var context = await _host.Browser.NewContextAsync(
-            DesignCulture.NewContextOptions(viewportWidth, viewportHeight)
-        );
-        await DesignCulture.InstallAsync(context);
+        var timing = Timing.Enabled;
+        var caseSw = timing ? System.Diagnostics.Stopwatch.StartNew() : null;
+        var sw = timing ? System.Diagnostics.Stopwatch.StartNew() : null;
 
-        var page = await context.NewPageAsync();
-        page.SetDefaultTimeout(90_000);
-
-        var consoleErrors = new List<string>();
-        page.Console += (_, msg) =>
-        {
-            if (string.Equals(msg.Type, "error", StringComparison.OrdinalIgnoreCase))
-            {
-                consoleErrors.Add(msg.Text);
-            }
-        };
-
+        var context = await _host.ContextPool.RentAsync(viewportWidth, viewportHeight);
+        IPage? page = null;
         try
         {
+            page = await context.NewPageAsync();
+            page.SetDefaultTimeout(90_000);
+            Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].new-context+page");
+
+            var consoleErrors = new List<string>();
+            page.Console += (_, msg) =>
+            {
+                if (string.Equals(msg.Type, "error", StringComparison.OrdinalIgnoreCase))
+                {
+                    consoleErrors.Add(msg.Text);
+                }
+            };
+
             var uri =
                 $"{_host.RootUri.AbsoluteUri.TrimEnd('/')}/test?type={Uri.EscapeDataString(typeName)}";
+            sw?.Restart();
             await page.GotoAsync(uri, new PageGotoOptions { WaitUntil = WaitUntilState.Load });
+            Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].goto-load");
 
             var element = page.Locator(UsedForTestSelector);
             try
             {
+                sw?.Restart();
                 await element.WaitForAsync(
                     new LocatorWaitForOptions
                     {
@@ -137,6 +142,7 @@ public sealed class UiDesignTests
                         Timeout = 90_000,
                     }
                 );
+                Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].wait-usedForTest");
             }
             catch (TimeoutException ex)
             {
@@ -156,8 +162,10 @@ public sealed class UiDesignTests
             }
 
             // Prefer fonts.ready over NetworkIdle — Blazor WASM + Google Fonts rarely go fully idle.
+            sw?.Restart();
             await page.EvaluateAsync("() => document.fonts.ready");
             await WaitForStableBoundingBoxAsync(element);
+            Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].fonts+stable-bbox");
 
             // Avoid accidental hover styles affecting the snapshot.
             await page.Mouse.MoveAsync(0, 0);
@@ -168,12 +176,17 @@ public sealed class UiDesignTests
             );
             try
             {
+                sw?.Restart();
                 await element.ScreenshotAsync(
                     new LocatorScreenshotOptions { Path = screenshotPath }
                 );
+                Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].screenshot");
+
+                sw?.Restart();
                 await VerifyFile(screenshotPath)
                     .UseDirectory(verifyDirectory)
                     .UseFileName(verifyFileName);
+                Timing.Log(sw, $"case[{verifyDirectory}/{verifyFileName}].verify");
             }
             finally
             {
@@ -182,11 +195,17 @@ public sealed class UiDesignTests
                     File.Delete(screenshotPath);
                 }
             }
+
+            Timing.Log(caseSw, $"case[{verifyDirectory}/{verifyFileName}].total");
         }
         finally
         {
-            await page.CloseAsync();
-            await context.DisposeAsync();
+            if (page is not null)
+            {
+                await page.CloseAsync();
+            }
+
+            await _host.ContextPool.ReturnAsync(context, viewportWidth, viewportHeight);
         }
     }
 
