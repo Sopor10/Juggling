@@ -15,3 +15,6 @@ RUN apt-get update \
 # Keep Node/npm on the normal system trust store. If the optional CA was valid,
 # update-ca-certificates added it there; otherwise this is the stock trust store.
 ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+
+# Match the previous devcontainer runtime user explicitly for image scanners.
+USER vscode
