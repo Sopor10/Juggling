@@ -1,0 +1,9 @@
+{
+  "id": "host-ca",
+  "version": "0.1.0",
+  "name": "Host CA",
+  "description": "Installs the optional host-provided CA certificate.",
+  "containerEnv": {
+    "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt"
+  }
+}

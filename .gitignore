@@ -15,7 +15,7 @@ node_modules
 .cursor/hooks/state/
 
 # Local Dev Container preparation (the CA itself is supplied by the host).
-.devcontainer/ca.pem
+.devcontainer/features/host-ca/ca.pem
 .devcontainer/ca-runtime/
 .tmp*
 .playwright-cli

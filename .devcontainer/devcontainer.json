@@ -1,10 +1,8 @@
 {
   "name": "Siteswaps",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
+    "./features/host-ca": {},
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "10.0.400"
     },
@@ -15,6 +13,14 @@
     "./features/pi-coding-agent": {},
     "ghcr.io/devcontainers/features/powershell:2": {}
   },
+  "overrideFeatureInstallOrder": [
+    "./features/host-ca",
+    "ghcr.io/devcontainers/features/dotnet",
+    "ghcr.io/devcontainers/features/node",
+    "./features/aspire-cli",
+    "./features/pi-coding-agent",
+    "ghcr.io/devcontainers/features/powershell"
+  ],
   "mounts": [
     "source=${localEnv:HOME}/.hermes/auth.json,target=/host-hermes-auth.json,type=bind,readonly,consistency=cached",
     "source=${localWorkspaceFolder}/.devcontainer/ca-runtime,target=/.msb/tls,type=bind,readonly,consistency=cached",
