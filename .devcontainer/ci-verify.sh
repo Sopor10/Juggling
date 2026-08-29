@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verifies that Aspire can start inside the Dev Container and expose services.
+# Verifies the Dev Container: Aspire start, Docker, and design visual tests.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -100,3 +100,17 @@ curl -fsS -o /dev/null -w "wizard:%{http_code}\n" http://localhost:7021/wizard
 curl -fsS -o /dev/null -w "cardstack:%{http_code}\n" http://localhost:7021/cardstack
 
 echo "==> Dev Container Aspire verification succeeded"
+
+# Free Aspire before Docker / design checks (Playwright + AppHost compete for RAM/CPU).
+cleanup
+trap - EXIT
+run_pid=""
+run_output=""
+
+echo "==> docker run hello-world"
+docker run --rm hello-world
+
+echo "==> design tests"
+dotnet test Siteswaps.Design.Tests/Siteswaps.Design.Tests.csproj
+
+echo "==> Dev Container verification succeeded"

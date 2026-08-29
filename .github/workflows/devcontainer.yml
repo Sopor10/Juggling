@@ -42,25 +42,10 @@ jobs:
           set -euo pipefail
           devcontainer up --workspace-folder . --remove-existing-container --log-level info
 
-      - name: Verify aspire start inside Dev Container
+      - name: Verify Dev Container
         run: |
           set -euo pipefail
           # Run the full verify script in one exec so the supervising shell
           # stays alive while Aspire resources become healthy.
           devcontainer exec --workspace-folder . \
-            bash .devcontainer/ci-verify-aspire.sh
-
-      - name: Verify Docker inside Dev Container
-        run: |
-          set -euo pipefail
-          # Cheap smoke test: Design tests need Docker (Testcontainers Playwright).
-          devcontainer exec --workspace-folder . \
-            docker run --rm hello-world
-
-      - name: Run design tests inside Dev Container
-        run: |
-          set -euo pipefail
-          # Visual regression uses Playwright via Docker; run after Aspire so the
-          # container toolchain is already proven warm.
-          devcontainer exec --workspace-folder . \
-            dotnet test Siteswaps.Design.Tests/Siteswaps.Design.Tests.csproj
+            bash .devcontainer/ci-verify.sh
