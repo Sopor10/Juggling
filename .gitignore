@@ -14,7 +14,9 @@ node_modules
 # Cursor hook turn-state (files-edited marker, etc.)
 .cursor/hooks/state/
 
-# Local agent/review scratch (e.g. .tmp-review-1, .tmp-e2e-run2.txt)
+# Local Dev Container preparation (the CA itself is supplied by the host).
+.devcontainer/ca.pem
+.devcontainer/ca-runtime/
 .tmp*
 .playwright-cli
 .playwright-mcp

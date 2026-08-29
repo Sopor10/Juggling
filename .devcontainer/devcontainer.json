@@ -1,6 +1,9 @@
 {
   "name": "Siteswaps",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
   "features": {
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "10.0.400"
@@ -14,6 +17,7 @@
   },
   "mounts": [
     "source=${localEnv:HOME}/.hermes/auth.json,target=/host-hermes-auth.json,type=bind,readonly,consistency=cached",
+    "source=${localWorkspaceFolder}/.devcontainer/ca-runtime,target=/.msb/tls,type=bind,readonly,consistency=cached",
     "source=juggling-pi-agent,target=/home/vscode/.pi/agent,type=volume",
     "source=juggling-nuget-packages,target=/home/vscode/.nuget/packages,type=volume",
     "source=juggling-nuget-http-cache,target=/home/vscode/.local/share/NuGet/http-cache,type=volume"
@@ -35,7 +39,7 @@
     "PI_PROVIDER": "openai-codex",
     "PI_MODEL": "gpt-5.6-luna"
   },
-  "initializeCommand": "test -e \"${localEnv:HOME}/.hermes/auth.json\" || install -D -m 600 /dev/null \"${localEnv:HOME}/.hermes/auth.json\"",
+  "initializeCommand": "bash .devcontainer/initialize-host.sh",
   "onCreateCommand": "bash .devcontainer/onCreate.sh",
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
   "postStartCommand": "bash .devcontainer/postStart.sh",
