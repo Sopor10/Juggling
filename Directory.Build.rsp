@@ -1,0 +1,3 @@
+# Applied automatically by MSBuild / dotnet build (not by Visual Studio IDE builds).
+# -mt = experimental in-process multithreaded mode (MSBuild 18.4+).
+-mt
