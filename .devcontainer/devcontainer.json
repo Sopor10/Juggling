@@ -8,6 +8,10 @@
     "ghcr.io/devcontainers/features/node:2": {
       "version": "24"
     },
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
     "./features/aspire-cli": {},
     "./features/pi-coding-agent": {},
     "ghcr.io/devcontainers/features/powershell:2": {}
