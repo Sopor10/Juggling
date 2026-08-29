@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verifies the Dev Container: Aspire start, Docker, and design visual tests.
+# Verifies the Dev Container: Aspire start and that Docker works (for design tests).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -101,16 +101,14 @@ curl -fsS -o /dev/null -w "cardstack:%{http_code}\n" http://localhost:7021/cards
 
 echo "==> Dev Container Aspire verification succeeded"
 
-# Free Aspire before Docker / design checks (Playwright + AppHost compete for RAM/CPU).
+# Free Aspire before the Docker smoke check.
 cleanup
 trap - EXIT
 run_pid=""
 run_output=""
 
+# Cheap proof that DinD works; Design.Tests (Playwright via Testcontainers) need it.
 echo "==> docker run hello-world"
 docker run --rm hello-world
-
-echo "==> design tests"
-dotnet test Siteswaps.Design.Tests/Siteswaps.Design.Tests.csproj
 
 echo "==> Dev Container verification succeeded"
