@@ -1,5 +1,5 @@
 {
-    "labels": ["dependencies"],
+    "labels": ["dependencies", "hermes-merge"],
     "automerge": true,
     "automergeType": "pr",
     "platformAutomerge": true,
