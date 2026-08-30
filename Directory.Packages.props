@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageVersion Include="CliWrap" Version="3.10.5" />
-    <PackageVersion Include="Meziantou.Framework.InlineSnapshotTesting" Version="6.0.4" />
+    <PackageVersion Include="Meziantou.Framework.InlineSnapshotTesting" Version="6.0.6" />
     <PackageVersion
       Include="Microsoft.AspNetCore.Components.WebAssembly.Server"
       Version="11.0.0-preview.7.26381.103"
