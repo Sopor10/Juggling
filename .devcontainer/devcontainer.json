@@ -16,6 +16,8 @@
     "./features/pi-coding-agent": {},
     "ghcr.io/devcontainers/features/powershell:2": {}
   },
+  "privileged": true,
+  "overrideCommand": false,
   "mounts": [
     "source=${localEnv:HOME}/.hermes/auth.json,target=/host-hermes-auth.json,type=bind,readonly,consistency=cached",
     "source=juggling-pi-agent,target=/home/vscode/.pi/agent,type=volume",
