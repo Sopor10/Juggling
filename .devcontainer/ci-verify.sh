@@ -45,6 +45,9 @@ fail_startup() {
   dump_aspire_logs || true
 }
 
+echo "==> dotnet restore"
+dotnet restore --disable-parallel -p:AspireUseCliBundle=false
+
 echo "==> dotnet build"
 if ! dotnet build "${APPHOST}" --no-restore; then
   echo "dotnet build failed." >&2
@@ -111,4 +114,6 @@ run_output=""
 echo "==> docker run hello-world"
 docker run --rm hello-world
 
+echo "==> dotnet test Siteswaps.Design.Tests"
+dotnet test "Siteswaps.Design.Tests/Siteswaps.Design.Tests.csproj" --no-restore
 echo "==> Dev Container verification succeeded"

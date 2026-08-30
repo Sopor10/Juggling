@@ -15,5 +15,4 @@ for cache_dir in "${NUGET_PACKAGES}" "${NUGET_HTTP_CACHE_PATH}"; do
   fi
 done
 
-dotnet restore --disable-parallel -p:AspireUseCliBundle=false
 bash .devcontainer/install-pi.sh
