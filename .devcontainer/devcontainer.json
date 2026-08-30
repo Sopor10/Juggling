@@ -8,10 +8,16 @@
     "ghcr.io/devcontainers/features/node:2": {
       "version": "24"
     },
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
     "./features/aspire-cli": {},
     "./features/pi-coding-agent": {},
     "ghcr.io/devcontainers/features/powershell:2": {}
   },
+  "privileged": true,
+  "overrideCommand": true,
   "mounts": [
     "source=${localEnv:HOME}/.hermes/auth.json,target=/host-hermes-auth.json,type=bind,readonly,consistency=cached",
     "source=juggling-pi-agent,target=/home/vscode/.pi/agent,type=volume",

@@ -15,9 +15,9 @@ permissions:
 
 jobs:
   verify:
-    name: Dev Container Aspire Start
+    name: Dev Container Verify
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -42,10 +42,10 @@ jobs:
           set -euo pipefail
           devcontainer up --workspace-folder . --remove-existing-container --log-level info
 
-      - name: Verify aspire start inside Dev Container
+      - name: Verify Dev Container
         run: |
           set -euo pipefail
           # Run the full verify script in one exec so the supervising shell
           # stays alive while Aspire resources become healthy.
           devcontainer exec --workspace-folder . \
-            bash .devcontainer/ci-verify-aspire.sh
+            bash .devcontainer/ci-verify.sh

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verifies that Aspire can start inside the Dev Container and expose services.
+# Verifies the Dev Container: Aspire start and that Docker works (for design tests).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -44,6 +44,9 @@ fail_startup() {
   cat "${run_output}" >&2 || true
   dump_aspire_logs || true
 }
+
+echo "==> dotnet restore"
+dotnet restore --disable-parallel -p:AspireUseCliBundle=false
 
 echo "==> dotnet build"
 if ! dotnet build "${APPHOST}" --no-restore; then
@@ -100,3 +103,17 @@ curl -fsS -o /dev/null -w "wizard:%{http_code}\n" http://localhost:7021/wizard
 curl -fsS -o /dev/null -w "cardstack:%{http_code}\n" http://localhost:7021/cardstack
 
 echo "==> Dev Container Aspire verification succeeded"
+
+# Free Aspire before the Docker smoke check.
+cleanup
+trap - EXIT
+run_pid=""
+run_output=""
+
+# Cheap proof that DinD works; Design.Tests (Playwright via Testcontainers) need it.
+echo "==> docker run hello-world"
+docker run --rm hello-world
+
+echo "==> dotnet test Siteswaps.Design.Tests"
+dotnet test "Siteswaps.Design.Tests/Siteswaps.Design.Tests.csproj" --no-restore
+echo "==> Dev Container verification succeeded"
