@@ -82,6 +82,6 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
     <PackageVersion Include="Pidgin" Version="3.5.1" />
     <PackageVersion Include="Dunet" Version="1.16.2" />
-    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="14.17.0" />
+    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="14.17.1" />
   </ItemGroup>
 </Project>
