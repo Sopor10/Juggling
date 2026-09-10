@@ -6,6 +6,9 @@ namespace Siteswaps.Generator.Core.Generator;
 
 public class SiteswapGenerator
 {
+    /// <summary>Bounds the fast path by its maximum materialized output size.</summary>
+    private const long MaxLandingPermutationOutputEntries = 10_000_000;
+
     public SiteswapGenerator(SiteswapGeneratorInput input)
         : this(new NoFilter(), input) { }
 
@@ -14,7 +17,9 @@ public class SiteswapGenerator
         Filter = filter;
         FilterAlwaysAccepts = filter is NoFilter;
         Input = input;
-        PartialSiteswap = PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
+        PartialSiteswap = UsesLandingPermutationGenerator
+            ? null!
+            : PartialSiteswap.Standard(Input.Period, Input.MaxHeight);
     }
 
     private ISiteswapFilter Filter { get; }
@@ -22,13 +27,29 @@ public class SiteswapGenerator
     private SiteswapGeneratorInput Input { get; }
     private PartialSiteswap PartialSiteswap { get; }
 
+    internal bool UsesLandingPermutationGenerator =>
+        FilterAlwaysAccepts
+        && (long)Input.Period * Math.Max(Input.StopCriteria.MaxNumberOfResults, 0)
+            <= MaxLandingPermutationOutputEntries;
+
     public IEnumerable<Siteswap> Generate(CancellationToken token = default)
     {
         var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
         cancellationTokenSource.CancelAfter(Input.StopCriteria.TimeOut);
 
         var results = new List<Siteswap>();
-        BackTrack(0, cancellationTokenSource.Token, results);
+        if (UsesLandingPermutationGenerator)
+        {
+            new LandingPermutationGenerator(Input).Generate(
+                cancellationTokenSource.Token,
+                results,
+                Input.StopCriteria.MaxNumberOfResults
+            );
+        }
+        else
+        {
+            BackTrack(0, cancellationTokenSource.Token, results);
+        }
         return results;
     }
 
