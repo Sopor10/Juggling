@@ -105,6 +105,9 @@
     [Parameter, SupplyParameterFromQuery(Name = "n")]
     public int NumberOfJugglers { get; set; } = 2;
 
+    [Parameter, SupplyParameterFromQuery(Name = "v")]
+    public string? View { get; set; }
+
     private DetailViewModel? Model { get; set; }
     private string ActiveTab { get; set; } = "hero";
 
@@ -120,10 +123,15 @@
     {
         var jugglers = NumberOfJugglers < MinJugglers ? 2 : Math.Clamp(NumberOfJugglers, MinJugglers, MaxJugglers);
         Model = DetailViewModel.TryCreate(StringValue, jugglers);
+        ActiveTab = Tabs.Any(tab => tab.Id == View) ? View! : "hero";
         base.OnParametersSet();
     }
 
-    private void SelectTab(string id) => ActiveTab = id;
+    private void SelectTab(string id)
+    {
+        ActiveTab = id;
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("v", id), replace: true);
+    }
 
     private void Rotate(int steps)
     {

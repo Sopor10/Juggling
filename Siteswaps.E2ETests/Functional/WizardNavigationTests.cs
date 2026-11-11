@@ -31,9 +31,9 @@ public class WizardNavigationTests(SharedBlazorFixture host) : IClassFixture<Sha
         await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("3");
     }
 
-    /// <summary>Summary: Full reload must open a coherent editing session at step 1 with default inputs.</summary>
+    /// <summary>Summary: Full reload restores the current wizard step and inputs from its deeplink.</summary>
     [Fact]
-    public async Task Reload_Opens_Default_Editing_Session()
+    public async Task Reload_Restores_Editing_Deep_Link()
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var wizard = await session.Page.OpenWizardAsync(E2EBaseUrl.FromFixture(host.Fixture));
@@ -48,9 +48,12 @@ public class WizardNavigationTests(SharedBlazorFixture host) : IClassFixture<Sha
         wizard = new WizardPageObject(page);
         await wizard.WaitUntilLoadedAsync();
 
+        await wizard.ExpectStepAsync(2);
+        await wizard.ClickBackAsync();
+        await wizard.ClickBackAsync();
         await wizard.ExpectStepAsync(0);
-        await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("5");
-        await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("2");
+        await Assertions.Expect(wizard.PeriodInput).ToHaveValueAsync("9");
+        await Assertions.Expect(wizard.JugglerExactInput).ToHaveValueAsync("4");
         await Assertions.Expect(wizard.Results).ToBeHiddenAsync();
     }
 }

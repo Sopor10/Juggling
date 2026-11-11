@@ -266,10 +266,11 @@ export function focusElement(id) {
   });
 }
 
-export function initHistory(dotnetHelper, step) {
+export function initHistory(dotnetHelper, step, isResults = false, url = undefined) {
   history.replaceState(
-    { ...history.state, pzWizard: { step, isResults: false } },
+    { ...history.state, pzWizard: { step, isResults } },
     '',
+    url,
   );
 
   const onPopState = (event) => {
@@ -288,6 +289,7 @@ export function initHistory(dotnetHelper, step) {
       'OnBrowserPopState',
       state?.step ?? 0,
       state?.isResults ?? false,
+      location.href,
     );
   };
 
@@ -295,24 +297,35 @@ export function initHistory(dotnetHelper, step) {
   historyHandlers.set(dotnetHelper, onPopState);
 }
 
-export function pushEditorState(step) {
+export function pushEditorState(step, url = undefined) {
   history.pushState(
     { ...history.state, pzWizard: { step, isResults: false } },
     '',
+    url,
   );
 }
 
-export function pushResultsState(step) {
+export function pushResultsState(step, url = undefined) {
   history.pushState(
     { ...history.state, pzWizard: { step, isResults: true } },
     '',
+    url,
   );
 }
 
-export function replaceEditorState(step) {
+export function replaceEditorState(step, url = undefined) {
   history.replaceState(
     { ...history.state, pzWizard: { step, isResults: false } },
     '',
+    url,
+  );
+}
+
+export function replaceResultsState(step, url = undefined) {
+  history.replaceState(
+    { ...history.state, pzWizard: { step, isResults: true } },
+    '',
+    url,
   );
 }
 

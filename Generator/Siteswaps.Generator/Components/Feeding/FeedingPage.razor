@@ -32,6 +32,8 @@
                                                    MoveTargets="_interfaceMoveTargets"
                                                    MoveRequested="MoveB1PassInterface" />
                         <ConfiguredGenerationWorkflow Config="_workflowConfig"
+                                              StateSnapshot="_workflowSnapshot"
+                                              StateChanged="OnWorkflowStateChanged"
                                                       OnResultsReady="OnWorkflowResults"
                                                       OnCancelled="BackToSetup" />
                     </div>

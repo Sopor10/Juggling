@@ -1,3 +1,6 @@
+using System.IO.Compression;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
@@ -16,9 +19,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     private NormalFeedSession? _session;
     private string? _loadError;
     private string? _loadedNotation;
+    private string? _loadedState;
     private bool _hasAttemptedLoad;
     private FeedingPhase _phase = FeedingPhase.Setup;
     private GenerationWorkflowConfig _workflowConfig = new();
+    private string? _workflowSnapshot;
     private IReadOnlyList<LocalFeedSiteswap> _b1Locals = [];
     private IReadOnlyList<LocalFeedSiteswap> _b2Locals = [];
     private IReadOnlyList<Siteswap> _b1Results = [];
@@ -32,6 +37,12 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
     [Parameter, SupplyParameterFromQuery(Name = "s")]
     public string? SiteswapNotation { get; set; }
+
+    [Parameter, SupplyParameterFromQuery(Name = "state")]
+    public string? DeeplinkState { get; set; }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
 
     [Inject]
     private IStringLocalizer<FeedingPage> L { get; set; } = default!;
@@ -50,9 +61,9 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     }
 
     private string DetailsBackHref =>
-        string.IsNullOrWhiteSpace(SiteswapNotation)
+        string.IsNullOrWhiteSpace(_session?.FeederSiteswap.ToString() ?? SiteswapNotation)
             ? "details"
-            : $"details?s={Uri.EscapeDataString(SiteswapNotation)}";
+            : $"details?s={Uri.EscapeDataString(_session?.FeederSiteswap.ToString() ?? SiteswapNotation!)}";
 
     private string HeaderTitle =>
         _phase switch
@@ -101,6 +112,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         if (
             _hasAttemptedLoad
             && string.Equals(_loadedNotation, SiteswapNotation, StringComparison.Ordinal)
+            && string.Equals(_loadedState, DeeplinkState, StringComparison.Ordinal)
         )
         {
             return;
@@ -108,6 +120,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
         _hasAttemptedLoad = true;
         _loadedNotation = SiteswapNotation;
+        _loadedState = DeeplinkState;
         TryLoadSession();
     }
 
@@ -125,6 +138,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         _selfReference = DotNetObjectReference.Create(this);
         await _jsModule.InvokeVoidAsync("initHistory", _selfReference, _phase.ToString());
         _historyReady = true;
+        await PersistStateAsync(push: false);
     }
 
     private void TryLoadSession()
@@ -136,14 +150,17 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         _b2Locals = [];
         _b1Results = [];
         _interfaceMoveTargets = [];
+        _workflowSnapshot = null;
 
-        if (string.IsNullOrWhiteSpace(SiteswapNotation))
+        var savedState = DecodeState(DeeplinkState);
+        var feederNotation = savedState?.Feeder ?? SiteswapNotation;
+        if (string.IsNullOrWhiteSpace(feederNotation))
         {
             _loadError = L["Open Feeding from a two-person siteswap on the details page."];
             return;
         }
 
-        if (!Siteswap.TryCreate(SiteswapNotation, out var feeder) || feeder is null)
+        if (!Siteswap.TryCreate(feederNotation, out var feeder) || feeder is null)
         {
             _loadError = L["Invalid siteswap."];
             return;
@@ -152,16 +169,340 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         try
         {
             _session = NormalFeedSession.FromFeederSiteswap(feeder);
+            if (savedState is not null)
+            {
+                RestoreState(savedState);
+            }
         }
         catch (ArgumentException)
         {
             _loadError = L["Invalid siteswap."];
         }
 
-        _ = ReplaceHistoryPhaseAsync(FeedingPhase.Setup);
+        _ = PersistStateAsync(push: false);
     }
 
-    private void AssignPass(int beatIndex, string partner)
+    private void RestoreState(string encoded) => RestoreState(DecodeState(encoded));
+
+    private void RestoreState(FeedingUrlState? saved)
+    {
+        if (saved is null || !Siteswap.TryCreate(saved.Feeder, out var feeder) || feeder is null)
+        {
+            return;
+        }
+
+        try
+        {
+            _session = NormalFeedSession.FromFeederSiteswap(feeder);
+            _b1Locals = [];
+            _b2Locals = [];
+            _b1Results = [];
+            _phase = FeedingPhase.Setup;
+            var assignments = saved.Assignments ?? "";
+            for (
+                var beat = 0;
+                beat < Math.Min(assignments.Length, _session.FeederSiteswap.Items.Length);
+                beat++
+            )
+            {
+                var assignment = assignments[beat] switch
+                {
+                    '1' => PartnerB1,
+                    '2' => PartnerB2,
+                    _ => null,
+                };
+                if (assignment is not null && _session.ThrowKinds[beat] == PassOrSelf.Pass)
+                {
+                    _session.AssignPass(beat, assignment);
+                }
+            }
+
+            _session.ClubsB1 = SafeClubs(saved.B1Min, saved.B1Max, _session.ClubsB1);
+            _session.ClubsB2 = SafeClubs(saved.B2Min, saved.B2Max, _session.ClubsB2);
+            _b1Results = ParseSiteswaps(saved.B1Results, _session.FeederSiteswap.Items.Length);
+            var b2Results = ParseSiteswaps(saved.B2Results, _session.FeederSiteswap.Items.Length);
+            if (_session.ArePassAssignmentsComplete)
+            {
+                _b1Locals = _session.ProjectLocalResults(PartnerB1, _b1Results);
+                _b2Locals = _session.ProjectLocalResults(PartnerB2, b2Results);
+                RestoreSelection(PartnerB1, saved.B1Selected, saved.B1InterfaceBeat);
+                RestoreSelection(PartnerB2, saved.B2Selected, saved.B2InterfaceBeat);
+                RefreshInterfaceMoveTargets();
+            }
+
+            if (Enum.TryParse<FeedingPhase>(saved.Phase, true, out var phase))
+            {
+                _phase = phase switch
+                {
+                    FeedingPhase.SelectB1 when _b1Locals.Count > 0 => FeedingPhase.SelectB1,
+                    FeedingPhase.SelectB2 when _b2Locals.Count > 0 => FeedingPhase.SelectB2,
+                    FeedingPhase.Results
+                        when _session.SelectedSiteswap(PartnerB1) is not null
+                            && _session.SelectedSiteswap(PartnerB2) is not null =>
+                        FeedingPhase.Results,
+                    FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2 when _session.CanGenerate =>
+                        phase,
+                    _ => FeedingPhase.Setup,
+                };
+                if (_phase is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2)
+                {
+                    _activeRole = _phase == FeedingPhase.GenerateB1 ? PartnerB1 : PartnerB2;
+                    _workflowConfig = _session.ToGenerationWorkflowConfig(_activeRole);
+                }
+                _workflowSnapshot = saved.WorkflowSnapshot;
+            }
+        }
+        catch (ArgumentException)
+        {
+            _phase = FeedingPhase.Setup;
+            _b1Locals = [];
+            _b2Locals = [];
+            _b1Results = [];
+        }
+    }
+
+    private void RestoreSelection(string role, string? notation, int? interfaceBeat)
+    {
+        if (string.IsNullOrWhiteSpace(notation) || _session is null)
+        {
+            return;
+        }
+
+        if (Siteswap.TryCreate(notation, out var selected) && selected is not null)
+        {
+            try
+            {
+                _session.SelectSiteswap(role, selected, interfaceBeat);
+            }
+            catch (ArgumentException)
+            {
+                // Invalid or no-longer-compatible selections are ignored.
+            }
+        }
+    }
+
+    private static Siteswap[] ParseSiteswaps(string[]? notations, int period)
+    {
+        if (notations is null)
+        {
+            return [];
+        }
+
+        return notations
+            .Take(256)
+            .Where(x => !string.IsNullOrWhiteSpace(x) && x.Length <= 128)
+            .Select(x => Siteswap.TryCreate(x, out var parsed) ? parsed : null)
+            .Where(x => x is not null && x.Items.Length == period)
+            .Cast<Siteswap>()
+            .ToArray();
+    }
+
+    private static Between SafeClubs(int min, int max, Between fallback)
+    {
+        min = Math.Clamp(min, 2, 30);
+        max = Math.Clamp(max, 2, 30);
+        return min <= max ? new Between { MinNumber = min, MaxNumber = max } : fallback;
+    }
+
+    private FeedingUrlState CreateUrlState()
+    {
+        var selectedB1 = _session?.SelectedSiteswap(PartnerB1);
+        var selectedB2 = _session?.SelectedSiteswap(PartnerB2);
+        int? b1PassBeat = null;
+        if (selectedB1 is not null)
+        {
+            var passBeats = _session!.PassInterfaceBeatsOf(selectedB1);
+            b1PassBeat = passBeats.Count > 0 ? passBeats[0] : null;
+        }
+
+        int? b2PassBeat = null;
+        if (selectedB2 is not null)
+        {
+            var passBeats = _session!.PassInterfaceBeatsOf(selectedB2);
+            b2PassBeat = passBeats.Count > 0 ? passBeats[0] : null;
+        }
+
+        return new FeedingUrlState
+        {
+            Feeder = _session?.FeederSiteswap.ToString() ?? SiteswapNotation ?? "",
+            Phase = _phase.ToString(),
+            Assignments = _session is null
+                ? ""
+                : string.Concat(
+                    _session.PassAssignments.Select(x =>
+                        x == PartnerB1 ? '1'
+                        : x == PartnerB2 ? '2'
+                        : '0'
+                    )
+                ),
+            B1Min = _session?.ClubsB1.MinNumber ?? 2,
+            B1Max = _session?.ClubsB1.MaxNumber ?? 2,
+            B2Min = _session?.ClubsB2.MinNumber ?? 2,
+            B2Max = _session?.ClubsB2.MaxNumber ?? 2,
+            B1Results = Enumerable
+                .Range(0, Math.Min(256, _b1Results.Count))
+                .Select(index => _b1Results[index].ToString())
+                .ToArray(),
+            B2Results = Enumerable
+                .Range(0, Math.Min(256, _b2Locals.Count))
+                .Select(index => _b2Locals[index].Global.ToString())
+                .ToArray(),
+            B1Selected = selectedB1?.ToString(),
+            B2Selected = selectedB2?.ToString(),
+            B1InterfaceBeat = selectedB1 is null ? null : b1PassBeat,
+            B2InterfaceBeat = selectedB2 is null ? null : b2PassBeat,
+            WorkflowSnapshot = _workflowSnapshot,
+        };
+    }
+
+    private static string EncodeState(FeedingUrlState state)
+    {
+        using var output = new MemoryStream();
+        using (var gzip = new GZipStream(output, CompressionLevel.Fastest, leaveOpen: true))
+        {
+            JsonSerializer.Serialize(gzip, state);
+        }
+
+        return Convert
+            .ToBase64String(output.ToArray())
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+    }
+
+    private static FeedingUrlState? DecodeState(string? encoded)
+    {
+        if (string.IsNullOrWhiteSpace(encoded) || encoded.Length > 32_000)
+        {
+            return null;
+        }
+
+        try
+        {
+            var base64 = encoded.Replace('-', '+').Replace('_', '/');
+            base64 = base64.PadRight(base64.Length + ((4 - base64.Length % 4) % 4), '=');
+            using var input = new MemoryStream(Convert.FromBase64String(base64));
+            using var gzip = new GZipStream(input, CompressionMode.Decompress);
+            using var output = new MemoryStream();
+            var buffer = new byte[4096];
+            int read;
+            while ((read = gzip.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                if (output.Length + read > 65_536)
+                {
+                    return null;
+                }
+                output.Write(buffer, 0, read);
+            }
+            return JsonSerializer.Deserialize<FeedingUrlState>(output.ToArray());
+        }
+        catch (Exception ex)
+            when (ex is FormatException or InvalidDataException or JsonException or IOException)
+        {
+            return null;
+        }
+    }
+
+    private async Task PersistStateAsync(bool push)
+    {
+        if (_jsModule is null || _session is null)
+        {
+            return;
+        }
+
+        var state = EncodeState(CreateUrlState());
+        var uriBuilder = new UriBuilder(Navigation.ToAbsoluteUri(Navigation.Uri));
+        var query = uriBuilder
+            .Query.TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Select(pair => pair.Split('=', 2))
+            .Select(parts =>
+                (
+                    Key: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
+                    Value: parts.Length > 1
+                        ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
+                        : string.Empty
+                )
+            )
+            .Where(parameter =>
+                !parameter.Key.Equals("s", StringComparison.OrdinalIgnoreCase)
+                && !parameter.Key.Equals("state", StringComparison.OrdinalIgnoreCase)
+            )
+            .Append((Key: "s", Value: _session.FeederSiteswap.ToString()))
+            .Append((Key: "state", Value: state));
+        uriBuilder.Query = string.Join(
+            "&",
+            query.Select(parameter =>
+                $"{Uri.EscapeDataString(parameter.Key)}={Uri.EscapeDataString(parameter.Value)}"
+            )
+        );
+        var url = uriBuilder.Uri.ToString();
+        try
+        {
+            await _jsModule.InvokeVoidAsync(
+                push ? "pushPhaseState" : "replacePhaseState",
+                _phase.ToString(),
+                url
+            );
+        }
+        catch (JSDisconnectedException)
+        {
+            // Circuit already gone.
+        }
+    }
+
+    private async Task OnWorkflowStateChanged(string? snapshot)
+    {
+        _workflowSnapshot = snapshot;
+        await PersistStateAsync(push: false);
+    }
+
+    private sealed class FeedingUrlState
+    {
+        [JsonPropertyName("f")]
+        public string Feeder { get; set; } = "";
+
+        [JsonPropertyName("p")]
+        public string Phase { get; set; } = "Setup";
+
+        [JsonPropertyName("a")]
+        public string Assignments { get; set; } = "";
+
+        [JsonPropertyName("m1")]
+        public int B1Min { get; set; } = 2;
+
+        [JsonPropertyName("x1")]
+        public int B1Max { get; set; } = 7;
+
+        [JsonPropertyName("m2")]
+        public int B2Min { get; set; } = 2;
+
+        [JsonPropertyName("x2")]
+        public int B2Max { get; set; } = 7;
+
+        [JsonPropertyName("r1")]
+        public string[]? B1Results { get; set; }
+
+        [JsonPropertyName("r2")]
+        public string[]? B2Results { get; set; }
+
+        [JsonPropertyName("s1")]
+        public string? B1Selected { get; set; }
+
+        [JsonPropertyName("s2")]
+        public string? B2Selected { get; set; }
+
+        [JsonPropertyName("i1")]
+        public int? B1InterfaceBeat { get; set; }
+
+        [JsonPropertyName("i2")]
+        public int? B2InterfaceBeat { get; set; }
+
+        [JsonPropertyName("w")]
+        public string? WorkflowSnapshot { get; set; }
+    }
+
+    private async Task AssignPass(int beatIndex, string partner)
     {
         if (_session is null)
         {
@@ -173,9 +514,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         _b2Locals = [];
         _b1Results = [];
         _interfaceMoveTargets = [];
+        _workflowSnapshot = null;
+        await PersistStateAsync(push: false);
     }
 
-    private void OnClubsB1MinChanged(int value)
+    private async Task OnClubsB1MinChanged(int value)
     {
         if (_session is null)
         {
@@ -183,9 +526,10 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB1 = _session.ClubsB1 with { MinNumber = value };
+        await PersistStateAsync(push: false);
     }
 
-    private void OnClubsB1MaxChanged(int value)
+    private async Task OnClubsB1MaxChanged(int value)
     {
         if (_session is null)
         {
@@ -193,9 +537,10 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB1 = _session.ClubsB1 with { MaxNumber = value };
+        await PersistStateAsync(push: false);
     }
 
-    private void OnClubsB2MinChanged(int value)
+    private async Task OnClubsB2MinChanged(int value)
     {
         if (_session is null)
         {
@@ -203,9 +548,10 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB2 = _session.ClubsB2 with { MinNumber = value };
+        await PersistStateAsync(push: false);
     }
 
-    private void OnClubsB2MaxChanged(int value)
+    private async Task OnClubsB2MaxChanged(int value)
     {
         if (_session is null)
         {
@@ -213,6 +559,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB2 = _session.ClubsB2 with { MaxNumber = value };
+        await PersistStateAsync(push: false);
     }
 
     private void StartGenerateB1()
@@ -235,6 +582,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _workflowConfig = _session.ToGenerationWorkflowConfig("B2");
+        _workflowSnapshot = null;
         _activeRole = "B2";
         _ = SetPhaseAsync(FeedingPhase.GenerateB2, push: true);
     }
@@ -272,7 +620,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         _ = RestoreResultsFocusAsync();
     }
 
-    private void OnSelectFromResults(LocalFeedSiteswap local)
+    private async Task OnSelectFromResults(LocalFeedSiteswap local)
     {
         if (_session is null)
         {
@@ -287,6 +635,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _b2Locals = [];
         }
 
+        await PersistStateAsync(push: false);
         StateHasChanged();
     }
 
@@ -312,7 +661,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _session?.SelectablePassInterfaceBeatsFor(PartnerB1, _b1Results) ?? [];
     }
 
-    private void MoveB1PassInterface(int beat)
+    private async Task MoveB1PassInterface(int beat)
     {
         if (_session?.TrySelectPassInterfaceBeat(PartnerB1, beat, _b1Results) != true)
         {
@@ -321,6 +670,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
         _b2Locals = [];
         RefreshInterfaceMoveTargets();
+        await PersistStateAsync(push: false);
     }
 
     private string? DescribeEmptyB2()
@@ -358,8 +708,9 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     private void ShowCombination() => _ = SetPhaseAsync(FeedingPhase.Results, push: true);
 
     [JSInvokable]
-    public async Task OnBrowserPopState(string phase)
+    public async Task OnBrowserPopState(string phase, string state)
     {
+        RestoreState(state);
         if (!Enum.TryParse<FeedingPhase>(phase, ignoreCase: true, out var parsed))
         {
             parsed = FeedingPhase.Setup;
@@ -424,39 +775,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     private async Task SetPhaseAsync(FeedingPhase phase, bool push)
     {
         _phase = phase;
-        if (!_historyReady || _jsModule is null)
-        {
-            return;
-        }
-
-        try
-        {
-            await _jsModule.InvokeVoidAsync(
-                push ? "pushPhaseState" : "replacePhaseState",
-                phase.ToString()
-            );
-        }
-        catch (JSDisconnectedException)
-        {
-            // Circuit already gone.
-        }
-    }
-
-    private async Task ReplaceHistoryPhaseAsync(FeedingPhase phase)
-    {
-        if (!_historyReady || _jsModule is null)
-        {
-            return;
-        }
-
-        try
-        {
-            await _jsModule.InvokeVoidAsync("replacePhaseState", phase.ToString());
-        }
-        catch (JSDisconnectedException)
-        {
-            // Circuit already gone.
-        }
+        await PersistStateAsync(push);
     }
 
     private async Task RestoreSetupFocusAsync()

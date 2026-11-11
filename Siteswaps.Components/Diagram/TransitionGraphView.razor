@@ -15,9 +15,21 @@
 
     protected override void OnParametersSet()
     {
-        if (!string.IsNullOrWhiteSpace(SiteswapsString))
+        Length = Math.Clamp(Length, 1, 5);
+        if (!string.IsNullOrWhiteSpace(SiteswapsString) && SiteswapsString.Length <= 512)
         {
-            Siteswaps = SiteswapList.FromString(SiteswapsString);
+            try
+            {
+                var notation = SiteswapsString.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                if (notation.Length is > 0 and <= 16)
+                {
+                    Siteswaps = SiteswapList.FromString(string.Join(',', notation));
+                }
+            }
+            catch (ArgumentException)
+            {
+                Siteswaps = null;
+            }
         }
         
         CreateNetworkData(Siteswaps);

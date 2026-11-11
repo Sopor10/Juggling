@@ -32,7 +32,7 @@
                     <div class="wizard-measure">
                         <div class="wizard-field">
                             <h2 @ref="_stepHeading0" class="wizard-section-label" tabindex="-1">@L["Jugglers"]</h2>
-                            <JugglerPicker @bind-Value="State.NumberOfJugglers" />
+                            <JugglerPicker Value="State.NumberOfJugglers" ValueChanged="OnJugglersChanged" />
                         </div>
 
                         <div class="wizard-field">
@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="wizard-field">
-                            <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" />
+                            <ThrowsChipGrid Selected="State.AllowedThrows" MaxHeight="State.MaxThrowHeight" SelectionChanged="OnThrowsChanged" />
                         </div>
                     </div>
                 </WizardStepPanel>

@@ -34,7 +34,50 @@
 
 @code {
 
-    [Parameter] public CausalDiagram Value { get; set; } = CausalDiagramGenerator.Generate(new Siteswap(5,3,1), new CyclicArray<Hand>(new Hand("R", new Person("A")), new Hand("L", new Person("A"))));
+    [Parameter, SupplyParameterFromQuery(Name = "s")]
+    public string? SiteswapNotation { get; set; }
+
+    [Parameter, SupplyParameterFromQuery(Name = "h")]
+    public string? HandsNotation { get; set; }
+
+    [Parameter]
+    public CausalDiagram Value { get; set; } = CausalDiagramGenerator.Generate(new Siteswap(5,3,1), new CyclicArray<Hand>(new Hand("R", new Person("A")), new Hand("L", new Person("A"))));
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrWhiteSpace(SiteswapNotation))
+        {
+            return;
+        }
+
+        if (!Siteswap.TryCreate(SiteswapNotation, out var siteswap) || siteswap is null)
+        {
+            return;
+        }
+
+        var hands = ParseHands(HandsNotation);
+        Value = CausalDiagramGenerator.Generate(siteswap, hands);
+        base.OnParametersSet();
+    }
+
+    private static CyclicArray<Hand> ParseHands(string? notation)
+    {
+        if (string.IsNullOrWhiteSpace(notation) || notation.Length > 80)
+        {
+            return DefaultHands();
+        }
+
+        var hands = notation.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (hands.Length is < 1 or > 16 || hands.Any(hand => hand.Length is < 2 or > 12 || !char.IsAsciiLetter(hand[^1])))
+        {
+            return DefaultHands();
+        }
+
+        return new CyclicArray<Hand>(hands.Select(hand => new Hand(hand[^1].ToString(), new Person(hand[..^1]))));
+    }
+
+    private static CyclicArray<Hand> DefaultHands() =>
+        new(new Hand("R", new Person("A")), new Hand("L", new Person("A")));
 
     private List<Person> Persons => Value.Throws.Select(x => x.Hand.Person).Distinct().ToList();
 

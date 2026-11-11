@@ -290,32 +290,35 @@ public class GenerationWorkflowRound2ReproTests
             )
         );
 
-        var generateTask = host.GenerateAsync();
-        await Task.Yield();
-
-        SetParameter(
-            host,
-            nameof(ConfiguredGenerationWorkflow.Config),
-            new GenerationWorkflowConfig { Period = 3, NumberOfJugglers = 2 }
-        );
-        InvokeOnParametersSet(host);
-
-        await generateTask;
-
-        if (readyCount == 0)
+        var previousContext = SynchronizationContext.Current;
+        var queuedContext = new QueuedSynchronizationContext();
+        Task generateTask;
+        try
         {
-            // Acceptable Soll: config change cancels / suppresses delivery.
-            return;
+            // Hold the initial Task.Yield continuation so Config swaps while the old session is suspended.
+            SynchronizationContext.SetSynchronizationContext(queuedContext);
+            generateTask = host.GenerateAsync();
+
+            SetParameter(
+                host,
+                nameof(ConfiguredGenerationWorkflow.Config),
+                new GenerationWorkflowConfig { Period = 3, NumberOfJugglers = 2 }
+            );
+            InvokeOnParametersSet(host);
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(previousContext);
         }
 
-        delivered.Should().NotBeNull();
-        delivered!
-            .Should()
-            .OnlyContain(
-                s => s.Period.Value == host.Session.Config.Period,
-                "OnResultsReady must not deliver stale results for a superseded Config"
-            );
+        queuedContext.RunQueuedContinuations();
+
+        await generateTask;
         host.Session.Config.Period.Should().Be(3);
+        readyCount
+            .Should()
+            .Be(0, "OnResultsReady must not deliver stale results for a superseded Config");
+        delivered.Should().BeNull();
     }
 
     [Test]
@@ -396,5 +399,30 @@ public class GenerationWorkflowRound2ReproTests
         );
         method.Should().NotBeNull();
         method!.Invoke(host, null);
+    }
+
+    private sealed class QueuedSynchronizationContext : SynchronizationContext
+    {
+        private readonly Queue<(SendOrPostCallback Callback, object? State)> _continuations = new();
+
+        public override void Post(SendOrPostCallback d, object? state) =>
+            _continuations.Enqueue((d, state));
+
+        public void RunQueuedContinuations()
+        {
+            while (_continuations.TryDequeue(out var continuation))
+            {
+                var previousContext = Current;
+                SetSynchronizationContext(this);
+                try
+                {
+                    continuation.Callback(continuation.State);
+                }
+                finally
+                {
+                    SetSynchronizationContext(previousContext);
+                }
+            }
+        }
     }
 }
