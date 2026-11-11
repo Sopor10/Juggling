@@ -10,7 +10,10 @@ namespace Siteswaps.E2ETests.Ux;
 /// <summary>Encodes navigation, history, and step-clarity UX contracts for the wizard at /.</summary>
 public class WizardNavigationUxTests(SharedBlazorFixture host) : IClassFixture<SharedBlazorFixture>
 {
-    private static readonly Regex WizardRootPath = new(@"/(wizard)?/?$", RegexOptions.IgnoreCase);
+    private static readonly Regex WizardRootPath = new(
+        @"/(wizard)?/?(?:\?.*)?$",
+        RegexOptions.IgnoreCase
+    );
 
     /// <summary>Summary: Double-tapping Weiter must advance only one step, never skip to filters.</summary>
     [Fact]

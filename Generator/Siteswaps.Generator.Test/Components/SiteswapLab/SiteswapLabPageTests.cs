@@ -85,8 +85,9 @@ public class SiteswapLabPageTests
     public void Cells_Uses_Interactive_TimeZones_And_Shared_Display_Settings()
     {
         var page = ReadGeneratorSource(
-            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
-        );
+                Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+            )
+            .Replace("\r\n", "\n", StringComparison.Ordinal);
 
         page.Should().Contain("class=\"lab-timezone-table\"");
         page.Should().Contain("class=\"lab-timezone-row\"");
@@ -96,7 +97,11 @@ public class SiteswapLabPageTests
         page.Should().NotContain("class=\"lab-timezone-card\"");
         page.Should().NotContain("@L[\"TimeZone {0}\", timeZoneIndex]");
         page.Should().Contain("People in the same timezone throw synchronously");
-        page.Should().Contain("@onclick=\"() => _direct.CycleTimeZone(personIndex)\"");
+        page.Should().Contain("@onclick=\"() => CycleTimeZone(personIndex)\"");
+        page.Should().Contain("private void CycleTimeZone(int person)");
+        page.Should().Contain("_direct.CycleTimeZone(person);\n        SaveStateToUrl();");
+        page.Should().Contain("private void OnThrowDisplayModeChanged(");
+        page.Should().Contain("_throwDisplayMode = mode;\n        SaveStateToUrl();");
         page.Should().Contain("OnTimeZoneRowKeyDown");
         page.Should().Contain("{0}, TimeZone {1}. Tap for next phase.");
         page.Should().Contain("class=\"lab-timezones\"");
@@ -111,7 +116,10 @@ public class SiteswapLabPageTests
         page.Should().NotContain("PeopleInTimeZone");
         page.Should().NotContain("lab-timezone-shared");
         page.Should().Contain("<FeedingThrowChipRow");
-        page.Should().Contain("<FeedingThrowDisplayModeToggle @bind-Mode=\"_throwDisplayMode\" />");
+        page.Should()
+            .Contain(
+                "<FeedingThrowDisplayModeToggle Mode=\"_throwDisplayMode\" ModeChanged=\"OnThrowDisplayModeChanged\" />"
+            );
         page.Should().Contain("FeedingThrowDisplay.Format(");
         page.Should().Contain("GetItemAsync<SettingsDto>(\"settings\")");
         page.Should().Contain("is-editing-throw");
@@ -238,15 +246,18 @@ public class SiteswapLabPageTests
     public void Throws_Step_Shows_Starting_Clubs_And_Rotation_Controls()
     {
         var page = ReadGeneratorSource(
-            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
-        );
+                Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+            )
+            .Replace("\r\n", "\n", StringComparison.Ordinal);
         var css = ReadGeneratorSource(
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
         );
 
         page.Should().Contain("class=\"lab-overview-rotation\"");
-        page.Should().Contain("@onclick=\"() => _direct.Rotate(1)\"");
-        page.Should().Contain("@onclick=\"() => _direct.Rotate(-1)\"");
+        page.Should().Contain("@onclick=\"() => Rotate(1)\"");
+        page.Should().Contain("@onclick=\"() => Rotate(-1)\"");
+        page.Should().Contain("private void Rotate(int steps)");
+        page.Should().Contain("_direct.Rotate(steps);\n        SaveStateToUrl();");
         page.Should().Contain("Rotate starting position");
         page.Should().Contain("class=\"lab-start-props\"");
         page.Should().Contain("_direct.StartingClubsFor(personIndex)");
@@ -419,7 +430,9 @@ public class SiteswapLabPageTests
         legend.Should().NotContain("@L[\"Throw display\"]");
         legend
             .Should()
-            .Contain("<FeedingThrowDisplayModeToggle @bind-Mode=\"_throwDisplayMode\" />");
+            .Contain(
+                "<FeedingThrowDisplayModeToggle Mode=\"_throwDisplayMode\" ModeChanged=\"OnThrowDisplayModeChanged\" />"
+            );
     }
 
     [Test]

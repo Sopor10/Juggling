@@ -168,9 +168,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             State.ShowThrowNames = settings.ShowThrowNames;
         }
 
-        RestoreUrlState(UrlState);
-        _loadedResultsDeepLink =
-            State.Phase == WizardPhase.Results && !string.IsNullOrWhiteSpace(UrlState);
+        var restoredUrlState = RestoreUrlState(UrlState) || RestoreUrlState(Navigation.Uri);
+        _loadedResultsDeepLink = restoredUrlState && State.Phase == WizardPhase.Results;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
