@@ -75,15 +75,20 @@ internal static class WizardUrlState
             }
 
             using var output = new MemoryStream();
-            using (var compressor = new BrotliStream(output, CompressionLevel.Fastest, leaveOpen: true))
+            using (
+                var compressor = new BrotliStream(output, CompressionLevel.Fastest, leaveOpen: true)
+            )
             {
                 compressor.Write(json);
             }
 
-            var encoded = Prefix + Convert.ToBase64String(output.ToArray())
-                .TrimEnd('=')
-                .Replace('+', '-')
-                .Replace('/', '_');
+            var encoded =
+                Prefix
+                + Convert
+                    .ToBase64String(output.ToArray())
+                    .TrimEnd('=')
+                    .Replace('+', '-')
+                    .Replace('/', '_');
             return encoded.Length <= MaxEncodedLength ? encoded : null;
         }
         catch (Exception)
@@ -94,7 +99,11 @@ internal static class WizardUrlState
 
     public static Snapshot? Decode(string? value)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length > MaxEncodedLength || !value.StartsWith(Prefix, StringComparison.Ordinal))
+        if (
+            string.IsNullOrWhiteSpace(value)
+            || value.Length > MaxEncodedLength
+            || !value.StartsWith(Prefix, StringComparison.Ordinal)
+        )
         {
             return null;
         }
@@ -130,8 +139,14 @@ internal static class WizardUrlState
     {
         state.CurrentStep = Math.Clamp(snapshot.Step, 0, WizardState.TotalSteps - 1);
         state.Phase = snapshot.Results ? WizardPhase.Results : WizardPhase.Editing;
-        state.NumberOfJugglers = Math.Clamp(snapshot.Jugglers, WizardState.MinJugglers, WizardState.MaxJugglersExact);
-        state.Period = new Period(Math.Clamp(snapshot.Period, WizardState.MinPeriod, WizardState.MaxPeriod));
+        state.NumberOfJugglers = Math.Clamp(
+            snapshot.Jugglers,
+            WizardState.MinJugglers,
+            WizardState.MaxJugglersExact
+        );
+        state.Period = new Period(
+            Math.Clamp(snapshot.Period, WizardState.MinPeriod, WizardState.MaxPeriod)
+        );
         state.Clubs = new Between
         {
             MinNumber = Math.Clamp(snapshot.MinClubs, WizardState.MinClubs, WizardState.MaxClubs),
@@ -144,41 +159,76 @@ internal static class WizardUrlState
         state.ShowThrowNames = snapshot.ShowThrowNames;
         state.ApplyMaxThrowHeight(snapshot.MaxThrowHeight);
         state.AllowedThrows.Clear();
-        state.AllowedThrows.AddRange(snapshot.Throws.Distinct().Select(ThrowByHeight).Where(x => x is not null).Cast<Throw>());
+        state.AllowedThrows.AddRange(
+            snapshot.Throws.Distinct().Select(ThrowByHeight).Where(x => x is not null).Cast<Throw>()
+        );
         var nextId = 1;
         state.FilterTree = new FilterTree(FromDto(snapshot.Filter, ref nextId));
-        for (var id = 1; id < nextId; id++) state.NextFilterId();
+        for (var id = 1; id < nextId; id++)
+            state.NextFilterId();
         state.VisitedSteps.Clear();
-        for (var step = 0; step <= state.CurrentStep; step++) state.VisitedSteps.Add(step);
-        if (state.Phase == WizardPhase.Results) state.MarkVisited(WizardState.ResultsStepIndex);
+        for (var step = 0; step <= state.CurrentStep; step++)
+            state.VisitedSteps.Add(step);
+        if (state.Phase == WizardPhase.Results)
+            state.MarkVisited(WizardState.ResultsStepIndex);
     }
 
-    private static NodeDto? ToDto(FilterNode? node) => node switch
-    {
-        null => null,
-        AndNode and => new NodeDto("and", and.Children.Select(ToDto).OfType<NodeDto>().ToArray()),
-        OrNode or => new NodeDto("or", or.Children.Select(ToDto).OfType<NodeDto>().ToArray()),
-        FilterLeaf leaf => new NodeDto("leaf", Value: FilterToDto(WizardFilterTree.Unwrap(leaf.Filter))),
-        _ => null,
-    };
+    private static NodeDto? ToDto(FilterNode? node) =>
+        node switch
+        {
+            null => null,
+            AndNode and => new NodeDto(
+                "and",
+                and.Children.Select(ToDto).OfType<NodeDto>().ToArray()
+            ),
+            OrNode or => new NodeDto("or", or.Children.Select(ToDto).OfType<NodeDto>().ToArray()),
+            FilterLeaf leaf => new NodeDto(
+                "leaf",
+                Value: FilterToDto(WizardFilterTree.Unwrap(leaf.Filter))
+            ),
+            _ => null,
+        };
 
-    private static FilterDto? FilterToDto(IFilterInformation filter) => filter switch
-    {
-        NewPatternFilterInformation pattern => new FilterDto("pattern", Heights: pattern.Pattern.Select(x => x.Height).ToArray(), Rotation: pattern.Rotation.Value, Include: pattern.IsIncludePattern, LocallyValid: pattern.IsValidLocally),
-        InterfaceFilterInformation iface => new FilterDto("interface", Landing: iface.Landing.Select(x => x.Height).ToArray(), Throws: iface.Throws?.Select(x => x.Height).ToArray(), AllowRotation: iface.AllowRotation),
-        EasyNumberFilter.NumberFilter number => new FilterDto("number", Heights: [number.Throw.Height], Amount: number.Amount, NumberType: (int)number.Type, Juggler: number.JugglerIndex),
-        StateFilter state => new FilterDto("state", State: state.Items.Select(x => (int)x).ToArray()),
-        _ => null,
-    };
+    private static FilterDto? FilterToDto(IFilterInformation filter) =>
+        filter switch
+        {
+            NewPatternFilterInformation pattern => new FilterDto(
+                "pattern",
+                Heights: pattern.Pattern.Select(x => x.Height).ToArray(),
+                Rotation: pattern.Rotation.Value,
+                Include: pattern.IsIncludePattern,
+                LocallyValid: pattern.IsValidLocally
+            ),
+            InterfaceFilterInformation iface => new FilterDto(
+                "interface",
+                Landing: iface.Landing.Select(x => x.Height).ToArray(),
+                Throws: iface.Throws?.Select(x => x.Height).ToArray(),
+                AllowRotation: iface.AllowRotation
+            ),
+            EasyNumberFilter.NumberFilter number => new FilterDto(
+                "number",
+                Heights: [number.Throw.Height],
+                Amount: number.Amount,
+                NumberType: (int)number.Type,
+                Juggler: number.JugglerIndex
+            ),
+            StateFilter state => new FilterDto(
+                "state",
+                State: state.Items.Select(x => (int)x).ToArray()
+            ),
+            _ => null,
+        };
 
     private static FilterNode? FromDto(NodeDto? node, ref int nextId)
     {
-        if (node is null) return null;
+        if (node is null)
+            return null;
         return node.Kind switch
         {
             "and" => new AndNode(FromChildren(node.Children, ref nextId)),
             "or" => new OrNode(FromChildren(node.Children, ref nextId)),
-            "leaf" when node.Value is not null && FilterFromDto(node.Value) is { } filter => new FilterLeaf(new WizardIdentifiedFilter(nextId++, filter)),
+            "leaf" when node.Value is not null && FilterFromDto(node.Value) is { } filter =>
+                new FilterLeaf(new WizardIdentifiedFilter(nextId++, filter)),
             _ => null,
         };
     }
@@ -188,21 +238,52 @@ internal static class WizardUrlState
         var result = ImmutableList.CreateBuilder<FilterNode>();
         foreach (var child in children ?? [])
         {
-            if (FromDto(child, ref nextId) is { } node) result.Add(node);
+            if (FromDto(child, ref nextId) is { } node)
+                result.Add(node);
         }
         return result.ToImmutable();
     }
 
-    private static IFilterInformation? FilterFromDto(FilterDto value) => value.Kind switch
-    {
-        "pattern" when ValidHeights(value.Heights) && value.Rotation is >= -3 and <= 19 => new NewPatternFilterInformation(value.Heights!.Select(ThrowByHeight).OfType<Throw>().ToList(), new PatternRotation(value.Rotation), value.Include, value.LocallyValid),
-        "interface" when ValidHeights(value.Landing) && (value.Throws is null || ValidHeights(value.Throws)) => new InterfaceFilterInformation(value.Landing!.Select(ThrowByHeight).OfType<Throw>().ToList(), value.AllowRotation, value.Throws?.Select(ThrowByHeight).OfType<Throw>().ToList()),
-        "number" when ValidHeights(value.Heights) && value.Amount is >= 0 and <= 1000 && Enum.IsDefined((EasyNumberFilter.NumberFilterType)value.NumberType) && value.Juggler is null or >= 0 and < WizardState.MaxJugglersExact => new EasyNumberFilter.NumberFilter { Amount = value.Amount, Type = (EasyNumberFilter.NumberFilterType)value.NumberType, Throw = ThrowByHeight(value.Heights![0])!, JugglerIndex = value.Juggler },
-        "state" when value.State is { Length: > 0 and <= 100 } && value.State.All(x => Enum.IsDefined((StateValue)x)) => new StateFilter([.. value.State.Select(x => (StateValue)x)]),
-        _ => null,
-    };
+    private static IFilterInformation? FilterFromDto(FilterDto value) =>
+        value.Kind switch
+        {
+            "pattern" when ValidHeights(value.Heights) && value.Rotation is >= -3 and <= 19 =>
+                new NewPatternFilterInformation(
+                    value.Heights!.Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    new PatternRotation(value.Rotation),
+                    value.Include,
+                    value.LocallyValid
+                ),
+            "interface"
+                when ValidHeights(value.Landing)
+                    && (value.Throws is null || ValidHeights(value.Throws)) =>
+                new InterfaceFilterInformation(
+                    value.Landing!.Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    value.AllowRotation,
+                    value.Throws?.Select(ThrowByHeight).OfType<Throw>().ToList()
+                ),
+            "number"
+                when ValidHeights(value.Heights)
+                    && value.Amount is >= 0 and <= 1000
+                    && Enum.IsDefined((EasyNumberFilter.NumberFilterType)value.NumberType)
+                    && value.Juggler is null or >= 0 and < WizardState.MaxJugglersExact =>
+                new EasyNumberFilter.NumberFilter
+                {
+                    Amount = value.Amount,
+                    Type = (EasyNumberFilter.NumberFilterType)value.NumberType,
+                    Throw = ThrowByHeight(value.Heights![0])!,
+                    JugglerIndex = value.Juggler,
+                },
+            "state"
+                when value.State is { Length: > 0 and <= 100 }
+                    && value.State.All(x => Enum.IsDefined((StateValue)x)) => new StateFilter([
+                .. value.State.Select(x => (StateValue)x),
+            ]),
+            _ => null,
+        };
 
-    private static bool IsValid(Snapshot? value) => value is not null
+    private static bool IsValid(Snapshot? value) =>
+        value is not null
         && value.Step is >= 0 and < WizardState.TotalSteps
         && value.Jugglers is >= WizardState.MinJugglers and <= WizardState.MaxJugglersExact
         && value.Period is >= WizardState.MinPeriod and <= WizardState.MaxPeriod
@@ -213,15 +294,22 @@ internal static class WizardUrlState
         && value.Throws.All(x => ThrowByHeight(x) is not null)
         && IsValidNode(value.Filter);
 
-    private static bool IsValidNode(NodeDto? node) => node switch
-    {
-        null => true,
-        { Kind: "and" or "or", Children: { Length: > 0 and <= 100 } children } => children.All(IsValidNode),
-        { Kind: "leaf", Value: not null } leaf => FilterFromDto(leaf.Value) is not null,
-        _ => false,
-    };
+    private static bool IsValidNode(NodeDto? node) =>
+        node switch
+        {
+            null => true,
+            { Kind: "and" or "or", Children: { Length: > 0 and <= 100 } children } => children.All(
+                IsValidNode
+            ),
+            { Kind: "leaf", Value: not null } leaf => FilterFromDto(leaf.Value) is not null,
+            _ => false,
+        };
 
-    private static bool ValidHeights(int[]? values) => values is { Length: > 0 and <= 100 } && values.All(x => ThrowByHeight(x) is not null);
+    private static bool ValidHeights(int[]? values) =>
+        values is { Length: > 0 and <= 100 } && values.All(x => ThrowByHeight(x) is not null);
 
-    private static Throw? ThrowByHeight(int height) => Throw.Everything(WizardState.AbsoluteMaxThrowHeight).FirstOrDefault(x => x.Height == height);
+    private static Throw? ThrowByHeight(int height) =>
+        Throw
+            .Everything(WizardState.AbsoluteMaxThrowHeight)
+            .FirstOrDefault(x => x.Height == height);
 }

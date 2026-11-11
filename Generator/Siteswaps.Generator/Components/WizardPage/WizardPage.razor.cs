@@ -169,7 +169,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
 
         RestoreUrlState(UrlState);
-        _loadedResultsDeepLink = State.Phase == WizardPhase.Results && !string.IsNullOrWhiteSpace(UrlState);
+        _loadedResultsDeepLink =
+            State.Phase == WizardPhase.Results && !string.IsNullOrWhiteSpace(UrlState);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -252,7 +253,8 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             State.CurrentStep = Math.Clamp(step, 0, WizardState.TotalSteps - 1);
             State.MarkVisited(State.CurrentStep);
-            State.Phase = isResults && State.Results.Count > 0 ? WizardPhase.Results : WizardPhase.Editing;
+            State.Phase =
+                isResults && State.Results.Count > 0 ? WizardPhase.Results : WizardPhase.Editing;
         }
         if (State.Phase == WizardPhase.Results)
         {
@@ -353,7 +355,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             StateHasChanged();
             if (_jsModule is not null)
             {
-                await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep, CurrentWizardUrl());
+                await _jsModule.InvokeVoidAsync(
+                    "replaceEditorState",
+                    State.CurrentStep,
+                    CurrentWizardUrl()
+                );
             }
 
             _isStepTransitioning = false;
@@ -423,7 +429,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             await InvokeAsync(StateHasChanged);
             if (_jsModule is not null)
             {
-                await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep, CurrentWizardUrl());
+                await _jsModule.InvokeVoidAsync(
+                    "pushResultsState",
+                    State.CurrentStep,
+                    CurrentWizardUrl()
+                );
             }
 
             await FocusResultsHeadingAsync();
@@ -537,11 +547,19 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         await InvokeAsync(StateHasChanged);
         if (_jsModule is not null && pushHistory)
         {
-            await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep, CurrentWizardUrl());
+            await _jsModule.InvokeVoidAsync(
+                "pushResultsState",
+                State.CurrentStep,
+                CurrentWizardUrl()
+            );
         }
         else if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("replaceResultsState", State.CurrentStep, CurrentWizardUrl());
+            await _jsModule.InvokeVoidAsync(
+                "replaceResultsState",
+                State.CurrentStep,
+                CurrentWizardUrl()
+            );
         }
 
         var cacheKey = WizardGenerationCacheKey.From(State);
@@ -736,7 +754,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         State.ResetToDefaults();
         if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep, CurrentWizardUrl());
+            await _jsModule.InvokeVoidAsync(
+                "replaceEditorState",
+                State.CurrentStep,
+                CurrentWizardUrl()
+            );
         }
     }
 
@@ -744,7 +766,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     {
         if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("pushEditorState", State.CurrentStep, CurrentWizardUrl());
+            await _jsModule.InvokeVoidAsync(
+                "pushEditorState",
+                State.CurrentStep,
+                CurrentWizardUrl()
+            );
         }
     }
 

@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Localization;
-using Microsoft.JSInterop;
 using System.IO.Compression;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.WizardPage;
@@ -199,7 +199,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _b1Results = [];
             _phase = FeedingPhase.Setup;
             var assignments = saved.Assignments ?? "";
-            for (var beat = 0; beat < Math.Min(assignments.Length, _session.FeederSiteswap.Items.Length); beat++)
+            for (
+                var beat = 0;
+                beat < Math.Min(assignments.Length, _session.FeederSiteswap.Items.Length);
+                beat++
+            )
             {
                 var assignment = assignments[beat] switch
                 {
@@ -232,9 +236,12 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
                 {
                     FeedingPhase.SelectB1 when _b1Locals.Count > 0 => FeedingPhase.SelectB1,
                     FeedingPhase.SelectB2 when _b2Locals.Count > 0 => FeedingPhase.SelectB2,
-                    FeedingPhase.Results when _session.SelectedSiteswap(PartnerB1) is not null
-                        && _session.SelectedSiteswap(PartnerB2) is not null => FeedingPhase.Results,
-                    FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2 when _session.CanGenerate => phase,
+                    FeedingPhase.Results
+                        when _session.SelectedSiteswap(PartnerB1) is not null
+                            && _session.SelectedSiteswap(PartnerB2) is not null =>
+                        FeedingPhase.Results,
+                    FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2 when _session.CanGenerate =>
+                        phase,
                     _ => FeedingPhase.Setup,
                 };
                 if (_phase is FeedingPhase.GenerateB1 or FeedingPhase.GenerateB2)
@@ -301,15 +308,25 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     {
         var selectedB1 = _session?.SelectedSiteswap(PartnerB1);
         var selectedB2 = _session?.SelectedSiteswap(PartnerB2);
-        var b1PassBeat = selectedB1 is null ? null : _session!.PassInterfaceBeatsOf(selectedB1).FirstOrDefault();
-        var b2PassBeat = selectedB2 is null ? null : _session!.PassInterfaceBeatsOf(selectedB2).FirstOrDefault();
+        var b1PassBeat = selectedB1 is null
+            ? null
+            : _session!.PassInterfaceBeatsOf(selectedB1).FirstOrDefault();
+        var b2PassBeat = selectedB2 is null
+            ? null
+            : _session!.PassInterfaceBeatsOf(selectedB2).FirstOrDefault();
         return new FeedingUrlState
         {
             Feeder = _session?.FeederSiteswap.ToString() ?? SiteswapNotation ?? "",
             Phase = _phase.ToString(),
             Assignments = _session is null
                 ? ""
-                : string.Concat(_session.PassAssignments.Select(x => x == PartnerB1 ? '1' : x == PartnerB2 ? '2' : '0')),
+                : string.Concat(
+                    _session.PassAssignments.Select(x =>
+                        x == PartnerB1 ? '1'
+                        : x == PartnerB2 ? '2'
+                        : '0'
+                    )
+                ),
             B1Min = _session?.ClubsB1.MinNumber ?? 2,
             B1Max = _session?.ClubsB1.MaxNumber ?? 2,
             B2Min = _session?.ClubsB2.MinNumber ?? 2,
@@ -332,7 +349,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             JsonSerializer.Serialize(gzip, state);
         }
 
-        return Convert.ToBase64String(output.ToArray()).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        return Convert
+            .ToBase64String(output.ToArray())
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
     }
 
     private static FeedingUrlState? DecodeState(string? encoded)
@@ -361,7 +382,8 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             }
             return JsonSerializer.Deserialize<FeedingUrlState>(output.ToArray());
         }
-        catch (Exception ex) when (ex is FormatException or InvalidDataException or JsonException or IOException)
+        catch (Exception ex)
+            when (ex is FormatException or InvalidDataException or JsonException or IOException)
         {
             return null;
         }
@@ -379,7 +401,11 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         url = Navigation.GetUriWithQueryParameter(url, "state", state);
         try
         {
-            await _jsModule.InvokeVoidAsync(push ? "pushPhaseState" : "replacePhaseState", _phase.ToString(), url);
+            await _jsModule.InvokeVoidAsync(
+                push ? "pushPhaseState" : "replacePhaseState",
+                _phase.ToString(),
+                url
+            );
         }
         catch (JSDisconnectedException)
         {
@@ -395,20 +421,47 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
     private sealed class FeedingUrlState
     {
-        [JsonPropertyName("f")] public string Feeder { get; set; } = "";
-        [JsonPropertyName("p")] public string Phase { get; set; } = "Setup";
-        [JsonPropertyName("a")] public string Assignments { get; set; } = "";
-        [JsonPropertyName("m1")] public int B1Min { get; set; } = 2;
-        [JsonPropertyName("x1")] public int B1Max { get; set; } = 7;
-        [JsonPropertyName("m2")] public int B2Min { get; set; } = 2;
-        [JsonPropertyName("x2")] public int B2Max { get; set; } = 7;
-        [JsonPropertyName("r1")] public string[]? B1Results { get; set; }
-        [JsonPropertyName("r2")] public string[]? B2Results { get; set; }
-        [JsonPropertyName("s1")] public string? B1Selected { get; set; }
-        [JsonPropertyName("s2")] public string? B2Selected { get; set; }
-        [JsonPropertyName("i1")] public int? B1InterfaceBeat { get; set; }
-        [JsonPropertyName("i2")] public int? B2InterfaceBeat { get; set; }
-        [JsonPropertyName("w")] public string? WorkflowSnapshot { get; set; }
+        [JsonPropertyName("f")]
+        public string Feeder { get; set; } = "";
+
+        [JsonPropertyName("p")]
+        public string Phase { get; set; } = "Setup";
+
+        [JsonPropertyName("a")]
+        public string Assignments { get; set; } = "";
+
+        [JsonPropertyName("m1")]
+        public int B1Min { get; set; } = 2;
+
+        [JsonPropertyName("x1")]
+        public int B1Max { get; set; } = 7;
+
+        [JsonPropertyName("m2")]
+        public int B2Min { get; set; } = 2;
+
+        [JsonPropertyName("x2")]
+        public int B2Max { get; set; } = 7;
+
+        [JsonPropertyName("r1")]
+        public string[]? B1Results { get; set; }
+
+        [JsonPropertyName("r2")]
+        public string[]? B2Results { get; set; }
+
+        [JsonPropertyName("s1")]
+        public string? B1Selected { get; set; }
+
+        [JsonPropertyName("s2")]
+        public string? B2Selected { get; set; }
+
+        [JsonPropertyName("i1")]
+        public int? B1InterfaceBeat { get; set; }
+
+        [JsonPropertyName("i2")]
+        public int? B2InterfaceBeat { get; set; }
+
+        [JsonPropertyName("w")]
+        public string? WorkflowSnapshot { get; set; }
     }
 
     private async Task AssignPass(int beatIndex, string partner)
