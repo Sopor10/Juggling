@@ -9,7 +9,7 @@
     <PackageVersion Include="Meziantou.Framework.InlineSnapshotTesting" Version="6.0.17" />
     <PackageVersion
       Include="Microsoft.AspNetCore.Components.WebAssembly.Server"
-      Version="11.0.0-preview.7.26381.103"
+      Version="11.0.0-rc.2.26478.115"
     />
     <PackageVersion
       Include="Microsoft.AspNetCore.Mvc.Testing"

@@ -783,13 +783,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         string? encoded = urlOrState;
         if (Uri.TryCreate(urlOrState, UriKind.Absolute, out var uri))
         {
-            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            encoded = query.TryGetValue("ws", out var value) ? value.ToString() : null;
+            encoded = GetQueryValue(uri.Query, "ws");
         }
         else if (urlOrState.Contains('?'))
         {
-            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(urlOrState);
-            encoded = query.TryGetValue("ws", out var value) ? value.ToString() : null;
+            encoded = GetQueryValue(urlOrState, "ws");
         }
 
         var snapshot = WizardUrlState.Decode(encoded);
@@ -800,6 +798,32 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         WizardUrlState.Apply(snapshot, State);
         State.Results.Clear();
         return true;
+    }
+
+    private static string? GetQueryValue(string queryOrUrl, string key)
+    {
+        var queryStart = queryOrUrl.IndexOf('?');
+        var query = queryStart >= 0 ? queryOrUrl[(queryStart + 1)..] : queryOrUrl.TrimStart('?');
+        var fragmentStart = query.IndexOf('#');
+        if (fragmentStart >= 0)
+        {
+            query = query[..fragmentStart];
+        }
+
+        foreach (var pair in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var separator = pair.IndexOf('=');
+            var name = separator < 0 ? pair : pair[..separator];
+            if (!string.Equals(Uri.UnescapeDataString(name.Replace('+', ' ')), key, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var value = separator < 0 ? string.Empty : pair[(separator + 1)..];
+            return Uri.UnescapeDataString(value.Replace('+', ' '));
+        }
+
+        return null;
     }
 
     private string CurrentWizardUrl()

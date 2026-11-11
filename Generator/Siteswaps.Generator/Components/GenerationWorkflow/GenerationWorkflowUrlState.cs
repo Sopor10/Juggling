@@ -175,7 +175,7 @@ internal static class GenerationWorkflowUrlState
         };
     }
 
-    private static FilterNode MakeLeaf(int id, IFilterInformation info, ref int maxId)
+    private static FilterLeaf MakeLeaf(int id, IFilterInformation info, ref int maxId)
     {
         if (id is > 0 and <= 100_000)
         {

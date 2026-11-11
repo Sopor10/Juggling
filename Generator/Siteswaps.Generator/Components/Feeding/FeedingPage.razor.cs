@@ -308,12 +308,20 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     {
         var selectedB1 = _session?.SelectedSiteswap(PartnerB1);
         var selectedB2 = _session?.SelectedSiteswap(PartnerB2);
-        var b1PassBeat = selectedB1 is null
-            ? null
-            : _session!.PassInterfaceBeatsOf(selectedB1).FirstOrDefault();
-        var b2PassBeat = selectedB2 is null
-            ? null
-            : _session!.PassInterfaceBeatsOf(selectedB2).FirstOrDefault();
+        int? b1PassBeat = null;
+        if (selectedB1 is not null)
+        {
+            var passBeats = _session!.PassInterfaceBeatsOf(selectedB1);
+            b1PassBeat = passBeats.Count > 0 ? passBeats[0] : null;
+        }
+
+        int? b2PassBeat = null;
+        if (selectedB2 is not null)
+        {
+            var passBeats = _session!.PassInterfaceBeatsOf(selectedB2);
+            b2PassBeat = passBeats.Count > 0 ? passBeats[0] : null;
+        }
+
         return new FeedingUrlState
         {
             Feeder = _session?.FeederSiteswap.ToString() ?? SiteswapNotation ?? "",
@@ -331,8 +339,14 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             B1Max = _session?.ClubsB1.MaxNumber ?? 2,
             B2Min = _session?.ClubsB2.MinNumber ?? 2,
             B2Max = _session?.ClubsB2.MaxNumber ?? 2,
-            B1Results = _b1Results.Take(256).Select(x => x.ToString()).ToArray(),
-            B2Results = _b2Locals.Take(256).Select(x => x.Global.ToString()).ToArray(),
+            B1Results = Enumerable
+                .Range(0, Math.Min(256, _b1Results.Count))
+                .Select(index => _b1Results[index].ToString())
+                .ToArray(),
+            B2Results = Enumerable
+                .Range(0, Math.Min(256, _b2Locals.Count))
+                .Select(index => _b2Locals[index].Global.ToString())
+                .ToArray(),
             B1Selected = selectedB1?.ToString(),
             B2Selected = selectedB2?.ToString(),
             B1InterfaceBeat = selectedB1 is null ? null : b1PassBeat,
@@ -397,8 +411,30 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         var state = EncodeState(CreateUrlState());
-        var url = Navigation.GetUriWithQueryParameter("s", _session.FeederSiteswap.ToString());
-        url = Navigation.GetUriWithQueryParameter(url, "state", state);
+        var uriBuilder = new UriBuilder(Navigation.ToAbsoluteUri(Navigation.Uri));
+        var query = uriBuilder
+            .Query.TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Select(pair => pair.Split('=', 2))
+            .Select(parts => (
+                Key: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
+                Value: parts.Length > 1
+                    ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
+                    : string.Empty
+            ))
+            .Where(parameter =>
+                !parameter.Key.Equals("s", StringComparison.OrdinalIgnoreCase)
+                && !parameter.Key.Equals("state", StringComparison.OrdinalIgnoreCase)
+            )
+            .Append((Key: "s", Value: _session.FeederSiteswap.ToString()))
+            .Append((Key: "state", Value: state));
+        uriBuilder.Query = string.Join(
+            "&",
+            query.Select(parameter =>
+                $"{Uri.EscapeDataString(parameter.Key)}={Uri.EscapeDataString(parameter.Value)}"
+            )
+        );
+        var url = uriBuilder.Uri.ToString();
         try
         {
             await _jsModule.InvokeVoidAsync(

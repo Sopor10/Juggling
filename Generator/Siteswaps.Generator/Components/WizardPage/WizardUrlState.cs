@@ -76,7 +76,7 @@ internal static class WizardUrlState
 
             using var output = new MemoryStream();
             using (
-                var compressor = new BrotliStream(output, CompressionLevel.Fastest, leaveOpen: true)
+                var compressor = new DeflateStream(output, CompressionLevel.Fastest, leaveOpen: true)
             )
             {
                 compressor.Write(json);
@@ -113,7 +113,7 @@ internal static class WizardUrlState
             var base64 = value[Prefix.Length..].Replace('-', '+').Replace('_', '/');
             base64 = base64.PadRight((base64.Length + 3) / 4 * 4, '=');
             using var compressed = new MemoryStream(Convert.FromBase64String(base64));
-            using var decompressor = new BrotliStream(compressed, CompressionMode.Decompress);
+            using var decompressor = new DeflateStream(compressed, CompressionMode.Decompress);
             using var output = new MemoryStream();
             var buffer = new byte[4096];
             int read;
