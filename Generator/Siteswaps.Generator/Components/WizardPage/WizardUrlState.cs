@@ -76,7 +76,11 @@ internal static class WizardUrlState
 
             using var output = new MemoryStream();
             using (
-                var compressor = new DeflateStream(output, CompressionLevel.Fastest, leaveOpen: true)
+                var compressor = new DeflateStream(
+                    output,
+                    CompressionLevel.Fastest,
+                    leaveOpen: true
+                )
             )
             {
                 compressor.Write(json);

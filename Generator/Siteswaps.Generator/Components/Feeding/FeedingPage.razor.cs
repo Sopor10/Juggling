@@ -416,12 +416,14 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             .Query.TrimStart('?')
             .Split('&', StringSplitOptions.RemoveEmptyEntries)
             .Select(pair => pair.Split('=', 2))
-            .Select(parts => (
-                Key: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
-                Value: parts.Length > 1
-                    ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
-                    : string.Empty
-            ))
+            .Select(parts =>
+                (
+                    Key: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
+                    Value: parts.Length > 1
+                        ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
+                        : string.Empty
+                )
+            )
             .Where(parameter =>
                 !parameter.Key.Equals("s", StringComparison.OrdinalIgnoreCase)
                 && !parameter.Key.Equals("state", StringComparison.OrdinalIgnoreCase)

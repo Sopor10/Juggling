@@ -814,7 +814,13 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             var separator = pair.IndexOf('=');
             var name = separator < 0 ? pair : pair[..separator];
-            if (!string.Equals(Uri.UnescapeDataString(name.Replace('+', ' ')), key, StringComparison.Ordinal))
+            if (
+                !string.Equals(
+                    Uri.UnescapeDataString(name.Replace('+', ' ')),
+                    key,
+                    StringComparison.Ordinal
+                )
+            )
             {
                 continue;
             }
