@@ -6,8 +6,10 @@
 @using Siteswaps.Generator.Components.Feeding
 @using Siteswaps.Generator.Components.WizardPage.Controls
 @using Siteswaps.Generator.Core.Generator
+@using System.Text.Json
 @inject IStringLocalizer<SiteswapLabPage> L
 @inject ILocalStorageService LocalStorage
+@inject NavigationManager Navigation
 
 <PageTitle>@L["Siteswap lab"]</PageTitle>
 
@@ -29,7 +31,7 @@
                         <div class="lab-config-field">
                             <span>@L["People"]</span>
                             <PeriodStepper Value="_direct.People.Count"
-                                           ValueChanged="_direct.SetPersonCount"
+                                           ValueChanged="SetPersonCount"
                                            Min="PassingEditorState.MinPeople"
                                            Max="PassingEditorState.MaxPeople"
                                            DecreaseLabel="@L["Remove person, People"]"
@@ -80,7 +82,7 @@
                                             _direct.People[person].Name,
                                             personTimeZone
                                         ]"
-                                        @onclick="() => _direct.CycleTimeZone(personIndex)"
+                                        @onclick="() => CycleTimeZone(personIndex)"
                                         @onkeydown="e => OnTimeZoneRowKeyDown(e, personIndex)">
                                         <th scope="row" class="lab-timezone-row-label">
                                             @_direct.People[person].Name
@@ -122,14 +124,14 @@
                                     class="lab-rotate"
                                     aria-label="@L["Rotate pattern left"]"
                                     disabled="@(_direct.Period <= 1)"
-                                    @onclick="() => _direct.Rotate(1)">
+                                    @onclick="() => Rotate(1)">
                                 ◄
                             </button>
                             <button type="button"
                                     class="lab-rotate"
                                     aria-label="@L["Rotate pattern right"]"
                                     disabled="@(_direct.Period <= 1)"
-                                    @onclick="() => _direct.Rotate(-1)">
+                                    @onclick="() => Rotate(-1)">
                                 ►
                             </button>
                         </div>
@@ -216,7 +218,7 @@
                         <li><span class="feeding-beat self collision" aria-hidden="true">!</span><span>@L["Collision"]</span></li>
                         <li><span class="feeding-beat self unfilled" aria-hidden="true">○</span><span>@L["No incoming throw"]</span></li>
                         <li class="lab-chip-legend-throw-display">
-                            <FeedingThrowDisplayModeToggle @bind-Mode="_throwDisplayMode" />
+                            <FeedingThrowDisplayModeToggle Mode="_throwDisplayMode" ModeChanged="OnThrowDisplayModeChanged" />
                         </li>
                     </ul>
             </div>
@@ -254,6 +256,8 @@
     private FeedingThrowDisplay.Mode _throwDisplayMode = FeedingThrowDisplay.Mode.Global;
     private readonly HashSet<int> _visitedCellsSteps = [0];
     private int _cellsStep;
+    [Parameter, SupplyParameterFromQuery(Name = "state")]
+    public string? StateQuery { get; set; }
     private ElementReference _dragScope;
     private int? _dragSourcePerson;
     private int? _dragSourceBeat;
@@ -265,6 +269,34 @@
         var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings");
         _direct = new PassingEditorState(maxThrowHeight: settings?.MaxHeight);
         _throwDisplayMode = FeedingThrowDisplay.ParseMode(settings?.ThrowDisplayMode);
+        if (!TryRestoreState(StateQuery, settings?.MaxHeight))
+        {
+            SaveStateToUrl();
+        }
+    }
+
+    private void SetPersonCount(int count)
+    {
+        _direct.SetPersonCount(count);
+        SaveStateToUrl();
+    }
+
+    private void CycleTimeZone(int person)
+    {
+        _direct.CycleTimeZone(person);
+        SaveStateToUrl();
+    }
+
+    private void Rotate(int steps)
+    {
+        _direct.Rotate(steps);
+        SaveStateToUrl();
+    }
+
+    private void OnThrowDisplayModeChanged(FeedingThrowDisplay.Mode mode)
+    {
+        _throwDisplayMode = mode;
+        SaveStateToUrl();
     }
 
     private void SetPeriod(int period)
@@ -278,6 +310,8 @@
         {
             _direct.RemoveBeat();
         }
+
+        SaveStateToUrl();
     }
 
     private bool CanEnterThrows => _direct.People.Count >= PassingEditorState.MinPeople;
@@ -309,9 +343,14 @@
         _direct.SelectCell(0, 0);
         _visitedCellsSteps.Add(1);
         _cellsStep = 1;
+        SaveStateToUrl();
     }
 
-    private void ReturnToPeopleStep() => _cellsStep = 0;
+    private void ReturnToPeopleStep()
+    {
+        _cellsStep = 0;
+        SaveStateToUrl();
+    }
 
     private void SelectCellsStep(int step)
     {
@@ -336,10 +375,12 @@
         )
         {
             _direct.ToggleCellSelection(person, beat);
+            SaveStateToUrl();
             return;
         }
 
         _direct.SelectCell(person, beat);
+        SaveStateToUrl();
     }
 
     private void OnChipDragStarted(int person, int beat)
@@ -400,6 +441,7 @@
 
         _direct.ApplyChipDrop(sourcePerson, sourceBeat, person, beat);
         ClearDragState();
+        SaveStateToUrl();
     }
 
     private void OnChipDragEnded()
@@ -448,8 +490,11 @@
 
     private void DecreaseSelectedHeight() => AdjustPassingHeight(-1);
 
-    private void OnSelectedTargetPersonChanged(int target) =>
+    private void OnSelectedTargetPersonChanged(int target)
+    {
         _direct.SetTarget(_direct.SelectedPerson, _direct.SelectedBeat, target);
+        SaveStateToUrl();
+    }
 
     private IReadOnlyList<FeedingThrowChipTargetPill> SelectedTargetPillsFor(int person)
     {
@@ -494,12 +539,15 @@
     private bool CanDecreaseSelectedHeight(int person) =>
         _direct.HasSelection && _direct.SelectedPerson == person && SelectedPassingCell.Height > 0;
 
-    private void AdjustPassingHeight(int delta) =>
+    private void AdjustPassingHeight(int delta)
+    {
         _direct.SetHeight(
             _direct.SelectedPerson,
             _direct.SelectedBeat,
             SelectedPassingCell.Height + delta
         );
+        SaveStateToUrl();
+    }
 
     private IReadOnlyList<FeedingThrowDisplay.Chip> PassingChipsFor(int person) =>
         _direct.People[person]
@@ -664,7 +712,146 @@
         if (e.Key is "Enter" or " ")
         {
             _direct.CycleTimeZone(personIndex);
+            SaveStateToUrl();
         }
     }
+
+    private void SaveStateToUrl()
+    {
+        if (_direct.People.Count == 0)
+        {
+            return;
+        }
+
+        var snapshot = new LabDeepLinkState(
+            1,
+            _direct.MaxThrowHeight,
+            _direct.People.Select(person => person.TimeZone).ToArray(),
+            _direct.People.Select(person => person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
+            _direct.People.Select(person => person.Cells.Select(cell => cell.TargetPerson ?? -1).ToArray()).ToArray(),
+            _direct.ThrowsInitialized,
+            _direct.HasSelection,
+            _direct.SelectedPerson,
+            _direct.SelectedBeat,
+            _cellsStep,
+            _visitedCellsSteps.Order().ToArray(),
+            _throwDisplayMode.ToString()
+        );
+        var json = JsonSerializer.Serialize(snapshot);
+        var encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json))
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("state", encoded), replace: true);
+    }
+
+    private bool TryRestoreState(string? encoded, int? localMaxHeight)
+    {
+        if (string.IsNullOrWhiteSpace(encoded) || encoded.Length > 12000)
+        {
+            return false;
+        }
+
+        try
+        {
+            var base64 = encoded.Replace('-', '+').Replace('_', '/');
+            base64 += new string('=', (4 - base64.Length % 4) % 4);
+            var json = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+            var state = JsonSerializer.Deserialize<LabDeepLinkState>(json);
+            if (state is null || state.Version != 1 || state.TimeZones is null || state.Heights is null || state.Targets is null)
+            {
+                return false;
+            }
+
+            var peopleCount = state.TimeZones.Length;
+            if (peopleCount is < PassingEditorState.MinPeople or > PassingEditorState.MaxPeople
+                || state.Heights.Length != peopleCount || state.Targets.Length != peopleCount)
+            {
+                return false;
+            }
+
+            var period = state.Heights[0]?.Length ?? 0;
+            if (period is < 1 or > Siteswap.MaxPeriodLength
+                || state.Heights.Any(row => row is null || row.Length != period)
+                || state.Targets.Any(row => row is null || row.Length != period)
+                || state.TimeZones.Any(zone => zone < 0 || zone >= peopleCount))
+            {
+                return false;
+            }
+
+            var maxHeight = SettingsDto.ClampMaxHeight(state.MaxHeight > 0 ? state.MaxHeight : localMaxHeight ?? new SettingsDto().MaxHeight);
+            _direct = new PassingEditorState(maxThrowHeight: maxHeight);
+            _direct.SetPersonCount(peopleCount);
+            while (_direct.Period < period) _direct.AddBeat();
+            while (_direct.Period > period) _direct.RemoveBeat();
+            for (var person = 0; person < peopleCount; person++)
+            {
+                for (var zone = _direct.People[person].TimeZone; zone != state.TimeZones[person]; zone = (zone + 1) % peopleCount)
+                {
+                    _direct.CycleTimeZone(person);
+                }
+            }
+
+            if (state.ThrowsInitialized)
+            {
+                _direct.InitializeThrowsForFirstEntry();
+                for (var person = 0; person < peopleCount; person++)
+                {
+                    for (var beat = 0; beat < period; beat++)
+                    {
+                        var height = Math.Clamp(state.Heights[person][beat], 0, maxHeight);
+                        _direct.SetHeight(person, beat, height);
+                        var target = state.Targets[person][beat];
+                        if (target >= 0 && target < peopleCount && _direct.CanSetTarget(person, beat, target))
+                        {
+                            _direct.SetTarget(person, beat, target);
+                        }
+                    }
+                }
+            }
+
+            _cellsStep = Math.Clamp(state.CellsStep, 0, CellsStepCount - 1);
+            _visitedCellsSteps.Clear();
+            _visitedCellsSteps.Add(0);
+            if (state.VisitedSteps is not null)
+            {
+                foreach (var step in state.VisitedSteps.Where(step => step is >= 0 and < CellsStepCount))
+                {
+                    _visitedCellsSteps.Add(step);
+                }
+            }
+            if (_cellsStep == 1) _visitedCellsSteps.Add(1);
+            if (state.HasSelection && state.SelectedPerson >= 0 && state.SelectedPerson < peopleCount && state.SelectedBeat >= 0 && state.SelectedBeat < period)
+            {
+                _direct.SelectCell(state.SelectedPerson, state.SelectedBeat);
+            }
+            else
+            {
+                _direct.ClearSelection();
+            }
+
+            _throwDisplayMode = FeedingThrowDisplay.ParseMode(state.DisplayMode);
+            return true;
+        }
+        catch (Exception exception) when (exception is FormatException or JsonException or ArgumentException or IndexOutOfRangeException)
+        {
+            return false;
+        }
+    }
+
+    private sealed record LabDeepLinkState(
+        int Version,
+        int MaxHeight,
+        int[] TimeZones,
+        int[][] Heights,
+        int[][] Targets,
+        bool ThrowsInitialized,
+        bool HasSelection,
+        int SelectedPerson,
+        int SelectedBeat,
+        int CellsStep,
+        int[] VisitedSteps,
+        string DisplayMode
+    );
 
 }

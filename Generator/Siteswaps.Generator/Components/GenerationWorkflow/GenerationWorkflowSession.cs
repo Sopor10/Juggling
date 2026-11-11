@@ -21,6 +21,12 @@ public sealed class GenerationWorkflowSession
 
     public GenerationWorkflowState State { get; }
 
+    /// <summary>Captures editable inputs and filters for a host-owned share URL.</summary>
+    public string? EncodeSnapshot() => GenerationWorkflowUrlState.Encode(this);
+
+    /// <summary>Restores editable inputs and filters from a host-owned share URL.</summary>
+    public bool ApplySnapshot(string? snapshot) => GenerationWorkflowUrlState.Apply(snapshot, this);
+
     public bool IsPeriodEditable => !Config.HasLockedPeriod;
 
     public bool IsJugglersEditable => !Config.HasLockedJugglers;

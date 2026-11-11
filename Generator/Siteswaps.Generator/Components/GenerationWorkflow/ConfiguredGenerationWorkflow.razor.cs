@@ -23,9 +23,18 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase, IDisposable
     private CancellationTokenSource? _generationCts;
     private FilterBottomSheet? _filterSheet;
     private FilterNode? _insertParent;
+    private string? _appliedSnapshot;
 
     [Parameter]
     public GenerationWorkflowConfig Config { get; set; } = new();
+
+    /// <summary>Optional serialized editable state supplied by the host.</summary>
+    [Parameter]
+    public string? StateSnapshot { get; set; }
+
+    /// <summary>Raised whenever the host-editable workflow state changes.</summary>
+    [Parameter]
+    public EventCallback<string?> StateChanged { get; set; }
 
     /// <summary>Fired with the complete generated list. Host owns display/selection.</summary>
     [Parameter]
@@ -52,14 +61,19 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase, IDisposable
 
     protected override void OnParametersSet()
     {
-        if (_session.Config.Equals(Config))
+        if (!_session.Config.Equals(Config))
         {
-            return;
+            CancelInFlightGeneration();
+            _generationEpoch++;
+            _session = GenerationWorkflowSession.Create(Config);
+            _appliedSnapshot = null;
         }
 
-        CancelInFlightGeneration();
-        _generationEpoch++;
-        _session = GenerationWorkflowSession.Create(Config);
+        if (!string.Equals(StateSnapshot, _appliedSnapshot, StringComparison.Ordinal))
+        {
+            _session.ApplySnapshot(StateSnapshot);
+            _appliedSnapshot = StateSnapshot;
+        }
     }
 
     public async Task GenerateAsync(CancellationToken cancellationToken = default)
@@ -140,15 +154,31 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase, IDisposable
 
     private void OnJugglersChanged(int value) => _session.SetNumberOfJugglers(value);
 
-    private void OnClubsMinChanged(int value) =>
+    private async Task OnClubsMinChanged(int value)
+    {
         _session.SetClubs(State.Clubs with { MinNumber = value });
+        await NotifyStateChangedAsync();
+    }
 
-    private void OnClubsMaxChanged(int value) =>
+    private async Task OnClubsMaxChanged(int value)
+    {
         _session.SetClubs(State.Clubs with { MaxNumber = value });
+        await NotifyStateChangedAsync();
+    }
 
-    private void OnRemoveFilter(int id) => _session.RemoveFilter(id);
+    private async Task OnRemoveFilter(int id)
+    {
+        _session.RemoveFilter(id);
+        await NotifyStateChangedAsync();
+    }
 
-    private void OnFilterTreeChanged(FilterTree tree) => _session.ReplaceEditableFilterTree(tree);
+    private async Task OnFilterTreeChanged(FilterTree tree)
+    {
+        _session.ReplaceEditableFilterTree(tree);
+        await NotifyStateChangedAsync();
+    }
+
+    private async Task OnThrowsChanged() => await NotifyStateChangedAsync();
 
     private void OpenAddFilterSheet()
     {
@@ -164,16 +194,17 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase, IDisposable
 
     private void OpenEditFilterSheet(WizardFilterEntry entry) => _filterSheet?.OpenForEdit(entry);
 
-    private void OnFilterAdded(IFilterInformation filter)
+    private async Task OnFilterAdded(IFilterInformation filter)
     {
         var id = State.NextFilterId();
         var leaf = new FilterLeaf(new WizardIdentifiedFilter(id, filter));
         var editable = WizardFilterTree.AddLeaf(_session.EditableFilterTree, _insertParent, leaf);
         _session.ReplaceEditableFilterTree(editable);
         _insertParent = null;
+        await NotifyStateChangedAsync();
     }
 
-    private void OnFilterEdited((int Id, IFilterInformation Filter) args)
+    private async Task OnFilterEdited((int Id, IFilterInformation Filter) args)
     {
         if (_session.LockedInterfaceFilterId is { } lockedId && lockedId == args.Id)
         {
@@ -181,7 +212,10 @@ public partial class ConfiguredGenerationWorkflow : ComponentBase, IDisposable
         }
 
         State.FilterTree = WizardFilterTree.ReplaceLeaf(State.FilterTree, args.Id, args.Filter);
+        await NotifyStateChangedAsync();
     }
+
+    private Task NotifyStateChangedAsync() => StateChanged.InvokeAsync(_session.EncodeSnapshot());
 
     private async Task OnGenerateClicked() => await GenerateAsync(CancellationToken.None);
 }

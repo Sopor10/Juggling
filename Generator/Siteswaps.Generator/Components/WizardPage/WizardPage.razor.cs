@@ -40,6 +40,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private ElementReference _stepHeading2;
     private ElementReference _swipeHost;
     private bool? _swipeBoundToResults;
+    private bool _loadedResultsDeepLink;
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
@@ -52,6 +53,9 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
     [Inject]
     private IStringLocalizer<WizardPage> L { get; set; } = default!;
+
+    [Parameter, SupplyParameterFromQuery(Name = "ws")]
+    public string? UrlState { get; set; }
 
     private string StepTitle(int step) =>
         step switch
@@ -163,6 +167,9 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             State.ShowThrowNames = settings.ShowThrowNames;
         }
+
+        RestoreUrlState(UrlState);
+        _loadedResultsDeepLink = State.Phase == WizardPhase.Results && !string.IsNullOrWhiteSpace(UrlState);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -174,7 +181,17 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
                 "./_content/Siteswaps.Generator/Components/WizardPage/WizardPage.razor.js"
             );
             _selfReference = DotNetObjectReference.Create(this);
-            await _jsModule.InvokeVoidAsync("initHistory", _selfReference, State.CurrentStep);
+            await _jsModule.InvokeVoidAsync(
+                "initHistory",
+                _selfReference,
+                State.CurrentStep,
+                State.Phase == WizardPhase.Results,
+                CurrentWizardUrl()
+            );
+            if (State.Phase == WizardPhase.Results && State.Results.Count == 0)
+            {
+                await StartGenerationAsync(pushHistory: false);
+            }
         }
 
         if (_swipeHost.Context is not null)
@@ -226,14 +243,22 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     }
 
     [JSInvokable]
-    public async Task OnBrowserPopState(int step, bool isResults)
+    public async Task OnBrowserPopState(int step, bool isResults, string url)
     {
         State.GenerationCancellation?.Cancel();
         _isStartingGeneration = false;
-        State.CurrentStep = Math.Clamp(step, 0, WizardState.TotalSteps - 1);
-        State.MarkVisited(State.CurrentStep);
-        State.Phase =
-            isResults && State.Results.Count > 0 ? WizardPhase.Results : WizardPhase.Editing;
+        var restored = RestoreUrlState(url);
+        if (!restored)
+        {
+            State.CurrentStep = Math.Clamp(step, 0, WizardState.TotalSteps - 1);
+            State.MarkVisited(State.CurrentStep);
+            State.Phase = isResults && State.Results.Count > 0 ? WizardPhase.Results : WizardPhase.Editing;
+        }
+        if (State.Phase == WizardPhase.Results)
+        {
+            State.Results.Clear();
+            _ = StartGenerationAsync(pushHistory: false);
+        }
         await InvokeAsync(StateHasChanged);
         await Task.Delay(150);
         if (State.Phase == WizardPhase.Editing)
@@ -246,13 +271,31 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
     }
 
-    private void OnPeriodChanged(int value) => State.Period = new Period(value);
+    private void OnPeriodChanged(int value)
+    {
+        State.Period = new Period(value);
+        _ = ReplaceUrlStateAsync();
+    }
 
-    private void OnClubsMinChanged(int value) =>
+    private void OnClubsMinChanged(int value)
+    {
         State.Clubs = State.Clubs with { MinNumber = value };
+        _ = ReplaceUrlStateAsync();
+    }
 
-    private void OnClubsMaxChanged(int value) =>
+    private void OnClubsMaxChanged(int value)
+    {
         State.Clubs = State.Clubs with { MaxNumber = value };
+        _ = ReplaceUrlStateAsync();
+    }
+
+    private void OnJugglersChanged(int value)
+    {
+        State.NumberOfJugglers = value;
+        _ = ReplaceUrlStateAsync();
+    }
+
+    private void OnThrowsChanged() => _ = ReplaceUrlStateAsync();
 
     private async Task OnNextClicked()
     {
@@ -310,7 +353,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
             StateHasChanged();
             if (_jsModule is not null)
             {
-                await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep);
+                await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep, CurrentWizardUrl());
             }
 
             _isStepTransitioning = false;
@@ -376,10 +419,11 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
             State.MarkVisited(WizardState.ResultsStepIndex);
             State.Phase = WizardPhase.Results;
+            _loadedResultsDeepLink = false;
             await InvokeAsync(StateHasChanged);
             if (_jsModule is not null)
             {
-                await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
+                await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep, CurrentWizardUrl());
             }
 
             await FocusResultsHeadingAsync();
@@ -449,6 +493,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private void OnFilterTreeChanged(FilterTree tree)
     {
         State.FilterTree = tree;
+        _ = ReplaceUrlStateAsync();
     }
 
     private void OnFilterAdded(IFilterInformation filter)
@@ -457,20 +502,23 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         var leaf = new FilterLeaf(new WizardIdentifiedFilter(id, filter));
         State.FilterTree = WizardFilterTree.AddLeaf(State.FilterTree, _insertParent, leaf);
         _insertParent = null;
+        _ = ReplaceUrlStateAsync();
     }
 
     private void OnFilterEdited((int Id, IFilterInformation Filter) args)
     {
         State.FilterTree = WizardFilterTree.ReplaceLeaf(State.FilterTree, args.Id, args.Filter);
+        _ = ReplaceUrlStateAsync();
     }
 
     private void RemoveFilter(int id)
     {
         State.FilterTree = WizardFilterTree.RemoveLeaf(State.FilterTree, id);
         _insertParent = null;
+        _ = ReplaceUrlStateAsync();
     }
 
-    private async Task StartGenerationAsync()
+    private async Task StartGenerationAsync(bool pushHistory = true)
     {
         if (_isStartingGeneration || State.Phase == WizardPhase.Generating)
         {
@@ -487,9 +535,13 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         State.Phase = WizardPhase.Generating;
         State.MarkVisited(WizardState.ResultsStepIndex);
         await InvokeAsync(StateHasChanged);
-        if (_jsModule is not null)
+        if (_jsModule is not null && pushHistory)
         {
-            await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep);
+            await _jsModule.InvokeVoidAsync("pushResultsState", State.CurrentStep, CurrentWizardUrl());
+        }
+        else if (_jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync("replaceResultsState", State.CurrentStep, CurrentWizardUrl());
         }
 
         var cacheKey = WizardGenerationCacheKey.From(State);
@@ -516,6 +568,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
             State.Phase = WizardPhase.Results;
             _isStartingGeneration = false;
+            await ReplaceResultsUrlStateAsync();
             await InvokeAsync(StateHasChanged);
             if (_jsModule is not null)
             {
@@ -571,6 +624,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
 
             State.Phase = WizardPhase.Results;
             _isStartingGeneration = false;
+            await ReplaceResultsUrlStateAsync();
             await InvokeAsync(StateHasChanged);
 
             if (_jsModule is not null)
@@ -587,6 +641,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             State.Results.AddRange(buffer);
             State.Phase = WizardPhase.Results;
+            await ReplaceResultsUrlStateAsync();
             await InvokeAsync(StateHasChanged);
             return;
         }
@@ -652,7 +707,17 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private async Task BackToEditing()
     {
         State.GenerationCancellation?.Cancel();
-        if (_jsModule is not null)
+        if (_loadedResultsDeepLink)
+        {
+            State.Phase = WizardPhase.Editing;
+            State.CurrentStep = WizardState.TotalSteps - 1;
+            _loadedResultsDeepLink = false;
+            await ReplaceEditorUrlStateAsync();
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(150);
+            await FocusActiveStepHeadingAsync();
+        }
+        else if (_jsModule is not null)
         {
             await _jsModule.InvokeVoidAsync("back");
         }
@@ -671,7 +736,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         State.ResetToDefaults();
         if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep);
+            await _jsModule.InvokeVoidAsync("replaceEditorState", State.CurrentStep, CurrentWizardUrl());
         }
     }
 
@@ -679,9 +744,65 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     {
         if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("pushEditorState", State.CurrentStep);
+            await _jsModule.InvokeVoidAsync("pushEditorState", State.CurrentStep, CurrentWizardUrl());
         }
     }
+
+    private bool RestoreUrlState(string? urlOrState)
+    {
+        if (string.IsNullOrWhiteSpace(urlOrState))
+        {
+            return false;
+        }
+        string? encoded = urlOrState;
+        if (Uri.TryCreate(urlOrState, UriKind.Absolute, out var uri))
+        {
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            encoded = query.TryGetValue("ws", out var value) ? value.ToString() : null;
+        }
+        else if (urlOrState.Contains('?'))
+        {
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(urlOrState);
+            encoded = query.TryGetValue("ws", out var value) ? value.ToString() : null;
+        }
+
+        var snapshot = WizardUrlState.Decode(encoded);
+        if (snapshot is null)
+        {
+            return false;
+        }
+        WizardUrlState.Apply(snapshot, State);
+        State.Results.Clear();
+        return true;
+    }
+
+    private string CurrentWizardUrl()
+    {
+        var encoded = WizardUrlState.Encode(State);
+        if (encoded is null)
+        {
+            return Navigation.Uri;
+        }
+        return Navigation.GetUriWithQueryParameter("ws", encoded);
+    }
+
+    private async Task ReplaceUrlStateAsync(bool results = false)
+    {
+        if (_jsModule is null)
+        {
+            return;
+        }
+
+        await _jsModule.InvokeVoidAsync(
+            results ? "replaceResultsState" : "replaceEditorState",
+            State.CurrentStep,
+            CurrentWizardUrl()
+        );
+    }
+
+    private Task ReplaceEditorUrlStateAsync() => ReplaceUrlStateAsync(results: false);
+
+    private Task ReplaceResultsUrlStateAsync() => ReplaceUrlStateAsync(results: true);
 
     public async ValueTask DisposeAsync()
     {

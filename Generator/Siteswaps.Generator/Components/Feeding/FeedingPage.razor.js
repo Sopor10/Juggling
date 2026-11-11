@@ -13,9 +13,11 @@ export function initHistory(dotnetHelper, phase) {
     }
 
     const state = event.state?.pzFeeding;
+    const params = new URLSearchParams(location.search);
     dotnetHelper.invokeMethodAsync(
       'OnBrowserPopState',
       state?.phase ?? 'Setup',
+      params.get('state') ?? '',
     );
   };
 
@@ -23,12 +25,14 @@ export function initHistory(dotnetHelper, phase) {
   historyHandlers.set(dotnetHelper, onPopState);
 }
 
-export function pushPhaseState(phase) {
+export function pushPhaseState(phase, url) {
   history.pushState({ ...history.state, pzFeeding: { phase } }, '');
+  if (url) history.replaceState(history.state, '', url);
 }
 
-export function replacePhaseState(phase) {
+export function replacePhaseState(phase, url) {
   history.replaceState({ ...history.state, pzFeeding: { phase } }, '');
+  if (url) history.replaceState(history.state, '', url);
 }
 
 export function back() {
