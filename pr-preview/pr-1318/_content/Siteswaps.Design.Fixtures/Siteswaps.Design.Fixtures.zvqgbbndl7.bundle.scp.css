@@ -1,0 +1,55 @@
+/* _content/Siteswaps.Design.Fixtures/DesignTestLayout.razor.rz.scp.css */
+.design-test-layout[b-ffr0kunkqn] {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #f5f3fb;
+    box-sizing: border-box;
+}
+/* _content/Siteswaps.Design.Fixtures/Home/BrandMark.razor.rz.scp.css */
+.pznav[b-qrb53kyzrv] {
+    --pznav-purple-950: #241a3d;
+    --pznav-purple-800: #33225d;
+    --pznav-purple-600: #472779;
+    --pznav-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+
+    width: 100%;
+    background: radial-gradient(
+        140% 180% at 15% 0%,
+        var(--pznav-purple-600) 0%,
+        var(--pznav-purple-800) 55%,
+        var(--pznav-purple-950) 100%
+    );
+    box-shadow: 0 4px 16px -6px rgba(36, 26, 61, 0.45);
+}
+
+.pznav-bar[b-qrb53kyzrv] {
+    display: flex;
+    align-items: center;
+    gap: 8px 16px;
+    min-height: 3.5rem;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+}
+
+.pznav-brand[b-qrb53kyzrv] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white !important;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.pznav-brand-text[b-qrb53kyzrv] {
+    font-family: var(--pznav-font-display);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.pznav-logo[b-qrb53kyzrv] {
+    display: block;
+    height: 32px;
+    width: auto;
+    flex-shrink: 0;
+}
