@@ -42,7 +42,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="TngTech.ArchUnitNET" Version="0.13.5" />
-    <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.13.4" />
+    <PackageVersion Include="TngTech.ArchUnitNET.NUnit" Version="0.13.5" />
     <PackageVersion Include="Verify" Version="32.0.1" />
     <PackageVersion Include="Verify.Nunit" Version="32.0.1" />
     <PackageVersion Include="Verify.ImageMagick" Version="3.11.0" />
