@@ -46,7 +46,7 @@
 
     protected override void OnParametersSet()
     {
-        if (!_initializedSpeed || _lastParameterSpeed != AnimationSpeed)
+        if (!_initializedSpeed || Math.Abs(_lastParameterSpeed - AnimationSpeed) > 0.001)
         {
             _effectiveSpeed = AnimationSpeed;
             _lastParameterSpeed = AnimationSpeed;
@@ -86,7 +86,10 @@
                 _renderedJson = _json;
                 _renderedSpeed = _effectiveSpeed;
             }
-            else if (_renderedSpeed != _effectiveSpeed)
+            else if (
+                _renderedSpeed is not double renderedSpeed
+                || Math.Abs(renderedSpeed - _effectiveSpeed) > 0.001
+            )
             {
                 await _module.InvokeVoidAsync("update", _target, _effectiveSpeed);
                 _renderedSpeed = _effectiveSpeed;
@@ -126,6 +129,7 @@
         }
         catch (JSDisconnectedException)
         {
+            _module = null;
         }
     }
 }
