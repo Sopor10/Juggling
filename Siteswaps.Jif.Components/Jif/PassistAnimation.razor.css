@@ -7,6 +7,12 @@
     background: #fff;
 }
 
+.passist-animation-stage ::deep .container {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+
 .passist-animation-error {
     padding: 12px;
     color: #8f1d1d;
