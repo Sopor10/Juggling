@@ -4,7 +4,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" />
-    <PackageReference Include="ExhaustiveMatching.Analyzer" />
     <PackageReference Include="Fluxor" />
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="Microsoft.AspNetCore.Components" />
@@ -15,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+    <ProjectReference Include="..\Siteswaps.Jif.Components\Siteswaps.Jif.Components.csproj" />
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Generator\Filter\FilterSelection.razor" />

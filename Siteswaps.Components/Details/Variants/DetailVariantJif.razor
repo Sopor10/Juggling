@@ -1,0 +1,32 @@
+@namespace Siteswaps.Components.Details.Variants
+@using System.Text.Json
+@using Siteswaps.Components.Details
+@using Siteswap.Details.Jif
+@using Siteswaps.Jif.Components
+
+<section class="sdv-jif">
+    <h3 class="sdv-section-title">JIF-Animation</h3>
+    <p class="sdv-muted">Passist animiert den aktuellen Siteswap mit der angezeigten Personen- und Keulenzahl.</p>
+    @if (Model is not null)
+    {
+        <PassistAnimation Jif="@JifDocument" />
+    }
+    <details class="sdv-jif-data">
+        <summary>Generiertes JIF anzeigen</summary>
+        <pre><code>@JifJson</code></pre>
+    </details>
+</section>
+
+@code {
+    [Parameter] public DetailViewModel? Model { get; set; }
+
+    private JifPattern JifDocument => JifMapper.Map(Model!.Value, Model.NumberOfJugglers, propType: "club");
+
+    private string JifJson => Model is null
+        ? "{}"
+        : JsonSerializer.Serialize(
+            JifDocument,
+            new JsonSerializerOptions { WriteIndented = true }
+        );
+
+}

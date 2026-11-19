@@ -13,6 +13,7 @@ flowchart TD
     GeneratorCore["Siteswaps Generator Core<br/>Pattern generation"]
     GeneratorUI["Generator UI<br/>CardStack and Wizard"]
     SharedComponents["Shared Components<br/>Reusable UI"]
+    JifUI["JIF UI<br/>Passist renderer"]
     Mcp["MCP Server<br/>AI integration"]
     Web["Web App<br/>Blazor host"]
     Hosting["AppHost<br/>Orchestration"]
@@ -21,7 +22,10 @@ flowchart TD
 
     GeneratorCore --> Domain
     GeneratorUI --> GeneratorCore
+    GeneratorUI --> JifUI
     SharedComponents --> Domain
+    SharedComponents --> JifUI
+    JifUI --> Domain
     Mcp --> GeneratorCore
     Mcp --> Domain
     Web --> GeneratorUI

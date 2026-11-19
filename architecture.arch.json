@@ -20,6 +20,11 @@
         "Siteswaps.Components."
       ]
     },
+    "JifUI": {
+      "namespaces": [
+        "Siteswaps.Jif.Components."
+      ]
+    },
     "Mcp": {
       "namespaces": [
         "Siteswaps.Mcp.Server."

@@ -43,6 +43,25 @@
     border-radius: 8px;
 }
 
+.sd-page ::deep .passist-animation-stage {
+    width: 100%;
+    height: 620px;
+    overflow: hidden;
+    border: 1px solid rgba(44, 31, 82, .16);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.sd-page ::deep .sdv-jif-data { margin-top: 12px; }
+.sd-page ::deep .sdv-jif-data pre {
+    max-height: 320px;
+    overflow: auto;
+    padding: 12px;
+    border-radius: 10px;
+    background: #241a3d;
+    color: #f5f3fb;
+}
+
 .sd-header {
     background: radial-gradient(120% 140% at 20% 0%, var(--sd-purple-600) 0%, var(--sd-purple-800) 45%, var(--sd-purple-950) 100%);
     color: white;

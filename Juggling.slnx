@@ -9,6 +9,7 @@
   <Project Path="Juggling.AppHost/Juggling.AppHost.csproj" />
   <Project Path="Siteswap.Details/Siteswap.Details.csproj" />
   <Project Path="Siteswaps.Components/Siteswaps.Components.csproj" />
+  <Project Path="Siteswaps.Jif.Components/Siteswaps.Jif.Components.csproj" />
   <Project Path="Siteswaps.Mcp.Server.Test/Siteswaps.Mcp.Server.Test.csproj" />
   <Project Path="Siteswaps.Mcp.Server/Siteswaps.Mcp.Server.csproj" />
   <Project Path="Siteswaps.Test/Siteswaps.Test.csproj" />

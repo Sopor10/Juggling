@@ -15,7 +15,8 @@ public class ArchitectureTests
     private readonly Architecture Architecture = new ArchLoader()
         .LoadAssemblies(
             typeof(Siteswaps.Generator.AssemblyInfo).Assembly,
-            typeof(Siteswaps.Generator.Core.Generator.SiteswapGenerator).Assembly
+            typeof(Siteswaps.Generator.Core.Generator.SiteswapGenerator).Assembly,
+            typeof(Siteswaps.Jif.Components.PassistAnimation).Assembly
         )
         .Build();
 

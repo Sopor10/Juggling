@@ -89,6 +89,9 @@
                     case "diagrams":
                         <DetailVariantDiagrams Model="Model" />
                         break;
+                    case "jif":
+                        <DetailVariantJif Model="Model" />
+                        break;
                 }
             </div>
         }
@@ -117,6 +120,7 @@
         new("analysis", L["Analysis"].Value),
         new("transitions", L["Transitions"].Value),
         new("diagrams", L["Diagrams"].Value),
+        new("jif", "JIF · Passist"),
     ];
 
     protected override void OnParametersSet()
