@@ -21,6 +21,7 @@
     var arrows = Mode == DiagramMode.Ladder ? Diagram.LadderArrows : Diagram.CausalArrows;
     var markerId = $"{_markerPrefix}-default";
     var colorLadderOrbits = ColorOrbits && Mode == DiagramMode.Ladder;
+    var colorThrowNodes = ColorOrbits && Mode == DiagramMode.Ladder;
 }
 
 <div class="pd-wrap" data-testid="passist-diagram-@Mode">
@@ -102,10 +103,13 @@
             var cx = PassistDiagramGeometry.X((decimal)node.Time, dx);
             var cy = PassistDiagramGeometry.Y(line);
             var handClass = node.Hand.Name == "L" ? "left" : "right";
-            <circle class="pd-node @handClass"
+            var isColoredOrbit = colorThrowNodes && node.OrbitIndex >= 0 && node.OrbitIndex < OrbitLabels.Count;
+            var nodeColor = isColoredOrbit ? OrbitColorPalette.For(node.OrbitIndex) : null;
+            <circle class="pd-node @handClass @(isColoredOrbit ? "pd-orbit-node" : null)"
                     cx="@cx.ToString(inv)"
                     cy="@cy.ToString(inv)"
-                    r="@PassistDiagramGeometry.NodeRadius.ToString(inv)" />
+                    r="@PassistDiagramGeometry.NodeRadius.ToString(inv)"
+                    style="@(nodeColor is null ? null : $"stroke:{nodeColor}")" />
             <SvgText X="@cx.ToString(inv)"
                      Y="@((cy + 5).ToString(inv))"
                      CssClass="pd-node-label"
@@ -115,19 +119,6 @@
         }
     </svg>
 </div>
-@if (colorLadderOrbits && OrbitLabels.Count > 0)
-{
-    <div class="pd-orbit-legend" aria-label="Objekt-Orbits">
-        @for (var i = 0; i < OrbitLabels.Count; i++)
-        {
-            <span class="pd-orbit-legend-item">
-                <span class="pd-orbit-swatch" style="background:@OrbitColorPalette.For(i)" aria-hidden="true"></span>
-                <span>Orbit @(i + 1): @OrbitLabels[i]</span>
-            </span>
-        }
-    </div>
-}
-
 @code {
     public enum DiagramMode
     {

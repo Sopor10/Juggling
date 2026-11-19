@@ -62,12 +62,12 @@
         else
         {
             <div class="sd-orbit-toggle-row">
-                <button type="button"
-                        class="sd-orbit-toggle @(OrbitColorsEnabled ? "active" : null)"
-                        aria-pressed="@OrbitColorsEnabled"
-                        @onclick="ToggleOrbitColors">
-                    Objekt-Orbits: @(OrbitColorsEnabled ? "farbig" : "einfarbig")
-                </button>
+                <div class="sd-orbit-toggle" role="radiogroup" aria-label="Wurffarben">
+                    <button type="button" role="radio" class="@(OrbitColorsEnabled ? "active" : null)"
+                            aria-checked="@OrbitColorsEnabled" @onclick="() => SetOrbitColors(true)">Orbits</button>
+                    <button type="button" role="radio" class="@(!OrbitColorsEnabled ? "active" : null)"
+                            aria-checked="@(!OrbitColorsEnabled)" @onclick="() => SetOrbitColors(false)">Pass / Self</button>
+                </div>
             </div>
             <div class="sd-tabs" role="tablist" aria-label="@L["Detail variants"]">
                 @foreach (var tab in Tabs)
@@ -146,7 +146,7 @@
         Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("v", id), replace: true);
     }
 
-    private void ToggleOrbitColors() => OrbitColorsEnabled = !OrbitColorsEnabled;
+    private void SetOrbitColors(bool enabled) => OrbitColorsEnabled = enabled;
 
     private void Rotate(int steps)
     {

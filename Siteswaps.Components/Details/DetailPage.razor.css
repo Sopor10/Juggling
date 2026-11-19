@@ -53,6 +53,13 @@
 }
 
 .sd-page ::deep .sdv-jif-data { margin-top: 12px; }
+.sd-page ::deep .sdv-jif-attribution {
+    margin: 8px 0 0;
+    color: var(--sd-purple-400);
+    font-size: 13px;
+    text-align: center;
+}
+.sd-page ::deep .sdv-jif-attribution a { color: var(--sd-purple-700); }
 .sd-page ::deep .sdv-jif-data pre {
     max-height: 320px;
     overflow: auto;
@@ -207,9 +214,16 @@
 }
 
 .sd-orbit-toggle {
-    appearance: none;
+    display: inline-flex;
+    overflow: hidden;
     border: 2px solid var(--sd-purple-100);
     border-radius: 999px;
+    background: transparent;
+}
+
+.sd-orbit-toggle button {
+    appearance: none;
+    border: 0;
     background: transparent;
     color: var(--sd-purple-700);
     padding: 7px 13px;
@@ -220,8 +234,7 @@
     cursor: pointer;
 }
 
-.sd-orbit-toggle.active {
-    border-color: var(--sd-purple-700);
+.sd-orbit-toggle button.active {
     background: var(--sd-purple-700);
     color: white;
 }

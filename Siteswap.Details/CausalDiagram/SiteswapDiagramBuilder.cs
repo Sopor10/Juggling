@@ -32,7 +32,13 @@ public static class SiteswapDiagramBuilder
         for (var beat = 0; beat < steps; beat++)
         {
             var landingLimbIndex = (beat + siteswap.Items[beat]) % numberOfHands;
-            nodes.Add(new Throw(hands[beat], siteswap.Items[beat], beat, landingLimbIndex));
+            nodes.Add(new Throw(
+                hands[beat],
+                siteswap.Items[beat],
+                beat,
+                landingLimbIndex,
+                orbitByBeat[beat % siteswap.Length]
+            ));
         }
 
         var causal = new List<DiagramArrow>();
