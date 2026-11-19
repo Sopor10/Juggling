@@ -131,90 +131,62 @@ public static class JifMapper
         return colors.ToArray();
     }
 
-    /// <summary>Maps the Siteswap Lab's phased, person-to-person throw grid to JIF.</summary>
-    public static JifPattern MapPassing(
-        IReadOnlyList<int> timeZones,
-        IReadOnlyList<IReadOnlyList<int>> heights,
-        IReadOnlyList<IReadOnlyList<int>> targets,
-        string propType = "club"
+    /// <summary>Maps a causal throw diagram to a complete JIF pattern.</summary>
+    public static JifPattern Map(
+        DiagramSet diagram,
+        string propType = "club",
+        string patternType = "passingSiteswap",
+        string? name = null,
+        string? description = null
     )
     {
-        ArgumentNullException.ThrowIfNull(timeZones);
-        ArgumentNullException.ThrowIfNull(heights);
-        ArgumentNullException.ThrowIfNull(targets);
+        ArgumentNullException.ThrowIfNull(diagram);
         ArgumentException.ThrowIfNullOrWhiteSpace(propType);
-        if (timeZones.Count == 0 || heights.Count != timeZones.Count || targets.Count != timeZones.Count)
-            throw new ArgumentException("Time zones, heights, and targets must describe the same non-empty set of jugglers.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(patternType);
+        if (diagram.Hands.Count == 0 || diagram.Jugglers.Count == 0 || diagram.StepCount <= 0)
+            throw new ArgumentException("The causal diagram needs jugglers, limbs, and a positive period.", nameof(diagram));
+        if (diagram.LimbPermutation.Count != diagram.Hands.Count)
+            throw new ArgumentException("The causal diagram limb permutation must match its limbs.", nameof(diagram));
 
-        var period = heights[0].Count;
-        if (period == 0 || heights.Any(row => row.Count != period) || targets.Any(row => row.Count != period))
-            throw new ArgumentException("Every juggler must have the same non-empty number of beats.");
-        if (timeZones.Any(zone => zone < 0))
-            throw new ArgumentOutOfRangeException(nameof(timeZones), "Time zones cannot be negative.");
-
-        var distinctZones = timeZones.Distinct().Order().ToArray();
-        var timeStretch = Math.Max(1, distinctZones.Length);
-        var normalizedTimeZones = timeZones
-            .Select(zone => Array.IndexOf(distinctZones, zone))
-            .ToArray();
-        if (targets.SelectMany(row => row).Any(target => target < 0 || target >= timeZones.Count))
-            throw new ArgumentOutOfRangeException(nameof(targets), "Every throw must target a known juggler.");
-
-        var limbs = timeZones.SelectMany((_, person) => new[]
-        {
-            new JifLimb { Juggler = person, Type = "right hand" },
-            new JifLimb { Juggler = person, Type = "left hand" },
-        }).ToList();
-
-        var throws = new List<JifThrow>(timeZones.Count * period);
-        for (var person = 0; person < timeZones.Count; person++)
-        {
-            for (var beat = 0; beat < period; beat++)
+        var handIndices = diagram.Hands
+            .Select((hand, index) => (hand, index))
+            .ToDictionary(entry => entry.hand, entry => entry.index);
+        var orderedThrows = diagram.Throws
+            .Where(node => node.Height > 0)
+            .OrderBy(node => node.Time)
+            .Select(node =>
             {
-                var height = heights[person][beat];
-                if (height < 0)
-                    throw new ArgumentOutOfRangeException(nameof(heights), "Throw heights cannot be negative.");
-                if (height == 0)
-                    continue;
+                if (!handIndices.TryGetValue(node.Hand, out var from))
+                    throw new ArgumentException("Every causal throw must start at a diagram limb.", nameof(diagram));
+                if (node.ToLimb is not int to || to < 0 || to >= diagram.Hands.Count)
+                    throw new ArgumentException("Every causal throw must identify its destination limb.", nameof(diagram));
 
-                var time = beat * timeStretch + normalizedTimeZones[person];
-                var landingTimeZone = (normalizedTimeZones[person] + height) % timeStretch;
-                if (landingTimeZone != normalizedTimeZones[targets[person][beat]])
-                    throw new ArgumentException($"Throw from juggler {person} at beat {beat} cannot land in the selected juggler's time zone.", nameof(targets));
-                var landingLocalBeat = beat + (normalizedTimeZones[person] + height) / timeStretch;
-                var from = person * 2 + beat % 2;
-                var to = targets[person][beat] * 2 + landingLocalBeat % 2;
-                throws.Add(new JifThrow
+                return new JifThrow
                 {
-                    Time = time,
-                    Duration = height,
+                    Time = node.Time,
+                    Duration = node.Height,
                     From = from,
                     To = to,
-                    Label = global::Siteswap.Details.Siteswap.Transform(height),
-                });
-            }
-        }
-
-        if (throws.Count == 0)
-            throw new ArgumentException("The pattern must contain at least one positive-height throw.", nameof(heights));
-
-        var basePeriod = period * timeStretch;
-        var orderedThrows = throws.OrderBy(throwEvent => throwEvent.Time).ToArray();
-        var limbPermutation = Enumerable.Range(0, timeZones.Count * 2)
-            .Select(limb => limb / 2 * 2 + (limb % 2 + period % 2) % 2)
+                    Label = global::Siteswap.Details.Siteswap.Transform(node.Height),
+                };
+            })
             .ToArray();
+        if (orderedThrows.Length == 0)
+            throw new ArgumentException("The causal diagram contains no positive-height throws.", nameof(diagram));
+
+        var limbPermutation = diagram.LimbPermutation.ToArray();
         var (firstPeriodProps, propPermutation, propCount) = AssignPropPermutation(
             orderedThrows,
             limbPermutation,
-            basePeriod,
-            timeZones.Count * 2
+            diagram.StepCount,
+            diagram.Hands.Count
         );
         var expansionCount = LeastCommonMultiple(
             PermutationOrder(limbPermutation),
             PermutationOrder(propPermutation)
         );
         if (expansionCount > 512 || (long)orderedThrows.Length * expansionCount > 30_000)
-            throw new InvalidOperationException("Passist needs an expansion larger than this widget supports for the current pattern.");
+            throw new InvalidOperationException("Passist needs an expansion larger than this pattern supports.");
 
         var expandedThrows = new List<JifThrow>(orderedThrows.Length * expansionCount);
         var limbMap = Enumerable.Range(0, limbPermutation.Length).ToArray();
@@ -226,7 +198,7 @@ public static class JifMapper
                 var throwEvent = orderedThrows[throwIndex];
                 expandedThrows.Add(throwEvent with
                 {
-                    Time = throwEvent.Time!.Value + repetition * basePeriod,
+                    Time = throwEvent.Time!.Value + repetition * diagram.StepCount,
                     From = limbMap[throwEvent.From!.Value],
                     To = limbMap[throwEvent.To!.Value],
                     Prop = propMap[firstPeriodProps[throwIndex]],
@@ -239,25 +211,31 @@ public static class JifMapper
 
         return new JifPattern
         {
-            Meta = new JifMeta { Name = "Siteswap Lab passing pattern", Generator = "Siteswap Generator" },
+            Meta = new JifMeta { Name = name ?? "Causal diagram pattern", Generator = "Siteswap Generator" },
             HighLevelDescription = new JifHighLevelDescription
             {
-                Type = "passingSiteswap",
-                Description = $"{timeZones.Count} jugglers, period {period}",
+                Type = patternType,
+                Description = description ?? $"{diagram.Jugglers.Count} jugglers, period {diagram.StepCount}",
             },
-            Jugglers = timeZones.Select((_, index) => CreateJuggler($"{(char)('A' + index)}", index, timeZones.Count)).ToList(),
-            Limbs = limbs,
+            Jugglers = diagram.Jugglers
+                .Select((juggler, index) => CreateJuggler(juggler.Name, index, diagram.Jugglers.Count))
+                .ToList(),
+            Limbs = diagram.Hands.Select(hand => new JifLimb
+            {
+                Juggler = diagram.Jugglers.IndexOf(hand.Person),
+                Type = hand.Name == "L" ? "left hand" : "right hand",
+            }).ToList(),
             Props = Enumerable.Range(0, propCount).Select(index => new JifObject
             {
                 Color = PropColors[index % PropColors.Length],
                 Type = propType,
             }).ToList(),
-            TimeStretchFactor = timeStretch,
+            TimeStretchFactor = diagram.TimeStretchFactor,
             Valid = true,
             Repetition = new JifRepetition
             {
-                Period = basePeriod * expansionCount,
-                LimbPermutation = Enumerable.Range(0, timeZones.Count * 2).ToArray(),
+                Period = diagram.StepCount * expansionCount,
+                LimbPermutation = Enumerable.Range(0, diagram.Hands.Count).ToArray(),
                 PropPermutation = Enumerable.Range(0, propCount).ToArray(),
             },
             Throws = expandedThrows,

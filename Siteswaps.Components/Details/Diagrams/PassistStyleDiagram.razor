@@ -13,7 +13,7 @@
     var inv = CultureInfo.InvariantCulture;
     var nJugglers = Diagram.Jugglers.Count;
     var (width, height) = PassistDiagramGeometry.ViewSize(
-        Diagram.Throws.Count,
+        Diagram.StepCount,
         nJugglers,
         Diagram.TimeStretchFactor
     );

@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using NUnit.Framework;
 using Siteswap.Details;
+using Siteswap.Details.CausalDiagram;
 using Siteswap.Details.Jif;
 
 namespace Siteswaps.Test.Jif;
@@ -70,7 +71,12 @@ public class JifMapperTests
             new[] { 2, 0, 2, 2, 2 },
         ];
 
-        var actual = JifMapper.MapPassing(timeZones, heights, targets);
+        var causalDiagram = PassingDiagramBuilder.Build(timeZones, heights, targets);
+        var actual = JifMapper.Map(
+            causalDiagram,
+            name: "Siteswap Lab passing pattern",
+            description: "3 jugglers, period 5"
+        );
 
         actual.Jugglers.Should().HaveCount(3);
         actual.Limbs.Should().HaveCount(6);

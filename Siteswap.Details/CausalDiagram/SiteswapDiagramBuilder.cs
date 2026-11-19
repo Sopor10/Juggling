@@ -31,7 +31,8 @@ public static class SiteswapDiagramBuilder
         var nodes = new List<Throw>(steps);
         for (var beat = 0; beat < steps; beat++)
         {
-            nodes.Add(new Throw(hands[beat], siteswap.Items[beat], beat));
+            var landingLimbIndex = (beat + siteswap.Items[beat]) % numberOfHands;
+            nodes.Add(new Throw(hands[beat], siteswap.Items[beat], beat, landingLimbIndex));
         }
 
         var causal = new List<DiagramArrow>();
@@ -87,6 +88,8 @@ public static class SiteswapDiagramBuilder
             CausalArrows: causal.ToImmutableList(),
             LadderArrows: ladder.ToImmutableList(),
             TimeStretchFactor: timeStretchFactor,
+            StepCount: steps,
+            LimbPermutation: Enumerable.Range(0, hands.Length).ToImmutableList(),
             StartProps: ComputeStartProps(siteswap, hands)
         );
     }
@@ -201,5 +204,7 @@ public record DiagramSet(
     ImmutableList<DiagramArrow> CausalArrows,
     ImmutableList<DiagramArrow> LadderArrows,
     decimal TimeStretchFactor,
+    int StepCount,
+    ImmutableList<int> LimbPermutation,
     ImmutableDictionary<string, StartProps> StartProps
 );

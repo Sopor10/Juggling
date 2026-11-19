@@ -6,6 +6,7 @@
 @using Siteswaps.Generator.Components.Feeding
 @using Siteswaps.Generator.Components.WizardPage.Controls
 @using Siteswaps.Generator.Core.Generator
+@using Siteswaps.Components.Details.Diagrams
 @using Siteswaps.Jif.Components
 @using System.Text.Json
 @inject IStringLocalizer<SiteswapLabPage> L
@@ -231,6 +232,7 @@
                             @if (_passingJifError is null)
                             {
                                 <PassistAnimation Jif="@(new JifInput.Json(jifJson))" />
+                                <JifCausalDiagram Jif="@(new JifInput.Json(jifJson))" />
                                 <details>
                                     <summary>Generiertes JIF anzeigen</summary>
                                     <pre><code>@jifJson</code></pre>
@@ -293,7 +295,7 @@
             try
             {
                 _passingJifError = null;
-                return SiteswapLabJifMapper.MapPassing(
+                return SiteswapLabJifMapper.MapViaCausalDiagram(
                     _direct.People.Select(person => person.TimeZone).ToArray(),
                     _direct.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
                     _direct.People.Select((person, index) => (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray(),
