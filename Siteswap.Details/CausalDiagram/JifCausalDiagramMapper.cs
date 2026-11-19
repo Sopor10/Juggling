@@ -15,23 +15,34 @@ public static class JifCausalDiagramMapper
         var sourceThrows = jif.Throws ?? [];
         var timeStretchFactor = jif.TimeStretchFactor ?? 1m;
         if (sourceJugglers.Count == 0 || sourceLimbs.Count == 0)
-            throw new ArgumentException("The JIF needs jugglers and limbs to draw a causal diagram.", nameof(jif));
+            throw new ArgumentException(
+                "The JIF needs jugglers and limbs to draw a causal diagram.",
+                nameof(jif)
+            );
         if (timeStretchFactor <= 0)
-            throw new ArgumentException("The JIF time stretch factor must be positive.", nameof(jif));
+            throw new ArgumentException(
+                "The JIF time stretch factor must be positive.",
+                nameof(jif)
+            );
 
         var jugglers = sourceJugglers
-            .Select((juggler, index) => new Person(
-                juggler.Name ?? juggler.Label ?? ((char)('A' + index)).ToString()
-            ))
+            .Select(
+                (juggler, index) =>
+                    new Person(juggler.Name ?? juggler.Label ?? ((char)('A' + index)).ToString())
+            )
             .ToImmutableList();
         var hands = sourceLimbs
             .Select(limb =>
             {
                 var jugglerIndex = limb.Juggler ?? -1;
                 if (jugglerIndex < 0 || jugglerIndex >= jugglers.Count)
-                    throw new ArgumentException("Every JIF limb must reference an existing juggler.", nameof(jif));
+                    throw new ArgumentException(
+                        "Every JIF limb must reference an existing juggler.",
+                        nameof(jif)
+                    );
 
-                var isLeft = limb.Type?.Contains("left", StringComparison.OrdinalIgnoreCase) == true
+                var isLeft =
+                    limb.Type?.Contains("left", StringComparison.OrdinalIgnoreCase) == true
                     || limb.Label?.Equals("L", StringComparison.OrdinalIgnoreCase) == true;
                 return new Hand(isLeft ? "L" : "R", jugglers[jugglerIndex]);
             })
@@ -48,10 +59,16 @@ public static class JifCausalDiagramMapper
             var fromIndex = jifThrow.From ?? -1;
             var toIndex = jifThrow.To ?? -1;
             if (fromIndex < 0 || fromIndex >= hands.Count || toIndex < 0 || toIndex >= hands.Count)
-                throw new ArgumentException("Every JIF throw must reference existing limbs.", nameof(jif));
+                throw new ArgumentException(
+                    "Every JIF throw must reference existing limbs.",
+                    nameof(jif)
+                );
 
             if (decimal.Truncate(duration) != duration)
-                throw new ArgumentException("Causal diagrams currently require whole-number throw durations.", nameof(jif));
+                throw new ArgumentException(
+                    "Causal diagrams currently require whole-number throw durations.",
+                    nameof(jif)
+                );
 
             var fromHand = hands[fromIndex];
             var toHand = hands[toIndex];
@@ -61,7 +78,10 @@ public static class JifCausalDiagramMapper
 
             var causalStep = duration - 2m * timeStretchFactor;
             if (decimal.Truncate(causalStep) != causalStep)
-                throw new ArgumentException("The JIF time scale does not align with whole beat steps.", nameof(jif));
+                throw new ArgumentException(
+                    "The JIF time scale does not align with whole beat steps.",
+                    nameof(jif)
+                );
 
             var step = decimal.ToInt32(causalStep);
             var causalTarget = new Throw(toHand, 0, time + causalStep);
@@ -70,7 +90,10 @@ public static class JifCausalDiagramMapper
         }
 
         if (nodes.Count == 0)
-            throw new ArgumentException("The JIF has no positive-height throws to draw.", nameof(jif));
+            throw new ArgumentException(
+                "The JIF has no positive-height throws to draw.",
+                nameof(jif)
+            );
 
         var endTime = nodes.Max(node => node.Time) + 1m;
         var period = jif.Repetition?.Period is > 0

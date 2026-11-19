@@ -37,7 +37,8 @@ public static class JifMapper
             .ToList();
         var propCount = (int)siteswap.NumberOfObjects();
         var propOrbitColors = GetPropOrbitColors(siteswap, diagram.Throws, propCount);
-        var props = Enumerable.Range(0, propCount)
+        var props = Enumerable
+            .Range(0, propCount)
             .Select(i => new JifObject
             {
                 Color = colorOrbits ? propOrbitColors[i] : PropColors[i % PropColors.Length],
@@ -51,8 +52,8 @@ public static class JifMapper
                 Type = hand.Name == "R" ? "right hand" : "left hand",
             })
             .ToList();
-        var throws = diagram.Throws
-            .Select(node => new JifThrow
+        var throws = diagram
+            .Throws.Select(node => new JifThrow
             {
                 Time = node.Time,
                 Duration = node.Height,
@@ -126,7 +127,9 @@ public static class JifMapper
         }
 
         if (colors.Count != propCount)
-            throw new InvalidOperationException("Siteswap orbit sizes do not match its prop count.");
+            throw new InvalidOperationException(
+                "Siteswap orbit sizes do not match its prop count."
+            );
 
         return colors.ToArray();
     }
@@ -144,22 +147,34 @@ public static class JifMapper
         ArgumentException.ThrowIfNullOrWhiteSpace(propType);
         ArgumentException.ThrowIfNullOrWhiteSpace(patternType);
         if (diagram.Hands.Count == 0 || diagram.Jugglers.Count == 0 || diagram.StepCount <= 0)
-            throw new ArgumentException("The causal diagram needs jugglers, limbs, and a positive period.", nameof(diagram));
+            throw new ArgumentException(
+                "The causal diagram needs jugglers, limbs, and a positive period.",
+                nameof(diagram)
+            );
         if (diagram.LimbPermutation.Count != diagram.Hands.Count)
-            throw new ArgumentException("The causal diagram limb permutation must match its limbs.", nameof(diagram));
+            throw new ArgumentException(
+                "The causal diagram limb permutation must match its limbs.",
+                nameof(diagram)
+            );
 
-        var handIndices = diagram.Hands
-            .Select((hand, index) => (hand, index))
+        var handIndices = diagram
+            .Hands.Select((hand, index) => (hand, index))
             .ToDictionary(entry => entry.hand, entry => entry.index);
-        var orderedThrows = diagram.Throws
-            .Where(node => node.Height > 0)
+        var orderedThrows = diagram
+            .Throws.Where(node => node.Height > 0)
             .OrderBy(node => node.Time)
             .Select(node =>
             {
                 if (!handIndices.TryGetValue(node.Hand, out var from))
-                    throw new ArgumentException("Every causal throw must start at a diagram limb.", nameof(diagram));
+                    throw new ArgumentException(
+                        "Every causal throw must start at a diagram limb.",
+                        nameof(diagram)
+                    );
                 if (node.ToLimb is not int to || to < 0 || to >= diagram.Hands.Count)
-                    throw new ArgumentException("Every causal throw must identify its destination limb.", nameof(diagram));
+                    throw new ArgumentException(
+                        "Every causal throw must identify its destination limb.",
+                        nameof(diagram)
+                    );
 
                 return new JifThrow
                 {
@@ -172,7 +187,10 @@ public static class JifMapper
             })
             .ToArray();
         if (orderedThrows.Length == 0)
-            throw new ArgumentException("The causal diagram contains no positive-height throws.", nameof(diagram));
+            throw new ArgumentException(
+                "The causal diagram contains no positive-height throws.",
+                nameof(diagram)
+            );
 
         var limbPermutation = diagram.LimbPermutation.ToArray();
         var (firstPeriodProps, propPermutation, propCount) = AssignPropPermutation(
@@ -186,7 +204,9 @@ public static class JifMapper
             PermutationOrder(propPermutation)
         );
         if (expansionCount > 512 || (long)orderedThrows.Length * expansionCount > 30_000)
-            throw new InvalidOperationException("Passist needs an expansion larger than this pattern supports.");
+            throw new InvalidOperationException(
+                "Passist needs an expansion larger than this pattern supports."
+            );
 
         var expandedThrows = new List<JifThrow>(orderedThrows.Length * expansionCount);
         var limbMap = Enumerable.Range(0, limbPermutation.Length).ToArray();
@@ -196,13 +216,15 @@ public static class JifMapper
             for (var throwIndex = 0; throwIndex < orderedThrows.Length; throwIndex++)
             {
                 var throwEvent = orderedThrows[throwIndex];
-                expandedThrows.Add(throwEvent with
-                {
-                    Time = throwEvent.Time!.Value + repetition * diagram.StepCount,
-                    From = limbMap[throwEvent.From!.Value],
-                    To = limbMap[throwEvent.To!.Value],
-                    Prop = propMap[firstPeriodProps[throwIndex]],
-                });
+                expandedThrows.Add(
+                    throwEvent with
+                    {
+                        Time = throwEvent.Time!.Value + repetition * diagram.StepCount,
+                        From = limbMap[throwEvent.From!.Value],
+                        To = limbMap[throwEvent.To!.Value],
+                        Prop = propMap[firstPeriodProps[throwIndex]],
+                    }
+                );
             }
 
             limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
@@ -211,25 +233,37 @@ public static class JifMapper
 
         return new JifPattern
         {
-            Meta = new JifMeta { Name = name ?? "Causal diagram pattern", Generator = "Siteswap Generator" },
+            Meta = new JifMeta
+            {
+                Name = name ?? "Causal diagram pattern",
+                Generator = "Siteswap Generator",
+            },
             HighLevelDescription = new JifHighLevelDescription
             {
                 Type = patternType,
-                Description = description ?? $"{diagram.Jugglers.Count} jugglers, period {diagram.StepCount}",
+                Description =
+                    description ?? $"{diagram.Jugglers.Count} jugglers, period {diagram.StepCount}",
             },
-            Jugglers = diagram.Jugglers
-                .Select((juggler, index) => CreateJuggler(juggler.Name, index, diagram.Jugglers.Count))
+            Jugglers = diagram
+                .Jugglers.Select(
+                    (juggler, index) => CreateJuggler(juggler.Name, index, diagram.Jugglers.Count)
+                )
                 .ToList(),
-            Limbs = diagram.Hands.Select(hand => new JifLimb
-            {
-                Juggler = diagram.Jugglers.IndexOf(hand.Person),
-                Type = hand.Name == "L" ? "left hand" : "right hand",
-            }).ToList(),
-            Props = Enumerable.Range(0, propCount).Select(index => new JifObject
-            {
-                Color = PropColors[index % PropColors.Length],
-                Type = propType,
-            }).ToList(),
+            Limbs = diagram
+                .Hands.Select(hand => new JifLimb
+                {
+                    Juggler = diagram.Jugglers.IndexOf(hand.Person),
+                    Type = hand.Name == "L" ? "left hand" : "right hand",
+                })
+                .ToList(),
+            Props = Enumerable
+                .Range(0, propCount)
+                .Select(index => new JifObject
+                {
+                    Color = PropColors[index % PropColors.Length],
+                    Type = propType,
+                })
+                .ToList(),
             TimeStretchFactor = diagram.TimeStretchFactor,
             Valid = true,
             Repetition = new JifRepetition
@@ -242,7 +276,11 @@ public static class JifMapper
         };
     }
 
-    private static (int[] FirstPeriodProps, int[] PropPermutation, int PropCount) AssignPropPermutation(
+    private static (
+        int[] FirstPeriodProps,
+        int[] PropPermutation,
+        int PropCount
+    ) AssignPropPermutation(
         IReadOnlyList<JifThrow> throws,
         IReadOnlyList<int> limbPermutation,
         int period,
@@ -304,7 +342,9 @@ public static class JifMapper
                     if (propMappings.TryGetValue(previousProp, out var mappedProp))
                     {
                         if (mappedProp != prop)
-                            throw new InvalidOperationException("The passing pattern does not have a consistent periodic prop assignment.");
+                            throw new InvalidOperationException(
+                                "The passing pattern does not have a consistent periodic prop assignment."
+                            );
                     }
                     else
                     {
@@ -319,7 +359,9 @@ public static class JifMapper
             limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
         }
 
-        throw new InvalidOperationException("Passist could not find a repeating prop assignment within 512 pattern periods.");
+        throw new InvalidOperationException(
+            "Passist could not find a repeating prop assignment within 512 pattern periods."
+        );
     }
 
     private static int PermutationOrder(IReadOnlyList<int> permutation)
@@ -353,14 +395,24 @@ public static class JifMapper
     private static JifJuggler CreateJuggler(string name, int index, int numberOfJugglers)
     {
         if (numberOfJugglers == 1)
-            return new JifJuggler { Name = name, Position = [0, 0, 0], LookAt = [0, 0, 1] };
+            return new JifJuggler
+            {
+                Name = name,
+                Position = [0, 0, 0],
+                LookAt = [0, 0, 1],
+            };
 
         var radius = 1.2 + numberOfJugglers * 0.2;
         var angle = 2 * Math.PI * index / numberOfJugglers;
         return new JifJuggler
         {
             Name = name,
-            Position = [RoundLikePassist(radius * Math.Cos(angle)), 0, RoundLikePassist(radius * Math.Sin(angle))],
+            Position =
+            [
+                RoundLikePassist(radius * Math.Cos(angle)),
+                0,
+                RoundLikePassist(radius * Math.Sin(angle)),
+            ],
             LookAt = [0, 0, 0],
         };
     }

@@ -10,7 +10,10 @@ namespace Siteswaps.Test.Jif;
 [TestFixture]
 public class JifMapperTests
 {
-    private static readonly JsonSerializerOptions SnapshotJsonOptions = new() { WriteIndented = true };
+    private static readonly JsonSerializerOptions SnapshotJsonOptions = new()
+    {
+        WriteIndented = true,
+    };
 
     // Props counts and person counts are taken from the Passist dev pages for each route.
     [TestCase("531", 1, 3)]
@@ -27,7 +30,9 @@ public class JifMapperTests
     [TestCase("999", 3, 9)]
     public void Maps_Passist_Siteswap_Cases(string notation, int jugglers, int props)
     {
-        var siteswap = new global::Siteswap.Details.Siteswap(notation.Select(character => character - '0').ToArray());
+        var siteswap = new global::Siteswap.Details.Siteswap(
+            notation.Select(character => character - '0').ToArray()
+        );
 
         var actual = JifMapper.Map(siteswap, jugglers);
 
@@ -38,17 +43,24 @@ public class JifMapperTests
         actual.Props.Should().HaveCount(props);
         actual.Throws.Should().NotBeEmpty();
         actual.Repetition!.Period.Should().Be(actual.Throws!.Count);
-        actual.Throws.Should().OnlyContain(throwEvent =>
-            throwEvent.Duration > 0
-            && throwEvent.From >= 0 && throwEvent.From < actual.Limbs!.Count
-            && throwEvent.To >= 0 && throwEvent.To < actual.Limbs.Count
-        );
+        actual
+            .Throws.Should()
+            .OnlyContain(throwEvent =>
+                throwEvent.Duration > 0
+                && throwEvent.From >= 0
+                && throwEvent.From < actual.Limbs!.Count
+                && throwEvent.To >= 0
+                && throwEvent.To < actual.Limbs.Count
+            );
     }
 
     [Test]
     public async Task Maps_531_To_The_Passist_Example()
     {
-        var actual = JifMapper.Map(new global::Siteswap.Details.Siteswap(5, 3, 1), numberOfJugglers: 1);
+        var actual = JifMapper.Map(
+            new global::Siteswap.Details.Siteswap(5, 3, 1),
+            numberOfJugglers: 1
+        );
         var actualJson = JsonSerializer.Serialize(actual, SnapshotJsonOptions);
 
         await Verify(actualJson);
@@ -85,14 +97,36 @@ public class JifMapperTests
         actual.Repetition.LimbPermutation.Should().Equal(0, 1, 2, 3, 4, 5);
         actual.Repetition.PropPermutation.Should().Equal(Enumerable.Range(0, 9));
         actual.Throws.Should().OnlyContain(throwEvent => throwEvent.Prop != null);
-        actual.Throws!.Should().ContainSingle(throwEvent => throwEvent.Time == 0 && throwEvent.From == 0).Which.Should().BeEquivalentTo(new JifThrow
-        {
-            Time = 0, Duration = 9, From = 0, To = 4, Label = "9", Prop = 0,
-        });
-        actual.Throws.Should().ContainSingle(throwEvent => throwEvent.Time == 1 && throwEvent.From == 2).Which.Should().BeEquivalentTo(new JifThrow
-        {
-            Time = 1, Duration = 6, From = 2, To = 3, Label = "6", Prop = 1,
-        });
+        actual
+            .Throws!.Should()
+            .ContainSingle(throwEvent => throwEvent.Time == 0 && throwEvent.From == 0)
+            .Which.Should()
+            .BeEquivalentTo(
+                new JifThrow
+                {
+                    Time = 0,
+                    Duration = 9,
+                    From = 0,
+                    To = 4,
+                    Label = "9",
+                    Prop = 0,
+                }
+            );
+        actual
+            .Throws.Should()
+            .ContainSingle(throwEvent => throwEvent.Time == 1 && throwEvent.From == 2)
+            .Which.Should()
+            .BeEquivalentTo(
+                new JifThrow
+                {
+                    Time = 1,
+                    Duration = 6,
+                    From = 2,
+                    To = 3,
+                    Label = "6",
+                    Prop = 1,
+                }
+            );
 
         await Verify(JsonSerializer.Serialize(actual, SnapshotJsonOptions));
     }
@@ -100,27 +134,58 @@ public class JifMapperTests
     [Test]
     public void Maps_Passist_Two_Jugglers_To_Radial_Poses_And_Center_Facing()
     {
-        var actual = JifMapper.Map(new global::Siteswap.Details.Siteswap(9, 6, 6, 8, 6), numberOfJugglers: 2);
-
-        actual.Jugglers.Should().BeEquivalentTo(
-        [
-            new JifJuggler { Name = "A", Position = [1.6m, 0, 0], LookAt = [0, 0, 0] },
-            new JifJuggler { Name = "B", Position = [-1.6m, 0, 0], LookAt = [0, 0, 0] },
-        ]
+        var actual = JifMapper.Map(
+            new global::Siteswap.Details.Siteswap(9, 6, 6, 8, 6),
+            numberOfJugglers: 2
         );
+
+        actual
+            .Jugglers.Should()
+            .BeEquivalentTo([
+                new JifJuggler
+                {
+                    Name = "A",
+                    Position = [1.6m, 0, 0],
+                    LookAt = [0, 0, 0],
+                },
+                new JifJuggler
+                {
+                    Name = "B",
+                    Position = [-1.6m, 0, 0],
+                    LookAt = [0, 0, 0],
+                },
+            ]);
     }
 
     [Test]
     public void Maps_Passist_Three_Jugglers_To_Radial_Poses_And_Center_Facing()
     {
-        var actual = JifMapper.Map(new global::Siteswap.Details.Siteswap(9, 6, 6, 8, 6), numberOfJugglers: 3);
-
-        actual.Jugglers.Should().BeEquivalentTo(
-        [
-            new JifJuggler { Name = "A", Position = [1.8m, 0, 0], LookAt = [0, 0, 0] },
-            new JifJuggler { Name = "B", Position = [-0.9m, 0, 1.559m], LookAt = [0, 0, 0] },
-            new JifJuggler { Name = "C", Position = [-0.9m, 0, -1.559m], LookAt = [0, 0, 0] },
-        ]
+        var actual = JifMapper.Map(
+            new global::Siteswap.Details.Siteswap(9, 6, 6, 8, 6),
+            numberOfJugglers: 3
         );
+
+        actual
+            .Jugglers.Should()
+            .BeEquivalentTo([
+                new JifJuggler
+                {
+                    Name = "A",
+                    Position = [1.8m, 0, 0],
+                    LookAt = [0, 0, 0],
+                },
+                new JifJuggler
+                {
+                    Name = "B",
+                    Position = [-0.9m, 0, 1.559m],
+                    LookAt = [0, 0, 0],
+                },
+                new JifJuggler
+                {
+                    Name = "C",
+                    Position = [-0.9m, 0, -1.559m],
+                    LookAt = [0, 0, 0],
+                },
+            ]);
     }
 }

@@ -32,13 +32,15 @@ public static class SiteswapDiagramBuilder
         for (var beat = 0; beat < steps; beat++)
         {
             var landingLimbIndex = (beat + siteswap.Items[beat]) % numberOfHands;
-            nodes.Add(new Throw(
-                hands[beat],
-                siteswap.Items[beat],
-                beat,
-                landingLimbIndex,
-                orbitByBeat[beat % siteswap.Length]
-            ));
+            nodes.Add(
+                new Throw(
+                    hands[beat],
+                    siteswap.Items[beat],
+                    beat,
+                    landingLimbIndex,
+                    orbitByBeat[beat % siteswap.Length]
+                )
+            );
         }
 
         var causal = new List<DiagramArrow>();
@@ -117,11 +119,12 @@ public static class SiteswapDiagramBuilder
 
     private static int[] OrbitIndices(Siteswap siteswap)
     {
-        var indices = Enumerable.Repeat(-1, siteswap.Length).ToArray();
+        var periodLength = Math.Clamp(siteswap.Length, 0, Siteswap.MaxPeriodLength);
+        var indices = Enumerable.Repeat(-1, periodLength).ToArray();
         var orbits = siteswap.GetOrbits();
         for (var orbitIndex = 0; orbitIndex < orbits.Count; orbitIndex++)
         {
-            for (var beat = 0; beat < siteswap.Length; beat++)
+            for (var beat = 0; beat < periodLength; beat++)
             {
                 if (orbits[orbitIndex].Items[beat] > 0)
                 {

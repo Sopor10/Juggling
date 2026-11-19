@@ -26,10 +26,15 @@ public sealed class DetailViewModel
         InterfacePassOrSelf = value.Interface.GetPassOrSelf(NumberOfJugglers).ToList();
         var orbitIndices = GetOrbitIndices(value);
         ThrowChips = Throws
-            .Select((height, i) => new ThrowChip(FormatThrow(height), PassOrSelf[i], orbitIndices[i]))
+            .Select(
+                (height, i) => new ThrowChip(FormatThrow(height), PassOrSelf[i], orbitIndices[i])
+            )
             .ToList();
         ThrowPassSelfChips = PassOrSelf
-            .Select((kind, index) => new ThrowChip(FormatPassSelfLetter(kind), kind, orbitIndices[index]))
+            .Select(
+                (kind, index) =>
+                    new ThrowChip(FormatPassSelfLetter(kind), kind, orbitIndices[index])
+            )
             .ToList();
         InterfaceChips = Interface
             .Select((ch, i) => new ThrowChip(ch.ToString(), InterfacePassOrSelf[i]))
@@ -154,11 +159,16 @@ public sealed class DetailViewModel
 
     private static int[] GetOrbitIndices(global::Siteswap.Details.Siteswap siteswap)
     {
-        var indices = Enumerable.Repeat(-1, siteswap.Length).ToArray();
+        var periodLength = Math.Clamp(
+            siteswap.Length,
+            0,
+            global::Siteswap.Details.Siteswap.MaxPeriodLength
+        );
+        var indices = Enumerable.Repeat(-1, periodLength).ToArray();
         var orbits = siteswap.GetOrbits();
         for (var orbitIndex = 0; orbitIndex < orbits.Count; orbitIndex++)
         {
-            for (var beat = 0; beat < siteswap.Length; beat++)
+            for (var beat = 0; beat < periodLength; beat++)
             {
                 if (orbits[orbitIndex].Items[beat] > 0)
                     indices[beat] = orbitIndex;
