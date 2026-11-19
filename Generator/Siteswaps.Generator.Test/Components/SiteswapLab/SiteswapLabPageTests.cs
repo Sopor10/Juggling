@@ -26,7 +26,7 @@ public class SiteswapLabPageTests
     }
 
     [Test]
-    public void Page_Uses_Accessible_Steppers_Without_Text_Error_List()
+    public void Page_Uses_Accessible_Steppers_And_Conditional_Jif_Error()
     {
         var page = ReadGeneratorSource(
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
@@ -50,7 +50,10 @@ public class SiteswapLabPageTests
         page.Should().Contain("Add person, People");
         page.Should().Contain("Remove last beat, Period");
         page.Should().Contain("Append beat, Period");
-        page.Should().NotContain("role=\"alert\"");
+        page.Should()
+            .Contain(
+                "role=\"alert\">Dieses Muster hat keinen periodisch darstellbaren JIF-Prop-Fluss: @_passingJifError</p>"
+            );
         page.Should().NotContain("lab-diagnostics");
         page.Should().NotContain("Pattern needs attention");
         page.Should().NotContain("lab-statusbar");
