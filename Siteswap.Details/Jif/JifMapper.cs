@@ -1,4 +1,5 @@
 using Siteswap.Details.CausalDiagram;
+using DiagramThrow = Siteswap.Details.CausalDiagram.Throw;
 
 namespace Siteswap.Details.Jif;
 
@@ -17,7 +18,12 @@ public static class JifMapper
         "#f2f2f2",
     ];
 
-    public static JifPattern Map(global::Siteswap.Details.Siteswap siteswap, int numberOfJugglers, string propType = "ball")
+    public static JifPattern Map(
+        global::Siteswap.Details.Siteswap siteswap,
+        int numberOfJugglers,
+        string propType = "ball",
+        bool colorOrbits = false
+    )
     {
         ArgumentNullException.ThrowIfNull(siteswap);
         ArgumentOutOfRangeException.ThrowIfLessThan(numberOfJugglers, 1);
@@ -30,9 +36,13 @@ public static class JifMapper
             .Select((juggler, index) => CreateJuggler(juggler.Name, index, numberOfJugglers))
             .ToList();
         var propCount = (int)siteswap.NumberOfObjects();
-        var props = Enumerable
-            .Range(0, propCount)
-            .Select(i => new JifObject { Color = PropColors[i % PropColors.Length], Type = propType })
+        var propOrbitColors = GetPropOrbitColors(siteswap, diagram.Throws, propCount);
+        var props = Enumerable.Range(0, propCount)
+            .Select(i => new JifObject
+            {
+                Color = colorOrbits ? propOrbitColors[i] : PropColors[i % PropColors.Length],
+                Type = propType,
+            })
             .ToList();
         var limbs = hands
             .Select(hand => new JifLimb
@@ -79,6 +89,46 @@ public static class JifMapper
 
             return 0;
         }
+    }
+
+    private static string[] GetPropOrbitColors(
+        global::Siteswap.Details.Siteswap siteswap,
+        IReadOnlyList<DiagramThrow> throws,
+        int propCount
+    )
+    {
+        var orbitByBeat = Enumerable.Repeat(-1, siteswap.Length).ToArray();
+        var orbits = siteswap.GetOrbits();
+        for (var orbitIndex = 0; orbitIndex < orbits.Count; orbitIndex++)
+        {
+            for (var beat = 0; beat < siteswap.Length; beat++)
+            {
+                if (orbits[orbitIndex].Items[beat] > 0)
+                    orbitByBeat[beat] = orbitIndex;
+            }
+        }
+
+        var assignedProps = new bool[throws.Count];
+        var colors = new List<string>(propCount);
+        for (var beat = 0; beat < throws.Count; beat++)
+        {
+            if (assignedProps[beat] || throws[beat].Height <= 0)
+                continue;
+
+            var orbitIndex = orbitByBeat[beat % siteswap.Length];
+            colors.Add(OrbitColorPalette.For(orbitIndex));
+            var landingBeat = beat;
+            while (landingBeat < throws.Count && throws[landingBeat % throws.Count].Height > 0)
+            {
+                assignedProps[landingBeat % throws.Count] = true;
+                landingBeat += throws[landingBeat % throws.Count].Height;
+            }
+        }
+
+        if (colors.Count != propCount)
+            throw new InvalidOperationException("Siteswap orbit sizes do not match its prop count.");
+
+        return colors.ToArray();
     }
 
     /// <summary>Maps the Siteswap Lab's phased, person-to-person throw grid to JIF.</summary>

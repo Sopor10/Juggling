@@ -200,6 +200,32 @@
     scrollbar-width: thin;
 }
 
+.sd-orbit-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 6px;
+}
+
+.sd-orbit-toggle {
+    appearance: none;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--sd-purple-700);
+    padding: 7px 13px;
+    min-height: 36px;
+    font-family: var(--sd-font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sd-orbit-toggle.active {
+    border-color: var(--sd-purple-700);
+    background: var(--sd-purple-700);
+    color: white;
+}
+
 .sd-tab {
     flex: 0 0 auto;
     text-align: center;
@@ -346,6 +372,11 @@
 .sd-page ::deep .sdv-beat.self {
     background: var(--sd-purple-100);
     border-color: color-mix(in srgb, var(--sd-purple-400) 45%, white);
+}
+
+.sd-page ::deep .sdv-beat.orbit-colored {
+    background: color-mix(in srgb, var(--orbit-color) 24%, white);
+    border-color: color-mix(in srgb, var(--orbit-color) 60%, white);
 }
 
 .sd-page ::deep .sdv-beat-throw {

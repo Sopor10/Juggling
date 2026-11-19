@@ -19,8 +19,14 @@
 
 @code {
     [Parameter] public DetailViewModel? Model { get; set; }
+    [Parameter] public bool ColorOrbits { get; set; } = true;
 
-    private JifPattern JifDocument => JifMapper.Map(Model!.Value, Model.NumberOfJugglers, propType: "club");
+    private JifPattern JifDocument => JifMapper.Map(
+        Model!.Value,
+        Model.NumberOfJugglers,
+        propType: "club",
+        colorOrbits: ColorOrbits
+    );
 
     private string JifJson => Model is null
         ? "{}"

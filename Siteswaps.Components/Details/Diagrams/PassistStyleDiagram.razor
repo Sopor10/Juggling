@@ -1,5 +1,6 @@
 @namespace Siteswaps.Components.Details.Diagrams
 @using System.Globalization
+@using Siteswap.Details
 @using Siteswap.Details.CausalDiagram
 @using Siteswaps.Components.Details
 
@@ -18,7 +19,8 @@
     );
     var dx = PassistDiagramGeometry.ColumnWidth(Diagram.TimeStretchFactor);
     var arrows = Mode == DiagramMode.Ladder ? Diagram.LadderArrows : Diagram.CausalArrows;
-    var markerId = $"pd-arrow-{Mode}-{Diagram.Throws.Count}";
+    var markerId = $"{_markerPrefix}-default";
+    var colorLadderOrbits = ColorOrbits && Mode == DiagramMode.Ladder;
 }
 
 <div class="pd-wrap" data-testid="passist-diagram-@Mode">
@@ -38,6 +40,22 @@
                     markerUnits="strokeWidth">
                 <path class="pd-arrow-fill" d="M0,0 L0,6 L9,3 z" />
             </marker>
+            @if (colorLadderOrbits)
+            {
+                @for (var i = 0; i < OrbitLabels.Count; i++)
+                {
+                    var orbitColor = OrbitColorPalette.For(i);
+                    <marker id="@OrbitMarkerId(i)"
+                            markerWidth="10"
+                            markerHeight="10"
+                            refX="0"
+                            refY="3"
+                            orient="auto"
+                            markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L9,3 z" fill="@orbitColor" />
+                    </marker>
+                }
+            }
         </defs>
 
         <rect class="pd-frame"
@@ -69,7 +87,13 @@
                 toLine,
                 Diagram.TimeStretchFactor
             );
-            <path class="pd-arrow-stroke" d="@path" marker-end="url(#@markerId)" />
+            var isColoredOrbit = colorLadderOrbits && arrow.OrbitIndex >= 0 && arrow.OrbitIndex < OrbitLabels.Count;
+            var arrowColor = isColoredOrbit ? OrbitColorPalette.For(arrow.OrbitIndex) : null;
+            var arrowMarker = isColoredOrbit ? OrbitMarkerId(arrow.OrbitIndex) : markerId;
+            <path class="pd-arrow-stroke @(isColoredOrbit ? "pd-orbit-arrow" : null)"
+                  d="@path"
+                  style="@(arrowColor is null ? null : $"stroke:{arrowColor}")"
+                  marker-end="url(#@arrowMarker)" />
         }
 
         @foreach (var node in Diagram.Throws)
@@ -91,6 +115,18 @@
         }
     </svg>
 </div>
+@if (colorLadderOrbits && OrbitLabels.Count > 0)
+{
+    <div class="pd-orbit-legend" aria-label="Objekt-Orbits">
+        @for (var i = 0; i < OrbitLabels.Count; i++)
+        {
+            <span class="pd-orbit-legend-item">
+                <span class="pd-orbit-swatch" style="background:@OrbitColorPalette.For(i)" aria-hidden="true"></span>
+                <span>Orbit @(i + 1): @OrbitLabels[i]</span>
+            </span>
+        }
+    </div>
+}
 
 @code {
     public enum DiagramMode
@@ -101,6 +137,12 @@
 
     [Parameter] public DiagramSet? Diagram { get; set; }
     [Parameter] public DiagramMode Mode { get; set; } = DiagramMode.Causal;
+    [Parameter] public bool ColorOrbits { get; set; }
+    [Parameter] public IReadOnlyList<string> OrbitLabels { get; set; } = [];
+
+    private readonly string _markerPrefix = $"pd-arrow-{Guid.NewGuid():N}";
+
+    private string OrbitMarkerId(int orbitIndex) => $"{_markerPrefix}-orbit-{orbitIndex}";
 
     private int JugglerIndex(Person person)
     {

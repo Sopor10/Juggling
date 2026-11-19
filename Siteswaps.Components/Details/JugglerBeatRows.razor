@@ -39,7 +39,7 @@
                     }
                     <div class="sdv-hero-throws"
                          style="@($"--sdv-stagger:{juggler.Index};--sdv-jugglers:{Model.NumberOfJugglers}")">
-                        <ThrowChipRow Chips="chips" AriaLabel="@($"Throws {juggler.Label}")" />
+            <ThrowChipRow Chips="chips" ColorOrbits="ColorOrbits" AriaLabel="@($"Throws {juggler.Label}")" />
                     </div>
                 </div>
             </div>
@@ -98,6 +98,7 @@
     [Parameter] public string? TitleClass { get; set; }
     [Parameter] public string? ExtraClass { get; set; }
     [Parameter] public bool ShowLegend { get; set; } = true;
+    [Parameter] public bool ColorOrbits { get; set; } = true;
 
     private DetailViewModel.ThrowDisplayMode _mode = DetailViewModel.ThrowDisplayMode.Global;
 

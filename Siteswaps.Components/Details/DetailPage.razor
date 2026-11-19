@@ -61,6 +61,14 @@
         }
         else
         {
+            <div class="sd-orbit-toggle-row">
+                <button type="button"
+                        class="sd-orbit-toggle @(OrbitColorsEnabled ? "active" : null)"
+                        aria-pressed="@OrbitColorsEnabled"
+                        @onclick="ToggleOrbitColors">
+                    Objekt-Orbits: @(OrbitColorsEnabled ? "farbig" : "einfarbig")
+                </button>
+            </div>
             <div class="sd-tabs" role="tablist" aria-label="@L["Detail variants"]">
                 @foreach (var tab in Tabs)
                 {
@@ -78,19 +86,19 @@
                 @switch (ActiveTab)
                 {
                     case "hero":
-                        <DetailVariantHero Model="Model" />
+                        <DetailVariantHero Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                     case "analysis":
-                        <DetailVariantAnalysis Model="Model" />
+                        <DetailVariantAnalysis Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                     case "transitions":
                         <DetailVariantTransitions Model="Model" />
                         break;
                     case "diagrams":
-                        <DetailVariantDiagrams Model="Model" />
+                        <DetailVariantDiagrams Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                     case "jif":
-                        <DetailVariantJif Model="Model" />
+                        <DetailVariantJif Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                 }
             </div>
@@ -113,6 +121,7 @@
 
     private DetailViewModel? Model { get; set; }
     private string ActiveTab { get; set; } = "hero";
+    private bool OrbitColorsEnabled { get; set; } = true;
 
     private TabInfo[] Tabs =>
     [
@@ -136,6 +145,8 @@
         ActiveTab = id;
         Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("v", id), replace: true);
     }
+
+    private void ToggleOrbitColors() => OrbitColorsEnabled = !OrbitColorsEnabled;
 
     private void Rotate(int steps)
     {

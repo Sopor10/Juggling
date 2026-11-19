@@ -8,7 +8,7 @@
 }
 
 <section class="sdv-hero">
-    <JugglerBeatRows Model="Model" />
+    <JugglerBeatRows Model="Model" ColorOrbits="ColorOrbits" />
 
     @if (Model.CanCreateThreePersonFeed)
     {
@@ -35,4 +35,5 @@
 
 @code {
     [Parameter] public DetailViewModel? Model { get; set; }
+    [Parameter] public bool ColorOrbits { get; set; } = true;
 }

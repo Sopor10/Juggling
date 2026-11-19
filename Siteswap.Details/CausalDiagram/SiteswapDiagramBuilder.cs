@@ -27,6 +27,7 @@ public static class SiteswapDiagramBuilder
 
         var numberOfHands = hands.Length;
         var timeStretchFactor = numberOfHands / 2m;
+        var orbitByBeat = OrbitIndices(siteswap);
         var nodes = new List<Throw>(steps);
         for (var beat = 0; beat < steps; beat++)
         {
@@ -51,7 +52,8 @@ public static class SiteswapDiagramBuilder
                         from,
                         nodes[causalTarget],
                         Step: height - numberOfHands,
-                        ToJuggler: toJuggler
+                        ToJuggler: toJuggler,
+                        OrbitIndex: orbitByBeat[beat % siteswap.Length]
                     )
                 );
             }
@@ -61,7 +63,13 @@ public static class SiteswapDiagramBuilder
             if (height > 0 && landBeat < steps)
             {
                 ladder.Add(
-                    new DiagramArrow(from, nodes[landBeat], Step: height, ToJuggler: toJuggler)
+                    new DiagramArrow(
+                        from,
+                        nodes[landBeat],
+                        Step: height,
+                        ToJuggler: toJuggler,
+                        OrbitIndex: orbitByBeat[beat % siteswap.Length]
+                    )
                 );
             }
         }
@@ -96,6 +104,24 @@ public static class SiteswapDiagramBuilder
             .ToList();
 
         return periods.Aggregate(1, Lcm);
+    }
+
+    private static int[] OrbitIndices(Siteswap siteswap)
+    {
+        var indices = Enumerable.Repeat(-1, siteswap.Length).ToArray();
+        var orbits = siteswap.GetOrbits();
+        for (var orbitIndex = 0; orbitIndex < orbits.Count; orbitIndex++)
+        {
+            for (var beat = 0; beat < siteswap.Length; beat++)
+            {
+                if (orbits[orbitIndex].Items[beat] > 0)
+                {
+                    indices[beat] = orbitIndex;
+                }
+            }
+        }
+
+        return indices;
     }
 
     private static ImmutableDictionary<string, StartProps> ComputeStartProps(
@@ -164,7 +190,7 @@ public static class SiteswapDiagramBuilder
     }
 }
 
-public record DiagramArrow(Throw From, Throw To, int Step, Person ToJuggler);
+public record DiagramArrow(Throw From, Throw To, int Step, Person ToJuggler, int OrbitIndex);
 
 public record StartProps(int Left, int Right);
 
