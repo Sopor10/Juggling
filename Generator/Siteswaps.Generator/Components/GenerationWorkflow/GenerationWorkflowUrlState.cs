@@ -76,23 +76,31 @@ internal static class GenerationWorkflowUrlState
         try
         {
             var snapshot = JsonSerializer.Deserialize<Snapshot>(json, Options);
-            if (!Valid(snapshot))
+            if (snapshot is not { } validSnapshot || !Valid(validSnapshot))
                 return false;
 
-            var min = Math.Clamp(snapshot!.MinClubs, WizardState.MinClubs, WizardState.MaxClubs);
-            var max = Math.Clamp(snapshot.MaxClubs, WizardState.MinClubs, WizardState.MaxClubs);
+            var min = Math.Clamp(
+                validSnapshot.MinClubs,
+                WizardState.MinClubs,
+                WizardState.MaxClubs
+            );
+            var max = Math.Clamp(
+                validSnapshot.MaxClubs,
+                WizardState.MinClubs,
+                WizardState.MaxClubs
+            );
             session.State.Clubs =
                 min <= max
                     ? new Between { MinNumber = min, MaxNumber = max }
                     : new Between { MinNumber = max, MaxNumber = max };
             session.State.AllowedThrows.Clear();
             session.State.AllowedThrows.AddRange(
-                snapshot.Throws.Distinct().Select(ThrowByHeight).OfType<Throw>()
+                validSnapshot.Throws.Distinct().Select(ThrowByHeight).OfType<Throw>()
             );
-            session.State.ShowThrowNames = snapshot.ShowThrowNames;
+            session.State.ShowThrowNames = validSnapshot.ShowThrowNames;
 
             var maxId = 0;
-            var tree = new FilterTree(FromNode(snapshot.Filters, ref maxId));
+            var tree = new FilterTree(FromNode(validSnapshot.Filters, ref maxId));
             session.ReplaceEditableFilterTree(tree);
             while (session.State.NextFilterId() <= maxId) { }
             return true;
@@ -201,7 +209,10 @@ internal static class GenerationWorkflowUrlState
         {
             "pattern" when ValidHeights(value.Heights) && value.Rotation is >= -3 and <= 7 =>
                 new NewPatternFilterInformation(
-                    value.Heights!.Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    (value.Heights ?? throw new InvalidOperationException())
+                        .Select(ThrowByHeight)
+                        .OfType<Throw>()
+                        .ToList(),
                     new PatternRotation(value.Rotation),
                     value.Include,
                     value.LocallyValid
@@ -210,7 +221,10 @@ internal static class GenerationWorkflowUrlState
                 when ValidHeights(value.Landing)
                     && (value.ThrowMask is null || ValidHeights(value.ThrowMask)) =>
                 new InterfaceFilterInformation(
-                    value.Landing!.Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    (value.Landing ?? throw new InvalidOperationException())
+                        .Select(ThrowByHeight)
+                        .OfType<Throw>()
+                        .ToList(),
                     value.AllowRotation,
                     value.ThrowMask?.Select(ThrowByHeight).OfType<Throw>().ToList()
                 ),
@@ -222,7 +236,11 @@ internal static class GenerationWorkflowUrlState
                 {
                     Amount = value.Amount,
                     Type = (EasyNumberFilter.NumberFilterType)value.NumberType,
-                    Throw = ThrowByHeight(value.Heights![0])!,
+                    Throw =
+                        ThrowByHeight((value.Heights ?? throw new InvalidOperationException())[0])
+                        ?? throw new InvalidOperationException(
+                            "The filter contains an invalid throw."
+                        ),
                     JugglerIndex = value.Juggler,
                 },
             "state"

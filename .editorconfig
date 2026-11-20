@@ -2,3 +2,4 @@ root = true
 
 [*.cs]
 dotnet_diagnostic.SOP003.max_method_lines = 150
+dotnet_diagnostic.SITESWAPS001.severity = error

@@ -253,7 +253,10 @@ internal static class WizardUrlState
         {
             "pattern" when ValidHeights(value.Heights) && value.Rotation is >= -3 and <= 19 =>
                 new NewPatternFilterInformation(
-                    value.Heights!.Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    (value.Heights ?? throw new InvalidOperationException())
+                        .Select(ThrowByHeight)
+                        .OfType<Throw>()
+                        .ToList(),
                     new PatternRotation(value.Rotation),
                     value.Include,
                     value.LocallyValid
@@ -262,7 +265,10 @@ internal static class WizardUrlState
                 when ValidHeights(value.Landing)
                     && (value.Throws is null || ValidHeights(value.Throws)) =>
                 new InterfaceFilterInformation(
-                    value.Landing!.Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    (value.Landing ?? throw new InvalidOperationException())
+                        .Select(ThrowByHeight)
+                        .OfType<Throw>()
+                        .ToList(),
                     value.AllowRotation,
                     value.Throws?.Select(ThrowByHeight).OfType<Throw>().ToList()
                 ),
@@ -275,7 +281,11 @@ internal static class WizardUrlState
                 {
                     Amount = value.Amount,
                     Type = (EasyNumberFilter.NumberFilterType)value.NumberType,
-                    Throw = ThrowByHeight(value.Heights![0])!,
+                    Throw =
+                        ThrowByHeight((value.Heights ?? throw new InvalidOperationException())[0])
+                        ?? throw new InvalidOperationException(
+                            "The filter contains an invalid throw."
+                        ),
                     JugglerIndex = value.Juggler,
                 },
             "state"

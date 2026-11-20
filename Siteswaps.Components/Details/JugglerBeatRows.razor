@@ -1,5 +1,6 @@
 @namespace Siteswaps.Components.Details
 @using Blazored.LocalStorage
+@using Siteswap.Details
 @inject ILocalStorageService LocalStorage
 @inject IStringLocalizer<JugglerBeatRows> L
 
@@ -39,7 +40,7 @@
                     }
                     <div class="sdv-hero-throws"
                          style="@($"--sdv-stagger:{juggler.Index};--sdv-jugglers:{Model.NumberOfJugglers}")">
-                        <ThrowChipRow Chips="chips" AriaLabel="@($"Throws {juggler.Label}")" />
+            <ThrowChipRow Chips="chips" ColorOrbits="ColorOrbits" AriaLabel="@($"Throws {juggler.Label}")" />
                     </div>
                 </div>
             </div>
@@ -49,15 +50,28 @@
             @if (ShowLegend)
             {
                 <div class="sdv-beat-legend" aria-label="@L["Legend"]">
-                    <span class="sdv-start-props sdv-start-props-legend" aria-hidden="true">
-                        <span class="sdv-start-props-hand">L</span>
-                        <span class="sdv-start-props-hand">R</span>
-                    </span>
-                    <span class="sdv-muted">@L["Start clubs"]</span>
-                    <span class="sdv-beat pass"><span class="sdv-beat-throw">·</span></span>
-                    <span class="sdv-muted">Pass</span>
-                    <span class="sdv-beat self"><span class="sdv-beat-throw">·</span></span>
-                    <span class="sdv-muted">Self</span>
+                    @if (ColorOrbits)
+                    {
+                        @foreach (var orbit in OrbitIndexes)
+                        {
+                            <span class="sdv-orbit-legend-item">
+                                <span class="sdv-orbit-legend-swatch" style="background:@OrbitColorPalette.For(orbit)" aria-hidden="true"></span>
+                                <span class="sdv-muted">Orbit @(orbit + 1)</span>
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="sdv-start-props sdv-start-props-legend" aria-hidden="true">
+                            <span class="sdv-start-props-hand">L</span>
+                            <span class="sdv-start-props-hand">R</span>
+                        </span>
+                        <span class="sdv-muted">@L["Start clubs"]</span>
+                        <span class="sdv-beat pass"><span class="sdv-beat-throw">·</span></span>
+                        <span class="sdv-muted">Pass</span>
+                        <span class="sdv-beat self"><span class="sdv-beat-throw">·</span></span>
+                        <span class="sdv-muted">Self</span>
+                    }
                 </div>
             }
             else
@@ -98,8 +112,15 @@
     [Parameter] public string? TitleClass { get; set; }
     [Parameter] public string? ExtraClass { get; set; }
     [Parameter] public bool ShowLegend { get; set; } = true;
+    [Parameter] public bool ColorOrbits { get; set; } = true;
 
     private DetailViewModel.ThrowDisplayMode _mode = DetailViewModel.ThrowDisplayMode.Global;
+    private IEnumerable<int> OrbitIndexes => Model!.Jugglers
+        .SelectMany(juggler => juggler.Throws)
+        .Select(throwItem => throwItem.OrbitIndex)
+        .Where(orbit => orbit >= 0)
+        .Distinct()
+        .Order();
 
     protected override async Task OnInitializedAsync()
     {

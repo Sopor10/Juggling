@@ -6,6 +6,8 @@
 @using Siteswaps.Generator.Components.Feeding
 @using Siteswaps.Generator.Components.WizardPage.Controls
 @using Siteswaps.Generator.Core.Generator
+@using Siteswaps.Components.Details.Diagrams
+@using Siteswaps.Jif.Components
 @using System.Text.Json
 @inject IStringLocalizer<SiteswapLabPage> L
 @inject ILocalStorageService LocalStorage
@@ -221,6 +223,27 @@
                             <FeedingThrowDisplayModeToggle Mode="_throwDisplayMode" ModeChanged="OnThrowDisplayModeChanged" />
                         </li>
                     </ul>
+                    @if (_direct.ThrowsInitialized)
+                    {
+                        var jifJson = PassingJifJson;
+                        <section class="lab-jif" aria-label="JIF animation">
+                            <h3>JIF-Animation</h3>
+                            <p>Das aktuelle Muster wird als JIF an das Passist-Widget übergeben.</p>
+                            @if (_passingJifError is null)
+                            {
+                                <PassistAnimation Jif="@(new JifInput.Json(jifJson))" />
+                                <JifCausalDiagram Jif="@(new JifInput.Json(jifJson))" />
+                                <details>
+                                    <summary>Generiertes JIF anzeigen</summary>
+                                    <pre><code>@jifJson</code></pre>
+                                </details>
+                            }
+                            else
+                            {
+                                <p role="alert">Dieses Muster hat keinen periodisch darstellbaren JIF-Prop-Fluss: @_passingJifError</p>
+                            }
+                        </section>
+                    }
             </div>
         </WizardStepPanel>
     </div>
@@ -263,6 +286,34 @@
     private int? _dragSourceBeat;
     private int? _dropTargetPerson;
     private int? _dropTargetBeat;
+    private string? _passingJifError;
+
+    private string PassingJifJson
+    {
+        get
+        {
+            try
+            {
+                _passingJifError = null;
+                return SiteswapLabJifMapper.MapViaCausalDiagram(
+                    _direct.People.Select(person => person.TimeZone).ToArray(),
+                    _direct.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
+                    _direct.People.Select((person, index) => (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray(),
+                    propType: "club"
+                );
+            }
+            catch (ArgumentException exception)
+            {
+                _passingJifError = exception.Message;
+            }
+            catch (InvalidOperationException exception)
+            {
+                _passingJifError = exception.Message;
+            }
+
+            return "{}";
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {

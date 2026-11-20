@@ -11,7 +11,11 @@
     {
         var kindClass = chip.Kind == PassOrSelf.Pass ? "pass" : "self";
         var kindTitle = chip.Kind == PassOrSelf.Pass ? "Pass" : "Self";
-        <div class="sdv-beat @kindClass" title="@kindTitle" aria-label="@chip.Display @kindTitle">
+        var orbitColor = ColorOrbits && chip.OrbitIndex >= 0 ? OrbitColorPalette.For(chip.OrbitIndex) : null;
+        <div class="sdv-beat @kindClass @(orbitColor is null ? null : "orbit-colored")"
+             style="@(orbitColor is null ? null : $"--orbit-color:{orbitColor}")"
+             title="@(orbitColor is null ? kindTitle : $"{kindTitle}, Orbit {chip.OrbitIndex + 1}")"
+             aria-label="@(orbitColor is null ? $"{chip.Display} {kindTitle}" : $"{chip.Display} {kindTitle}, Orbit {chip.OrbitIndex + 1}")">
             <span class="sdv-beat-throw">@chip.Display</span>
         </div>
     }
@@ -20,4 +24,5 @@
 @code {
     [Parameter] public IReadOnlyList<DetailViewModel.ThrowChip>? Chips { get; set; }
     [Parameter] public string AriaLabel { get; set; } = "Throws";
+    [Parameter] public bool ColorOrbits { get; set; }
 }

@@ -61,6 +61,14 @@
         }
         else
         {
+            <div class="sd-orbit-toggle-row">
+                <div class="sd-orbit-toggle" role="radiogroup" aria-label="Wurffarben">
+                    <button type="button" role="radio" class="@(OrbitColorsEnabled ? "active" : null)"
+                            aria-checked="@OrbitColorsEnabled" @onclick="() => SetOrbitColors(true)">Orbits</button>
+                    <button type="button" role="radio" class="@(!OrbitColorsEnabled ? "active" : null)"
+                            aria-checked="@(!OrbitColorsEnabled)" @onclick="() => SetOrbitColors(false)">Pass / Self</button>
+                </div>
+            </div>
             <div class="sd-tabs" role="tablist" aria-label="@L["Detail variants"]">
                 @foreach (var tab in Tabs)
                 {
@@ -78,16 +86,19 @@
                 @switch (ActiveTab)
                 {
                     case "hero":
-                        <DetailVariantHero Model="Model" />
+                        <DetailVariantHero Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                     case "analysis":
-                        <DetailVariantAnalysis Model="Model" />
+                        <DetailVariantAnalysis Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                     case "transitions":
                         <DetailVariantTransitions Model="Model" />
                         break;
                     case "diagrams":
-                        <DetailVariantDiagrams Model="Model" />
+                        <DetailVariantDiagrams Model="Model" ColorOrbits="OrbitColorsEnabled" />
+                        break;
+                    case "jif":
+                        <DetailVariantJif Model="Model" ColorOrbits="OrbitColorsEnabled" />
                         break;
                 }
             </div>
@@ -110,6 +121,7 @@
 
     private DetailViewModel? Model { get; set; }
     private string ActiveTab { get; set; } = "hero";
+    private bool OrbitColorsEnabled { get; set; } = true;
 
     private TabInfo[] Tabs =>
     [
@@ -117,6 +129,7 @@
         new("analysis", L["Analysis"].Value),
         new("transitions", L["Transitions"].Value),
         new("diagrams", L["Diagrams"].Value),
+        new("jif", "JIF · Passist"),
     ];
 
     protected override void OnParametersSet()
@@ -132,6 +145,8 @@
         ActiveTab = id;
         Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("v", id), replace: true);
     }
+
+    private void SetOrbitColors(bool enabled) => OrbitColorsEnabled = enabled;
 
     private void Rotate(int steps)
     {

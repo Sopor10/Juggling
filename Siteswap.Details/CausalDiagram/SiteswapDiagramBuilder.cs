@@ -27,10 +27,20 @@ public static class SiteswapDiagramBuilder
 
         var numberOfHands = hands.Length;
         var timeStretchFactor = numberOfHands / 2m;
+        var orbitByBeat = OrbitIndices(siteswap);
         var nodes = new List<Throw>(steps);
         for (var beat = 0; beat < steps; beat++)
         {
-            nodes.Add(new Throw(hands[beat], siteswap.Items[beat], beat));
+            var landingLimbIndex = (beat + siteswap.Items[beat]) % numberOfHands;
+            nodes.Add(
+                new Throw(
+                    hands[beat],
+                    siteswap.Items[beat],
+                    beat,
+                    landingLimbIndex,
+                    orbitByBeat[beat % siteswap.Length]
+                )
+            );
         }
 
         var causal = new List<DiagramArrow>();
@@ -51,7 +61,8 @@ public static class SiteswapDiagramBuilder
                         from,
                         nodes[causalTarget],
                         Step: height - numberOfHands,
-                        ToJuggler: toJuggler
+                        ToJuggler: toJuggler,
+                        OrbitIndex: orbitByBeat[beat % siteswap.Length]
                     )
                 );
             }
@@ -61,7 +72,13 @@ public static class SiteswapDiagramBuilder
             if (height > 0 && landBeat < steps)
             {
                 ladder.Add(
-                    new DiagramArrow(from, nodes[landBeat], Step: height, ToJuggler: toJuggler)
+                    new DiagramArrow(
+                        from,
+                        nodes[landBeat],
+                        Step: height,
+                        ToJuggler: toJuggler,
+                        OrbitIndex: orbitByBeat[beat % siteswap.Length]
+                    )
                 );
             }
         }
@@ -79,6 +96,8 @@ public static class SiteswapDiagramBuilder
             CausalArrows: causal.ToImmutableList(),
             LadderArrows: ladder.ToImmutableList(),
             TimeStretchFactor: timeStretchFactor,
+            StepCount: steps,
+            LimbPermutation: Enumerable.Range(0, hands.Length).ToImmutableList(),
             StartProps: ComputeStartProps(siteswap, hands)
         );
     }
@@ -96,6 +115,26 @@ public static class SiteswapDiagramBuilder
             .ToList();
 
         return periods.Aggregate(1, Lcm);
+    }
+
+    private static int[] OrbitIndices(Siteswap siteswap)
+    {
+        var periodLength = Math.Clamp(siteswap.Length, 0, Siteswap.MaxPeriodLength);
+        var indices = Enumerable.Repeat(-1, periodLength).ToArray();
+        var orbits = siteswap.GetOrbits();
+        var orbitCount = Math.Min(orbits.Count, periodLength);
+        for (var orbitIndex = 0; orbitIndex < orbitCount; orbitIndex++)
+        {
+            for (var beat = 0; beat < periodLength; beat++)
+            {
+                if (orbits[orbitIndex].Items[beat] > 0)
+                {
+                    indices[beat] = orbitIndex;
+                }
+            }
+        }
+
+        return indices;
     }
 
     private static ImmutableDictionary<string, StartProps> ComputeStartProps(
@@ -164,7 +203,7 @@ public static class SiteswapDiagramBuilder
     }
 }
 
-public record DiagramArrow(Throw From, Throw To, int Step, Person ToJuggler);
+public record DiagramArrow(Throw From, Throw To, int Step, Person ToJuggler, int OrbitIndex);
 
 public record StartProps(int Left, int Right);
 
@@ -175,5 +214,7 @@ public record DiagramSet(
     ImmutableList<DiagramArrow> CausalArrows,
     ImmutableList<DiagramArrow> LadderArrows,
     decimal TimeStretchFactor,
+    int StepCount,
+    ImmutableList<int> LimbPermutation,
     ImmutableDictionary<string, StartProps> StartProps
 );

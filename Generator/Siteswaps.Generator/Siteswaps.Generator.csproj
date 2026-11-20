@@ -16,5 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswaps.Generator.Core\Siteswaps.Generator.Core.csproj" />
+    <ProjectReference Include="..\..\Siteswaps.Jif.Components\Siteswaps.Jif.Components.csproj" />
+    <ProjectReference Include="..\..\Siteswaps.Components\Siteswaps.Components.csproj" />
+    <ProjectReference Include="..\..\Siteswap.Details\Siteswap.Details.csproj">
+      <Aliases>JifDetails</Aliases>
+    </ProjectReference>
   </ItemGroup>
 </Project>

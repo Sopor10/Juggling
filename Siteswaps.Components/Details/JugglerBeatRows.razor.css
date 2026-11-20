@@ -134,7 +134,12 @@
 
 .sdv-beat-legend {
     display: flex;
-    flex-wrap: wrap;
+    flex: 0 0 270px;
+    width: 270px;
+    max-width: 100%;
+    height: 36px;
+    box-sizing: border-box;
+    flex-wrap: nowrap;
     gap: 8px;
     align-items: center;
     margin: 0;
@@ -149,6 +154,18 @@
 .sdv-beat-legend .sdv-beat-throw {
     font-size: 14px;
     line-height: 1;
+}
+
+.sdv-orbit-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sdv-orbit-legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
 }
 
 .sdv-start-props-legend {

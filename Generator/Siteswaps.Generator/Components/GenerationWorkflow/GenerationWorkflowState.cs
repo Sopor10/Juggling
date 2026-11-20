@@ -25,7 +25,13 @@ public sealed class GenerationWorkflowState
 
     public Period Period
     {
-        get => _config.HasLockedPeriod ? new Period(_config.Period!.Value) : _inner.Period;
+        get =>
+            _config.HasLockedPeriod
+                ? new Period(
+                    _config.Period
+                        ?? throw new InvalidOperationException("Locked period is missing.")
+                )
+                : _inner.Period;
         set
         {
             if (_config.HasLockedPeriod)
@@ -40,7 +46,10 @@ public sealed class GenerationWorkflowState
     public int NumberOfJugglers
     {
         get =>
-            _config.HasLockedJugglers ? _config.NumberOfJugglers!.Value : _inner.NumberOfJugglers;
+            _config.HasLockedJugglers
+                ? _config.NumberOfJugglers
+                    ?? throw new InvalidOperationException("Locked juggler count is missing.")
+                : _inner.NumberOfJugglers;
         set
         {
             if (_config.HasLockedJugglers)

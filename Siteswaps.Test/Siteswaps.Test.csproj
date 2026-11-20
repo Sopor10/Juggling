@@ -13,5 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Siteswap.Details\Siteswap.Details.csproj" />
+    <ProjectReference Include="..\Siteswaps.Components\Siteswaps.Components.csproj" />
   </ItemGroup>
 </Project>

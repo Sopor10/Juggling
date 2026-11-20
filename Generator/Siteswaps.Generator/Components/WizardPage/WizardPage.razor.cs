@@ -43,16 +43,31 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     private bool _loadedResultsDeepLink;
 
     [Inject]
-    private NavigationManager Navigation { get; set; } = default!;
+    private NavigationManager? InjectedNavigation { get; set; }
+
+    private NavigationManager Navigation =>
+        InjectedNavigation
+        ?? throw new InvalidOperationException("NavigationManager was not injected.");
 
     [Inject]
-    private IJSRuntime JsRuntime { get; set; } = default!;
+    private IJSRuntime? InjectedJsRuntime { get; set; }
+
+    private IJSRuntime JsRuntime =>
+        InjectedJsRuntime ?? throw new InvalidOperationException("IJSRuntime was not injected.");
 
     [Inject]
-    private ILocalStorageService LocalStorage { get; set; } = default!;
+    private ILocalStorageService? InjectedLocalStorage { get; set; }
+
+    private ILocalStorageService LocalStorage =>
+        InjectedLocalStorage
+        ?? throw new InvalidOperationException("Local storage was not injected.");
 
     [Inject]
-    private IStringLocalizer<WizardPage> L { get; set; } = default!;
+    private IStringLocalizer<WizardPage>? InjectedLocalizer { get; set; }
+
+    private IStringLocalizer<WizardPage> L =>
+        InjectedLocalizer
+        ?? throw new InvalidOperationException("The page localizer was not injected.");
 
     [Parameter, SupplyParameterFromQuery(Name = "ws")]
     public string? UrlState { get; set; }

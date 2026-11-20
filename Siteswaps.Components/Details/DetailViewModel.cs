@@ -24,11 +24,17 @@ public sealed class DetailViewModel
         Throws = value.Items.EnumerateValues(1).ToList();
         PassOrSelf = value.GetPassOrSelf(NumberOfJugglers).ToList();
         InterfacePassOrSelf = value.Interface.GetPassOrSelf(NumberOfJugglers).ToList();
+        var orbitIndices = GetOrbitIndices(value);
         ThrowChips = Throws
-            .Select((height, i) => new ThrowChip(FormatThrow(height), PassOrSelf[i]))
+            .Select(
+                (height, i) => new ThrowChip(FormatThrow(height), PassOrSelf[i], orbitIndices[i])
+            )
             .ToList();
         ThrowPassSelfChips = PassOrSelf
-            .Select(kind => new ThrowChip(FormatPassSelfLetter(kind), kind))
+            .Select(
+                (kind, index) =>
+                    new ThrowChip(FormatPassSelfLetter(kind), kind, orbitIndices[index])
+            )
             .ToList();
         InterfaceChips = Interface
             .Select((ch, i) => new ThrowChip(ch.ToString(), InterfacePassOrSelf[i]))
@@ -65,7 +71,8 @@ public sealed class DetailViewModel
                             ),
                             GlobalDisplay: FormatThrow(height),
                             NameDisplay: FormatThrowName(height, NumberOfJugglers),
-                            Kind: PassOrSelf[globalIndex]
+                            Kind: PassOrSelf[globalIndex],
+                            OrbitIndex: orbitIndices[globalIndex]
                         );
                     })
                     .ToList();
@@ -150,6 +157,28 @@ public sealed class DetailViewModel
             _ => "?",
         };
 
+    private static int[] GetOrbitIndices(global::Siteswap.Details.Siteswap siteswap)
+    {
+        var periodLength = Math.Clamp(
+            siteswap.Length,
+            0,
+            global::Siteswap.Details.Siteswap.MaxPeriodLength
+        );
+        var indices = Enumerable.Repeat(-1, periodLength).ToArray();
+        var orbits = siteswap.GetOrbits();
+        var orbitCount = Math.Min(orbits.Count, periodLength);
+        for (var orbitIndex = 0; orbitIndex < orbitCount; orbitIndex++)
+        {
+            for (var beat = 0; beat < periodLength; beat++)
+            {
+                if (orbits[orbitIndex].Items[beat] > 0)
+                    indices[beat] = orbitIndex;
+            }
+        }
+
+        return indices;
+    }
+
     public enum ThrowDisplayMode
     {
         Local,
@@ -157,21 +186,26 @@ public sealed class DetailViewModel
         Name,
     }
 
-    public record ThrowChip(string Display, global::Siteswap.Details.PassOrSelf Kind);
+    public record ThrowChip(
+        string Display,
+        global::Siteswap.Details.PassOrSelf Kind,
+        int OrbitIndex = -1
+    );
 
     public record JugglerThrow(
         string LocalDisplay,
         string GlobalDisplay,
         string NameDisplay,
-        global::Siteswap.Details.PassOrSelf Kind
+        global::Siteswap.Details.PassOrSelf Kind,
+        int OrbitIndex
     )
     {
         public ThrowChip ForMode(ThrowDisplayMode mode) =>
             mode switch
             {
-                ThrowDisplayMode.Global => new ThrowChip(GlobalDisplay, Kind),
-                ThrowDisplayMode.Name => new ThrowChip(NameDisplay, Kind),
-                _ => new ThrowChip(LocalDisplay, Kind),
+                ThrowDisplayMode.Global => new ThrowChip(GlobalDisplay, Kind, OrbitIndex),
+                ThrowDisplayMode.Name => new ThrowChip(NameDisplay, Kind, OrbitIndex),
+                _ => new ThrowChip(LocalDisplay, Kind, OrbitIndex),
             };
     }
 

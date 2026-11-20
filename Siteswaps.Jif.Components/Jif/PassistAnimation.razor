@@ -1,0 +1,135 @@
+@namespace Siteswaps.Jif.Components
+@using Microsoft.AspNetCore.Components.Web
+@using System.Text.Json
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="passist-animation">
+    <div class="passist-animation-stage" @ref="_target" role="img" aria-label="Passist-JIF-Animation"></div>
+    <label class="passist-animation-speed">
+        <span>Animationsgeschwindigkeit</span>
+        <input type="range" min="0.5" max="4" step="0.1" value="@_effectiveSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" @oninput="OnSpeedChanged" />
+        <output>@_effectiveSpeed.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)×</output>
+    </label>
+    @if (_error is not null)
+    {
+        <p class="passist-animation-error" role="alert">Passist-Widget konnte nicht geladen werden: @_error</p>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public JifInput Jif { get; set; } = new JifInput.Json("{}");
+
+    [Parameter]
+    public double AnimationSpeed { get; set; } = 0.8;
+
+    [Parameter]
+    public bool EnableSettings { get; set; } = true;
+
+    [Parameter]
+    public bool Teaser { get; set; }
+
+    [Parameter]
+    public EventCallback<double> AnimationSpeedChanged { get; set; }
+
+    private ElementReference _target;
+    private IJSObjectReference? _module;
+    private string? _json;
+    private string? _renderedJson;
+    private string? _error;
+    private double _effectiveSpeed;
+    private double _lastParameterSpeed;
+    private double? _renderedSpeed;
+    private bool _initializedSpeed;
+
+    protected override void OnParametersSet()
+    {
+        if (!_initializedSpeed || Math.Abs(_lastParameterSpeed - AnimationSpeed) > 0.001)
+        {
+            _effectiveSpeed = AnimationSpeed;
+            _lastParameterSpeed = AnimationSpeed;
+            _initializedSpeed = true;
+        }
+
+        _json = Jif.Match(
+            pattern => JsonSerializer.Serialize(pattern.Value),
+            json => json.Value
+        );
+
+        try
+        {
+            using var _ = JsonDocument.Parse(_json);
+            _error = null;
+        }
+        catch (JsonException exception)
+        {
+            _error = $"Ungültiges JIF-JSON: {exception.Message}";
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_json is null || _error is not null)
+            return;
+
+        try
+        {
+            _module ??= await JS.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Siteswaps.Jif.Components/Jif/PassistAnimation.razor.js"
+            );
+            if (_renderedJson != _json)
+            {
+                await _module.InvokeVoidAsync("render", _target, _json, _effectiveSpeed, Teaser, EnableSettings);
+                _renderedJson = _json;
+                _renderedSpeed = _effectiveSpeed;
+            }
+            else if (
+                _renderedSpeed is not double renderedSpeed
+                || Math.Abs(renderedSpeed - _effectiveSpeed) > 0.001
+            )
+            {
+                await _module.InvokeVoidAsync("update", _target, _effectiveSpeed);
+                _renderedSpeed = _effectiveSpeed;
+            }
+        }
+        catch (Exception exception)
+        {
+            _error = exception.Message;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task OnSpeedChanged(ChangeEventArgs args)
+    {
+        if (!double.TryParse(args.Value?.ToString(), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var speed))
+            return;
+
+        _effectiveSpeed = Math.Clamp(speed, 0.5, 4.0);
+        if (_module is not null && _renderedJson == _json)
+        {
+            await _module.InvokeVoidAsync("update", _target, _effectiveSpeed);
+            _renderedSpeed = _effectiveSpeed;
+        }
+        await AnimationSpeedChanged.InvokeAsync(_effectiveSpeed);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is null)
+            return;
+
+        try
+        {
+            await _module.InvokeVoidAsync("destroy", _target);
+            await _module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+            _module = null;
+        }
+    }
+}

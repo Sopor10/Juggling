@@ -11,15 +11,22 @@
 <section class="sdv-diagrams">
     <h3 class="sdv-section-title">Causal Diagram</h3>
     <p class="sdv-muted">Pfeile: welcher Wurf erzwingt den nächsten.</p>
-    <PassistStyleDiagram Diagram="Diagram" Mode="PassistStyleDiagram.DiagramMode.Causal" />
+    <PassistStyleDiagram Diagram="Diagram"
+                         Mode="PassistStyleDiagram.DiagramMode.Causal"
+                         ColorOrbits="ColorOrbits"
+                         OrbitLabels="@Model.Orbits.Select(orbit => orbit.DisplayValue).ToList()" />
 
     <h3 class="sdv-section-title sdv-diagrams-gap">Ladder Diagram</h3>
     <p class="sdv-muted">Objektpfade; Pfeillänge = Wurfhöhe.</p>
-    <PassistStyleDiagram Diagram="Diagram" Mode="PassistStyleDiagram.DiagramMode.Ladder" />
+    <PassistStyleDiagram Diagram="Diagram"
+                         Mode="PassistStyleDiagram.DiagramMode.Ladder"
+                         ColorOrbits="ColorOrbits"
+                         OrbitLabels="@Model.Orbits.Select(orbit => orbit.DisplayValue).ToList()" />
 </section>
 
 @code {
     [Parameter] public DetailViewModel? Model { get; set; }
+    [Parameter] public bool ColorOrbits { get; set; } = true;
 
     private DiagramSet? Diagram { get; set; }
 

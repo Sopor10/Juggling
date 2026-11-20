@@ -27,7 +27,7 @@
 
     <div class="sdv-analysis-beats">
         <h3 class="sdv-section-title sdv-analysis-gap">@L["Throws"]</h3>
-        <ThrowChipRow Chips="ActiveThrowChips" AriaLabel="@L["Throws"]" />
+        <ThrowChipRow Chips="ActiveThrowChips" ColorOrbits="ColorOrbits" AriaLabel="@L["Throws"]" />
 
         <h3 class="sdv-section-title sdv-analysis-gap-tight">Interface</h3>
         <ThrowChipRow Chips="ActiveInterfaceChips" AriaLabel="Interface" />
@@ -97,6 +97,7 @@
 
 @code {
     [Parameter] public DetailViewModel? Model { get; set; }
+    [Parameter] public bool ColorOrbits { get; set; } = true;
 
     private string? _expandedOrbit;
     private bool _showPassSelf;

@@ -32,7 +32,7 @@ public enum GenerationScenario
 [ShortRunJob]
 public class SiteswapGeneratorBenchmarks
 {
-    private Func<SiteswapGenerator> createGenerator = null!;
+    private Func<SiteswapGenerator>? createGenerator;
 
     [ParamsSource(nameof(Scenarios))]
     public GenerationScenario Scenario { get; set; }
@@ -52,7 +52,12 @@ public class SiteswapGeneratorBenchmarks
     [Benchmark]
     public int GenerateSiteswaps()
     {
-        var resultCount = createGenerator().Generate().Count();
+        var generatorFactory =
+            createGenerator
+            ?? throw new InvalidOperationException(
+                "Benchmark setup did not initialize the generator."
+            );
+        var resultCount = generatorFactory().Generate().Count();
         if (NestedGenerationScenarioFactory.AllScenarios.Contains(Scenario))
             NestedGenerationScenarioFactory.ValidateResultCount(Scenario, resultCount);
         else

@@ -1,0 +1,48 @@
+@namespace Siteswaps.Components.Details.Diagrams
+@using System.Text.Json
+@using Siteswap.Details.CausalDiagram
+@using Siteswap.Details.Jif
+@using Siteswaps.Jif.Components
+
+@if (_diagram is not null || _error is not null)
+{
+    <section class="jif-causal-diagram" aria-labelledby="jif-causal-diagram-title">
+        <h3 id="jif-causal-diagram-title" class="sdv-section-title">Kausales Diagramm</h3>
+        <p class="sdv-muted">Die Pfeile zeigen den kausalen Zusammenhang der Würfe im Feeding-Muster.</p>
+        @if (_error is not null)
+        {
+            <p role="alert">Das Causal Diagram konnte nicht aus dem JIF erstellt werden: @_error</p>
+        }
+        else
+        {
+            <PassistStyleDiagram Diagram="_diagram" Mode="PassistStyleDiagram.DiagramMode.Causal" />
+        }
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public JifInput Jif { get; set; } = new JifInput.Json("{}");
+
+    private DiagramSet? _diagram;
+    private string? _error;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var pattern = Jif.Match(
+                structured => structured.Value,
+                json => JsonSerializer.Deserialize<JifPattern>(json.Value)
+                    ?? throw new JsonException("The JIF JSON contains no document.")
+            );
+            _diagram = JifCausalDiagramMapper.Map(pattern);
+            _error = null;
+        }
+        catch (Exception exception) when (exception is JsonException or ArgumentException or InvalidOperationException)
+        {
+            _diagram = null;
+            _error = exception.Message;
+        }
+    }
+}

@@ -43,6 +43,32 @@
     border-radius: 8px;
 }
 
+.sd-page ::deep .passist-animation-stage {
+    width: 100%;
+    height: 620px;
+    overflow: hidden;
+    border: 1px solid rgba(44, 31, 82, .16);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.sd-page ::deep .sdv-jif-data { margin-top: 12px; }
+.sd-page ::deep .sdv-jif-attribution {
+    margin: 8px 0 0;
+    color: var(--sd-purple-400);
+    font-size: 13px;
+    text-align: center;
+}
+.sd-page ::deep .sdv-jif-attribution a { color: var(--sd-purple-700); }
+.sd-page ::deep .sdv-jif-data pre {
+    max-height: 320px;
+    overflow: auto;
+    padding: 12px;
+    border-radius: 10px;
+    background: #241a3d;
+    color: #f5f3fb;
+}
+
 .sd-header {
     background: radial-gradient(120% 140% at 20% 0%, var(--sd-purple-600) 0%, var(--sd-purple-800) 45%, var(--sd-purple-950) 100%);
     color: white;
@@ -179,6 +205,38 @@
     border-bottom: 2px solid var(--sd-purple-100);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
+}
+
+.sd-orbit-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 6px;
+}
+
+.sd-orbit-toggle {
+    display: inline-flex;
+    overflow: hidden;
+    border: 2px solid var(--sd-purple-100);
+    border-radius: 999px;
+    background: transparent;
+}
+
+.sd-orbit-toggle button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--sd-purple-700);
+    padding: 7px 13px;
+    min-height: 36px;
+    font-family: var(--sd-font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sd-orbit-toggle button.active {
+    background: var(--sd-purple-700);
+    color: white;
 }
 
 .sd-tab {
@@ -327,6 +385,11 @@
 .sd-page ::deep .sdv-beat.self {
     background: var(--sd-purple-100);
     border-color: color-mix(in srgb, var(--sd-purple-400) 45%, white);
+}
+
+.sd-page ::deep .sdv-beat.orbit-colored {
+    background: color-mix(in srgb, var(--orbit-color) 24%, white);
+    border-color: color-mix(in srgb, var(--orbit-color) 60%, white);
 }
 
 .sd-page ::deep .sdv-beat-throw {

@@ -69,11 +69,16 @@ public class FilterDslParser
         var parseResult = Parse(dsl);
         if (!parseResult.Success)
         {
-            return FilterCreateResult.Failure(parseResult.ErrorMessage!);
+            return FilterCreateResult.Failure(
+                parseResult.ErrorMessage ?? "Die Filter-DSL konnte nicht geparst werden."
+            );
         }
 
+        if (parseResult.Expression is not { } expression)
+            return FilterCreateResult.Failure("Der Parser hat keinen Filterausdruck geliefert.");
+
         // 2. Validieren
-        var validationResult = Validate(parseResult.Expression!);
+        var validationResult = Validate(expression);
         if (!validationResult.IsValid)
         {
             var errorMessages = validationResult.Errors.Select(e => e.Message);
@@ -83,7 +88,7 @@ public class FilterDslParser
         // 3. Kompilieren
         try
         {
-            var filter = Compile(parseResult.Expression!);
+            var filter = Compile(expression);
             return FilterCreateResult.Successful(filter);
         }
         catch (Exception ex)

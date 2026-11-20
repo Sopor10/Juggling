@@ -1,0 +1,39 @@
+@namespace Siteswaps.Components.Details.Variants
+@using System.Text.Json
+@using Siteswaps.Components.Details
+@using Siteswap.Details.Jif
+@using Siteswaps.Jif.Components
+
+<section class="sdv-jif">
+    @if (Model is not null)
+    {
+        <PassistAnimation Jif="@JifDocument" />
+        <p class="sdv-jif-attribution">
+            Animation mit <a href="https://juggle.ch/jif" target="_blank" rel="noopener">Passist</a> · Danke an Passist
+        </p>
+    }
+    <details class="sdv-jif-data">
+        <summary>Generiertes JIF anzeigen</summary>
+        <pre><code>@JifJson</code></pre>
+    </details>
+</section>
+
+@code {
+    [Parameter] public DetailViewModel? Model { get; set; }
+    [Parameter] public bool ColorOrbits { get; set; } = true;
+
+    private JifPattern JifDocument => JifMapper.Map(
+        Model!.Value,
+        Model.NumberOfJugglers,
+        propType: "club",
+        colorOrbits: ColorOrbits
+    );
+
+    private string JifJson => Model is null
+        ? "{}"
+        : JsonSerializer.Serialize(
+            JifDocument,
+            new JsonSerializerOptions { WriteIndented = true }
+        );
+
+}

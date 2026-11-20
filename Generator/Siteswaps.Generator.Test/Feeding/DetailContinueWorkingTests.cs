@@ -15,35 +15,28 @@ public class DetailContinueWorkingTests
             Path.Combine("Details", "Variants", "DetailVariantHero.razor")
         );
 
-        hero.Should().Contain("Continue with this siteswap");
         hero.Should().Contain("Create 3-person feed");
+        hero.Should().NotContain("Continue with this siteswap");
+        hero.Should().NotContain("sdv-continue-lead");
 
         hero.Should().Contain("ThreePersonFeedHref");
         // App-relative: no leading slash on feeding path in markup or helper usage.
         hero.Should().NotContain("href=\"/feeding");
         hero.Should().NotContain("href='/feeding");
 
-        var primaryStart = hero.IndexOf("sdv-continue-primary", StringComparison.Ordinal);
-        var primaryEnd = hero.IndexOf(
-            "sdv-continue-secondary",
-            primaryStart,
-            StringComparison.Ordinal
-        );
-        var primaryBlock = hero[primaryStart..primaryEnd];
-        primaryBlock.Should().NotContain("target=\"_blank\"");
-        primaryBlock.Should().NotContain("rel=\"noopener\"");
+        hero.Should().NotContain("sdv-continue-secondary");
     }
 
     [Test]
-    public void DetailVariantHero_Includes_Passist_Secondary_Action()
+    public void DetailVariantJif_Attributes_And_Thanks_Passist()
     {
-        var hero = ReadComponentsSource(
-            Path.Combine("Details", "Variants", "DetailVariantHero.razor")
+        var jif = ReadComponentsSource(
+            Path.Combine("Details", "Variants", "DetailVariantJif.razor")
         );
 
-        hero.Should().Contain("Passist");
-        hero.Should().Contain("PassistLink");
-        hero.Should().Contain("Open in Passist");
+        jif.Should().Contain("https://juggle.ch/jif");
+        jif.Should().Contain("Passist");
+        jif.Should().Contain("Danke an Passist");
     }
 
     [Test]
@@ -51,7 +44,7 @@ public class DetailContinueWorkingTests
     {
         var page = ReadComponentsSource(Path.Combine("Details", "DetailPage.razor"));
 
-        // Passist moved into the continue-working section on the hero.
+        // Passist is attributed on the JIF subpage.
         var headerBlock = ExtractUntil(page, "sd-header", "sd-sheet");
         headerBlock.Should().NotContain("PassistLink");
         headerBlock.Should().NotContain(">Passist<");
