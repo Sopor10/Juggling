@@ -68,7 +68,7 @@ public class FeedingRound1RetestReproTests
             .Returns((string key) => new LocalizedString(key, key));
 
         typeof(FeedingPage)
-            .GetProperty("L", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .GetProperty("InjectedLocalizer", BindingFlags.Instance | BindingFlags.NonPublic)!
             .SetValue(page, localizer.Object);
     }
 

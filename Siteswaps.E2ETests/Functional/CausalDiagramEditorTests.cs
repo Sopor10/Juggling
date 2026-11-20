@@ -144,7 +144,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await session.Page.GetByText("Muster laden").ClickAsync();
         await session.Page.Locator("#custom-siteswap").FillAsync("423");
         await session.Page.Locator(".pattern-loader-grid > div:first-child button").ClickAsync();
-        (await session.Page.Locator(".throw-hit-target").CountAsync()).Should().Be(6);
+        (await session.Page.Locator(".throw-hit-target").CountAsync()).Should().Be(12);
 
         await session
             .Page.Locator("#custom-feeding")
@@ -160,12 +160,13 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         await OpenEditor(session.Page, E2EBaseUrl.FromFixture(host.Fixture));
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("feeding-7-5");
+        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("custom");
+        await session.Page.GetByRole(AriaRole.Button, new() { Name = "+ Knoten" }).ClickAsync();
 
-        var unlinkedThrow = session.Page.Locator(".throw-hit-target[data-throw-id='P1-6']").First;
-        await unlinkedThrow.FocusAsync();
+        var unlinkedThrow = session.Page.Locator(".throw-hit-target[aria-pressed='true']").First;
+        var throwId = await unlinkedThrow.GetAttributeAsync("data-throw-id");
         await Assertions
-            .Expect(session.Page.Locator(".pd-node-label[data-throw-id='P1-6']").First)
+            .Expect(session.Page.Locator($".pd-node-label[data-throw-id='{throwId}']").First)
             .ToHaveTextAsync("—");
         await Assertions
             .Expect(session.Page.Locator(".node-inspector output"))
