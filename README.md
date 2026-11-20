@@ -35,6 +35,7 @@ flowchart TD
     Tests --> Domain
     Tests --> GeneratorCore
     Tests --> GeneratorUI
+    Tests --> SharedComponents
     Tests --> Mcp
     Tests --> Web
     Benchmarks --> GeneratorCore
