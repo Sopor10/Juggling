@@ -46,7 +46,7 @@ internal static class SiteswapLabJifMapper
         IReadOnlyList<int> timeZones
     )
     {
-        const double spacing = 1.1;
+        const double spacing = 2.0;
         var zones = timeZones.Distinct().Order().ToArray();
         var peopleByZone = zones
             .Select(zone =>
