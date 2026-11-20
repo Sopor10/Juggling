@@ -122,7 +122,8 @@ public static class SiteswapDiagramBuilder
         var periodLength = Math.Clamp(siteswap.Length, 0, Siteswap.MaxPeriodLength);
         var indices = Enumerable.Repeat(-1, periodLength).ToArray();
         var orbits = siteswap.GetOrbits();
-        for (var orbitIndex = 0; orbitIndex < orbits.Count; orbitIndex++)
+        var orbitCount = Math.Min(orbits.Count, periodLength);
+        for (var orbitIndex = 0; orbitIndex < orbitCount; orbitIndex++)
         {
             for (var beat = 0; beat < periodLength; beat++)
             {

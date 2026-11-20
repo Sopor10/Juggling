@@ -79,8 +79,16 @@ internal static class GenerationWorkflowUrlState
             if (snapshot is not { } validSnapshot || !Valid(validSnapshot))
                 return false;
 
-            var min = Math.Clamp(validSnapshot.MinClubs, WizardState.MinClubs, WizardState.MaxClubs);
-            var max = Math.Clamp(validSnapshot.MaxClubs, WizardState.MinClubs, WizardState.MaxClubs);
+            var min = Math.Clamp(
+                validSnapshot.MinClubs,
+                WizardState.MinClubs,
+                WizardState.MaxClubs
+            );
+            var max = Math.Clamp(
+                validSnapshot.MaxClubs,
+                WizardState.MinClubs,
+                WizardState.MaxClubs
+            );
             session.State.Clubs =
                 min <= max
                     ? new Between { MinNumber = min, MaxNumber = max }
@@ -201,7 +209,10 @@ internal static class GenerationWorkflowUrlState
         {
             "pattern" when ValidHeights(value.Heights) && value.Rotation is >= -3 and <= 7 =>
                 new NewPatternFilterInformation(
-                    (value.Heights ?? throw new InvalidOperationException()).Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    (value.Heights ?? throw new InvalidOperationException())
+                        .Select(ThrowByHeight)
+                        .OfType<Throw>()
+                        .ToList(),
                     new PatternRotation(value.Rotation),
                     value.Include,
                     value.LocallyValid
@@ -210,7 +221,10 @@ internal static class GenerationWorkflowUrlState
                 when ValidHeights(value.Landing)
                     && (value.ThrowMask is null || ValidHeights(value.ThrowMask)) =>
                 new InterfaceFilterInformation(
-                    (value.Landing ?? throw new InvalidOperationException()).Select(ThrowByHeight).OfType<Throw>().ToList(),
+                    (value.Landing ?? throw new InvalidOperationException())
+                        .Select(ThrowByHeight)
+                        .OfType<Throw>()
+                        .ToList(),
                     value.AllowRotation,
                     value.ThrowMask?.Select(ThrowByHeight).OfType<Throw>().ToList()
                 ),
@@ -222,8 +236,11 @@ internal static class GenerationWorkflowUrlState
                 {
                     Amount = value.Amount,
                     Type = (EasyNumberFilter.NumberFilterType)value.NumberType,
-                    Throw = ThrowByHeight((value.Heights ?? throw new InvalidOperationException())[0])
-                        ?? throw new InvalidOperationException("The filter contains an invalid throw."),
+                    Throw =
+                        ThrowByHeight((value.Heights ?? throw new InvalidOperationException())[0])
+                        ?? throw new InvalidOperationException(
+                            "The filter contains an invalid throw."
+                        ),
                     JugglerIndex = value.Juggler,
                 },
             "state"

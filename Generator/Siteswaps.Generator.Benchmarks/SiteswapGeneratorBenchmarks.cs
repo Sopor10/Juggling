@@ -52,8 +52,11 @@ public class SiteswapGeneratorBenchmarks
     [Benchmark]
     public int GenerateSiteswaps()
     {
-        var generatorFactory = createGenerator
-            ?? throw new InvalidOperationException("Benchmark setup did not initialize the generator.");
+        var generatorFactory =
+            createGenerator
+            ?? throw new InvalidOperationException(
+                "Benchmark setup did not initialize the generator."
+            );
         var resultCount = generatorFactory().Generate().Count();
         if (NestedGenerationScenarioFactory.AllScenarios.Contains(Scenario))
             NestedGenerationScenarioFactory.ValidateResultCount(Scenario, resultCount);

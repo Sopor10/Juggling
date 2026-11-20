@@ -100,7 +100,8 @@ public static class JifMapper
     {
         var orbitByBeat = Enumerable.Repeat(-1, siteswap.Length).ToArray();
         var orbits = siteswap.GetOrbits();
-        for (var orbitIndex = 0; orbitIndex < orbits.Count; orbitIndex++)
+        var orbitCount = Math.Min(orbits.Count, siteswap.Length);
+        for (var orbitIndex = 0; orbitIndex < orbitCount; orbitIndex++)
         {
             for (var beat = 0; beat < siteswap.Length; beat++)
             {
@@ -146,46 +147,12 @@ public static class JifMapper
         ArgumentNullException.ThrowIfNull(diagram);
         ArgumentException.ThrowIfNullOrWhiteSpace(propType);
         ArgumentException.ThrowIfNullOrWhiteSpace(patternType);
-        if (diagram.Hands.Count == 0 || diagram.Jugglers.Count == 0 || diagram.StepCount <= 0)
-            throw new ArgumentException(
-                "The causal diagram needs jugglers, limbs, and a positive period.",
-                nameof(diagram)
-            );
-        if (diagram.LimbPermutation.Count != diagram.Hands.Count)
-            throw new ArgumentException(
-                "The causal diagram limb permutation must match its limbs.",
-                nameof(diagram)
-            );
+        ValidateDiagram(diagram);
 
         var handIndices = diagram
             .Hands.Select((hand, index) => (hand, index))
             .ToDictionary(entry => entry.hand, entry => entry.index);
-        var orderedThrows = diagram
-            .Throws.Where(node => node.Height > 0)
-            .OrderBy(node => node.Time)
-            .Select(node =>
-            {
-                if (!handIndices.TryGetValue(node.Hand, out var from))
-                    throw new ArgumentException(
-                        "Every causal throw must start at a diagram limb.",
-                        nameof(diagram)
-                    );
-                if (node.ToLimb is not int to || to < 0 || to >= diagram.Hands.Count)
-                    throw new ArgumentException(
-                        "Every causal throw must identify its destination limb.",
-                        nameof(diagram)
-                    );
-
-                return new JifThrow
-                {
-                    Time = node.Time,
-                    Duration = node.Height,
-                    From = from,
-                    To = to,
-                    Label = global::Siteswap.Details.Siteswap.Transform(node.Height),
-                };
-            })
-            .ToArray();
+        var orderedThrows = BuildOrderedThrows(diagram, handIndices, nameof(diagram));
         if (orderedThrows.Length == 0)
             throw new ArgumentException(
                 "The causal diagram contains no positive-height throws.",
@@ -208,28 +175,15 @@ public static class JifMapper
                 "Passist needs an expansion larger than this pattern supports."
             );
 
-        var expandedThrows = new List<JifThrow>(orderedThrows.Length * expansionCount);
-        var limbMap = Enumerable.Range(0, limbPermutation.Length).ToArray();
-        var propMap = Enumerable.Range(0, propCount).ToArray();
-        for (var repetition = 0; repetition < expansionCount; repetition++)
-        {
-            for (var throwIndex = 0; throwIndex < orderedThrows.Length; throwIndex++)
-            {
-                var throwEvent = orderedThrows[throwIndex];
-                expandedThrows.Add(
-                    throwEvent with
-                    {
-                        Time = Required(throwEvent.Time, "throw time") + repetition * diagram.StepCount,
-                        From = limbMap[Required(throwEvent.From, "source limb")],
-                        To = limbMap[Required(throwEvent.To, "destination limb")],
-                        Prop = propMap[firstPeriodProps[throwIndex]],
-                    }
-                );
-            }
-
-            limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
-            propMap = propMap.Select(index => propPermutation[index]).ToArray();
-        }
+        var expandedThrows = ExpandThrows(
+            orderedThrows,
+            firstPeriodProps,
+            limbPermutation,
+            propPermutation,
+            propCount,
+            expansionCount,
+            diagram.StepCount
+        );
 
         return new JifPattern
         {
@@ -276,6 +230,88 @@ public static class JifMapper
         };
     }
 
+    private static void ValidateDiagram(DiagramSet diagram)
+    {
+        if (diagram.Hands.Count == 0 || diagram.Jugglers.Count == 0 || diagram.StepCount <= 0)
+            throw new ArgumentException(
+                "The causal diagram needs jugglers, limbs, and a positive period.",
+                nameof(diagram)
+            );
+        if (diagram.LimbPermutation.Count != diagram.Hands.Count)
+            throw new ArgumentException(
+                "The causal diagram limb permutation must match its limbs.",
+                nameof(diagram)
+            );
+    }
+
+    private static JifThrow[] BuildOrderedThrows(
+        DiagramSet diagram,
+        IReadOnlyDictionary<Hand, int> handIndices,
+        string parameterName
+    ) =>
+        diagram
+            .Throws.Where(node => node.Height > 0)
+            .OrderBy(node => node.Time)
+            .Select(node =>
+            {
+                if (!handIndices.TryGetValue(node.Hand, out var from))
+                    throw new ArgumentException(
+                        "Every causal throw must start at a diagram limb.",
+                        parameterName
+                    );
+                if (node.ToLimb is not int to || to < 0 || to >= diagram.Hands.Count)
+                    throw new ArgumentException(
+                        "Every causal throw must identify its destination limb.",
+                        parameterName
+                    );
+
+                return new JifThrow
+                {
+                    Time = node.Time,
+                    Duration = node.Height,
+                    From = from,
+                    To = to,
+                    Label = global::Siteswap.Details.Siteswap.Transform(node.Height),
+                };
+            })
+            .ToArray();
+
+    private static List<JifThrow> ExpandThrows(
+        IReadOnlyList<JifThrow> orderedThrows,
+        IReadOnlyList<int> firstPeriodProps,
+        IReadOnlyList<int> limbPermutation,
+        IReadOnlyList<int> propPermutation,
+        int propCount,
+        int expansionCount,
+        int stepCount
+    )
+    {
+        var expandedThrows = new List<JifThrow>(orderedThrows.Count * expansionCount);
+        var limbMap = Enumerable.Range(0, limbPermutation.Count).ToArray();
+        var propMap = Enumerable.Range(0, propCount).ToArray();
+        for (var repetition = 0; repetition < expansionCount; repetition++)
+        {
+            for (var throwIndex = 0; throwIndex < orderedThrows.Count; throwIndex++)
+            {
+                var throwEvent = orderedThrows[throwIndex];
+                expandedThrows.Add(
+                    throwEvent with
+                    {
+                        Time = Required(throwEvent.Time, "throw time") + repetition * stepCount,
+                        From = limbMap[Required(throwEvent.From, "source limb")],
+                        To = limbMap[Required(throwEvent.To, "destination limb")],
+                        Prop = propMap[firstPeriodProps[throwIndex]],
+                    }
+                );
+            }
+
+            limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
+            propMap = propMap.Select(index => propPermutation[index]).ToArray();
+        }
+
+        return expandedThrows;
+    }
+
     private static (
         int[] FirstPeriodProps,
         int[] PropPermutation,
@@ -288,80 +324,122 @@ public static class JifMapper
     )
     {
         const int maxIterations = 512;
-        var holdings = Enumerable.Range(0, limbCount).Select(_ => new Queue<int>()).ToArray();
-        var catches = new PriorityQueue<(int Target, int Prop), (decimal Time, long Order)>();
-        var propOrder = new List<int>();
-        var firstPeriodProps = new int[throws.Count];
-        var propMappings = new Dictionary<int, int>();
-        var propCount = 0;
-        var unassignedCount = 1;
-        var eventOrder = 0L;
-        var limbMap = Enumerable.Range(0, limbCount).ToArray();
-
+        var assignment = new PropAssignmentState(throws, limbPermutation, period, limbCount);
         for (var iteration = 0; iteration < maxIterations; iteration++)
         {
-            if (iteration > 0 && unassignedCount == 0 && propMappings.Count == propCount)
-            {
-                return (
-                    firstPeriodProps,
-                    Enumerable.Range(0, propCount).Select(index => propMappings[index]).ToArray(),
-                    propCount
-                );
-            }
+            if (assignment.IsComplete(iteration))
+                return assignment.Result();
 
-            unassignedCount = 0;
+            assignment.BeginPeriod();
             for (var throwIndex = 0; throwIndex < throws.Count; throwIndex++)
-            {
-                var throwEvent = throws[throwIndex];
-                var time = Required(throwEvent.Time, "throw time") + iteration * period;
-                while (catches.TryPeek(out var landing, out var priority) && priority.Time <= time)
-                {
-                    catches.Dequeue();
-                    holdings[landing.Target].Enqueue(landing.Prop);
-                }
-
-                var from = limbMap[Required(throwEvent.From, "source limb")];
-                var to = limbMap[Required(throwEvent.To, "destination limb")];
-                int prop;
-                if (holdings[from].Count > 0)
-                {
-                    prop = holdings[from].Dequeue();
-                }
-                else
-                {
-                    prop = propCount++;
-                    unassignedCount++;
-                }
-                if (iteration == 0)
-                {
-                    firstPeriodProps[throwIndex] = prop;
-                }
-                else
-                {
-                    var previousProp = propOrder[propOrder.Count - throws.Count];
-                    if (propMappings.TryGetValue(previousProp, out var mappedProp))
-                    {
-                        if (mappedProp != prop)
-                            throw new InvalidOperationException(
-                                "The passing pattern does not have a consistent periodic prop assignment."
-                            );
-                    }
-                    else
-                    {
-                        propMappings.Add(previousProp, prop);
-                    }
-                }
-
-                propOrder.Add(prop);
-                catches.Enqueue((to, prop), (time + Required(throwEvent.Duration, "throw duration"), eventOrder++));
-            }
-
-            limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
+                assignment.ProcessThrow(throwIndex, iteration);
+            assignment.AdvanceLimbs();
         }
 
         throw new InvalidOperationException(
             "Passist could not find a repeating prop assignment within 512 pattern periods."
         );
+    }
+
+    private sealed class PropAssignmentState
+    {
+        private readonly IReadOnlyList<JifThrow> throws;
+        private readonly IReadOnlyList<int> limbPermutation;
+        private readonly int period;
+        private readonly Queue<int>[] holdings;
+        private readonly PriorityQueue<(int Target, int Prop), (decimal Time, long Order)> catches =
+            new();
+        private readonly List<int> propOrder = [];
+        private readonly Dictionary<int, int> propMappings = [];
+        private int propCount;
+        private int unassignedCount = 1;
+        private long eventOrder;
+        private int[] limbMap;
+
+        public PropAssignmentState(
+            IReadOnlyList<JifThrow> throws,
+            IReadOnlyList<int> limbPermutation,
+            int period,
+            int limbCount
+        )
+        {
+            this.throws = throws;
+            this.limbPermutation = limbPermutation;
+            this.period = period;
+            FirstPeriodProps = new int[throws.Count];
+            holdings = Enumerable.Range(0, limbCount).Select(_ => new Queue<int>()).ToArray();
+            limbMap = Enumerable.Range(0, limbCount).ToArray();
+        }
+
+        public int[] FirstPeriodProps { get; }
+
+        public bool IsComplete(int iteration) =>
+            iteration > 0 && unassignedCount == 0 && propMappings.Count == propCount;
+
+        public void BeginPeriod() => unassignedCount = 0;
+
+        public void ProcessThrow(int throwIndex, int iteration)
+        {
+            var throwEvent = throws[throwIndex];
+            var time = Required(throwEvent.Time, "throw time") + iteration * period;
+            MoveLandedProps(time);
+            var from = limbMap[Required(throwEvent.From, "source limb")];
+            var to = limbMap[Required(throwEvent.To, "destination limb")];
+            var prop = TakeOrCreateProp(from);
+            RecordPropAssignment(throwIndex, prop, iteration);
+            propOrder.Add(prop);
+            var duration = Required(throwEvent.Duration, "throw duration");
+            catches.Enqueue((to, prop), (time + duration, eventOrder++));
+        }
+
+        public void AdvanceLimbs() =>
+            limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
+
+        public (int[] FirstPeriodProps, int[] PropPermutation, int PropCount) Result() =>
+            (
+                FirstPeriodProps,
+                Enumerable.Range(0, propCount).Select(index => propMappings[index]).ToArray(),
+                propCount
+            );
+
+        private void MoveLandedProps(decimal time)
+        {
+            while (catches.TryPeek(out var landing, out var priority) && priority.Time <= time)
+            {
+                catches.Dequeue();
+                holdings[landing.Target].Enqueue(landing.Prop);
+            }
+        }
+
+        private int TakeOrCreateProp(int limb)
+        {
+            if (holdings[limb].Count > 0)
+                return holdings[limb].Dequeue();
+
+            unassignedCount++;
+            return propCount++;
+        }
+
+        private void RecordPropAssignment(int throwIndex, int prop, int iteration)
+        {
+            if (iteration == 0)
+            {
+                FirstPeriodProps[throwIndex] = prop;
+                return;
+            }
+
+            var previousProp = propOrder[propOrder.Count - throws.Count];
+            if (!propMappings.TryGetValue(previousProp, out var mappedProp))
+            {
+                propMappings.Add(previousProp, prop);
+                return;
+            }
+
+            if (mappedProp != prop)
+                throw new InvalidOperationException(
+                    "The passing pattern does not have a consistent periodic prop assignment."
+                );
+        }
     }
 
     private static int PermutationOrder(IReadOnlyList<int> permutation)
@@ -393,8 +471,8 @@ public static class JifMapper
         right == 0 ? Math.Abs(left) : GreatestCommonDivisor(right, left % right);
 
     private static T Required<T>(T? value, string field)
-        where T : struct => value
-        ?? throw new InvalidOperationException($"Every JIF throw must define its {field}.");
+        where T : struct =>
+        value ?? throw new InvalidOperationException($"Every JIF throw must define its {field}.");
 
     private static JifJuggler CreateJuggler(string name, int index, int numberOfJugglers)
     {

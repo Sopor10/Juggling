@@ -44,20 +44,22 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     [Inject]
     private NavigationManager? InjectedNavigation { get; set; }
 
-    private NavigationManager Navigation => InjectedNavigation
+    private NavigationManager Navigation =>
+        InjectedNavigation
         ?? throw new InvalidOperationException("NavigationManager was not injected.");
 
     [Inject]
     private IStringLocalizer<FeedingPage>? InjectedLocalizer { get; set; }
 
-    private IStringLocalizer<FeedingPage> L => InjectedLocalizer
+    private IStringLocalizer<FeedingPage> L =>
+        InjectedLocalizer
         ?? throw new InvalidOperationException("The page localizer was not injected.");
 
     [Inject]
     private IJSRuntime? InjectedJsRuntime { get; set; }
 
-    private IJSRuntime JsRuntime => InjectedJsRuntime
-        ?? throw new InvalidOperationException("IJSRuntime was not injected.");
+    private IJSRuntime JsRuntime =>
+        InjectedJsRuntime ?? throw new InvalidOperationException("IJSRuntime was not injected.");
 
     private enum FeedingPhase
     {
@@ -195,7 +197,9 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
     private void RestoreState(FeedingUrlState? saved)
     {
-        if (saved is null || !Siteswap.TryCreate(saved.Feeder, out var feeder) || feeder is null)
+        if (saved is not { } state)
+            return;
+        if (!Siteswap.TryCreate(state.Feeder, out var feeder) || feeder is null)
         {
             return;
         }

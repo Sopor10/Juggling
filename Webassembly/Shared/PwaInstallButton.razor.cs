@@ -11,8 +11,8 @@ public sealed partial class PwaInstallButton : IAsyncDisposable
     [Inject]
     private IJSRuntime? InjectedJs { get; set; }
 
-    private IJSRuntime Js => InjectedJs
-        ?? throw new InvalidOperationException("IJSRuntime was not injected.");
+    private IJSRuntime Js =>
+        InjectedJs ?? throw new InvalidOperationException("IJSRuntime was not injected.");
 
     [Parameter]
     public EventCallback OnClicked { get; set; }

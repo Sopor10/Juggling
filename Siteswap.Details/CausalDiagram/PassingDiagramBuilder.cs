@@ -14,6 +14,55 @@ public static class PassingDiagramBuilder
         ArgumentNullException.ThrowIfNull(timeZones);
         ArgumentNullException.ThrowIfNull(heights);
         ArgumentNullException.ThrowIfNull(targets);
+        var period = ValidateDimensions(timeZones, heights, targets);
+        ValidateValues(timeZones, heights, targets);
+
+        var distinctZones = timeZones.Distinct().Order().ToArray();
+        var timeStretch = Math.Max(1, distinctZones.Length);
+        var normalizedTimeZones = NormalizeTimeZones(timeZones, distinctZones);
+        var jugglers = CreateJugglers(timeZones.Count);
+        var hands = CreateHands(jugglers);
+        var nodes = CreateThrows(
+            timeZones,
+            heights,
+            targets,
+            normalizedTimeZones,
+            timeStretch,
+            period,
+            hands
+        );
+        if (nodes.Count == 0)
+            throw new ArgumentException(
+                "The pattern must contain at least one positive-height throw.",
+                nameof(heights)
+            );
+
+        var (causalArrows, ladderArrows) = CreateArrows(nodes, hands, timeStretch);
+        var basePeriod = period * timeStretch;
+        var limbPermutation = Enumerable
+            .Range(0, timeZones.Count * 2)
+            .Select(limb => limb / 2 * 2 + (limb % 2 + period % 2) % 2)
+            .ToImmutableList();
+
+        return new DiagramSet(
+            Hands: hands,
+            Jugglers: jugglers,
+            Throws: nodes.OrderBy(node => node.Time).ToImmutableList(),
+            CausalArrows: causalArrows,
+            LadderArrows: ladderArrows,
+            TimeStretchFactor: timeStretch,
+            StepCount: basePeriod,
+            LimbPermutation: limbPermutation,
+            StartProps: ImmutableDictionary<string, StartProps>.Empty
+        );
+    }
+
+    private static int ValidateDimensions(
+        IReadOnlyList<int> timeZones,
+        IReadOnlyList<IReadOnlyList<int>> heights,
+        IReadOnlyList<IReadOnlyList<int>> targets
+    )
+    {
         if (
             timeZones.Count == 0
             || heights.Count != timeZones.Count
@@ -32,6 +81,16 @@ public static class PassingDiagramBuilder
             throw new ArgumentException(
                 "Every juggler must have the same non-empty number of beats."
             );
+
+        return period;
+    }
+
+    private static void ValidateValues(
+        IReadOnlyList<int> timeZones,
+        IReadOnlyList<IReadOnlyList<int>> heights,
+        IReadOnlyList<IReadOnlyList<int>> targets
+    )
+    {
         if (timeZones.Any(zone => zone < 0))
             throw new ArgumentOutOfRangeException(
                 nameof(timeZones),
@@ -47,24 +106,36 @@ public static class PassingDiagramBuilder
                 nameof(heights),
                 "Throw heights cannot be negative."
             );
+    }
 
-        var distinctZones = timeZones.Distinct().Order().ToArray();
-        var timeStretch = Math.Max(1, distinctZones.Length);
-        var normalizedTimeZones = timeZones
-            .Select(zone => Array.IndexOf(distinctZones, zone))
-            .ToArray();
-        var jugglers = timeZones
-            .Select((_, index) => new Person(((char)('A' + index)).ToString()))
+    private static int[] NormalizeTimeZones(IReadOnlyList<int> timeZones, int[] distinctZones) =>
+        timeZones.Select(zone => Array.IndexOf(distinctZones, zone)).ToArray();
+
+    private static ImmutableList<Person> CreateJugglers(int count) =>
+        Enumerable
+            .Range(0, count)
+            .Select(index => new Person(((char)('A' + index)).ToString()))
             .ToImmutableList();
-        var hands = Enumerable
-            .Range(0, timeZones.Count)
+
+    private static ImmutableList<Hand> CreateHands(ImmutableList<Person> jugglers) =>
+        Enumerable
+            .Range(0, jugglers.Count)
             .SelectMany(person =>
                 new[] { new Hand("R", jugglers[person]), new Hand("L", jugglers[person]) }
             )
             .ToImmutableList();
-        var basePeriod = period * timeStretch;
-        var nodes = new List<Throw>();
 
+    private static List<Throw> CreateThrows(
+        IReadOnlyList<int> timeZones,
+        IReadOnlyList<IReadOnlyList<int>> heights,
+        IReadOnlyList<IReadOnlyList<int>> targets,
+        IReadOnlyList<int> normalizedTimeZones,
+        int timeStretch,
+        int period,
+        ImmutableList<Hand> hands
+    )
+    {
+        var nodes = new List<Throw>();
         for (var person = 0; person < timeZones.Count; person++)
         {
             for (var beat = 0; beat < period; beat++)
@@ -72,35 +143,62 @@ public static class PassingDiagramBuilder
                 var height = heights[person][beat];
                 if (height == 0)
                     continue;
-
-                var targetPerson = targets[person][beat];
-                var time = beat * timeStretch + normalizedTimeZones[person];
-                var landingTimeZone = (normalizedTimeZones[person] + height) % timeStretch;
-                if (landingTimeZone != normalizedTimeZones[targetPerson])
-                    throw new ArgumentException(
-                        $"Throw from juggler {person} at beat {beat} cannot land in the selected juggler's time zone.",
-                        nameof(targets)
-                    );
-
-                var landingLocalBeat = beat + (normalizedTimeZones[person] + height) / timeStretch;
-                var fromLimb = person * 2 + beat % 2;
-                var toLimb = targetPerson * 2 + landingLocalBeat % 2;
-                nodes.Add(new Throw(hands[fromLimb], height, time, toLimb));
+                nodes.Add(
+                    CreateThrow(
+                        person,
+                        beat,
+                        height,
+                        targets,
+                        normalizedTimeZones,
+                        timeStretch,
+                        hands
+                    )
+                );
             }
         }
 
-        if (nodes.Count == 0)
+        return nodes;
+    }
+
+    private static Throw CreateThrow(
+        int person,
+        int beat,
+        int height,
+        IReadOnlyList<IReadOnlyList<int>> targets,
+        IReadOnlyList<int> normalizedTimeZones,
+        int timeStretch,
+        ImmutableList<Hand> hands
+    )
+    {
+        var targetPerson = targets[person][beat];
+        var time = beat * timeStretch + normalizedTimeZones[person];
+        var landingTimeZone = (normalizedTimeZones[person] + height) % timeStretch;
+        if (landingTimeZone != normalizedTimeZones[targetPerson])
             throw new ArgumentException(
-                "The pattern must contain at least one positive-height throw.",
-                nameof(heights)
+                $"Throw from juggler {person} at beat {beat} cannot land in the selected juggler's time zone.",
+                nameof(targets)
             );
 
-        var causalArrows = new List<DiagramArrow>(nodes.Count);
-        var ladderArrows = new List<DiagramArrow>(nodes.Count);
+        var landingLocalBeat = beat + (normalizedTimeZones[person] + height) / timeStretch;
+        var fromLimb = person * 2 + beat % 2;
+        var toLimb = targetPerson * 2 + landingLocalBeat % 2;
+        return new Throw(hands[fromLimb], height, time, toLimb);
+    }
+
+    private static (
+        ImmutableList<DiagramArrow> Causal,
+        ImmutableList<DiagramArrow> Ladder
+    ) CreateArrows(IEnumerable<Throw> nodes, ImmutableList<Hand> hands, int timeStretch)
+    {
+        var causalArrows = ImmutableList.CreateBuilder<DiagramArrow>();
+        var ladderArrows = ImmutableList.CreateBuilder<DiagramArrow>();
         foreach (var node in nodes)
         {
-            var toLimb = node.ToLimb
-                ?? throw new InvalidOperationException("Every throw must identify its destination limb.");
+            var toLimb =
+                node.ToLimb
+                ?? throw new InvalidOperationException(
+                    "Every throw must identify its destination limb."
+                );
             var toHand = hands[toLimb];
             var causalStep = node.Height - 2 * timeStretch;
             causalArrows.Add(
@@ -123,21 +221,6 @@ public static class PassingDiagramBuilder
             );
         }
 
-        var limbPermutation = Enumerable
-            .Range(0, timeZones.Count * 2)
-            .Select(limb => limb / 2 * 2 + (limb % 2 + period % 2) % 2)
-            .ToImmutableList();
-
-        return new DiagramSet(
-            Hands: hands,
-            Jugglers: jugglers,
-            Throws: nodes.OrderBy(node => node.Time).ToImmutableList(),
-            CausalArrows: causalArrows.ToImmutableList(),
-            LadderArrows: ladderArrows.ToImmutableList(),
-            TimeStretchFactor: timeStretch,
-            StepCount: basePeriod,
-            LimbPermutation: limbPermutation,
-            StartProps: ImmutableDictionary<string, StartProps>.Empty
-        );
+        return (causalArrows.ToImmutable(), ladderArrows.ToImmutable());
     }
 }

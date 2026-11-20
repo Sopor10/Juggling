@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Siteswaps.Analyzers;
 
@@ -16,7 +16,8 @@ public sealed class NoNullForgivingOperatorAnalyzer : DiagnosticAnalyzer
         "The null-forgiving operator is forbidden; handle nullability explicitly",
         "Reliability",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
@@ -26,7 +27,8 @@ public sealed class NoNullForgivingOperatorAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         context.RegisterSyntaxNodeAction(
             AnalyzeSuppression,
-            SyntaxKind.SuppressNullableWarningExpression);
+            SyntaxKind.SuppressNullableWarningExpression
+        );
     }
 
     private static void AnalyzeSuppression(SyntaxNodeAnalysisContext context)

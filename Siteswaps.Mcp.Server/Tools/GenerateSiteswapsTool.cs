@@ -62,8 +62,11 @@ public class GenerateSiteswapsTool(ILogger<GenerateSiteswapsTool> logger)
             }
 
             var defaultFilter = new FilterBuilder(input).WithDefault().Build();
-            var dslFilter = dslResult.Filter
-                ?? throw new InvalidOperationException("The filter parser succeeded without producing a filter.");
+            var dslFilter =
+                dslResult.Filter
+                ?? throw new InvalidOperationException(
+                    "The filter parser succeeded without producing a filter."
+                );
             siteswapFilter = new FilterBuilder(input).And(dslFilter, defaultFilter).Build();
         }
         else
