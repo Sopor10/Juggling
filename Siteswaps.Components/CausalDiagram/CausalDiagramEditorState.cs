@@ -244,6 +244,28 @@ public sealed class CausalDiagramEditorState
             }
         }
 
+        var edges = CreateFeedingEdges(rows, byName, nodes, cycleLength);
+        state = new CausalDiagramEditorState
+        {
+            PresetId = "custom",
+            CycleLength = cycleLength,
+            ActiveJugglerId = jugglers[0].Id,
+            Jugglers = jugglers,
+            Throws = nodes,
+            CausalEdges = edges,
+        };
+        state.SynchronizeHeights();
+        error = string.Empty;
+        return true;
+    }
+
+    private static List<EditorCausalEdge> CreateFeedingEdges(
+        List<(string Name, List<(int Height, string Target)> Throws)> rows,
+        Dictionary<string, EditorJuggler> byName,
+        IReadOnlyList<EditorThrow> nodes,
+        int cycleLength
+    )
+    {
         var edges = new List<EditorCausalEdge>();
         for (var personIndex = 0; personIndex < rows.Count; personIndex++)
         {
@@ -280,18 +302,7 @@ public sealed class CausalDiagramEditorState
             }
         }
 
-        state = new CausalDiagramEditorState
-        {
-            PresetId = "custom",
-            CycleLength = cycleLength,
-            ActiveJugglerId = jugglers[0].Id,
-            Jugglers = jugglers,
-            Throws = nodes,
-            CausalEdges = edges,
-        };
-        state.SynchronizeHeights();
-        error = string.Empty;
-        return true;
+        return edges;
     }
 
     private static int LeastCommonMultiple(int left, int right)
