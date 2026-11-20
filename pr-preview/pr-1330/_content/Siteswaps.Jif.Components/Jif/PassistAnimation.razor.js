@@ -24,7 +24,7 @@ function normalizeForPassist(jif) {
 
     const jugglers = jif.jugglers ?? [];
     for (const [index, juggler] of jugglers.entries()) {
-        juggler.name ??= juggler.label ?? String.fromCharCode(65 + index);
+        juggler.name ??= juggler.label ?? String.fromCodePoint(65 + index);
 
         if (!juggler.position) {
             if (jugglers.length === 1) {
