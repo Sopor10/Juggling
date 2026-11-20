@@ -102,7 +102,10 @@ public class SiteswapLabPageTests
         page.Should().Contain("People in the same timezone throw synchronously");
         page.Should().Contain("@onclick=\"() => CycleTimeZone(personIndex)\"");
         page.Should().Contain("private void CycleTimeZone(int person)");
-        page.Should().Contain("_direct.CycleTimeZone(person);\n        SaveStateToUrl();");
+        page.Should()
+            .Contain(
+                "_direct.CycleTimeZone(person);\n        RebuildLayoutForCurrentPreset();\n        SaveStateToUrl();"
+            );
         page.Should().Contain("private void OnThrowDisplayModeChanged(");
         page.Should().Contain("_throwDisplayMode = mode;\n        SaveStateToUrl();");
         page.Should().Contain("OnTimeZoneRowKeyDown");
@@ -139,7 +142,7 @@ public class SiteswapLabPageTests
         page.Should().NotContain("Select a throw above to see where it lands and edit it.");
         page.Should().NotContain("AdjustPassingHeightByPeriod");
         page.Should().NotContain("SetPassingTarget(");
-        page.Should().NotContain("<select");
+        page.Should().Contain("<select id=\"lab-layout-person\"");
         page.Should().Contain("OnChipClicked");
         page.Should().Contain("ApplyChipDrop");
         page.Should().Contain("HasSelection");
