@@ -24,16 +24,25 @@ public sealed class CausalDiagramEditorState
     public List<EditorThrow> Throws { get; set; } = [];
     public List<EditorCausalEdge> CausalEdges { get; set; } = [];
 
-    public static CausalDiagramEditorState CreateSiteswap531() => CreateSiteswapPattern("531", "siteswap-531");
+    public static CausalDiagramEditorState CreateSiteswap531() =>
+        CreateSiteswapPattern("531", "siteswap-531");
 
-    public static CausalDiagramEditorState CreateSiteswapPattern(string notation, string presetId = "custom") =>
+    public static CausalDiagramEditorState CreateSiteswapPattern(
+        string notation,
+        string presetId = "custom"
+    ) =>
         TryCreateSiteswap(notation, presetId, out var state) && state is not null
             ? state
             : throw new ArgumentException($"Ungültiger Siteswap: {notation}", nameof(notation));
 
-    public static CausalDiagramEditorState CreateFeeding75() => CreateFeedingPattern(7, 5, "feeding-7-5");
+    public static CausalDiagramEditorState CreateFeeding75() =>
+        CreateFeedingPattern(7, 5, "feeding-7-5");
 
-    public static CausalDiagramEditorState CreateFeedingPattern(int firstCount, int secondCount, string presetId)
+    public static CausalDiagramEditorState CreateFeedingPattern(
+        int firstCount,
+        int secondCount,
+        string presetId
+    )
     {
         if (firstCount is < 1 or > 64 || secondCount is < 1 or > 64)
             throw new ArgumentOutOfRangeException(nameof(firstCount));
@@ -46,32 +55,46 @@ public sealed class CausalDiagramEditorState
         return state;
     }
 
-    public static CausalDiagramEditorState CreateEmpty() => new()
-    {
-        PresetId = "custom",
-        ActiveJugglerId = "A",
-        CycleLength = 7m,
-        Jugglers = [new EditorJuggler("A", "Jongleur A")]
-    };
+    public static CausalDiagramEditorState CreateEmpty() =>
+        new()
+        {
+            PresetId = "custom",
+            ActiveJugglerId = "A",
+            CycleLength = 7m,
+            Jugglers = [new EditorJuggler("A", "Jongleur A")],
+        };
 
-    public static bool TryCreateSiteswap(string notation, string presetId, out CausalDiagramEditorState? state)
+    public static bool TryCreateSiteswap(
+        string notation,
+        string presetId,
+        out CausalDiagramEditorState? state
+    )
     {
         state = null;
         if (string.IsNullOrWhiteSpace(notation) || notation.Length > 64)
             return false;
         var normalizedNotation = notation.Trim();
-        if (normalizedNotation.Length is < 1 or > 64 || normalizedNotation.Any(c => !(c is >= '0' and <= '9' or >= 'a' and <= 'z')) ||
-            !Siteswap.Details.Siteswap.TryCreate(normalizedNotation, out var siteswap) || siteswap is null || siteswap.Length is < 1 or > 64)
+        if (
+            normalizedNotation.Length is < 1 or > 64
+            || normalizedNotation.Any(c => !(c is >= '0' and <= '9' or >= 'a' and <= 'z'))
+            || !Siteswap.Details.Siteswap.TryCreate(normalizedNotation, out var siteswap)
+            || siteswap is null
+            || siteswap.Length is < 1 or > 64
+        )
             return false;
 
-        var handPeriod = siteswap.Length % 2 == 0 || Enumerable.Range(0, siteswap.Length).All(beat => siteswap.Items[beat] == 0)
-            ? siteswap.Length
-            : siteswap.Length * 2;
+        var handPeriod =
+            siteswap.Length % 2 == 0
+            || Enumerable.Range(0, siteswap.Length).All(beat => siteswap.Items[beat] == 0)
+                ? siteswap.Length
+                : siteswap.Length * 2;
         var nodes = new List<EditorThrow>(handPeriod);
         for (var beat = 0; beat < handPeriod; beat++)
         {
             var height = siteswap.Items[beat % siteswap.Length];
-            nodes.Add(new EditorThrow($"A{beat + 1}", "A", beat % 2 == 0 ? "R" : "L", beat, height));
+            nodes.Add(
+                new EditorThrow($"A{beat + 1}", "A", beat % 2 == 0 ? "R" : "L", beat, height)
+            );
         }
 
         state = new CausalDiagramEditorState
@@ -81,19 +104,24 @@ public sealed class CausalDiagramEditorState
             ActiveJugglerId = "A",
             Jugglers = [new EditorJuggler("A", "Jongleur A")],
             Throws = nodes,
-            CausalEdges = SiteswapEdges(nodes, handPeriod, numberOfHands: 2)
+            CausalEdges = SiteswapEdges(nodes, handPeriod, numberOfHands: 2),
         };
         state.SynchronizeHeights();
         return true;
     }
 
-    private static List<EditorCausalEdge> SiteswapEdges(IReadOnlyList<EditorThrow> nodes, decimal period, int numberOfHands)
+    private static List<EditorCausalEdge> SiteswapEdges(
+        IReadOnlyList<EditorThrow> nodes,
+        decimal period,
+        int numberOfHands
+    )
     {
         var byTime = nodes.ToDictionary(node => (int)node.StartTime);
         var edges = new List<EditorCausalEdge>();
         foreach (var node in nodes)
         {
-            if (node.Height == 0) continue;
+            if (node.Height == 0)
+                continue;
             var absoluteBeat = (int)node.StartTime + (int)node.Height - numberOfHands;
             var targetBeat = ((absoluteBeat % (int)period) + (int)period) % (int)period;
             var cycleOffset = (int)Math.Floor((double)absoluteBeat / (double)period);
@@ -103,7 +131,11 @@ public sealed class CausalDiagramEditorState
         return edges;
     }
 
-    public static bool TryCreateFeeding(string notation, out CausalDiagramEditorState? state, out string error)
+    public static bool TryCreateFeeding(
+        string notation,
+        out CausalDiagramEditorState? state,
+        out string error
+    )
     {
         state = null;
         error = "Eine Zeile pro Jongleur, z. B. A: 3>B, 3>A und in der nächsten Zeile B: 3>A, 3>B.";
@@ -111,32 +143,72 @@ public sealed class CausalDiagramEditorState
             return false;
 
         var rows = new List<(string Name, List<(int Height, string Target)> Throws)>();
-        foreach (var line in notation.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+        foreach (
+            var line in notation.Split(
+                '\n',
+                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
+            )
+        )
         {
             var separator = line.IndexOf(':');
-            if (separator < 1) return false;
+            if (separator < 1)
+                return false;
             var name = line[..separator].Trim();
             var pattern = line[(separator + 1)..];
-            if (name.Length > 32 || name.Any(char.IsControl) || rows.Any(row => string.Equals(row.Name, name, StringComparison.OrdinalIgnoreCase)))
+            if (
+                name.Length > 32
+                || name.Any(char.IsControl)
+                || rows.Any(row =>
+                    string.Equals(row.Name, name, StringComparison.OrdinalIgnoreCase)
+                )
+            )
                 return false;
             var throws = new List<(int Height, string Target)>();
-            foreach (var token in pattern.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            foreach (
+                var token in pattern.Split(
+                    ',',
+                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
+                )
+            )
             {
                 var arrow = token.IndexOf('>');
-                if (arrow < 1 || !int.TryParse(token[..arrow], NumberStyles.None, CultureInfo.InvariantCulture, out var height) || height is < 1 or > 100)
+                if (
+                    arrow < 1
+                    || !int.TryParse(
+                        token[..arrow],
+                        NumberStyles.None,
+                        CultureInfo.InvariantCulture,
+                        out var height
+                    )
+                    || height is < 1 or > 100
+                )
                     return false;
                 var target = token[(arrow + 1)..].Trim();
-                if (target.EndsWith(".R", StringComparison.OrdinalIgnoreCase) || target.EndsWith(".L", StringComparison.OrdinalIgnoreCase))
+                if (
+                    target.EndsWith(".R", StringComparison.OrdinalIgnoreCase)
+                    || target.EndsWith(".L", StringComparison.OrdinalIgnoreCase)
+                )
                     target = target[..^2];
-                if (string.IsNullOrWhiteSpace(target) || target.Length > 32) return false;
+                if (string.IsNullOrWhiteSpace(target) || target.Length > 32)
+                    return false;
                 throws.Add((height, target));
             }
-            if (throws.Count is < 1 or > 64) return false;
+            if (throws.Count is < 1 or > 64)
+                return false;
             rows.Add((name, throws));
         }
 
-        if (rows.Count is < 1 or > 16 || rows.Sum(row => row.Throws.Count) > 500 ||
-            rows.Any(row => row.Throws.Any(item => !rows.Any(target => string.Equals(target.Name, item.Target, StringComparison.OrdinalIgnoreCase)))))
+        if (
+            rows.Count is < 1 or > 16
+            || rows.Sum(row => row.Throws.Count) > 500
+            || rows.Any(row =>
+                row.Throws.Any(item =>
+                    !rows.Any(target =>
+                        string.Equals(target.Name, item.Target, StringComparison.OrdinalIgnoreCase)
+                    )
+                )
+            )
+        )
             return false;
 
         var cycleLength = rows.Select(row => row.Throws.Count).Aggregate(1, LeastCommonMultiple);
@@ -145,9 +217,14 @@ public sealed class CausalDiagramEditorState
             error = "Das gemeinsame Wiederholungsmuster benötigt mehr als 500 Knoten.";
             return false;
         }
-        var jugglers = rows.Select((row, index) => new EditorJuggler($"P{index + 1}", row.Name)).ToList();
+        var jugglers = rows.Select((row, index) => new EditorJuggler($"P{index + 1}", row.Name))
+            .ToList();
         var byName = rows.Select((row, index) => (row.Name, Juggler: jugglers[index]))
-            .ToDictionary(item => item.Name, item => item.Juggler, StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(
+                item => item.Name,
+                item => item.Juggler,
+                StringComparer.OrdinalIgnoreCase
+            );
         var nodes = new List<EditorThrow>();
         for (var personIndex = 0; personIndex < rows.Count; personIndex++)
         {
@@ -155,8 +232,15 @@ public sealed class CausalDiagramEditorState
             var beatDuration = cycleLength / row.Throws.Count;
             for (var beat = 0; beat < row.Throws.Count; beat++)
             {
-                nodes.Add(new EditorThrow($"P{personIndex + 1}-{beat + 1}", jugglers[personIndex].Id,
-                    beat % 2 == 0 ? "R" : "L", beat * beatDuration, row.Throws[beat].Height));
+                nodes.Add(
+                    new EditorThrow(
+                        $"P{personIndex + 1}-{beat + 1}",
+                        jugglers[personIndex].Id,
+                        beat % 2 == 0 ? "R" : "L",
+                        beat * beatDuration,
+                        row.Throws[beat].Height
+                    )
+                );
             }
         }
 
@@ -169,12 +253,30 @@ public sealed class CausalDiagramEditorState
             {
                 var source = nodes.First(node => node.Id == $"P{personIndex + 1}-{beat + 1}");
                 var targetId = byName[row.Throws[beat].Target].Id;
-                var targetBeatDuration = cycleLength / rows.First(targetRow => string.Equals(targetRow.Name, row.Throws[beat].Target, StringComparison.OrdinalIgnoreCase)).Throws.Count;
-                var causalTime = source.StartTime + row.Throws[beat].Height * sourceBeatDuration - 2m * targetBeatDuration;
-                var (target, cycleOffset) = NearestUnusedCyclicTarget(nodes.Where(node => node.JugglerId == targetId), causalTime, cycleLength,
-                    edges.Select(edge => (edge.ToThrowId, edge.CycleOffset)).ToHashSet());
-                if (target is null) continue;
-                edges.Add(new EditorCausalEdge($"feed-{source.Id}", source.Id, target.Id, cycleOffset));
+                var targetBeatDuration =
+                    cycleLength
+                    / rows.First(targetRow =>
+                        string.Equals(
+                            targetRow.Name,
+                            row.Throws[beat].Target,
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                    ).Throws.Count;
+                var causalTime =
+                    source.StartTime
+                    + row.Throws[beat].Height * sourceBeatDuration
+                    - 2m * targetBeatDuration;
+                var (target, cycleOffset) = NearestUnusedCyclicTarget(
+                    nodes.Where(node => node.JugglerId == targetId),
+                    causalTime,
+                    cycleLength,
+                    edges.Select(edge => (edge.ToThrowId, edge.CycleOffset)).ToHashSet()
+                );
+                if (target is null)
+                    continue;
+                edges.Add(
+                    new EditorCausalEdge($"feed-{source.Id}", source.Id, target.Id, cycleOffset)
+                );
             }
         }
 
@@ -185,7 +287,7 @@ public sealed class CausalDiagramEditorState
             ActiveJugglerId = jugglers[0].Id,
             Jugglers = jugglers,
             Throws = nodes,
-            CausalEdges = edges
+            CausalEdges = edges,
         };
         state.SynchronizeHeights();
         error = string.Empty;
@@ -196,18 +298,35 @@ public sealed class CausalDiagramEditorState
     {
         var a = left;
         var b = right;
-        while (b != 0) (a, b) = (b, a % b);
+        while (b != 0)
+            (a, b) = (b, a % b);
         return checked(left / a * right);
     }
 
-    private static (EditorThrow? Target, int CycleOffset) NearestUnusedCyclicTarget(IEnumerable<EditorThrow> candidates, decimal time, int cycleLength,
-        HashSet<(string Id, int CycleOffset)> occupied)
+    private static (EditorThrow? Target, int CycleOffset) NearestUnusedCyclicTarget(
+        IEnumerable<EditorThrow> candidates,
+        decimal time,
+        int cycleLength,
+        HashSet<(string Id, int CycleOffset)> occupied
+    )
     {
-        return candidates.SelectMany(node =>
+        return candidates
+            .SelectMany(node =>
             {
-                var nearest = (int)Math.Round((time - node.StartTime) / cycleLength, MidpointRounding.AwayFromZero);
-                return Enumerable.Range(nearest - 250, 501).Select(offset => (Target: node, CycleOffset: offset,
-                    Distance: Math.Abs(node.StartTime + offset * cycleLength - time)));
+                var nearest = (int)
+                    Math.Round(
+                        (time - node.StartTime) / cycleLength,
+                        MidpointRounding.AwayFromZero
+                    );
+                return Enumerable
+                    .Range(nearest - 250, 501)
+                    .Select(offset =>
+                        (
+                            Target: node,
+                            CycleOffset: offset,
+                            Distance: Math.Abs(node.StartTime + offset * cycleLength - time)
+                        )
+                    );
             })
             .Where(candidate => !occupied.Contains((candidate.Target.Id, candidate.CycleOffset)))
             .OrderBy(candidate => candidate.Distance)
@@ -216,11 +335,20 @@ public sealed class CausalDiagramEditorState
             .FirstOrDefault();
     }
 
-    private static (EditorThrow Target, int CycleOffset) NearestCyclicTarget(IEnumerable<EditorThrow> candidates, decimal time, int cycleLength)
+    private static (EditorThrow Target, int CycleOffset) NearestCyclicTarget(
+        IEnumerable<EditorThrow> candidates,
+        decimal time,
+        int cycleLength
+    )
     {
-        return candidates.Select(node =>
+        return candidates
+            .Select(node =>
             {
-                var cycleOffset = (int)Math.Round((time - node.StartTime) / cycleLength, MidpointRounding.AwayFromZero);
+                var cycleOffset = (int)
+                    Math.Round(
+                        (time - node.StartTime) / cycleLength,
+                        MidpointRounding.AwayFromZero
+                    );
                 var distance = Math.Abs(node.StartTime + cycleOffset * cycleLength - time);
                 return (Target: node, CycleOffset: cycleOffset, Distance: distance);
             })
@@ -245,20 +373,35 @@ public sealed class CausalDiagramEditorState
             writer.WriteBoolean("s", SnapEnabled);
             writer.WriteNumber("q", SnapStep);
             writer.WriteStartArray("j");
-            foreach (var juggler in Jugglers) { writer.WriteStartArray(); writer.WriteStringValue(juggler.Id); writer.WriteStringValue(juggler.Name); writer.WriteEndArray(); }
+            foreach (var juggler in Jugglers)
+            {
+                writer.WriteStartArray();
+                writer.WriteStringValue(juggler.Id);
+                writer.WriteStringValue(juggler.Name);
+                writer.WriteEndArray();
+            }
             writer.WriteEndArray();
             writer.WriteStartArray("t");
             foreach (var item in Throws)
             {
-                writer.WriteStartArray(); writer.WriteStringValue(item.Id); writer.WriteStringValue(item.JugglerId);
-                writer.WriteStringValue(item.Hand); writer.WriteNumberValue(item.StartTime); writer.WriteNumberValue(item.Height); writer.WriteEndArray();
+                writer.WriteStartArray();
+                writer.WriteStringValue(item.Id);
+                writer.WriteStringValue(item.JugglerId);
+                writer.WriteStringValue(item.Hand);
+                writer.WriteNumberValue(item.StartTime);
+                writer.WriteNumberValue(item.Height);
+                writer.WriteEndArray();
             }
             writer.WriteEndArray();
             writer.WriteStartArray("e");
             foreach (var edge in CausalEdges)
             {
-                writer.WriteStartArray(); writer.WriteStringValue(edge.Id); writer.WriteStringValue(edge.FromThrowId);
-                writer.WriteStringValue(edge.ToThrowId); writer.WriteNumberValue(edge.CycleOffset); writer.WriteEndArray();
+                writer.WriteStartArray();
+                writer.WriteStringValue(edge.Id);
+                writer.WriteStringValue(edge.FromThrowId);
+                writer.WriteStringValue(edge.ToThrowId);
+                writer.WriteNumberValue(edge.CycleOffset);
+                writer.WriteEndArray();
             }
             writer.WriteEndArray();
             writer.WriteEndObject();
@@ -269,44 +412,71 @@ public sealed class CausalDiagramEditorState
     public static bool TryDecode(string? token, out CausalDiagramEditorState? state)
     {
         state = null;
-        if (string.IsNullOrWhiteSpace(token) || token.Length > MaximumTokenLength) return false;
+        if (string.IsNullOrWhiteSpace(token) || token.Length > MaximumTokenLength)
+            return false;
         try
         {
             CausalDiagramEditorState? decoded;
             if (token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
-                decoded = DeserializeCompact(DecodePayload(token[CompactTokenPrefix.Length..]), expectedVersion: 3);
+                decoded = DeserializeCompact(
+                    DecodePayload(token[CompactTokenPrefix.Length..]),
+                    expectedVersion: 3
+                );
             else if (token.StartsWith(PreviousCompactTokenPrefix, StringComparison.Ordinal))
             {
-                decoded = DeserializeCompact(DecodePayload(token[PreviousCompactTokenPrefix.Length..]), expectedVersion: 2);
+                decoded = DeserializeCompact(
+                    DecodePayload(token[PreviousCompactTokenPrefix.Length..]),
+                    expectedVersion: 2
+                );
                 decoded.Version = 3;
                 decoded.NormalizeCausalEdges();
             }
             else if (token.StartsWith(OldCompactTokenPrefix, StringComparison.Ordinal))
-                decoded = MigrateLegacy(DeserializeV1(DecodePayload(token[OldCompactTokenPrefix.Length..])));
+                decoded = MigrateLegacy(
+                    DeserializeV1(DecodePayload(token[OldCompactTokenPrefix.Length..]))
+                );
             else
             {
-                if (token.Contains('.', StringComparison.Ordinal)) return false;
+                if (token.Contains('.', StringComparison.Ordinal))
+                    return false;
                 var json = DecodePayload(token);
                 var legacy = JsonSerializer.Deserialize<LegacyState>(StrictUtf8.GetString(json));
                 decoded = legacy is null ? null : MigrateLegacy(legacy);
             }
             if (decoded is not null)
             {
-                decoded.PresetId = decoded.PresetId switch { "siteswap531" => "siteswap-531", "feeding75" => "feeding-7-5", _ => decoded.PresetId };
+                decoded.PresetId = decoded.PresetId switch
+                {
+                    "siteswap531" => "siteswap-531",
+                    "feeding75" => "feeding-7-5",
+                    _ => decoded.PresetId,
+                };
                 decoded.SynchronizeHeights();
             }
-            if (!IsValid(decoded)) return false;
+            if (!IsValid(decoded))
+                return false;
             state = decoded;
             return true;
         }
-        catch (Exception exception) when (exception is FormatException or JsonException or ArgumentException or DecoderFallbackException or OverflowException or InvalidOperationException)
-        { return false; }
+        catch (Exception exception)
+            when (exception
+                    is FormatException
+                        or JsonException
+                        or ArgumentException
+                        or DecoderFallbackException
+                        or OverflowException
+                        or InvalidOperationException
+            )
+        {
+            return false;
+        }
     }
 
     private static byte[] DecodePayload(string token)
     {
         var bytes = FromBase64Url(token);
-        if (bytes.Length > MaximumDecodedPayloadBytes) throw new FormatException("The payload exceeds the limit.");
+        if (bytes.Length > MaximumDecodedPayloadBytes)
+            throw new FormatException("The payload exceeds the limit.");
         return bytes;
     }
 
@@ -314,35 +484,104 @@ public sealed class CausalDiagramEditorState
     {
         using var doc = JsonDocument.Parse(json, new JsonDocumentOptions { MaxDepth = 8 });
         var root = doc.RootElement;
-        if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty("v", out var version) || !version.TryGetInt32(out var v) || v != expectedVersion ||
-            !root.TryGetProperty("p", out var preset) || preset.ValueKind != JsonValueKind.String ||
-            !root.TryGetProperty("a", out var active) || active.ValueKind != JsonValueKind.String ||
-            !root.TryGetProperty("c", out var cycle) || !cycle.TryGetDecimal(out var c) ||
-            !root.TryGetProperty("r", out var reps) || !reps.TryGetInt32(out var repetitions) ||
-            !root.TryGetProperty("s", out var snap) || snap.ValueKind is not (JsonValueKind.True or JsonValueKind.False) ||
-            !root.TryGetProperty("q", out var step) || !step.TryGetDecimal(out var snapStep) ||
-            !root.TryGetProperty("j", out var jugglers) || jugglers.ValueKind != JsonValueKind.Array || jugglers.GetArrayLength() > 16 ||
-            !root.TryGetProperty("t", out var throws) || throws.ValueKind != JsonValueKind.Array || throws.GetArrayLength() > 500 ||
-            !root.TryGetProperty("e", out var edges) || edges.ValueKind != JsonValueKind.Array || edges.GetArrayLength() > 2_000)
+        if (
+            root.ValueKind != JsonValueKind.Object
+            || !root.TryGetProperty("v", out var version)
+            || !version.TryGetInt32(out var v)
+            || v != expectedVersion
+            || !root.TryGetProperty("p", out var preset)
+            || preset.ValueKind != JsonValueKind.String
+            || !root.TryGetProperty("a", out var active)
+            || active.ValueKind != JsonValueKind.String
+            || !root.TryGetProperty("c", out var cycle)
+            || !cycle.TryGetDecimal(out var c)
+            || !root.TryGetProperty("r", out var reps)
+            || !reps.TryGetInt32(out var repetitions)
+            || !root.TryGetProperty("s", out var snap)
+            || snap.ValueKind is not (JsonValueKind.True or JsonValueKind.False)
+            || !root.TryGetProperty("q", out var step)
+            || !step.TryGetDecimal(out var snapStep)
+            || !root.TryGetProperty("j", out var jugglers)
+            || jugglers.ValueKind != JsonValueKind.Array
+            || jugglers.GetArrayLength() > 16
+            || !root.TryGetProperty("t", out var throws)
+            || throws.ValueKind != JsonValueKind.Array
+            || throws.GetArrayLength() > 500
+            || !root.TryGetProperty("e", out var edges)
+            || edges.ValueKind != JsonValueKind.Array
+            || edges.GetArrayLength() > 2_000
+        )
             throw new JsonException("Invalid editor state shape.");
-        var state = new CausalDiagramEditorState { Version = v, PresetId = preset.GetString() ?? throw new JsonException(), ActiveJugglerId = active.GetString() ?? throw new JsonException(), CycleLength = c,
-            Repetitions = repetitions, SnapEnabled = snap.GetBoolean(), SnapStep = snapStep, Jugglers = [], Throws = [], CausalEdges = [] };
+        var state = new CausalDiagramEditorState
+        {
+            Version = v,
+            PresetId = preset.GetString() ?? throw new JsonException(),
+            ActiveJugglerId = active.GetString() ?? throw new JsonException(),
+            CycleLength = c,
+            Repetitions = repetitions,
+            SnapEnabled = snap.GetBoolean(),
+            SnapStep = snapStep,
+            Jugglers = [],
+            Throws = [],
+            CausalEdges = [],
+        };
         foreach (var item in jugglers.EnumerateArray())
         {
-            if (item.ValueKind != JsonValueKind.Array || item.GetArrayLength() != 2 || item[0].ValueKind != JsonValueKind.String || item[1].ValueKind != JsonValueKind.String) throw new JsonException();
-            state.Jugglers.Add(new EditorJuggler(item[0].GetString() ?? throw new JsonException(), item[1].GetString() ?? throw new JsonException()));
+            if (
+                item.ValueKind != JsonValueKind.Array
+                || item.GetArrayLength() != 2
+                || item[0].ValueKind != JsonValueKind.String
+                || item[1].ValueKind != JsonValueKind.String
+            )
+                throw new JsonException();
+            state.Jugglers.Add(
+                new EditorJuggler(
+                    item[0].GetString() ?? throw new JsonException(),
+                    item[1].GetString() ?? throw new JsonException()
+                )
+            );
         }
         foreach (var item in throws.EnumerateArray())
         {
-            if (item.ValueKind != JsonValueKind.Array || item.GetArrayLength() != 5 || item[0].ValueKind != JsonValueKind.String ||
-                item[1].ValueKind != JsonValueKind.String || item[2].ValueKind != JsonValueKind.String || !item[3].TryGetDecimal(out var start) || !item[4].TryGetDecimal(out var height)) throw new JsonException();
-            state.Throws.Add(new EditorThrow(item[0].GetString() ?? throw new JsonException(), item[1].GetString() ?? throw new JsonException(), item[2].GetString() ?? throw new JsonException(), start, height));
+            if (
+                item.ValueKind != JsonValueKind.Array
+                || item.GetArrayLength() != 5
+                || item[0].ValueKind != JsonValueKind.String
+                || item[1].ValueKind != JsonValueKind.String
+                || item[2].ValueKind != JsonValueKind.String
+                || !item[3].TryGetDecimal(out var start)
+                || !item[4].TryGetDecimal(out var height)
+            )
+                throw new JsonException();
+            state.Throws.Add(
+                new EditorThrow(
+                    item[0].GetString() ?? throw new JsonException(),
+                    item[1].GetString() ?? throw new JsonException(),
+                    item[2].GetString() ?? throw new JsonException(),
+                    start,
+                    height
+                )
+            );
         }
         foreach (var item in edges.EnumerateArray())
         {
-            if (item.ValueKind != JsonValueKind.Array || item.GetArrayLength() != 4 || item[0].ValueKind != JsonValueKind.String ||
-                item[1].ValueKind != JsonValueKind.String || item[2].ValueKind != JsonValueKind.String || !item[3].TryGetInt32(out var offset)) throw new JsonException();
-            state.CausalEdges.Add(new EditorCausalEdge(item[0].GetString() ?? throw new JsonException(), item[1].GetString() ?? throw new JsonException(), item[2].GetString() ?? throw new JsonException(), offset));
+            if (
+                item.ValueKind != JsonValueKind.Array
+                || item.GetArrayLength() != 4
+                || item[0].ValueKind != JsonValueKind.String
+                || item[1].ValueKind != JsonValueKind.String
+                || item[2].ValueKind != JsonValueKind.String
+                || !item[3].TryGetInt32(out var offset)
+            )
+                throw new JsonException();
+            state.CausalEdges.Add(
+                new EditorCausalEdge(
+                    item[0].GetString() ?? throw new JsonException(),
+                    item[1].GetString() ?? throw new JsonException(),
+                    item[2].GetString() ?? throw new JsonException(),
+                    offset
+                )
+            );
         }
         return state;
     }
@@ -351,41 +590,116 @@ public sealed class CausalDiagramEditorState
     {
         using var doc = JsonDocument.Parse(json, new JsonDocumentOptions { MaxDepth = 8 });
         var root = doc.RootElement;
-        if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty("v", out var version) || !version.TryGetInt32(out var v) || v != 1 ||
-            !root.TryGetProperty("p", out var preset) || !root.TryGetProperty("c", out var cycle) || !cycle.TryGetDecimal(out var c) ||
-            !root.TryGetProperty("r", out var reps) || !reps.TryGetInt32(out var repetitions) || !root.TryGetProperty("s", out var snap) ||
-            !root.TryGetProperty("q", out var step) || !step.TryGetDecimal(out var snapStep) || !root.TryGetProperty("j", out var jugglers) ||
-            !root.TryGetProperty("t", out var throws)) throw new JsonException("Invalid legacy editor state.");
-        var legacy = new LegacyState { Version = v, PresetId = preset.GetString() ?? throw new JsonException(), ActiveJugglerId = root.TryGetProperty("a", out var active) ? active.GetString() ?? throw new JsonException() : "A",
-            CycleLength = c, Repetitions = repetitions, SnapEnabled = snap.GetBoolean(), SnapStep = snapStep,
-            Jugglers = [], Throws = [] };
-        foreach (var item in jugglers.EnumerateArray()) legacy.Jugglers.Add(new LegacyJuggler(item[0].GetString() ?? throw new JsonException(), item[1].GetString() ?? throw new JsonException()));
+        if (
+            root.ValueKind != JsonValueKind.Object
+            || !root.TryGetProperty("v", out var version)
+            || !version.TryGetInt32(out var v)
+            || v != 1
+            || !root.TryGetProperty("p", out var preset)
+            || !root.TryGetProperty("c", out var cycle)
+            || !cycle.TryGetDecimal(out var c)
+            || !root.TryGetProperty("r", out var reps)
+            || !reps.TryGetInt32(out var repetitions)
+            || !root.TryGetProperty("s", out var snap)
+            || !root.TryGetProperty("q", out var step)
+            || !step.TryGetDecimal(out var snapStep)
+            || !root.TryGetProperty("j", out var jugglers)
+            || !root.TryGetProperty("t", out var throws)
+        )
+            throw new JsonException("Invalid legacy editor state.");
+        var legacy = new LegacyState
+        {
+            Version = v,
+            PresetId = preset.GetString() ?? throw new JsonException(),
+            ActiveJugglerId = root.TryGetProperty("a", out var active)
+                ? active.GetString() ?? throw new JsonException()
+                : "A",
+            CycleLength = c,
+            Repetitions = repetitions,
+            SnapEnabled = snap.GetBoolean(),
+            SnapStep = snapStep,
+            Jugglers = [],
+            Throws = [],
+        };
+        foreach (var item in jugglers.EnumerateArray())
+            legacy.Jugglers.Add(
+                new LegacyJuggler(
+                    item[0].GetString() ?? throw new JsonException(),
+                    item[1].GetString() ?? throw new JsonException()
+                )
+            );
         foreach (var item in throws.EnumerateArray())
         {
-            if (item.ValueKind != JsonValueKind.Array || item.GetArrayLength() is not (6 or 7) || !item[3].TryGetDecimal(out var start) || !item[4].TryGetDecimal(out var end)) throw new JsonException();
-            legacy.Throws.Add(new LegacyThrow { Id = item[0].GetString() ?? throw new JsonException(), JugglerId = item[1].GetString() ?? throw new JsonException(), Hand = item[2].GetString() ?? throw new JsonException(), StartTime = start,
-                LandingTime = end, TargetJugglerId = item[5].GetString() ?? throw new JsonException(), TargetHand = item.GetArrayLength() == 7 ? item[6].GetString() ?? throw new JsonException() : "R" });
+            if (
+                item.ValueKind != JsonValueKind.Array
+                || item.GetArrayLength() is not (6 or 7)
+                || !item[3].TryGetDecimal(out var start)
+                || !item[4].TryGetDecimal(out var end)
+            )
+                throw new JsonException();
+            legacy.Throws.Add(
+                new LegacyThrow
+                {
+                    Id = item[0].GetString() ?? throw new JsonException(),
+                    JugglerId = item[1].GetString() ?? throw new JsonException(),
+                    Hand = item[2].GetString() ?? throw new JsonException(),
+                    StartTime = start,
+                    LandingTime = end,
+                    TargetJugglerId = item[5].GetString() ?? throw new JsonException(),
+                    TargetHand =
+                        item.GetArrayLength() == 7
+                            ? item[6].GetString() ?? throw new JsonException()
+                            : "R",
+                }
+            );
         }
         return legacy;
     }
 
     private static CausalDiagramEditorState MigrateLegacy(LegacyState legacy)
     {
-        var jugglers = legacy.Jugglers.Select(item => new EditorJuggler(item.Id, item.Name)).ToList();
-        var nodes = legacy.Throws.Select(item => new EditorThrow(item.Id, item.JugglerId, item.Hand, item.StartTime, Math.Max(0.1m, item.LandingTime - item.StartTime))).ToList();
+        var jugglers = legacy
+            .Jugglers.Select(item => new EditorJuggler(item.Id, item.Name))
+            .ToList();
+        var nodes = legacy
+            .Throws.Select(item => new EditorThrow(
+                item.Id,
+                item.JugglerId,
+                item.Hand,
+                item.StartTime,
+                Math.Max(0.1m, item.LandingTime - item.StartTime)
+            ))
+            .ToList();
         var edges = new List<EditorCausalEdge>();
         foreach (var item in legacy.Throws)
         {
             var targetNodes = nodes.Where(node => node.JugglerId == item.TargetJugglerId).ToList();
-            if (targetNodes.Count == 0) continue;
+            if (targetNodes.Count == 0)
+                continue;
             var targetTime = item.LandingTime - Math.Max(1, jugglers.Count * 2);
-            var (target, offset) = NearestCyclicTarget(targetNodes, targetTime, Math.Max(1, (int)legacy.CycleLength));
+            var (target, offset) = NearestCyclicTarget(
+                targetNodes,
+                targetTime,
+                Math.Max(1, (int)legacy.CycleLength)
+            );
             edges.Add(new EditorCausalEdge($"migrated-{item.Id}", item.Id, target.Id, offset));
         }
-        var activeId = jugglers.Any(item => item.Id == legacy.ActiveJugglerId) ? legacy.ActiveJugglerId : jugglers.FirstOrDefault()?.Id ?? "";
-        var migrated = new CausalDiagramEditorState { Version = 3, PresetId = legacy.PresetId, ActiveJugglerId = activeId,
-            CycleLength = legacy.CycleLength, Repetitions = legacy.Repetitions, SnapEnabled = legacy.SnapEnabled, SnapStep = legacy.SnapStep,
-            Jugglers = jugglers, Throws = nodes, CausalEdges = edges };
+        var activeId = jugglers.Any(item => item.Id == legacy.ActiveJugglerId)
+            ? legacy.ActiveJugglerId
+            : jugglers.FirstOrDefault()?.Id ?? "";
+        var migrated = new CausalDiagramEditorState
+        {
+            Version = 3,
+            PresetId = legacy.PresetId,
+            ActiveJugglerId = activeId,
+            CycleLength = legacy.CycleLength,
+            Repetitions = legacy.Repetitions,
+            SnapEnabled = legacy.SnapEnabled,
+            SnapStep = legacy.SnapStep,
+            Jugglers = jugglers,
+            Throws = nodes,
+            CausalEdges = edges,
+        };
         migrated.NormalizeCausalEdges();
         migrated.SynchronizeHeights();
         return migrated;
@@ -393,26 +707,77 @@ public sealed class CausalDiagramEditorState
 
     private static bool IsValid(CausalDiagramEditorState? state)
     {
-        if (state is null || state.Version != 3 || state.Jugglers is null || state.Throws is null || state.CausalEdges is null ||
-            !CausalDiagramEditorPresets.IsKnownId(state.PresetId) || state.CycleLength <= 0 || state.CycleLength > 10_000 ||
-            state.Repetitions is < 1 or > 20 || state.SnapStep < 0.001m || state.SnapStep > 1_000 ||
-            state.Jugglers.Count is < 1 or > 16 || state.Throws.Count > 500 || state.CausalEdges.Count > 2_000) return false;
-        if (state.Jugglers.Any(item => item is null || !ValidText(item.Id, 64) || !ValidText(item.Name, 128))) return false;
+        if (
+            state is null
+            || state.Version != 3
+            || state.Jugglers is null
+            || state.Throws is null
+            || state.CausalEdges is null
+            || !CausalDiagramEditorPresets.IsKnownId(state.PresetId)
+            || state.CycleLength <= 0
+            || state.CycleLength > 10_000
+            || state.Repetitions is < 1 or > 20
+            || state.SnapStep < 0.001m
+            || state.SnapStep > 1_000
+            || state.Jugglers.Count is < 1 or > 16
+            || state.Throws.Count > 500
+            || state.CausalEdges.Count > 2_000
+        )
+            return false;
+        if (
+            state.Jugglers.Any(item =>
+                item is null || !ValidText(item.Id, 64) || !ValidText(item.Name, 128)
+            )
+        )
+            return false;
         var jugglerIds = state.Jugglers.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
-        if (jugglerIds.Count != state.Jugglers.Count || !jugglerIds.Contains(state.ActiveJugglerId)) return false;
-        if (state.Throws.Any(item => item is null || !ValidText(item.Id, 64) || !jugglerIds.Contains(item.JugglerId) || item.Hand is not ("R" or "L") ||
-                item.StartTime < 0 || item.StartTime >= state.CycleLength || item.Height < 0 || item.Height > 10_000)) return false;
+        if (jugglerIds.Count != state.Jugglers.Count || !jugglerIds.Contains(state.ActiveJugglerId))
+            return false;
+        if (
+            state.Throws.Any(item =>
+                item is null
+                || !ValidText(item.Id, 64)
+                || !jugglerIds.Contains(item.JugglerId)
+                || item.Hand is not ("R" or "L")
+                || item.StartTime < 0
+                || item.StartTime >= state.CycleLength
+                || item.Height < 0
+                || item.Height > 10_000
+            )
+        )
+            return false;
         var throwIds = state.Throws.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
-        if (throwIds.Count != state.Throws.Count) return false;
-        if (state.CausalEdges.Any(edge => edge is null || !ValidText(edge.Id, 96) || !throwIds.Contains(edge.FromThrowId) || !throwIds.Contains(edge.ToThrowId) || edge.CycleOffset is < -1_000 or > 1_000)) return false;
-        if (state.CausalEdges.Select(edge => edge.Id).Distinct(StringComparer.Ordinal).Count() != state.CausalEdges.Count ||
-            state.CausalEdges.Select(edge => edge.FromThrowId).Distinct(StringComparer.Ordinal).Count() != state.CausalEdges.Count ||
-            state.CausalEdges.Select(edge => (edge.ToThrowId, edge.CycleOffset)).Distinct().Count() != state.CausalEdges.Count) return false;
+        if (throwIds.Count != state.Throws.Count)
+            return false;
+        if (
+            state.CausalEdges.Any(edge =>
+                edge is null
+                || !ValidText(edge.Id, 96)
+                || !throwIds.Contains(edge.FromThrowId)
+                || !throwIds.Contains(edge.ToThrowId)
+                || edge.CycleOffset is < -1_000 or > 1_000
+            )
+        )
+            return false;
+        if (
+            state.CausalEdges.Select(edge => edge.Id).Distinct(StringComparer.Ordinal).Count()
+                != state.CausalEdges.Count
+            || state
+                .CausalEdges.Select(edge => edge.FromThrowId)
+                .Distinct(StringComparer.Ordinal)
+                .Count() != state.CausalEdges.Count
+            || state
+                .CausalEdges.Select(edge => (edge.ToThrowId, edge.CycleOffset))
+                .Distinct()
+                .Count() != state.CausalEdges.Count
+        )
+            return false;
         return state.CausalEdges.All(edge =>
         {
             var source = state.Throws.First(node => node.Id == edge.FromThrowId);
             var target = state.Throws.First(node => node.Id == edge.ToThrowId);
-            return source.Height >= 0 && source.Height == DerivedHeight(state, source, target, edge.CycleOffset);
+            return source.Height >= 0
+                && source.Height == DerivedHeight(state, source, target, edge.CycleOffset);
         });
     }
 
@@ -423,7 +788,8 @@ public sealed class CausalDiagramEditorState
             var edge = CausalEdges[edgeIndex];
             var sourceIndex = Throws.FindIndex(node => node.Id == edge.FromThrowId);
             var target = Throws.FirstOrDefault(node => node.Id == edge.ToThrowId);
-            if (sourceIndex < 0 || target is null) continue;
+            if (sourceIndex < 0 || target is null)
+                continue;
             var source = Throws[sourceIndex];
             var height = DerivedHeight(this, source, target, edge.CycleOffset);
             while (height < 0 && edge.CycleOffset < 1_000)
@@ -438,17 +804,28 @@ public sealed class CausalDiagramEditorState
 
     private void NormalizeCausalEdges()
     {
-        if (CausalEdges is null || Throws is null) return;
-        var throwIds = Throws.Where(node => node is not null).Select(node => node.Id).ToHashSet(StringComparer.Ordinal);
+        if (CausalEdges is null || Throws is null)
+            return;
+        var throwIds = Throws
+            .Where(node => node is not null)
+            .Select(node => node.Id)
+            .ToHashSet(StringComparer.Ordinal);
         var sources = new HashSet<string>(StringComparer.Ordinal);
         var targets = new HashSet<(string Id, int CycleOffset)>();
         var edgeIds = new HashSet<string>(StringComparer.Ordinal);
         var normalized = new List<EditorCausalEdge>();
         foreach (var edge in CausalEdges)
         {
-            if (edge is null || !throwIds.Contains(edge.FromThrowId) || !throwIds.Contains(edge.ToThrowId) ||
-                edge.CycleOffset is < -1_000 or > 1_000 || !ValidText(edge.Id, 96) ||
-                edgeIds.Contains(edge.Id) || sources.Contains(edge.FromThrowId) || targets.Contains((edge.ToThrowId, edge.CycleOffset)))
+            if (
+                edge is null
+                || !throwIds.Contains(edge.FromThrowId)
+                || !throwIds.Contains(edge.ToThrowId)
+                || edge.CycleOffset is < -1_000 or > 1_000
+                || !ValidText(edge.Id, 96)
+                || edgeIds.Contains(edge.Id)
+                || sources.Contains(edge.FromThrowId)
+                || targets.Contains((edge.ToThrowId, edge.CycleOffset))
+            )
                 continue;
             edgeIds.Add(edge.Id);
             sources.Add(edge.FromThrowId);
@@ -458,20 +835,44 @@ public sealed class CausalDiagramEditorState
         CausalEdges = normalized;
     }
 
-    private static decimal DerivedHeight(CausalDiagramEditorState state, EditorThrow source, EditorThrow target, int cycleOffset)
+    private static decimal DerivedHeight(
+        CausalDiagramEditorState state,
+        EditorThrow source,
+        EditorThrow target,
+        int cycleOffset
+    )
     {
-        var sourceCount = Math.Max(1, state.Throws.Count(node => node.JugglerId == source.JugglerId));
-        var targetCount = Math.Max(1, state.Throws.Count(node => node.JugglerId == target.JugglerId));
+        var sourceCount = Math.Max(
+            1,
+            state.Throws.Count(node => node.JugglerId == source.JugglerId)
+        );
+        var targetCount = Math.Max(
+            1,
+            state.Throws.Count(node => node.JugglerId == target.JugglerId)
+        );
         var sourceBeat = state.CycleLength / sourceCount;
         var targetBeat = state.CycleLength / targetCount;
-        return (target.StartTime + cycleOffset * state.CycleLength - source.StartTime + 2m * targetBeat) / sourceBeat;
+        return (
+                target.StartTime
+                + cycleOffset * state.CycleLength
+                - source.StartTime
+                + 2m * targetBeat
+            ) / sourceBeat;
     }
 
-    private static bool ValidText(string? value, int length) => !string.IsNullOrWhiteSpace(value) && value.Length <= length;
-    private static string ToBase64Url(byte[] bytes) => Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    private static bool ValidText(string? value, int length) =>
+        !string.IsNullOrWhiteSpace(value) && value.Length <= length;
+
+    private static string ToBase64Url(byte[] bytes) =>
+        Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
     private static byte[] FromBase64Url(string token)
     {
-        if (string.IsNullOrEmpty(token) || token.Any(c => !(char.IsAsciiLetterOrDigit(c) || c is '-' or '_' or '='))) throw new FormatException("Invalid Base64URL.");
+        if (
+            string.IsNullOrEmpty(token)
+            || token.Any(c => !(char.IsAsciiLetterOrDigit(c) || c is '-' or '_' or '='))
+        )
+            throw new FormatException("Invalid Base64URL.");
         var base64 = token.Replace('-', '+').Replace('_', '/');
         base64 += new string('=', (4 - base64.Length % 4) % 4);
         return Convert.FromBase64String(base64);
@@ -489,7 +890,9 @@ public sealed class CausalDiagramEditorState
         public List<LegacyJuggler> Jugglers { get; set; } = [];
         public List<LegacyThrow> Throws { get; set; } = [];
     }
+
     private sealed record LegacyJuggler(string Id, string Name);
+
     private sealed class LegacyThrow
     {
         public string Id { get; set; } = "";
@@ -503,5 +906,18 @@ public sealed class CausalDiagramEditorState
 }
 
 public sealed record EditorJuggler(string Id, string Name);
-public sealed record EditorThrow(string Id, string JugglerId, string Hand, decimal StartTime, decimal Height);
-public sealed record EditorCausalEdge(string Id, string FromThrowId, string ToThrowId, int CycleOffset = 0);
+
+public sealed record EditorThrow(
+    string Id,
+    string JugglerId,
+    string Hand,
+    decimal StartTime,
+    decimal Height
+);
+
+public sealed record EditorCausalEdge(
+    string Id,
+    string FromThrowId,
+    string ToThrowId,
+    int CycleOffset = 0
+);
