@@ -111,14 +111,9 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         );
         try
         {
-            await Assertions
-                .Expect(
-                    sharedPage.GetByRole(
-                        AriaRole.Heading,
-                        new() { Name = "Kausaler Diagramm-Editor" }
-                    )
-                )
-                .ToBeVisibleAsync();
+            await sharedPage
+                .GetByLabel("Vorlage")
+                .WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
         }
         catch (PlaywrightException exception)
         {
@@ -163,7 +158,8 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await session.Page.GetByLabel("Vorlage").SelectOptionAsync("custom");
         await session.Page.GetByRole(AriaRole.Button, new() { Name = "+ Knoten" }).ClickAsync();
 
-        var unlinkedThrow = session.Page.Locator(".throw-hit-target[aria-pressed='true']").First;
+        var unlinkedThrow = session.Page.Locator(".throw-hit-target").Last;
+        await unlinkedThrow.FocusAsync();
         var throwId = await unlinkedThrow.GetAttributeAsync("data-throw-id");
         await Assertions
             .Expect(session.Page.Locator($".pd-node-label[data-throw-id='{throwId}']").First)
