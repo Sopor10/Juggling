@@ -52,6 +52,12 @@ jobs:
           mkdir -p publish/wwwroot/siteswap-lab
           cp publish/wwwroot/index.html publish/wwwroot/siteswap-lab/index.html
 
+          preview_version="${GITHUB_SHA:0:12}"
+          cp publish/wwwroot/sw-registrator.js "publish/wwwroot/sw-registrator-${preview_version}.js"
+          sed -i "s/sw-registrator\.js/sw-registrator-${preview_version}.js/g" \
+            publish/wwwroot/index.html \
+            publish/wwwroot/siteswap-lab/index.html
+
       # The normal registrator detects /pr-preview/, unregisters any existing root-scoped
       # worker and avoids registering another one. Remove the published worker assets too.
       - name: Disable service worker in preview
