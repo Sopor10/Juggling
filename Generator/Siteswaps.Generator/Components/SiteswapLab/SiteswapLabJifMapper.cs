@@ -12,7 +12,8 @@ internal static class SiteswapLabJifMapper
         IReadOnlyList<int> timeZones,
         IReadOnlyList<IReadOnlyList<int>> heights,
         IReadOnlyList<IReadOnlyList<int>> targets,
-        string propType
+        string propType,
+        IReadOnlyList<JugglerLayoutPose> layout
     )
     {
         var period = heights.Count == 0 ? 0 : heights[0].Count;
@@ -30,58 +31,51 @@ internal static class SiteswapLabJifMapper
 
         jif = jif with
         {
-            Jugglers = ArrangeJugglersByTimeZone(
+            Jugglers = ApplyLayout(
                 jif.Jugglers
                     ?? throw new InvalidOperationException(
                         "The JIF mapper did not return jugglers."
                     ),
-                timeZones
+                layout
             ),
         };
         return JsonSerializer.Serialize(jif, JsonOptions);
     }
 
-    private static JifDetails::Siteswap.Details.Jif.JifJuggler[] ArrangeJugglersByTimeZone(
+    private static JifDetails::Siteswap.Details.Jif.JifJuggler[] ApplyLayout(
         IReadOnlyList<JifDetails::Siteswap.Details.Jif.JifJuggler> jugglers,
-        IReadOnlyList<int> timeZones
+        IReadOnlyList<JugglerLayoutPose> layout
     )
     {
-        const double spacing = 4.0;
-        var zones = timeZones.Distinct().Order().ToArray();
-        var peopleByZone = zones
-            .Select(zone =>
-                Enumerable
-                    .Range(0, timeZones.Count)
-                    .Where(person => timeZones[person] == zone)
-                    .ToArray()
-            )
-            .ToArray();
-        var radius = 1.2 + zones.Length * 0.2;
-        var positions = new decimal[timeZones.Count][];
-
-        for (var zoneIndex = 0; zoneIndex < zones.Length; zoneIndex++)
+        if (jugglers.Count != layout.Count)
         {
-            var people = peopleByZone[zoneIndex];
-            var angle = zones.Length == 1 ? 0 : 2 * Math.PI * zoneIndex / zones.Length;
-            var centerX = zones.Length == 1 ? 0 : radius * Math.Cos(angle);
-            var centerZ = zones.Length == 1 ? 0 : radius * Math.Sin(angle);
-            var tangentX = -Math.Sin(angle);
-            var tangentZ = Math.Cos(angle);
-
-            for (var memberIndex = 0; memberIndex < people.Length; memberIndex++)
-            {
-                var offset = (memberIndex - (people.Length - 1) / 2.0) * spacing;
-                positions[people[memberIndex]] =
-                [
-                    RoundLikePassist(centerX + tangentX * offset),
-                    0,
-                    RoundLikePassist(centerZ + tangentZ * offset),
-                ];
-            }
+            throw new ArgumentException(
+                "There must be a layout position for each juggler.",
+                nameof(layout)
+            );
         }
 
+        const double layoutScale = 4.5;
         return jugglers
-            .Select((juggler, index) => juggler with { Position = positions[index] })
+            .Select(
+                (juggler, index) =>
+                {
+                    var pose = layout[index];
+                    var x = pose.X * layoutScale;
+                    var z = pose.Z * layoutScale;
+                    var radians = pose.Rotation * Math.PI / 180;
+                    return juggler with
+                    {
+                        Position = [RoundLikePassist(x), 0, RoundLikePassist(z)],
+                        LookAt =
+                        [
+                            RoundLikePassist(x + Math.Sin(radians)),
+                            0,
+                            RoundLikePassist(z - Math.Cos(radians)),
+                        ],
+                    };
+                }
+            )
             .ToArray();
     }
 

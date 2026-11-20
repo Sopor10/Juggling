@@ -6,6 +6,16 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Siteswap lab" xml:space="preserve"><value>Siteswap-Labor</value></data>
   <data name="← swipe left/right →" xml:space="preserve"><value>← nach links/rechts wischen →</value></data>
+  <data name="Change animation layout" xml:space="preserve"><value>Aufstellung für Animation ändern</value></data>
+  <data name="Layout presets" xml:space="preserve"><value>Voreinstellungen für Aufstellung</value></data>
+  <data name="Circle" xml:space="preserve"><value>Kreis</value></data>
+  <data name="Drag jugglers to move them. Drag the small handle to rotate them." xml:space="preserve"><value>Ziehe Jongleure zum Verschieben; ziehe den kleinen Griff zum Drehen.</value></data>
+  <data name="Top-down juggler layout" xml:space="preserve"><value>Draufsicht der Jongleure</value></data>
+  <data name="Move or rotate {0}" xml:space="preserve"><value>Jongleur {0} verschieben oder drehen</value></data>
+  <data name="Rotate {0}" xml:space="preserve"><value>Jongleur {0} drehen</value></data>
+  <data name="Selected juggler" xml:space="preserve"><value>Ausgewählter Jongleur</value></data>
+  <data name="Rotate {0} left" xml:space="preserve"><value>{0} nach links drehen</value></data>
+  <data name="Rotate {0} right" xml:space="preserve"><value>{0} nach rechts drehen</value></data>
   <data name="Back" xml:space="preserve"><value>Zurück</value></data>
   <data name="Next" xml:space="preserve"><value>Weiter</value></data>
   <data name="Next: {0}" xml:space="preserve"><value>Weiter: {0}</value></data>

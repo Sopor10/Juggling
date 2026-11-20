@@ -12,6 +12,153 @@
     color: var(--wizard-purple-500);
 }
 
+.lab-layout-editor {
+    margin: 16px 0;
+    border: 2px solid var(--wizard-purple-100);
+    border-radius: 14px;
+    background: white;
+}
+
+.lab-layout-editor > summary {
+    padding: 13px 15px;
+    color: var(--wizard-purple-900);
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.lab-layout-editor[open] > summary {
+    border-bottom: 1px solid var(--wizard-purple-100);
+}
+
+.lab-layout-controls {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+}
+
+.lab-layout-presets {
+    display: flex;
+    gap: 8px;
+}
+
+.lab-layout-preset,
+.lab-layout-rotation-controls button {
+    min-height: 42px;
+    padding: 7px 13px;
+    border: 2px solid var(--wizard-purple-200);
+    border-radius: 10px;
+    background: white;
+    color: var(--wizard-purple-900);
+    font: 800 .95rem/1 inherit;
+    cursor: pointer;
+}
+
+.lab-layout-preset.active {
+    border-color: var(--wizard-purple-700);
+    background: var(--wizard-purple-700);
+    color: white;
+}
+
+.lab-layout-hint {
+    margin: 0;
+    color: var(--wizard-purple-600);
+    font-size: .88rem;
+    line-height: 1.4;
+}
+
+.lab-layout-canvas-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.lab-layout-canvas {
+    display: block;
+    width: 100%;
+    max-height: 340px;
+    touch-action: none;
+    user-select: none;
+}
+
+.lab-layout-board {
+    fill: var(--wizard-purple-50, #f7f4fc);
+    stroke: var(--wizard-purple-200);
+    stroke-width: 2;
+}
+
+.lab-layout-axis {
+    stroke: var(--wizard-purple-200);
+    stroke-dasharray: 4 6;
+    stroke-width: 1;
+}
+
+.lab-layout-juggler {
+    cursor: grab;
+    touch-action: none;
+}
+
+.lab-layout-juggler:active {
+    cursor: grabbing;
+}
+
+.lab-layout-person {
+    fill: var(--wizard-purple-700);
+    stroke: white;
+    stroke-width: 3;
+}
+
+.lab-layout-facing path {
+    fill: none;
+    stroke: white;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+}
+
+.lab-layout-rotation-handle {
+    fill: var(--wizard-orange);
+    stroke: white;
+    stroke-width: 2;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.lab-layout-person-label {
+    fill: white;
+    font: 900 12px system-ui, sans-serif;
+    pointer-events: none;
+}
+
+.lab-layout-rotation-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lab-layout-rotation-controls label {
+    color: var(--wizard-purple-900);
+    font-size: .85rem;
+    font-weight: 800;
+}
+
+.lab-layout-rotation-controls select {
+    min-height: 42px;
+    min-width: 70px;
+    flex: 1 1 auto;
+    padding: 6px 10px;
+    border: 2px solid var(--wizard-purple-200);
+    border-radius: 10px;
+    background: white;
+    color: var(--wizard-purple-900);
+    font: 800 .95rem/1 inherit;
+}
+
+.lab-layout-rotation-controls button {
+    min-width: 44px;
+    padding-inline: 8px;
+    font-size: 1.2rem;
+}
+
 .lab-passing-overview {
     --lab-chip-size: 48px;
     --lab-chip-gap: 10px;
