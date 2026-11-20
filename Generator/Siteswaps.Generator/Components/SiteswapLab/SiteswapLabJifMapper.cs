@@ -32,7 +32,9 @@ internal static class SiteswapLabJifMapper
         {
             Jugglers = ArrangeJugglersByTimeZone(
                 jif.Jugglers
-                    ?? throw new InvalidOperationException("The JIF mapper did not return jugglers."),
+                    ?? throw new InvalidOperationException(
+                        "The JIF mapper did not return jugglers."
+                    ),
                 timeZones
             ),
         };
@@ -46,7 +48,12 @@ internal static class SiteswapLabJifMapper
     {
         var zones = timeZones.Distinct().Order().ToArray();
         var peopleByZone = zones
-            .Select(zone => Enumerable.Range(0, timeZones.Count).Where(person => timeZones[person] == zone).ToArray())
+            .Select(zone =>
+                Enumerable
+                    .Range(0, timeZones.Count)
+                    .Where(person => timeZones[person] == zone)
+                    .ToArray()
+            )
             .ToArray();
         var radius = 1.2 + zones.Length * 0.2;
         var positions = new decimal[timeZones.Count][];
