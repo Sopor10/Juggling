@@ -219,9 +219,9 @@ public static class JifMapper
                 expandedThrows.Add(
                     throwEvent with
                     {
-                        Time = throwEvent.Time!.Value + repetition * diagram.StepCount,
-                        From = limbMap[throwEvent.From!.Value],
-                        To = limbMap[throwEvent.To!.Value],
+                        Time = Required(throwEvent.Time, "throw time") + repetition * diagram.StepCount,
+                        From = limbMap[Required(throwEvent.From, "source limb")],
+                        To = limbMap[Required(throwEvent.To, "destination limb")],
                         Prop = propMap[firstPeriodProps[throwIndex]],
                     }
                 );
@@ -313,15 +313,15 @@ public static class JifMapper
             for (var throwIndex = 0; throwIndex < throws.Count; throwIndex++)
             {
                 var throwEvent = throws[throwIndex];
-                var time = throwEvent.Time!.Value + iteration * period;
+                var time = Required(throwEvent.Time, "throw time") + iteration * period;
                 while (catches.TryPeek(out var landing, out var priority) && priority.Time <= time)
                 {
                     catches.Dequeue();
                     holdings[landing.Target].Enqueue(landing.Prop);
                 }
 
-                var from = limbMap[throwEvent.From!.Value];
-                var to = limbMap[throwEvent.To!.Value];
+                var from = limbMap[Required(throwEvent.From, "source limb")];
+                var to = limbMap[Required(throwEvent.To, "destination limb")];
                 int prop;
                 if (holdings[from].Count > 0)
                 {
@@ -353,7 +353,7 @@ public static class JifMapper
                 }
 
                 propOrder.Add(prop);
-                catches.Enqueue((to, prop), (time + throwEvent.Duration!.Value, eventOrder++));
+                catches.Enqueue((to, prop), (time + Required(throwEvent.Duration, "throw duration"), eventOrder++));
             }
 
             limbMap = limbMap.Select(index => limbPermutation[index]).ToArray();
@@ -391,6 +391,10 @@ public static class JifMapper
 
     private static int GreatestCommonDivisor(int left, int right) =>
         right == 0 ? Math.Abs(left) : GreatestCommonDivisor(right, left % right);
+
+    private static T Required<T>(T? value, string field)
+        where T : struct => value
+        ?? throw new InvalidOperationException($"Every JIF throw must define its {field}.");
 
     private static JifJuggler CreateJuggler(string name, int index, int numberOfJugglers)
     {

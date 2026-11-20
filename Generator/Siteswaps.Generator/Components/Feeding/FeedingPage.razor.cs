@@ -42,13 +42,22 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     public string? DeeplinkState { get; set; }
 
     [Inject]
-    private NavigationManager Navigation { get; set; } = default!;
+    private NavigationManager? InjectedNavigation { get; set; }
+
+    private NavigationManager Navigation => InjectedNavigation
+        ?? throw new InvalidOperationException("NavigationManager was not injected.");
 
     [Inject]
-    private IStringLocalizer<FeedingPage> L { get; set; } = default!;
+    private IStringLocalizer<FeedingPage>? InjectedLocalizer { get; set; }
+
+    private IStringLocalizer<FeedingPage> L => InjectedLocalizer
+        ?? throw new InvalidOperationException("The page localizer was not injected.");
 
     [Inject]
-    private IJSRuntime JsRuntime { get; set; } = default!;
+    private IJSRuntime? InjectedJsRuntime { get; set; }
+
+    private IJSRuntime JsRuntime => InjectedJsRuntime
+        ?? throw new InvalidOperationException("IJSRuntime was not injected.");
 
     private enum FeedingPhase
     {
@@ -63,7 +72,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     private string DetailsBackHref =>
         string.IsNullOrWhiteSpace(_session?.FeederSiteswap.ToString() ?? SiteswapNotation)
             ? "details"
-            : $"details?s={Uri.EscapeDataString(_session?.FeederSiteswap.ToString() ?? SiteswapNotation!)}";
+            : $"details?s={Uri.EscapeDataString(_session?.FeederSiteswap.ToString() ?? SiteswapNotation ?? "")}";
 
     private string HeaderTitle =>
         _phase switch
@@ -309,16 +318,16 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         var selectedB1 = _session?.SelectedSiteswap(PartnerB1);
         var selectedB2 = _session?.SelectedSiteswap(PartnerB2);
         int? b1PassBeat = null;
-        if (selectedB1 is not null)
+        if (_session is { } currentSession && selectedB1 is not null)
         {
-            var passBeats = _session!.PassInterfaceBeatsOf(selectedB1);
+            var passBeats = currentSession.PassInterfaceBeatsOf(selectedB1);
             b1PassBeat = passBeats.Count > 0 ? passBeats[0] : null;
         }
 
         int? b2PassBeat = null;
-        if (selectedB2 is not null)
+        if (_session is { } secondSession && selectedB2 is not null)
         {
-            var passBeats = _session!.PassInterfaceBeatsOf(selectedB2);
+            var passBeats = secondSession.PassInterfaceBeatsOf(selectedB2);
             b2PassBeat = passBeats.Count > 0 ? passBeats[0] : null;
         }
 

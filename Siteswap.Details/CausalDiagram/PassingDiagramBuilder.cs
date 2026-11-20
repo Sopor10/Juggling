@@ -99,7 +99,8 @@ public static class PassingDiagramBuilder
         var ladderArrows = new List<DiagramArrow>(nodes.Count);
         foreach (var node in nodes)
         {
-            var toLimb = node.ToLimb!.Value;
+            var toLimb = node.ToLimb
+                ?? throw new InvalidOperationException("Every throw must identify its destination limb.");
             var toHand = hands[toLimb];
             var causalStep = node.Height - 2 * timeStretch;
             causalArrows.Add(

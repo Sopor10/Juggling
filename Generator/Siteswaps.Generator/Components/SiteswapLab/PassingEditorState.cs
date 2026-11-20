@@ -123,7 +123,7 @@ public sealed class PassingEditorState
         AllLandings()
             .Where(landing => landing.TargetPerson is not null)
             .GroupBy(landing => new PassingLandingSlot(
-                landing.TargetPerson!.Value,
+                landing.TargetPerson.GetValueOrDefault(),
                 landing.TargetBeat
             ))
             .Where(group => group.Count() > 1)
@@ -137,7 +137,7 @@ public sealed class PassingEditorState
             var occupied = AllLandings()
                 .Where(landing => landing.TargetPerson is not null)
                 .Select(landing => new PassingLandingSlot(
-                    landing.TargetPerson!.Value,
+                    landing.TargetPerson.GetValueOrDefault(),
                     landing.TargetBeat
                 ))
                 .ToHashSet();

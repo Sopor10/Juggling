@@ -11,6 +11,12 @@
     <NoWarn>$(NoWarn);BL0012;BL0016</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Siteswaps.Analyzers/Siteswaps.Analyzers.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      IsAspireProjectResource="false"
+                      Condition="'$(MSBuildProjectName)' != 'Siteswaps.Analyzers'" />
+    <CompilerVisibleProperty Include="IsTestProject" />
     <PackageReference Include="Sopor10.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <OutputItemType>Analyzer</OutputItemType>
