@@ -46,6 +46,7 @@ internal static class SiteswapLabJifMapper
         IReadOnlyList<int> timeZones
     )
     {
+        const double spacing = 1.1;
         var zones = timeZones.Distinct().Order().ToArray();
         var peopleByZone = zones
             .Select(zone =>
@@ -69,7 +70,7 @@ internal static class SiteswapLabJifMapper
 
             for (var memberIndex = 0; memberIndex < people.Length; memberIndex++)
             {
-                var offset = (memberIndex - (people.Length - 1) / 2.0) * 0.65;
+                var offset = (memberIndex - (people.Length - 1) / 2.0) * spacing;
                 positions[people[memberIndex]] =
                 [
                     RoundLikePassist(centerX + tangentX * offset),
