@@ -491,10 +491,18 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             new PageGotoOptions { WaitUntil = WaitUntilState.Load }
         );
         var heading = page.GetByRole(AriaRole.Heading, new() { Name = "Kausaler Diagramm-Editor" });
-        if (!await heading.IsVisibleAsync())
+        try
+        {
+            await heading.WaitForAsync(
+                new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30_000 }
+            );
+        }
+        catch (TimeoutException)
+        {
             throw new InvalidOperationException(
                 $"Editor page did not render: base={baseUri}; url={page.Url}; status={response?.Status}; contentType={response?.Headers.GetValueOrDefault("content-type")}; body={await page.Locator("body").InnerTextAsync()}; pageErrors={string.Join(" | ", pageErrors)}; consoleErrors={string.Join(" | ", consoleErrors)}; failedResponses={string.Join(" | ", failedResponses)}"
             );
+        }
     }
 
     private static Task SaveDesignScreenshotAsync(IPage page, string fileName)
