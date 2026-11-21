@@ -4,6 +4,9 @@
 name: PR Validation
 
 on:
+  push:
+    branches:
+      - codex/ci-test-runtime
   pull_request: 
     branches:
       - main
