@@ -7,6 +7,11 @@ runs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 11.0.100
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('global.json', 'Directory.Packages.props', '**/*.csproj') }}
     - name: Restore tools
       run: dotnet tool restore
       shell: bash
@@ -22,8 +27,22 @@ runs:
         pwsh Siteswaps.E2ETests/bin/Debug/net11.0/playwright.ps1 install --with-deps chromium
       shell: bash
     - name: Test
-      run: dotnet test
+      run: |
+        mkdir -p artifacts
+        dotnet test --logger "trx;LogFileName=ci-tests.trx" -bl:artifacts/ci-tests.binlog -- \
+          xUnit.ParallelizeTestCollections=true \
+          xUnit.MaxParallelThreads=4
       shell: bash
+    - name: Upload test diagnostics
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: test-diagnostics
+        path: |
+          artifacts/ci-tests.binlog
+          **/TestResults/ci-tests.trx
+        if-no-files-found: ignore
+        retention-days: 3
     - name: Upload design screenshot diffs
       if: failure()
       uses: actions/upload-artifact@v7
