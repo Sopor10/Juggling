@@ -76,15 +76,6 @@
     flex-shrink: 0;
 }
 
-.sd-header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-height: 1.5rem;
-}
-
-.sd-back,
 .sd-external {
     color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
@@ -92,7 +83,6 @@
     font-size: 13px;
 }
 
-.sd-back:hover,
 .sd-external:hover {
     color: var(--sd-orange);
 }

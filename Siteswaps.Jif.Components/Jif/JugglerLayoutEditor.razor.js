@@ -21,7 +21,7 @@ function begin(svg, dotnet, person, pointerId, onMove) {
     const finish = event => {
         if (event.pointerId !== pointerId) return;
         stop();
-        dotnet.invokeMethodAsync("FinishLayoutDrag");
+        dotnet.invokeMethodAsync("FinishDrag");
     };
     activeDrag = () => {
         document.removeEventListener("pointermove", move);
@@ -36,14 +36,14 @@ function begin(svg, dotnet, person, pointerId, onMove) {
 
 export function startMove(svg, dotnet, person, pointerId) {
     begin(svg, dotnet, person, pointerId, point => {
-        dotnet.invokeMethodAsync("MoveLayoutPerson", person, (point.x - 180) / 145, (point.y - 120) / 85);
+        dotnet.invokeMethodAsync("MovePerson", person, (point.x - 180) / 145, (point.y - 120) / 85);
     });
 }
 
 export function startRotate(svg, dotnet, person, pointerId, centerX, centerY) {
     begin(svg, dotnet, person, pointerId, point => {
         const degrees = Math.atan2(point.x - centerX, centerY - point.y) * 180 / Math.PI;
-        dotnet.invokeMethodAsync("RotateLayoutPersonTo", person, (degrees + 360) % 360);
+        dotnet.invokeMethodAsync("RotatePersonTo", person, (degrees + 360) % 360);
     });
 }
 

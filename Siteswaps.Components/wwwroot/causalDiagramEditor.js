@@ -1,5 +1,22 @@
 let activeMove;
 let activePressCleanup;
+const outsideCloseHandlers = new WeakMap();
+
+export function bindOutsideClose(element) {
+    if (!element || outsideCloseHandlers.has(element)) return;
+    const pointerDown = event => {
+        if (element.open && !element.contains(event.target)) element.open = false;
+    };
+    document.addEventListener("pointerdown", pointerDown, true);
+    outsideCloseHandlers.set(element, pointerDown);
+}
+
+export function unbindOutsideClose(element) {
+    const pointerDown = outsideCloseHandlers.get(element);
+    if (!pointerDown) return;
+    document.removeEventListener("pointerdown", pointerDown, true);
+    outsideCloseHandlers.delete(element);
+}
 
 export function startJugglerHold(dotnet, jugglerId, pointerId, originX, originY) {
     stopJugglerHold();
@@ -78,6 +95,14 @@ export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX
         timer = setTimeout(() => {
             editing = true;
             target?.classList.remove("pressing");
+            const suppressReleaseClick = event => {
+                document.removeEventListener("click", suppressReleaseClick, true);
+                if (event.target !== target) return;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            };
+            document.addEventListener("click", suppressReleaseClick, true);
+            setTimeout(() => document.removeEventListener("click", suppressReleaseClick, true), 1200);
             dotnet.invokeMethodAsync("EnableThrowEditing", id, cycle);
         }, 550);
     }

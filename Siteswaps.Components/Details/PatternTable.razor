@@ -1,0 +1,80 @@
+@namespace Siteswaps.Components.Details
+@inject IStringLocalizer<PatternTable> L
+
+@if (Rows.Count > 0)
+{
+    <div class="pattern-table @Class" style="@Style">
+        @if (Toolbar is not null)
+        {
+            @Toolbar
+        }
+        @if (RotationRequested.HasDelegate)
+        {
+            <div class="pattern-table-rotation" role="group" aria-label="@L["Rotate starting position"]">
+                <button type="button" class="pattern-table-rotate" aria-label="@L["Rotate pattern left"]"
+                        disabled="@(RotationPeriod <= 1)" @onclick="() => RotationRequested.InvokeAsync(1)">◄</button>
+                <button type="button" class="pattern-table-rotate" aria-label="@L["Rotate pattern right"]"
+                        disabled="@(RotationPeriod <= 1)" @onclick="() => RotationRequested.InvokeAsync(-1)">►</button>
+            </div>
+        }
+        <div class="pattern-table-rows">
+            @foreach (var row in Rows)
+            {
+                <div class="pattern-table-row @RowClass @RowClassFor?.Invoke(row)" data-timezone="@row.TimeZone">
+                    <div class="pattern-table-meta @MetaClass">
+                        <div class="pattern-table-label @LabelClass">
+                            @if (LabelTemplate is not null) { @LabelTemplate(row) }
+                            else { <strong>@row.Label</strong> }
+                        </div>
+                        @if (row.LeftClubs is not null || row.RightClubs is not null)
+                        {
+                            <div class="pattern-table-start-clubs @StartClubsClass" aria-label="@row.StartClubsAriaLabel">
+                                <span class="@StartClubsHandClass">@(row.LeftClubs?.ToString() ?? "")</span>
+                                <span class="@StartClubsHandClass">@(row.RightClubs?.ToString() ?? "")</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="pattern-table-throws @ThrowsClass"
+                         style="--sdv-stagger:@row.Stagger;--sdv-jugglers:@row.StaggerCount;--feeding-stagger:@row.Stagger;--feeding-jugglers:@row.StaggerCount;--lab-phase:@row.Phase;--lab-phase-count:@row.PhaseCount">
+                        @RowTemplate(row)
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Legend is not null)
+        {
+            @Legend
+        }
+    </div>
+}
+
+@code {
+    public sealed record PatternRow(
+        string Label,
+        int Stagger = 0,
+        int StaggerCount = 1,
+        int Phase = 0,
+        int PhaseCount = 1,
+        int? LeftClubs = null,
+        int? RightClubs = null,
+        int TimeZone = 0,
+        string? StartClubsAriaLabel = null
+    );
+
+    [Parameter, EditorRequired] public IReadOnlyList<PatternRow> Rows { get; set; } = [];
+    [Parameter, EditorRequired] public RenderFragment<PatternRow> RowTemplate { get; set; } = null!;
+    [Parameter] public RenderFragment<PatternRow>? LabelTemplate { get; set; }
+    [Parameter] public RenderFragment? Toolbar { get; set; }
+    [Parameter] public EventCallback<int> RotationRequested { get; set; }
+    [Parameter] public int RotationPeriod { get; set; }
+    [Parameter] public RenderFragment? Legend { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public string? Style { get; set; }
+    [Parameter] public string? RowClass { get; set; }
+    [Parameter] public Func<PatternRow, string?>? RowClassFor { get; set; }
+    [Parameter] public string? MetaClass { get; set; }
+    [Parameter] public string? LabelClass { get; set; }
+    [Parameter] public string? StartClubsClass { get; set; }
+    [Parameter] public string? StartClubsHandClass { get; set; }
+    [Parameter] public string? ThrowsClass { get; set; }
+}

@@ -3,6 +3,7 @@ using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Services;
+using Siteswaps.Jif.Components.Navigation;
 #if DEBUG
 using Fluxor.Blazor.Web.ReduxDevTools;
 #endif
@@ -24,6 +25,7 @@ public static class DependencyInjectionExtensions
 #endif
         });
         services.AddScoped<INavigation, NavigationManagerAdapter>();
+        services.AddScoped<UrlStateNavigation>();
 
         services.AddBlazoredLocalStorage();
         services.AddSingleton<AppUpdateService>();

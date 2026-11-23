@@ -16,93 +16,55 @@
             <h3 class="sdv-section-title @TitleClass">@Title</h3>
         }
 
-        @foreach (var juggler in Model.Jugglers)
-        {
-            Model.Diagrams.StartProps.TryGetValue(juggler.Label, out var start);
-            var chips = juggler.Throws.Select(t => t.ForMode(_mode)).ToList();
-            <div class="sdv-hero-juggler">
-                <div class="sdv-hero-beats">
-                    <div class="sdv-hero-id">
-                        <span class="sdv-hero-label">@juggler.Label</span>
-                        @if (Model.ShowLocalAverages)
-                        {
-                            <span class="sdv-muted sdv-hero-avg">Ø @juggler.AverageObjects.ToString("0.##")</span>
-                        }
-                    </div>
-                    @if (start is not null)
+        <PatternTable Rows="TableRows" Class="sdv-pattern-table" RowClass="sdv-hero-juggler sdv-hero-beats"
+                      LabelClass="sdv-hero-id"
+                      StartClubsClass="sdv-start-props" StartClubsHandClass="sdv-start-props-hand" ThrowsClass="sdv-hero-throws">
+            <LabelTemplate Context="tableRow">
+                @{ var juggler = Model.Jugglers.First(row => row.Label == tableRow.Label); }
+                <span class="sdv-hero-label">@juggler.Label</span>
+                @if (Model.ShowLocalAverages)
+                {
+                    <span class="sdv-muted sdv-hero-avg">Ø @juggler.AverageObjects.ToString("0.##")</span>
+                }
+            </LabelTemplate>
+            <RowTemplate Context="tableRow">
+                @{ var juggler = Model.Jugglers.First(row => row.Label == tableRow.Label); }
+                @{ var chips = juggler.Throws.Select(item => item.ForMode(_mode)).ToList(); }
+                <ThrowChipRow Chips="chips" ColorOrbits="ColorOrbits" AriaLabel="@($"Throws {juggler.Label}")" />
+            </RowTemplate>
+            <Legend>
+                <div class="sdv-hero-footer">
+                    @if (ShowLegend)
                     {
-                        <div class="sdv-start-props"
-                             title="@L["Starting club distribution (L / R)"]"
-                             aria-label="@($"Start clubs {juggler.Label}: left {start.Left}, right {start.Right}")">
-                            <span class="sdv-start-props-hand">@start.Left</span>
-                            <span class="sdv-start-props-hand">@start.Right</span>
+                        <div class="sdv-beat-legend" aria-label="@L["Legend"]">
+                            @if (ColorOrbits)
+                            {
+                                @foreach (var orbit in OrbitIndexes)
+                                {
+                                    <span class="sdv-orbit-legend-item"><span class="sdv-orbit-legend-swatch" style="background:@OrbitColorPalette.For(orbit)" aria-hidden="true"></span><span class="sdv-muted">Orbit @(orbit + 1)</span></span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="sdv-start-props sdv-start-props-legend" aria-hidden="true"><span class="sdv-start-props-hand">L</span><span class="sdv-start-props-hand">R</span></span>
+                                <span class="sdv-muted">@L["Start clubs"]</span>
+                                <span class="sdv-beat pass"><span class="sdv-beat-throw">·</span></span><span class="sdv-muted">Pass</span>
+                                <span class="sdv-beat self"><span class="sdv-beat-throw">·</span></span><span class="sdv-muted">Self</span>
+                            }
                         </div>
-                    }
-                    <div class="sdv-hero-throws"
-                         style="@($"--sdv-stagger:{juggler.Index};--sdv-jugglers:{Model.NumberOfJugglers}")">
-            <ThrowChipRow Chips="chips" ColorOrbits="ColorOrbits" AriaLabel="@($"Throws {juggler.Label}")" />
-                    </div>
-                </div>
-            </div>
-        }
-
-        <div class="sdv-hero-footer">
-            @if (ShowLegend)
-            {
-                <div class="sdv-beat-legend" aria-label="@L["Legend"]">
-                    @if (ColorOrbits)
-                    {
-                        @foreach (var orbit in OrbitIndexes)
-                        {
-                            <span class="sdv-orbit-legend-item">
-                                <span class="sdv-orbit-legend-swatch" style="background:@OrbitColorPalette.For(orbit)" aria-hidden="true"></span>
-                                <span class="sdv-muted">Orbit @(orbit + 1)</span>
-                            </span>
-                        }
                     }
                     else
                     {
-                        <span class="sdv-start-props sdv-start-props-legend" aria-hidden="true">
-                            <span class="sdv-start-props-hand">L</span>
-                            <span class="sdv-start-props-hand">R</span>
-                        </span>
-                        <span class="sdv-muted">@L["Start clubs"]</span>
-                        <span class="sdv-beat pass"><span class="sdv-beat-throw">·</span></span>
-                        <span class="sdv-muted">Pass</span>
-                        <span class="sdv-beat self"><span class="sdv-beat-throw">·</span></span>
-                        <span class="sdv-muted">Self</span>
+                        <span></span>
                     }
+                    <div class="sdv-throw-mode" role="radiogroup" aria-label="Wurf-Anzeige">
+                        <button type="button" role="radio" class="@ModeClass(DetailViewModel.ThrowDisplayMode.Local)" aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Local)" @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Local)">Lokal</button>
+                        <button type="button" role="radio" class="@ModeClass(DetailViewModel.ThrowDisplayMode.Global)" aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Global)" @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Global)">Global</button>
+                        <button type="button" role="radio" class="@ModeClass(DetailViewModel.ThrowDisplayMode.Name)" aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Name)" @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Name)">Namen</button>
+                    </div>
                 </div>
-            }
-            else
-            {
-                <span></span>
-            }
-
-            <div class="sdv-throw-mode" role="radiogroup" aria-label="Wurf-Anzeige">
-                <button type="button"
-                        role="radio"
-                        class="@ModeClass(DetailViewModel.ThrowDisplayMode.Local)"
-                        aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Local)"
-                        @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Local)">
-                    Lokal
-                </button>
-                <button type="button"
-                        role="radio"
-                        class="@ModeClass(DetailViewModel.ThrowDisplayMode.Global)"
-                        aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Global)"
-                        @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Global)">
-                    Global
-                </button>
-                <button type="button"
-                        role="radio"
-                        class="@ModeClass(DetailViewModel.ThrowDisplayMode.Name)"
-                        aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Name)"
-                        @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Name)">
-                    Namen
-                </button>
-            </div>
-        </div>
+            </Legend>
+        </PatternTable>
     </div>
 </div>
 
@@ -113,6 +75,19 @@
     [Parameter] public string? ExtraClass { get; set; }
     [Parameter] public bool ShowLegend { get; set; } = true;
     [Parameter] public bool ColorOrbits { get; set; } = true;
+
+    private IReadOnlyList<PatternTable.PatternRow> TableRows => Model!.Jugglers.Select(juggler =>
+    {
+        Model.Diagrams.StartProps.TryGetValue(juggler.Label, out var start);
+        return new PatternTable.PatternRow(
+            juggler.Label,
+            juggler.Index,
+            Model.NumberOfJugglers,
+            LeftClubs: start?.Left,
+            RightClubs: start?.Right,
+            StartClubsAriaLabel: start is null ? null : $"Start clubs {juggler.Label}: left {start.Left}, right {start.Right}"
+        );
+    }).ToList();
 
     private DetailViewModel.ThrowDisplayMode _mode = DetailViewModel.ThrowDisplayMode.Global;
     private IEnumerable<int> OrbitIndexes => Model!.Jugglers

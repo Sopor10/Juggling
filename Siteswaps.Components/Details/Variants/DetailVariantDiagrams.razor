@@ -2,6 +2,7 @@
 @using Siteswap.Details.CausalDiagram
 @using Siteswaps.Components.Details
 @using Siteswaps.Components.Details.Diagrams
+@using Siteswaps.Components.CausalDiagram
 
 @if (Model is null || Diagram is null)
 {
@@ -11,10 +12,16 @@
 <section class="sdv-diagrams">
     <h3 class="sdv-section-title">Causal Diagram</h3>
     <p class="sdv-muted">Pfeile: welcher Wurf erzwingt den nächsten.</p>
-    <PassistStyleDiagram Diagram="Diagram"
-                         Mode="PassistStyleDiagram.DiagramMode.Causal"
-                         ColorOrbits="ColorOrbits"
-                         OrbitLabels="@Model.Orbits.Select(orbit => orbit.DisplayValue).ToList()" />
+    <CausalDiagramEditorView Embedded="true"
+                              ExternalState="CausalEditorState"
+                              ShowOptions="false"
+                              ShowAnimation="false"
+                              AllowNodeMove="false"
+                              AllowThrowActions="false"
+                              AllowJugglerActions="false"
+                              AllowArrowEditing="false"
+                              ShowUnconnectedHeight="true"
+                              ShowConnectionIssues="false" />
 
     <h3 class="sdv-section-title sdv-diagrams-gap">Ladder Diagram</h3>
     <p class="sdv-muted">Objektpfade; Pfeillänge = Wurfhöhe.</p>
@@ -29,10 +36,59 @@
     [Parameter] public bool ColorOrbits { get; set; } = true;
 
     private DiagramSet? Diagram { get; set; }
+    private CausalDiagramEditorState? CausalEditorState { get; set; }
 
     protected override void OnParametersSet()
     {
         Diagram = Model?.Diagrams;
+        CausalEditorState = Diagram is null ? null : BuildCausalEditorState(Diagram);
         base.OnParametersSet();
+    }
+
+    private static CausalDiagramEditorState BuildCausalEditorState(DiagramSet diagram)
+    {
+        var jugglers = diagram.Jugglers.Select((person, index) =>
+            new EditorJuggler($"P{index + 1}", person.Name)).ToList();
+        var throws = diagram.Throws.Select((item, index) =>
+        {
+            var jugglerIndex = diagram.Jugglers.IndexOf(item.Hand.Person);
+            return new EditorThrow(
+                $"throw-{index + 1}",
+                $"P{Math.Max(0, jugglerIndex) + 1}",
+                item.Hand.Name,
+                item.Time,
+                item.Height
+            );
+        }).ToList();
+        var handsPerCycle = Math.Max(1, diagram.Hands.Count);
+        var edges = diagram.Throws.Select((item, index) =>
+        {
+            var causalTarget = index + item.Height - handsPerCycle;
+            var cycleOffset = Math.DivRem(causalTarget, diagram.StepCount, out var targetIndex);
+            if (targetIndex < 0)
+            {
+                targetIndex += diagram.StepCount;
+                cycleOffset--;
+            }
+            return new EditorCausalEdge(
+                $"causal-{index + 1}",
+                $"throw-{index + 1}",
+                $"throw-{targetIndex + 1}",
+                cycleOffset
+            );
+        }).ToList();
+
+        return new CausalDiagramEditorState
+        {
+            PresetId = "custom",
+            ActiveJugglerId = jugglers.FirstOrDefault()?.Id ?? "P1",
+            CycleLength = Math.Max(1, diagram.StepCount),
+            Repetitions = 1,
+            TimelineWidth = diagram.StepCount * PassistDiagramGeometry.ColumnWidth(diagram.TimeStretchFactor),
+            LaneSpacing = PassistDiagramGeometry.RowHeight,
+            Jugglers = jugglers,
+            Throws = throws,
+            CausalEdges = edges,
+        };
     }
 }

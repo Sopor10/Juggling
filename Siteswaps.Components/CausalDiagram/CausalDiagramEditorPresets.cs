@@ -53,11 +53,20 @@ public static class CausalDiagramEditorPresets
             "Siteswap",
             () => CausalDiagramEditorState.CreateSiteswapPattern("97531", "siteswap-97531")
         ),
+        new("four-hand-period-3", "4-händig · Periode 3", "4-händig", () => CreateFourHanded(3)),
+        new("four-hand-period-4", "4-händig · Periode 4", "4-händig", () => CreateFourHanded(4)),
+        new("four-hand-period-5", "4-händig · Periode 5", "4-händig", () => CreateFourHanded(5)),
         new(
             "feeding-3-3",
             "3:3 Polyrhythmus",
             "Polyrhythmus",
             () => CausalDiagramEditorState.CreateFeedingPattern(3, 3, "feeding-3-3")
+        ),
+        new(
+            "feeding-3-4",
+            "3:4 Polyrhythmus",
+            "Polyrhythmus",
+            () => CausalDiagramEditorState.CreateFeedingPattern(3, 4, "feeding-3-4")
         ),
         new(
             "feeding-5-3",
@@ -73,6 +82,27 @@ public static class CausalDiagramEditorPresets
         ),
     ];
 
+    public static IEnumerable<CausalDiagramEditorPreset> VisibleSiteswap => All.Where(preset =>
+        preset.Id is "siteswap-3" or "siteswap-97531"
+    );
+
+    public static IEnumerable<CausalDiagramEditorPreset> VisiblePolyrhythms => All.Where(preset =>
+        preset.Id is "feeding-3-4" or "feeding-7-5"
+    );
+
+    private static CausalDiagramEditorState CreateFourHanded(int period)
+    {
+        var firstHands = string.Concat(Enumerable.Range(0, period).Select(beat => beat % 2 == 0 ? 'R' : 'L'));
+        var secondHands = string.Concat(Enumerable.Range(0, period).Select(beat => beat % 2 == 0 ? 'R' : 'L'));
+        var firstThrows = string.Join(", ", Enumerable.Repeat("3>B", period));
+        var secondThrows = string.Join(", ", Enumerable.Repeat("3>A", period));
+        var notation = $"A: ({firstHands} 0) {firstThrows}\nB: ({secondHands} 0.5) {secondThrows}";
+        if (!CausalDiagramEditorState.TryCreateFeeding(notation, out var state, out _) || state is null)
+            throw new InvalidOperationException($"Die 4-händige Vorlage mit Periode {period} konnte nicht erstellt werden.");
+        state.PresetId = $"four-hand-period-{period}";
+        return state;
+    }
+
     public static bool IsKnownId(string? id) =>
-        id is "custom" or "siteswap531" or "feeding75" || All.Any(preset => preset.Id == id);
+        id is "custom" or "siteswap531" or "feeding75" or "feeding-5-3" || All.Any(preset => preset.Id == id);
 }

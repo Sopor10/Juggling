@@ -1,6 +1,7 @@
 @inject NavigationManager Navigation
 @inject IStringLocalizer<NavMenu> L
-@implements IDisposable
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
 <nav class="pznav" aria-label="@L["Main navigation"]">
     <div class="pznav-bar">
@@ -8,14 +9,13 @@
             <img class="pznav-logo" src="images/brand/passing_zone_short_logo.svg" width="52" height="32" alt="Passing Zone" />
             <span class="pznav-brand-text">@CurrentSectionTitle</span>
         </a>
-        <button type="button" title="@L["Navigation menu"]" aria-label="@L["Navigation menu"]" aria-controls="pznav-links" class="pznav-menu-button" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
+        <button @ref="_menuButton" type="button" title="@L["Navigation menu"]" aria-label="@L["Navigation menu"]" aria-controls="pznav-links" class="pznav-menu-button" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
             <span class="pznav-toggler-icon" aria-hidden="true"></span>
         </button>
-        <div id="pznav-links" class="@NavMenuCssClass pznav-links">
+        <div @ref="_menu" id="pznav-links" class="@NavMenuCssClass pznav-links">
             <button type="button" class="pznav-link pznav-tool-link" @onclick="OpenSiteswapDialog">@L["Open siteswap"]</button>
             <PwaInstallButton OnClicked="CloseNavMenu" />
             <a class="pznav-link @(IsCurrentRoute("") ? "active" : "")" href="" aria-current="@(IsCurrentRoute("") ? "page" : null)" @onclick="CloseNavMenu">@L["Generator"]</a>
-            <a class="pznav-link @(IsCurrentRoute("feeding") ? "active" : "")" href="feeding" aria-current="@(IsCurrentRoute("feeding") ? "page" : null)" @onclick="CloseNavMenu">@L["Feeding"]</a>
             <a class="pznav-link @(IsCurrentRoute("siteswap-lab") ? "active" : "")" href="siteswap-lab" aria-current="@(IsCurrentRoute("siteswap-lab") ? "page" : null)" @onclick="CloseNavMenu">@L["Siteswap lab"]</a>
             <a class="pznav-link @(IsCurrentRoute("causal-diagram-editor") ? "active" : "")" href="causal-diagram-editor" aria-current="@(IsCurrentRoute("causal-diagram-editor") ? "page" : null)" @onclick="CloseNavMenu">@L["Causal diagram editor"]</a>
             <a class="pznav-link @(IsCurrentRoute("Settings") ? "active" : "")" href="Settings" aria-current="@(IsCurrentRoute("Settings") ? "page" : null)" @onclick="CloseNavMenu">@L["Settings"]</a>
@@ -27,10 +27,10 @@
             <section class="pznav-siteswap-dialog" role="dialog" aria-modal="true" aria-labelledby="pznav-dialog-title" @onclick:stopPropagation="true">
                 <h2 id="pznav-dialog-title">@L["Open siteswap"]</h2>
                 <form class="pznav-dialog-form" @onsubmit="OpenSiteswap" @onsubmit:preventDefault>
-                    <label for="pznav-siteswap">@L["Siteswap…"]</label>
                     <input id="pznav-siteswap"
                            class="pznav-dialog-input"
                            type="text"
+                           aria-label="@L["Open siteswap"]"
                            inputmode="text"
                            autocomplete="off"
                            spellcheck="false"
@@ -58,14 +58,27 @@
     private string _siteswapQuery = "";
     private bool _invalid;
     private bool _showSiteswapDialog;
+    private ElementReference _menu;
+    private ElementReference _menuButton;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<NavMenu>? _dotNetRef;
     private string CurrentRoute => Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', 2)[0].Trim('/');
     private string CurrentSectionTitle
     {
         get
         {
-            return IsCurrentRoute("causal-diagram-editor")
-                ? L["Causal diagram editor"]
-                : "Siteswap Generator";
+            return CurrentRoute.ToLowerInvariant() switch
+            {
+                "feeding" => L["Feed combination"].Value,
+                "siteswap-lab" => L["Siteswap lab"].Value,
+                "causal-diagram-editor" => L["Causal diagram editor"].Value,
+                "settings" => L["Settings"].Value,
+                "details" => L["Siteswap details"].Value,
+                "causal-diagram-view" => L["Causal diagram"].Value,
+                "transitiongraph" => L["Transition graph"].Value,
+                "test" => L["Test page"].Value,
+                _ => "Siteswap Generator",
+            };
         }
     }
 
@@ -77,7 +90,23 @@
 
     protected override void OnInitialized() => Navigation.LocationChanged += OnLocationChanged;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _module = await JS.InvokeAsync<IJSObjectReference>("import", Navigation.ToAbsoluteUri("navMenu.js").ToString());
+        _dotNetRef = DotNetObjectReference.Create(this);
+        await _module.InvokeVoidAsync("watchOutsideClicks", _menu, _menuButton, _dotNetRef);
+    }
+
     private void OnLocationChanged(object? sender, LocationChangedEventArgs args) => _ = InvokeAsync(StateHasChanged);
+
+    [JSInvokable]
+    public Task CloseMenuFromOutside()
+    {
+        if (collapseNavMenu) return Task.CompletedTask;
+        collapseNavMenu = true;
+        return InvokeAsync(StateHasChanged);
+    }
 
     private void CloseNavMenu() => collapseNavMenu = true;
 
@@ -99,7 +128,16 @@
         if (e.Key == "Escape") CloseSiteswapDialog();
     }
 
-    public void Dispose() => Navigation.LocationChanged -= OnLocationChanged;
+    public async ValueTask DisposeAsync()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("stopWatchingOutsideClicks");
+            await _module.DisposeAsync();
+        }
+        _dotNetRef?.Dispose();
+    }
 
     private void OpenSiteswap()
     {

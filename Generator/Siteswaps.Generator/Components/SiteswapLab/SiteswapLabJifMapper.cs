@@ -1,10 +1,11 @@
 extern alias JifDetails;
 
 using System.Text.Json;
+using Siteswaps.Jif.Components;
 
 namespace Siteswaps.Generator.Components.SiteswapLab;
 
-internal static class SiteswapLabJifMapper
+public static class SiteswapLabJifMapper
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
@@ -29,56 +30,7 @@ internal static class SiteswapLabJifMapper
             description: $"{timeZones.Count} jugglers, period {period}"
         );
 
-        jif = jif with
-        {
-            Jugglers = ApplyLayout(
-                jif.Jugglers
-                    ?? throw new InvalidOperationException(
-                        "The JIF mapper did not return jugglers."
-                    ),
-                layout
-            ),
-        };
+        jif = JugglerLayoutPresets.ApplyToJif(jif, layout);
         return JsonSerializer.Serialize(jif, JsonOptions);
     }
-
-    private static JifDetails::Siteswap.Details.Jif.JifJuggler[] ApplyLayout(
-        IReadOnlyList<JifDetails::Siteswap.Details.Jif.JifJuggler> jugglers,
-        IReadOnlyList<JugglerLayoutPose> layout
-    )
-    {
-        if (jugglers.Count != layout.Count)
-        {
-            throw new ArgumentException(
-                "There must be a layout position for each juggler.",
-                nameof(layout)
-            );
-        }
-
-        const double layoutScale = 4.5;
-        return jugglers
-            .Select(
-                (juggler, index) =>
-                {
-                    var pose = layout[index];
-                    var x = pose.X * layoutScale;
-                    var z = pose.Z * layoutScale;
-                    var radians = pose.Rotation * Math.PI / 180;
-                    return juggler with
-                    {
-                        Position = [RoundLikePassist(x), 0, RoundLikePassist(z)],
-                        LookAt =
-                        [
-                            RoundLikePassist(x + Math.Sin(radians)),
-                            0,
-                            RoundLikePassist(z - Math.Cos(radians)),
-                        ],
-                    };
-                }
-            )
-            .ToArray();
-    }
-
-    private static decimal RoundLikePassist(double value) =>
-        decimal.Round((decimal)value, 3, MidpointRounding.AwayFromZero);
 }

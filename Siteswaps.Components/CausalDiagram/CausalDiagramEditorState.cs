@@ -57,6 +57,75 @@ public sealed class CausalDiagramEditorState
         return state;
     }
 
+    public static CausalDiagramEditorState CreatePassingPattern(
+        IReadOnlyList<int> timeZones,
+        IReadOnlyList<IReadOnlyList<int>> heights,
+        IReadOnlyList<IReadOnlyList<int>> targets
+    )
+    {
+        var diagram = Siteswap.Details.CausalDiagram.PassingDiagramBuilder.Build(timeZones, heights, targets);
+        var jugglers = Enumerable.Range(0, timeZones.Count)
+            .Select(index => new EditorJuggler($"P{index + 1}", ((char)('A' + index)).ToString()))
+            .ToList();
+        var cycleLength = diagram.StepCount;
+        var throws = diagram.Throws.Select((node, index) => new EditorThrow(
+            $"P{jugglers.FindIndex(juggler => juggler.Name == node.Hand.Person.Name) + 1}-{index + 1}",
+            $"P{jugglers.FindIndex(juggler => juggler.Name == node.Hand.Person.Name) + 1}",
+            node.Hand.Name,
+            node.Time,
+            node.Height
+        )).ToList();
+
+        var edges = new List<EditorCausalEdge>();
+        foreach (var source in diagram.CausalArrows)
+        {
+            var sourceId = FindThrowId(source.From, diagram.Throws, throws);
+            if (sourceId is null) continue;
+            var targetPerson = Array.FindIndex(jugglers.ToArray(), juggler => juggler.Name == source.To.Hand.Person.Name);
+            if (targetPerson < 0) continue;
+            var targetJugglerId = $"P{targetPerson + 1}";
+            var target = diagram.Throws.Select((node, index) => new
+                {
+                    Throw = node,
+                    EditorThrow = throws[index],
+                    Cycle = (int)Math.Round((source.To.Time - node.Time) / cycleLength, MidpointRounding.AwayFromZero)
+                })
+                .Where(candidate => candidate.EditorThrow.JugglerId == targetJugglerId && candidate.Throw.Hand.Name == source.To.Hand.Name)
+                .Select(candidate => new
+                {
+                    candidate.EditorThrow,
+                    candidate.Cycle,
+                    Distance = Math.Abs(candidate.Throw.Time + candidate.Cycle * cycleLength - source.To.Time)
+                })
+                .OrderBy(candidate => candidate.Distance)
+                .FirstOrDefault();
+            if (target is not null)
+                edges.Add(new EditorCausalEdge($"e-{sourceId}", sourceId, target.EditorThrow.Id, target.Cycle));
+        }
+
+        return new CausalDiagramEditorState
+        {
+            PresetId = "custom",
+            ActiveJugglerId = jugglers[0].Id,
+            CycleLength = cycleLength,
+            Jugglers = jugglers,
+            Throws = throws,
+            CausalEdges = edges,
+        };
+    }
+
+    private static string? FindThrowId(
+        Siteswap.Details.CausalDiagram.Throw target,
+        System.Collections.Immutable.ImmutableList<Siteswap.Details.CausalDiagram.Throw> sourceThrows,
+        List<EditorThrow> editorThrows
+    )
+    {
+        for (var index = 0; index < sourceThrows.Count; index++)
+            if (sourceThrows[index] == target)
+                return editorThrows[index].Id;
+        return null;
+    }
+
     public static CausalDiagramEditorState CreateEmpty() =>
         new()
         {

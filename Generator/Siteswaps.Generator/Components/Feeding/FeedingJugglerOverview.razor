@@ -1,5 +1,6 @@
 @namespace Siteswaps.Generator.Components.Feeding
 @using Siteswaps.Generator.Core.Generator
+@using Siteswaps.Components.Details
 @inject IStringLocalizer<FeedingJugglerOverview> L
 
 @if (Rows.Count == 0)
@@ -9,65 +10,50 @@
 
 <div class="feeding-jugglers @ExtraClass">
     <div class="feeding-jugglers-body">
-        @foreach (var row in Rows)
-        {
-            var chips = FeedingThrowDisplay.ChipsFor(row.Siteswap, row.Juggler, row.NumberOfJugglers, Mode);
-            <div class="feeding-juggler">
-                <div class="feeding-juggler-beats">
-                    <div class="feeding-juggler-id">
-                        <span class="feeding-juggler-label">@row.Label</span>
-                        @if (row.ShowAverage)
-                        {
-                            <span class="feeding-juggler-avg">Ø @FeedingThrowDisplay.FormatAverage(row.Average)</span>
-                        }
-                    </div>
-                    @if (row.StartingClubs is { } clubs)
+        <PatternTable Rows="TableRows" Class="feeding-pattern-table" RowClass="feeding-juggler-beats"
+                      RotationRequested="RotationRequested" RotationPeriod="Session.FeederSiteswap.Period.Value"
+                      LabelClass="feeding-juggler-id" StartClubsClass="feeding-start-props" StartClubsHandClass="feeding-start-props-hand"
+                      ThrowsClass="feeding-juggler-throws">
+            <LabelTemplate Context="tableRow">
+                @{ var row = Rows.First(item => item.Label == tableRow.Label); }
+                <span class="feeding-juggler-label">@row.Label</span>
+                @if (row.ShowAverage)
+                {
+                    <span class="feeding-juggler-avg">Ø @FeedingThrowDisplay.FormatAverage(row.Average)</span>
+                }
+            </LabelTemplate>
+            <RowTemplate Context="tableRow">
+                @{ var row = Rows.First(item => item.Label == tableRow.Label); }
+                @{ var chips = FeedingThrowDisplay.ChipsFor(row.Siteswap, row.Juggler, row.NumberOfJugglers, Mode); }
+                <FeedingThrowChipRow Chips="chips"
+                                     AriaLabel="@L["Throws {0}", row.Label]"
+                                     SelectedLocalBeat="SelectedBeatFor(row.Label)"
+                                     LandingLocalBeat="LandingBeatFor(row.Label)"
+                                     ChipClicked="beat => SelectThrow(row.Label, beat)"
+                                     AccessibleName="@(chip => ChipAccessibleName(row, chip))"
+                                     KindName="KindName" />
+            </RowTemplate>
+            <Legend>
+                <div class="feeding-jugglers-footer">
+                    @if (ShowLegend)
                     {
-                        <div class="feeding-start-props"
-                             title="@L["Starting club distribution (L / R)"]"
-                             aria-label="@L["Start clubs {0}: left {1}, right {2}", row.Label, clubs.Left, clubs.Right]">
-                            <span class="feeding-start-props-hand">@clubs.Left</span>
-                            <span class="feeding-start-props-hand">@clubs.Right</span>
+                        <div class="feeding-beat-legend" aria-label="@L["Legend"]">
+                            <span class="feeding-start-props feeding-start-props-legend" aria-hidden="true"><span class="feeding-start-props-hand">L</span><span class="feeding-start-props-hand">R</span></span>
+                            <span class="feeding-muted">@L["Start clubs"]</span>
+                            <span class="feeding-beat pass"><span class="feeding-beat-throw">·</span></span><span class="feeding-muted">Pass</span>
+                            <span class="feeding-beat self"><span class="feeding-beat-throw">·</span></span><span class="feeding-muted">Self</span>
                         </div>
                     }
-                    <div class="feeding-juggler-throws"
-                         style="@($"--feeding-stagger:{row.Juggler};--feeding-jugglers:{row.NumberOfJugglers}")">
-                        <FeedingThrowChipRow Chips="chips"
-                                             AriaLabel="@L["Throws {0}", row.Label]"
-                                             SelectedLocalBeat="SelectedBeatFor(row.Label)"
-                                             LandingLocalBeat="LandingBeatFor(row.Label)"
-                                             ChipClicked="beat => SelectThrow(row.Label, beat)"
-                                             AccessibleName="@(chip => ChipAccessibleName(row, chip))"
-                                             KindName="KindName" />
-                    </div>
+                    else
+                    {
+                        <span></span>
+                    }
+                    <FeedingThrowDisplayModeToggle Mode="Mode" ModeChanged="ModeChanged" />
                 </div>
-            </div>
-        }
+            </Legend>
+        </PatternTable>
 
         <p class="feeding-sr-only" role="status" aria-live="polite">@SelectionStatus</p>
-
-        <div class="feeding-jugglers-footer">
-            @if (ShowLegend)
-            {
-                <div class="feeding-beat-legend" aria-label="@L["Legend"]">
-                    <span class="feeding-start-props feeding-start-props-legend" aria-hidden="true">
-                        <span class="feeding-start-props-hand">L</span>
-                        <span class="feeding-start-props-hand">R</span>
-                    </span>
-                    <span class="feeding-muted">@L["Start clubs"]</span>
-                    <span class="feeding-beat pass"><span class="feeding-beat-throw">·</span></span>
-                    <span class="feeding-muted">Pass</span>
-                    <span class="feeding-beat self"><span class="feeding-beat-throw">·</span></span>
-                    <span class="feeding-muted">Self</span>
-                </div>
-            }
-            else
-            {
-                <span></span>
-            }
-
-            <FeedingThrowDisplayModeToggle Mode="Mode" ModeChanged="ModeChanged" />
-        </div>
     </div>
 </div>
 
@@ -97,10 +83,24 @@
     public EventCallback<FeedingThrowDisplay.Mode> ModeChanged { get; set; }
 
     [Parameter]
+    public EventCallback<int> RotationRequested { get; set; }
+
+    [Parameter]
     public bool ShowLegend { get; set; } = true;
 
     [Parameter]
     public string? ExtraClass { get; set; }
+
+    private IReadOnlyList<PatternTable.PatternRow> TableRows => Rows.Select(row => new PatternTable.PatternRow(
+        row.Label,
+        row.Juggler,
+        row.NumberOfJugglers,
+        LeftClubs: row.StartingClubs?.Left,
+        RightClubs: row.StartingClubs?.Right,
+        StartClubsAriaLabel: row.StartingClubs is { } clubs
+            ? L["Start clubs {0}: left {1}, right {2}", row.Label, clubs.Left, clubs.Right].Value
+            : null
+    )).ToList();
 
     private int? SelectedBeatFor(string role) =>
         _selectedLanding is { SourceRole: var sourceRole } && sourceRole == role

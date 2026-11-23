@@ -25,6 +25,10 @@
     color: var(--sd-purple-900);
     font-family: 'Nunito', system-ui, sans-serif;
 }
+.causal-editor.embedded { min-height: 0; padding: 0; background: transparent; }
+.embedded .editor-content { width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.embedded .diagram-scroll { padding-top: 0; }
+.juggler-add-target.read-only { pointer-events: none; }
 
 .editor-content { display: grid; gap: 1rem; width: min(1180px, calc(100% - 2rem)); margin: 1rem auto; padding: clamp(.8rem, 2vw, 1.35rem); border: 1px solid var(--sd-purple-100); border-radius: var(--sd-radius-lg); background: var(--sd-card); box-shadow: var(--sd-shadow); }
 .editor-field { display: grid; gap: .25rem; color: var(--sd-purple-700); font-size: .82rem; font-weight: 800; }
@@ -50,13 +54,11 @@
 .diagram-options-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: .8rem; }
 .diagram-options-grid input[type=range] { width: 100%; accent-color: var(--sd-purple-500); }
 .diagram-options-grid output { color: #655a7d; font-size: .82rem; font-weight: 700; }
-.diagram-add-juggler { position: absolute; z-index: 30; top: .55rem; right: 3.35rem; display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--sd-purple-100); border-radius: 50%; background: #fff; color: var(--sd-purple-600); font: 800 1.5rem/1 'Nunito', sans-serif; cursor: pointer; box-shadow: var(--sd-shadow-sm); }
-.diagram-add-juggler:hover { background: var(--sd-purple-100); }
 .editor-help { margin: .15rem 0; color: #655a7d; font-size: .9rem; line-height: 1.45; }
 .editor-guidance { margin: 0; }
 .editor-notice { margin: 0; padding: .7rem .9rem; border: 1px solid #e6d898; border-radius: var(--sd-radius-sm); background: #fff8df; color: #594617; }
 
-.diagram-scroll { width: 100%; min-width: 0; overflow: auto; border: 2px solid var(--sd-purple-100); border-radius: var(--sd-radius-md); background: #fff; -webkit-overflow-scrolling: touch; }
+.diagram-scroll { width: 100%; min-width: 0; overflow: auto; padding-top: 16px; border: 2px solid var(--sd-purple-100); border-radius: var(--sd-radius-md); background: #fff; -webkit-overflow-scrolling: touch; }
 .diagram-canvas { display: block; max-width: none; touch-action: pan-x pan-y; }
 .pd-frame { fill: #fbfaff; stroke: var(--sd-purple-100); }
 .timeline { stroke: #d7cdec; stroke-width: 2; }

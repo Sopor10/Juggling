@@ -8,6 +8,7 @@ using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
 using Siteswaps.Generator.Components.WizardPage;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Jif.Components.Navigation;
 
 namespace Siteswaps.Generator.Components.Feeding;
 
@@ -44,9 +45,16 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
     [Inject]
     private NavigationManager? InjectedNavigation { get; set; }
 
+    [Inject]
+    private UrlStateNavigation? InjectedUrlStateNavigation { get; set; }
+
     private NavigationManager Navigation =>
         InjectedNavigation
         ?? throw new InvalidOperationException("NavigationManager was not injected.");
+
+    private UrlStateNavigation UrlStateNavigation =>
+        InjectedUrlStateNavigation
+        ?? throw new InvalidOperationException("URL state navigation was not injected.");
 
     [Inject]
     private IStringLocalizer<FeedingPage>? InjectedLocalizer { get; set; }
@@ -70,11 +78,6 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         SelectB2,
         Results,
     }
-
-    private string DetailsBackHref =>
-        string.IsNullOrWhiteSpace(_session?.FeederSiteswap.ToString() ?? SiteswapNotation)
-            ? "details"
-            : $"details?s={Uri.EscapeDataString(_session?.FeederSiteswap.ToString() ?? SiteswapNotation ?? "")}";
 
     private string HeaderTitle =>
         _phase switch
@@ -424,32 +427,12 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         var state = EncodeState(CreateUrlState());
-        var uriBuilder = new UriBuilder(Navigation.ToAbsoluteUri(Navigation.Uri));
-        var query = uriBuilder
-            .Query.TrimStart('?')
-            .Split('&', StringSplitOptions.RemoveEmptyEntries)
-            .Select(pair => pair.Split('=', 2))
-            .Select(parts =>
-                (
-                    Key: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
-                    Value: parts.Length > 1
-                        ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
-                        : string.Empty
-                )
-            )
-            .Where(parameter =>
-                !parameter.Key.Equals("s", StringComparison.OrdinalIgnoreCase)
-                && !parameter.Key.Equals("state", StringComparison.OrdinalIgnoreCase)
-            )
-            .Append((Key: "s", Value: _session.FeederSiteswap.ToString()))
-            .Append((Key: "state", Value: state));
-        uriBuilder.Query = string.Join(
-            "&",
-            query.Select(parameter =>
-                $"{Uri.EscapeDataString(parameter.Key)}={Uri.EscapeDataString(parameter.Value)}"
-            )
+        var url = UrlStateNavigation.WithQueryParameter(
+            Navigation.Uri,
+            "s",
+            _session.FeederSiteswap.ToString()
         );
-        var url = uriBuilder.Uri.ToString();
+        url = UrlStateNavigation.WithQueryParameter(url, "state", state);
         try
         {
             await _jsModule.InvokeVoidAsync(
@@ -462,6 +445,17 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         {
             // Circuit already gone.
         }
+    }
+
+    private async Task RotateFeedingPattern(int steps)
+    {
+        if (_session is null)
+        {
+            return;
+        }
+
+        _session.Rotate(steps);
+        await PersistStateAsync(push: true);
     }
 
     private async Task OnWorkflowStateChanged(string? snapshot)
@@ -528,7 +522,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         _b1Results = [];
         _interfaceMoveTargets = [];
         _workflowSnapshot = null;
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
     }
 
     private async Task OnClubsB1MinChanged(int value)
@@ -539,7 +533,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB1 = _session.ClubsB1 with { MinNumber = value };
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
     }
 
     private async Task OnClubsB1MaxChanged(int value)
@@ -550,7 +544,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB1 = _session.ClubsB1 with { MaxNumber = value };
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
     }
 
     private async Task OnClubsB2MinChanged(int value)
@@ -561,7 +555,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB2 = _session.ClubsB2 with { MinNumber = value };
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
     }
 
     private async Task OnClubsB2MaxChanged(int value)
@@ -572,7 +566,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
         }
 
         _session.ClubsB2 = _session.ClubsB2 with { MaxNumber = value };
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
     }
 
     private void StartGenerateB1()
@@ -648,7 +642,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
             _b2Locals = [];
         }
 
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
         StateHasChanged();
     }
 
@@ -683,7 +677,7 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
         _b2Locals = [];
         RefreshInterfaceMoveTargets();
-        await PersistStateAsync(push: false);
+        await PersistStateAsync(push: true);
     }
 
     private string? DescribeEmptyB2()
