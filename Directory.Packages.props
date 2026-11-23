@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageVersion Include="CliWrap" Version="3.10.5" />
-    <PackageVersion Include="Meziantou.Framework.InlineSnapshotTesting" Version="6.0.24" />
+    <PackageVersion Include="Meziantou.Framework.InlineSnapshotTesting" Version="6.0.26" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="11.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="11.0.0" />
@@ -50,14 +50,14 @@
     <PackageVersion Include="ExhaustiveMatching.Analyzer" Version="0.5.0" />
     <PackageVersion Include="Fluxor" Version="6.11.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.65.1" />
     <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.65.1" />
     <PackageVersion Include="DotNetGraph" Version="3.3.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.11.0" />
     <PackageVersion Include="System.Drawing.Common" Version="11.0.0" />
     <PackageVersion Include="TextCopy" Version="6.2.1" />
-    <PackageVersion Include="Z.Blazor.Diagrams" Version="3.0.4.1" />
+    <PackageVersion Include="Z.Blazor.Diagrams" Version="3.0.5" />
     <PackageVersion Include="Svg" Version="3.4.8" />
     <PackageVersion Include="AutomaticGraphLayout" Version="1.1.12" />
     <PackageVersion Include="AutomaticGraphLayout.Drawing" Version="1.1.12" />

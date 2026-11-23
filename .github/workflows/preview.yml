@@ -43,21 +43,26 @@ jobs:
           -p:GHPages=true
           -p:GHPagesBase=/pr-preview/pr-${{ github.event.number }}/
 
-      # Previews must not register a service worker: the production worker is root-scoped
-      # and would otherwise keep hijacking /pr-preview/ navigations for returning visitors.
+      # GitHub Pages serves its root 404 page for deep links, which gives a
+      # PR preview the production base URL. Add an index at this route so the
+      # Siteswap Lab state can load inside the preview's own base path.
+      - name: Add Siteswap Lab preview route
+        if: github.event.action != 'closed'
+        run: |
+          mkdir -p publish/wwwroot/siteswap-lab
+          cp publish/wwwroot/index.html publish/wwwroot/siteswap-lab/index.html
+
+          preview_version="${GITHUB_SHA:0:12}"
+          cp publish/wwwroot/sw-registrator.js "publish/wwwroot/sw-registrator-${preview_version}.js"
+          sed -i "s/sw-registrator\.js/sw-registrator-${preview_version}.js/g" \
+            publish/wwwroot/index.html \
+            publish/wwwroot/siteswap-lab/index.html
+
+      # The normal registrator detects /pr-preview/, unregisters any existing root-scoped
+      # worker and avoids registering another one. Remove the published worker assets too.
       - name: Disable service worker in preview
         if: github.event.action != 'closed'
         run: |
-          cat > publish/wwwroot/sw-registrator.js <<'EOF'
-          window.updateAvailable = Promise.resolve(false);
-          window.registerForUpdateAvailableNotification = () => {};
-          window.appUpdate = {
-            checkForUpdates: async () => ({ status: 'Unsupported' }),
-            applyUpdate: async () => {},
-            subscribe: () => {},
-            unsubscribe: () => {}
-          };
-          EOF
           rm -f publish/wwwroot/service-worker.js \
                 publish/wwwroot/service-worker.js.br \
                 publish/wwwroot/service-worker.js.gz \
