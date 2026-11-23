@@ -27,6 +27,34 @@ public sealed class CausalDiagramEditorJifAdapterTests
     }
 
     [Test]
+    public void TemporaryMultipleIncomingArrowsKeepTheDiagramEditableButPauseAnimation()
+    {
+        var state = CausalDiagramEditorState.CreateFeeding75();
+        var edgeIndex = state.CausalEdges.FindIndex(edge => edge.FromThrowId == "P1-2");
+        var duplicate = state.CausalEdges.Single(edge => edge.FromThrowId == "P1-1");
+        state.CausalEdges[edgeIndex] = state.CausalEdges[edgeIndex] with
+        {
+            ToThrowId = duplicate.ToThrowId,
+            CycleOffset = duplicate.CycleOffset
+        };
+        state.SynchronizeHeights();
+
+        CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeTrue();
+        CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error).Should().BeFalse();
+        error.Should().Contain("mehrere eingehende Pfeile");
+    }
+
+    [Test]
+    public void JugglerWithoutThrowsPausesAnimationWithoutThrowing()
+    {
+        var state = CausalDiagramEditorState.CreateFeeding75();
+        state.Jugglers.Add(new EditorJuggler("J3", "Jongleur 3"));
+
+        CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error).Should().BeFalse();
+        error.Should().Contain("mindestens einen Wurf");
+    }
+
+    [Test]
     public void Feeding75_ExpandsIndependentTrackPeriodsToBalancedCommonPeriod()
     {
         var state = CausalDiagramEditorState.CreateFeeding75();
@@ -42,6 +70,8 @@ public sealed class CausalDiagramEditorJifAdapterTests
         diagram.Throws.Should().HaveCount(12);
         diagram.Throws.Count(item => item.Hand.Person.Name == "A").Should().Be(7);
         diagram.Throws.Count(item => item.Hand.Person.Name == "B").Should().Be(5);
+        diagram.Throws.Where(item => item.Hand.Person.Name == "A").Select(item => item.Height).Should().OnlyContain(height => height == 5);
+        diagram.Throws.Where(item => item.Hand.Person.Name == "B").Select(item => item.Height).Should().OnlyContain(height => height == 7);
         diagram.Throws.Should().OnlyContain(item => item.ToLimb.HasValue);
         CausalDiagramEditorJifAdapter
             .TryMap(state, out var mapped, out error)
@@ -49,10 +79,15 @@ public sealed class CausalDiagramEditorJifAdapterTests
             .BeTrue(error);
         mapped.Should().NotBeNull();
         mapped!.Jugglers.Should().HaveCount(2);
+        mapped.Jugglers!.Select(juggler => juggler.Position![0]).Should().Equal(1.6m, -1.6m);
+        mapped.Jugglers.Select(juggler => juggler.Position![2]).Should().OnlyContain(z => z == 0m);
+        mapped.Props.Should().HaveCount(2);
+        mapped.Props!.Should().OnlyContain(prop => prop.Type == "club");
+        mapped.Limbs.Should().HaveCount(4);
         mapped.Repetition.Should().NotBeNull();
-        mapped.Repetition!.Period.Should().BeGreaterThanOrEqualTo(35);
-        (mapped.Repetition.Period % 35).Should().Be(0);
-        mapped.Throws.Should().HaveCount(12 * mapped.Repetition.Period!.Value / 35);
+        mapped.Repetition!.Period.Should().Be(14);
+        mapped.TimeStretchFactor.Should().Be(1m);
+        mapped.Throws!.Select(item => item.Duration).Should().OnlyContain(duration => duration == 1m || duration == 1.4m);
         mapped.Throws.Should().HaveCount(24);
     }
 

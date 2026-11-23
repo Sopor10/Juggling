@@ -1,62 +1,104 @@
 @inject NavigationManager Navigation
 @inject IStringLocalizer<NavMenu> L
+@implements IDisposable
 
 <nav class="pznav" aria-label="@L["Main navigation"]">
     <div class="pznav-bar">
         <a class="pznav-brand" href="" aria-label="@L["Passing Zone – Siteswap Generator"]">
             <img class="pznav-logo" src="images/brand/passing_zone_short_logo.svg" width="52" height="32" alt="Passing Zone" />
-            <span class="pznav-brand-text">Siteswap Generator</span>
+            <span class="pznav-brand-text">@CurrentSectionTitle</span>
         </a>
-        <form class="pznav-search" @onsubmit="OpenSiteswap" @onsubmit:preventDefault>
-            <label class="visually-hidden" for="pznav-siteswap">@L["Open siteswap"]</label>
-            <input id="pznav-siteswap"
-                   class="pznav-search-input"
-                   type="search"
-                   inputmode="text"
-                   autocomplete="off"
-                   spellcheck="false"
-                   placeholder="@L["Siteswap…"]"
-                   aria-invalid="@(_invalid ? "true" : "false")"
-                   @bind="_siteswapQuery"
-                   @bind:event="oninput" />
-            <button type="submit" class="pznav-search-submit" title="@L["Open details"]" aria-label="@L["Open details"]">
-                →
-            </button>
-        </form>
-        <button type="button" title="@L["Navigation menu"]" class="pznav-toggler" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
+        <button type="button" title="@L["Navigation menu"]" aria-label="@L["Navigation menu"]" aria-controls="pznav-links" class="pznav-menu-button" aria-expanded="@(!collapseNavMenu)" @onclick="ToggleNavMenu">
             <span class="pznav-toggler-icon" aria-hidden="true"></span>
         </button>
-        <div class="@NavMenuCssClass pznav-links">
+        <div id="pznav-links" class="@NavMenuCssClass pznav-links">
+            <button type="button" class="pznav-link pznav-tool-link" @onclick="OpenSiteswapDialog">@L["Open siteswap"]</button>
             <PwaInstallButton OnClicked="CloseNavMenu" />
-            <NavLink class="pznav-link" href="" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
-                @L["Generator"]
-            </NavLink>
-            <NavLink class="pznav-link" href="feeding" @onclick="CloseNavMenu">
-                @L["Feeding"]
-            </NavLink>
-            <NavLink class="pznav-link" href="siteswap-lab" @onclick="CloseNavMenu">
-                @L["Siteswap lab"]
-            </NavLink>
-            <NavLink class="pznav-link" href="causal-diagram-editor" @onclick="CloseNavMenu">
-                @L["Causal diagram editor"]
-            </NavLink>
-            <NavLink class="pznav-link" href="Settings" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
-                @L["Settings"]
-            </NavLink>
+            <a class="pznav-link @(IsCurrentRoute("") ? "active" : "")" href="" aria-current="@(IsCurrentRoute("") ? "page" : null)" @onclick="CloseNavMenu">@L["Generator"]</a>
+            <a class="pznav-link @(IsCurrentRoute("siteswap-lab") ? "active" : "")" href="siteswap-lab" aria-current="@(IsCurrentRoute("siteswap-lab") ? "page" : null)" @onclick="CloseNavMenu">@L["Siteswap lab"]</a>
+            <a class="pznav-link @(IsCurrentRoute("causal-diagram-editor") ? "active" : "")" href="causal-diagram-editor" aria-current="@(IsCurrentRoute("causal-diagram-editor") ? "page" : null)" @onclick="CloseNavMenu">@L["Causal diagram editor"]</a>
+            <a class="pznav-link @(IsCurrentRoute("Settings") ? "active" : "")" href="Settings" aria-current="@(IsCurrentRoute("Settings") ? "page" : null)" @onclick="CloseNavMenu">@L["Settings"]</a>
         </div>
     </div>
+    @if (_showSiteswapDialog)
+    {
+        <div class="pznav-dialog-backdrop" role="presentation" @onclick="CloseSiteswapDialog" @onkeydown="HandleDialogKey">
+            <section class="pznav-siteswap-dialog" role="dialog" aria-modal="true" aria-labelledby="pznav-dialog-title" @onclick:stopPropagation="true">
+                <h2 id="pznav-dialog-title">@L["Open siteswap"]</h2>
+                <form class="pznav-dialog-form" @onsubmit="OpenSiteswap" @onsubmit:preventDefault>
+                    <label for="pznav-siteswap">@L["Siteswap…"]</label>
+                    <input id="pznav-siteswap"
+                           class="pznav-dialog-input"
+                           type="text"
+                           inputmode="text"
+                           autocomplete="off"
+                           spellcheck="false"
+                           placeholder="@L["Siteswap…"]"
+                           aria-invalid="@(_invalid ? "true" : "false")"
+                           @bind="_siteswapQuery"
+                           @bind:event="oninput"
+                           autofocus />
+                    @if (_invalid)
+                    {
+                        <span class="pznav-dialog-error" role="alert">@L["Enter a siteswap"]</span>
+                    }
+                    <div class="pznav-dialog-actions">
+                        <button type="button" class="pznav-dialog-cancel" @onclick="CloseSiteswapDialog">@L["Cancel"]</button>
+                        <button type="submit" class="pznav-dialog-submit">@L["Open"]</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    }
 </nav>
 
 @code {
     private bool collapseNavMenu = true;
     private string _siteswapQuery = "";
     private bool _invalid;
+    private bool _showSiteswapDialog;
+    private string CurrentRoute => Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', 2)[0].Trim('/');
+    private string CurrentSectionTitle
+    {
+        get
+        {
+            return IsCurrentRoute("causal-diagram-editor")
+                ? L["Causal diagram editor"]
+                : "Siteswap Generator";
+        }
+    }
 
     private string? NavMenuCssClass => collapseNavMenu ? "pznav-links-collapsed" : null;
 
     private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
 
+    private bool IsCurrentRoute(string route) => string.Equals(CurrentRoute, route, StringComparison.OrdinalIgnoreCase);
+
+    protected override void OnInitialized() => Navigation.LocationChanged += OnLocationChanged;
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs args) => _ = InvokeAsync(StateHasChanged);
+
     private void CloseNavMenu() => collapseNavMenu = true;
+
+    private void OpenSiteswapDialog()
+    {
+        CloseNavMenu();
+        _invalid = false;
+        _showSiteswapDialog = true;
+    }
+
+    private void CloseSiteswapDialog()
+    {
+        _showSiteswapDialog = false;
+        _invalid = false;
+    }
+
+    private void HandleDialogKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") CloseSiteswapDialog();
+    }
+
+    public void Dispose() => Navigation.LocationChanged -= OnLocationChanged;
 
     private void OpenSiteswap()
     {
@@ -68,6 +110,7 @@
         }
 
         _invalid = false;
+        _showSiteswapDialog = false;
         CloseNavMenu();
         // App-relative (no leading '/'): respects <base href> / PathBase in PR previews.
         Navigation.NavigateTo($"details?s={Uri.EscapeDataString(query)}");
