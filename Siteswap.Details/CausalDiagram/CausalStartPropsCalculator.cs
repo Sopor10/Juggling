@@ -3,9 +3,9 @@ using System.Collections.Immutable;
 namespace Siteswap.Details.CausalDiagram;
 
 /// <summary>
-/// Evaluates the proposed no-incoming-arrow heuristic for a diagram.
-/// This is not a complete cyclic inventory calculation: closed causal loops have no roots,
-/// even though each loop still needs a club to seed it.
+/// Calculates cold-start hand inventories from periodic paths through a causal diagram.
+/// The older no-incoming-arrow methods remain available for comparison, but cannot account
+/// for closed causal loops on their own.
 /// </summary>
 public static class CausalStartPropsCalculator
 {
@@ -25,9 +25,12 @@ public static class CausalStartPropsCalculator
             _ => new StartProps(Left: 0, Right: 0),
             StringComparer.Ordinal
         );
+        var totalHeight = diagram.Throws.Sum(node => node.Height);
+        if (totalHeight % diagram.StepCount != 0)
+            throw new InvalidOperationException("A periodic causal diagram must have an integral prop count.");
         var positiveThrows = diagram.Throws.Where(node => node.Height > 0).ToArray();
         if (positiveThrows.Length == 0)
-            return new CausalStartPropsResult(counts.ToImmutableDictionary(StringComparer.Ordinal), 1);
+            return new CausalStartPropsResult(counts.ToImmutableDictionary(StringComparer.Ordinal), 1, 0);
 
         var period = (decimal)diagram.StepCount;
         var handCount = 2m * diagram.TimeStretchFactor;
@@ -74,6 +77,7 @@ public static class CausalStartPropsCalculator
             periodShift[index] = next.Shift;
         }
 
+        // Every physical landing feeds one throw and every throw consumes one landing, so the relation is a permutation.
         var indegrees = new int[positiveThrows.Length];
         foreach (var target in successor)
             indegrees[target]++;
@@ -84,6 +88,7 @@ public static class CausalStartPropsCalculator
 
         var visited = new bool[positiveThrows.Length];
         var fullPeriodMultiplier = 1;
+        var seedingCompletionTime = 0m;
         for (var start = 0; start < positiveThrows.Length; start++)
         {
             if (visited[start])
@@ -103,6 +108,7 @@ public static class CausalStartPropsCalculator
                 throw new InvalidOperationException("A periodic prop path must advance through time.");
             fullPeriodMultiplier = LeastCommonMultiple(fullPeriodMultiplier, windings);
 
+            // A quotient cycle with W period shifts lifts to W prop paths; each starts at its first throw in its W-period window.
             for (var initialShift = 0; initialShift < windings; initialShift++)
             {
                 var phase = initialShift;
@@ -114,6 +120,7 @@ public static class CausalStartPropsCalculator
                         return eventData;
                     })
                     .MinBy(eventData => eventData.Time);
+                seedingCompletionTime = Math.Max(seedingCompletionTime, first.Time);
 
                 var hand = positiveThrows[first.Index].Hand;
                 var currentCount = counts[hand.Person.Name];
@@ -123,7 +130,18 @@ public static class CausalStartPropsCalculator
             }
         }
 
-        return new CausalStartPropsResult(counts.ToImmutableDictionary(StringComparer.Ordinal), fullPeriodMultiplier);
+        var startProps = counts.ToImmutableDictionary(StringComparer.Ordinal);
+        var propCount = startProps.Values.Sum(count => count.Left + count.Right);
+        if (propCount != totalHeight / diagram.StepCount)
+            throw new InvalidOperationException(
+                $"Periodic causal paths account for {propCount} props, but throw heights require {totalHeight / diagram.StepCount}."
+            );
+
+        return new CausalStartPropsResult(
+            startProps,
+            fullPeriodMultiplier,
+            seedingCompletionTime
+        );
     }
 
     private static int LeastCommonMultiple(int left, int right) =>
@@ -240,5 +258,6 @@ public static class CausalStartPropsCalculator
 
 public sealed record CausalStartPropsResult(
     ImmutableDictionary<string, StartProps> StartProps,
-    int FullPeriodMultiplier
+    int FullPeriodMultiplier,
+    decimal SeedingCompletionTime
 );
