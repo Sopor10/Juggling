@@ -78,7 +78,7 @@ public class FeedingRound4RetestReproTests
             Path.Combine("Components", "Feeding", "FeedingPage.razor.css")
         );
         var wizardCss = ReadGeneratorSource(
-            Path.Combine("Components", "Layout", "WizardShell.razor.css")
+            Path.Combine("..", "..", "Siteswaps.Components", "Layout", "WizardShell.razor.css")
         );
 
         var feedingPrimary = ExtractRuleBodyContaining(feedingCss, ".feeding-btn-primary");

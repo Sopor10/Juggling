@@ -15,6 +15,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
         await page.GotoAsync(
             new Uri(E2EBaseUrl.FromFixture(host.Fixture), "causal-diagram-editor").AbsoluteUri
         );
+        await page.GetByRole(AriaRole.Button, new() { Name = "Weiter zum Diagramm" }).ClickAsync();
         await page.Locator(".arrow-target-handle").First.WaitForAsync();
         Assert.Equal("1", await page.Locator(".pd-node-label").First.TextContentAsync());
         Assert.Equal(0, await page.Locator(".animation-unavailable").CountAsync());
@@ -70,6 +71,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
         await page.GotoAsync(
             new Uri(E2EBaseUrl.FromFixture(host.Fixture), "causal-diagram-editor").AbsoluteUri
         );
+        await page.GetByRole(AriaRole.Button, new() { Name = "Weiter zum Diagramm" }).ClickAsync();
         await page.Locator(".arrow-target-handle").First.WaitForAsync();
         var throwTarget = page.Locator(".throw-hit-target").First;
         await throwTarget.ClickAsync();
@@ -87,6 +89,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
         await page.GotoAsync(
             new Uri(E2EBaseUrl.FromFixture(host.Fixture), "causal-diagram-editor").AbsoluteUri
         );
+        await page.GetByRole(AriaRole.Button, new() { Name = "Weiter zum Diagramm" }).ClickAsync();
         await page.Locator(".diagram-options summary").ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Jongleur hinzufügen" }).ClickAsync();
