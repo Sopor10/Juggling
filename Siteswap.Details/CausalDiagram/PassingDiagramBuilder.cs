@@ -186,8 +186,10 @@ public static class PassingDiagramBuilder
                 nameof(targets)
             );
 
-        var landingLocalBeat = beat
-            + (normalizedTimeZones[person] + height - normalizedTimeZones[targetPerson]) / timeStretch;
+        var landingLocalBeat =
+            beat
+            + (normalizedTimeZones[person] + height - normalizedTimeZones[targetPerson])
+                / timeStretch;
         var fromLimb = person * 2 + beat % 2;
         var toLimb = targetPerson * 2 + landingLocalBeat % 2;
         return new Throw(hands[fromLimb], height, time, toLimb);

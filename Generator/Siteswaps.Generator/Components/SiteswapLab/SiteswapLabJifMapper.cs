@@ -10,7 +10,10 @@ public static class SiteswapLabJifMapper
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
-    public static ImmutableDictionary<string, JifDetails::Siteswap.Details.CausalDiagram.StartProps> CalculateCausalStartProps(
+    public static ImmutableDictionary<
+        string,
+        JifDetails::Siteswap.Details.CausalDiagram.StartProps
+    > CalculateCausalStartProps(
         IReadOnlyList<int> timeZones,
         IReadOnlyList<IReadOnlyList<int>> heights,
         IReadOnlyList<IReadOnlyList<int>> targets
@@ -25,8 +28,8 @@ public static class SiteswapLabJifMapper
                     StringComparer.Ordinal
                 );
 
-        return JifDetails::Siteswap.Details.CausalDiagram.PassingDiagramBuilder
-            .Build(timeZones, heights, targets)
+        return JifDetails::Siteswap
+            .Details.CausalDiagram.PassingDiagramBuilder.Build(timeZones, heights, targets)
             .StartProps;
     }
 

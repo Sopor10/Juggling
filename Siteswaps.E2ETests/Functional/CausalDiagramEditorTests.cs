@@ -40,8 +40,20 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         )
             .Should()
             .Be(0);
-        (await session.Page.GetByRole(AriaRole.Heading, new() { Name = "Kausaldiagramm-Editor" }).CountAsync()).Should().Be(0);
-        (await session.Page.GetByRole(AriaRole.Button, new() { Name = "Link kopieren" }).CountAsync()).Should().Be(0);
+        (
+            await session
+                .Page.GetByRole(AriaRole.Heading, new() { Name = "Kausaldiagramm-Editor" })
+                .CountAsync()
+        )
+            .Should()
+            .Be(0);
+        (
+            await session
+                .Page.GetByRole(AriaRole.Button, new() { Name = "Link kopieren" })
+                .CountAsync()
+        )
+            .Should()
+            .Be(0);
         await SaveDesignScreenshotAsync(session.Page, "causal-editor-desktop-node-selected.png");
 
         var url = session.Page.Url;
@@ -74,7 +86,13 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             );
         }
         (await sharedPage.GetByLabel("Diagrammvorlage").InputValueAsync()).Should().Be("custom");
-        (await sharedPage.Locator(".juggler-add-target[data-juggler-id='P2']").GetAttributeAsync("aria-pressed")).Should().Be("true");
+        (
+            await sharedPage
+                .Locator(".juggler-add-target[data-juggler-id='P2']")
+                .GetAttributeAsync("aria-pressed")
+        )
+            .Should()
+            .Be("true");
         (await sharedPage.GetByLabel("Wiederholungen").InputValueAsync()).Should().Be("3");
         (await sharedPage.GetByLabel("Einrasten").IsCheckedAsync()).Should().BeFalse();
         (await sharedPage.Locator(".throw-hit-target").CountAsync()).Should().Be(36);

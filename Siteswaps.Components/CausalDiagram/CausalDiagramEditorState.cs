@@ -13,6 +13,13 @@ public sealed class CausalDiagramEditorState
     private const int MaximumDecodedPayloadBytes = 220_000;
     private static readonly UTF8Encoding StrictUtf8 = new(false, true);
 
+    private sealed record FeedingRow(
+        string Name,
+        string? HandSequence,
+        decimal Offset,
+        List<(int Height, string Target)> Throws
+    );
+
     public int Version { get; set; } = 3;
     public string PresetId { get; set; } = "custom";
     public string ActiveJugglerId { get; set; } = "A";
@@ -63,44 +70,79 @@ public sealed class CausalDiagramEditorState
         IReadOnlyList<IReadOnlyList<int>> targets
     )
     {
-        var diagram = Siteswap.Details.CausalDiagram.PassingDiagramBuilder.Build(timeZones, heights, targets);
-        var jugglers = Enumerable.Range(0, timeZones.Count)
+        var diagram = Siteswap.Details.CausalDiagram.PassingDiagramBuilder.Build(
+            timeZones,
+            heights,
+            targets
+        );
+        var jugglers = Enumerable
+            .Range(0, timeZones.Count)
             .Select(index => new EditorJuggler($"P{index + 1}", ((char)('A' + index)).ToString()))
             .ToList();
         var cycleLength = diagram.StepCount;
-        var throws = diagram.Throws.Select((node, index) => new EditorThrow(
-            $"P{jugglers.FindIndex(juggler => juggler.Name == node.Hand.Person.Name) + 1}-{index + 1}",
-            $"P{jugglers.FindIndex(juggler => juggler.Name == node.Hand.Person.Name) + 1}",
-            node.Hand.Name,
-            node.Time,
-            node.Height
-        )).ToList();
+        var throws = diagram
+            .Throws.Select(
+                (node, index) =>
+                    new EditorThrow(
+                        $"P{jugglers.FindIndex(juggler => juggler.Name == node.Hand.Person.Name) + 1}-{index + 1}",
+                        $"P{jugglers.FindIndex(juggler => juggler.Name == node.Hand.Person.Name) + 1}",
+                        node.Hand.Name,
+                        node.Time,
+                        node.Height
+                    )
+            )
+            .ToList();
 
         var edges = new List<EditorCausalEdge>();
         foreach (var source in diagram.CausalArrows)
         {
             var sourceId = FindThrowId(source.From, diagram.Throws, throws);
-            if (sourceId is null) continue;
-            var targetPerson = Array.FindIndex(jugglers.ToArray(), juggler => juggler.Name == source.To.Hand.Person.Name);
-            if (targetPerson < 0) continue;
+            if (sourceId is null)
+                continue;
+            var targetPerson = Array.FindIndex(
+                jugglers.ToArray(),
+                juggler => juggler.Name == source.To.Hand.Person.Name
+            );
+            if (targetPerson < 0)
+                continue;
             var targetJugglerId = $"P{targetPerson + 1}";
-            var target = diagram.Throws.Select((node, index) => new
-                {
-                    Throw = node,
-                    EditorThrow = throws[index],
-                    Cycle = (int)Math.Round((source.To.Time - node.Time) / cycleLength, MidpointRounding.AwayFromZero)
-                })
-                .Where(candidate => candidate.EditorThrow.JugglerId == targetJugglerId && candidate.Throw.Hand.Name == source.To.Hand.Name)
+            var target = diagram
+                .Throws.Select(
+                    (node, index) =>
+                        new
+                        {
+                            Throw = node,
+                            EditorThrow = throws[index],
+                            Cycle = (int)
+                                Math.Round(
+                                    (source.To.Time - node.Time) / cycleLength,
+                                    MidpointRounding.AwayFromZero
+                                ),
+                        }
+                )
+                .Where(candidate =>
+                    candidate.EditorThrow.JugglerId == targetJugglerId
+                    && candidate.Throw.Hand.Name == source.To.Hand.Name
+                )
                 .Select(candidate => new
                 {
                     candidate.EditorThrow,
                     candidate.Cycle,
-                    Distance = Math.Abs(candidate.Throw.Time + candidate.Cycle * cycleLength - source.To.Time)
+                    Distance = Math.Abs(
+                        candidate.Throw.Time + candidate.Cycle * cycleLength - source.To.Time
+                    ),
                 })
                 .OrderBy(candidate => candidate.Distance)
                 .FirstOrDefault();
             if (target is not null)
-                edges.Add(new EditorCausalEdge($"e-{sourceId}", sourceId, target.EditorThrow.Id, target.Cycle));
+                edges.Add(
+                    new EditorCausalEdge(
+                        $"e-{sourceId}",
+                        sourceId,
+                        target.EditorThrow.Id,
+                        target.Cycle
+                    )
+                );
         }
 
         return new CausalDiagramEditorState
@@ -212,92 +254,7 @@ public sealed class CausalDiagramEditorState
         error = "Eine Zeile pro Jongleur, z. B. A: 3>B, 3>A und in der nächsten Zeile B: 3>A, 3>B.";
         if (string.IsNullOrWhiteSpace(notation) || notation.Length > 8_000)
             return false;
-
-        var rows = new List<(string Name, string? HandSequence, decimal Offset, List<(int Height, string Target)> Throws)>();
-        foreach (
-            var line in notation.Split(
-                '\n',
-                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
-            )
-        )
-        {
-            var separator = line.IndexOf(':');
-            if (separator < 1)
-                return false;
-            var name = line[..separator].Trim();
-            var pattern = line[(separator + 1)..];
-            if (
-                name.Length > 32
-                || name.Any(char.IsControl)
-                || rows.Any(row =>
-                    string.Equals(row.Name, name, StringComparison.OrdinalIgnoreCase)
-                )
-            )
-                return false;
-            string? handSequence = null;
-            var offset = 0m;
-            pattern = pattern.TrimStart();
-            if (pattern.StartsWith('('))
-            {
-                var close = pattern.IndexOf(')');
-                if (close < 2)
-                    return false;
-                var handSpec = pattern[1..close].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                handSequence = handSpec[0].ToUpperInvariant();
-                if (handSequence.Length is < 1 or > 16 || handSequence.Any(hand => hand is not ('R' or 'L')))
-                    return false;
-                if (handSpec.Length > 2 || handSpec.Length == 2 &&
-                    (!decimal.TryParse(handSpec[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out offset)
-                    || offset is not (0m or 0.5m or 1m)))
-                    return false;
-                pattern = pattern[(close + 1)..].TrimStart();
-            }
-            var throws = new List<(int Height, string Target)>();
-            foreach (
-                var token in pattern.Split(
-                    ',',
-                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
-                )
-            )
-            {
-                var arrow = token.IndexOf('>');
-                if (
-                    arrow < 1
-                    || !int.TryParse(
-                        token[..arrow],
-                        NumberStyles.None,
-                        CultureInfo.InvariantCulture,
-                        out var height
-                    )
-                    || height is < 1 or > 100
-                )
-                    return false;
-                var target = token[(arrow + 1)..].Trim();
-                if (
-                    target.EndsWith(".R", StringComparison.OrdinalIgnoreCase)
-                    || target.EndsWith(".L", StringComparison.OrdinalIgnoreCase)
-                )
-                    target = target[..^2];
-                if (string.IsNullOrWhiteSpace(target) || target.Length > 32)
-                    return false;
-                throws.Add((height, target));
-            }
-            if (throws.Count is < 1 or > 64)
-                return false;
-            rows.Add((name, handSequence, offset, throws));
-        }
-
-        if (
-            rows.Count is < 1 or > 16
-            || rows.Sum(row => row.Throws.Count) > 500
-            || rows.Any(row =>
-                row.Throws.Any(item =>
-                    !rows.Any(target =>
-                        string.Equals(target.Name, item.Target, StringComparison.OrdinalIgnoreCase)
-                    )
-                )
-            )
-        )
+        if (!TryParseFeedingRows(notation, out var rows) || !AreFeedingRowsValid(rows))
             return false;
 
         var cycleLength = rows.Select(row => row.Throws.Count).Aggregate(1, LeastCommonMultiple);
@@ -306,6 +263,145 @@ public sealed class CausalDiagramEditorState
             error = "Das gemeinsame Wiederholungsmuster benötigt mehr als 500 Knoten.";
             return false;
         }
+
+        state = CreateFeedingEditorState(rows, cycleLength);
+        error = string.Empty;
+        return true;
+    }
+
+    private static bool TryParseFeedingRows(string notation, out List<FeedingRow> rows)
+    {
+        rows = [];
+        foreach (
+            var line in notation.Split(
+                '\n',
+                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
+            )
+        )
+        {
+            if (!TryParseFeedingRow(line, rows, out var row))
+                return false;
+            rows.Add(row);
+        }
+
+        return rows.Count is >= 1 and <= 16;
+    }
+
+    private static bool TryParseFeedingRow(
+        string line,
+        IReadOnlyList<FeedingRow> existingRows,
+        out FeedingRow row
+    )
+    {
+        row = new FeedingRow(string.Empty, null, 0m, []);
+        var separator = line.IndexOf(':');
+        if (separator < 1)
+            return false;
+
+        var name = line[..separator].Trim();
+        var pattern = line[(separator + 1)..].TrimStart();
+        if (
+            name.Length > 32
+            || name.Any(char.IsControl)
+            || existingRows.Any(existing =>
+                string.Equals(existing.Name, name, StringComparison.OrdinalIgnoreCase)
+            )
+        )
+            return false;
+
+        string? handSequence = null;
+        var offset = 0m;
+        if (pattern.StartsWith('('))
+        {
+            var close = pattern.IndexOf(')');
+            if (close < 2)
+                return false;
+            var handSpec = pattern[1..close].Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            handSequence = handSpec[0].ToUpperInvariant();
+            if (
+                handSequence.Length is < 1 or > 16
+                || handSequence.Any(hand => hand is not ('R' or 'L'))
+                || handSpec.Length > 2
+                || handSpec.Length == 2
+                    && (
+                        !decimal.TryParse(
+                            handSpec[1],
+                            NumberStyles.AllowDecimalPoint,
+                            CultureInfo.InvariantCulture,
+                            out offset
+                        ) || offset is not (0m or 0.5m or 1m)
+                    )
+            )
+                return false;
+            pattern = pattern[(close + 1)..].TrimStart();
+        }
+
+        var throws = new List<(int Height, string Target)>();
+        foreach (
+            var token in pattern.Split(
+                ',',
+                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
+            )
+        )
+        {
+            if (!TryParseFeedingThrow(token, out var parsedThrow))
+                return false;
+            throws.Add(parsedThrow);
+        }
+        if (throws.Count is < 1 or > 64)
+            return false;
+
+        row = new FeedingRow(name, handSequence, offset, throws);
+        return true;
+    }
+
+    private static bool TryParseFeedingThrow(
+        string token,
+        out (int Height, string Target) parsedThrow
+    )
+    {
+        parsedThrow = default;
+        var arrow = token.IndexOf('>');
+        if (
+            arrow < 1
+            || !int.TryParse(
+                token[..arrow],
+                NumberStyles.None,
+                CultureInfo.InvariantCulture,
+                out var height
+            )
+            || height is < 1 or > 100
+        )
+            return false;
+
+        var target = token[(arrow + 1)..].Trim();
+        if (
+            target.EndsWith(".R", StringComparison.OrdinalIgnoreCase)
+            || target.EndsWith(".L", StringComparison.OrdinalIgnoreCase)
+        )
+            target = target[..^2];
+        if (string.IsNullOrWhiteSpace(target) || target.Length > 32)
+            return false;
+
+        parsedThrow = (height, target);
+        return true;
+    }
+
+    private static bool AreFeedingRowsValid(IReadOnlyList<FeedingRow> rows) =>
+        rows.Sum(row => row.Throws.Count) <= 500
+        && rows.All(row =>
+            row.Throws.All(item =>
+                rows.Any(target =>
+                    string.Equals(target.Name, item.Target, StringComparison.OrdinalIgnoreCase)
+                )
+            )
+        );
+
+    private static CausalDiagramEditorState CreateFeedingEditorState(
+        List<FeedingRow> rows,
+        int cycleLength
+    )
+    {
         var jugglers = rows.Select((row, index) => new EditorJuggler($"P{index + 1}", row.Name))
             .ToList();
         var byName = rows.Select((row, index) => (row.Name, Juggler: jugglers[index]))
@@ -325,7 +421,11 @@ public sealed class CausalDiagramEditorState
                     new EditorThrow(
                         $"P{personIndex + 1}-{beat + 1}",
                         jugglers[personIndex].Id,
-                        row.HandSequence is null ? beat % 2 == 0 ? "R" : "L" : row.HandSequence[beat % row.HandSequence.Length].ToString(),
+                        row.HandSequence is null
+                            ? beat % 2 == 0
+                                ? "R"
+                                : "L"
+                            : row.HandSequence[beat % row.HandSequence.Length].ToString(),
                         (beat * beatDuration + row.Offset * beatDuration) % cycleLength,
                         row.Throws[beat].Height
                     )
@@ -334,7 +434,7 @@ public sealed class CausalDiagramEditorState
         }
 
         var edges = CreateFeedingEdges(rows, byName, nodes, cycleLength);
-        state = new CausalDiagramEditorState
+        var state = new CausalDiagramEditorState
         {
             PresetId = "custom",
             CycleLength = cycleLength,
@@ -344,12 +444,11 @@ public sealed class CausalDiagramEditorState
             CausalEdges = edges,
         };
         state.SynchronizeHeights();
-        error = string.Empty;
-        return true;
+        return state;
     }
 
     private static List<EditorCausalEdge> CreateFeedingEdges(
-        List<(string Name, string? HandSequence, decimal Offset, List<(int Height, string Target)> Throws)> rows,
+        List<FeedingRow> rows,
         Dictionary<string, EditorJuggler> byName,
         IReadOnlyList<EditorThrow> nodes,
         int cycleLength
@@ -937,12 +1036,27 @@ public sealed class CausalDiagramEditorState
 
     private static void MigrateLegacy75Heights(CausalDiagramEditorState state)
     {
-        if (state.CycleLength != 35m || state.Jugglers.Count != 2 || state.Throws.Count != 12 || state.CausalEdges.Count != 12)
+        if (
+            state.CycleLength != 35m
+            || state.Jugglers.Count != 2
+            || state.Throws.Count != 12
+            || state.CausalEdges.Count != 12
+        )
             return;
-        var rows = state.Jugglers.Select(juggler => state.Throws.Where(node => node.JugglerId == juggler.Id).OrderBy(node => node.StartTime).ToArray()).ToArray();
+        var rows = state
+            .Jugglers.Select(juggler =>
+                state
+                    .Throws.Where(node => node.JugglerId == juggler.Id)
+                    .OrderBy(node => node.StartTime)
+                    .ToArray()
+            )
+            .ToArray();
         if (rows[0].Length != 7 || rows[1].Length != 5)
             return;
-        var edges = state.CausalEdges.ToDictionary(edge => edge.FromThrowId, StringComparer.Ordinal);
+        var edges = state.CausalEdges.ToDictionary(
+            edge => edge.FromThrowId,
+            StringComparer.Ordinal
+        );
         for (var rowIndex = 0; rowIndex < rows.Length; rowIndex++)
         {
             var row = rows[rowIndex];
@@ -952,17 +1066,22 @@ public sealed class CausalDiagramEditorState
                 var node = row[beat];
                 var targetIndex = (beat - 2 + row.Length) % row.Length;
                 var targetCycle = beat < 2 ? 0 : 1;
-                if (node.StartTime != beat * beatDuration || node.Height != row.Length
+                if (
+                    node.StartTime != beat * beatDuration
+                    || node.Height != row.Length
                     || node.Hand != (beat % 2 == 0 ? "R" : "L")
                     || !edges.TryGetValue(node.Id, out var edge)
                     || edge.ToThrowId != row[targetIndex].Id
-                    || edge.CycleOffset != targetCycle)
+                    || edge.CycleOffset != targetCycle
+                )
                     return;
             }
         }
 
         state.PresetId = "feeding-7-5";
-        state.CausalEdges = state.Throws.Select(node => new EditorCausalEdge($"feed-{node.Id}", node.Id, node.Id, 0)).ToList();
+        state.CausalEdges = state
+            .Throws.Select(node => new EditorCausalEdge($"feed-{node.Id}", node.Id, node.Id, 0))
+            .ToList();
         for (var index = 0; index < state.Throws.Count; index++)
             state.Throws[index] = state.Throws[index] with { Height = 2m };
     }

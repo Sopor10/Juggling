@@ -195,21 +195,34 @@ public class CausalDiagramEditorStateTests
         legacy.PresetId = "custom";
         foreach (var row in new[] { (JugglerId: "P1", Count: 7), (JugglerId: "P2", Count: 5) })
         {
-            var nodes = legacy.Throws.Where(node => node.JugglerId == row.JugglerId).OrderBy(node => node.StartTime).ToArray();
+            var nodes = legacy
+                .Throws.Where(node => node.JugglerId == row.JugglerId)
+                .OrderBy(node => node.StartTime)
+                .ToArray();
             for (var beat = 0; beat < nodes.Length; beat++)
             {
                 var target = nodes[(beat - 2 + nodes.Length) % nodes.Length];
                 var offset = beat < 2 ? 0 : 1;
-                var edgeIndex = legacy.CausalEdges.FindIndex(edge => edge.FromThrowId == nodes[beat].Id);
-                legacy.CausalEdges[edgeIndex] = legacy.CausalEdges[edgeIndex] with { ToThrowId = target.Id, CycleOffset = offset };
+                var edgeIndex = legacy.CausalEdges.FindIndex(edge =>
+                    edge.FromThrowId == nodes[beat].Id
+                );
+                legacy.CausalEdges[edgeIndex] = legacy.CausalEdges[edgeIndex] with
+                {
+                    ToThrowId = target.Id,
+                    CycleOffset = offset,
+                };
             }
         }
-        legacy.Throws = legacy.Throws.Select(node => node with { Height = node.JugglerId == "P1" ? 7m : 5m }).ToList();
+        legacy.Throws = legacy
+            .Throws.Select(node => node with { Height = node.JugglerId == "P1" ? 7m : 5m })
+            .ToList();
 
         CausalDiagramEditorState.TryDecode(legacy.Encode(), out var migrated).Should().BeTrue();
         migrated!.PresetId.Should().Be("feeding-7-5");
         migrated.Throws.Should().OnlyContain(node => node.Height == 2m);
-        migrated.CausalEdges.Should().OnlyContain(edge => edge.FromThrowId == edge.ToThrowId && edge.CycleOffset == 0);
+        migrated
+            .CausalEdges.Should()
+            .OnlyContain(edge => edge.FromThrowId == edge.ToThrowId && edge.CycleOffset == 0);
     }
 
     [Test]
@@ -268,12 +281,12 @@ public class CausalDiagramEditorStateTests
         [
             new EditorThrow("A1", "A", "R", 0m, 0m),
             new EditorThrow("A2", "A", "L", 1m, 0m),
-            new EditorThrow("A3", "A", "R", 2m, 0m)
+            new EditorThrow("A3", "A", "R", 2m, 0m),
         ];
         state.CausalEdges =
         [
             new EditorCausalEdge("e1", "A1", "A2", 0),
-            new EditorCausalEdge("duplicate-in", "A3", "A2", 0)
+            new EditorCausalEdge("duplicate-in", "A3", "A2", 0),
         ];
         state.SynchronizeHeights();
         CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
@@ -303,14 +316,26 @@ public class CausalDiagramEditorStateTests
             .Should()
             .BeTrue(error);
 
-        state!.Throws.Where(node => node.JugglerId == "P1").Select(node => node.Hand)
-            .Should().Equal("L", "L", "R", "R");
-        state.Throws.Where(node => node.JugglerId == "P1").Select(node => node.StartTime)
-            .Should().Equal(0m, 1m, 2m, 3m);
-        state.Throws.Where(node => node.JugglerId == "P2").Select(node => node.Hand)
-            .Should().Equal("R", "L");
-        state.Throws.Where(node => node.JugglerId == "P2").Select(node => node.StartTime)
-            .Should().Equal(1m, 3m);
+        state!
+            .Throws.Where(node => node.JugglerId == "P1")
+            .Select(node => node.Hand)
+            .Should()
+            .Equal("L", "L", "R", "R");
+        state
+            .Throws.Where(node => node.JugglerId == "P1")
+            .Select(node => node.StartTime)
+            .Should()
+            .Equal(0m, 1m, 2m, 3m);
+        state
+            .Throws.Where(node => node.JugglerId == "P2")
+            .Select(node => node.Hand)
+            .Should()
+            .Equal("R", "L");
+        state
+            .Throws.Where(node => node.JugglerId == "P2")
+            .Select(node => node.StartTime)
+            .Should()
+            .Equal(1m, 3m);
     }
 
     [Test]

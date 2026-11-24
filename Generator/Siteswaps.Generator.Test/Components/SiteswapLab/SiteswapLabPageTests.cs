@@ -235,8 +235,7 @@ public class SiteswapLabPageTests
         var page = ReadGeneratorSource(
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
         );
-        var toolbar = page.Split("class=\"lab-overview-toolbar\"", 2)[1]
-            .Split("</Toolbar>", 2)[0];
+        var toolbar = page.Split("class=\"lab-overview-toolbar\"", 2)[1].Split("</Toolbar>", 2)[0];
 
         page.Should().Contain("class=\"lab-overview-toolbar\"");
         page.Should().Contain("class=\"lab-overview-toolbar-group\"");

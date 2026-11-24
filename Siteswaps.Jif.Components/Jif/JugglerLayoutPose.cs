@@ -4,7 +4,11 @@ namespace Siteswaps.Jif.Components;
 
 public sealed record JugglerLayoutPose(double X, double Z, double Rotation);
 
-public sealed record JugglerLayoutChange(string Preset, IReadOnlyList<JugglerLayoutPose> Poses, bool Commit = false);
+public sealed record JugglerLayoutChange(
+    string Preset,
+    IReadOnlyList<JugglerLayoutPose> Poses,
+    bool Commit = false
+);
 
 public static class JugglerLayoutPresets
 {
@@ -28,7 +32,8 @@ public static class JugglerLayoutPresets
         var zones = timeZones.Distinct().Order().ToArray();
         for (var zoneIndex = 0; zoneIndex < zones.Length; zoneIndex++)
         {
-            var people = Enumerable.Range(0, timeZones.Count)
+            var people = Enumerable
+                .Range(0, timeZones.Count)
                 .Where(person => timeZones[person] == zones[zoneIndex])
                 .ToArray();
             var hasMultipleZones = zones.Length > 1;
@@ -55,24 +60,29 @@ public static class JugglerLayoutPresets
         var jugglers = pattern.Jugglers ?? [];
         var defaultLayout = CreateWvLayout(Enumerable.Repeat(0, jugglers.Count).ToArray());
         return jugglers
-            .Select((juggler, index) =>
-            {
-                if (juggler.Position is null)
-                    return defaultLayout[index];
+            .Select(
+                (juggler, index) =>
+                {
+                    if (juggler.Position is null)
+                        return defaultLayout[index];
 
-                var position = juggler.Position ?? [0m, 0m, 0m];
-                var lookAt = juggler.LookAt ?? [0m, 0m, 0m];
-                var x = (double)(position.Count > 0 ? position[0] : 0m) / 4.5;
-                var z = (double)(position.Count > 2 ? position[2] : 0m) / 4.5;
-                var dx = (double)(lookAt.Count > 0 ? lookAt[0] : 0m)
-                    - (position.Count > 0 ? (double)position[0] : 0d);
-                var dz = (double)(lookAt.Count > 2 ? lookAt[2] : 0m)
-                    - (position.Count > 2 ? (double)position[2] : 0d);
-                var rotation = dx == 0 && dz == 0
-                    ? RotationTowardCenter(x, z)
-                    : NormalizeRotation(Math.Atan2(dx, -dz) * 180 / Math.PI);
-                return new JugglerLayoutPose(x, z, rotation);
-            })
+                    var position = juggler.Position ?? [0m, 0m, 0m];
+                    var lookAt = juggler.LookAt ?? [0m, 0m, 0m];
+                    var x = (double)(position.Count > 0 ? position[0] : 0m) / 4.5;
+                    var z = (double)(position.Count > 2 ? position[2] : 0m) / 4.5;
+                    var dx =
+                        (double)(lookAt.Count > 0 ? lookAt[0] : 0m)
+                        - (position.Count > 0 ? (double)position[0] : 0d);
+                    var dz =
+                        (double)(lookAt.Count > 2 ? lookAt[2] : 0m)
+                        - (position.Count > 2 ? (double)position[2] : 0d);
+                    var rotation =
+                        dx == 0 && dz == 0
+                            ? RotationTowardCenter(x, z)
+                            : NormalizeRotation(Math.Atan2(dx, -dz) * 180 / Math.PI);
+                    return new JugglerLayoutPose(x, z, rotation);
+                }
+            )
             .ToArray();
     }
 
@@ -81,25 +91,35 @@ public static class JugglerLayoutPresets
         var jugglers = pattern.Jugglers ?? [];
         if (jugglers.Count != layout.Count)
         {
-            throw new ArgumentException("There must be a layout pose for each juggler.", nameof(layout));
+            throw new ArgumentException(
+                "There must be a layout pose for each juggler.",
+                nameof(layout)
+            );
         }
 
         const double layoutScale = 4.5;
         return pattern with
         {
             Jugglers = jugglers
-                .Select((juggler, index) =>
-                {
-                    var pose = layout[index];
-                    var x = pose.X * layoutScale;
-                    var z = pose.Z * layoutScale;
-                    var radians = pose.Rotation * Math.PI / 180;
-                    return juggler with
+                .Select(
+                    (juggler, index) =>
                     {
-                        Position = [RoundLikePassist(x), 0, RoundLikePassist(z)],
-                        LookAt = [RoundLikePassist(x + Math.Sin(radians)), 0, RoundLikePassist(z - Math.Cos(radians))],
-                    };
-                })
+                        var pose = layout[index];
+                        var x = pose.X * layoutScale;
+                        var z = pose.Z * layoutScale;
+                        var radians = pose.Rotation * Math.PI / 180;
+                        return juggler with
+                        {
+                            Position = [RoundLikePassist(x), 0, RoundLikePassist(z)],
+                            LookAt =
+                            [
+                                RoundLikePassist(x + Math.Sin(radians)),
+                                0,
+                                RoundLikePassist(z - Math.Cos(radians)),
+                            ],
+                        };
+                    }
+                )
                 .ToArray(),
         };
     }

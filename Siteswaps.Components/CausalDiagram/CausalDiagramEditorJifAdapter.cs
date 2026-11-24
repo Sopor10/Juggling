@@ -24,7 +24,8 @@ public static class CausalDiagramEditorJifAdapter
 
         if (state.Jugglers.Any(juggler => state.Throws.All(node => node.JugglerId != juggler.Id)))
         {
-            error = "Jeder Jongleur braucht mindestens einen Wurf, damit die Passist-Animation erstellt werden kann.";
+            error =
+                "Jeder Jongleur braucht mindestens einen Wurf, damit die Passist-Animation erstellt werden kann.";
             return false;
         }
 
@@ -34,12 +35,28 @@ public static class CausalDiagramEditorJifAdapter
             return true;
         }
 
-        if (state.CausalEdges.GroupBy(edge => (edge.ToThrowId, edge.CycleOffset)).Any(group => group.Count() > 1))
+        if (
+            state
+                .CausalEdges.GroupBy(edge => (edge.ToThrowId, edge.CycleOffset))
+                .Any(group => group.Count() > 1)
+        )
         {
-            error = "Ein Wurfknoten hat mehrere eingehende Pfeile. Passe die Verbindungen an, damit die Passist-Animation wieder eindeutig ist.";
+            error =
+                "Ein Wurfknoten hat mehrere eingehende Pfeile. Passe die Verbindungen an, damit die Passist-Animation wieder eindeutig ist.";
             return false;
         }
 
+        return TryCreateCustomDiagramSet(state, out diagram, out error);
+    }
+
+    private static bool TryCreateCustomDiagramSet(
+        CausalDiagramEditorState state,
+        out DiagramSet? diagram,
+        out string error
+    )
+    {
+        diagram = null;
+        error = "Dieses Diagramm kann nicht als Passist-Animation dargestellt werden.";
         var jugglers = state.Jugglers.Select(juggler => new Person(juggler.Name)).ToArray();
         var jugglerIndex = state
             .Jugglers.Select((juggler, index) => (juggler.Id, index))
@@ -480,11 +497,15 @@ public static class CausalDiagramEditorJifAdapter
         {
             TimeStretchFactor = pattern.TimeStretchFactor,
             Repetition = pattern.Repetition with { Period = decimal.ToInt32(scaledPeriod) },
-            Throws = pattern.Throws?.Select(throwEvent => throwEvent with
-            {
-                Time = throwEvent.Time * factor,
-                Duration = throwEvent.Duration * factor,
-            }).ToArray(),
+            Throws = pattern
+                .Throws?.Select(throwEvent =>
+                    throwEvent with
+                    {
+                        Time = throwEvent.Time * factor,
+                        Duration = throwEvent.Duration * factor,
+                    }
+                )
+                .ToArray(),
         };
     }
 

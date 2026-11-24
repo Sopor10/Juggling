@@ -35,7 +35,7 @@ public sealed class CausalDiagramEditorJifAdapterTests
         state.CausalEdges[edgeIndex] = state.CausalEdges[edgeIndex] with
         {
             ToThrowId = duplicate.ToThrowId,
-            CycleOffset = duplicate.CycleOffset
+            CycleOffset = duplicate.CycleOffset,
         };
         state.SynchronizeHeights();
 
@@ -70,8 +70,16 @@ public sealed class CausalDiagramEditorJifAdapterTests
         diagram.Throws.Should().HaveCount(12);
         diagram.Throws.Count(item => item.Hand.Person.Name == "A").Should().Be(7);
         diagram.Throws.Count(item => item.Hand.Person.Name == "B").Should().Be(5);
-        diagram.Throws.Where(item => item.Hand.Person.Name == "A").Select(item => item.Height).Should().OnlyContain(height => height == 5);
-        diagram.Throws.Where(item => item.Hand.Person.Name == "B").Select(item => item.Height).Should().OnlyContain(height => height == 7);
+        diagram
+            .Throws.Where(item => item.Hand.Person.Name == "A")
+            .Select(item => item.Height)
+            .Should()
+            .OnlyContain(height => height == 5);
+        diagram
+            .Throws.Where(item => item.Hand.Person.Name == "B")
+            .Select(item => item.Height)
+            .Should()
+            .OnlyContain(height => height == 7);
         diagram.Throws.Should().OnlyContain(item => item.ToLimb.HasValue);
         CausalDiagramEditorJifAdapter
             .TryMap(state, out var mapped, out error)
@@ -87,7 +95,10 @@ public sealed class CausalDiagramEditorJifAdapterTests
         mapped.Repetition.Should().NotBeNull();
         mapped.Repetition!.Period.Should().Be(14);
         mapped.TimeStretchFactor.Should().Be(1m);
-        mapped.Throws!.Select(item => item.Duration).Should().OnlyContain(duration => duration == 1m || duration == 1.4m);
+        mapped
+            .Throws!.Select(item => item.Duration)
+            .Should()
+            .OnlyContain(duration => duration == 1m || duration == 1.4m);
         mapped.Throws.Should().HaveCount(24);
     }
 

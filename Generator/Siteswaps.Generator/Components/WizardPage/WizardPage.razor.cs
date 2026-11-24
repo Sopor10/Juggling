@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
-using Siteswaps.Jif.Components.Navigation;
 using Siteswaps.Generator.Components;
 using Siteswaps.Generator.Components.GenerationWorkflow;
 using Siteswaps.Generator.Components.State;
@@ -12,6 +11,7 @@ using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;
 using Siteswaps.Generator.Components.WizardPage.Results;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Jif.Components.Navigation;
 
 namespace Siteswaps.Generator.Components.WizardPage;
 

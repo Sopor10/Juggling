@@ -18,7 +18,10 @@ public static class CausalStartPropsCalculator
     {
         ArgumentNullException.ThrowIfNull(diagram);
         if (diagram.StepCount <= 0)
-            throw new ArgumentOutOfRangeException(nameof(diagram), "Diagram period must be positive.");
+            throw new ArgumentOutOfRangeException(
+                nameof(diagram),
+                "Diagram period must be positive."
+            );
 
         var counts = diagram.Jugglers.ToDictionary(
             person => person.Name,
@@ -27,15 +30,21 @@ public static class CausalStartPropsCalculator
         );
         var totalHeight = diagram.Throws.Sum(node => node.Height);
         if (totalHeight % diagram.StepCount != 0)
-            throw new InvalidOperationException("A periodic causal diagram must have an integral prop count.");
+            throw new InvalidOperationException(
+                "A periodic causal diagram must have an integral prop count."
+            );
         var positiveThrows = diagram.Throws.Where(node => node.Height > 0).ToArray();
         if (positiveThrows.Length == 0)
-            return new CausalStartPropsResult(counts.ToImmutableDictionary(StringComparer.Ordinal), 1, 0);
+            return new CausalStartPropsResult(
+                counts.ToImmutableDictionary(StringComparer.Ordinal),
+                1,
+                0
+            );
 
         var period = (decimal)diagram.StepCount;
         var handCount = 2m * diagram.TimeStretchFactor;
-        var outgoingArrows = diagram.CausalArrows
-            .GroupBy(arrow => Key(arrow.From))
+        var outgoingArrows = diagram
+            .CausalArrows.GroupBy(arrow => Key(arrow.From))
             .ToDictionary(group => group.Key, group => group.ToArray());
         var throwsByHand = positiveThrows
             .Select((node, index) => (Node: node, Index: index))
@@ -61,14 +70,30 @@ public static class CausalStartPropsCalculator
             var next = candidates
                 .Select(candidate =>
                 {
-                    var shift = decimal.ToInt32(decimal.Ceiling((landingTime - candidate.Node.Time) / period));
+                    var shift = decimal.ToInt32(
+                        decimal.Ceiling((landingTime - candidate.Node.Time) / period)
+                    );
                     shift = Math.Max(0, shift);
-                    return (candidate.Index, Shift: shift, Time: candidate.Node.Time + shift * period);
+                    return (
+                        candidate.Index,
+                        Shift: shift,
+                        Time: candidate.Node.Time + shift * period
+                    );
                 })
                 .OrderBy(candidate => candidate.Time)
                 .First();
-            if (candidates.Count(candidate => candidate.Node.Time +
-                    Math.Max(0, decimal.ToInt32(decimal.Ceiling((landingTime - candidate.Node.Time) / period))) * period == next.Time) != 1)
+            if (
+                candidates.Count(candidate =>
+                    candidate.Node.Time
+                        + Math.Max(
+                            0,
+                            decimal.ToInt32(
+                                decimal.Ceiling((landingTime - candidate.Node.Time) / period)
+                            )
+                        ) * period
+                    == next.Time
+                ) != 1
+            )
                 throw new InvalidOperationException(
                     $"Landing from {key} has more than one next throw on its target hand."
                 );
@@ -105,7 +130,9 @@ public static class CausalStartPropsCalculator
 
             var windings = cycle.Sum(index => periodShift[index]);
             if (windings <= 0)
-                throw new InvalidOperationException("A periodic prop path must advance through time.");
+                throw new InvalidOperationException(
+                    "A periodic prop path must advance through time."
+                );
             fullPeriodMultiplier = LeastCommonMultiple(fullPeriodMultiplier, windings);
 
             // A quotient cycle with W period shifts lifts to W prop paths; each starts at its first throw in its W-period window.
@@ -115,7 +142,11 @@ public static class CausalStartPropsCalculator
                 var first = cycle
                     .Select(index =>
                     {
-                        var eventData = (Index: index, Shift: phase, Time: positiveThrows[index].Time + phase * period);
+                        var eventData = (
+                            Index: index,
+                            Shift: phase,
+                            Time: positiveThrows[index].Time + phase * period
+                        );
                         phase = (phase + periodShift[index]) % windings;
                         return eventData;
                     })
@@ -124,9 +155,16 @@ public static class CausalStartPropsCalculator
 
                 var hand = positiveThrows[first.Index].Hand;
                 var currentCount = counts[hand.Person.Name];
-                counts[hand.Person.Name] = hand.Name == "L"
-                    ? currentCount with { Left = currentCount.Left + 1 }
-                    : currentCount with { Right = currentCount.Right + 1 };
+                counts[hand.Person.Name] =
+                    hand.Name == "L"
+                        ? currentCount with
+                        {
+                            Left = currentCount.Left + 1,
+                        }
+                        : currentCount with
+                        {
+                            Right = currentCount.Right + 1,
+                        };
             }
         }
 
@@ -137,11 +175,7 @@ public static class CausalStartPropsCalculator
                 $"Periodic causal paths account for {propCount} props, but throw heights require {totalHeight / diagram.StepCount}."
             );
 
-        return new CausalStartPropsResult(
-            startProps,
-            fullPeriodMultiplier,
-            seedingCompletionTime
-        );
+        return new CausalStartPropsResult(startProps, fullPeriodMultiplier, seedingCompletionTime);
     }
 
     private static int LeastCommonMultiple(int left, int right) =>
@@ -173,9 +207,10 @@ public static class CausalStartPropsCalculator
         Throw node,
         decimal handCount,
         IReadOnlyDictionary<NodeKey, DiagramArrow[]> outgoingArrows
-    ) => outgoingArrows.TryGetValue(Key(node), out var arrows) && arrows.Length == 1
-        ? arrows[0].To.Time + handCount
-        : node.Time + node.Height;
+    ) =>
+        outgoingArrows.TryGetValue(Key(node), out var arrows) && arrows.Length == 1
+            ? arrows[0].To.Time + handCount
+            : node.Time + node.Height;
 
     private static string HandKey(Hand hand) => $"{hand.Person.Name}/{hand.Name}";
 
@@ -191,11 +226,8 @@ public static class CausalStartPropsCalculator
     )
     {
         ArgumentOutOfRangeException.ThrowIfNegative(totalProps);
-        var counts = Calculate(throws, causalArrows, jugglers).ToDictionary(
-            pair => pair.Key,
-            pair => pair.Value,
-            StringComparer.Ordinal
-        );
+        var counts = Calculate(throws, causalArrows, jugglers)
+            .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
         var remainder = totalProps - counts.Values.Sum(count => count.Left + count.Right);
         // Preserve overfull root estimates; there is no remainder to distribute.
         if (remainder <= 0)
@@ -203,15 +235,23 @@ public static class CausalStartPropsCalculator
 
         var hands = jugglers
             .OrderBy(juggler => juggler.Name, StringComparer.Ordinal)
-            .SelectMany(juggler => new[] { (juggler.Name, IsRight: true), (juggler.Name, IsRight: false) })
+            .SelectMany(juggler =>
+                new[] { (juggler.Name, IsRight: true), (juggler.Name, IsRight: false) }
+            )
             .ToArray();
         for (var index = 0; index < remainder; index++)
         {
             var (juggler, isRight) = hands[index % hands.Length];
             var current = counts[juggler];
             counts[juggler] = isRight
-                ? current with { Right = current.Right + 1 }
-                : current with { Left = current.Left + 1 };
+                ? current with
+                {
+                    Right = current.Right + 1,
+                }
+                : current with
+                {
+                    Left = current.Left + 1,
+                };
         }
 
         return counts.ToImmutableDictionary(StringComparer.Ordinal);
@@ -242,16 +282,22 @@ public static class CausalStartPropsCalculator
                 continue;
 
             var current = counts[node.Hand.Person.Name];
-            counts[node.Hand.Person.Name] = node.Hand.Name == "L"
-                ? current with { Left = current.Left + 1 }
-                : current with { Right = current.Right + 1 };
+            counts[node.Hand.Person.Name] =
+                node.Hand.Name == "L"
+                    ? current with
+                    {
+                        Left = current.Left + 1,
+                    }
+                    : current with
+                    {
+                        Right = current.Right + 1,
+                    };
         }
 
         return counts.ToImmutableDictionary(StringComparer.Ordinal);
     }
 
-    private static NodeKey Key(Throw node) =>
-        new(node.Time, node.Hand.Person.Name, node.Hand.Name);
+    private static NodeKey Key(Throw node) => new(node.Time, node.Hand.Person.Name, node.Hand.Name);
 
     private readonly record struct NodeKey(decimal Time, string Juggler, string Hand);
 }

@@ -1,16 +1,16 @@
 extern alias JifDetails;
+using FluentAssertions;
 
 using FsCheck;
-using FluentAssertions;
 using Microsoft.FSharp.Core;
 using Siteswaps.Generator.Components;
 using Siteswaps.Generator.Components.SiteswapLab;
 using Siteswaps.Generator.Core.Generator;
 using CausalStartPropsCalculator = JifDetails::Siteswap.Details.CausalDiagram.CausalStartPropsCalculator;
+using DetailSiteswap = JifDetails::Siteswap.Details.Siteswap;
 using PassingDiagramBuilder = JifDetails::Siteswap.Details.CausalDiagram.PassingDiagramBuilder;
 using SiteswapDiagramBuilder = JifDetails::Siteswap.Details.CausalDiagram.SiteswapDiagramBuilder;
 using StartProps = JifDetails::Siteswap.Details.CausalDiagram.StartProps;
-using DetailSiteswap = JifDetails::Siteswap.Details.Siteswap;
 
 namespace Siteswaps.Generator.Test.Feeding;
 
@@ -41,9 +41,14 @@ public sealed class CausalStartPropsPropertyTests
             var pattern = FeedingPattern.Create(seed);
             pattern.PersonCount.Should().BeInRange(3, 5);
             pattern.State.IsValid.Should().BeTrue(pattern.ToString());
-            var diagramPatternPeriod = pattern.Period % 2 == 0 ? pattern.Period : pattern.Period * 2;
-            var activeSlots = pattern.State.People.Sum(person => person.Cells.Count(cell => cell.Height > 0));
-            pattern.Diagram.Throws.Should().HaveCount(activeSlots * (diagramPatternPeriod / pattern.Period));
+            var diagramPatternPeriod =
+                pattern.Period % 2 == 0 ? pattern.Period : pattern.Period * 2;
+            var activeSlots = pattern.State.People.Sum(person =>
+                person.Cells.Count(cell => cell.Height > 0)
+            );
+            pattern
+                .Diagram.Throws.Should()
+                .HaveCount(activeSlots * (diagramPatternPeriod / pattern.Period));
             validCount++;
         }
 
@@ -56,7 +61,11 @@ public sealed class CausalStartPropsPropertyTests
         for (var seed = 0; seed < FeedingSampleCount; seed++)
         {
             var pattern = FeedingPattern.Create(seed);
-            var zones = pattern.State.People.Select(person => person.TimeZone).Distinct().Order().ToArray();
+            var zones = pattern
+                .State.People.Select(person => person.TimeZone)
+                .Distinct()
+                .Order()
+                .ToArray();
             var timeStretch = zones.Length;
             var diagramPeriod = pattern.Period % 2 == 0 ? pattern.Period : pattern.Period * 2;
 
@@ -70,18 +79,33 @@ public sealed class CausalStartPropsPropertyTests
                     var zone = Array.IndexOf(zones, pattern.State.People[person].TimeZone);
                     var time = beat * timeStretch + zone;
                     var node = pattern.Diagram.Throws.Single(item =>
-                        item.Hand.Person.Name == ((char)('A' + person)).ToString() && item.Time == time);
+                        item.Hand.Person.Name == ((char)('A' + person)).ToString()
+                        && item.Time == time
+                    );
                     var cell = pattern.State.People[person].Cells[beat % pattern.Period];
-                    var targetPerson = cell.TargetPerson ?? throw new InvalidOperationException("Generated feed target is missing.");
-                    var targetZone = Array.IndexOf(zones, pattern.State.People[targetPerson].TimeZone);
+                    var targetPerson =
+                        cell.TargetPerson
+                        ?? throw new InvalidOperationException("Generated feed target is missing.");
+                    var targetZone = Array.IndexOf(
+                        zones,
+                        pattern.State.People[targetPerson].TimeZone
+                    );
                     var targetLocalBeat = beat + (zone + node.Height - targetZone) / timeStretch;
                     var expectedHand = targetLocalBeat % 2 == 0 ? "R" : "L";
                     var actualTargetHand = pattern.Diagram.Hands[node.ToLimb!.Value];
 
-                    actualTargetHand.Person.Name.Should().Be(((char)('A' + targetPerson)).ToString(),
-                        $"seed {seed}, {person}/{beat} should land on its selected person");
-                    actualTargetHand.Name.Should().Be(expectedHand,
-                        $"seed {seed}, {person}/{beat} should land on the hand active at target local beat {targetLocalBeat}");
+                    actualTargetHand
+                        .Person.Name.Should()
+                        .Be(
+                            ((char)('A' + targetPerson)).ToString(),
+                            $"seed {seed}, {person}/{beat} should land on its selected person"
+                        );
+                    actualTargetHand
+                        .Name.Should()
+                        .Be(
+                            expectedHand,
+                            $"seed {seed}, {person}/{beat} should land on the hand active at target local beat {targetLocalBeat}"
+                        );
                 }
             }
         }
@@ -90,48 +114,73 @@ public sealed class CausalStartPropsPropertyTests
     [Test]
     public void Siteswap_distribution_algorithms_are_equal_for_generator_outputs()
     {
-        CheckProperty(SiteSwapCase.Arbitrary, testCase =>
-        {
-            var notation = testCase.Notation;
-            DetailSiteswap.TryCreate(notation, out var siteswap);
-            var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
-            var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram);
-            return SameDistribution(diagram.StartProps, causal);
-        });
+        CheckProperty(
+            SiteSwapCase.Arbitrary,
+            testCase =>
+            {
+                var notation = testCase.Notation;
+                DetailSiteswap.TryCreate(notation, out var siteswap);
+                var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
+                var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram);
+                return SameDistribution(diagram.StartProps, causal);
+            }
+        );
     }
 
-    [Test, Explicit("Exploratory property: known counterexamples are expected while the algorithms differ.")]
+    [
+        Test,
+        Explicit(
+            "Exploratory property: known counterexamples are expected while the algorithms differ."
+        )
+    ]
     public void Feeding_distribution_algorithms_are_equal_for_random_valid_patterns()
     {
-        CheckProperty(FeedingPattern.Arbitrary, pattern =>
-        {
-            var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(pattern.Diagram);
-            var inventory = pattern.State.People.Select((person, index) =>
-                    (person.Name, Props: pattern.State.StartingClubsFor(index)))
-                .ToDictionary(
-                    item => item.Name,
-                    item => new StartProps(item.Props.Left, item.Props.Right),
-                    StringComparer.Ordinal
+        CheckProperty(
+            FeedingPattern.Arbitrary,
+            pattern =>
+            {
+                var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(
+                    pattern.Diagram
                 );
-            return SameDistribution(inventory, causal);
-        });
+                var inventory = pattern
+                    .State.People.Select(
+                        (person, index) =>
+                            (person.Name, Props: pattern.State.StartingClubsFor(index))
+                    )
+                    .ToDictionary(
+                        item => item.Name,
+                        item => new StartProps(item.Props.Left, item.Props.Right),
+                        StringComparer.Ordinal
+                    );
+                return SameDistribution(inventory, causal);
+            }
+        );
     }
 
     [Test]
     public void FsCheck_feeding_generator_produces_valid_patterns_with_feasible_causal_starts()
     {
-        CheckProperty(FeedingPattern.Arbitrary, pattern =>
-        {
-            if (!pattern.State.IsValid)
-                return false;
+        CheckProperty(
+            FeedingPattern.Arbitrary,
+            pattern =>
+            {
+                if (!pattern.State.IsValid)
+                    return false;
 
-            var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
-            return CanRun(
-                pattern.Diagram,
-                analysis.StartProps.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
-                analysis.FullPeriodMultiplier
-            );
-        });
+                var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(
+                    pattern.Diagram
+                );
+                return CanRun(
+                    pattern.Diagram,
+                    analysis.StartProps.ToDictionary(
+                        pair => pair.Key,
+                        pair => pair.Value,
+                        StringComparer.Ordinal
+                    ),
+                    analysis.FullPeriodMultiplier
+                );
+            }
+        );
     }
 
     [Test]
@@ -144,7 +193,8 @@ public sealed class CausalStartPropsPropertyTests
         var matchingSiteswaps = GeneratedSiteswaps
             .Where(notation => CompareSiteswap(notation) is null)
             .ToArray();
-        var allFeedingDifferences = Enumerable.Range(0, FeedingSampleCount)
+        var allFeedingDifferences = Enumerable
+            .Range(0, FeedingSampleCount)
             .Select(seed => (Seed: seed, Pattern: FeedingPattern.Create(seed)))
             .Select(item => (item.Seed, item.Pattern, Difference: CompareFeeding(item.Pattern)))
             .Where(item => item.Difference is not null)
@@ -153,7 +203,9 @@ public sealed class CausalStartPropsPropertyTests
         TestContext.Progress.WriteLine(
             $"Siteswap mismatches: {allSiteswapDifferences.Length}/{GeneratedSiteswaps.Length}; first 20:"
         );
-        TestContext.Progress.WriteLine($"Siteswap matches: {matchingSiteswaps.Length}/{GeneratedSiteswaps.Length}");
+        TestContext.Progress.WriteLine(
+            $"Siteswap matches: {matchingSiteswaps.Length}/{GeneratedSiteswaps.Length}"
+        );
         foreach (var item in allSiteswapDifferences.Take(20))
             TestContext.Progress.WriteLine($"  {item.Notation}: {item.Difference}");
 
@@ -161,7 +213,9 @@ public sealed class CausalStartPropsPropertyTests
             $"Feeding mismatches: {allFeedingDifferences.Length}/{FeedingSampleCount} valid generated patterns; first 20:"
         );
         foreach (var item in allFeedingDifferences.Take(20))
-            TestContext.Progress.WriteLine($"  seed {item.Seed}: {item.Pattern}; {item.Difference}");
+            TestContext.Progress.WriteLine(
+                $"  seed {item.Seed}: {item.Pattern}; {item.Difference}"
+            );
 
         allSiteswapDifferences.Should().BeEmpty();
         allFeedingDifferences.Should().NotBeEmpty();
@@ -178,9 +232,12 @@ public sealed class CausalStartPropsPropertyTests
     public void Causal_distribution_repairs_invalid_legacy_feeding_starts()
     {
         var failures = new List<(int Seed, string Pattern, string Legacy, string Causal)>();
-        var physicallyValidDifferences = new List<(int Seed, string Pattern, string Legacy, string Causal)>();
-        var naturalDistributionFailures = new List<(int Seed, string Pattern, string Natural, string Causal)>();
-        var naturalDistributionDifferences = new List<(int Seed, string Pattern, string Natural, string Causal)>();
+        var physicallyValidDifferences =
+            new List<(int Seed, string Pattern, string Legacy, string Causal)>();
+        var naturalDistributionFailures =
+            new List<(int Seed, string Pattern, string Natural, string Causal)>();
+        var naturalDistributionDifferences =
+            new List<(int Seed, string Pattern, string Natural, string Causal)>();
         var legacyCountErrors = 0;
         var legacySimulationFailures = 0;
         var legacyRuns = 0;
@@ -189,32 +246,51 @@ public sealed class CausalStartPropsPropertyTests
         {
             var pattern = FeedingPattern.Create(seed);
             var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
-            var legacy = pattern.State.People.Select((person, index) =>
-                    (person.Name, Props: pattern.State.StartingClubsFor(index)))
+            var legacy = pattern
+                .State.People.Select(
+                    (person, index) => (person.Name, Props: pattern.State.StartingClubsFor(index))
+                )
                 .ToDictionary(
                     item => item.Name,
                     item => new StartProps(item.Props.Left, item.Props.Right),
                     StringComparer.Ordinal
                 );
-            var expectedProps = pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+            var expectedProps =
+                pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
             var natural = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
                 pattern.Diagram.Throws,
                 pattern.Diagram.CausalArrows,
                 pattern.Diagram.Jugglers,
                 expectedProps
             );
-            if (!CanRun(pattern.Diagram, natural.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal), analysis.FullPeriodMultiplier))
-                naturalDistributionFailures.Add((seed, pattern.ToString(), Format(natural), Format(analysis.StartProps)));
+            if (
+                !CanRun(
+                    pattern.Diagram,
+                    natural.ToDictionary(
+                        pair => pair.Key,
+                        pair => pair.Value,
+                        StringComparer.Ordinal
+                    ),
+                    analysis.FullPeriodMultiplier
+                )
+            )
+                naturalDistributionFailures.Add(
+                    (seed, pattern.ToString(), Format(natural), Format(analysis.StartProps))
+                );
             else
             {
                 naturalRuns++;
                 if (!SameDistribution(natural, analysis.StartProps))
-                    naturalDistributionDifferences.Add((seed, pattern.ToString(), Format(natural), Format(analysis.StartProps)));
+                    naturalDistributionDifferences.Add(
+                        (seed, pattern.ToString(), Format(natural), Format(analysis.StartProps))
+                    );
             }
 
             var actualProps = legacy.Values.Sum(count => count.Left + count.Right);
             var hasCorrectPropCount = actualProps == expectedProps;
-            var canRun = hasCorrectPropCount && CanRun(pattern.Diagram, legacy, analysis.FullPeriodMultiplier);
+            var canRun =
+                hasCorrectPropCount
+                && CanRun(pattern.Diagram, legacy, analysis.FullPeriodMultiplier);
             if (!hasCorrectPropCount)
                 legacyCountErrors++;
             else if (!canRun)
@@ -223,30 +299,42 @@ public sealed class CausalStartPropsPropertyTests
             {
                 legacyRuns++;
                 if (!SameDistribution(legacy, analysis.StartProps))
-                    physicallyValidDifferences.Add((seed, pattern.ToString(), Format(legacy), Format(analysis.StartProps)));
+                    physicallyValidDifferences.Add(
+                        (seed, pattern.ToString(), Format(legacy), Format(analysis.StartProps))
+                    );
             }
 
             if (!canRun)
-                failures.Add((seed, pattern.ToString(), Format(legacy), Format(analysis.StartProps)));
+                failures.Add(
+                    (seed, pattern.ToString(), Format(legacy), Format(analysis.StartProps))
+                );
         }
 
         TestContext.Progress.WriteLine(
             $"Legacy starts: {legacyCountErrors} wrong prop counts; {legacySimulationFailures} fail the physical simulation; {legacyRuns} pass (total {FeedingSampleCount} valid feeds)."
         );
         foreach (var failure in failures.Take(20))
-            TestContext.Progress.WriteLine($"  seed {failure.Seed}: {failure.Pattern}; legacy={failure.Legacy}; causal={failure.Causal}");
+            TestContext.Progress.WriteLine(
+                $"  seed {failure.Seed}: {failure.Pattern}; legacy={failure.Legacy}; causal={failure.Causal}"
+            );
         TestContext.Progress.WriteLine(
             $"Legacy distributions that differ but pass prop-count, no-shortage, and periodic-state checks: {physicallyValidDifferences.Count}"
         );
         foreach (var caseData in physicallyValidDifferences.Take(20))
-            TestContext.Progress.WriteLine($"  seed {caseData.Seed}: {caseData.Pattern}; legacy={caseData.Legacy}; causal={caseData.Causal}");
+            TestContext.Progress.WriteLine(
+                $"  seed {caseData.Seed}: {caseData.Pattern}; legacy={caseData.Legacy}; causal={caseData.Causal}"
+            );
         TestContext.Progress.WriteLine(
             $"Natural alphabetical distributions: {naturalRuns}/{FeedingSampleCount} pass physical simulation; {naturalDistributionFailures.Count} fail; {naturalDistributionDifferences.Count} valid cases differ from causal path distribution."
         );
         foreach (var caseData in naturalDistributionFailures.Take(20))
-            TestContext.Progress.WriteLine($"  seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}");
+            TestContext.Progress.WriteLine(
+                $"  seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}"
+            );
         foreach (var caseData in naturalDistributionDifferences.Take(20))
-            TestContext.Progress.WriteLine($"  valid seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}");
+            TestContext.Progress.WriteLine(
+                $"  valid seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}"
+            );
         failures.Should().NotBeEmpty();
     }
 
@@ -258,43 +346,76 @@ public sealed class CausalStartPropsPropertyTests
         var pattern = FeedingPattern.Create(1);
         pattern.State.IsValid.Should().BeTrue();
         var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
-        analysis.StartProps.Should().BeEquivalentTo(new Dictionary<string, StartProps>
-        {
-            ["A"] = new(Left: 0, Right: 1),
-            ["B"] = new(Left: 0, Right: 0),
-            ["C"] = new(Left: 0, Right: 0),
-        });
+        analysis
+            .StartProps.Should()
+            .BeEquivalentTo(
+                new Dictionary<string, StartProps>
+                {
+                    ["A"] = new(Left: 0, Right: 1),
+                    ["B"] = new(Left: 0, Right: 0),
+                    ["C"] = new(Left: 0, Right: 0),
+                }
+            );
         pattern.Diagram.StartProps.Should().BeEquivalentTo(analysis.StartProps);
-        SiteswapLabJifMapper.CalculateCausalStartProps(
-            pattern.State.People.Select(person => person.TimeZone).ToArray(),
-            pattern.State.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
-            pattern.State.People.Select((person, index) =>
-                (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray()
-        ).Should().BeEquivalentTo(analysis.StartProps);
+        SiteswapLabJifMapper
+            .CalculateCausalStartProps(
+                pattern.State.People.Select(person => person.TimeZone).ToArray(),
+                pattern
+                    .State.People.Select(person =>
+                        (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()
+                    )
+                    .ToArray(),
+                pattern
+                    .State.People.Select(
+                        (person, index) =>
+                            (IReadOnlyList<int>)
+                                person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()
+                    )
+                    .ToArray()
+            )
+            .Should()
+            .BeEquivalentTo(analysis.StartProps);
 
-        var totalProps = pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+        var totalProps =
+            pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
         var alphabeticalRemainder = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
             pattern.Diagram.Throws,
             pattern.Diagram.CausalArrows,
             pattern.Diagram.Jugglers,
             totalProps
         );
-        alphabeticalRemainder.Should().BeEquivalentTo(new Dictionary<string, StartProps>
-        {
-            ["A"] = new(Left: 0, Right: 0),
-            ["B"] = new(Left: 0, Right: 1),
-            ["C"] = new(Left: 1, Right: 0),
-        });
+        alphabeticalRemainder
+            .Should()
+            .BeEquivalentTo(
+                new Dictionary<string, StartProps>
+                {
+                    ["A"] = new(Left: 0, Right: 0),
+                    ["B"] = new(Left: 0, Right: 1),
+                    ["C"] = new(Left: 1, Right: 0),
+                }
+            );
         CanRun(
-            pattern.Diagram,
-            alphabeticalRemainder.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
-            analysis.FullPeriodMultiplier
-        ).Should().BeFalse("the first scheduled throw is A/R at time zero");
+                pattern.Diagram,
+                alphabeticalRemainder.ToDictionary(
+                    pair => pair.Key,
+                    pair => pair.Value,
+                    StringComparer.Ordinal
+                ),
+                analysis.FullPeriodMultiplier
+            )
+            .Should()
+            .BeFalse("the first scheduled throw is A/R at time zero");
         CanRun(
-            pattern.Diagram,
-            analysis.StartProps.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
-            analysis.FullPeriodMultiplier
-        ).Should().BeTrue("the causal cycle's phase determines which hand holds the club at start");
+                pattern.Diagram,
+                analysis.StartProps.ToDictionary(
+                    pair => pair.Key,
+                    pair => pair.Value,
+                    StringComparer.Ordinal
+                ),
+                analysis.FullPeriodMultiplier
+            )
+            .Should()
+            .BeTrue("the causal cycle's phase determines which hand holds the club at start");
     }
 
     private static void AssertFeedingSimulation(int seed)
@@ -303,7 +424,9 @@ public sealed class CausalStartPropsPropertyTests
         var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
         var distribution = analysis.StartProps;
         var heightSum = pattern.Diagram.Throws.Sum(node => node.Height);
-        (heightSum % pattern.Diagram.StepCount).Should().Be(0, $"seed {seed} should have an integral prop count");
+        (heightSum % pattern.Diagram.StepCount)
+            .Should()
+            .Be(0, $"seed {seed} should have an integral prop count");
         var expectedProps = heightSum / pattern.Diagram.StepCount;
         distribution.Values.Sum(count => count.Left + count.Right).Should().Be(expectedProps);
 
@@ -313,10 +436,14 @@ public sealed class CausalStartPropsPropertyTests
             var props = distribution[hand.Person.Name];
             inventory[(hand.Person.Name, hand.Name)] = hand.Name == "L" ? props.Left : props.Right;
         }
-        var throwsByTime = pattern.Diagram.Throws
-            .Where(node => node.Height > 0)
+        var throwsByTime = pattern
+            .Diagram.Throws.Where(node => node.Height > 0)
             .GroupBy(node => node.Time)
-            .ToDictionary(group => group.Key, group => group.OrderBy(node => node.Hand.Person.Name, StringComparer.Ordinal).ToArray());
+            .ToDictionary(
+                group => group.Key,
+                group =>
+                    group.OrderBy(node => node.Hand.Person.Name, StringComparer.Ordinal).ToArray()
+            );
         var arrivals = new Dictionary<(int Time, string Juggler, string Hand), int>();
         var period = pattern.Diagram.StepCount;
         var maxHeight = pattern.Diagram.Throws.Max(node => node.Height);
@@ -339,12 +466,21 @@ public sealed class CausalStartPropsPropertyTests
                 foreach (var throwNode in events)
                 {
                     var source = (throwNode.Hand.Person.Name, throwNode.Hand.Name);
-                    inventory.GetValueOrDefault(source).Should().BeGreaterThan(0,
-                        $"seed {seed}, at time {time}, before throw {throwNode.Hand.Person.Name}/{throwNode.Hand.Name}");
+                    inventory
+                        .GetValueOrDefault(source)
+                        .Should()
+                        .BeGreaterThan(
+                            0,
+                            $"seed {seed}, at time {time}, before throw {throwNode.Hand.Person.Name}/{throwNode.Hand.Name}"
+                        );
                     inventory[source]--;
 
                     var targetHand = pattern.Diagram.Hands[throwNode.ToLimb!.Value];
-                    var landing = (time + throwNode.Height, targetHand.Person.Name, targetHand.Name);
+                    var landing = (
+                        time + throwNode.Height,
+                        targetHand.Person.Name,
+                        targetHand.Name
+                    );
                     arrivals[landing] = arrivals.GetValueOrDefault(landing) + 1;
                 }
             }
@@ -352,10 +488,12 @@ public sealed class CausalStartPropsPropertyTests
             if (time == seedTime)
                 stateAfterSeeding = Snapshot(time, inventory, arrivals);
             if (time == seedTime + fullPeriod)
-                Snapshot(time, inventory, arrivals).Should().BeEquivalentTo(
-                    stateAfterSeeding,
-                    $"seed {seed}, {pattern}, start={Format(distribution)}, multiplier={analysis.FullPeriodMultiplier}, state should repeat after every prop orbit has been seeded"
-                );
+                Snapshot(time, inventory, arrivals)
+                    .Should()
+                    .BeEquivalentTo(
+                        stateAfterSeeding,
+                        $"seed {seed}, {pattern}, start={Format(distribution)}, multiplier={analysis.FullPeriodMultiplier}, state should repeat after every prop orbit has been seeded"
+                    );
         }
     }
 
@@ -366,7 +504,11 @@ public sealed class CausalStartPropsPropertyTests
     )
     {
         var totalHeight = diagram.Throws.Sum(node => node.Height);
-        if (totalHeight % diagram.StepCount != 0 || startProps.Values.Sum(count => count.Left + count.Right) != totalHeight / diagram.StepCount)
+        if (
+            totalHeight % diagram.StepCount != 0
+            || startProps.Values.Sum(count => count.Left + count.Right)
+                != totalHeight / diagram.StepCount
+        )
             return false;
 
         var inventory = new Dictionary<(string Juggler, string Hand), int>();
@@ -376,7 +518,8 @@ public sealed class CausalStartPropsPropertyTests
             inventory[(hand.Person.Name, hand.Name)] = hand.Name == "L" ? props.Left : props.Right;
         }
 
-        var throwsByTime = diagram.Throws.Where(node => node.Height > 0)
+        var throwsByTime = diagram
+            .Throws.Where(node => node.Height > 0)
             .GroupBy(node => node.Time)
             .ToDictionary(group => group.Key, group => group.ToArray());
         var arrivals = new Dictionary<(int Time, string Juggler, string Hand), int>();
@@ -405,7 +548,11 @@ public sealed class CausalStartPropsPropertyTests
                     inventory[source]--;
 
                     var targetHand = diagram.Hands[throwNode.ToLimb!.Value];
-                    var arrival = (time + throwNode.Height, targetHand.Person.Name, targetHand.Name);
+                    var arrival = (
+                        time + throwNode.Height,
+                        targetHand.Person.Name,
+                        targetHand.Name
+                    );
                     arrivals[arrival] = arrivals.GetValueOrDefault(arrival) + 1;
                 }
             }
@@ -422,10 +569,9 @@ public sealed class CausalStartPropsPropertyTests
             && SameEntries(firstPeriodicState.InFlight, repeatedPeriodicState.InFlight);
     }
 
-    private static bool SameEntries<TKey>(
-        Dictionary<TKey, int> left,
-        Dictionary<TKey, int> right
-    ) where TKey : notnull => left.Count == right.Count
+    private static bool SameEntries<TKey>(Dictionary<TKey, int> left, Dictionary<TKey, int> right)
+        where TKey : notnull =>
+        left.Count == right.Count
         && left.All(pair => right.TryGetValue(pair.Key, out var value) && value == pair.Value);
 
     private static string[] GenerateSiteswaps()
@@ -456,7 +602,8 @@ public sealed class CausalStartPropsPropertyTests
     private static bool SameDistribution(
         IReadOnlyDictionary<string, StartProps> expected,
         System.Collections.Immutable.ImmutableDictionary<string, StartProps> actual
-    ) => expected.Count == actual.Count
+    ) =>
+        expected.Count == actual.Count
         && expected.All(pair => actual.TryGetValue(pair.Key, out var value) && pair.Value == value);
 
     private static void CheckProperty<T>(Arbitrary<T> arbitrary, Func<T, bool> property)
@@ -481,8 +628,10 @@ public sealed class CausalStartPropsPropertyTests
     private static string? CompareFeeding(FeedingPattern pattern)
     {
         var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(pattern.Diagram);
-        var inventory = pattern.State.People.Select((person, index) =>
-                (person.Name, Props: pattern.State.StartingClubsFor(index)))
+        var inventory = pattern
+            .State.People.Select(
+                (person, index) => (person.Name, Props: pattern.State.StartingClubsFor(index))
+            )
             .ToDictionary(
                 item => item.Name,
                 item => new StartProps(item.Props.Left, item.Props.Right),
@@ -494,20 +643,27 @@ public sealed class CausalStartPropsPropertyTests
     }
 
     private static string Format(IReadOnlyDictionary<string, StartProps> distribution) =>
-        string.Join(", ", distribution.OrderBy(pair => pair.Key).Select(pair => $"{pair.Key}:{pair.Value.Left}/{pair.Value.Right}"));
+        string.Join(
+            ", ",
+            distribution
+                .OrderBy(pair => pair.Key)
+                .Select(pair => $"{pair.Key}:{pair.Value.Left}/{pair.Value.Right}")
+        );
 
     private static SimulationSnapshot Snapshot(
         int time,
         IReadOnlyDictionary<(string Juggler, string Hand), int> inventory,
         IReadOnlyDictionary<(int Time, string Juggler, string Hand), int> arrivals
-    ) => new(
-        inventory.ToDictionary(pair => pair.Key, pair => pair.Value),
-        arrivals.Where(pair => pair.Key.Time > time)
-            .ToDictionary(
-                pair => (pair.Key.Time - time, pair.Key.Juggler, pair.Key.Hand),
-                pair => pair.Value
-            )
-    );
+    ) =>
+        new(
+            inventory.ToDictionary(pair => pair.Key, pair => pair.Value),
+            arrivals
+                .Where(pair => pair.Key.Time > time)
+                .ToDictionary(
+                    pair => (pair.Key.Time - time, pair.Key.Juggler, pair.Key.Hand),
+                    pair => pair.Value
+                )
+        );
 
     private sealed record SimulationSnapshot(
         Dictionary<(string Juggler, string Hand), int> Inventory,
@@ -520,12 +676,13 @@ public sealed class CausalStartPropsPropertyTests
     {
         public override string ToString() => Notation;
 
-        public static Arbitrary<SiteSwapCase> Arbitrary { get; } = new DelegateArbitrary<SiteSwapCase>(
-            FsCheck.Fluent.Gen.Select(
-                FsCheck.Fluent.Gen.Elements(GeneratedSiteswaps),
-                notation => new SiteSwapCase(notation)
-            )
-        );
+        public static Arbitrary<SiteSwapCase> Arbitrary { get; } =
+            new DelegateArbitrary<SiteSwapCase>(
+                FsCheck.Fluent.Gen.Select(
+                    FsCheck.Fluent.Gen.Elements(GeneratedSiteswaps),
+                    notation => new SiteSwapCase(notation)
+                )
+            );
     }
 
     private sealed record FeedingPattern(
@@ -536,14 +693,18 @@ public sealed class CausalStartPropsPropertyTests
         JifDetails::Siteswap.Details.CausalDiagram.DiagramSet Diagram
     )
     {
-        public static Arbitrary<FeedingPattern> Arbitrary { get; } = new DelegateArbitrary<FeedingPattern>(
-            FsCheck.Fluent.Gen.Select(FsCheck.Fluent.Gen.Choose(0, int.MaxValue), seed => Create(seed))
-        );
+        public static Arbitrary<FeedingPattern> Arbitrary { get; } =
+            new DelegateArbitrary<FeedingPattern>(
+                FsCheck.Fluent.Gen.Select(
+                    FsCheck.Fluent.Gen.Choose(0, int.MaxValue),
+                    seed => Create(seed)
+                )
+            );
 
         public override string ToString() =>
-            $"people={PersonCount}, period={Period}, zones=[{string.Join(',', State.People.Select(person => person.TimeZone))}], " +
-            $"heights=[{string.Join(';', State.People.Select(person => string.Join(',', person.Cells.Select(cell => cell.Height))))}], " +
-            $"targets=[{string.Join(';', State.People.Select(person => string.Join(',', person.Cells.Select(cell => cell.TargetPerson))))}]";
+            $"people={PersonCount}, period={Period}, zones=[{string.Join(',', State.People.Select(person => person.TimeZone))}], "
+            + $"heights=[{string.Join(';', State.People.Select(person => string.Join(',', person.Cells.Select(cell => cell.Height))))}], "
+            + $"targets=[{string.Join(';', State.People.Select(person => string.Join(',', person.Cells.Select(cell => cell.TargetPerson))))}]";
 
         public static FeedingPattern Create(int seed)
         {
@@ -552,19 +713,17 @@ public sealed class CausalStartPropsPropertyTests
             var period = random.Next(2, 6);
             var zoneCount = random.Next(2, Math.Min(4, personCount) + 1);
 
-            var zones = Enumerable.Range(0, personCount)
+            var zones = Enumerable
+                .Range(0, personCount)
                 .Select(person => person % zoneCount)
                 .ToArray();
             Shuffle(zones, random);
 
-            var targets = Enumerable.Range(0, personCount)
-                .Select(_ => new int[period])
-                .ToArray();
-            var heights = Enumerable.Range(0, personCount)
-                .Select(_ => new int[period])
-                .ToArray();
+            var targets = Enumerable.Range(0, personCount).Select(_ => new int[period]).ToArray();
+            var heights = Enumerable.Range(0, personCount).Select(_ => new int[period]).ToArray();
             var allSlots = Enumerable.Range(0, personCount * period).ToArray();
-            var activeSlots = Enumerable.Range(0, personCount)
+            var activeSlots = Enumerable
+                .Range(0, personCount)
                 .Select(person => person * period + random.Next(period))
                 .ToHashSet();
             var remainingSlots = allSlots.Where(slot => !activeSlots.Contains(slot)).ToArray();
@@ -594,7 +753,10 @@ public sealed class CausalStartPropsPropertyTests
                 heights[sourcePerson][sourceBeat] = height;
             }
 
-            var state = new PassingEditorState(new string('3', period), maxThrowHeight: SettingsDto.MaxMaxHeight);
+            var state = new PassingEditorState(
+                new string('3', period),
+                maxThrowHeight: SettingsDto.MaxMaxHeight
+            );
             state.SetPersonCount(personCount);
             for (var person = 0; person < personCount; person++)
             {
@@ -608,12 +770,16 @@ public sealed class CausalStartPropsPropertyTests
                     state.SetHeight(person, beat, heights[person][beat]);
                     if (heights[person][beat] == 0)
                     {
-                        state.SetTarget(person, beat, person)
-                            .Should().BeTrue($"empty slot {person}/{beat} should target itself");
+                        state
+                            .SetTarget(person, beat, person)
+                            .Should()
+                            .BeTrue($"empty slot {person}/{beat} should target itself");
                         continue;
                     }
-                    state.SetTarget(person, beat, targets[person][beat])
-                        .Should().BeTrue($"generated landing for {person}/{beat} must be zone-compatible");
+                    state
+                        .SetTarget(person, beat, targets[person][beat])
+                        .Should()
+                        .BeTrue($"generated landing for {person}/{beat} must be zone-compatible");
                 }
             }
 

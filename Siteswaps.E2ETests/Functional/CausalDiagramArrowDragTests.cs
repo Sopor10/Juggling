@@ -35,7 +35,11 @@ public sealed class CausalDiagramArrowDragTests(ExternalBlazorAppFixture host)
 
         await page.Mouse.MoveAsync(handle!.X + handle.Width / 2, handle.Y + handle.Height / 2);
         await page.Mouse.DownAsync();
-        await page.Mouse.MoveAsync(destination!.X + destination.Width / 2, destination.Y + destination.Height / 2, new MouseMoveOptions { Steps = 8 });
+        await page.Mouse.MoveAsync(
+            destination!.X + destination.Width / 2,
+            destination.Y + destination.Height / 2,
+            new MouseMoveOptions { Steps = 8 }
+        );
         await page.WaitForFunctionAsync(
             "({ edgeId, originalX }) => { const item = [...document.querySelectorAll('.arrow-target-handle')].find(node => node.dataset.edgeId === edgeId); return item && item.getAttribute('cx') !== originalX; }",
             new { edgeId, originalX }
@@ -56,7 +60,8 @@ public sealed class CausalDiagramArrowDragTests(ExternalBlazorAppFixture host)
         var page = await host.Context.NewPageAsync();
         page.SetDefaultTimeout(15_000);
         page.PageError += (_, error) => Console.WriteLine($"PAGE ERROR: {error}");
-        page.Console += (_, message) => Console.WriteLine($"BROWSER CONSOLE: {message.Type} {message.Text}");
+        page.Console += (_, message) =>
+            Console.WriteLine($"BROWSER CONSOLE: {message.Type} {message.Text}");
         await page.GotoAsync(new Uri(host.BaseUri, "causal-diagram-editor").AbsoluteUri);
         await page.Locator(".arrow-target-handle").First.WaitForAsync();
         await page.Locator(".throw-hit-target").First.ClickAsync();
@@ -64,9 +69,14 @@ public sealed class CausalDiagramArrowDragTests(ExternalBlazorAppFixture host)
         var height = page.GetByLabel("Höhe (Schläge)");
         Assert.Equal("1", await height.InputValueAsync());
         Assert.Equal(0, await page.GetByLabel("Kausaler Zielknoten").CountAsync());
-        Assert.Equal(0, await page.GetByText("Animationsgeschwindigkeit", new() { Exact = true }).CountAsync());
+        Assert.Equal(
+            0,
+            await page.GetByText("Animationsgeschwindigkeit", new() { Exact = true }).CountAsync()
+        );
 
-        var choices = await height.Locator("option").EvaluateAllAsync<string[]>("items => items.map(item => item.value)");
+        var choices = await height
+            .Locator("option")
+            .EvaluateAllAsync<string[]>("items => items.map(item => item.value)");
         Assert.Contains("1", choices);
         var nextHeight = choices.First(value => value != "1");
         await height.SelectOptionAsync(nextHeight);
@@ -84,11 +94,17 @@ public sealed class CausalDiagramArrowDragTests(ExternalBlazorAppFixture host)
         await page.GetByRole(AriaRole.Button, new() { Name = "Jongleur hinzufügen" }).ClickAsync();
 
         Assert.Equal(3, await page.Locator(".pd-juggler-label").CountAsync());
-        Assert.Equal("true", await page.Locator(".juggler-add-target[data-juggler-id='J3']").GetAttributeAsync("aria-pressed"));
-        Assert.Equal("1", await page.Locator(".pd-node-label[data-throw-id='J3-1']").First.TextContentAsync());
+        Assert.Equal(
+            "true",
+            await page.Locator(".juggler-add-target[data-juggler-id='J3']")
+                .GetAttributeAsync("aria-pressed")
+        );
+        Assert.Equal(
+            "1",
+            await page.Locator(".pd-node-label[data-throw-id='J3-1']").First.TextContentAsync()
+        );
         Assert.Equal(0, await page.Locator(".animation-unavailable").CountAsync());
         Assert.False(await page.Locator("#blazor-error-ui").IsVisibleAsync());
         Assert.Contains("state=j3.", page.Url);
     }
-
 }

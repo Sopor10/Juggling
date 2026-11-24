@@ -25,15 +25,18 @@ public sealed class UrlStateNavigation(NavigationManager navigation)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         var builder = new UriBuilder(navigation.ToAbsoluteUri(uri));
-        var parameters = builder.Query.TrimStart('?')
+        var parameters = builder
+            .Query.TrimStart('?')
             .Split('&', StringSplitOptions.RemoveEmptyEntries)
             .Select(pair => pair.Split('=', 2))
-            .Select(parts => (
-                Name: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
-                Value: parts.Length > 1
-                    ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
-                    : string.Empty
-            ))
+            .Select(parts =>
+                (
+                    Name: Uri.UnescapeDataString(parts[0].Replace('+', ' ')),
+                    Value: parts.Length > 1
+                        ? Uri.UnescapeDataString(parts[1].Replace('+', ' '))
+                        : string.Empty
+                )
+            )
             .Where(parameter => !parameter.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
             .ToList();
 

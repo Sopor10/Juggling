@@ -19,7 +19,10 @@ public class NavRound5RetestReproTests
     {
         var css = ReadWebassemblySource(Path.Combine("Shared", "NavMenu.razor.css"));
 
-        var dialogActionBodies = ExtractAllRuleBodiesContaining(css, ".pznav-dialog-actions button");
+        var dialogActionBodies = ExtractAllRuleBodiesContaining(
+            css,
+            ".pznav-dialog-actions button"
+        );
         var linkBodies = ExtractAllRuleBodiesContaining(css, ".pznav-link");
 
         dialogActionBodies.Should().NotBeEmpty("expected dialog action button rule");

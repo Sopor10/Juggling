@@ -1,14 +1,14 @@
 extern alias JifDetails;
+using System.Collections.Immutable;
 
 using FluentAssertions;
-using System.Collections.Immutable;
 using Siteswaps.Generator.Components.Feeding;
 using Siteswaps.Generator.Components.SiteswapLab;
 using CausalStartPropsCalculator = JifDetails::Siteswap.Details.CausalDiagram.CausalStartPropsCalculator;
 using PassingDiagramBuilder = JifDetails::Siteswap.Details.CausalDiagram.PassingDiagramBuilder;
+using Siteswap = JifDetails::Siteswap.Details.Siteswap;
 using SiteswapDiagramBuilder = JifDetails::Siteswap.Details.CausalDiagram.SiteswapDiagramBuilder;
 using StartProps = JifDetails::Siteswap.Details.CausalDiagram.StartProps;
-using Siteswap = JifDetails::Siteswap.Details.Siteswap;
 
 namespace Siteswaps.Generator.Test.Feeding;
 
@@ -45,8 +45,16 @@ public class CausalStartPropsTests
     public void Causal_roots_differ_from_existing_inventory_for_two_person_feeding()
     {
         var timeZones = new[] { 0, 1 };
-        IReadOnlyList<int>[] heights = [[5, 6], [9, 4]];
-        IReadOnlyList<int>[] targets = [[1, 0], [0, 1]];
+        IReadOnlyList<int>[] heights =
+        [
+            [5, 6],
+            [9, 4],
+        ];
+        IReadOnlyList<int>[] targets =
+        [
+            [1, 0],
+            [0, 1],
+        ];
 
         var graphCounts = GraphCounts(timeZones, heights, targets);
         var inventory = InventoryFor(timeZones, heights, targets);
@@ -62,7 +70,10 @@ public class CausalStartPropsTests
     [TestCase("531", 1)]
     [TestCase("97522", 3)]
     [TestCase("441", 1)]
-    public void Causal_root_count_is_repeatable_for_valid_siteswaps(string notation, int expectedRoots)
+    public void Causal_root_count_is_repeatable_for_valid_siteswaps(
+        string notation,
+        int expectedRoots
+    )
     {
         Siteswap.TryCreate(notation, out var siteswap).Should().BeTrue();
         var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
@@ -146,8 +157,8 @@ public class CausalStartPropsTests
                 state.SetTarget(person, beat, targets[person][beat]).Should().BeTrue();
         }
 
-        return state.People.Select((person, index) =>
-                (person.Name, Clubs: state.StartingClubsFor(index)))
+        return state
+            .People.Select((person, index) => (person.Name, Clubs: state.StartingClubsFor(index)))
             .ToDictionary(entry => entry.Name, entry => entry.Clubs);
     }
 }
