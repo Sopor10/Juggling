@@ -36,7 +36,8 @@ public sealed class CausalStartPropsPropertyTests
             var pattern = FeedingPattern.Create(seed);
             pattern.PersonCount.Should().BeInRange(3, 5);
             pattern.State.IsValid.Should().BeTrue(pattern.ToString());
-            pattern.Diagram.Throws.Should().HaveCount(pattern.PersonCount * pattern.Period);
+            var diagramPatternPeriod = pattern.Period % 2 == 0 ? pattern.Period : pattern.Period * 2;
+            pattern.Diagram.Throws.Should().HaveCount(pattern.PersonCount * diagramPatternPeriod);
             validCount++;
         }
 
@@ -51,12 +52,7 @@ public sealed class CausalStartPropsPropertyTests
             var notation = testCase.Notation;
             DetailSiteswap.TryCreate(notation, out var siteswap);
             var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
-            var causal = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
-                diagram.Throws,
-                diagram.CausalArrows,
-                diagram.Jugglers,
-                (int)siteswap!.NumberOfObjects()
-            );
+            var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram);
             return SameDistribution(diagram.StartProps, causal);
         });
     }
@@ -66,12 +62,7 @@ public sealed class CausalStartPropsPropertyTests
     {
         CheckProperty(FeedingPattern.Arbitrary, pattern =>
         {
-            var causal = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
-                pattern.Diagram.Throws,
-                pattern.Diagram.CausalArrows,
-                pattern.Diagram.Jugglers,
-                TotalProps(pattern.Diagram)
-            );
+            var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(pattern.Diagram);
             var inventory = pattern.State.People.Select((person, index) =>
                     (person.Name, Props: pattern.State.StartingClubsFor(index)))
                 .ToDictionary(
@@ -112,8 +103,70 @@ public sealed class CausalStartPropsPropertyTests
         foreach (var item in allFeedingDifferences.Take(20))
             TestContext.Progress.WriteLine($"  seed {item.Seed}: {item.Pattern}; {item.Difference}");
 
-        allSiteswapDifferences.Should().NotBeEmpty();
+        allSiteswapDifferences.Should().BeEmpty();
         allFeedingDifferences.Should().NotBeEmpty();
+    }
+
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(4)]
+    [TestCase(8)]
+    [TestCase(17)]
+    [TestCase(42)]
+    [TestCase(104)]
+    public void Causal_distribution_is_feasible_when_simulated_from_all_props_in_hands(int seed)
+    {
+        var pattern = FeedingPattern.Create(seed);
+        var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
+        var distribution = analysis.StartProps;
+        var expectedProps = pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+        distribution.Values.Sum(count => count.Left + count.Right).Should().Be(expectedProps);
+
+        var inventory = new Dictionary<(string Juggler, string Hand), int>();
+        foreach (var hand in pattern.Diagram.Hands)
+        {
+            var props = distribution[hand.Person.Name];
+            inventory[(hand.Person.Name, hand.Name)] = hand.Name == "L" ? props.Left : props.Right;
+        }
+        var startingInventory = inventory.ToDictionary(pair => pair.Key, pair => pair.Value);
+
+        var throwsByTime = pattern.Diagram.Throws
+            .Where(node => node.Height > 0)
+            .GroupBy(node => node.Time)
+            .ToDictionary(group => group.Key, group => group.OrderBy(node => node.Hand.Person.Name, StringComparer.Ordinal).ToArray());
+        var arrivals = new Dictionary<(int Time, string Juggler, string Hand), int>();
+        var period = pattern.Diagram.StepCount;
+        var maxHeight = pattern.Diagram.Throws.Max(node => node.Height);
+        var fullPeriod = period * analysis.FullPeriodMultiplier;
+        var horizon = fullPeriod + maxHeight;
+        for (var time = 0; time < horizon; time++)
+        {
+            foreach (var arrival in arrivals.Where(pair => pair.Key.Time == time).ToArray())
+            {
+                var key = (arrival.Key.Juggler, arrival.Key.Hand);
+                inventory[key] = inventory.GetValueOrDefault(key) + arrival.Value;
+                arrivals.Remove(arrival.Key);
+            }
+
+            if (time == fullPeriod)
+                inventory.Should().BeEquivalentTo(startingInventory, $"seed {seed} should return to its start inventory after the full prop-path period");
+
+            var phase = (decimal)(time % period);
+            if (!throwsByTime.TryGetValue(phase, out var events))
+                continue;
+
+            foreach (var throwNode in events)
+            {
+                var source = (throwNode.Hand.Person.Name, throwNode.Hand.Name);
+                inventory.GetValueOrDefault(source).Should().BeGreaterThan(0,
+                    $"seed {seed}, at time {time}, before throw {throwNode.Hand.Person.Name}/{throwNode.Hand.Name}");
+                inventory[source]--;
+
+                var targetHand = pattern.Diagram.Hands[throwNode.ToLimb!.Value];
+                var landing = (time + throwNode.Height, targetHand.Person.Name, targetHand.Name);
+                arrivals[landing] = arrivals.GetValueOrDefault(landing) + 1;
+            }
+        }
     }
 
     private static string[] GenerateSiteswaps()
@@ -154,12 +207,7 @@ public sealed class CausalStartPropsPropertyTests
     {
         DetailSiteswap.TryCreate(notation, out var siteswap);
         var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
-        var causal = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
-            diagram.Throws,
-            diagram.CausalArrows,
-            diagram.Jugglers,
-            (int)siteswap!.NumberOfObjects()
-        );
+        var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram);
         return SameDistribution(diagram.StartProps, causal)
             ? null
             : $"legacy={Format(diagram.StartProps)}, causal={Format(causal)}";
@@ -167,12 +215,7 @@ public sealed class CausalStartPropsPropertyTests
 
     private static string? CompareFeeding(FeedingPattern pattern)
     {
-        var causal = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
-            pattern.Diagram.Throws,
-            pattern.Diagram.CausalArrows,
-            pattern.Diagram.Jugglers,
-            TotalProps(pattern.Diagram)
-        );
+        var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(pattern.Diagram);
         var inventory = pattern.State.People.Select((person, index) =>
                 (person.Name, Props: pattern.State.StartingClubsFor(index)))
             .ToDictionary(
@@ -187,9 +230,6 @@ public sealed class CausalStartPropsPropertyTests
 
     private static string Format(IReadOnlyDictionary<string, StartProps> distribution) =>
         string.Join(", ", distribution.OrderBy(pair => pair.Key).Select(pair => $"{pair.Key}:{pair.Value.Left}/{pair.Value.Right}"));
-
-    private static int TotalProps(JifDetails::Siteswap.Details.CausalDiagram.DiagramSet diagram) =>
-        diagram.Throws.Sum(throwNode => throwNode.Height) / diagram.StepCount;
 
     private static int PositiveModulo(int value, int modulo) => (value % modulo + modulo) % modulo;
 

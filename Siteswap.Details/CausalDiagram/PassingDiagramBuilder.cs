@@ -19,6 +19,7 @@ public static class PassingDiagramBuilder
 
         var distinctZones = timeZones.Distinct().Order().ToArray();
         var timeStretch = Math.Max(1, distinctZones.Length);
+        var diagramPatternPeriod = period % 2 == 0 ? period : period * 2;
         var normalizedTimeZones = NormalizeTimeZones(timeZones, distinctZones);
         var jugglers = CreateJugglers(timeZones.Count);
         var hands = CreateHands(jugglers);
@@ -29,6 +30,7 @@ public static class PassingDiagramBuilder
             normalizedTimeZones,
             timeStretch,
             period,
+            diagramPatternPeriod,
             hands
         );
         if (nodes.Count == 0)
@@ -38,10 +40,10 @@ public static class PassingDiagramBuilder
             );
 
         var (causalArrows, ladderArrows) = CreateArrows(nodes, hands, timeStretch);
-        var basePeriod = period * timeStretch;
+        var basePeriod = diagramPatternPeriod * timeStretch;
         var limbPermutation = Enumerable
             .Range(0, timeZones.Count * 2)
-            .Select(limb => limb / 2 * 2 + (limb % 2 + period % 2) % 2)
+            .Select(limb => limb / 2 * 2 + (limb % 2 + diagramPatternPeriod % 2) % 2)
             .ToImmutableList();
 
         return new DiagramSet(
@@ -132,15 +134,16 @@ public static class PassingDiagramBuilder
         IReadOnlyList<int> normalizedTimeZones,
         int timeStretch,
         int period,
+        int diagramPatternPeriod,
         ImmutableList<Hand> hands
     )
     {
         var nodes = new List<Throw>();
         for (var person = 0; person < timeZones.Count; person++)
         {
-            for (var beat = 0; beat < period; beat++)
+            for (var beat = 0; beat < diagramPatternPeriod; beat++)
             {
-                var height = heights[person][beat];
+                var height = heights[person][beat % period];
                 if (height == 0)
                     continue;
                 nodes.Add(
@@ -170,7 +173,7 @@ public static class PassingDiagramBuilder
         ImmutableList<Hand> hands
     )
     {
-        var targetPerson = targets[person][beat];
+        var targetPerson = targets[person][beat % targets[person].Count];
         var time = beat * timeStretch + normalizedTimeZones[person];
         var landingTimeZone = (normalizedTimeZones[person] + height) % timeStretch;
         if (landingTimeZone != normalizedTimeZones[targetPerson])
