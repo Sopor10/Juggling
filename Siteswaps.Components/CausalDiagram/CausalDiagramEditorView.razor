@@ -1,5 +1,7 @@
 @using System.Globalization
 @using System.Reflection
+@using System.Text
+@using System.Text.Json
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.JSInterop
 @using Siteswaps.Components.Layout
@@ -234,7 +236,15 @@
       @if (ShowAnimation)
       {
       <section class="causal-editor-animation sdv-card" aria-label="Passist-Animation">
-        <h2>Passist-Animation</h2>
+        <div class="causal-editor-animation-heading">
+          <h2>Passist-Animation</h2>
+          <div class="causal-animation-orbit-toggle" role="radiogroup" aria-label="Wurffarben">
+            <button type="button" role="radio" class="@(OrbitColorsEnabled ? "active" : null)"
+                    aria-checked="@OrbitColorsEnabled" @onclick="() => SetOrbitColors(true)">Orbits</button>
+            <button type="button" role="radio" class="@(!OrbitColorsEnabled ? "active" : null)"
+                    aria-checked="@(!OrbitColorsEnabled)" @onclick="() => SetOrbitColors(false)">Pass / Self</button>
+          </div>
+        </div>
         @if (_animationJif is not null)
         {
             <PassistAnimation Jif="@(new JifInput.Structured(_animationJif))" AnimationSpeed="0.8" Teaser="true" EnableSettings="false" ShowSpeedLabel="false" ShowLayoutEditor="false" />
@@ -269,6 +279,10 @@
     [Parameter]
     public string? StateToken { get; set; }
     [Parameter]
+    public string? SetupToken { get; set; }
+    [Parameter]
+    public int? WizardStep { get; set; }
+    [Parameter]
     public CausalDiagramEditorState? ExternalState { get; set; }
     [Parameter]
     public bool Embedded { get; set; }
@@ -299,6 +313,7 @@
     private (string ThrowId, int Cycle)? _handMenuThrow;
     private bool _invalidState;
     private bool _wizardInitialized;
+    private int? _lastWizardStepParameter;
     private int _wizardStep = 1;
     private readonly HashSet<int> _visitedWizardSteps = [0];
     private List<SetupJugglerSettings> _setupJugglers = [];
@@ -307,6 +322,7 @@
     private string _preset = "feeding-7-5";
     private (string EdgeId, int SourceCycle, decimal X, decimal Y)? _edgeDragPreview;
     private JifPattern? _animationJif;
+    private bool OrbitColorsEnabled { get; set; } = true;
     private string _animationUnavailable = "Für dieses Diagramm ist keine Passist-Animation verfügbar.";
     private sealed record SetupJugglerSettings(
         string Id,
@@ -315,6 +331,7 @@
         string HandOrder,
         decimal PhaseOffset
     );
+    private sealed record SetupDraft(string PresetId, SetupJugglerSettings[] Jugglers);
     private static string EditorBuildVersion =>
         typeof(CausalDiagramEditorView)
             .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -332,10 +349,22 @@
     {
         if (!_wizardInitialized)
         {
-            _wizardStep = Embedded || ExternalState is not null || !string.IsNullOrEmpty(StateToken) ? 2 : 1;
-            if (_wizardStep == 2)
+            var hasState = ExternalState is not null || !string.IsNullOrEmpty(StateToken);
+            var hasSetupDraft = !string.IsNullOrEmpty(SetupToken);
+            _wizardStep = Embedded
+                ? 2
+                : WizardStep is 1 or 2
+                    ? WizardStep.Value
+                    : hasSetupDraft ? 1 : hasState ? 2 : 1;
+            if (hasState || _wizardStep == 2)
                 _visitedWizardSteps.Add(1);
+            _lastWizardStepParameter = WizardStep;
             _wizardInitialized = true;
+        }
+        else if (!Embedded && (WizardStep is 1 or 2) && WizardStep != _lastWizardStepParameter)
+        {
+            _wizardStep = WizardStep.Value;
+            _lastWizardStepParameter = WizardStep;
         }
 
         if (ExternalState is not null)
@@ -367,11 +396,28 @@
             _preset = _state.PresetId;
             SyncSetupFromState();
         }
+        if (!Embedded && _wizardStep == 1 && TryDecodeSetupDraft(SetupToken, out var setupDraft))
+        {
+            _preset = setupDraft.PresetId;
+            _setupJugglers = setupDraft.Jugglers.ToList();
+        }
         if (ShowAnimation) RefreshAnimation();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender && !Embedded)
+        {
+            if (_wizardStep == 1 && string.IsNullOrEmpty(SetupToken))
+                PersistSetupDraft();
+            else if (WizardStep is null)
+                UrlStateNavigation.SetQueryParameter(
+                    "step",
+                    _wizardStep.ToString(CultureInfo.InvariantCulture),
+                    replace: true
+                );
+        }
+
         if (firstRender && (ShowOptions || AllowNodeMove || AllowThrowActions || AllowJugglerActions || AllowArrowEditing))
         {
             _module = await JS.InvokeAsync<IJSObjectReference>(
@@ -766,6 +812,7 @@
         _selectedId = null;
         SyncSetupFromState();
         RefreshAnimation();
+        PersistSetupDraft(includeBaseState: true);
     }
 
     private void SyncSetupFromState()
@@ -817,6 +864,69 @@
     private static string FormatPhaseOffset(decimal offset) =>
         offset.ToString("0.##", CultureInfo.InvariantCulture);
 
+    private static string EncodeSetupDraft(SetupDraft draft) =>
+        Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(draft))
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+
+    private static bool TryDecodeSetupDraft(string? token, out SetupDraft draft)
+    {
+        draft = new SetupDraft("custom", []);
+        if (string.IsNullOrWhiteSpace(token) || token.Length > 8_000)
+            return false;
+
+        try
+        {
+            var base64 = token.Replace('-', '+').Replace('_', '/');
+            base64 = base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
+            var decoded = JsonSerializer.Deserialize<SetupDraft>(Convert.FromBase64String(base64));
+            if (
+                decoded is null
+                || !CausalDiagramEditorPresets.IsKnownId(decoded.PresetId)
+                || decoded.Jugglers is null
+                || decoded.Jugglers.Length is < 1 or > 16
+                || decoded.Jugglers.Any(juggler =>
+                    juggler is null
+                    || string.IsNullOrEmpty(juggler.Id)
+                    || juggler.Id.Length > 64
+                    || juggler.Name is null
+                    || juggler.Name.Length > 128
+                    || juggler.HandOrder is null
+                    || juggler.HandOrder.Length > 64
+                )
+                || decoded.Jugglers.Select(juggler => juggler.Id)
+                    .Distinct(StringComparer.Ordinal).Count() != decoded.Jugglers.Length
+            )
+                return false;
+
+            draft = decoded;
+            return true;
+        }
+        catch (Exception exception) when (exception is FormatException or JsonException or ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    private void PersistSetupDraft(bool includeBaseState = false)
+    {
+        if (Embedded)
+            return;
+
+        var token = EncodeSetupDraft(new SetupDraft(_preset, _setupJugglers.ToArray()));
+        var uri = UrlStateNavigation.GetUriWithQueryParameter("setup", token);
+        uri = UrlStateNavigation.WithQueryParameter(
+            uri,
+            "step",
+            _wizardStep.ToString(CultureInfo.InvariantCulture)
+        );
+        if (includeBaseState)
+            uri = UrlStateNavigation.WithQueryParameter(uri, "state", _state.Encode());
+
+        UrlStateNavigation.NavigateTo(uri, replace: true);
+    }
+
     private void SetSetupJugglerName(string id, string? name) =>
         UpdateSetupJuggler(id, juggler => juggler with { Name = name ?? string.Empty });
 
@@ -844,6 +954,7 @@
         if (index >= 0)
             _setupJugglers[index] = update(_setupJugglers[index]);
         _setupValidationError = null;
+        PersistSetupDraft();
     }
 
     private void AddSetupJuggler()
@@ -855,6 +966,7 @@
         var id = $"setup-{Guid.NewGuid():N}";
         _setupJugglers.Add(new SetupJugglerSettings(id, ((char)('A' + index)).ToString(), 1, "R", 0m));
         _setupValidationError = null;
+        PersistSetupDraft();
     }
 
     private void RemoveSetupJuggler(string id)
@@ -864,12 +976,14 @@
 
         _setupJugglers.RemoveAll(juggler => juggler.Id == id);
         _setupValidationError = null;
+        PersistSetupDraft();
     }
 
     private void BackToSetup()
     {
         SyncSetupFromState();
         _wizardStep = 1;
+        PersistSetupDraft();
     }
 
     private void SelectWizardStep(int step)
@@ -877,7 +991,7 @@
         if (step == 0)
             BackToSetup();
         else if (step == 1 && _visitedWizardSteps.Contains(step))
-            _wizardStep = 2;
+            ContinueToEditor();
     }
 
     private void ContinueToEditor()
@@ -1068,12 +1182,20 @@
         }
         _state.Repetitions = Math.Clamp(_state.Repetitions, 1, 20);
         RefreshAnimation();
-        UrlStateNavigation.SetQueryParameter("state", _state.Encode());
+        var uri = UrlStateNavigation.GetUriWithQueryParameter("state", _state.Encode());
+        uri = UrlStateNavigation.WithQueryParameter(
+            uri,
+            "step",
+            _wizardStep.ToString(CultureInfo.InvariantCulture)
+        );
+        if (_wizardStep == 2)
+            uri = UrlStateNavigation.WithQueryParameter(uri, "setup", null);
+        UrlStateNavigation.NavigateTo(uri);
     }
 
     private void RefreshAnimation()
     {
-        if (CausalDiagramEditorJifAdapter.TryMap(_state, out var pattern, out var error) && pattern is not null)
+        if (CausalDiagramEditorJifAdapter.TryMap(_state, out var pattern, out var error, OrbitColorsEnabled) && pattern is not null)
         {
             _animationJif = pattern;
             _animationUnavailable = "";
@@ -1083,6 +1205,15 @@
             _animationJif = null;
             _animationUnavailable = error;
         }
+    }
+
+    private void SetOrbitColors(bool enabled)
+    {
+        if (OrbitColorsEnabled == enabled)
+            return;
+
+        OrbitColorsEnabled = enabled;
+        RefreshAnimation();
     }
 
     public async ValueTask DisposeAsync()

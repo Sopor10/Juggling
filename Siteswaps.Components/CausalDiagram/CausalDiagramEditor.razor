@@ -2,9 +2,15 @@
 @using Siteswaps.Components.CausalDiagram
 
 <PageTitle>Kausaldiagramm-Editor</PageTitle>
-<CausalDiagramEditorView StateToken="@StateToken" />
+<CausalDiagramEditorView StateToken="@StateToken" SetupToken="@SetupToken" WizardStep="@WizardStep" />
 
 @code {
     [Parameter, SupplyParameterFromQuery(Name = "state")]
     public string? StateToken { get; set; }
+
+    [Parameter, SupplyParameterFromQuery(Name = "step")]
+    public int? WizardStep { get; set; }
+
+    [Parameter, SupplyParameterFromQuery(Name = "setup")]
+    public string? SetupToken { get; set; }
 }

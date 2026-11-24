@@ -105,12 +105,17 @@
 .connection-issues button:hover { text-decoration: underline; }
 
 .causal-editor-animation { display: grid; gap: .7rem; padding: 14px 16px; border: 2px solid var(--decision-color-border-subtle); border-radius: var(--decision-radius-control); background: var(--decision-color-surface-page); box-shadow: var(--decision-shadow-control); }
+.causal-editor-animation-heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .causal-editor-animation h2 { margin: 0; color: var(--decision-color-brand-strong); font: 800 1.1rem var(--decision-font-display); }
+.causal-animation-orbit-toggle { display: inline-flex; overflow: hidden; border: 2px solid var(--decision-color-border-subtle); border-radius: 999px; background: transparent; }
+.causal-animation-orbit-toggle button { appearance: none; border: 0; padding: 7px 13px; min-height: 36px; background: transparent; color: var(--decision-color-brand-strong); font: 700 13px var(--decision-font-display); cursor: pointer; }
+.causal-animation-orbit-toggle button.active { background: var(--decision-color-brand-strong); color: var(--decision-color-white); }
 .animation-unavailable { margin: 0; padding: .8rem 1rem; border-radius: var(--decision-radius-compact); background: var(--decision-color-white); color: var(--decision-color-brand-strong); line-height: 1.45; }
 .causal-editor-animation ::deep .passist-animation-stage { height: clamp(280px, 55vw, 460px); }
 :is(button, input, select, textarea, summary, .throw-hit-target, .juggler-add-target, .throw-edit-actions [role=button], .throw-hand-menu [role=button]):focus-visible { outline: 3px solid var(--decision-color-focus); outline-offset: 2px; }
 
 @media (max-width: 700px) {
+    .causal-editor-animation-heading { align-items: flex-start; flex-direction: column; }
     .editor-field select { max-width: 100%; }
     .diagram-options-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .editor-setup-grid { grid-template-columns: 1fr; }
