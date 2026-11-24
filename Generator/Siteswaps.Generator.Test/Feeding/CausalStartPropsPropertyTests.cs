@@ -178,9 +178,12 @@ public sealed class CausalStartPropsPropertyTests
     {
         var failures = new List<(int Seed, string Pattern, string Legacy, string Causal)>();
         var physicallyValidDifferences = new List<(int Seed, string Pattern, string Legacy, string Causal)>();
+        var naturalDistributionFailures = new List<(int Seed, string Pattern, string Natural, string Causal)>();
+        var naturalDistributionDifferences = new List<(int Seed, string Pattern, string Natural, string Causal)>();
         var legacyCountErrors = 0;
         var legacySimulationFailures = 0;
         var legacyRuns = 0;
+        var naturalRuns = 0;
         for (var seed = 0; seed < 500; seed++)
         {
             var pattern = FeedingPattern.Create(seed);
@@ -193,6 +196,21 @@ public sealed class CausalStartPropsPropertyTests
                     StringComparer.Ordinal
                 );
             var expectedProps = pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+            var natural = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
+                pattern.Diagram.Throws,
+                pattern.Diagram.CausalArrows,
+                pattern.Diagram.Jugglers,
+                expectedProps
+            );
+            if (!CanRun(pattern.Diagram, natural.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal), analysis.FullPeriodMultiplier))
+                naturalDistributionFailures.Add((seed, pattern.ToString(), Format(natural), Format(analysis.StartProps)));
+            else
+            {
+                naturalRuns++;
+                if (!SameDistribution(natural, analysis.StartProps))
+                    naturalDistributionDifferences.Add((seed, pattern.ToString(), Format(natural), Format(analysis.StartProps)));
+            }
+
             var actualProps = legacy.Values.Sum(count => count.Left + count.Right);
             var hasCorrectPropCount = actualProps == expectedProps;
             var canRun = hasCorrectPropCount && CanRun(pattern.Diagram, legacy, analysis.FullPeriodMultiplier);
@@ -221,7 +239,54 @@ public sealed class CausalStartPropsPropertyTests
         );
         foreach (var caseData in physicallyValidDifferences.Take(20))
             TestContext.Progress.WriteLine($"  seed {caseData.Seed}: {caseData.Pattern}; legacy={caseData.Legacy}; causal={caseData.Causal}");
+        TestContext.Progress.WriteLine(
+            $"Natural alphabetical distributions: {naturalRuns}/500 pass physical simulation; {naturalDistributionFailures.Count} fail; {naturalDistributionDifferences.Count} valid cases differ from causal path distribution."
+        );
+        foreach (var caseData in naturalDistributionFailures.Take(20))
+            TestContext.Progress.WriteLine($"  seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}");
+        foreach (var caseData in naturalDistributionDifferences.Take(20))
+            TestContext.Progress.WriteLine($"  valid seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}");
         failures.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void Causal_path_phase_is_needed_when_a_feed_has_a_closed_prop_cycle()
+    {
+        /// Seed 1 is a 3-person, period-2 valid feed whose positive throws form one
+        /// closed causal prop path: A/R -> B/R -> C/L -> A/R.
+        var pattern = FeedingPattern.Create(1);
+        pattern.State.IsValid.Should().BeTrue();
+        var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
+        analysis.StartProps.Should().BeEquivalentTo(new Dictionary<string, StartProps>
+        {
+            ["A"] = new(Left: 0, Right: 1),
+            ["B"] = new(Left: 0, Right: 0),
+            ["C"] = new(Left: 0, Right: 0),
+        });
+
+        var totalProps = pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+        var alphabeticalRemainder = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
+            pattern.Diagram.Throws,
+            pattern.Diagram.CausalArrows,
+            pattern.Diagram.Jugglers,
+            totalProps
+        );
+        alphabeticalRemainder.Should().BeEquivalentTo(new Dictionary<string, StartProps>
+        {
+            ["A"] = new(Left: 0, Right: 0),
+            ["B"] = new(Left: 0, Right: 1),
+            ["C"] = new(Left: 1, Right: 0),
+        });
+        CanRun(
+            pattern.Diagram,
+            alphabeticalRemainder.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
+            analysis.FullPeriodMultiplier
+        ).Should().BeFalse("the first scheduled throw is A/R at time zero");
+        CanRun(
+            pattern.Diagram,
+            analysis.StartProps.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
+            analysis.FullPeriodMultiplier
+        ).Should().BeTrue("the causal cycle's phase determines which hand holds the club at start");
     }
 
     private static void AssertFeedingSimulation(int seed)
