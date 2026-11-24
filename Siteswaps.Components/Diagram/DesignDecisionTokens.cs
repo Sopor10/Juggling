@@ -34,7 +34,10 @@ internal static class DesignDecisionTokens
 
         try
         {
-            var values = await module.InvokeAsync<string[]>("readDecisionTokens", DiagramTokenNames);
+            var values = await module.InvokeAsync<string[]>(
+                "readDecisionTokens",
+                DiagramTokenNames
+            );
             if (values.Length != DiagramTokenNames.Length || values.Any(string.IsNullOrWhiteSpace))
             {
                 throw new InvalidOperationException("A required design decision token is missing.");

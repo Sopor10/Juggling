@@ -94,12 +94,13 @@ public static class CausalDiagramEditorPresets
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>
         All.Where(preset =>
-            preset.Id is "siteswap-3"
-                or "feeding-7-5"
-                or "jugglers-1"
-                or "jugglers-2"
-                or "jugglers-3"
-                or "jugglers-4"
+            preset.Id
+                is "siteswap-3"
+                    or "feeding-7-5"
+                    or "jugglers-1"
+                    or "jugglers-2"
+                    or "jugglers-3"
+                    or "jugglers-4"
         );
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleSynchronous =>
@@ -107,18 +108,29 @@ public static class CausalDiagramEditorPresets
 
     private static CausalDiagramEditorState CreateJugglerDefault(int jugglerCount)
     {
-        var names = Enumerable.Range(0, jugglerCount)
+        var names = Enumerable
+            .Range(0, jugglerCount)
             .Select(index => ((char)('A' + index)).ToString())
             .ToArray();
-        var lines = names.Select((name, index) =>
-        {
-            var phaseOffset = (decimal)index / jugglerCount;
-            var nextJuggler = names[(index + 1) % jugglerCount];
-            return $"{name}: (RLR {phaseOffset.ToString(System.Globalization.CultureInfo.InvariantCulture)}) 3>{nextJuggler}, 3>{nextJuggler}, 3>{nextJuggler}";
-        });
+        var lines = names.Select(
+            (name, index) =>
+            {
+                var phaseOffset = (decimal)index / jugglerCount;
+                var nextJuggler = names[(index + 1) % jugglerCount];
+                return $"{name}: (RLR {phaseOffset.ToString(System.Globalization.CultureInfo.InvariantCulture)}) 3>{nextJuggler}, 3>{nextJuggler}, 3>{nextJuggler}";
+            }
+        );
 
-        if (!CausalDiagramEditorState.TryCreateFeeding(string.Join('\n', lines), out var state, out _) || state is null)
-            throw new InvalidOperationException($"Die Vorlage für {jugglerCount} Jongleure konnte nicht erstellt werden.");
+        if (
+            !CausalDiagramEditorState.TryCreateFeeding(
+                string.Join('\n', lines),
+                out var state,
+                out _
+            ) || state is null
+        )
+            throw new InvalidOperationException(
+                $"Die Vorlage für {jugglerCount} Jongleure konnte nicht erstellt werden."
+            );
 
         state.PresetId = $"jugglers-{jugglerCount}";
         return state;
@@ -127,8 +139,13 @@ public static class CausalDiagramEditorPresets
     private static CausalDiagramEditorState CreateSynchronousFourBeatPair()
     {
         const string notation = "A: (RLRL 0) 3>B, 3>B, 3>B, 3>B\nB: (RLRL 0) 3>A, 3>A, 3>A, 3>A";
-        if (!CausalDiagramEditorState.TryCreateFeeding(notation, out var state, out _) || state is null)
-            throw new InvalidOperationException("Die synchrone 4-Beat-Vorlage konnte nicht erstellt werden.");
+        if (
+            !CausalDiagramEditorState.TryCreateFeeding(notation, out var state, out _)
+            || state is null
+        )
+            throw new InvalidOperationException(
+                "Die synchrone 4-Beat-Vorlage konnte nicht erstellt werden."
+            );
 
         state.PresetId = "jugglers-2-synchronous-4";
         return state;

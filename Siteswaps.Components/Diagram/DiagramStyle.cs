@@ -5,7 +5,10 @@ namespace Siteswaps.Components.Diagram;
 /// <summary>Maps shared design decisions to the concrete values required by vis-network.</summary>
 internal static class DiagramStyle
 {
-    public static NetworkOptions Options(VisNetwork.Blazor.Network _, DiagramDesignDecisions decisions) =>
+    public static NetworkOptions Options(
+        VisNetwork.Blazor.Network _,
+        DiagramDesignDecisions decisions
+    ) =>
         new()
         {
             Nodes = new NodeOption

@@ -212,7 +212,8 @@ public static class JifMapper
                     Type = hand.Name == "L" ? "left hand" : "right hand",
                 })
                 .ToList(),
-            Props = Enumerable.Range(0, propCount)
+            Props = Enumerable
+                .Range(0, propCount)
                 .Select(index => new JifObject
                 {
                     Color = colorOrbits
