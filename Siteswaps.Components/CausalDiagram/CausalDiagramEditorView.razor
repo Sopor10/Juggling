@@ -408,7 +408,7 @@
     {
         if (!AllowNodeMove && !AllowThrowActions) return;
         if (_module is not null && _dotNetRef is not null)
-            await _module.InvokeVoidAsync("startThrowInteraction", _svg, _dotNetRef, id, cycle, e.PointerId, e.ClientX, e.ClientY, IsEditingThrow(id, cycle));
+            await _module.InvokeVoidAsync("startThrowInteraction", _svg, _dotNetRef, id, cycle, e.PointerId, e.ClientX, e.ClientY, e.PointerType, IsEditingThrow(id, cycle));
     }
 
     [JSInvokable]

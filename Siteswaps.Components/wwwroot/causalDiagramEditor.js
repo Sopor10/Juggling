@@ -58,11 +58,11 @@ export function stopJugglerHold() {
     if (activePressCleanup) activePressCleanup();
 }
 
-export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX, originY, editingAlready) {
+export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX, originY, pointerType, editingAlready) {
     stopDrag();
     const target = [...svg.querySelectorAll(".throw-hit-target")]
         .find(item => item.dataset.throwId === id && item.dataset.cycle === String(cycle));
-    let editing = editingAlready;
+    let editing = editingAlready || pointerType === "touch";
     let timer;
     if (!editing) target?.classList.add("pressing");
     const move = event => {
@@ -91,7 +91,9 @@ export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX
     document.addEventListener("pointermove", move, { passive: false });
     document.addEventListener("pointerup", up, true);
     document.addEventListener("pointercancel", up);
-    if (!editing) {
+    if (pointerType === "touch" && !editingAlready) {
+        dotnet.invokeMethodAsync("EnableThrowEditing", id, cycle);
+    } else if (!editing) {
         timer = setTimeout(() => {
             editing = true;
             target?.classList.remove("pressing");

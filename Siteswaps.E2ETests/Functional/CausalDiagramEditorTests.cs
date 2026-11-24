@@ -299,21 +299,31 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         );
         focusStroke.Should().Be("rgb(0, 179, 255)");
 
-        await target.ScrollIntoViewIfNeededAsync();
+        await target.EvaluateAsync("node => node.blur()");
+        await scroller.EvaluateAsync("node => node.scrollLeft = 0");
         var targetBox =
             await target.BoundingBoxAsync()
             ?? throw new InvalidOperationException("The throw target has no layout box.");
         var startX = targetBox.X + targetBox.Width / 2;
         var startY = targetBox.Y + targetBox.Height / 2;
         var urlBeforeTouchDrag = page.Url;
+        var scrollLeftBeforeTouchDrag = await scroller.EvaluateAsync<double>(
+            "node => node.scrollLeft"
+        );
+        var scrollTopBeforeTouchDrag = await page.EvaluateAsync<double>("() => window.scrollY");
         await DispatchTouch(cdp, "touchStart", startX, startY);
-        await page.WaitForTimeoutAsync(600);
         await DispatchTouch(cdp, "touchMove", startX + 35, startY);
         await DispatchTouch(cdp, "touchMove", startX + 80, startY);
         await DispatchTouchEnd(cdp);
-        await page.WaitForTimeoutAsync(500);
+        await page.WaitForTimeoutAsync(150);
         page.Url.Should().NotBe(urlBeforeTouchDrag);
         await Assertions.Expect(page.Locator(".pd-node.selected")).ToHaveCountAsync(2);
+        (await scroller.EvaluateAsync<double>("node => node.scrollLeft"))
+            .Should()
+            .Be(scrollLeftBeforeTouchDrag);
+        (await page.EvaluateAsync<double>("() => window.scrollY"))
+            .Should()
+            .Be(scrollTopBeforeTouchDrag);
     }
 
     [Fact]
