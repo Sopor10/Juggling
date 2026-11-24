@@ -45,6 +45,7 @@
         };
         window.blazorCulture.setDocumentLang(window.blazorCulture.getPreferred());
     </script>
+    <meta name="app-build-version" content="79568138b5d5" />
 </head>
 
 <body>
@@ -60,7 +61,7 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="pwa-install.js"></script>
-    <script src="sw-registrator-e0a9aff57dcd.js"></script>
+    <script src="sw-registrator-79568138b5d5.js"></script>
     <script>
         window.blazorIsLocalDevelopment = ['localhost', '127.0.0.1', '[::1]']
             .includes(window.location.hostname);
@@ -69,12 +70,20 @@
     <script>
         Blazor.start({
             loadBootResource: (type, name, defaultUri, integrity) => {
-                if (!window.blazorIsLocalDevelopment || !defaultUri.startsWith(window.location.origin)) {
+                if (!defaultUri.startsWith(window.location.origin)) {
+                    return defaultUri;
+                }
+
+                const previewVersion = document.querySelector('meta[name="app-build-version"]')?.content;
+                if (!window.blazorIsLocalDevelopment && !previewVersion) {
                     return defaultUri;
                 }
 
                 const separator = defaultUri.includes('?') ? '&' : '?';
-                return `${defaultUri}${separator}dev=${Date.now()}`;
+                const cacheKey = window.blazorIsLocalDevelopment
+                    ? `dev=${Date.now()}`
+                    : `v=${encodeURIComponent(previewVersion)}`;
+                return `${defaultUri}${separator}${cacheKey}`;
             }
         });
     </script>
