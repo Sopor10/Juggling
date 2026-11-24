@@ -264,6 +264,13 @@ public sealed class CausalStartPropsPropertyTests
             ["B"] = new(Left: 0, Right: 0),
             ["C"] = new(Left: 0, Right: 0),
         });
+        pattern.Diagram.StartProps.Should().BeEquivalentTo(analysis.StartProps);
+        SiteswapLabJifMapper.CalculateCausalStartProps(
+            pattern.State.People.Select(person => person.TimeZone).ToArray(),
+            pattern.State.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
+            pattern.State.People.Select((person, index) =>
+                (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray()
+        ).Should().BeEquivalentTo(analysis.StartProps);
 
         var totalProps = pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
         var alphabeticalRemainder = CausalStartPropsCalculator.CalculateWithNaturalRemainder(

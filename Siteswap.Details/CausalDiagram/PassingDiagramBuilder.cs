@@ -46,7 +46,7 @@ public static class PassingDiagramBuilder
             .Select(limb => limb / 2 * 2 + (limb % 2 + diagramPatternPeriod % 2) % 2)
             .ToImmutableList();
 
-        return new DiagramSet(
+        var diagram = new DiagramSet(
             Hands: hands,
             Jugglers: jugglers,
             Throws: nodes.OrderBy(node => node.Time).ToImmutableList(),
@@ -57,6 +57,10 @@ public static class PassingDiagramBuilder
             LimbPermutation: limbPermutation,
             StartProps: ImmutableDictionary<string, StartProps>.Empty
         );
+        return diagram with
+        {
+            StartProps = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram),
+        };
     }
 
     private static int ValidateDimensions(

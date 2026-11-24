@@ -1,5 +1,6 @@
 extern alias JifDetails;
 
+using System.Collections.Immutable;
 using System.Text.Json;
 using Siteswaps.Jif.Components;
 
@@ -8,6 +9,26 @@ namespace Siteswaps.Generator.Components.SiteswapLab;
 public static class SiteswapLabJifMapper
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
+    public static ImmutableDictionary<string, JifDetails::Siteswap.Details.CausalDiagram.StartProps> CalculateCausalStartProps(
+        IReadOnlyList<int> timeZones,
+        IReadOnlyList<IReadOnlyList<int>> heights,
+        IReadOnlyList<IReadOnlyList<int>> targets
+    )
+    {
+        if (!heights.SelectMany(row => row).Any(height => height > 0))
+            return Enumerable
+                .Range(0, timeZones.Count)
+                .ToImmutableDictionary(
+                    index => ((char)('A' + index)).ToString(),
+                    _ => new JifDetails::Siteswap.Details.CausalDiagram.StartProps(0, 0),
+                    StringComparer.Ordinal
+                );
+
+        return JifDetails::Siteswap.Details.CausalDiagram.PassingDiagramBuilder
+            .Build(timeZones, heights, targets)
+            .StartProps;
+    }
 
     public static string MapViaCausalDiagram(
         IReadOnlyList<int> timeZones,

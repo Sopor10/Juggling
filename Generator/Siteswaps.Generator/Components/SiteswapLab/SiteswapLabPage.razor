@@ -318,19 +318,31 @@
         _direct.People.Select((person, index) => (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray()
     );
 
-    private IReadOnlyList<PatternTable.PatternRow> LabTableRows => _direct.People.Select((person, index) =>
+    private IReadOnlyList<PatternTable.PatternRow> LabTableRows
     {
-        var clubs = _direct.StartingClubsFor(index);
-        return new PatternTable.PatternRow(
-            person.Name,
-            Phase: _direct.TimelinePhaseFor(index),
-            PhaseCount: _direct.ActiveTimeZoneCount,
-            LeftClubs: clubs.Left,
-            RightClubs: clubs.Right,
-            TimeZone: person.TimeZone,
-            StartClubsAriaLabel: L["Start clubs {0}: left {1}, right {2}", person.Name, clubs.Left, clubs.Right].Value
-        );
-    }).ToList();
+        get
+        {
+            var causalStarts = SiteswapLabJifMapper.CalculateCausalStartProps(
+                _direct.People.Select(person => person.TimeZone).ToArray(),
+                _direct.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
+                _direct.People.Select((person, index) =>
+                    (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray()
+            );
+            return _direct.People.Select((person, index) =>
+            {
+                var clubs = causalStarts[person.Name];
+                return new PatternTable.PatternRow(
+                    person.Name,
+                    Phase: _direct.TimelinePhaseFor(index),
+                    PhaseCount: _direct.ActiveTimeZoneCount,
+                    LeftClubs: clubs.Left,
+                    RightClubs: clubs.Right,
+                    TimeZone: person.TimeZone,
+                    StartClubsAriaLabel: L["Start clubs {0}: left {1}, right {2}", person.Name, clubs.Left, clubs.Right].Value
+                );
+            }).ToList();
+        }
+    }
 
     private int PersonIndex(string label) =>
         _direct.People.Select((person, index) => (person, index)).First(item => item.person.Name == label).index;
