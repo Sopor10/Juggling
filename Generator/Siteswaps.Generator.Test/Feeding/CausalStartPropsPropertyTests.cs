@@ -17,6 +17,7 @@ namespace Siteswaps.Generator.Test.Feeding;
 [TestFixture]
 public sealed class CausalStartPropsPropertyTests
 {
+    private const int FeedingSampleCount = 2_000;
     private static int CappedSiteswapInputCount;
     private static readonly string[] GeneratedSiteswaps = GenerateSiteswaps();
 
@@ -52,7 +53,7 @@ public sealed class CausalStartPropsPropertyTests
     [Test]
     public void Passing_diagram_maps_every_landing_to_the_requested_person_and_local_hand()
     {
-        for (var seed = 0; seed < 500; seed++)
+        for (var seed = 0; seed < FeedingSampleCount; seed++)
         {
             var pattern = FeedingPattern.Create(seed);
             var zones = pattern.State.People.Select(person => person.TimeZone).Distinct().Order().ToArray();
@@ -143,7 +144,7 @@ public sealed class CausalStartPropsPropertyTests
         var matchingSiteswaps = GeneratedSiteswaps
             .Where(notation => CompareSiteswap(notation) is null)
             .ToArray();
-        var allFeedingDifferences = Enumerable.Range(0, 500)
+        var allFeedingDifferences = Enumerable.Range(0, FeedingSampleCount)
             .Select(seed => (Seed: seed, Pattern: FeedingPattern.Create(seed)))
             .Select(item => (item.Seed, item.Pattern, Difference: CompareFeeding(item.Pattern)))
             .Where(item => item.Difference is not null)
@@ -157,7 +158,7 @@ public sealed class CausalStartPropsPropertyTests
             TestContext.Progress.WriteLine($"  {item.Notation}: {item.Difference}");
 
         TestContext.Progress.WriteLine(
-            $"Feeding mismatches: {allFeedingDifferences.Length}/500 valid generated patterns; first 20:"
+            $"Feeding mismatches: {allFeedingDifferences.Length}/{FeedingSampleCount} valid generated patterns; first 20:"
         );
         foreach (var item in allFeedingDifferences.Take(20))
             TestContext.Progress.WriteLine($"  seed {item.Seed}: {item.Pattern}; {item.Difference}");
@@ -169,7 +170,7 @@ public sealed class CausalStartPropsPropertyTests
     [Test]
     public void Causal_distribution_is_feasible_when_simulated_from_all_props_in_hands()
     {
-        for (var seed = 0; seed < 500; seed++)
+        for (var seed = 0; seed < FeedingSampleCount; seed++)
             AssertFeedingSimulation(seed);
     }
 
@@ -184,7 +185,7 @@ public sealed class CausalStartPropsPropertyTests
         var legacySimulationFailures = 0;
         var legacyRuns = 0;
         var naturalRuns = 0;
-        for (var seed = 0; seed < 500; seed++)
+        for (var seed = 0; seed < FeedingSampleCount; seed++)
         {
             var pattern = FeedingPattern.Create(seed);
             var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
@@ -230,7 +231,7 @@ public sealed class CausalStartPropsPropertyTests
         }
 
         TestContext.Progress.WriteLine(
-            $"Legacy starts: {legacyCountErrors} wrong prop counts; {legacySimulationFailures} fail the physical simulation; {legacyRuns} pass (total 500 valid feeds)."
+            $"Legacy starts: {legacyCountErrors} wrong prop counts; {legacySimulationFailures} fail the physical simulation; {legacyRuns} pass (total {FeedingSampleCount} valid feeds)."
         );
         foreach (var failure in failures.Take(20))
             TestContext.Progress.WriteLine($"  seed {failure.Seed}: {failure.Pattern}; legacy={failure.Legacy}; causal={failure.Causal}");
@@ -240,7 +241,7 @@ public sealed class CausalStartPropsPropertyTests
         foreach (var caseData in physicallyValidDifferences.Take(20))
             TestContext.Progress.WriteLine($"  seed {caseData.Seed}: {caseData.Pattern}; legacy={caseData.Legacy}; causal={caseData.Causal}");
         TestContext.Progress.WriteLine(
-            $"Natural alphabetical distributions: {naturalRuns}/500 pass physical simulation; {naturalDistributionFailures.Count} fail; {naturalDistributionDifferences.Count} valid cases differ from causal path distribution."
+            $"Natural alphabetical distributions: {naturalRuns}/{FeedingSampleCount} pass physical simulation; {naturalDistributionFailures.Count} fail; {naturalDistributionDifferences.Count} valid cases differ from causal path distribution."
         );
         foreach (var caseData in naturalDistributionFailures.Take(20))
             TestContext.Progress.WriteLine($"  seed {caseData.Seed}: {caseData.Pattern}; natural={caseData.Natural}; causal={caseData.Causal}");
