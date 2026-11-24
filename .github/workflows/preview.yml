@@ -53,6 +53,9 @@ jobs:
           cp publish/wwwroot/index.html publish/wwwroot/siteswap-lab/index.html
 
           preview_version="${GITHUB_SHA:0:12}"
+          sed -i "s#</head>#    <meta name=\"app-build-version\" content=\"${preview_version}\" />\\n</head>#" \
+            publish/wwwroot/index.html \
+            publish/wwwroot/siteswap-lab/index.html
           cp publish/wwwroot/sw-registrator.js "publish/wwwroot/sw-registrator-${preview_version}.js"
           sed -i "s/sw-registrator\.js/sw-registrator-${preview_version}.js/g" \
             publish/wwwroot/index.html \

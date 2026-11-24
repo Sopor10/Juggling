@@ -1,4 +1,5 @@
 @using System.Globalization
+@using System.Reflection
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.JSInterop
 @using Siteswaps.Components.CausalDiagram
@@ -226,6 +227,10 @@
     private (string EdgeId, int SourceCycle, decimal X, decimal Y)? _edgeDragPreview;
     private JifPattern? _animationJif;
     private string _animationUnavailable = "Für dieses Diagramm ist keine Passist-Animation verfügbar.";
+    private static string EditorBuildVersion =>
+        typeof(CausalDiagramEditorView)
+            .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion ?? "1.0.0";
     private decimal _timeMax
     {
         get
@@ -269,7 +274,12 @@
     {
         if (firstRender && (ShowOptions || AllowNodeMove || AllowThrowActions || AllowJugglerActions || AllowArrowEditing))
         {
-            _module = await JS.InvokeAsync<IJSObjectReference>("import", Navigation.ToAbsoluteUri("_content/Siteswaps.Components/causalDiagramEditor.js").ToString());
+            _module = await JS.InvokeAsync<IJSObjectReference>(
+                "import",
+                Navigation.ToAbsoluteUri(
+                    $"_content/Siteswaps.Components/causalDiagramEditor.js?v={Uri.EscapeDataString(EditorBuildVersion)}"
+                ).ToString()
+            );
             _dotNetRef = DotNetObjectReference.Create(this);
             if (ShowOptions) await _module.InvokeVoidAsync("bindOutsideClose", _diagramOptions);
         }

@@ -69,12 +69,20 @@
     <script>
         Blazor.start({
             loadBootResource: (type, name, defaultUri, integrity) => {
-                if (!window.blazorIsLocalDevelopment || !defaultUri.startsWith(window.location.origin)) {
+                if (!defaultUri.startsWith(window.location.origin)) {
+                    return defaultUri;
+                }
+
+                const previewVersion = document.querySelector('meta[name="app-build-version"]')?.content;
+                if (!window.blazorIsLocalDevelopment && !previewVersion) {
                     return defaultUri;
                 }
 
                 const separator = defaultUri.includes('?') ? '&' : '?';
-                return `${defaultUri}${separator}dev=${Date.now()}`;
+                const cacheKey = window.blazorIsLocalDevelopment
+                    ? `dev=${Date.now()}`
+                    : `v=${encodeURIComponent(previewVersion)}`;
+                return `${defaultUri}${separator}${cacheKey}`;
             }
         });
     </script>

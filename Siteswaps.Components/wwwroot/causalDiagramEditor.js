@@ -62,7 +62,8 @@ export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX
     stopDrag();
     const target = [...svg.querySelectorAll(".throw-hit-target")]
         .find(item => item.dataset.throwId === id && item.dataset.cycle === String(cycle));
-    let editing = editingAlready || pointerType === "touch";
+    const touchInput = pointerType !== "mouse" || window.matchMedia("(pointer: coarse)").matches;
+    let editing = editingAlready || touchInput;
     let timer;
     if (!editing) target?.classList.add("pressing");
     const move = event => {
@@ -91,7 +92,7 @@ export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX
     document.addEventListener("pointermove", move, { passive: false });
     document.addEventListener("pointerup", up, true);
     document.addEventListener("pointercancel", up);
-    if (pointerType === "touch" && !editingAlready) {
+    if (touchInput && !editingAlready) {
         dotnet.invokeMethodAsync("EnableThrowEditing", id, cycle);
     } else if (!editing) {
         timer = setTimeout(() => {
