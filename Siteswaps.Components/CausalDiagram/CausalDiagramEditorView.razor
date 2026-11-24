@@ -519,7 +519,6 @@
             DeleteThrow(id);
             return;
         }
-        if (!IsEditingThrow(id, cycle)) return;
         if (e.Key is not ("ArrowLeft" or "ArrowRight")) return;
         var item = _state.Throws.FirstOrDefault(t => t.Id == id);
         if (item is null) return;

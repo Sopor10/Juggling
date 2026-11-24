@@ -289,7 +289,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         var startY = targetBox.Y + targetBox.Height / 2;
         var urlBeforeTouchDrag = page.Url;
         await DispatchTouch(cdp, "touchStart", startX, startY);
-        await page.WaitForTimeoutAsync(100);
+        await page.WaitForTimeoutAsync(600);
         await DispatchTouch(cdp, "touchMove", startX + 35, startY);
         await DispatchTouch(cdp, "touchMove", startX + 80, startY);
         await DispatchTouchEnd(cdp);

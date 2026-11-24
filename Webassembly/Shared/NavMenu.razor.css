@@ -121,7 +121,7 @@
 .pznav-dialog-input[aria-invalid="true"] { border-color: #c2344f; }
 .pznav-dialog-error { color: #a12742; font: 700 .82rem 'Nunito', system-ui, sans-serif; }
 .pznav-dialog-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .8rem; }
-.pznav-dialog-actions button { min-height: 42px; padding: .5rem .9rem; border: 1px solid #d7c9eb; border-radius: 10px; background: #fff; color: var(--pznav-purple-800); font: 800 .88rem 'Nunito', system-ui, sans-serif; cursor: pointer; }
+.pznav-dialog-actions button { min-height: 44px; padding: .5rem .9rem; border: 1px solid #d7c9eb; border-radius: 10px; background: #fff; color: var(--pznav-purple-800); font: 800 .88rem 'Nunito', system-ui, sans-serif; cursor: pointer; }
 .pznav-dialog-actions .pznav-dialog-submit { border-color: var(--pznav-purple-700); background: var(--pznav-purple-700); color: #fff; }
 .pznav-dialog-actions button:focus-visible { outline: 3px solid var(--pznav-orange); outline-offset: 2px; }
 
