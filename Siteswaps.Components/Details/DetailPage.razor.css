@@ -1,44 +1,20 @@
 /* Design tokens mirrored from WizardPage (intentionally local copy). */
 .sd-page {
-    --sd-purple-950: #241a3d;
-    --sd-purple-900: #2c1f52;
-    --sd-purple-800: #33225d;
-    --sd-purple-700: #3c286d;
-    --sd-purple-600: #472779;
-    --sd-purple-500: #552f8c;
-    --sd-purple-400: #6b41a8;
-    --sd-purple-300: #8a63c4;
-    --sd-purple-100: #e8e1f7;
-    --sd-orange: #f9a500;
-    --sd-orange-dark: #db8f00;
-    --sd-blue: #00b3ff;
-    --sd-mint: #cbf7d4;
-    --sd-bg: #f5f3fb;
-    --sd-card: #ffffff;
-    --sd-radius-lg: 22px;
-    --sd-radius-md: 14px;
-    --sd-radius-sm: 10px;
-    --sd-shadow: 0 8px 24px -8px rgba(44, 31, 82, 0.35);
-    --sd-shadow-sm: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
-    --sd-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
-    --sd-pass: var(--sd-orange);
-    --sd-self: var(--sd-purple-500);
-
     width: 100%;
     min-height: 100%;
     flex: 1;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    background: var(--sd-bg);
-    font-family: 'Nunito', system-ui, sans-serif;
-    color: var(--sd-purple-900);
+    background: var(--decision-color-surface-page);
+    font-family: var(--decision-font-body);
+    color: var(--decision-color-text-primary);
     -webkit-tap-highlight-color: transparent;
 }
 
 .sd-page ::deep button:focus-visible,
 .sd-page ::deep a:focus-visible {
-    outline: 3px solid #00b3ff;
+    outline: 3px solid var(--decision-color-focus);
     outline-offset: 2px;
     border-radius: 8px;
 }
@@ -47,44 +23,44 @@
     width: 100%;
     height: 620px;
     overflow: hidden;
-    border: 1px solid rgba(44, 31, 82, .16);
+    border: 1px solid var(--decision-color-border-shadow);
     border-radius: 14px;
-    background: #fff;
+    background: var(--decision-color-white);
 }
 
 .sd-page ::deep .sdv-jif-data { margin-top: 12px; }
 .sd-page ::deep .sdv-jif-attribution {
     margin: 8px 0 0;
-    color: var(--sd-purple-400);
+    color: var(--decision-color-text-muted);
     font-size: 13px;
     text-align: center;
 }
-.sd-page ::deep .sdv-jif-attribution a { color: var(--sd-purple-700); }
+.sd-page ::deep .sdv-jif-attribution a { color: var(--decision-color-brand-strong); }
 .sd-page ::deep .sdv-jif-data pre {
     max-height: 320px;
     overflow: auto;
     padding: 12px;
     border-radius: 10px;
-    background: #241a3d;
-    color: #f5f3fb;
+    background: var(--decision-color-text-strong);
+    color: var(--decision-color-surface-page);
 }
 
 .sd-header {
-    background: radial-gradient(120% 140% at 20% 0%, var(--sd-purple-600) 0%, var(--sd-purple-800) 45%, var(--sd-purple-950) 100%);
-    color: white;
+    background: radial-gradient(120% 140% at 20% 0%, var(--decision-color-brand) 0%, var(--decision-color-text-secondary) 45%, var(--decision-color-text-strong) 100%);
+    color: var(--decision-color-white);
     padding: 14px 20px 22px;
     flex-shrink: 0;
 }
 
 .sd-external {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--decision-color-text-on-brand-emphasis);
     text-decoration: none;
     font-weight: 700;
     font-size: 13px;
 }
 
 .sd-external:hover {
-    color: var(--sd-orange);
+    color: var(--decision-color-action-primary);
 }
 
 .sd-header-notation {
@@ -96,7 +72,7 @@
 }
 
 .sd-header-notation-value {
-    font-family: var(--sd-font-display);
+    font-family: var(--decision-font-display);
     font-size: clamp(28px, 8vw, 42px);
     font-weight: 800;
     letter-spacing: 0.04em;
@@ -107,7 +83,7 @@
     appearance: none;
     border: 0;
     background: transparent;
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--decision-color-text-on-brand-secondary);
     font-size: clamp(18px, 5vw, 26px);
     line-height: 1;
     padding: 8px 6px;
@@ -116,8 +92,8 @@
 }
 
 .sd-rotate:hover:not(:disabled) {
-    color: var(--sd-orange);
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--decision-color-action-primary);
+    background: var(--decision-color-brand-overlay);
 }
 
 .sd-rotate:disabled {
@@ -135,7 +111,7 @@
     text-align: center;
     font-size: 14px;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.88);
+    color: var(--decision-color-text-on-brand-tertiary);
 }
 
 .sd-juggler-stepper {
@@ -155,7 +131,7 @@
 }
 
 .sd-header-meta-clubs {
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--decision-color-text-on-brand-muted);
     font-size: 13px;
 }
 
@@ -175,13 +151,13 @@
 }
 
 .sd-empty h2 {
-    font-family: var(--sd-font-display);
-    color: var(--sd-purple-800);
+    font-family: var(--decision-font-display);
+    color: var(--decision-color-text-secondary);
     margin: 0 0 8px;
 }
 
 .sd-empty p {
-    color: var(--sd-purple-400);
+    color: var(--decision-color-text-muted);
     margin: 0;
 }
 
@@ -192,7 +168,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     margin: 0 0 16px;
-    border-bottom: 2px solid var(--sd-purple-100);
+    border-bottom: 2px solid var(--decision-color-border-subtle);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
 }
@@ -206,7 +182,7 @@
 .sd-orbit-toggle {
     display: inline-flex;
     overflow: hidden;
-    border: 2px solid var(--sd-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 999px;
     background: transparent;
 }
@@ -215,18 +191,18 @@
     appearance: none;
     border: 0;
     background: transparent;
-    color: var(--sd-purple-700);
+    color: var(--decision-color-brand-strong);
     padding: 7px 13px;
     min-height: 36px;
-    font-family: var(--sd-font-display);
+    font-family: var(--decision-font-display);
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
 }
 
 .sd-orbit-toggle button.active {
-    background: var(--sd-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .sd-tab {
@@ -238,8 +214,8 @@
     margin-bottom: -2px;
     border-radius: 0;
     background: transparent;
-    color: var(--sd-purple-400);
-    font-family: var(--sd-font-display);
+    color: var(--decision-color-text-muted);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
     min-height: 44px;
@@ -250,12 +226,12 @@
 }
 
 .sd-tab:hover {
-    color: var(--sd-purple-700);
+    color: var(--decision-color-brand-strong);
 }
 
 .sd-tab.active {
-    color: var(--sd-purple-800);
-    border-bottom-color: var(--sd-orange);
+    color: var(--decision-color-text-secondary);
+    border-bottom-color: var(--decision-color-action-primary);
     background: transparent;
 }
 
@@ -267,10 +243,10 @@
 .sd-page ::deep .sdv-section-title {
     margin-top: 0;
     margin-bottom: 16px;
-    font-family: var(--sd-font-display);
+    font-family: var(--decision-font-display);
     font-size: 18px;
     font-weight: 800;
-    color: var(--sd-purple-800);
+    color: var(--decision-color-text-secondary);
 }
 
 .sd-page ::deep .sdv-analysis-gap,
@@ -280,7 +256,7 @@
 }
 
 .sd-page ::deep .sdv-muted {
-    color: var(--sd-purple-400);
+    color: var(--decision-color-text-muted);
     font-size: 13px;
 }
 
@@ -296,8 +272,8 @@
     flex-direction: column;
     gap: 2px;
     padding: 10px 12px;
-    background: var(--sd-purple-100);
-    border-radius: var(--sd-radius-sm);
+    background: var(--decision-color-border-subtle);
+    border-radius: var(--decision-radius-compact);
     min-width: 72px;
 }
 
@@ -306,31 +282,31 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--sd-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 .sd-page ::deep .sdv-chip-value {
-    font-family: var(--sd-font-display);
+    font-family: var(--decision-font-display);
     font-size: 18px;
     font-weight: 800;
-    color: var(--sd-purple-900);
+    color: var(--decision-color-text-primary);
 }
 
 .sd-page ::deep .sdv-chip.accent {
-    background: linear-gradient(180deg, #ffb838, var(--sd-orange));
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
 }
 
 .sd-page ::deep .sdv-chip.accent .sdv-chip-label,
 .sd-page ::deep .sdv-chip.accent .sdv-chip-value {
-    color: var(--sd-purple-950);
+    color: var(--decision-color-text-strong);
 }
 
 .sd-page ::deep .sdv-card {
-    background: var(--sd-bg);
-    border: 2px solid var(--sd-purple-100);
-    border-radius: var(--sd-radius-md);
+    background: var(--decision-color-surface-page);
+    border: 2px solid var(--decision-color-border-subtle);
+    border-radius: var(--decision-radius-control);
     padding: 14px 16px;
-    box-shadow: var(--sd-shadow-sm);
+    box-shadow: var(--decision-shadow-control);
 }
 
 .sd-page ::deep .sdv-mono {
@@ -340,11 +316,11 @@
 }
 
 .sd-page ::deep .sdv-pass {
-    color: var(--sd-pass);
+    color: var(--decision-color-status-pass);
 }
 
 .sd-page ::deep .sdv-self {
-    color: var(--sd-self);
+    color: var(--decision-color-status-self-throw);
 }
 
 .sd-page ::deep .sdv-beat-row {
@@ -361,41 +337,41 @@
     min-width: 44px;
     min-height: 44px;
     padding: 8px 10px;
-    border-radius: var(--sd-radius-sm);
+    border-radius: var(--decision-radius-compact);
     border: 2px solid transparent;
-    font-family: var(--sd-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 800;
 }
 
 .sd-page ::deep .sdv-beat.pass {
-    background: color-mix(in srgb, var(--sd-orange) 28%, white);
-    border-color: color-mix(in srgb, var(--sd-orange) 55%, white);
+    background: color-mix(in srgb, var(--decision-color-action-primary) 28%, var(--decision-color-white));
+    border-color: color-mix(in srgb, var(--decision-color-action-primary) 55%, var(--decision-color-white));
 }
 
 .sd-page ::deep .sdv-beat.self {
-    background: var(--sd-purple-100);
-    border-color: color-mix(in srgb, var(--sd-purple-400) 45%, white);
+    background: var(--decision-color-border-subtle);
+    border-color: color-mix(in srgb, var(--decision-color-text-muted) 45%, var(--decision-color-white));
 }
 
 .sd-page ::deep .sdv-beat.orbit-colored {
-    background: color-mix(in srgb, var(--orbit-color) 24%, white);
-    border-color: color-mix(in srgb, var(--orbit-color) 60%, white);
+    background: color-mix(in srgb, var(--orbit-color) 24%, var(--decision-color-white));
+    border-color: color-mix(in srgb, var(--orbit-color) 60%, var(--decision-color-white));
 }
 
 .sd-page ::deep .sdv-beat-throw {
     font-size: 18px;
     line-height: 1;
-    color: var(--sd-purple-900);
+    color: var(--decision-color-text-primary);
 }
 
 .sd-page ::deep .sdv-link {
-    color: var(--sd-purple-700);
+    color: var(--decision-color-brand-strong);
     font-weight: 800;
     text-decoration: none;
 }
 
 .sd-page ::deep .sdv-link:hover {
-    color: var(--sd-orange);
+    color: var(--decision-color-action-primary);
 }
 
 @media (min-width: 700px) {

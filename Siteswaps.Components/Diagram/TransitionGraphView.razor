@@ -4,14 +4,20 @@
 @using Siteswap.Details.StateDiagram
 @using Siteswap.Details.StateDiagram.Graph
 @using SiteswapList = Siteswap.Details.SiteswapList
+@inject IJSRuntime JS
 
-<Network Id="my-id" Data="@Data" Options="Options" style="width: 640px; height: 480px"/>
+@if (_designDecisions is { } decisions)
+{
+    <Network Id="my-id" Data="@Data" Options="@(network => DiagramStyle.Options(network, decisions))" style="width: 640px; height: 480px"/>
+}
 
 @code {
 
     [Parameter] public SiteswapList? Siteswaps { get; set; } = new(new(4,4,1), new (5,1), new(7,0,7,0,1));
     [Parameter,SupplyParameterFromQuery] public int Length { get; set; } = 2;
     [Parameter,SupplyParameterFromQuery(Name = "siteswaps")] public string? SiteswapsString { get; set; }
+
+    private DiagramDesignDecisions? _designDecisions;
 
     protected override void OnParametersSet()
     {
@@ -32,13 +38,28 @@
             }
         }
         
-        CreateNetworkData(Siteswaps);
+        if (_designDecisions is not null)
+        {
+            CreateNetworkData(Siteswaps, _designDecisions);
+        }
         base.OnParametersSet();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _designDecisions = await DesignDecisionTokens.ReadDiagramAsync(JS);
+        CreateNetworkData(Siteswaps, _designDecisions);
+        await InvokeAsync(StateHasChanged);
     }
 
     private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
-    private void CreateNetworkData(SiteswapList? list)
+    private void CreateNetworkData(SiteswapList? list, DiagramDesignDecisions decisions)
     {
         var nodes = new List<Node>();
         var edges = new List<Edge>();
@@ -51,9 +72,9 @@
         var graph = list.TransitionGraph(Length);
 
 
-        AddNodes(graph, nodes);
+        AddNodes(graph, nodes, decisions);
 
-        AddEdges(graph, edges);
+        AddEdges(graph, edges, decisions);
 
         Console.WriteLine(graph.Edges.Count);
 
@@ -66,33 +87,51 @@
     }
 
 
-    private static void AddEdges(Graph<Siteswap, Transition> fromGraph, List<Edge> edges)
+    private static void AddEdges(
+        Graph<Siteswap, Transition> fromGraph,
+        List<Edge> edges,
+        DiagramDesignDecisions decisions
+    )
     {
         foreach (var edge in fromGraph.Edges)
         {
-            AddEdge(edges, edge.N1.ToString(), edge.N2.ToString(), string.Join("", edge.Data.Throws.Select(x => x.Value.ToSiteswapString())).ToString());
+            AddEdge(
+                edges,
+                edge.N1.ToString(),
+                edge.N2.ToString(),
+                string.Join("", edge.Data.Throws.Select(x => x.Value.ToSiteswapString())),
+                decisions
+            );
         }
     }
 
-    private static void AddEdge(List<Edge> edges, string from, string to, string data)
+    private static void AddEdge(
+        List<Edge> edges,
+        string from,
+        string to,
+        string data,
+        DiagramDesignDecisions decisions
+    )
     {
         if (edges.Any(x => x.From == from && x.To == to))
         {
             return;
         }
 
-        var item = DiagramStyle.CreateEdge(from, to, data);
+        var item = DiagramStyle.CreateEdge(from, to, data, decisions);
         edges.Add(item);
     }
 
-    private static void AddNodes(Graph<Siteswap, Transition> fromGraph, ICollection<Node> nodes)
+    private static void AddNodes(
+        Graph<Siteswap, Transition> fromGraph,
+        ICollection<Node> nodes,
+        DiagramDesignDecisions decisions
+    )
     {
         foreach (var node in fromGraph.Nodes)
         {
-            nodes.Add(DiagramStyle.CreateStateNode(node.ToString(), node.ToString()));
+            nodes.Add(DiagramStyle.CreateStateNode(node.ToString(), node.ToString(), decisions));
         }
     }
-
-    private NetworkOptions Options(Network arg) => DiagramStyle.Options(arg);
 
 }

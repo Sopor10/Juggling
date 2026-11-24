@@ -1,20 +1,11 @@
 .feeding-title {
     margin: 10px 0 0;
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-family: var(--decision-font-display);
     font-size: 1.5rem;
 }
 
 .feeding-steps {
     flex: 1;
-    --feeding-purple-900: #2c1f52;
-    --feeding-purple-700: #3c286d;
-    --feeding-purple-600: #472779;
-    --feeding-purple-500: #552f8c;
-    --feeding-purple-100: #e8e1f7;
-    --feeding-orange: #f9a500;
-    --feeding-card: #ffffff;
-    --feeding-radius: 14px;
-    --feeding-radius-sm: 10px;
 }
 
 .feeding-lead,
@@ -43,7 +34,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 8px 0;
-    border-bottom: 1px solid var(--feeding-purple-100);
+    border-bottom: 1px solid var(--decision-color-border-subtle);
 }
 
 .feeding-pass-actions {
@@ -64,18 +55,18 @@
 }
 
 .feeding-chip {
-    border: 2px solid var(--feeding-purple-100);
-    border-radius: var(--feeding-radius-sm);
-    background: white;
-    color: var(--feeding-purple-500);
+    border: 2px solid var(--decision-color-border-subtle);
+    border-radius: var(--decision-radius-compact);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-accent);
     font-weight: 800;
     transition: all 0.12s ease;
 }
 
 .feeding-chip.active {
-    background: #3c286d;
-    border-color: #3c286d;
-    color: white;
+    background: var(--decision-color-brand-strong);
+    border-color: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .feeding-btn-primary {
@@ -84,13 +75,13 @@
     min-height: 48px;
     min-width: 44px;
     padding: 10px 20px;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    background: linear-gradient(180deg, #ffb838, var(--feeding-orange));
-    color: var(--wizard-purple-950);
-    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
+    color: var(--decision-color-text-strong);
+    box-shadow: var(--decision-shadow-action-primary);
 }
 
 .feeding-btn-primary:active {
@@ -103,9 +94,9 @@
 }
 
 .feeding-btn-ghost {
-    border-radius: var(--feeding-radius-sm);
+    border-radius: var(--decision-radius-compact);
     background: transparent;
-    color: var(--feeding-purple-600);
+    color: var(--decision-color-brand);
     text-decoration: underline;
 }
 
@@ -120,15 +111,15 @@
 .feeding-result {
     width: 100%;
     text-align: left;
-    border-radius: var(--feeding-radius-sm);
-    background: var(--feeding-purple-100);
+    border-radius: var(--decision-radius-compact);
+    background: var(--decision-color-border-subtle);
 }
 
 .feeding-result.active,
 .feeding-result[aria-pressed="true"] {
-    background: var(--feeding-orange);
-    color: #241a3d;
-    border: 2px solid #db8f00;
+    background: var(--decision-color-action-primary);
+    color: var(--decision-color-text-strong);
+    border: 2px solid var(--decision-color-action-primary-hover);
 }
 
 .feeding-digit-row {
@@ -153,7 +144,7 @@
 }
 
 .feeding-digit {
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: clamp(1.75rem, 6vw, 2.25rem);
     font-weight: 800;
     line-height: 1;
@@ -161,7 +152,7 @@
 
 .feeding-digit-cell.is-self .feeding-digit,
 .feeding-self-hint {
-    color: var(--feeding-purple-400);
+    color: var(--decision-color-text-muted);
     opacity: 0.55;
 }
 
@@ -235,8 +226,8 @@
 
 .feeding-steps ::deep .feeding-results-title {
     margin: 0;
-    color: var(--feeding-purple-800);
-    font-family: var(--wizard-font-display);
+    color: var(--decision-color-text-secondary);
+    font-family: var(--decision-font-display);
     font-size: 20px;
     line-height: 1.2;
 }
@@ -255,25 +246,25 @@
     width: 100%;
     padding: 10px 14px;
     border: 0;
-    border-radius: var(--feeding-radius-sm);
-    background: var(--feeding-purple-100);
-    color: var(--feeding-purple-900);
+    border-radius: var(--decision-radius-compact);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-text-primary);
     font-family: inherit;
     cursor: pointer;
 }
 
 .feeding-steps ::deep .feeding-result.active,
 .feeding-steps ::deep .feeding-result[aria-pressed="true"] {
-    background: var(--feeding-orange);
-    color: #241a3d;
-    border: 2px solid #db8f00;
+    background: var(--decision-color-action-primary);
+    color: var(--decision-color-text-strong);
+    border: 2px solid var(--decision-color-action-primary-hover);
 }
 
 .feeding-steps ::deep .feeding-result:focus-visible,
 .feeding-steps ::deep .feeding-btn-primary:focus-visible,
 .feeding-steps ::deep .feeding-btn-ghost:focus-visible,
 .feeding-steps ::deep .feeding-throw-mode button:focus-visible {
-    outline: 3px solid var(--feeding-purple-500);
+    outline: 3px solid var(--decision-color-brand-accent);
     outline-offset: 2px;
 }
 
@@ -314,7 +305,7 @@
     width: 100%;
     margin-top: 0;
     padding: 10px 0 calc(18px + env(safe-area-inset-bottom, 0px));
-    background: var(--feeding-bg);
+    background: var(--decision-color-surface-page);
     box-sizing: border-box;
 }
 
@@ -340,20 +331,20 @@
     padding: 10px 20px;
     border: 0;
     border-radius: 999px;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     cursor: pointer;
 }
 
 .feeding-steps ::deep .feeding-btn-primary {
-    background: linear-gradient(180deg, #ffb838, var(--feeding-orange));
-    color: var(--wizard-purple-950);
-    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
+    color: var(--decision-color-text-strong);
+    box-shadow: var(--decision-shadow-action-primary);
 }
 
 .feeding-steps ::deep .feeding-btn-ghost {
-    background: var(--feeding-purple-100);
-    color: var(--feeding-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
 }
 
 .feeding-steps ::deep .feeding-beat-row,
@@ -373,10 +364,10 @@
     min-height: 44px;
     padding: 8px 10px;
     border: 2px solid transparent;
-    border-radius: var(--feeding-radius-sm);
-    font-family: var(--wizard-font-display);
+    border-radius: var(--decision-radius-compact);
+    font-family: var(--decision-font-display);
     font-weight: 800;
-    color: var(--feeding-purple-900);
+    color: var(--decision-color-text-primary);
     box-sizing: border-box;
 }
 
@@ -385,33 +376,33 @@
 }
 
 .feeding-steps ::deep .feeding-beat.pass {
-    background: color-mix(in srgb, var(--feeding-orange) 28%, white);
-    border-color: color-mix(in srgb, var(--feeding-orange) 55%, white);
+    background: color-mix(in srgb, var(--decision-color-action-primary) 28%, var(--decision-color-white));
+    border-color: color-mix(in srgb, var(--decision-color-action-primary) 55%, var(--decision-color-white));
 }
 
 .feeding-steps ::deep .feeding-beat.self {
-    background: var(--feeding-purple-100);
+    background: var(--decision-color-border-subtle);
 }
 
 .feeding-steps ::deep .feeding-beat.is-selected {
-    background: var(--feeding-purple-700);
-    border-color: var(--feeding-purple-700);
-    color: white;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--feeding-purple-500) 25%, transparent);
+    background: var(--decision-color-brand-strong);
+    border-color: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--decision-color-brand-accent) 25%, transparent);
 }
 
 .feeding-steps ::deep .feeding-beat.is-landing {
-    border-color: var(--feeding-orange);
-    box-shadow: inset 0 0 0 2px white, 0 0 0 3px color-mix(in srgb, var(--feeding-orange) 35%, transparent);
+    border-color: var(--decision-color-action-primary);
+    box-shadow: inset 0 0 0 2px var(--decision-color-white), 0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 35%, transparent);
 }
 
 .feeding-steps ::deep .feeding-beat.is-selected.is-landing {
-    background: var(--feeding-purple-700);
-    border-color: var(--feeding-orange);
+    background: var(--decision-color-brand-strong);
+    border-color: var(--decision-color-action-primary);
 }
 
 .feeding-steps ::deep button.feeding-beat:focus-visible {
-    outline: 3px solid var(--feeding-purple-500);
+    outline: 3px solid var(--decision-color-brand-accent);
     outline-offset: 3px;
 }
 
@@ -451,7 +442,7 @@
 }
 
 .feeding-steps ::deep .feeding-juggler-label {
-    color: var(--feeding-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: 16px;
     font-weight: 800;
     line-height: 1;
@@ -471,16 +462,16 @@
     min-width: 44px;
     min-height: 44px;
     padding: 4px 8px;
-    border: 2px dashed color-mix(in srgb, var(--feeding-purple-400) 40%, white);
-    border-radius: var(--feeding-radius-sm);
-    background: color-mix(in srgb, var(--feeding-purple-100) 55%, white);
+    border: 2px dashed color-mix(in srgb, var(--decision-color-text-muted) 40%, var(--decision-color-white));
+    border-radius: var(--decision-radius-compact);
+    background: color-mix(in srgb, var(--decision-color-border-subtle) 55%, var(--decision-color-white));
     box-sizing: border-box;
     flex-shrink: 0;
 }
 
 .feeding-steps ::deep .feeding-start-props-hand {
-    color: var(--feeding-purple-700);
-    font-family: var(--wizard-font-display);
+    color: var(--decision-color-brand-strong);
+    font-family: var(--decision-font-display);
     font-size: 14px;
     font-weight: 800;
     line-height: 1;
@@ -530,7 +521,7 @@
 }
 
 .feeding-steps ::deep .feeding-muted {
-    color: var(--feeding-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: 12px;
 }
 
@@ -543,10 +534,10 @@
     display: inline-flex;
     flex-shrink: 0;
     margin-left: auto;
-    border: 2px solid var(--feeding-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 999px;
     overflow: hidden;
-    background: white;
+    background: var(--decision-color-white);
 }
 
 .feeding-steps ::deep .feeding-throw-mode button {
@@ -556,8 +547,8 @@
     min-height: 40px;
     padding: 8px 12px;
     background: transparent;
-    color: var(--feeding-purple-500);
-    font-family: var(--wizard-font-display);
+    color: var(--decision-color-brand-accent);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;
@@ -565,12 +556,12 @@
 }
 
 .feeding-steps ::deep .feeding-throw-mode button + button {
-    border-left: 2px solid var(--feeding-purple-100);
+    border-left: 2px solid var(--decision-color-border-subtle);
 }
 
 .feeding-steps ::deep .feeding-throw-mode button.active {
-    background: var(--feeding-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .feeding-steps ::deep .feeding-interface-row {
@@ -582,14 +573,14 @@
 .feeding-steps ::deep .feeding-interface-cell {
     min-width: 64px;
     padding: 8px;
-    border-radius: var(--feeding-radius-sm);
-    background: var(--feeding-purple-100);
+    border-radius: var(--decision-radius-compact);
+    background: var(--decision-color-border-subtle);
     text-align: center;
 }
 
 .feeding-steps ::deep .feeding-interface-cell.is-b1,
 .feeding-steps ::deep .feeding-interface-cell.is-b2 {
-    background: color-mix(in srgb, var(--feeding-orange) 32%, white);
+    background: color-mix(in srgb, var(--decision-color-action-primary) 32%, var(--decision-color-white));
 }
 
 .feeding-steps ::deep .feeding-interface-pick {

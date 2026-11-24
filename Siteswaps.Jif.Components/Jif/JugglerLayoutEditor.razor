@@ -8,24 +8,38 @@
 
 @if (JugglerNames.Count > 1 && Poses.Count == JugglerNames.Count)
 {
-    <details class="juggler-layout-editor">
-        <summary>@L["Change animation layout"]</summary>
+    <section class="juggler-layout-editor" aria-labelledby="juggler-layout-title">
+        <div class="juggler-layout-heading">
+            <h2 id="juggler-layout-title">@L["Animation layout"]</h2>
+            <button type="button" class="juggler-layout-help-toggle"
+                    aria-label="@L[_showHint ? "Hide help" : "Show help"]"
+                    aria-expanded="@_showHint" aria-controls="juggler-layout-hint" @onclick="ToggleHint"><span aria-hidden="true">ⓘ</span></button>
+        </div>
+        @if (_showHint)
+        {
+            <p id="juggler-layout-hint" class="juggler-layout-hint" role="note">@L["Choose a preset or customize the positions."]</p>
+        }
         <div class="juggler-layout-controls">
-            <div class="juggler-layout-toolbar">
-                <div class="juggler-layout-presets" role="group" aria-label="@L["Layout presets"]">
-                    <button type="button" class="juggler-layout-preset @(_preset == "circle" ? "active" : null)"
-                            aria-pressed="@(_preset == "circle")" @onclick='() => ApplyPreset("circle")'>@L["Circle"]</button>
-                    <button type="button" class="juggler-layout-preset @(_preset == "w-v" ? "active" : null)"
-                            aria-pressed="@(_preset == "w-v")" @onclick='() => ApplyPreset("w-v")'>@L["W/V"]</button>
-                </div>
-                <button type="button" class="juggler-layout-help-toggle"
-                        aria-label="@L[_showHint ? "Hide help" : "Show help"]"
-                        aria-expanded="@_showHint" @onclick="ToggleHint"><span aria-hidden="true">ⓘ</span></button>
+            <div class="juggler-layout-presets" role="group" aria-label="@L["Layout presets"]">
+                <button type="button" class="juggler-layout-preset @(_preset == "circle" ? "active" : null)"
+                        aria-pressed="@(_preset == "circle")" @onclick='() => ApplyPreset("circle")'>
+                    <span>@L["Circle"]</span>
+                    @if (_preset == "circle") { <span class="juggler-layout-state">@L["Current"]</span> }
+                </button>
+                <button type="button" class="juggler-layout-preset @(_preset == "w-v" ? "active" : null)"
+                        aria-pressed="@(_preset == "w-v")" @onclick='() => ApplyPreset("w-v")'>
+                    <span>@L["W/V"]</span>
+                    <span class="juggler-layout-state">@(_preset == "w-v" ? L["Current"] : L["Default"])</span>
+                </button>
             </div>
-            @if (_showHint)
-            {
-                <p class="juggler-layout-hint" role="note">@L["Drag jugglers to move them. Drag the small handle to rotate them."]</p>
-            }
+            <button type="button" class="juggler-layout-customize" @onclick="OpenEditor">@L["Customize positions"]</button>
+        </div>
+
+        <dialog @ref="_dialog" class="juggler-layout-dialog" aria-labelledby="juggler-layout-dialog-title" @onclose="OnDialogClosed">
+            <div class="juggler-layout-dialog-header">
+                <h2 id="juggler-layout-dialog-title">@L["Customize positions"]</h2>
+                <button type="button" class="juggler-layout-dialog-close" aria-label="@L["Close"]" @onclick="CloseEditor">×</button>
+            </div>
             <div class="juggler-layout-canvas-wrap">
                 <svg @ref="_svg" class="juggler-layout-canvas" viewBox="0 0 360 240" role="group"
                      aria-label="@L["Top-down juggler layout"]">
@@ -54,8 +68,8 @@
                     }
                 </svg>
             </div>
-        </div>
-    </details>
+        </dialog>
+    </section>
 }
 
 @code {
@@ -66,12 +80,31 @@
     [Parameter] public EventCallback<JugglerLayoutChange> LayoutChanged { get; set; }
 
     private ElementReference _svg;
+    private ElementReference _dialog;
     private IJSObjectReference? _module;
     private DotNetObjectReference<JugglerLayoutEditor>? _dotNetRef;
     private bool _showHint;
+    private bool _editorOpen;
+    private bool _dialogOpen;
     private string _preset = "w-v";
 
     private void ToggleHint() => _showHint = !_showHint;
+    private void OpenEditor() => _editorOpen = true;
+
+    private async Task CloseEditor()
+    {
+        _editorOpen = false;
+        if (_module is not null && _dialogOpen)
+            await _module.InvokeVoidAsync("closeDialog", _dialog);
+        _dialogOpen = false;
+    }
+
+    private Task OnDialogClosed()
+    {
+        _editorOpen = false;
+        _dialogOpen = false;
+        return Task.CompletedTask;
+    }
 
     protected override void OnParametersSet()
     {
@@ -154,6 +187,12 @@
         {
             _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Siteswaps.Jif.Components/Jif/JugglerLayoutEditor.razor.js");
             _dotNetRef = DotNetObjectReference.Create(this);
+        }
+
+        if (_editorOpen && !_dialogOpen && _module is not null)
+        {
+            await _module.InvokeVoidAsync("showDialog", _dialog);
+            _dialogOpen = true;
         }
     }
 

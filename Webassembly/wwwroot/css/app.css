@@ -1,11 +1,10 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
-@import "colors.css";
 
 html, body {
     font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin: 0;
-    background: #f5f3fb;
+    background: var(--decision-color-surface-page);
 }
 
 /* Pre-Blazor splash: centered brand icon (removed when the app mounts). */
@@ -14,7 +13,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f5f3fb;
+    background: var(--decision-color-surface-page);
     box-sizing: border-box;
     padding: 24px;
 }
@@ -32,14 +31,14 @@ h1:focus {
 
 /* Links und Button-Links */
 a, .btn-link {
-    color: var(--color-primary); /* Primärfarbe */
+    color: var(--decision-color-brand); /* Primärfarbe */
 }
 
 /* Primäre Buttons */
 .btn-primary {
-    color: #fff;
-    background-color: var(--color-primary); /* Primärfarbe */
-    border-color: var(--color-primary-dark); /* Dunklere Variante der Primärfarbe */
+    color: var(--decision-color-white);
+    background-color: var(--decision-color-brand); /* Primärfarbe */
+    border-color: var(--decision-color-brand-strong); /* Dunklere Variante der Primärfarbe */
 }
 
 /* Inhaltsbereich Padding */
@@ -51,7 +50,7 @@ a, .btn-link {
 .content:has(.settings-page),
 .content:has(.sd-page) {
     padding-top: 0;
-    background: #f5f3fb;
+    background: var(--decision-color-surface-page);
 }
 
 .content:has(.wizard-page) {
@@ -60,29 +59,29 @@ a, .btn-link {
 
 html:has(.sd-page),
 body:has(.sd-page) {
-    background: #f5f3fb;
+    background: var(--decision-color-surface-page);
 }
 
 /* Gültige Eingabefelder (modifiziert) */
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid var(--color-success); /* Erfolg - auf Primärfarbe basierend */
+    outline: 1px solid var(--decision-color-status-success); /* Erfolg - auf Primärfarbe basierend */
 }
 
 /* Ungültige Eingabefelder */
 .invalid {
-    outline: 1px solid var(--color-danger); /* Gefahrenfarbe */
+    outline: 1px solid var(--decision-color-status-error); /* Gefahrenfarbe */
 }
 
 /* Validierungsfehlermeldungen */
 .validation-message {
-    color: var(--color-danger); /* Gefahrenfarbe für Fehlermeldungen */
+    color: var(--decision-color-status-error); /* Gefahrenfarbe für Fehlermeldungen */
 }
 
 /* Blazor-Fehler-UI */
 #blazor-error-ui {
-    background: var(--color-background-light); /* Heller Fehlerhintergrund */
+    background: var(--decision-color-status-error-surface); /* Heller Fehlerhintergrund */
     bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--decision-shadow-error-ui);
     display: none;
     left: 0;
     padding: 0.6rem 1.25rem 0.7rem 1.25rem;
@@ -97,13 +96,13 @@ body:has(.sd-page) {
     position: absolute;
     right: 0.75rem;
     top: 0.5rem;
-    color: var(--color-primary); /* Primärfarbe für Dismiss-Button */
+    color: var(--decision-color-brand); /* Primärfarbe für Dismiss-Button */
 }
 
 /* Fehlerbereich */
 .blazor-error-boundary {
-    background-color: var(--color-error-background); /* Gefahrenfarbe für Fehlerbereiche */
-    color: var(--color-error-text); /* Weißer Text auf Fehlerbereich */
+    background-color: var(--decision-color-status-error-surface); /* Gefahrenfarbe für Fehlerbereiche */
+    color: var(--decision-color-white); /* Weißer Text auf Fehlerbereich */
 }
 
 .blazor-error-boundary::after {
@@ -112,5 +111,5 @@ body:has(.sd-page) {
 
 /* Dismiss-Button im Fehlerbereich beim Hover */
 #blazor-error-ui .dismiss:hover {
-    color: var(--color-success); 
+    color: var(--decision-color-status-success);
 }

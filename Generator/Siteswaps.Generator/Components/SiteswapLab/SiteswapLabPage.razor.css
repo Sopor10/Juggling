@@ -9,7 +9,7 @@
 
 .lab-kicker {
     margin-top: 0;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 .lab-passing-overview {
@@ -61,49 +61,49 @@
     padding: 8px;
     border: 2px solid transparent;
     border-radius: 10px;
-    color: var(--wizard-purple-950);
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    color: var(--decision-color-text-strong);
+    font-family: var(--decision-font-display);
     font-size: 1rem;
     font-weight: 900;
     cursor: pointer;
 }
 
 ::deep .feeding-beat.pass {
-    border-color: color-mix(in srgb, var(--wizard-orange) 55%, white);
-    background: color-mix(in srgb, var(--wizard-orange) 28%, white);
+    border-color: color-mix(in srgb, var(--decision-color-action-primary) 55%, var(--decision-color-white));
+    background: color-mix(in srgb, var(--decision-color-action-primary) 28%, var(--decision-color-white));
 }
 
 ::deep .feeding-beat.self {
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
 }
 
 ::deep .feeding-beat.is-selected {
-    border-color: var(--wizard-purple-700);
-    background: var(--wizard-purple-700);
-    color: white;
+    border-color: var(--decision-color-brand-strong);
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 ::deep .feeding-beat.is-landing {
-    border-color: var(--wizard-orange);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+    border-color: var(--decision-color-action-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 30%, transparent);
 }
 
 ::deep .feeding-beat.is-incoming {
-    border-color: var(--wizard-purple-500);
-    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--wizard-purple-500) 40%, transparent);
+    border-color: var(--decision-color-brand-accent);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--decision-color-brand-accent) 40%, transparent);
 }
 
 ::deep .feeding-beat.is-selected.is-incoming {
     box-shadow:
-        inset 0 0 0 2px color-mix(in srgb, white 55%, transparent),
-        0 0 0 3px color-mix(in srgb, var(--wizard-purple-500) 35%, transparent);
+        inset 0 0 0 2px color-mix(in srgb, var(--decision-color-white) 55%, transparent),
+        0 0 0 3px color-mix(in srgb, var(--decision-color-brand-accent) 35%, transparent);
 }
 
 ::deep .feeding-beat.is-landing.is-incoming {
-    border-color: var(--wizard-orange);
+    border-color: var(--decision-color-action-primary);
     box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent),
-        inset 0 0 0 2px color-mix(in srgb, var(--wizard-purple-500) 40%, transparent);
+        0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 30%, transparent),
+        inset 0 0 0 2px color-mix(in srgb, var(--decision-color-brand-accent) 40%, transparent);
 }
 
 ::deep .feeding-beat-row-editing {
@@ -138,9 +138,9 @@
     padding: 0;
     border: 0;
     border-radius: 8px;
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-700);
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
+    font-family: var(--decision-font-display);
     font-size: 1.1rem;
     font-weight: 900;
     cursor: pointer;
@@ -188,20 +188,20 @@
     align-items: center;
     justify-content: center;
     padding: 0 4px;
-    border: 2px solid var(--wizard-purple-200);
+    border: 2px solid var(--decision-color-border);
     border-radius: 8px;
-    background: white;
-    color: var(--wizard-purple-700);
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
+    font-family: var(--decision-font-display);
     font-size: .82rem;
     font-weight: 900;
     cursor: pointer;
 }
 
 ::deep .feeding-beat-target-pill.active {
-    border-color: var(--wizard-orange);
-    background: color-mix(in srgb, var(--wizard-orange) 22%, white);
-    color: var(--wizard-purple-950);
+    border-color: var(--decision-color-action-primary);
+    background: color-mix(in srgb, var(--decision-color-action-primary) 22%, var(--decision-color-white));
+    color: var(--decision-color-text-strong);
 }
 
 ::deep .feeding-beat-target-pill:disabled {
@@ -220,8 +220,8 @@
 }
 
 ::deep .feeding-beat.is-drop-target {
-    border-color: var(--wizard-orange);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 45%, transparent);
+    border-color: var(--decision-color-action-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 45%, transparent);
 }
 
 ::deep .feeding-beat.is-drop-invalid {
@@ -230,28 +230,28 @@
 }
 
 ::deep .feeding-beat.collision {
-    border-color: #c33e4a;
+    border-color: var(--decision-color-status-error);
     background-image: repeating-linear-gradient(
         -45deg,
         transparent 0 5px,
-        rgba(195, 62, 74, .2) 5px 9px
+        color-mix(in srgb, var(--decision-color-status-error) 20%, transparent) 5px 9px
     );
-    box-shadow: 0 0 0 3px rgba(195, 62, 74, .18);
+    box-shadow: var(--decision-shadow-status-error);
 }
 
 ::deep .feeding-beat.is-landing.collision {
-    border-color: var(--wizard-orange);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+    border-color: var(--decision-color-action-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 30%, transparent);
     background-image: repeating-linear-gradient(
         -45deg,
         transparent 0 5px,
-        rgba(195, 62, 74, .25) 5px 9px
+        color-mix(in srgb, var(--decision-color-status-error) 25%, transparent) 5px 9px
     );
 }
 
 ::deep .feeding-beat.unfilled {
-    border: 2px dashed #b16a00;
-    background-image: radial-gradient(circle, rgba(177, 106, 0, .2) 1px, transparent 1px);
+    border: 2px dashed var(--decision-color-status-warning);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--decision-color-status-warning) 20%, transparent) 1px, transparent 1px);
     background-size: 5px 5px;
 }
 
@@ -267,7 +267,7 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .7rem;
     font-weight: 900;
 }
@@ -287,8 +287,8 @@
     justify-content: center;
     border: 0;
     border-radius: 50%;
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
     font-size: 20px;
     font-weight: 900;
     cursor: pointer;
@@ -304,7 +304,7 @@
     min-height: 44px;
     border: 0;
     background: transparent;
-    color: var(--wizard-purple-950);
+    color: var(--decision-color-text-strong);
     font: 900 1.5rem/1 'Baloo 2', system-ui, sans-serif;
     text-align: center;
     -moz-appearance: textfield;
@@ -346,7 +346,7 @@
 .lab-throws-hint {
     width: 100%;
     margin: -2px 0 6px;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .72rem;
     text-align: center;
 }
@@ -391,7 +391,7 @@
     height: 4px;
     margin-inline: auto;
     border-radius: 999px;
-    background: var(--wizard-purple-300);
+    background: var(--decision-color-brand-soft);
     transform: translateX(
         calc(var(--lab-phase, 0) * 6px / var(--lab-phase-count, 1))
     );
@@ -402,13 +402,13 @@
 }
 
 .lab-timezone-row:focus-visible {
-    outline: 2px solid var(--wizard-purple-500);
+    outline: 2px solid var(--decision-color-brand-accent);
     outline-offset: 2px;
 }
 
 .lab-timezone-row-label {
     padding: 0 4px;
-    color: var(--wizard-purple-950);
+    color: var(--decision-color-text-strong);
     font-size: 1rem;
     font-weight: 900;
     line-height: 1;
@@ -428,7 +428,7 @@
     height: 2.75rem;
     min-height: 2.75rem;
     border-radius: 8px;
-    background: color-mix(in srgb, var(--wizard-purple-100) 55%, transparent);
+    background: color-mix(in srgb, var(--decision-color-border-subtle) 55%, transparent);
 }
 
 .lab-timezone-marker {
@@ -437,7 +437,7 @@
     justify-content: center;
     min-width: 1.5rem;
     min-height: 1.5rem;
-    color: var(--wizard-purple-950);
+    color: var(--decision-color-text-strong);
     font-size: 1rem;
     font-weight: 900;
     line-height: 1;
@@ -460,7 +460,7 @@
 }
 
 ::deep .lab-overview-toolbar-label {
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .7rem;
     font-weight: 900;
     line-height: 1.1;
@@ -478,10 +478,10 @@
     min-width: 44px;
     min-height: 44px;
     padding: 0;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 10px;
-    background: white;
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
     font: inherit;
     font-size: 1rem;
     font-weight: 900;
@@ -502,15 +502,15 @@
     min-width: 44px;
     min-height: 44px;
     padding: 4px 8px;
-    border: 2px dashed color-mix(in srgb, var(--wizard-purple-400) 40%, white);
+    border: 2px dashed color-mix(in srgb, var(--decision-color-text-muted) 40%, var(--decision-color-white));
     border-radius: 9px;
-    background: color-mix(in srgb, var(--wizard-purple-100) 55%, white);
+    background: color-mix(in srgb, var(--decision-color-border-subtle) 55%, var(--decision-color-white));
     box-sizing: border-box;
     flex-shrink: 0;
 }
 
 ::deep .lab-start-props-hand {
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
     font-size: .88rem;
     font-weight: 800;
     line-height: 1;
@@ -530,9 +530,9 @@
     display: inline-flex;
     flex-shrink: 0;
     overflow: hidden;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 999px;
-    background: white;
+    background: var(--decision-color-white);
 }
 
 ::deep .feeding-throw-mode button {
@@ -542,18 +542,18 @@
     padding: 7px 10px;
     border: 0;
     background: transparent;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font: 800 .72rem/1 inherit;
     cursor: pointer;
 }
 
 ::deep .feeding-throw-mode button + button {
-    border-left: 2px solid var(--wizard-purple-100);
+    border-left: 2px solid var(--decision-color-border-subtle);
 }
 
 ::deep .feeding-throw-mode button.active {
-    background: var(--wizard-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 ::deep .lab-overview-row {
@@ -595,7 +595,7 @@
     width: 1.5rem;
     min-width: 1.5rem;
     justify-content: center;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 ::deep .lab-overview-person strong {
@@ -627,10 +627,10 @@
     appearance: none;
     min-height: 36px;
     padding: 6px 12px;
-    border: 1px solid var(--wizard-purple-200);
+    border: 1px solid var(--decision-color-border);
     border-radius: 999px;
-    background: white;
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
     font: inherit;
     font-size: .8rem;
     font-weight: 800;
@@ -653,7 +653,7 @@
     min-width: 0;
     align-items: center;
     gap: 6px;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .72rem;
     font-weight: 800;
 }
@@ -678,53 +678,53 @@
 }
 
 ::deep .lab-chip-legend .feeding-beat.pass {
-    border-color: color-mix(in srgb, var(--wizard-orange) 55%, white);
-    background: color-mix(in srgb, var(--wizard-orange) 28%, white);
+    border-color: color-mix(in srgb, var(--decision-color-action-primary) 55%, var(--decision-color-white));
+    background: color-mix(in srgb, var(--decision-color-action-primary) 28%, var(--decision-color-white));
 }
 
 ::deep .lab-chip-legend .feeding-beat.self {
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
 }
 
 ::deep .lab-chip-legend .feeding-beat.is-selected {
-    border-color: var(--wizard-purple-700);
-    background: var(--wizard-purple-700);
-    color: white;
+    border-color: var(--decision-color-brand-strong);
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 ::deep .lab-chip-legend .feeding-beat.is-landing {
-    border-color: var(--wizard-orange);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+    border-color: var(--decision-color-action-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 30%, transparent);
 }
 
 ::deep .lab-chip-legend .feeding-beat.is-incoming {
-    border-color: var(--wizard-purple-500);
-    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--wizard-purple-500) 40%, transparent);
+    border-color: var(--decision-color-brand-accent);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--decision-color-brand-accent) 40%, transparent);
 }
 
 ::deep .lab-chip-legend .feeding-beat.collision {
-    border-color: #c33e4a;
+    border-color: var(--decision-color-status-error);
     background-image: repeating-linear-gradient(
         -45deg,
         transparent 0 5px,
-        rgba(195, 62, 74, .2) 5px 9px
+        color-mix(in srgb, var(--decision-color-status-error) 20%, transparent) 5px 9px
     );
-    box-shadow: 0 0 0 3px rgba(195, 62, 74, .18);
+    box-shadow: var(--decision-shadow-status-error);
 }
 
 ::deep .lab-chip-legend .feeding-beat.is-landing.collision {
-    border-color: var(--wizard-orange);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wizard-orange) 30%, transparent);
+    border-color: var(--decision-color-action-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--decision-color-action-primary) 30%, transparent);
     background-image: repeating-linear-gradient(
         -45deg,
         transparent 0 5px,
-        rgba(195, 62, 74, .25) 5px 9px
+        color-mix(in srgb, var(--decision-color-status-error) 25%, transparent) 5px 9px
     );
 }
 
 ::deep .lab-chip-legend .feeding-beat.unfilled {
-    border: 2px dashed #b16a00;
-    background-image: radial-gradient(circle, rgba(177, 106, 0, .2) 1px, transparent 1px);
+    border: 2px dashed var(--decision-color-status-warning);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--decision-color-status-warning) 20%, transparent) 1px, transparent 1px);
     background-size: 5px 5px;
 }
 
@@ -733,9 +733,9 @@
     gap: 12px;
     margin-top: 18px;
     padding: 14px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 12px;
-    background: var(--wizard-card);
+    background: var(--decision-color-surface-card);
 }
 
 .lab-selected-cell h3 {
@@ -761,13 +761,13 @@
 
 .lab-height-editor-label,
 .lab-target-editor > span {
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .7rem;
     font-weight: 900;
 }
 
 .lab-height-editor-hint {
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     font-size: .65rem;
     font-weight: 800;
     line-height: 1.2;
@@ -783,8 +783,8 @@
     min-height: 44px;
     border: 0;
     border-radius: 9px;
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
     font-weight: 900;
     cursor: pointer;
 }
@@ -796,7 +796,7 @@
 
 .lab-selected-empty {
     margin: 0;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .95rem;
     font-weight: 800;
 }
@@ -805,10 +805,10 @@
 .lab-target-output {
     min-width: 0;
     min-height: 44px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 9px;
-    background: white;
-    color: var(--wizard-purple-950);
+    background: var(--decision-color-white);
+    color: var(--decision-color-text-strong);
     font: 900 1rem/1 inherit;
     text-align: center;
 }
@@ -819,8 +819,8 @@
 }
 
 .lab-target-output.invalid {
-    border-color: #c33e4a;
-    color: #a22c38;
+    border-color: var(--decision-color-status-error);
+    color: var(--decision-color-status-error-text);
 }
 
 .lab-target-editor {
@@ -847,7 +847,7 @@
 }
 
 .lab-incoming-label {
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: .7rem;
     font-weight: 900;
 }
@@ -857,10 +857,10 @@
     min-height: 44px;
     margin: 0;
     padding: 10px 12px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 9px;
-    background: white;
-    color: var(--wizard-purple-950);
+    background: var(--decision-color-white);
+    color: var(--decision-color-text-strong);
     font: 800 .82rem/1.35 inherit;
 }
 
@@ -872,7 +872,7 @@
 }
 
 .lab-incoming-empty {
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 button:focus-visible,
@@ -880,7 +880,7 @@ input:focus-visible,
 select:focus-visible,
 a:focus-visible,
 ::deep button:focus-visible {
-    outline: 3px solid var(--wizard-orange);
+    outline: 3px solid var(--decision-color-action-primary);
     outline-offset: 3px;
 }
 

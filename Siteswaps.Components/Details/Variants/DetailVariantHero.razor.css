@@ -9,7 +9,7 @@
     box-sizing: border-box;
     margin-top: 28px;
     padding-top: 20px;
-    border-top: 2px solid var(--sd-purple-100);
+    border-top: 2px solid var(--decision-color-border-subtle);
 }
 
 .sdv-continue-heading {
@@ -41,7 +41,7 @@
     padding: 0 20px;
     border-radius: 999px;
     border: none;
-    font-family: var(--sd-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
     text-decoration: none;
@@ -50,9 +50,9 @@
 }
 
 .sdv-continue-primary {
-    background: linear-gradient(180deg, #ffb838, var(--sd-orange));
-    color: var(--sd-purple-950);
-    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
+    color: var(--decision-color-text-strong);
+    box-shadow: var(--decision-shadow-action-primary);
 }
 
 .sdv-continue-primary:active {
@@ -60,8 +60,8 @@
 }
 
 .sdv-continue-secondary {
-    background: var(--sd-purple-100);
-    color: var(--sd-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
 }
 
 .sdv-continue-secondary:active {

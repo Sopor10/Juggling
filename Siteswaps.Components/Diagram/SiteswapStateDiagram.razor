@@ -1,10 +1,14 @@
 ﻿@using Siteswap.Details
 @using Siteswap.Details.StateDiagram
 @using VisNetwork.Blazor.Models
+@inject IJSRuntime JS
 @if (Value is not null)
 {
     <div class="border-1">
-        <Network Id="@NetworkId" Data="@Data" Options="DiagramStyle.Options" style="width: 100%; max-width: 640px; height: 360px"/>
+        @if (_designDecisions is { } decisions)
+        {
+            <Network Id="@NetworkId" Data="@Data" Options="@(network => DiagramStyle.Options(network, decisions))" style="width: 100%; max-width: 640px; height: 360px"/>
+        }
     </div>
 }
 
@@ -17,15 +21,33 @@
 
     private string NetworkId => string.IsNullOrWhiteSpace(Id) ? "siteswap-detail-diagram" : Id;
 
+    private DiagramDesignDecisions? _designDecisions;
+
     private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
     protected override void OnParametersSet()
     {
-        CreateNetworkData();
+        if (_designDecisions is not null)
+        {
+            CreateNetworkData(_designDecisions);
+        }
+
         base.OnParametersSet();
     }
 
-    private void CreateNetworkData()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _designDecisions = await DesignDecisionTokens.ReadDiagramAsync(JS);
+        CreateNetworkData(_designDecisions);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void CreateNetworkData(DiagramDesignDecisions decisions)
     {
         var nodes = new List<Node>();
         var edges = new List<Edge>();
@@ -37,9 +59,9 @@
 
         var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(Value);
 
-        AddNodes(fromGraph, nodes);
+        AddNodes(fromGraph, nodes, decisions);
 
-        AddEdges(fromGraph, edges);
+        AddEdges(fromGraph, edges, decisions);
 
 
         Data = new NetworkData
@@ -49,37 +71,63 @@
         };
     }
 
-    private static void AddEdges(StateGraph fromGraph, List<Edge> edges)
+    private static void AddEdges(StateGraph fromGraph, List<Edge> edges, DiagramDesignDecisions decisions)
     {
         foreach (var edge in fromGraph.Graph.Edges)
         {
-            AddEdge(edges, edge.N1.StateRepresentation(), edge.N2.StateRepresentation(), edge.Data.ToString());
+            AddEdge(
+                edges,
+                edge.N1.StateRepresentation(),
+                edge.N2.StateRepresentation(),
+                edge.Data.ToString(),
+                decisions
+            );
         }
     }
 
-    private static void AddEdge(List<Edge> edges, string from, string to, string data)
+    private static void AddEdge(
+        List<Edge> edges,
+        string from,
+        string to,
+        string data,
+        DiagramDesignDecisions decisions
+    )
     {
         if (edges.Any(x => x.From == from && x.To == to))
         {
             return;
         }
 
-        edges.Add(DiagramStyle.CreateEdge(from, to, data));
+        edges.Add(DiagramStyle.CreateEdge(from, to, data, decisions));
     }
 
-    private static void AddNodes(StateGraph fromGraph, ICollection<Node> nodes)
+    private static void AddNodes(
+        StateGraph fromGraph,
+        ICollection<Node> nodes,
+        DiagramDesignDecisions decisions
+    )
     {
         foreach (var node in fromGraph.Graph.Nodes)
         {
-            AddState(nodes, node);
+            AddState(nodes, node, decisions);
         }
     }
 
-    private static void AddState(ICollection<Node> nodes, State node)
+    private static void AddState(
+        ICollection<Node> nodes,
+        State node,
+        DiagramDesignDecisions decisions
+    )
     {
         if (nodes.All(x => x.Id != node.StateRepresentation()))
         {
-            nodes.Add(DiagramStyle.CreateStateNode(node.StateRepresentation(), node.StateRepresentation()));
+            nodes.Add(
+                DiagramStyle.CreateStateNode(
+                    node.StateRepresentation(),
+                    node.StateRepresentation(),
+                    decisions
+                )
+            );
         }
     }
 }

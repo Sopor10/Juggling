@@ -4,10 +4,15 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Change animation layout" xml:space="preserve"><value>Change animation layout</value></data>
+  <data name="Animation layout" xml:space="preserve"><value>Animation layout</value></data>
   <data name="Layout presets" xml:space="preserve"><value>Layout presets</value></data>
   <data name="Circle" xml:space="preserve"><value>Circle</value></data>
   <data name="W/V" xml:space="preserve"><value>W/V</value></data>
+  <data name="Current" xml:space="preserve"><value>Current</value></data>
+  <data name="Default" xml:space="preserve"><value>Default</value></data>
+  <data name="Customize positions" xml:space="preserve"><value>Customize positions</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Choose a preset or customize the positions." xml:space="preserve"><value>Choose a preset or customize the positions.</value></data>
   <data name="Drag jugglers to move them. Drag the small handle to rotate them." xml:space="preserve"><value>Drag jugglers to move them. Drag the small handle to rotate them.</value></data>
   <data name="Show help" xml:space="preserve"><value>Show help</value></data>
   <data name="Hide help" xml:space="preserve"><value>Hide help</value></data>

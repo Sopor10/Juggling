@@ -1,0 +1,58 @@
+@using Microsoft.AspNetCore.Components.Sections
+@namespace Siteswaps.Components.Layout
+
+@if (Enabled)
+{
+    <div class="wizard-page">
+        <header class="wizard-header">
+            @if (HeaderContent is not null)
+            {
+                @HeaderContent
+            }
+            else
+            {
+                <SectionOutlet SectionName="@WizardShellSections.Header" />
+            }
+        </header>
+
+        <div class="wizard-body">
+            @if (ChildContent is not null)
+            {
+                @ChildContent
+            }
+            else
+            {
+                <SectionOutlet SectionName="@WizardShellSections.Body" />
+            }
+        </div>
+
+        <div class="wizard-footer">
+            @if (FooterContent is not null)
+            {
+                @FooterContent
+            }
+            else
+            {
+                <SectionOutlet SectionName="@WizardShellSections.Footer" />
+            }
+        </div>
+    </div>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter]
+    public bool Enabled { get; set; } = true;
+
+    [Parameter]
+    public RenderFragment? HeaderContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? FooterContent { get; set; }
+}

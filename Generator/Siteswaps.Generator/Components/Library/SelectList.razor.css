@@ -22,19 +22,19 @@
     appearance: none;
     width: 16px;
     height: 16px;
-    border: 2px solid var(--color-base-500);
+    border: 2px solid var(--decision-color-text-muted);
     border-radius: 4px;
     cursor: pointer;
-    background-color: var(--color-base-100);
+    background-color: var(--decision-color-surface-subtle);
 }
 
 .custom-checkbox-item input[type="checkbox"]:checked {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary-dark);
+    background-color: var(--decision-color-brand-accent);
+    border-color: var(--decision-color-brand);
 }
 
 .custom-checkbox-item label {
     font-size: 1rem;
-    color: var(--color-text-primary);
+    color: var(--decision-color-text-primary);
     cursor: pointer;
 }

@@ -10,10 +10,10 @@
     min-width: 44px;
     min-height: 44px;
     padding: 0;
-    border: 2px solid var(--wizard-purple-100, #e8e1f7);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 10px;
-    background: white;
-    color: var(--wizard-purple-700, #3c286d);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
     font: inherit;
     font-weight: 900;
     cursor: pointer;
