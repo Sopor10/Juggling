@@ -288,6 +288,9 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
 
         var target = page.Locator(".throw-hit-target").First;
         await scroller.EvaluateAsync("node => node.scrollLeft = 0");
+        await target.EvaluateAsync(
+            "node => node.addEventListener('pointerdown', event => window.__touchDragDownPrevented = event.defaultPrevented)"
+        );
         await target.FocusAsync();
         var positionBeforeArrow = await target.GetAttributeAsync("cx");
         var urlBeforeArrow = page.Url;
@@ -316,6 +319,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await DispatchTouch(cdp, "touchMove", startX + 80, startY);
         await DispatchTouchEnd(cdp);
         await page.WaitForTimeoutAsync(150);
+        (await page.EvaluateAsync<bool>("() => window.__touchDragDownPrevented")).Should().BeTrue();
         page.Url.Should().NotBe(urlBeforeTouchDrag);
         await Assertions.Expect(page.Locator(".pd-node.selected")).ToHaveCountAsync(2);
         (await scroller.EvaluateAsync<double>("node => node.scrollLeft"))

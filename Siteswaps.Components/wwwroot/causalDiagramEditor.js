@@ -1,6 +1,25 @@
 let activeMove;
 let activePressCleanup;
 const outsideCloseHandlers = new WeakMap();
+const touchDragHandlers = new WeakMap();
+
+export function bindTouchDragTargets(svg) {
+    if (!svg || touchDragHandlers.has(svg)) return;
+    const pointerDown = event => {
+        if (event.pointerType === "mouse" && !window.matchMedia("(pointer: coarse)").matches) return;
+        const target = event.target.closest?.(".throw-hit-target, .arrow-target-handle, .juggler-add-target");
+        if (target && svg.contains(target)) event.preventDefault();
+    };
+    svg.addEventListener("pointerdown", pointerDown, { capture: true, passive: false });
+    touchDragHandlers.set(svg, pointerDown);
+}
+
+export function unbindTouchDragTargets(svg) {
+    const pointerDown = touchDragHandlers.get(svg);
+    if (!pointerDown) return;
+    svg.removeEventListener("pointerdown", pointerDown, true);
+    touchDragHandlers.delete(svg);
+}
 
 export function bindOutsideClose(element) {
     if (!element || outsideCloseHandlers.has(element)) return;

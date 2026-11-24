@@ -281,6 +281,7 @@
                 ).ToString()
             );
             _dotNetRef = DotNetObjectReference.Create(this);
+            await _module.InvokeVoidAsync("bindTouchDragTargets", _svg);
             if (ShowOptions) await _module.InvokeVoidAsync("bindOutsideClose", _diagramOptions);
         }
     }
@@ -687,6 +688,7 @@
     {
         if (_module is not null)
         {
+            await _module.InvokeVoidAsync("unbindTouchDragTargets", _svg);
             if (ShowOptions) await _module.InvokeVoidAsync("unbindOutsideClose", _diagramOptions);
             await _module.InvokeVoidAsync("stopDrag");
             await _module.InvokeVoidAsync("stopJugglerHold");
