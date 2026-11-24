@@ -11,21 +11,21 @@
     <details class="juggler-layout-editor">
         <summary>@L["Change animation layout"]</summary>
         <div class="juggler-layout-controls">
-            <div class="juggler-layout-presets" role="group" aria-label="@L["Layout presets"]">
-                <button type="button" class="juggler-layout-preset @(_preset == "circle" ? "active" : null)"
-                        aria-pressed="@(_preset == "circle")" @onclick='() => ApplyPreset("circle")'>@L["Circle"]</button>
-                <button type="button" class="juggler-layout-preset @(_preset == "w-v" ? "active" : null)"
-                        aria-pressed="@(_preset == "w-v")" @onclick='() => ApplyPreset("w-v")'>@L["W/V"]</button>
-            </div>
-            <div class="juggler-layout-help">
+            <div class="juggler-layout-toolbar">
+                <div class="juggler-layout-presets" role="group" aria-label="@L["Layout presets"]">
+                    <button type="button" class="juggler-layout-preset @(_preset == "circle" ? "active" : null)"
+                            aria-pressed="@(_preset == "circle")" @onclick='() => ApplyPreset("circle")'>@L["Circle"]</button>
+                    <button type="button" class="juggler-layout-preset @(_preset == "w-v" ? "active" : null)"
+                            aria-pressed="@(_preset == "w-v")" @onclick='() => ApplyPreset("w-v")'>@L["W/V"]</button>
+                </div>
                 <button type="button" class="juggler-layout-help-toggle"
                         aria-label="@L[_showHint ? "Hide help" : "Show help"]"
-                        aria-expanded="@_showHint" @onclick="ToggleHint">?</button>
-                @if (_showHint)
-                {
-                    <p class="juggler-layout-hint" role="note">@L["Drag jugglers to move them. Drag the small handle to rotate them."]</p>
-                }
+                        aria-expanded="@_showHint" @onclick="ToggleHint"><span aria-hidden="true">ⓘ</span></button>
             </div>
+            @if (_showHint)
+            {
+                <p class="juggler-layout-hint" role="note">@L["Drag jugglers to move them. Drag the small handle to rotate them."]</p>
+            }
             <div class="juggler-layout-canvas-wrap">
                 <svg @ref="_svg" class="juggler-layout-canvas" viewBox="0 0 360 240" role="group"
                      aria-label="@L["Top-down juggler layout"]">
