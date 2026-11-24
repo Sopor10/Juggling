@@ -126,7 +126,9 @@ public class SiteswapLabPageTests
             .Contain(
                 "<FeedingThrowDisplayModeToggle Mode=\"_throwDisplayMode\" ModeChanged=\"OnThrowDisplayModeChanged\" />"
             );
-        page.Should().Contain("FeedingThrowDisplay.Format(");
+        page.Should().Contain("<PatternTable Rows=\"LabTableRows\"");
+        page.Should().Contain("private IReadOnlyList<PatternTable.PatternRow> LabTableRows");
+        page.Should().Contain("CausalStartProps");
         page.Should().Contain("GetItemAsync<SettingsDto>(\"settings\")");
         page.Should().Contain("is-editing-throw");
         page.Should().Contain("lab-overview-meta");
@@ -142,13 +144,15 @@ public class SiteswapLabPageTests
         page.Should().NotContain("Select a throw above to see where it lands and edit it.");
         page.Should().NotContain("AdjustPassingHeightByPeriod");
         page.Should().NotContain("SetPassingTarget(");
-        page.Should().Contain("<select id=\"lab-layout-person\"");
+        page.Should().Contain("<PassistAnimation");
+        page.Should().Contain("JugglerNames=");
+        page.Should().Contain("LayoutPoses=\"_layoutPoses\"");
         page.Should().Contain("OnChipClicked");
         page.Should().Contain("ApplyChipDrop");
         page.Should().Contain("HasSelection");
         page.Should().NotContain("class=\"lab-palette\"");
-        page.Should().Contain("Tap a throw to select it. Drag to change where it lands.");
-        page.Should().Contain("class=\"lab-throws-hint\"");
+        page.Should().NotContain("Tap a throw to select it. Drag to change where it lands.");
+        page.Should().NotContain("class=\"lab-throws-hint\"");
         page.Should().NotContain("ChipClicked=\"beat => _direct.SelectCell");
     }
 
@@ -231,8 +235,7 @@ public class SiteswapLabPageTests
         var page = ReadGeneratorSource(
             Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
         );
-        var toolbar = page.Split("class=\"lab-overview-toolbar\"", 2)[1]
-            .Split("lab-passing-overview", 2)[0];
+        var toolbar = page.Split("class=\"lab-overview-toolbar\"", 2)[1].Split("</Toolbar>", 2)[0];
 
         page.Should().Contain("class=\"lab-overview-toolbar\"");
         page.Should().Contain("class=\"lab-overview-toolbar-group\"");
@@ -265,8 +268,10 @@ public class SiteswapLabPageTests
         page.Should().Contain("private void Rotate(int steps)");
         page.Should().Contain("_direct.Rotate(steps);\n        SaveStateToUrl();");
         page.Should().Contain("Rotate starting position");
-        page.Should().Contain("class=\"lab-start-props\"");
-        page.Should().Contain("_direct.StartingClubsFor(personIndex)");
+        page.Should().Contain("StartClubsClass=\"lab-start-props\"");
+        page.Should().Contain("CausalStartProps");
+        page.Should().Contain("LeftClubs: clubs.Left");
+        page.Should().Contain("RightClubs: clubs.Right");
         page.Should().Contain("Start clubs");
         css.Should().Contain(".lab-start-props");
         css.Should().Contain(".lab-rotate");
@@ -432,10 +437,8 @@ public class SiteswapLabPageTests
         page.Should().NotContain("<button class=\"feeding-beat self\"");
 
         var legend = page.Split("class=\"lab-chip-legend\"", 2)[1].Split("</ul>", 2)[0];
-        legend.Should().Contain("class=\"lab-chip-legend-throw-display\"");
-        legend.Should().NotContain("@L[\"Throw display\"]");
-        legend
-            .Should()
+        legend.Should().NotContain("Throw display");
+        page.Should()
             .Contain(
                 "<FeedingThrowDisplayModeToggle Mode=\"_throwDisplayMode\" ModeChanged=\"OnThrowDisplayModeChanged\" />"
             );

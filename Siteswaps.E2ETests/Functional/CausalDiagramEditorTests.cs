@@ -10,31 +10,29 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
     : IClassFixture<SharedBlazorFixture>
 {
     [Fact]
-    public async Task CustomFeedingState_CopiesAndRestoresCompleteDeeplink()
+    public async Task CustomFeedingState_PersistsAndRestoresCompleteDeeplink()
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         var baseUri = E2EBaseUrl.FromFixture(host.Fixture);
         await OpenEditor(session.Page, baseUri);
         await SaveDesignScreenshotAsync(session.Page, "causal-editor-desktop.png");
 
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("feeding-7-5");
-        await session.Page.GetByLabel("Knoten auf Zeitleiste").SelectOptionAsync("P2");
+        await session.Page.Locator(".diagram-options summary").ClickAsync();
+        await session.Page.GetByLabel("Diagrammvorlage").SelectOptionAsync("feeding-7-5");
+        await session.Page.Locator(".juggler-add-target[data-juggler-id='P2']").ClickAsync();
+        await OpenDiagramOptions(session.Page);
         await session.Page.GetByLabel("Wiederholungen").FillAsync("3");
         await session.Page.GetByLabel("Wiederholungen").PressAsync("Tab");
         await session.Page.GetByLabel("Einrasten").UncheckAsync();
         var sourceNode = session.Page.Locator(".throw-hit-target").First;
         await sourceNode.FocusAsync();
         await sourceNode.PressAsync("Enter");
-        await Assertions.Expect(session.Page.GetByText("Höhe (Schläge)")).ToBeVisibleAsync();
-        (
-            await session
-                .Page.GetByRole(AriaRole.Heading, new() { Name = "Kausaler Diagramm-Editor" })
-                .CountAsync()
-        )
-            .Should()
-            .Be(1);
+        await Assertions.Expect(session.Page.Locator(".node-inspector")).ToHaveCountAsync(0);
+        (await session.Page.TitleAsync()).Should().Be("Kausaldiagramm-Editor");
         (await session.Page.GetByLabel("Jongleurname").CountAsync()).Should().Be(0);
-        (await session.Page.GetByLabel("Zyklus").CountAsync()).Should().Be(0);
+        (await session.Page.GetByLabel("Zyklus", new() { Exact = true }).CountAsync())
+            .Should()
+            .Be(0);
         (await session.Page.Locator(".node-inspector input[type=number]").CountAsync())
             .Should()
             .Be(0);
@@ -47,55 +45,23 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             .Be(0);
         (
             await session
-                .Page.Locator(".editor-header")
-                .GetByText("PASSING ZONE", new() { Exact = false })
+                .Page.GetByRole(AriaRole.Heading, new() { Name = "Kausaldiagramm-Editor" })
                 .CountAsync()
         )
             .Should()
             .Be(0);
         (
             await session
-                .Page.Locator(".editor-header")
-                .GetByText("Würfe als Knoten", new() { Exact = false })
+                .Page.GetByRole(AriaRole.Button, new() { Name = "Link kopieren" })
                 .CountAsync()
         )
             .Should()
             .Be(0);
         await SaveDesignScreenshotAsync(session.Page, "causal-editor-desktop-node-selected.png");
-        await session.Page.Locator(".node-inspector select").First.SelectOptionAsync("L");
-        var targetSelect = session.Page.GetByLabel("Kausaler Zielknoten");
-        var currentTarget = await targetSelect.InputValueAsync();
-        var targetOptions = await targetSelect
-            .Locator("option")
-            .EvaluateAllAsync<string[]>("options => options.map(option => option.value)");
-        var newTarget = targetOptions.First(value => value.Length > 0 && value != currentTarget);
-        await targetSelect.SelectOptionAsync(newTarget);
 
         var url = session.Page.Url;
         url.Should().Contain("state=j3.");
         url.Length.Should().BeLessThan(2_048);
-        await session.Context.GrantPermissionsAsync(
-            ["clipboard-read", "clipboard-write"],
-            new BrowserContextGrantPermissionsOptions
-            {
-                Origin = baseUri.GetLeftPart(UriPartial.Authority),
-            }
-        );
-        await session
-            .Page.GetByRole(AriaRole.Button, new() { Name = "Link kopieren" })
-            .ClickAsync();
-        await Assertions
-            .Expect(
-                session
-                    .Page.GetByRole(AriaRole.Status)
-                    .Filter(new() { HasText = "Deeplink kopiert" })
-            )
-            .ToBeVisibleAsync();
-        var copiedUrl = await session.Page.EvaluateAsync<string>(
-            "() => navigator.clipboard.readText()"
-        );
-        copiedUrl.Should().Be(url);
-
         var sharedPage = await session.Context.NewPageAsync();
         var browserErrors = new List<string>();
         var consoleErrors = new List<string>();
@@ -106,13 +72,14 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
                 consoleErrors.Add(message.Text);
         };
         var response = await sharedPage.GotoAsync(
-            copiedUrl,
+            url,
             new PageGotoOptions { WaitUntil = WaitUntilState.Load }
         );
+        await sharedPage.Locator(".diagram-options summary").ClickAsync();
         try
         {
             await sharedPage
-                .GetByLabel("Vorlage")
+                .GetByLabel("Diagrammvorlage")
                 .WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
         }
         catch (PlaywrightException exception)
@@ -121,8 +88,12 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
                 $"status={response?.Status}; url={sharedPage.Url}; errors={string.Join(" | ", browserErrors)}; console={string.Join(" | ", consoleErrors)}; body={await sharedPage.Locator("body").InnerTextAsync()}; {exception.Message}"
             );
         }
-        (await sharedPage.GetByLabel("Vorlage").InputValueAsync()).Should().Be("custom");
-        (await sharedPage.GetByLabel("Knoten auf Zeitleiste").InputValueAsync()).Should().Be("P2");
+        (await sharedPage.GetByLabel("Diagrammvorlage").InputValueAsync())
+            .Should()
+            .Be("feeding-7-5");
+        (await sharedPage.Locator(".juggler-add-target[data-juggler-id='P2']").CountAsync())
+            .Should()
+            .Be(1);
         (await sharedPage.GetByLabel("Wiederholungen").InputValueAsync()).Should().Be("3");
         (await sharedPage.GetByLabel("Einrasten").IsCheckedAsync()).Should().BeFalse();
         (await sharedPage.Locator(".throw-hit-target").CountAsync()).Should().Be(36);
@@ -130,33 +101,13 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
     }
 
     [Fact]
-    public async Task CustomSiteswapAndFeedingInputs_LoadEditablePatterns()
-    {
-        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
-        var baseUri = E2EBaseUrl.FromFixture(host.Fixture);
-        await OpenEditor(session.Page, baseUri);
-
-        await session.Page.GetByText("Muster laden").ClickAsync();
-        await session.Page.Locator("#custom-siteswap").FillAsync("423");
-        await session.Page.Locator(".pattern-loader-grid > div:first-child button").ClickAsync();
-        (await session.Page.Locator(".throw-hit-target").CountAsync()).Should().Be(12);
-
-        await session
-            .Page.Locator("#custom-feeding")
-            .FillAsync("Ada: 5>B, 3>Ada, 1>Ada\nB: 3>Ada, 3>Ada, 3>B");
-        await session.Page.Locator(".pattern-loader-grid > div:nth-child(2) button").ClickAsync();
-        (await session.Page.Locator(".throw-hit-target").CountAsync()).Should().Be(12);
-        await Assertions.Expect(session.Page.GetByLabel("Vorlage")).ToHaveValueAsync("custom");
-        await Assertions.Expect(session.Page.GetByRole(AriaRole.Alert)).ToHaveCountAsync(0);
-    }
-
-    [Fact]
     public async Task UnlinkedFeedingThrow_DoesNotDisplayAnIndependentHeight()
     {
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         await OpenEditor(session.Page, E2EBaseUrl.FromFixture(host.Fixture));
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("custom");
-        await session.Page.GetByRole(AriaRole.Button, new() { Name = "+ Knoten" }).ClickAsync();
+        await session.Page.Locator(".diagram-options summary").ClickAsync();
+        await session.Page.GetByLabel("Diagrammvorlage").SelectOptionAsync("custom");
+        await session.Page.Locator(".juggler-add-target[data-juggler-id='A']").PressAsync("Enter");
 
         var unlinkedThrow = session.Page.Locator(".throw-hit-target").Last;
         await unlinkedThrow.FocusAsync();
@@ -164,24 +115,17 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await Assertions
             .Expect(session.Page.Locator($".pd-node-label[data-throw-id='{throwId}']").First)
             .ToHaveTextAsync("—");
-        await Assertions
-            .Expect(session.Page.Locator(".node-inspector output"))
-            .ToHaveTextAsync("—");
+        (await session.Page.Locator(".node-inspector").CountAsync()).Should().Be(0);
         (await unlinkedThrow.GetAttributeAsync("aria-label")).Should().Contain("Wurf —");
 
         (await session.Page.Locator(".node-inspector input[type=number]").CountAsync())
             .Should()
             .Be(0);
 
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("custom");
-        await session.Page.GetByRole(AriaRole.Button, new() { Name = "+ Knoten" }).ClickAsync();
-        await session.Page.GetByRole(AriaRole.Button, new() { Name = "+ Knoten" }).ClickAsync();
-        var targetOptionLabels = await session
-            .Page.Locator(".node-inspector select")
-            .Nth(1)
-            .Locator("option")
-            .AllTextContentsAsync();
-        targetOptionLabels.Should().Contain(label => label.Contains('—'));
+        await session.Page.GetByLabel("Diagrammvorlage").SelectOptionAsync("custom");
+        await session.Page.Locator(".juggler-add-target[data-juggler-id='A']").PressAsync("Enter");
+        await session.Page.Locator(".juggler-add-target[data-juggler-id='A']").PressAsync("Enter");
+        (await session.Page.Locator(".node-inspector").CountAsync()).Should().Be(0);
     }
 
     [Fact]
@@ -200,21 +144,21 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             .Expect(stage.Locator(".test-passist-widget"))
             .ToHaveAttributeAsync("data-throws", "24");
 
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("siteswap-531");
+        await OpenDiagramOptions(session.Page);
+        await session.Page.GetByLabel("Diagrammvorlage").SelectOptionAsync("siteswap-3");
         await Assertions.Expect(stage).ToBeVisibleAsync();
-        await Assertions
-            .Expect(animation.Locator("[role=img][aria-label='Passist-JIF-Animation']"))
-            .ToBeVisibleAsync();
         await Assertions
             .Expect(stage.Locator(".test-passist-widget"))
             .ToHaveAttributeAsync("data-time-scale", "1");
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("custom");
+        await OpenDiagramOptions(session.Page);
+        await session.Page.GetByLabel("Diagrammvorlage").SelectOptionAsync("custom");
         await Assertions
             .Expect(animation.GetByRole(AriaRole.Status))
             .ToContainTextAsync("nicht als Passist-Animation dargestellt werden");
         await Assertions.Expect(animation.Locator(".passist-animation-stage")).ToHaveCountAsync(0);
 
-        await session.Page.GetByLabel("Vorlage").SelectOptionAsync("feeding-7-5");
+        await OpenDiagramOptions(session.Page);
+        await session.Page.GetByLabel("Diagrammvorlage").SelectOptionAsync("feeding-7-5");
         await Assertions.Expect(stage).ToBeVisibleAsync();
         await Assertions
             .Expect(stage.Locator(".test-passist-widget"))
@@ -344,6 +288,9 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
 
         var target = page.Locator(".throw-hit-target").First;
         await scroller.EvaluateAsync("node => node.scrollLeft = 0");
+        await target.EvaluateAsync(
+            "node => node.addEventListener('pointerdown', event => window.__touchDragDownPrevented = event.defaultPrevented)"
+        );
         await target.FocusAsync();
         var positionBeforeArrow = await target.GetAttributeAsync("cx");
         var urlBeforeArrow = page.Url;
@@ -355,21 +302,32 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         );
         focusStroke.Should().Be("rgb(0, 179, 255)");
 
-        await target.ScrollIntoViewIfNeededAsync();
+        await target.EvaluateAsync("node => node.blur()");
+        await scroller.EvaluateAsync("node => node.scrollLeft = 0");
         var targetBox =
             await target.BoundingBoxAsync()
             ?? throw new InvalidOperationException("The throw target has no layout box.");
         var startX = targetBox.X + targetBox.Width / 2;
         var startY = targetBox.Y + targetBox.Height / 2;
         var urlBeforeTouchDrag = page.Url;
+        var scrollLeftBeforeTouchDrag = await scroller.EvaluateAsync<double>(
+            "node => node.scrollLeft"
+        );
+        var scrollTopBeforeTouchDrag = await page.EvaluateAsync<double>("() => window.scrollY");
         await DispatchTouch(cdp, "touchStart", startX, startY);
-        await page.WaitForTimeoutAsync(100);
         await DispatchTouch(cdp, "touchMove", startX + 35, startY);
         await DispatchTouch(cdp, "touchMove", startX + 80, startY);
         await DispatchTouchEnd(cdp);
-        await page.WaitForTimeoutAsync(500);
+        await page.WaitForTimeoutAsync(150);
+        (await page.EvaluateAsync<bool>("() => window.__touchDragDownPrevented")).Should().BeTrue();
         page.Url.Should().NotBe(urlBeforeTouchDrag);
         await Assertions.Expect(page.Locator(".pd-node.selected")).ToHaveCountAsync(2);
+        (await scroller.EvaluateAsync<double>("node => node.scrollLeft"))
+            .Should()
+            .Be(scrollLeftBeforeTouchDrag);
+        (await page.EvaluateAsync<double>("() => window.scrollY"))
+            .Should()
+            .Be(scrollTopBeforeTouchDrag);
     }
 
     [Fact]
@@ -390,6 +348,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await E2ECulture.InstallAsync(context);
         var page = await context.NewPageAsync();
         await OpenEditor(page, E2EBaseUrl.FromFixture(host.Fixture));
+        await page.Locator(".diagram-options summary").ClickAsync();
         var repetitions = page.GetByLabel("Wiederholungen");
         await repetitions.FillAsync("20");
         await repetitions.PressAsync("Tab");
@@ -435,6 +394,13 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             "node => getComputedStyle(node).stroke"
         );
         focusStroke.Should().Be("rgb(0, 179, 255)");
+    }
+
+    private static async Task OpenDiagramOptions(IPage page)
+    {
+        var options = page.Locator(".diagram-options");
+        if (!await options.EvaluateAsync<bool>("element => element.open"))
+            await options.Locator("summary").ClickAsync();
     }
 
     private static async Task OpenEditor(IPage page, Uri baseUri)
@@ -487,10 +453,10 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             new Uri(baseUri, "causal-diagram-editor").ToString(),
             new PageGotoOptions { WaitUntil = WaitUntilState.Load }
         );
-        var heading = page.GetByRole(AriaRole.Heading, new() { Name = "Kausaler Diagramm-Editor" });
+        var diagram = page.Locator(".diagram-scroll");
         try
         {
-            await heading.WaitForAsync(
+            await diagram.WaitForAsync(
                 new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30_000 }
             );
         }

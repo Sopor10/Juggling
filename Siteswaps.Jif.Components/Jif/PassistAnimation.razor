@@ -2,14 +2,26 @@
 @using Microsoft.AspNetCore.Components.Web
 @using System.Text.Json
 @using Microsoft.JSInterop
+@using Siteswap.Details.Jif
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
 <div class="passist-animation">
     <div class="passist-animation-stage" @ref="_target" role="img" aria-label="Passist-JIF-Animation"></div>
+    @if (ShowLayoutEditor && _layoutNames.Length > 1 && _layoutPoses.Length == _layoutNames.Length)
+    {
+        <JugglerLayoutEditor JugglerNames="_layoutNames"
+                             TimeZones="_layoutTimeZones"
+                             Poses="_layoutPoses"
+                             Preset="_layoutPreset"
+                             LayoutChanged="OnLayoutChanged" />
+    }
     <label class="passist-animation-speed">
-        <span>Animationsgeschwindigkeit</span>
-        <input type="range" min="0.5" max="4" step="0.1" value="@_effectiveSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" @oninput="OnSpeedChanged" />
+        @if (ShowSpeedLabel)
+        {
+            <span>Animationsgeschwindigkeit</span>
+        }
+        <input type="range" aria-label="Animationsgeschwindigkeit" min="0.5" max="4" step="0.1" value="@_effectiveSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" @oninput="OnSpeedChanged" />
         <output>@_effectiveSpeed.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)×</output>
     </label>
     @if (_error is not null)
@@ -32,11 +44,38 @@
     public bool Teaser { get; set; }
 
     [Parameter]
+    public bool ShowSpeedLabel { get; set; } = true;
+
+    [Parameter]
+    public bool ShowLayoutEditor { get; set; } = true;
+
+    [Parameter]
+    public IReadOnlyList<string>? JugglerNames { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<int>? TimeZones { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<JugglerLayoutPose>? LayoutPoses { get; set; }
+
+    [Parameter]
+    public string LayoutPreset { get; set; } = "w-v";
+
+    [Parameter]
+    public EventCallback<JugglerLayoutChange> LayoutChanged { get; set; }
+
+    [Parameter]
     public EventCallback<double> AnimationSpeedChanged { get; set; }
 
     private ElementReference _target;
     private IJSObjectReference? _module;
     private string? _json;
+    private string? _sourceJson;
+    private JifPattern? _pattern;
+    private string[] _layoutNames = [];
+    private int[] _layoutTimeZones = [];
+    private JugglerLayoutPose[] _layoutPoses = [];
+    private string _layoutPreset = "w-v";
     private string? _renderedJson;
     private string? _error;
     private double _effectiveSpeed;
@@ -53,20 +92,57 @@
             _initializedSpeed = true;
         }
 
-        _json = Jif.Match(
+        var sourceJson = Jif.Match(
             pattern => JsonSerializer.Serialize(pattern.Value),
             json => json.Value
         );
 
         try
         {
-            using var _ = JsonDocument.Parse(_json);
+            using var _ = JsonDocument.Parse(sourceJson);
+            if (_sourceJson != sourceJson)
+            {
+                _sourceJson = sourceJson;
+                _pattern = JsonSerializer.Deserialize<JifPattern>(sourceJson);
+                var jugglers = _pattern?.Jugglers ?? [];
+                _layoutPoses = LayoutPoses?.ToArray() ?? JugglerLayoutPresets.ReadPoses(_pattern ?? new JifPattern());
+                _layoutPreset = LayoutPreset;
+            }
+            else if (LayoutPoses is not null && !LayoutPoses.SequenceEqual(_layoutPoses))
+            {
+                _layoutPoses = LayoutPoses.ToArray();
+            }
+
+            var currentJugglers = _pattern?.Jugglers ?? [];
+            _layoutNames = JugglerNames is { Count: var namesCount } && namesCount == currentJugglers.Count
+                ? JugglerNames.ToArray()
+                : currentJugglers.Select((juggler, index) => juggler.Name ?? juggler.Label ?? ((char)('A' + index)).ToString()).ToArray();
+            _layoutTimeZones = TimeZones is { Count: var zoneCount } && zoneCount == currentJugglers.Count
+                ? TimeZones.ToArray()
+                : Enumerable.Repeat(0, currentJugglers.Count).ToArray();
+
+            _json = sourceJson;
+            if (ShowLayoutEditor && _pattern?.Jugglers is { Count: > 1 } && _layoutPoses.Length == _pattern.Jugglers.Count)
+            {
+                _json = JsonSerializer.Serialize(JugglerLayoutPresets.ApplyToJif(_pattern, _layoutPoses));
+            }
             _error = null;
         }
         catch (JsonException exception)
         {
             _error = $"Ungültiges JIF-JSON: {exception.Message}";
         }
+    }
+
+    private async Task OnLayoutChanged(JugglerLayoutChange change)
+    {
+        _layoutPoses = change.Poses.ToArray();
+        _layoutPreset = change.Preset;
+        _pattern ??= _sourceJson is null ? null : JsonSerializer.Deserialize<JifPattern>(_sourceJson);
+        _json = _pattern is null
+            ? _sourceJson
+            : JsonSerializer.Serialize(JugglerLayoutPresets.ApplyToJif(_pattern, _layoutPoses));
+        await LayoutChanged.InvokeAsync(change);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

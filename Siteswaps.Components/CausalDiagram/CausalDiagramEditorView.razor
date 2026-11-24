@@ -1,0 +1,699 @@
+@using System.Globalization
+@using System.Reflection
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.JSInterop
+@using Siteswaps.Components.CausalDiagram
+@using Siteswaps.Jif.Components.Navigation
+@using Siteswaps.Components.Details.Diagrams
+@using Siteswaps.Jif.Components
+@using Siteswap.Details.Jif
+@inject NavigationManager Navigation
+@inject UrlStateNavigation UrlStateNavigation
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<main class="causal-editor @(Embedded ? "embedded" : "sd-page")">
+    @if (_invalidState)
+    {
+        <p class="editor-notice" role="status">Der Linkzustand war ungültig oder wird nicht unterstützt. Ein neues Diagramm wurde geladen.</p>
+    }
+    <div class="sd-sheet editor-content">
+      <div class="diagram-shell">
+        @if (ShowOptions)
+        {
+        <details @ref="_diagramOptions" class="diagram-options">
+          <summary aria-label="Diagrammoptionen" title="Diagrammoptionen">⋮</summary>
+          <div class="diagram-options-content">
+            <div class="diagram-options-grid">
+              <label class="editor-field">Diagrammvorlage
+                <select value="@_preset" @onchange="LoadPreset">
+                    <option value="custom">Eigenes Diagramm</option>
+                    <optgroup label="Siteswap">
+                        @foreach (var preset in CausalDiagramEditorPresets.VisibleSiteswap)
+                        {
+                            <option value="@preset.Id">@preset.Label</option>
+                        }
+                    </optgroup>
+                    <optgroup label="4-händige Siteswaps">
+                        @foreach (var preset in CausalDiagramEditorPresets.All.Where(preset => preset.Group == "4-händig"))
+                        {
+                            <option value="@preset.Id">@preset.Label</option>
+                        }
+                    </optgroup>
+                    <optgroup label="Polyrhythmus">
+                        @foreach (var preset in CausalDiagramEditorPresets.VisiblePolyrhythms)
+                        {
+                            <option value="@preset.Id">@preset.Label</option>
+                        }
+                    </optgroup>
+                </select>
+              </label>
+              <label class="editor-field">Wiederholungen
+                <input type="number" min="1" max="20" @bind="_state.Repetitions" @bind:after="StateChanged" />
+              </label>
+              <label class="snap-control"><input aria-label="Einrasten" type="checkbox" @bind="_state.SnapEnabled" @bind:after="StateChanged" /> Einrasten <small>(@_state.SnapStep.ToString("0.##"))</small></label>
+              <label class="editor-field">Breite pro Zyklus
+                <input type="range" min="280" max="1120" step="40" @bind="_state.TimelineWidth" @bind:after="StateChanged" />
+                <output>@_state.TimelineWidth px je Zyklus · @EventSpacingSummary</output>
+              </label>
+              <label class="editor-field">Abstand zwischen Jongleuren
+                <input type="range" min="80" max="180" step="5" @bind="_state.LaneSpacing" @bind:after="StateChanged" />
+                <output>@_state.LaneSpacing px</output>
+              </label>
+            </div>
+            <button type="button" class="editor-action" aria-label="Jongleur hinzufügen" @onclick="AddJuggler" disabled="@(_state.Jugglers.Count >= 16)">+ Jongleur hinzufügen</button>
+          </div>
+        </details>
+        }
+      <div class="diagram-scroll pd-wrap">
+        @{ var connectionIssueIds = ShowConnectionIssues ? ConnectionIssues().Select(issue => issue.ThrowId).ToHashSet(StringComparer.Ordinal) : new HashSet<string>(StringComparer.Ordinal); }
+        <svg @ref="_svg" class="diagram-canvas pd-svg" width="@SvgWidth" style="width: @(SvgWidth)px" viewBox="0 0 @SvgWidth @SvgHeight" role="group" aria-label="Kausales Jonglierdiagramm" @onpointerup="EndDrag" @onpointercancel="EndDrag">
+            @foreach (var juggler in _state.Jugglers.Select((item, index) => (item, index)))
+            {
+                var y = RowY(juggler.index);
+                <g class="juggler-add-target @(!AllowJugglerActions ? "read-only" : "")" data-juggler-id="@juggler.item.Id" role="@(AllowJugglerActions ? "button" : null)" tabindex="@(AllowJugglerActions ? 0 : -1)" aria-pressed="@(AllowJugglerActions && _state.ActiveJugglerId == juggler.item.Id)" aria-label="@(AllowJugglerActions ? JugglerActionLabel(juggler.item.Name) : juggler.item.Name)" @onclick="() => SelectJuggler(juggler.item.Id)" @onkeydown="e => HandleJugglerKey(juggler.item.Id, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginJugglerHold(juggler.item.Id, e)">
+                    <rect class="juggler-add-target-bg" x="8" y="@(y - 54)" width="96" height="40" rx="10" />
+                    <SvgText CssClass="pd-juggler-label" X="18" Y="@((y - 28).ToString(CultureInfo.InvariantCulture))">@juggler.item.Name</SvgText>
+                </g>
+                <line class="timeline" x1="110" x2="@(SvgWidth - 20)" y1="@y" y2="@y" />
+            }
+            <defs><marker id="causal-arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path class="pd-arrow-fill" d="M0,0 L0,6 L9,3 z" /></marker></defs>
+            @foreach (var edge in _state.CausalEdges)
+            {
+                @for (var cycle = 0; cycle < _state.Repetitions; cycle++)
+                {
+                    var sourceCycle = cycle;
+                    var targetCycle = cycle + edge.CycleOffset;
+                    var source = _state.Throws.FirstOrDefault(item => item.Id == edge.FromThrowId);
+                    var target = _state.Throws.FirstOrDefault(item => item.Id == edge.ToThrowId);
+                    if (source is not null && target is not null && targetCycle >= 0 && targetCycle < _state.Repetitions)
+                    {
+                        var arrowPath = CausalPath(edge, sourceCycle);
+                        if (_edgeDragPreview is { } preview && preview.EdgeId == edge.Id && preview.SourceCycle == sourceCycle)
+                            arrowPath = CausalPathToPoint(edge, sourceCycle, preview.X, preview.Y);
+                        <path class="pd-arrow-stroke causal-arrow" d="@arrowPath" marker-end="url(#causal-arrowhead)" />
+                    }
+                }
+            }
+            @for (var cycle = 0; cycle < _state.Repetitions; cycle++)
+            {
+                var currentCycle = cycle;
+                @foreach (var item in _state.Throws)
+                {
+                    var nodeTime = item.StartTime + cycle * _state.CycleLength;
+                    var nodeX = X(nodeTime);
+                    var nodeY = RowY(JugglerIndex(item.JugglerId));
+                    @if (AllowNodeMove || AllowThrowActions)
+                    {
+                        <circle class="throw-hit-target @(IsEditingThrow(item.Id, currentCycle) ? "editing" : "")" data-throw-id="@item.Id" data-cycle="@currentCycle" cx="@SvgNumber(nodeX)" cy="@nodeY" r="28" tabindex="0" role="button" aria-label="Wurf @DerivedHeightLabel(item), Hand @item.Hand von @JugglerName(item.JugglerId), Wiederholung @(currentCycle + 1). Kurz drücken zum Auswählen, lange drücken zum Bearbeiten." aria-pressed="@(item.Id == _selectedId)" @onclick="() => ToggleSelection(item.Id)" @onkeydown="e => HandleThrowKey(item.Id, currentCycle, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginThrowInteraction(item.Id, currentCycle, e)" />
+                    }
+                    <g class="throw-node-visual @(IsEditingThrow(item.Id, currentCycle) ? "wiggling" : "")">
+                        <circle class="pd-node @(item.Hand == "L" ? "left" : "right") @(item.Id == _selectedId ? "selected" : "") @(connectionIssueIds.Contains(item.Id) ? "connection-error" : "")" data-juggler-id="@item.JugglerId" data-throw-id="@item.Id" cx="@SvgNumber(nodeX)" cy="@nodeY" r="20" pointer-events="none" />
+                        <SvgText CssClass="pd-node-label" data-throw-id="@item.Id" X="@nodeX.ToString(CultureInfo.InvariantCulture)" Y="@((nodeY + 5).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle" pointer-events="none">@DerivedHeightLabel(item)</SvgText>
+                        <SvgText CssClass="pd-node-hand" X="@nodeX.ToString(CultureInfo.InvariantCulture)" Y="@((nodeY + 34).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle" pointer-events="none">@item.Hand</SvgText>
+                    </g>
+                }
+            }
+            @if (AllowArrowEditing)
+            {
+            @foreach (var edge in _state.CausalEdges)
+            {
+                @for (var cycle = 0; cycle < _state.Repetitions; cycle++)
+                {
+                    var sourceCycle = cycle;
+                    var targetCycle = cycle + edge.CycleOffset;
+                    if (targetCycle >= 0 && targetCycle < _state.Repetitions)
+                    {
+                        var targetHandle = _edgeDragPreview is { } drag && drag.EdgeId == edge.Id && drag.SourceCycle == sourceCycle
+                            ? (X: drag.X, Y: drag.Y)
+                            : ArrowTargetPoint(edge, sourceCycle);
+                        var isDraggingHandle = _edgeDragPreview is { } activeDrag && activeDrag.EdgeId == edge.Id && activeDrag.SourceCycle == sourceCycle;
+                        <circle class="arrow-target-handle @(isDraggingHandle ? "dragging" : "")" data-edge-id="@edge.Id" cx="@SvgNumber(targetHandle.X)" cy="@SvgNumber(targetHandle.Y)" r="18" role="button" tabindex="0" aria-label="Pfeilende ziehen, um den Zielknoten zu ändern" @onpointerdown="e => BeginEdgeDrag(edge.Id, sourceCycle, e)"><title>Pfeilende ziehen, um den Zielknoten zu ändern</title></circle>
+                    }
+                }
+            }
+            }
+            @for (var cycle = 0; cycle < _state.Repetitions; cycle++)
+            {
+                var labelCycle = cycle;
+                <SvgText CssClass="cycle-label" X="@X(labelCycle * _state.CycleLength).ToString(CultureInfo.InvariantCulture)" Y="@((SvgHeight - 20).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">@labelCycle</SvgText>
+            }
+            @if (AllowThrowActions)
+            {
+            @for (var cycle = 0; cycle < _state.Repetitions; cycle++)
+            {
+                var currentCycle = cycle;
+                @foreach (var item in _state.Throws.Where(item => IsEditingThrow(item.Id, currentCycle)))
+                {
+                    var nodeX = X(item.StartTime + currentCycle * _state.CycleLength);
+                    var nodeY = RowY(JugglerIndex(item.JugglerId));
+                    var menuX = nodeX > SvgWidth - 150 ? nodeX - 142 : nodeX + 30;
+                    <g class="throw-edit-actions">
+                        <g class="throw-delete-action" role="button" tabindex="0" aria-label="Wurf löschen" @onclick="() => DeleteThrow(item.Id)" @onkeydown="e => HandleThrowActionKey(item.Id, e, delete: true)" @onkeydown:preventDefault="true">
+                            <circle cx="@(nodeX - 21)" cy="@(nodeY - 21)" r="11" />
+                            <SvgText X="@((nodeX - 21).ToString(CultureInfo.InvariantCulture))" Y="@((nodeY - 17).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">−</SvgText>
+                        </g>
+                        <g class="throw-menu-action" role="button" tabindex="0" aria-label="Hand-Menü öffnen" aria-expanded="@IsHandMenuOpen(item.Id, currentCycle)" @onclick="() => ToggleHandMenu(item.Id, currentCycle)" @onkeydown="e => HandleThrowActionKey(item.Id, e, delete: false, cycle: currentCycle)" @onkeydown:preventDefault="true">
+                            <circle cx="@(nodeX + 21)" cy="@(nodeY - 21)" r="11" />
+                            <SvgText X="@((nodeX + 21).ToString(CultureInfo.InvariantCulture))" Y="@((nodeY - 16).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">⋯</SvgText>
+                        </g>
+                    </g>
+                    @if (IsHandMenuOpen(item.Id, currentCycle))
+                    {
+                        <g class="throw-hand-menu" role="group" aria-label="Hand wechseln">
+                            <rect x="@menuX" y="@(nodeY - 25)" width="132" height="38" rx="10" />
+                            <g role="button" tabindex="0" aria-label="Hand wechseln von @(item.Hand == "R" ? "Rechts zu Links" : "Links zu Rechts")" @onclick="() => ToggleThrowHand(item.Id)" @onkeydown="e => HandleHandMenuKey(item.Id, e)" @onkeydown:preventDefault="true">
+                                <SvgText X="@((menuX + 66).ToString(CultureInfo.InvariantCulture))" Y="@((nodeY + 1).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">Hand wechseln: @(item.Hand == "R" ? "R → L" : "L → R")</SvgText>
+                            </g>
+                        </g>
+                    }
+                }
+            }
+            }
+        </svg>
+      </div>
+      </div>
+      @if (ShowAnimation)
+      {
+      <section class="causal-editor-animation sdv-card" aria-label="Passist-Animation">
+        <h2>Passist-Animation</h2>
+        @if (_animationJif is not null)
+        {
+            <PassistAnimation Jif="@(new JifInput.Structured(_animationJif))" AnimationSpeed="0.8" Teaser="true" EnableSettings="false" ShowSpeedLabel="false" ShowLayoutEditor="false" />
+        }
+        else
+        {
+            <p class="animation-unavailable" role="status">@_animationUnavailable</p>
+        }
+      </section>
+      }
+    </div>
+</main>
+
+@code {
+    [Parameter]
+    public string? StateToken { get; set; }
+    [Parameter]
+    public CausalDiagramEditorState? ExternalState { get; set; }
+    [Parameter]
+    public bool Embedded { get; set; }
+    [Parameter]
+    public bool ShowOptions { get; set; } = true;
+    [Parameter]
+    public bool ShowAnimation { get; set; } = true;
+    [Parameter]
+    public bool AllowNodeMove { get; set; } = true;
+    [Parameter]
+    public bool AllowThrowActions { get; set; } = true;
+    [Parameter]
+    public bool AllowJugglerActions { get; set; } = true;
+    [Parameter]
+    public bool AllowArrowEditing { get; set; } = true;
+    [Parameter]
+    public bool ShowUnconnectedHeight { get; set; }
+    [Parameter]
+    public bool ShowConnectionIssues { get; set; } = true;
+
+    private CausalDiagramEditorState _state = CausalDiagramEditorState.CreateFeeding75();
+    private ElementReference _svg;
+    private ElementReference _diagramOptions;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<CausalDiagramEditorView>? _dotNetRef;
+    private string? _selectedId;
+    private (string ThrowId, int Cycle)? _editingThrow;
+    private (string ThrowId, int Cycle)? _handMenuThrow;
+    private bool _invalidState;
+    private string _preset = "feeding-7-5";
+    private (string EdgeId, int SourceCycle, decimal X, decimal Y)? _edgeDragPreview;
+    private JifPattern? _animationJif;
+    private string _animationUnavailable = "Für dieses Diagramm ist keine Passist-Animation verfügbar.";
+    private static string EditorBuildVersion =>
+        typeof(CausalDiagramEditorView)
+            .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion ?? "1.0.0";
+    private decimal _timeMax
+    {
+        get
+        {
+            return Math.Max(1m, _state.CycleLength * _state.Repetitions);
+        }
+    }
+    private int SvgHeight => Math.Max(180, RowY(_state.Jugglers.Count - 1) + 75);
+
+    protected override void OnParametersSet()
+    {
+        if (ExternalState is not null)
+        {
+            _state = ExternalState;
+            _preset = _state.PresetId;
+            _invalidState = false;
+            if (ShowAnimation) RefreshAnimation();
+            return;
+        }
+        if (CausalDiagramEditorState.TryDecode(StateToken, out var decoded) && decoded is not null)
+        {
+            _state = decoded;
+            _preset = decoded.PresetId;
+            _invalidState = false;
+        }
+        else if (!string.IsNullOrEmpty(StateToken))
+        {
+            _state = CausalDiagramEditorState.CreateFeeding75();
+            _preset = _state.PresetId;
+            _invalidState = true;
+        }
+        else
+        {
+            _state = CausalDiagramEditorState.CreateFeeding75();
+            _preset = _state.PresetId;
+        }
+        if (ShowAnimation) RefreshAnimation();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && (ShowOptions || AllowNodeMove || AllowThrowActions || AllowJugglerActions || AllowArrowEditing))
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>(
+                "import",
+                Navigation.ToAbsoluteUri(
+                    $"_content/Siteswaps.Components/causalDiagramEditor.js?v={Uri.EscapeDataString(EditorBuildVersion)}"
+                ).ToString()
+            );
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await _module.InvokeVoidAsync("bindTouchDragTargets", _svg);
+            if (ShowOptions) await _module.InvokeVoidAsync("bindOutsideClose", _diagramOptions);
+        }
+    }
+
+    private int JugglerIndex(string id) => _state.Jugglers.FindIndex(j => j.Id == id);
+    private string JugglerName(string id) => _state.Jugglers.FirstOrDefault(j => j.Id == id)?.Name ?? id;
+    private int RowY(int index) => 70 + (int)(_state.LaneSpacing * index);
+    private decimal TimeScale => Math.Clamp(_state.TimelineWidth / Math.Max(1m, _state.CycleLength), 6m, 120m);
+    private int SvgWidth => Math.Max(640, (int)Math.Ceiling((double)(X(_timeMax) + 50m)));
+    private decimal X(decimal time) => 120m + time * TimeScale;
+    private string EventSpacingSummary => string.Join(" · ", _state.Jugglers.Select(juggler =>
+    {
+        var count = Math.Max(1, _state.Throws.Count(node => node.JugglerId == juggler.Id));
+        var spacing = _state.TimelineWidth / count;
+        return $"{juggler.Name}: {spacing.ToString("0.#", CultureInfo.InvariantCulture)} px";
+    }));
+    private string HeightLabel(decimal height) => height.ToString("0.##", CultureInfo.InvariantCulture);
+    private string SvgNumber(decimal value) => value.ToString(CultureInfo.InvariantCulture);
+    private string DerivedHeightLabel(EditorThrow node) =>
+        _state.CausalEdges.Any(edge => edge.FromThrowId == node.Id) || ShowUnconnectedHeight
+            ? HeightLabel(node.Height)
+            : "—";
+    private string NodeLabel(EditorThrow node) => $"{JugglerName(node.JugglerId)} · {DerivedHeightLabel(node)} @ {node.StartTime.ToString("0.##", CultureInfo.InvariantCulture)}";
+    private static string JugglerActionLabel(string name) => $"{name}: kurz drücken zum Auswählen, lange drücken zum Hinzufügen eines Wurfs";
+    private bool IsEditingThrow(string throwId, int cycle) => _editingThrow == (throwId, cycle);
+    private bool IsHandMenuOpen(string throwId, int cycle) => _handMenuThrow == (throwId, cycle);
+    private List<ConnectionIssue> ConnectionIssues()
+    {
+        var issues = new List<ConnectionIssue>();
+        foreach (var node in _state.Throws)
+        {
+            var incoming = _state.CausalEdges.Count(edge => edge.ToThrowId == node.Id);
+            var outgoing = _state.CausalEdges.Count(edge => edge.FromThrowId == node.Id);
+            var messages = new List<string>();
+            AddArrowCountMessage(messages, "eingehend", incoming);
+            AddArrowCountMessage(messages, "ausgehend", outgoing);
+            if (messages.Count > 0)
+                issues.Add(new ConnectionIssue(node.Id, messages));
+        }
+        return issues;
+    }
+
+    private static void AddArrowCountMessage(List<string> messages, string direction, int count)
+    {
+        if (count == 0)
+            messages.Add($"kein {direction}er Pfeil");
+        else if (count > 1)
+            messages.Add($"{count} {direction}e Pfeile");
+    }
+
+
+    private async Task BeginJugglerHold(string jugglerId, PointerEventArgs e)
+    {
+        if (!AllowJugglerActions) return;
+        if (_module is not null && _dotNetRef is not null)
+            await _module.InvokeVoidAsync("startJugglerHold", _dotNetRef, jugglerId, e.PointerId, e.ClientX, e.ClientY);
+    }
+
+    private void SelectJuggler(string jugglerId)
+    {
+        if (!AllowJugglerActions) return;
+        _state.ActiveJugglerId = jugglerId;
+        StateChanged();
+    }
+
+    private void HandleJugglerKey(string jugglerId, KeyboardEventArgs e)
+    {
+        if (!AllowJugglerActions) return;
+        if (e.Key is "Enter" or " ")
+            AddThrow(jugglerId);
+    }
+
+    [JSInvokable]
+    public Task AddThrowForJuggler(string jugglerId) => InvokeAsync(() => AddThrow(jugglerId));
+
+    private string CausalPath(EditorCausalEdge edge, int sourceCycle)
+    {
+        var source = _state.Throws.First(node => node.Id == edge.FromThrowId);
+        var target = _state.Throws.First(node => node.Id == edge.ToThrowId);
+        var sourceLine = JugglerIndex(source.JugglerId);
+        var targetLine = JugglerIndex(target.JugglerId);
+        var x1 = X(source.StartTime + sourceCycle * _state.CycleLength);
+        var y1 = RowY(sourceLine);
+        var x2 = X(target.StartTime + (sourceCycle + edge.CycleOffset) * _state.CycleLength);
+        var y2 = RowY(targetLine);
+        var dx = x2 - x1;
+        var dy = y2 - y1;
+        var length = Math.Max(1d, Math.Sqrt((double)(dx * dx + dy * dy)));
+        var sx = x1 + (decimal)(double)dx / (decimal)length * 22m;
+        var sy = y1 + (decimal)(double)dy / (decimal)length * 22m;
+        var tx = x2 - (decimal)(double)dx / (decimal)length * 28m;
+        var ty = y2 - (decimal)(double)dy / (decimal)length * 28m;
+        if (Math.Abs(dx) < 1m && Math.Abs(dy) < 1m)
+            return FormattableString.Invariant($"M{x1 - 16},{y1 - 16} C{x1 - 52},{y1 - 74} {x1 + 52},{y1 - 74} {x1 + 16},{y1 - 16}");
+        if (sourceLine == targetLine)
+        {
+            var curve = Math.Sign((double)dx) * 35m;
+            return FormattableString.Invariant($"M{sx},{sy} C{x1 + dx / 3},{y1 - curve} {x1 + 2m * dx / 3},{y1 - curve} {tx},{ty}");
+        }
+        return FormattableString.Invariant($"M{sx},{sy} L{tx},{ty}");
+    }
+
+    private string CausalPathToPoint(EditorCausalEdge edge, int sourceCycle, decimal x, decimal y)
+    {
+        var source = _state.Throws.First(node => node.Id == edge.FromThrowId);
+        var x1 = X(source.StartTime + sourceCycle * _state.CycleLength);
+        var y1 = RowY(JugglerIndex(source.JugglerId));
+        var dx = x - x1;
+        var dy = y - y1;
+        var length = Math.Max(1d, Math.Sqrt((double)(dx * dx + dy * dy)));
+        var sx = x1 + (decimal)(double)dx / (decimal)length * 22m;
+        var sy = y1 + (decimal)(double)dy / (decimal)length * 22m;
+        var tx = x - (decimal)(double)dx / (decimal)length * 14m;
+        var ty = y - (decimal)(double)dy / (decimal)length * 14m;
+        return FormattableString.Invariant($"M{sx},{sy} L{tx},{ty}");
+    }
+
+    private (decimal X, decimal Y) ArrowTargetPoint(EditorCausalEdge edge, int sourceCycle)
+    {
+        var source = _state.Throws.First(node => node.Id == edge.FromThrowId);
+        var target = _state.Throws.First(node => node.Id == edge.ToThrowId);
+        var x1 = X(source.StartTime + sourceCycle * _state.CycleLength);
+        var y1 = RowY(JugglerIndex(source.JugglerId));
+        var x2 = X(target.StartTime + (sourceCycle + edge.CycleOffset) * _state.CycleLength);
+        var y2 = RowY(JugglerIndex(target.JugglerId));
+        var dx = x2 - x1;
+        var dy = y2 - y1;
+        if (Math.Abs(dx) < 1m && Math.Abs(dy) < 1m)
+            return (x2 + 16m, y2 - 16m);
+        var length = Math.Max(1d, Math.Sqrt((double)(dx * dx + dy * dy)));
+        return (x2 - (decimal)(double)dx / (decimal)length * 28m, y2 - (decimal)(double)dy / (decimal)length * 28m);
+    }
+
+    private async Task BeginThrowInteraction(string id, int cycle, PointerEventArgs e)
+    {
+        if (!AllowNodeMove && !AllowThrowActions) return;
+        if (_module is not null && _dotNetRef is not null)
+            await _module.InvokeVoidAsync("startThrowInteraction", _svg, _dotNetRef, id, cycle, e.PointerId, e.ClientX, e.ClientY, e.PointerType, IsEditingThrow(id, cycle));
+    }
+
+    [JSInvokable]
+    public Task EnableThrowEditing(string id, int cycle)
+    {
+        _selectedId = id;
+        _editingThrow = (id, cycle);
+        _handMenuThrow = null;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private async Task BeginEdgeDrag(string edgeId, int sourceCycle, PointerEventArgs e)
+    {
+        if (!AllowArrowEditing) return;
+        _edgeDragPreview = null;
+        if (_module is not null && _dotNetRef is not null)
+            await _module.InvokeVoidAsync("startEdgeDrag", _svg, _dotNetRef, edgeId, sourceCycle, e.PointerId);
+    }
+
+    [JSInvokable]
+    public Task PreviewEdgeDrop(string edgeId, int sourceCycle, double normalizedX, double normalizedY)
+    {
+        if (!double.IsFinite(normalizedX) || !double.IsFinite(normalizedY)) return Task.CompletedTask;
+        _edgeDragPreview = (edgeId, sourceCycle,
+            (decimal)Math.Clamp(normalizedX * SvgWidth, 0, SvgWidth),
+            (decimal)Math.Clamp(normalizedY * SvgHeight, 0, SvgHeight));
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task CancelEdgeDrop()
+    {
+        _edgeDragPreview = null;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task CompleteEdgeDrop(string edgeId, int sourceCycle, double normalizedX, double normalizedY)
+    {
+        if (!double.IsFinite(normalizedX) || !double.IsFinite(normalizedY)) return Task.CompletedTask;
+        var edgeIndex = _state.CausalEdges.FindIndex(edge => edge.Id == edgeId);
+        if (edgeIndex < 0)
+        {
+            _edgeDragPreview = null;
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        var time = (decimal)Math.Clamp((normalizedX * SvgWidth - 120d) / (double)TimeScale, 0, (double)_timeMax);
+        var row = Enumerable.Range(0, _state.Jugglers.Count)
+            .OrderBy(index => Math.Abs(RowY(index) - normalizedY * SvgHeight))
+            .First();
+        var jugglerId = _state.Jugglers[row].Id;
+        var target = _state.Throws.Where(node => node.JugglerId == jugglerId)
+            .Select(node =>
+            {
+                var targetCycle = (int)Math.Round((time - node.StartTime) / _state.CycleLength, MidpointRounding.AwayFromZero);
+                var absoluteTime = node.StartTime + targetCycle * _state.CycleLength;
+                return (Node: node, Cycle: targetCycle, Distance: Math.Abs(absoluteTime - time));
+            })
+            .OrderBy(candidate => candidate.Distance)
+            .FirstOrDefault();
+        if (target.Node is null)
+        {
+            _edgeDragPreview = null;
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        var edge = _state.CausalEdges[edgeIndex];
+        _state.CausalEdges[edgeIndex] = edge with { ToThrowId = target.Node.Id, CycleOffset = target.Cycle - sourceCycle };
+        _edgeDragPreview = null;
+        _selectedId = edge.FromThrowId;
+        StateChanged();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task MoveThrow(string id, int cycle, double normalizedX)
+    {
+        if (!AllowNodeMove) return Task.CompletedTask;
+        if (!double.IsFinite(normalizedX)) return Task.CompletedTask;
+        var item = _state.Throws.FirstOrDefault(t => t.Id == id);
+        if (item is null) return Task.CompletedTask;
+        var visualTime = (decimal)Math.Clamp((normalizedX * SvgWidth - 120d) / (double)TimeScale, 0, (double)_timeMax);
+        var start = visualTime - cycle * _state.CycleLength;
+        UpdateThrowStart(item, start);
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleThrowKey(string id, int cycle, KeyboardEventArgs e)
+    {
+        if (e.Key is "Enter" or " ")
+        {
+            ToggleSelection(id);
+            return;
+        }
+        if (e.Key == "Escape")
+        {
+            _editingThrow = null;
+            _handMenuThrow = null;
+            return;
+        }
+        if ((e.Key is "Delete" or "Backspace") && IsEditingThrow(id, cycle))
+        {
+            DeleteThrow(id);
+            return;
+        }
+        if (e.Key is not ("ArrowLeft" or "ArrowRight")) return;
+        var item = _state.Throws.FirstOrDefault(t => t.Id == id);
+        if (item is null) return;
+        var step = _state.SnapEnabled ? _state.SnapStep : 0.1m;
+        var start = item.StartTime + (e.Key == "ArrowLeft" ? -step : step);
+        UpdateThrowStart(item, start);
+    }
+
+    private void UpdateThrowStart(EditorThrow item, decimal start)
+    {
+        _state.Throws[_state.Throws.IndexOf(item)] = EditorThrowPositioning.MoveStart(_state, item, start);
+        _state.SynchronizeHeights();
+        _selectedId = item.Id;
+        PatternChanged();
+    }
+
+    private async Task EndDrag(PointerEventArgs e)
+    {
+        if (_module is not null) await _module.InvokeVoidAsync("stopDrag");
+    }
+
+    private void Select(string id)
+    {
+        if (_selectedId != id)
+        {
+            _editingThrow = null;
+            _handMenuThrow = null;
+        }
+        _selectedId = id;
+    }
+
+    private void ToggleSelection(string id)
+    {
+        if (_selectedId == id)
+        {
+            _selectedId = null;
+            _editingThrow = null;
+            _handMenuThrow = null;
+            return;
+        }
+
+        Select(id);
+    }
+
+    private sealed record ConnectionIssue(string ThrowId, List<string> Messages);
+    private void ToggleHandMenu(string id, int cycle)
+    {
+        _editingThrow = (id, cycle);
+        _selectedId = id;
+        _handMenuThrow = IsHandMenuOpen(id, cycle) ? null : (id, cycle);
+    }
+
+    private void HandleThrowActionKey(string id, KeyboardEventArgs e, bool delete, int cycle = 0)
+    {
+        if (e.Key is not ("Enter" or " ")) return;
+        if (delete) DeleteThrow(id);
+        else ToggleHandMenu(id, cycle);
+    }
+
+    private void HandleHandMenuKey(string id, KeyboardEventArgs e)
+    {
+        if (e.Key is "Enter" or " ") ToggleThrowHand(id);
+    }
+
+    private void ToggleThrowHand(string id)
+    {
+        var item = _state.Throws.FirstOrDefault(throwNode => throwNode.Id == id);
+        if (item is null) return;
+        _state.Throws[_state.Throws.IndexOf(item)] = item with { Hand = item.Hand == "R" ? "L" : "R" };
+        _handMenuThrow = null;
+        PatternChanged();
+    }
+
+    private void AddThrow(string jugglerId)
+    {
+        if (_state.Throws.Count >= 500) return;
+        var juggler = _state.Jugglers.FirstOrDefault(j => j.Id == jugglerId);
+        if (juggler is null) return;
+        _state.ActiveJugglerId = jugglerId;
+        var last = _state.Throws.LastOrDefault(t => t.JugglerId == juggler.Id);
+        var start = last is null ? 0m : Math.Min(_state.CycleLength - 0.25m, last.StartTime + 1m);
+        var hand = last?.Hand == "R" ? "L" : "R";
+        var item = new EditorThrow(Guid.NewGuid().ToString("N"), juggler.Id, hand, Math.Max(0m, start), 1m);
+        _state.Throws.Add(item);
+        _selectedId = item.Id;
+        PatternChanged();
+    }
+
+    private void AddJuggler()
+    {
+        if (_state.Jugglers.Count >= 16) return;
+        var index = _state.Jugglers.Count;
+        var id = $"J{index + 1}";
+        while (_state.Jugglers.Any(j => j.Id == id)) id = $"J-{Guid.NewGuid():N}";
+        _state.Jugglers.Add(new EditorJuggler(id, $"Jongleur {index + 1}"));
+        var throwId = $"{id}-1";
+        _state.Throws.Add(new EditorThrow(throwId, id, "R", 0m, 1m));
+        _state.CausalEdges.Add(new EditorCausalEdge($"e-{throwId}", throwId, throwId, -1));
+        _state.ActiveJugglerId = id;
+        _state.SynchronizeHeights();
+        PatternChanged();
+    }
+
+    private void DeleteThrow(string id)
+    {
+        var item = _state.Throws.FirstOrDefault(throwNode => throwNode.Id == id);
+        if (item is null) return;
+        _state.Throws.Remove(item);
+        _state.CausalEdges.RemoveAll(edge => edge.FromThrowId == item.Id || edge.ToThrowId == item.Id);
+        _selectedId = null;
+        _editingThrow = null;
+        _handMenuThrow = null;
+        PatternChanged();
+    }
+
+    private void LoadPreset(ChangeEventArgs e)
+    {
+        _preset = e.Value?.ToString() ?? "custom";
+        _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create() ?? CausalDiagramEditorState.CreateEmpty();
+        _state.ActiveJugglerId = _state.Jugglers[0].Id;
+        _selectedId = null;
+        StateChanged();
+    }
+
+    private void StateChanged() => PersistState(diagramChanged: false);
+
+    private void PatternChanged() => PersistState(diagramChanged: true);
+
+    private void PersistState(bool diagramChanged)
+    {
+        if (diagramChanged)
+        {
+            _preset = "custom";
+            _state.PresetId = _preset;
+        }
+        _state.Repetitions = Math.Clamp(_state.Repetitions, 1, 20);
+        RefreshAnimation();
+        UrlStateNavigation.SetQueryParameter("state", _state.Encode());
+    }
+
+    private void RefreshAnimation()
+    {
+        if (CausalDiagramEditorJifAdapter.TryMap(_state, out var pattern, out var error) && pattern is not null)
+        {
+            _animationJif = pattern;
+            _animationUnavailable = "";
+        }
+        else
+        {
+            _animationJif = null;
+            _animationUnavailable = error;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("unbindTouchDragTargets", _svg);
+            if (ShowOptions) await _module.InvokeVoidAsync("unbindOutsideClose", _diagramOptions);
+            await _module.InvokeVoidAsync("stopDrag");
+            await _module.InvokeVoidAsync("stopJugglerHold");
+            await _module.DisposeAsync();
+        }
+        _dotNetRef?.Dispose();
+    }
+}

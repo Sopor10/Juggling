@@ -12,22 +12,17 @@ public class FeedingBeatStaggerTests
     [Test]
     public void FeedingJugglerOverview_Applies_TimeZone_Stagger_Css_Vars()
     {
-        var razor = ReadGeneratorSource(
+        var overview = ReadGeneratorSource(
             Path.Combine("Components", "Feeding", "FeedingJugglerOverview.razor")
         );
+        var sharedTable = ReadGeneratorSource(
+            Path.Combine("..", "..", "Siteswaps.Components", "Details", "PatternTable.razor")
+        );
 
-        razor
-            .Should()
-            .Contain(
-                "--feeding-stagger:{row.Juggler}",
-                "B1/B2 TimeZone must drive horizontal half-beat offset vs A"
-            );
-        razor
-            .Should()
-            .Contain(
-                "--feeding-jugglers:{row.NumberOfJugglers}",
-                "stagger pitch must scale by pair juggler count (same as Details)"
-            );
+        overview.Should().Contain("row.Juggler,");
+        overview.Should().Contain("row.NumberOfJugglers,");
+        sharedTable.Should().Contain("--feeding-stagger:@row.Stagger");
+        sharedTable.Should().Contain("--feeding-jugglers:@row.StaggerCount");
     }
 
     [Test]

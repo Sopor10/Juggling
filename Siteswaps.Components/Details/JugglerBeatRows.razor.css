@@ -14,7 +14,7 @@
     margin-bottom: 14px;
 }
 
-.sdv-hero-footer {
+.sdv-hero-jugglers ::deep .sdv-hero-footer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -23,10 +23,10 @@
     width: 100%;
     box-sizing: border-box;
     margin-top: 36px;
-    padding-left: calc(var(--sdv-juggler-id-width, 3.25rem) + 8px);
+    padding-left: calc(var(--sdv-juggler-id-width, 1.5rem) + 8px);
 }
 
-.sdv-throw-mode {
+.sdv-hero-jugglers ::deep .sdv-throw-mode {
     display: inline-flex;
     flex-shrink: 0;
     margin-left: auto;
@@ -36,7 +36,7 @@
     background: var(--sd-bg);
 }
 
-.sdv-throw-mode button {
+.sdv-hero-jugglers ::deep .sdv-throw-mode button {
     appearance: none;
     border: 0;
     margin: 0;
@@ -51,37 +51,37 @@
     transition: background 0.15s ease, color 0.15s ease;
 }
 
-.sdv-throw-mode button + button {
+.sdv-hero-jugglers ::deep .sdv-throw-mode button + button {
     border-left: 2px solid var(--sd-purple-100);
 }
 
-.sdv-throw-mode button:hover {
+.sdv-hero-jugglers ::deep .sdv-throw-mode button:hover {
     color: var(--sd-purple-700);
 }
 
-.sdv-throw-mode button.active {
+.sdv-hero-jugglers ::deep .sdv-throw-mode button.active {
     background: var(--sd-purple-700);
     color: white;
 }
 
-.sdv-hero-juggler {
+.sdv-hero-jugglers ::deep .sdv-hero-juggler {
     margin-bottom: 14px;
 }
 
-.sdv-hero-beats {
+.sdv-hero-jugglers ::deep .sdv-hero-beats {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.sdv-hero-id {
+.sdv-hero-jugglers ::deep .sdv-hero-id {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 2px;
     flex-shrink: 0;
-    width: var(--sdv-juggler-id-width, 3.25rem);
-    min-width: var(--sdv-juggler-id-width, 3.25rem);
+    width: var(--sdv-juggler-id-width, 1.5rem);
+    min-width: var(--sdv-juggler-id-width, 1.5rem);
 }
 
 .sdv-hero-label {
@@ -96,7 +96,7 @@
     line-height: 1;
 }
 
-.sdv-hero-throws {
+.sdv-hero-jugglers ::deep .sdv-hero-throws {
     margin-left: calc(var(--sdv-stagger, 0) * (44px + 8px) / var(--sdv-jugglers, 2));
 }
 
@@ -109,7 +109,7 @@
     font-size: 15px;
 }
 
-.sdv-start-props {
+.sdv-hero-jugglers ::deep .sdv-start-props {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
@@ -124,7 +124,7 @@
     flex-shrink: 0;
 }
 
-.sdv-start-props-hand {
+.sdv-hero-jugglers ::deep .sdv-start-props-hand {
     font-family: var(--sd-font-display);
     font-size: 14px;
     font-weight: 800;
@@ -132,7 +132,7 @@
     color: var(--sd-purple-700);
 }
 
-.sdv-beat-legend {
+.sdv-hero-jugglers ::deep .sdv-beat-legend {
     display: flex;
     flex: 0 0 270px;
     width: 270px;
@@ -145,35 +145,35 @@
     margin: 0;
 }
 
-.sdv-beat-legend .sdv-beat {
+.sdv-hero-jugglers ::deep .sdv-beat-legend .sdv-beat {
     min-width: 28px;
     min-height: 28px;
     padding: 2px;
 }
 
-.sdv-beat-legend .sdv-beat-throw {
+.sdv-hero-jugglers ::deep .sdv-beat-legend .sdv-beat-throw {
     font-size: 14px;
     line-height: 1;
 }
 
-.sdv-orbit-legend-item {
+.sdv-hero-jugglers ::deep .sdv-orbit-legend-item {
     display: inline-flex;
     align-items: center;
     gap: 4px;
 }
 
-.sdv-orbit-legend-swatch {
+.sdv-hero-jugglers ::deep .sdv-orbit-legend-swatch {
     width: 16px;
     height: 16px;
     border-radius: 4px;
 }
 
-.sdv-start-props-legend {
+.sdv-hero-jugglers ::deep .sdv-start-props-legend {
     min-width: 28px;
     min-height: 28px;
     padding: 2px 6px;
 }
 
-.sdv-start-props-legend .sdv-start-props-hand {
+.sdv-hero-jugglers ::deep .sdv-start-props-legend .sdv-start-props-hand {
     font-size: 11px;
 }

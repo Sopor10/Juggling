@@ -7,14 +7,14 @@
 @using Siteswaps.Generator.Components.WizardPage.Controls
 @using Siteswaps.Generator.Core.Generator
 @using Siteswaps.Components.Details.Diagrams
+@using Siteswaps.Components.CausalDiagram
+@using Siteswaps.Jif.Components.Navigation
+@using Siteswaps.Components.Details
 @using Siteswaps.Jif.Components
-@using Microsoft.JSInterop
 @using System.Text.Json
-@implements IAsyncDisposable
 @inject IStringLocalizer<SiteswapLabPage> L
 @inject ILocalStorageService LocalStorage
-@inject NavigationManager Navigation
-@inject IJSRuntime JS
+@inject UrlStateNavigation UrlStateNavigation
 
 <PageTitle>@L["Siteswap lab"]</PageTitle>
 
@@ -119,59 +119,34 @@
 
         <WizardStepPanel StepIndex="1" IsActive="@IsStepActive(1)">
             <div class="wizard-measure">
-                <div class="lab-overview-toolbar">
-                    <div class="lab-overview-toolbar-group">
-                        <span class="lab-overview-toolbar-label" id="lab-rotation-label">@L["Rotate starting position"]</span>
-                        <div class="lab-overview-rotation"
-                             role="group"
-                             aria-labelledby="lab-rotation-label">
-                            <button type="button"
-                                    class="lab-rotate"
-                                    aria-label="@L["Rotate pattern left"]"
-                                    disabled="@(_direct.Period <= 1)"
-                                    @onclick="() => Rotate(1)">
-                                ◄
-                            </button>
-                            <button type="button"
-                                    class="lab-rotate"
-                                    aria-label="@L["Rotate pattern right"]"
-                                    disabled="@(_direct.Period <= 1)"
-                                    @onclick="() => Rotate(-1)">
-                                ►
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                    <p class="lab-throws-hint">@L["Tap a throw to select it. Drag to change where it lands."]</p>
-                    <div class="lab-passing-overview"
-                         @ref="_dragScope"
-                         style="@($"--lab-period:{_direct.Period}")">
-                        @for (var person = 0; person < _direct.People.Count; person++)
-                        {
-                            var personIndex = person;
-                            <div class="lab-overview-row @(_direct.HasSelection && _direct.SelectedPerson == personIndex ? "is-editing-throw" : null)"
-                                 data-timezone="@_direct.TimelinePhaseFor(person)">
-                                <div class="lab-overview-meta">
-                                    <div class="lab-overview-person"
-                                         aria-label="@($"{_direct.People[person].Name}, {L["TimeZone {0}", _direct.People[person].TimeZone]}")">
-                                        <strong aria-hidden="true">@_direct.People[person].Name</strong>
-                                    </div>
-                                    @{
-                                        var clubs = _direct.StartingClubsFor(personIndex);
-                                    }
-                                    <div class="lab-start-props"
-                                         title="@L["Starting club distribution (L / R)"]"
-                                         aria-label="@L["Start clubs {0}: left {1}, right {2}", _direct.People[person].Name, clubs.Left, clubs.Right]">
-                                        <span class="lab-start-props-hand">@clubs.Left</span>
-                                        <span class="lab-start-props-hand">@clubs.Right</span>
+                    <div class="lab-passing-overview" @ref="_dragScope" style="@($"--lab-period:{_direct.Period}")">
+                        <PatternTable Rows="LabTableRows" Class="lab-pattern-table" RowClass="lab-overview-row"
+                                      RowClassFor="LabRowClass"
+                                      MetaClass="lab-overview-meta"
+                                      StartClubsClass="lab-start-props" StartClubsHandClass="lab-start-props-hand" ThrowsClass="lab-overview-throws">
+                            <Toolbar>
+                                <div class="lab-overview-toolbar">
+                                    <div class="lab-overview-toolbar-group">
+                                        <span class="lab-overview-toolbar-label" id="lab-rotation-label">@L["Rotate starting position"]</span>
+                                        <div class="lab-overview-rotation" role="group" aria-labelledby="lab-rotation-label">
+                                            <button type="button" class="lab-rotate" aria-label="@L["Rotate pattern left"]" disabled="@(_direct.Period <= 1)" @onclick="() => Rotate(1)">◄</button>
+                                            <button type="button" class="lab-rotate" aria-label="@L["Rotate pattern right"]" disabled="@(_direct.Period <= 1)" @onclick="() => Rotate(-1)">►</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="lab-overview-throws"
-                                     style="@($"--lab-phase:{_direct.TimelinePhaseFor(person)};--lab-phase-count:{_direct.ActiveTimeZoneCount}")">
+                            </Toolbar>
+                            <LabelTemplate Context="tableRow">
+                                @{ var personIndex = PersonIndex(tableRow.Label); }
+                                <div class="lab-overview-person" aria-label="@($"{tableRow.Label}, {L["TimeZone {0}", _direct.People[personIndex].TimeZone]}")">
+                                    <strong aria-hidden="true">@tableRow.Label</strong>
+                                </div>
+                            </LabelTemplate>
+                            <RowTemplate Context="tableRow">
+                                @{ var personIndex = PersonIndex(tableRow.Label); }
                                     <FeedingThrowChipRow Chips="PassingChipsFor(personIndex)"
-                                                         AriaLabel="@L["Throws {0}", _direct.People[person].Name]"
-                                                         SelectedLocalBeat="@SelectedBeatFor(person)"
-                                                         LandingLocalBeat="@LandingBeatFor(person)"
+                                                         AriaLabel="@L["Throws {0}", tableRow.Label]"
+                                                         SelectedLocalBeat="@SelectedBeatFor(personIndex)"
+                                                         LandingLocalBeat="@LandingBeatFor(personIndex)"
                                                          EnableDragDrop="true"
                                                          RowPersonIndex="@personIndex"
                                                          DragScope="_dragScope"
@@ -202,118 +177,57 @@
                                                          AccessibleName="chip => PassingChipAccessibleName(personIndex, chip)"
                                                          StateClass="chip => PassingChipStateClass(personIndex, chip.LocalBeat)"
                                                          KindName="PassingKindName" />
+                            </RowTemplate>
+                            <Legend>
+                                <div class="lab-pattern-footer">
+                                    <button type="button" class="lab-legend-toggle" aria-expanded="@_showThrowLegend" @onclick="() => _showThrowLegend = !_showThrowLegend">
+                                        @(_showThrowLegend ? "Legende ausblenden" : "Legende einblenden")
+                                    </button>
+                                    <FeedingThrowDisplayModeToggle Mode="_throwDisplayMode" ModeChanged="OnThrowDisplayModeChanged" />
                                 </div>
-                            </div>
-                        }
+                                @if (_showThrowLegend)
+                                {
+                                    <ul class="lab-chip-legend" aria-label="@L["Throw state legend"]">
+                                        <li><span class="lab-start-props lab-start-props-legend" aria-hidden="true"><span class="lab-start-props-hand">L</span><span class="lab-start-props-hand">R</span></span><span>@L["Start clubs"]</span></li>
+                                        <li><span class="feeding-beat self" aria-hidden="true">·</span><span>@L["Self"]</span></li>
+                                        <li><span class="feeding-beat pass" aria-hidden="true">·</span><span>@L["Pass"]</span></li>
+                                        <li><span class="feeding-beat self is-selected" aria-hidden="true">·</span><span>@L["Selected throw"]</span></li>
+                                        <li><span class="feeding-beat self is-landing" aria-hidden="true">·</span><span>@L["Landing target"]</span></li>
+                                        <li><span class="feeding-beat self is-incoming" aria-hidden="true">·</span><span>@L["Incoming throw"]</span></li>
+                                        <li><span class="feeding-beat self collision" aria-hidden="true">!</span><span>@L["Collision"]</span></li>
+                                        <li><span class="feeding-beat self unfilled" aria-hidden="true">○</span><span>@L["No incoming throw"]</span></li>
+                                    </ul>
+                                }
+                            </Legend>
+                        </PatternTable>
                     </div>
-
-                    <ul class="lab-chip-legend" aria-label="@L["Throw state legend"]">
-                        <li>
-                            <span class="lab-start-props lab-start-props-legend" aria-hidden="true">
-                                <span class="lab-start-props-hand">L</span>
-                                <span class="lab-start-props-hand">R</span>
-                            </span>
-                            <span>@L["Start clubs"]</span>
-                        </li>
-                        <li><span class="feeding-beat self" aria-hidden="true">·</span><span>@L["Self"]</span></li>
-                        <li><span class="feeding-beat pass" aria-hidden="true">·</span><span>@L["Pass"]</span></li>
-                        <li><span class="feeding-beat self is-selected" aria-hidden="true">·</span><span>@L["Selected throw"]</span></li>
-                        <li><span class="feeding-beat self is-landing" aria-hidden="true">·</span><span>@L["Landing target"]</span></li>
-                        <li><span class="feeding-beat self is-incoming" aria-hidden="true">·</span><span>@L["Incoming throw"]</span></li>
-                        <li><span class="feeding-beat self collision" aria-hidden="true">!</span><span>@L["Collision"]</span></li>
-                        <li><span class="feeding-beat self unfilled" aria-hidden="true">○</span><span>@L["No incoming throw"]</span></li>
-                        <li class="lab-chip-legend-throw-display">
-                            <FeedingThrowDisplayModeToggle Mode="_throwDisplayMode" ModeChanged="OnThrowDisplayModeChanged" />
-                        </li>
-                    </ul>
                     @if (_direct.ThrowsInitialized)
                     {
                         var jifJson = PassingJifJson;
                         <section class="lab-jif" aria-label="JIF animation">
                             <h3>JIF-Animation</h3>
-                            <p>Das aktuelle Muster wird als JIF an das Passist-Widget übergeben.</p>
-                            <details class="lab-layout-editor">
-                                <summary>@L["Change animation layout"]</summary>
-                                <div class="lab-layout-controls">
-                                    <div class="lab-layout-presets" role="group" aria-label="@L["Layout presets"]">
-                                        <button type="button"
-                                                class="lab-layout-preset @(_layoutPreset == "circle" ? "active" : null)"
-                                                aria-pressed="@(_layoutPreset == "circle")"
-                                                @onclick="ApplyCircleLayoutPreset">
-                                            @L["Circle"]
-                                        </button>
-                                        <button type="button"
-                                                class="lab-layout-preset @(_layoutPreset == "w-v" ? "active" : null)"
-                                                aria-pressed="@(_layoutPreset == "w-v")"
-                                                @onclick="ApplyWvLayoutPreset">
-                                            @L["W/V"]
-                                        </button>
-                                    </div>
-                                    <p class="lab-layout-hint">@L["Drag jugglers to move them. Drag the small handle to rotate them."]</p>
-                                    <div class="lab-layout-canvas-wrap">
-                                        <svg @ref="_layoutSvg"
-                                             class="lab-layout-canvas"
-                                             viewBox="0 0 360 240"
-                                             role="group"
-                                             aria-label="@L["Top-down juggler layout"]">
-                                            <rect class="lab-layout-board" x="10" y="10" width="340" height="220" rx="18" />
-                                            <line class="lab-layout-axis" x1="180" y1="20" x2="180" y2="220" />
-                                            <line class="lab-layout-axis" x1="20" y1="120" x2="340" y2="120" />
-                                            @for (var person = 0; person < _direct.People.Count; person++)
-                                            {
-                                                var personIndex = person;
-                                                var pose = _layoutPoses[person];
-                                                var x = LayoutSvgX(pose.X);
-                                                var y = LayoutSvgY(pose.Z);
-                                                <g class="lab-layout-juggler"
-                                                   tabindex="0"
-                                                   role="button"
-                                                   aria-label="@L["Move or rotate {0}", _direct.People[person].Name]"
-                                                   transform="translate(@SvgNumber(x) @SvgNumber(y))"
-                                                   @onpointerdown="e => BeginLayoutMove(personIndex, e)"
-                                                   @onkeydown="e => HandleLayoutPersonKeyDown(personIndex, e)"
-                                                   @onkeydown:preventDefault="true">
-                                                    <title>@L["Move or rotate {0}", _direct.People[person].Name]</title>
-                                                    <circle class="lab-layout-person" r="18" />
-                                                    <g class="lab-layout-facing" transform="rotate(@SvgNumber(pose.Rotation))" pointer-events="none">
-                                                        <path d="M0 9 L0 -14 M-5 -8 L0 -14 L5 -8" />
-                                                    </g>
-                                                    <circle class="lab-layout-rotation-handle"
-                                                            cx="0"
-                                                            cy="-27"
-                                                            r="7"
-                                                            role="button"
-                                                            aria-label="@L["Rotate {0}", _direct.People[person].Name]"
-                                                            @onpointerdown="e => BeginLayoutRotate(personIndex, e)"
-                                                            @onpointerdown:stopPropagation="true" />
-                                                    <text class="lab-layout-person-label" text-anchor="middle" y="5" pointer-events="none">
-                                                        @_direct.People[person].Name
-                                                    </text>
-                                                </g>
-                                            }
-                                        </svg>
-                                    </div>
-                                    <div class="lab-layout-rotation-controls">
-                                        <label for="lab-layout-person">@L["Selected juggler"]</label>
-                                        <select id="lab-layout-person" @bind="_selectedLayoutPerson">
-                                            @for (var person = 0; person < _direct.People.Count; person++)
-                                            {
-                                                <option value="@person">@_direct.People[person].Name</option>
-                                            }
-                                        </select>
-                                        <button type="button" aria-label="@L["Rotate {0} left", _direct.People[_selectedLayoutPerson].Name]" @onclick="() => RotateLayoutPerson(-15)">↶</button>
-                                        <button type="button" aria-label="@L["Rotate {0} right", _direct.People[_selectedLayoutPerson].Name]" @onclick="() => RotateLayoutPerson(15)">↷</button>
-                                    </div>
-                                </div>
-                            </details>
                             @if (_passingJifError is null)
                             {
-                                <PassistAnimation Jif="@(new JifInput.Json(jifJson))" />
-                                <JifCausalDiagram Jif="@(new JifInput.Json(jifJson))" />
-                                <details>
-                                    <summary>Generiertes JIF anzeigen</summary>
-                                    <pre><code>@jifJson</code></pre>
-                                </details>
+                                <PassistAnimation Jif="@(new JifInput.Json(jifJson))"
+                                                  ShowSpeedLabel="false"
+                                                  JugglerNames="@(_direct.People.Select(person => person.Name).ToArray())"
+                                                  TimeZones="@(_direct.People.Select(person => person.TimeZone).ToArray())"
+                                                  LayoutPoses="_layoutPoses"
+                                                  LayoutPreset="_layoutPreset"
+                                                  LayoutChanged="OnLayoutChanged" />
+                                <JifCopyButton JifJson="jifJson" />
+                                <section class="jif-causal-diagram" aria-label="Kausales Diagramm">
+                                    <h3 class="sdv-section-title">Kausales Diagramm</h3>
+                                    <CausalDiagramEditorView Embedded="true"
+                                                              ExternalState="@PassingDiagramState"
+                                                              ShowOptions="false"
+                                                              ShowAnimation="false"
+                                                              AllowNodeMove="false"
+                                                              AllowThrowActions="false"
+                                                              AllowJugglerActions="false"
+                                                              AllowArrowEditing="false"
+                                                              ShowConnectionIssues="false" />
+                                </section>
                             }
                             else
                             {
@@ -355,7 +269,6 @@
     private PassingEditorState _direct = new();
     private JugglerLayoutPose[] _layoutPoses = [];
     private string _layoutPreset = "w-v";
-    private int _selectedLayoutPerson;
     private FeedingThrowDisplay.Mode _throwDisplayMode = FeedingThrowDisplay.Mode.Global;
     private readonly HashSet<int> _visitedCellsSteps = [0];
     private int _cellsStep;
@@ -367,9 +280,9 @@
     private int? _dropTargetPerson;
     private int? _dropTargetBeat;
     private string? _passingJifError;
-    private ElementReference _layoutSvg;
-    private IJSObjectReference? _layoutModule;
-    private DotNetObjectReference<SiteswapLabPage>? _layoutDotNetRef;
+    private bool _showThrowLegend;
+    private bool _stateInitialized;
+    private string? _lastAppliedState;
 
     private string PassingJifJson
     {
@@ -399,34 +312,74 @@
         }
     }
 
+    private CausalDiagramEditorState PassingDiagramState => CausalDiagramEditorState.CreatePassingPattern(
+        _direct.People.Select(person => person.TimeZone).ToArray(),
+        _direct.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
+        _direct.People.Select((person, index) => (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray()
+    );
+
+    private IReadOnlyList<PatternTable.PatternRow> LabTableRows
+    {
+        get
+        {
+            var causalStarts = SiteswapLabJifMapper.CalculateCausalStartProps(
+                _direct.People.Select(person => person.TimeZone).ToArray(),
+                _direct.People.Select(person => (IReadOnlyList<int>)person.Cells.Select(cell => cell.Height).ToArray()).ToArray(),
+                _direct.People.Select((person, index) =>
+                    (IReadOnlyList<int>)person.Cells.Select(cell => cell.TargetPerson ?? index).ToArray()).ToArray()
+            );
+            return _direct.People.Select((person, index) =>
+            {
+                var clubs = causalStarts[person.Name];
+                return new PatternTable.PatternRow(
+                    person.Name,
+                    Phase: _direct.TimelinePhaseFor(index),
+                    PhaseCount: _direct.ActiveTimeZoneCount,
+                    LeftClubs: clubs.Left,
+                    RightClubs: clubs.Right,
+                    TimeZone: person.TimeZone,
+                    StartClubsAriaLabel: L["Start clubs {0}: left {1}, right {2}", person.Name, clubs.Left, clubs.Right].Value
+                );
+            }).ToList();
+        }
+    }
+
+    private int PersonIndex(string label) =>
+        _direct.People.Select((person, index) => (person, index)).First(item => item.person.Name == label).index;
+
+    private string? LabRowClass(PatternTable.PatternRow row) =>
+        _direct.HasSelection && PersonIndex(row.Label) == _direct.SelectedPerson ? "is-editing-throw" : null;
+
     protected override async Task OnInitializedAsync()
     {
         var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings");
         _direct = new PassingEditorState(maxThrowHeight: settings?.MaxHeight);
         _throwDisplayMode = FeedingThrowDisplay.ParseMode(settings?.ThrowDisplayMode);
-        if (!TryRestoreState(StateQuery, settings?.MaxHeight))
+        var restored = TryRestoreState(StateQuery, settings?.MaxHeight);
+        _stateInitialized = true;
+        _lastAppliedState = StateQuery;
+        if (!restored)
         {
             ApplyLayoutPreset("w-v", save: false);
-            SaveStateToUrl();
+            SaveStateToUrl(replace: true);
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnParametersSet()
     {
-        if (!firstRender)
+        if (!_stateInitialized || string.Equals(StateQuery, _lastAppliedState, StringComparison.Ordinal))
         {
             return;
         }
 
-        _layoutModule = await JS.InvokeAsync<IJSObjectReference>(
-            "import",
-            Navigation.ToAbsoluteUri(
-                "./_content/Siteswaps.Generator/Components/SiteswapLab/SiteswapLabPage.razor.js"
-            ).ToString()
-        );
-        _layoutDotNetRef = DotNetObjectReference.Create(this);
-    }
+        _lastAppliedState = StateQuery;
+        if (string.IsNullOrWhiteSpace(StateQuery))
+        {
+            return;
+        }
 
+        TryRestoreState(StateQuery, _direct.MaxThrowHeight);
+    }
     private void SetPersonCount(int count)
     {
         _direct.SetPersonCount(count);
@@ -879,7 +832,6 @@
     {
         _layoutPreset = preset is "circle" or "w-v" ? preset : "w-v";
         _layoutPoses = CreateLayoutPoses(_layoutPreset, _direct.People.Select(person => person.TimeZone).ToArray());
-        _selectedLayoutPerson = Math.Clamp(_selectedLayoutPerson, 0, _layoutPoses.Length - 1);
         if (save)
         {
             SaveStateToUrl();
@@ -908,7 +860,6 @@
             _layoutPoses = _layoutPoses.Concat(defaults.Skip(_layoutPoses.Length)).ToArray();
         }
 
-        _selectedLayoutPerson = Math.Clamp(_selectedLayoutPerson, 0, count - 1);
     }
 
     private static JugglerLayoutPose[] CreateLayoutPoses(string preset, IReadOnlyList<int> timeZones)
@@ -918,174 +869,23 @@
             return [];
         }
 
-        return preset == "circle" ? CreateCircleLayout(timeZones.Count) : CreateWvLayout(timeZones);
+        return preset == "circle"
+            ? JugglerLayoutPresets.CreateCircleLayout(timeZones.Count)
+            : JugglerLayoutPresets.CreateWvLayout(timeZones);
     }
 
-    private static JugglerLayoutPose[] CreateCircleLayout(int personCount)
+    private Task OnLayoutChanged(JugglerLayoutChange change)
     {
-        const double radius = 0.68;
-        var poses = new JugglerLayoutPose[personCount];
-        for (var person = 0; person < personCount; person++)
+        _layoutPreset = change.Preset;
+        _layoutPoses = change.Poses.ToArray();
+        if (change.Commit)
         {
-            var angle = 2 * Math.PI * person / personCount;
-            var x = radius * Math.Cos(angle);
-            var z = radius * Math.Sin(angle);
-            poses[person] = new JugglerLayoutPose(x, z, RotationTowardCenter(x, z));
+            SaveStateToUrl();
         }
-
-        return poses;
+        return Task.CompletedTask;
     }
 
-    private static JugglerLayoutPose[] CreateWvLayout(IReadOnlyList<int> timeZones)
-    {
-        var poses = new JugglerLayoutPose[timeZones.Count];
-        var zones = timeZones.Distinct().Order().ToArray();
-        for (var zoneIndex = 0; zoneIndex < zones.Length; zoneIndex++)
-        {
-            var people = Enumerable.Range(0, timeZones.Count)
-                .Where(person => timeZones[person] == zones[zoneIndex])
-                .ToArray();
-            var hasMultipleZones = zones.Length > 1;
-            var angle = hasMultipleZones ? 2 * Math.PI * zoneIndex / zones.Length : 0;
-            var centerX = hasMultipleZones ? 0.52 * Math.Cos(angle) : 0;
-            var centerZ = hasMultipleZones ? 0.52 * Math.Sin(angle) : 0;
-            var tangentX = hasMultipleZones ? -Math.Sin(angle) : 1;
-            var tangentZ = hasMultipleZones ? Math.Cos(angle) : 0;
-
-            for (var member = 0; member < people.Length; member++)
-            {
-                var offset = (member - (people.Length - 1) / 2.0) * 0.42;
-                var x = centerX + tangentX * offset;
-                var z = centerZ + tangentZ * offset;
-                poses[people[member]] = new JugglerLayoutPose(x, z, RotationTowardCenter(x, z));
-            }
-        }
-
-        return poses;
-    }
-
-    private static double RotationTowardCenter(double x, double z) =>
-        NormalizeRotation(Math.Atan2(-x, z) * 180 / Math.PI);
-
-    private static double NormalizeRotation(double degrees)
-    {
-        degrees %= 360;
-        return degrees < 0 ? degrees + 360 : degrees;
-    }
-
-    private static double LayoutSvgX(double x) => 180 + Math.Clamp(x, -1, 1) * 145;
-
-    private static double LayoutSvgY(double z) => 120 + Math.Clamp(z, -1, 1) * 85;
-
-    private static string SvgNumber(double value) => value.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
-
-    private async Task BeginLayoutMove(int person, PointerEventArgs args)
-    {
-        _layoutPreset = "custom";
-        if (_layoutModule is not null && _layoutDotNetRef is not null)
-        {
-            await _layoutModule.InvokeVoidAsync("startMove", _layoutSvg, _layoutDotNetRef, person, args.PointerId);
-        }
-    }
-
-    private async Task BeginLayoutRotate(int person, PointerEventArgs args)
-    {
-        _layoutPreset = "custom";
-        if (_layoutModule is not null && _layoutDotNetRef is not null)
-        {
-            await _layoutModule.InvokeVoidAsync(
-                "startRotate",
-                _layoutSvg,
-                _layoutDotNetRef,
-                person,
-                args.PointerId,
-                LayoutSvgX(_layoutPoses[person].X),
-                LayoutSvgY(_layoutPoses[person].Z)
-            );
-        }
-    }
-
-    [JSInvokable]
-    public Task MoveLayoutPerson(int person, double x, double z) => InvokeAsync(() =>
-    {
-        if (person < 0 || person >= _layoutPoses.Length || !double.IsFinite(x) || !double.IsFinite(z))
-        {
-            return;
-        }
-
-        _layoutPreset = "custom";
-        _layoutPoses[person] = _layoutPoses[person] with
-        {
-            X = Math.Clamp(x, -1, 1),
-            Z = Math.Clamp(z, -1, 1),
-        };
-        StateHasChanged();
-    });
-
-    [JSInvokable]
-    public Task RotateLayoutPersonTo(int person, double rotation) => InvokeAsync(() =>
-    {
-        if (person < 0 || person >= _layoutPoses.Length || !double.IsFinite(rotation))
-        {
-            return;
-        }
-
-        _layoutPreset = "custom";
-        _layoutPoses[person] = _layoutPoses[person] with { Rotation = NormalizeRotation(rotation) };
-        StateHasChanged();
-    });
-
-    [JSInvokable]
-    public Task FinishLayoutDrag() => InvokeAsync(SaveStateToUrl);
-
-    private void RotateLayoutPerson(int delta)
-    {
-        _layoutPreset = "custom";
-        var pose = _layoutPoses[_selectedLayoutPerson];
-        _layoutPoses[_selectedLayoutPerson] = pose with
-        {
-            Rotation = NormalizeRotation(pose.Rotation + delta),
-        };
-        SaveStateToUrl();
-    }
-
-    private void HandleLayoutPersonKeyDown(int person, KeyboardEventArgs args)
-    {
-        if (args.Key is not ("ArrowLeft" or "ArrowRight" or "ArrowUp" or "ArrowDown"))
-        {
-            return;
-        }
-
-        if (args.ShiftKey)
-        {
-            _selectedLayoutPerson = person;
-            RotateLayoutPerson(args.Key is "ArrowLeft" or "ArrowDown" ? -15 : 15);
-            return;
-        }
-
-        var deltaX = args.Key switch
-        {
-            "ArrowLeft" => -0.05,
-            "ArrowRight" => 0.05,
-            _ => 0,
-        };
-        var deltaZ = args.Key switch
-        {
-            "ArrowUp" => -0.05,
-            "ArrowDown" => 0.05,
-            _ => 0,
-        };
-        var pose = _layoutPoses[person];
-        _layoutPoses[person] = pose with
-        {
-            X = Math.Clamp(pose.X + deltaX, -1, 1),
-            Z = Math.Clamp(pose.Z + deltaZ, -1, 1),
-        };
-        _layoutPreset = "custom";
-        SaveStateToUrl();
-    }
-
-    private void SaveStateToUrl()
+    private void SaveStateToUrl(bool replace = false)
     {
         if (_direct.People.Count == 0)
         {
@@ -1113,7 +913,8 @@
             .TrimEnd('=')
             .Replace('+', '-')
             .Replace('/', '_');
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("state", encoded), replace: true);
+        _lastAppliedState = encoded;
+        UrlStateNavigation.SetQueryParameter("state", encoded, replace);
     }
 
     private bool TryRestoreState(string? encoded, int? localMaxHeight)
@@ -1219,14 +1020,13 @@
             )
             {
                 _layoutPoses = storedPoses
-                    .Select(pose => pose with { Rotation = NormalizeRotation(pose.Rotation) })
+                    .Select(pose => pose with { Rotation = JugglerLayoutPresets.NormalizeRotation(pose.Rotation) })
                     .ToArray();
             }
             else
             {
                 _layoutPoses = CreateLayoutPoses(_layoutPreset, state.TimeZones);
             }
-            _selectedLayoutPerson = Math.Clamp(_selectedLayoutPerson, 0, peopleCount - 1);
             return true;
         }
         catch (Exception exception) when (exception is FormatException or JsonException or ArgumentException or IndexOutOfRangeException)
@@ -1251,15 +1051,5 @@
         string? LayoutPreset = null,
         JugglerLayoutPose[]? LayoutPoses = null
     );
-
-    public async ValueTask DisposeAsync()
-    {
-        _layoutDotNetRef?.Dispose();
-        if (_layoutModule is not null)
-        {
-            await _layoutModule.InvokeVoidAsync("stop");
-            await _layoutModule.DisposeAsync();
-        }
-    }
 
 }

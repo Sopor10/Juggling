@@ -1,14 +1,11 @@
 @page "/details"
 @namespace Siteswaps.Components.Details
 @using Siteswaps.Components.Details.Variants
-@inject NavigationManager Navigation
+@inject Siteswaps.Jif.Components.Navigation.UrlStateNavigation UrlStateNavigation
 @inject IStringLocalizer<DetailPage> L
 
 <div class="sd-page">
     <header class="sd-header">
-        <div class="sd-header-row">
-            <a class="sd-back" href="">@L["← Wizard"]</a>
-        </div>
         @if (Model is not null)
         {
             <div class="sd-header-notation" role="group" aria-label="@L["Siteswap rotation"]">
@@ -143,7 +140,7 @@
     private void SelectTab(string id)
     {
         ActiveTab = id;
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("v", id), replace: true);
+        UrlStateNavigation.SetQueryParameter("v", id);
     }
 
     private void SetOrbitColors(bool enabled) => OrbitColorsEnabled = enabled;
@@ -156,7 +153,7 @@
         }
 
         var rotated = Model.Value.Rotate(steps).ToString();
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("s", rotated));
+        UrlStateNavigation.SetQueryParameter("s", rotated);
     }
 
     private void ChangeJugglers(int delta)
@@ -172,7 +169,7 @@
             return;
         }
 
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("n", next.ToString()));
+        UrlStateNavigation.SetQueryParameter("n", next.ToString());
     }
 
     private sealed record TabInfo(string Id, string Label);

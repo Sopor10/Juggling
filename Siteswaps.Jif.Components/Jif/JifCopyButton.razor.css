@@ -1,0 +1,25 @@
+.jif-copy-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 16px;
+}
+
+.jif-copy-button {
+    appearance: none;
+    min-height: 36px;
+    padding: 6px 12px;
+    border: 1px solid var(--wizard-purple-200);
+    border-radius: 999px;
+    background: white;
+    color: var(--wizard-purple-700);
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.jif-copy-status {
+    color: var(--wizard-purple-600);
+    font-size: .8rem;
+}

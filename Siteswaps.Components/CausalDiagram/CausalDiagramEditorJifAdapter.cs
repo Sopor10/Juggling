@@ -22,12 +22,41 @@ public static class CausalDiagramEditorJifAdapter
         if (state.Jugglers.Count == 0 || state.Throws.Count == 0 || state.CycleLength <= 0)
             return false;
 
+        if (state.Jugglers.Any(juggler => state.Throws.All(node => node.JugglerId != juggler.Id)))
+        {
+            error =
+                "Jeder Jongleur braucht mindestens einen Wurf, damit die Passist-Animation erstellt werden kann.";
+            return false;
+        }
+
         if (TryBuildCanonicalSiteswap(state, out diagram))
         {
             error = string.Empty;
             return true;
         }
 
+        if (
+            state
+                .CausalEdges.GroupBy(edge => (edge.ToThrowId, edge.CycleOffset))
+                .Any(group => group.Count() > 1)
+        )
+        {
+            error =
+                "Ein Wurfknoten hat mehrere eingehende Pfeile. Passe die Verbindungen an, damit die Passist-Animation wieder eindeutig ist.";
+            return false;
+        }
+
+        return TryCreateCustomDiagramSet(state, out diagram, out error);
+    }
+
+    private static bool TryCreateCustomDiagramSet(
+        CausalDiagramEditorState state,
+        out DiagramSet? diagram,
+        out string error
+    )
+    {
+        diagram = null;
+        error = "Dieses Diagramm kann nicht als Passist-Animation dargestellt werden.";
         var jugglers = state.Jugglers.Select(juggler => new Person(juggler.Name)).ToArray();
         var jugglerIndex = state
             .Jugglers.Select((juggler, index) => (juggler.Id, index))
@@ -415,6 +444,7 @@ public static class CausalDiagramEditorJifAdapter
                 propType: "club",
                 patternType: "passingSiteswap"
             );
+            pattern = NormalizeAnimationTimeScale(state, pattern);
             error = string.Empty;
             return true;
         }
@@ -439,6 +469,44 @@ public static class CausalDiagramEditorJifAdapter
             error = "Die Passist-Animation überschreitet den unterstützten Umfang.";
             return false;
         }
+    }
+
+    private static JifPattern NormalizeAnimationTimeScale(
+        CausalDiagramEditorState state,
+        JifPattern pattern
+    )
+    {
+        if (state.Jugglers.Count < 2 || pattern.Repetition?.Period is not int period)
+            return pattern;
+
+        // Normalize local beat heights to Passist's shared clock using the fastest row beat.
+        var fastestBeat = state
+            .Jugglers.Select(juggler =>
+                state.CycleLength / state.Throws.Count(node => node.JugglerId == juggler.Id)
+            )
+            .Min();
+        if (fastestBeat <= 1m)
+            return pattern;
+
+        var factor = 1m / fastestBeat;
+        var scaledPeriod = period * factor;
+        if (decimal.Truncate(scaledPeriod) != scaledPeriod || scaledPeriod is < 1 or > int.MaxValue)
+            return pattern;
+
+        return pattern with
+        {
+            TimeStretchFactor = pattern.TimeStretchFactor,
+            Repetition = pattern.Repetition with { Period = decimal.ToInt32(scaledPeriod) },
+            Throws = pattern
+                .Throws?.Select(throwEvent =>
+                    throwEvent with
+                    {
+                        Time = throwEvent.Time * factor,
+                        Duration = throwEvent.Duration * factor,
+                    }
+                )
+                .ToArray(),
+        };
     }
 
     private static DiagramSet ExpandToHandPeriod(DiagramSet diagram)

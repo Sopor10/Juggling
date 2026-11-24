@@ -1,13 +1,34 @@
 @namespace Siteswaps.Generator.Components.Feeding
+@using Siteswaps.Components.CausalDiagram
+@using Siteswaps.Jif.Components
+@using Siteswaps.Generator.Core.Generator
 @inject IStringLocalizer<FeedingCombinationView> L
 
 <section class="feeding-combination" aria-labelledby="feeding-title">
     <FeedingJugglerOverview Session="Session"
                             Rows="BuildRows()"
                             Mode="_mode"
-                            ModeChanged="OnModeChanged" />
+                            ModeChanged="OnModeChanged"
+                            RotationRequested="RotationRequested" />
 
-    <FeedingInterfaceOccupancy Session="Session" />
+    @if (PassingPattern is { } passing)
+    {
+        <section class="feeding-combination-visuals" aria-label="Passist und Kausaldiagramm">
+            <PassistAnimation Jif="@(new JifInput.Json(passing.JifJson))"
+                              TimeZones="@(new[] { Session.Topology.A.TimeZone, Session.Topology.B1.TimeZone, Session.Topology.B2.TimeZone })"
+                              EnableSettings="true"
+                              ShowSpeedLabel="false" />
+            <CausalDiagramEditorView Embedded="true"
+                                      ExternalState="passing.DiagramState"
+                                      ShowOptions="false"
+                                      ShowAnimation="false"
+                                      AllowNodeMove="false"
+                                      AllowThrowActions="false"
+                                      AllowJugglerActions="false"
+                                      AllowArrowEditing="false"
+                                      ShowConnectionIssues="false" />
+        </section>
+    }
 
     @if (ShowBack)
     {
@@ -18,11 +39,16 @@
 @code {
     private FeedingThrowDisplay.Mode _mode = FeedingThrowDisplay.Mode.Global;
 
+    private PassingPatternViewModel? PassingPattern => BuildPassingPattern();
+
     [Parameter, EditorRequired]
     public NormalFeedSession Session { get; set; } = null!;
 
     [Parameter]
     public EventCallback Back { get; set; }
+
+    [Parameter]
+    public EventCallback<int> RotationRequested { get; set; }
 
     /// <summary>When false, host owns Back in a sticky footer (FeedingPage).</summary>
     [Parameter]
@@ -79,4 +105,63 @@
             );
         }
     }
+
+    private PassingPatternViewModel? BuildPassingPattern()
+    {
+        string[] roles = ["A", "B1", "B2"];
+        var siteswaps = new Siteswap?[roles.Length];
+        siteswaps[0] = Session.FeederSiteswap;
+        siteswaps[1] = Session.SelectedSiteswap("B1");
+        siteswaps[2] = Session.SelectedSiteswap("B2");
+        if (siteswaps.Any(siteswap => siteswap is null))
+        {
+            return null;
+        }
+
+        const int pairJugglers = 2;
+        var timeZones = roles.Select(role => Session.Topology[role].TimeZone).ToArray();
+        var heights = roles.Select((role, index) => (IReadOnlyList<int>)FeedingThrowDisplay
+            .ChipsFor(siteswaps[index]!, timeZones[index], pairJugglers, FeedingThrowDisplay.Mode.Global)
+            .Select(chip => chip.Height)
+            .ToArray()).ToArray();
+        var targets = roles.Select((role, person) => (IReadOnlyList<int>)Enumerable.Range(0, heights[person].Count)
+            .Select(beat =>
+            {
+                var globalBeat = (timeZones[person] + beat * pairJugglers) % Session.FeederSiteswap.Items.Length;
+                if (FeedingThrowDisplay.Kind(heights[person][beat], pairJugglers) == PassOrSelf.Self)
+                {
+                    return person;
+                }
+
+                if (person == 0)
+                {
+                    var recipient = Session.PassAssignments[globalBeat];
+                    return recipient == "B1" ? 1 : recipient == "B2" ? 2 : person;
+                }
+
+                return 0;
+            }).ToArray()).ToArray();
+
+        try
+        {
+            var state = CausalDiagramEditorState.CreatePassingPattern(timeZones, heights, targets);
+            var jifJson = Siteswaps.Generator.Components.SiteswapLab.SiteswapLabJifMapper.MapViaCausalDiagram(
+                timeZones,
+                heights,
+                targets,
+                propType: "club",
+                layout: JugglerLayoutPresets.CreateWvLayout(timeZones));
+            return new PassingPatternViewModel(state, jifJson);
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    private sealed record PassingPatternViewModel(CausalDiagramEditorState DiagramState, string JifJson);
 }

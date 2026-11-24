@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Change animation layout" xml:space="preserve"><value>Change animation layout</value></data>
+  <data name="Layout presets" xml:space="preserve"><value>Layout presets</value></data>
+  <data name="Circle" xml:space="preserve"><value>Circle</value></data>
+  <data name="W/V" xml:space="preserve"><value>W/V</value></data>
+  <data name="Drag jugglers to move them. Drag the small handle to rotate them." xml:space="preserve"><value>Drag jugglers to move them. Drag the small handle to rotate them.</value></data>
+  <data name="Show help" xml:space="preserve"><value>Show help</value></data>
+  <data name="Hide help" xml:space="preserve"><value>Hide help</value></data>
+  <data name="Top-down juggler layout" xml:space="preserve"><value>Top-down juggler layout</value></data>
+  <data name="Move or rotate {0}" xml:space="preserve"><value>Move or rotate {0}</value></data>
+  <data name="Rotate {0}" xml:space="preserve"><value>Rotate {0}</value></data>
+  <data name="Selected juggler" xml:space="preserve"><value>Selected juggler</value></data>
+  <data name="Rotate {0} left" xml:space="preserve"><value>Rotate {0} left</value></data>
+  <data name="Rotate {0} right" xml:space="preserve"><value>Rotate {0} right</value></data>
+</root>

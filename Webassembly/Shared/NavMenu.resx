@@ -10,9 +10,16 @@
   <data name="Open siteswap" xml:space="preserve"><value>Open siteswap</value></data>
   <data name="Passing Zone – Siteswap Generator" xml:space="preserve"><value>Passing Zone – Siteswap Generator</value></data>
   <data name="Generator" xml:space="preserve"><value>Generator</value></data>
-  <data name="Feeding" xml:space="preserve"><value>Feeding</value></data>
-  <data name="Siteswap lab" xml:space="preserve"><value>Siteswap lab</value></data>
+  <data name="Siteswap lab" xml:space="preserve"><value>Feeding</value></data>
   <data name="Causal diagram editor" xml:space="preserve"><value>Causal diagram editor</value></data>
+  <data name="Feed combination" xml:space="preserve"><value>Feed combination</value></data>
+  <data name="Siteswap details" xml:space="preserve"><value>Siteswap details</value></data>
+  <data name="Causal diagram" xml:space="preserve"><value>Causal diagram</value></data>
+  <data name="Transition graph" xml:space="preserve"><value>Transition graph</value></data>
+  <data name="Test page" xml:space="preserve"><value>Test page</value></data>
   <data name="Settings" xml:space="preserve"><value>Settings</value></data>
   <data name="Siteswap…" xml:space="preserve"><value>Siteswap…</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Enter a siteswap" xml:space="preserve"><value>Enter a siteswap to continue.</value></data>
 </root>

@@ -1,11 +1,3 @@
-.settings-title {
-    margin: 0;
-    text-align: center;
-    font-family: var(--wizard-font-display);
-    font-weight: 800;
-    font-size: 1.5rem;
-}
-
 .settings-steps {
     flex: 1;
 }

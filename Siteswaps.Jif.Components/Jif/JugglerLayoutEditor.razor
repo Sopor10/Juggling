@@ -1,0 +1,165 @@
+@namespace Siteswaps.Jif.Components
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Localization
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject IStringLocalizer<JugglerLayoutEditor> L
+
+@if (JugglerNames.Count > 1 && Poses.Count == JugglerNames.Count)
+{
+    <details class="juggler-layout-editor">
+        <summary>@L["Change animation layout"]</summary>
+        <div class="juggler-layout-controls">
+            <div class="juggler-layout-toolbar">
+                <div class="juggler-layout-presets" role="group" aria-label="@L["Layout presets"]">
+                    <button type="button" class="juggler-layout-preset @(_preset == "circle" ? "active" : null)"
+                            aria-pressed="@(_preset == "circle")" @onclick='() => ApplyPreset("circle")'>@L["Circle"]</button>
+                    <button type="button" class="juggler-layout-preset @(_preset == "w-v" ? "active" : null)"
+                            aria-pressed="@(_preset == "w-v")" @onclick='() => ApplyPreset("w-v")'>@L["W/V"]</button>
+                </div>
+                <button type="button" class="juggler-layout-help-toggle"
+                        aria-label="@L[_showHint ? "Hide help" : "Show help"]"
+                        aria-expanded="@_showHint" @onclick="ToggleHint"><span aria-hidden="true">ⓘ</span></button>
+            </div>
+            @if (_showHint)
+            {
+                <p class="juggler-layout-hint" role="note">@L["Drag jugglers to move them. Drag the small handle to rotate them."]</p>
+            }
+            <div class="juggler-layout-canvas-wrap">
+                <svg @ref="_svg" class="juggler-layout-canvas" viewBox="0 0 360 240" role="group"
+                     aria-label="@L["Top-down juggler layout"]">
+                    <rect class="juggler-layout-board" x="10" y="10" width="340" height="220" rx="18" />
+                    <line class="juggler-layout-axis" x1="180" y1="20" x2="180" y2="220" />
+                    <line class="juggler-layout-axis" x1="20" y1="120" x2="340" y2="120" />
+                    @for (var person = 0; person < JugglerNames.Count; person++)
+                    {
+                        var index = person;
+                        var pose = Poses[index];
+                        <g class="juggler-layout-person-group" tabindex="0" role="button"
+                           aria-label="@L["Move or rotate {0}", JugglerNames[index]]"
+                           transform="translate(@SvgNumber(LayoutSvgX(pose.X)) @SvgNumber(LayoutSvgY(pose.Z)))"
+                           @onpointerdown="e => BeginMove(index, e)"
+                           @onkeydown="e => HandleKeyDown(index, e)" @onkeydown:preventDefault="true">
+                            <title>@L["Move or rotate {0}", JugglerNames[index]]</title>
+                            <circle class="juggler-layout-person" r="18" />
+                            <g class="juggler-layout-facing" transform="rotate(@SvgNumber(pose.Rotation))" pointer-events="none">
+                                <path d="M0 9 L0 -14 M-5 -8 L0 -14 L5 -8" />
+                            </g>
+                            <circle class="juggler-layout-rotation-handle" cx="0" cy="-27" r="7"
+                                    role="button" aria-label="@L["Rotate {0}", JugglerNames[index]]"
+                                    @onpointerdown="e => BeginRotate(index, e)" @onpointerdown:stopPropagation="true" />
+                            <text class="juggler-layout-person-label" text-anchor="middle" y="5" pointer-events="none">@JugglerNames[index]</text>
+                        </g>
+                    }
+                </svg>
+            </div>
+        </div>
+    </details>
+}
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<string> JugglerNames { get; set; } = [];
+    [Parameter, EditorRequired] public IReadOnlyList<int> TimeZones { get; set; } = [];
+    [Parameter, EditorRequired] public IReadOnlyList<JugglerLayoutPose> Poses { get; set; } = [];
+    [Parameter] public string Preset { get; set; } = "w-v";
+    [Parameter] public EventCallback<JugglerLayoutChange> LayoutChanged { get; set; }
+
+    private ElementReference _svg;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<JugglerLayoutEditor>? _dotNetRef;
+    private bool _showHint;
+    private string _preset = "w-v";
+
+    private void ToggleHint() => _showHint = !_showHint;
+
+    protected override void OnParametersSet()
+    {
+        _preset = Preset is "circle" or "w-v" or "custom" ? Preset : "w-v";
+    }
+
+    private async Task ApplyPreset(string preset)
+    {
+        _preset = preset;
+        var zones = TimeZones.Count == JugglerNames.Count ? TimeZones : Enumerable.Repeat(0, JugglerNames.Count).ToArray();
+        var poses = preset == "circle"
+            ? JugglerLayoutPresets.CreateCircleLayout(JugglerNames.Count)
+            : JugglerLayoutPresets.CreateWvLayout(zones);
+        await LayoutChanged.InvokeAsync(new JugglerLayoutChange(_preset, poses, Commit: true));
+    }
+
+    private async Task BeginMove(int person, PointerEventArgs args)
+    {
+        _preset = "custom";
+        if (_module is not null && _dotNetRef is not null)
+            await _module.InvokeVoidAsync("startMove", _svg, _dotNetRef, person, args.PointerId);
+    }
+
+    private async Task BeginRotate(int person, PointerEventArgs args)
+    {
+        _preset = "custom";
+        if (_module is not null && _dotNetRef is not null)
+            await _module.InvokeVoidAsync("startRotate", _svg, _dotNetRef, person, args.PointerId,
+                LayoutSvgX(Poses[person].X), LayoutSvgY(Poses[person].Z));
+    }
+
+    [JSInvokable]
+    public Task MovePerson(int person, double x, double z) => InvokeAsync(async () =>
+    {
+        if (person < 0 || person >= Poses.Count || !double.IsFinite(x) || !double.IsFinite(z)) return;
+        var poses = Poses.ToArray();
+        poses[person] = poses[person] with { X = Math.Clamp(x, -1, 1), Z = Math.Clamp(z, -1, 1) };
+        await LayoutChanged.InvokeAsync(new JugglerLayoutChange("custom", poses));
+    });
+
+    [JSInvokable]
+    public Task RotatePersonTo(int person, double rotation) => InvokeAsync(async () =>
+    {
+        if (person < 0 || person >= Poses.Count || !double.IsFinite(rotation)) return;
+        var poses = Poses.ToArray();
+        poses[person] = poses[person] with { Rotation = NormalizeRotation(rotation) };
+        await LayoutChanged.InvokeAsync(new JugglerLayoutChange("custom", poses));
+    });
+
+    [JSInvokable]
+    public Task FinishDrag() => LayoutChanged.InvokeAsync(new JugglerLayoutChange("custom", Poses, Commit: true));
+
+    private Task HandleKeyDown(int person, KeyboardEventArgs args)
+    {
+        if (args.Key is not ("ArrowLeft" or "ArrowRight" or "ArrowUp" or "ArrowDown")) return Task.CompletedTask;
+        var poses = Poses.ToArray();
+        if (args.ShiftKey)
+        {
+            poses[person] = poses[person] with { Rotation = NormalizeRotation(poses[person].Rotation + (args.Key is "ArrowLeft" or "ArrowDown" ? -15 : 15)) };
+        }
+        else
+        {
+            poses[person] = poses[person] with
+            {
+                X = Math.Clamp(poses[person].X + (args.Key == "ArrowLeft" ? -0.05 : args.Key == "ArrowRight" ? 0.05 : 0), -1, 1),
+                Z = Math.Clamp(poses[person].Z + (args.Key == "ArrowUp" ? -0.05 : args.Key == "ArrowDown" ? 0.05 : 0), -1, 1),
+            };
+        }
+        return LayoutChanged.InvokeAsync(new JugglerLayoutChange("custom", poses, Commit: true));
+    }
+
+    private static double LayoutSvgX(double x) => 180 + Math.Clamp(x, -1, 1) * 145;
+    private static double LayoutSvgY(double z) => 120 + Math.Clamp(z, -1, 1) * 85;
+    private static string SvgNumber(double value) => value.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+    private static double NormalizeRotation(double degrees) { degrees %= 360; return degrees < 0 ? degrees + 360 : degrees; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Siteswaps.Jif.Components/Jif/JugglerLayoutEditor.razor.js");
+            _dotNetRef = DotNetObjectReference.Create(this);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null) { await _module.InvokeVoidAsync("stop"); await _module.DisposeAsync(); }
+        _dotNetRef?.Dispose();
+    }
+}

@@ -6,8 +6,7 @@
 <PageTitle>@L["3-person feed"]</PageTitle>
 
 <SectionContent SectionName="@WizardShellSections.Header">
-    <a class="feeding-back" href="@DetailsBackHref">@L["← Details"]</a>
-    <h1 id="feeding-title" @ref="_setupTitle" class="feeding-title" tabindex="-1">@HeaderTitle</h1>
+    <h1 id="feeding-title" @ref="_setupTitle" class="wizard-sr-only" tabindex="-1">@HeaderTitle</h1>
 </SectionContent>
 
 <SectionContent SectionName="@WizardShellSections.Body">
@@ -64,7 +63,7 @@
             <div class="wizard-steps feeding-steps">
                 <section class="wizard-step active feeding-sheet-step" aria-labelledby="feeding-title">
                     <div class="wizard-measure">
-                        <FeedingCombinationView Session="_session" ShowBack="false" />
+                        <FeedingCombinationView Session="_session" ShowBack="false" RotationRequested="RotateFeedingPattern" />
                     </div>
                 </section>
             </div>

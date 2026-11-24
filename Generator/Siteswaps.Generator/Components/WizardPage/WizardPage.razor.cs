@@ -11,6 +11,7 @@ using Siteswaps.Generator.Components.State.FilterTrees;
 using Siteswaps.Generator.Components.WizardPage.Filters;
 using Siteswaps.Generator.Components.WizardPage.Results;
 using Siteswaps.Generator.Core.Generator;
+using Siteswaps.Jif.Components.Navigation;
 
 namespace Siteswaps.Generator.Components.WizardPage;
 
@@ -45,9 +46,16 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
     [Inject]
     private NavigationManager? InjectedNavigation { get; set; }
 
+    [Inject]
+    private UrlStateNavigation? InjectedUrlStateNavigation { get; set; }
+
     private NavigationManager Navigation =>
         InjectedNavigation
         ?? throw new InvalidOperationException("NavigationManager was not injected.");
+
+    private UrlStateNavigation UrlStateNavigation =>
+        InjectedUrlStateNavigation
+        ?? throw new InvalidOperationException("URL state navigation was not injected.");
 
     [Inject]
     private IJSRuntime? InjectedJsRuntime { get; set; }
@@ -769,7 +777,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         if (_jsModule is not null)
         {
             await _jsModule.InvokeVoidAsync(
-                "replaceEditorState",
+                "pushEditorState",
                 State.CurrentStep,
                 CurrentWizardUrl()
             );
@@ -853,7 +861,7 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         {
             return Navigation.Uri;
         }
-        return Navigation.GetUriWithQueryParameter("ws", encoded);
+        return UrlStateNavigation.GetUriWithQueryParameter("ws", encoded);
     }
 
     private async Task ReplaceUrlStateAsync(bool results = false)
@@ -864,13 +872,25 @@ public partial class WizardPage : ComponentBase, IAsyncDisposable
         }
 
         await _jsModule.InvokeVoidAsync(
-            results ? "replaceResultsState" : "replaceEditorState",
+            results ? "replaceResultsState" : "pushEditorState",
             State.CurrentStep,
             CurrentWizardUrl()
         );
     }
 
-    private Task ReplaceEditorUrlStateAsync() => ReplaceUrlStateAsync(results: false);
+    private async Task ReplaceEditorUrlStateAsync()
+    {
+        if (_jsModule is null)
+        {
+            return;
+        }
+
+        await _jsModule.InvokeVoidAsync(
+            "replaceEditorState",
+            State.CurrentStep,
+            CurrentWizardUrl()
+        );
+    }
 
     private Task ReplaceResultsUrlStateAsync() => ReplaceUrlStateAsync(results: true);
 

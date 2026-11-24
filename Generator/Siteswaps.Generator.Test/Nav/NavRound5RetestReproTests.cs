@@ -12,22 +12,23 @@ namespace Siteswaps.Generator.Test.Nav;
 public class NavRound5RetestReproTests
 {
     /// <summary>
-    /// Finding (Medium): Nav search submit and Settings link touch targets are under 44px
-    /// (search bar height 2.4rem; submit has no min-height; link dips to 2.4rem on small screens).
-    /// Soll: .pznav-search-submit and every .pznav-link rule declare min-height ≥ 44px.
+    /// Nav dialog actions and menu links must meet the 44px minimum touch target.
     /// </summary>
     [Test]
     public void Nav_Search_And_Settings_Meet_44px_Touch_Target()
     {
         var css = ReadWebassemblySource(Path.Combine("Shared", "NavMenu.razor.css"));
 
-        var searchSubmitBodies = ExtractAllRuleBodiesContaining(css, ".pznav-search-submit");
+        var dialogActionBodies = ExtractAllRuleBodiesContaining(
+            css,
+            ".pznav-dialog-actions button"
+        );
         var linkBodies = ExtractAllRuleBodiesContaining(css, ".pznav-link");
 
-        searchSubmitBodies.Should().NotBeEmpty("expected .pznav-search-submit rule");
+        dialogActionBodies.Should().NotBeEmpty("expected dialog action button rule");
         linkBodies.Should().NotBeEmpty("expected .pznav-link rule (Settings)");
 
-        var submitHeights = searchSubmitBodies
+        var submitHeights = dialogActionBodies
             .Select(EffectiveMinHeightPx)
             .Where(h => h is not null)
             .Select(h => h!.Value)
@@ -44,8 +45,8 @@ public class NavRound5RetestReproTests
         (worstSubmit >= 44 && worstLink >= 44)
             .Should()
             .BeTrue(
-                "Nav search submit and Settings (.pznav-link) must expose ≥44px touch targets "
-                    + $"(search-submit worst min-height={FormatPx(worstSubmit)}, "
+                "Nav dialog buttons and menu links must expose ≥44px touch targets "
+                    + $"(dialog button worst min-height={FormatPx(worstSubmit)}, "
                     + $"pznav-link worst min-height={FormatPx(worstLink)})"
             );
     }

@@ -1,0 +1,29 @@
+@namespace Siteswaps.Jif.Components
+@using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
+@inject IJSRuntime JS
+@inject IStringLocalizer<JifCopyButton> L
+
+<div class="jif-copy-control">
+    <button type="button" class="jif-copy-button" @onclick="CopyJif">@L["Copy JIF"]</button>
+    <span class="jif-copy-status" role="status" aria-live="polite">@_status</span>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string JifJson { get; set; } = "{}";
+
+    private string? _status;
+
+    private async Task CopyJif()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", JifJson);
+            _status = L["JIF copied to clipboard"].Value;
+        }
+        catch (JSException)
+        {
+            _status = L["Could not copy JIF"].Value;
+        }
+    }
+}

@@ -14,6 +14,8 @@ public class CausalDiagramEditorStateTests
         var state = CausalDiagramEditorState.CreateSiteswap531();
         state.Repetitions = 7;
         state.SnapEnabled = false;
+        state.TimelineWidth = 720m;
+        state.LaneSpacing = 135m;
         state.ActiveJugglerId = "A";
         state.Throws[0] = state.Throws[0] with { Hand = "L", Height = 3.25m };
 
@@ -40,6 +42,8 @@ public class CausalDiagramEditorStateTests
             decoded!.Version.Should().Be(3);
             decoded.ActiveJugglerId.Should().Be("P1");
             decoded.PresetId.Should().Be("feeding-7-5");
+            decoded.TimelineWidth.Should().Be(560m);
+            decoded.LaneSpacing.Should().Be(105m);
             decoded.Throws[0].Height.Should().Be(2m);
             decoded.CausalEdges.Should().ContainSingle();
             CausalDiagramEditorState
@@ -148,7 +152,7 @@ public class CausalDiagramEditorStateTests
         var edge = state.CausalEdges.Single(item => item.FromThrowId == "P1-1");
         var target = state.Throws.Single(node => node.Id == edge.ToThrowId);
         target.JugglerId.Should().Be("P1");
-        (target.StartTime + edge.CycleOffset * state.CycleLength).Should().Be(1m);
+        (target.StartTime + edge.CycleOffset * state.CycleLength).Should().Be(-1m);
     }
 
     [Test]
@@ -158,12 +162,17 @@ public class CausalDiagramEditorStateTests
         var aToB = state.CausalEdges.Single(edge => edge.FromThrowId == "P1-1");
         var aTarget = state.Throws.Single(node => node.Id == aToB.ToThrowId);
         aTarget.JugglerId.Should().Be("P1");
-        (aTarget.StartTime + aToB.CycleOffset * state.CycleLength).Should().Be(25m);
+        aTarget.Id.Should().Be("P1-7");
+        aToB.CycleOffset.Should().Be(-1);
+        (aTarget.StartTime + aToB.CycleOffset * state.CycleLength).Should().Be(-5m);
 
         var bToA = state.CausalEdges.Single(edge => edge.FromThrowId == "P2-1");
         var bTarget = state.Throws.Single(node => node.Id == bToA.ToThrowId);
         bTarget.JugglerId.Should().Be("P2");
-        (bTarget.StartTime + bToA.CycleOffset * state.CycleLength).Should().Be(21m);
+        bTarget.Id.Should().Be("P2-5");
+        bToA.CycleOffset.Should().Be(-1);
+        (bTarget.StartTime + bToA.CycleOffset * state.CycleLength).Should().Be(-7m);
+        state.Throws.Should().OnlyContain(item => item.Height == 1m);
         state.CycleLength.Should().Be(35m);
         state.Throws.Count(node => node.JugglerId == "P1").Should().Be(7);
         state.Throws.Count(node => node.JugglerId == "P2").Should().Be(5);
@@ -177,6 +186,43 @@ public class CausalDiagramEditorStateTests
             .Select(node => node.StartTime)
             .Should()
             .Equal(0, 7, 14, 21, 28);
+    }
+
+    [Test]
+    public void TryDecode_MigratesSavedLegacy75PresetFromEventCountsToTwoBeatThrows()
+    {
+        var legacy = CausalDiagramEditorState.CreateFeeding75();
+        legacy.PresetId = "custom";
+        foreach (var row in new[] { (JugglerId: "P1", Count: 7), (JugglerId: "P2", Count: 5) })
+        {
+            var nodes = legacy
+                .Throws.Where(node => node.JugglerId == row.JugglerId)
+                .OrderBy(node => node.StartTime)
+                .ToArray();
+            for (var beat = 0; beat < nodes.Length; beat++)
+            {
+                var target = nodes[(beat - 2 + nodes.Length) % nodes.Length];
+                var offset = beat < 2 ? 0 : 1;
+                var edgeIndex = legacy.CausalEdges.FindIndex(edge =>
+                    edge.FromThrowId == nodes[beat].Id
+                );
+                legacy.CausalEdges[edgeIndex] = legacy.CausalEdges[edgeIndex] with
+                {
+                    ToThrowId = target.Id,
+                    CycleOffset = offset,
+                };
+            }
+        }
+        legacy.Throws = legacy
+            .Throws.Select(node => node with { Height = node.JugglerId == "P1" ? 7m : 5m })
+            .ToList();
+
+        CausalDiagramEditorState.TryDecode(legacy.Encode(), out var migrated).Should().BeTrue();
+        migrated!.PresetId.Should().Be("feeding-7-5");
+        migrated.Throws.Should().OnlyContain(node => node.Height == 2m);
+        migrated
+            .CausalEdges.Should()
+            .OnlyContain(edge => edge.FromThrowId == edge.ToThrowId && edge.CycleOffset == 0);
     }
 
     [Test]
@@ -200,7 +246,7 @@ public class CausalDiagramEditorStateTests
         state.Throws[sourceIndex] = source with { StartTime = source.StartTime + 0.25m };
         state.SynchronizeHeights();
         state.CausalEdges[0].ToThrowId.Should().Be(edge.ToThrowId);
-        state.Throws[sourceIndex].Height.Should().NotBe(oldHeight);
+        state.Throws[sourceIndex].Height.Should().Be(oldHeight - 0.05m);
         CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
         decoded!.Throws[sourceIndex].Height.Should().Be(state.Throws[sourceIndex].Height);
     }
@@ -223,15 +269,28 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
-    public void TryDecode_RejectsMultipleOutgoingOrIncomingCausalEdges()
+    public void TryDecode_RejectsMultipleOutgoingButAllowsTemporaryMultipleIncomingEdges()
     {
         var state = CausalDiagramEditorState.CreateSiteswapPattern("531");
         state.CausalEdges.Add(new EditorCausalEdge("duplicate-out", "A1", "A2", 2));
         CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeFalse();
 
-        state = CausalDiagramEditorState.CreateSiteswapPattern("531");
-        state.CausalEdges.Add(new EditorCausalEdge("duplicate-in", "A2", "A1", 1));
-        CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeFalse();
+        state = CausalDiagramEditorState.CreateEmpty();
+        state.CycleLength = 3m;
+        state.Throws =
+        [
+            new EditorThrow("A1", "A", "R", 0m, 0m),
+            new EditorThrow("A2", "A", "L", 1m, 0m),
+            new EditorThrow("A3", "A", "R", 2m, 0m),
+        ];
+        state.CausalEdges =
+        [
+            new EditorCausalEdge("e1", "A1", "A2", 0),
+            new EditorCausalEdge("duplicate-in", "A3", "A2", 0),
+        ];
+        state.SynchronizeHeights();
+        CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
+        decoded!.CausalEdges.Should().Contain(edge => edge.Id == "duplicate-in");
     }
 
     [Test]
@@ -246,6 +305,47 @@ public class CausalDiagramEditorStateTests
         var target = state.Throws.Single(node => node.Id == edge.ToThrowId);
         target.JugglerId.Should().Be("P1");
         (target.StartTime + edge.CycleOffset * state.CycleLength).Should().Be(0m);
+    }
+
+    [Test]
+    public void TryCreateFeeding_AppliesHandSequenceAndHalfLocalBeatOffsetPerRow()
+    {
+        const string pattern = "A: (LLRR) 2>A, 2>A, 2>A, 2>A\nB: (RL 0.5) 2>B, 2>B";
+        CausalDiagramEditorState
+            .TryCreateFeeding(pattern, out var state, out var error)
+            .Should()
+            .BeTrue(error);
+
+        state!
+            .Throws.Where(node => node.JugglerId == "P1")
+            .Select(node => node.Hand)
+            .Should()
+            .Equal("L", "L", "R", "R");
+        state
+            .Throws.Where(node => node.JugglerId == "P1")
+            .Select(node => node.StartTime)
+            .Should()
+            .Equal(0m, 1m, 2m, 3m);
+        state
+            .Throws.Where(node => node.JugglerId == "P2")
+            .Select(node => node.Hand)
+            .Should()
+            .Equal("R", "L");
+        state
+            .Throws.Where(node => node.JugglerId == "P2")
+            .Select(node => node.StartTime)
+            .Should()
+            .Equal(1m, 3m);
+    }
+
+    [Test]
+    public void TryCreateFeeding_WithoutHandSequenceKeepsAlternatingDefault()
+    {
+        CausalDiagramEditorState
+            .TryCreateFeeding("A: 2>A, 2>A, 2>A", out var state, out var error)
+            .Should()
+            .BeTrue(error);
+        state!.Throws.Select(node => node.Hand).Should().Equal("R", "L", "R");
     }
 
     [Test]
