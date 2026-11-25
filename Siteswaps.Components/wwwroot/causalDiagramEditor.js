@@ -3,6 +3,22 @@ let activePressCleanup;
 const outsideCloseHandlers = new WeakMap();
 const touchDragHandlers = new WeakMap();
 
+function capturePointer(element, pointerId) {
+    try {
+        element.setPointerCapture(pointerId);
+    } catch {
+        // The pointer may already have ended while Blazor was dispatching pointerdown.
+    }
+}
+
+function releasePointer(element, pointerId) {
+    try {
+        if (element.hasPointerCapture(pointerId)) element.releasePointerCapture(pointerId);
+    } catch {
+        // Pointer capture is already gone after pointerup or pointercancel.
+    }
+}
+
 export function bindTouchDragTargets(svg) {
     if (!svg || touchDragHandlers.has(svg)) return;
     const pointerDown = event => {
@@ -79,6 +95,9 @@ export function stopJugglerHold() {
 
 export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX, originY, pointerType, editingAlready) {
     stopDrag();
+    // Blazor rerenders the SVG after each moved throw. Keep capture on this
+    // stable ancestor so Chrome does not lose the touch stream with the node.
+    capturePointer(svg, pointerId);
     const target = [...svg.querySelectorAll(".throw-hit-target")]
         .find(item => item.dataset.throwId === id && item.dataset.cycle === String(cycle));
     const touchInput = pointerType !== "mouse" || window.matchMedia("(pointer: coarse)").matches;
@@ -103,6 +122,7 @@ export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX
     activeMove = () => {
         clearTimeout(timer);
         target?.classList.remove("pressing");
+        releasePointer(svg, pointerId);
         document.removeEventListener("pointermove", move);
         document.removeEventListener("pointerup", up, true);
         document.removeEventListener("pointercancel", up);
@@ -136,6 +156,7 @@ export function stopDrag() {
 
 export function startEdgeDrag(svg, dotnet, edgeId, sourceCycle, pointerId) {
     stopDrag();
+    capturePointer(svg, pointerId);
     const move = event => {
         if (event.pointerId !== pointerId) return;
         const bounds = svg.getBoundingClientRect();
@@ -165,6 +186,7 @@ export function startEdgeDrag(svg, dotnet, edgeId, sourceCycle, pointerId) {
         stopDrag();
     };
     activeMove = () => {
+        releasePointer(svg, pointerId);
         document.removeEventListener("pointermove", move);
         document.removeEventListener("pointerup", up, true);
         document.removeEventListener("pointercancel", cancel);
