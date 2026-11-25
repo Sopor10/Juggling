@@ -21,19 +21,44 @@ function releasePointer(element, pointerId) {
 
 export function bindTouchDragTargets(svg) {
     if (!svg || touchDragHandlers.has(svg)) return;
+    const activeTouchGuards = new Map();
     const pointerDown = event => {
         if (event.pointerType === "mouse" && !window.matchMedia("(pointer: coarse)").matches) return;
         const target = event.target.closest?.(".throw-hit-target, .arrow-target-handle, .juggler-add-target");
-        if (target && svg.contains(target)) event.preventDefault();
+        if (!target || !svg.contains(target)) return;
+        event.preventDefault();
+        if (!target.matches(".arrow-target-handle")) return;
+
+        // Start capture and suppress native scrolling synchronously, before
+        // Blazor's pointerdown callback can round-trip through JS interop.
+        const touchInput = event.pointerType !== "mouse" || window.matchMedia("(pointer: coarse)").matches;
+        if (!touchInput || activeTouchGuards.has(event.pointerId)) return;
+        capturePointer(svg, event.pointerId);
+        const preventTouchScroll = touchEvent => touchEvent.preventDefault();
+        const cleanup = release => {
+            document.removeEventListener("touchmove", preventTouchScroll, true);
+            document.removeEventListener("pointerup", end, true);
+            document.removeEventListener("pointercancel", end, true);
+            activeTouchGuards.delete(event.pointerId);
+            if (release) releasePointer(svg, event.pointerId);
+        };
+        const end = endEvent => {
+            if (endEvent.pointerId === event.pointerId) cleanup(false);
+        };
+        document.addEventListener("touchmove", preventTouchScroll, { capture: true, passive: false });
+        document.addEventListener("pointerup", end, true);
+        document.addEventListener("pointercancel", end, true);
+        activeTouchGuards.set(event.pointerId, () => cleanup(true));
     };
     svg.addEventListener("pointerdown", pointerDown, { capture: true, passive: false });
-    touchDragHandlers.set(svg, pointerDown);
+    touchDragHandlers.set(svg, { pointerDown, activeTouchGuards });
 }
 
 export function unbindTouchDragTargets(svg) {
-    const pointerDown = touchDragHandlers.get(svg);
-    if (!pointerDown) return;
-    svg.removeEventListener("pointerdown", pointerDown, true);
+    const binding = touchDragHandlers.get(svg);
+    if (!binding) return;
+    svg.removeEventListener("pointerdown", binding.pointerDown, true);
+    for (const cleanup of binding.activeTouchGuards.values()) cleanup();
     touchDragHandlers.delete(svg);
 }
 
