@@ -325,6 +325,9 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await target.EvaluateAsync(
             "node => node.addEventListener('pointerdown', event => window.__touchDragDownPrevented = event.defaultPrevented)"
         );
+        await page.Locator(".diagram-canvas").EvaluateAsync(
+            "svg => svg.addEventListener('gotpointercapture', event => window.__touchDragSvgCaptured = svg.hasPointerCapture(event.pointerId))"
+        );
         await target.FocusAsync();
         var positionBeforeArrow = await target.GetAttributeAsync("cx");
         var urlBeforeArrow = page.Url;
@@ -344,6 +347,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         var startX = targetBox.X + targetBox.Width / 2;
         var startY = targetBox.Y + targetBox.Height / 2;
         var urlBeforeTouchDrag = page.Url;
+        var positionBeforeTouchDrag = await target.GetAttributeAsync("cx");
         var scrollLeftBeforeTouchDrag = await scroller.EvaluateAsync<double>(
             "node => node.scrollLeft"
         );
@@ -354,7 +358,10 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await DispatchTouchEnd(cdp);
         await page.WaitForTimeoutAsync(150);
         (await page.EvaluateAsync<bool>("() => window.__touchDragDownPrevented")).Should().BeTrue();
+        (await page.EvaluateAsync<bool>("() => window.__touchDragSvgCaptured")).Should().BeTrue();
         page.Url.Should().NotBe(urlBeforeTouchDrag);
+        var positionAfterTouchDrag = await target.GetAttributeAsync("cx");
+        positionAfterTouchDrag.Should().NotBe(positionBeforeTouchDrag);
         await Assertions.Expect(page.Locator(".pd-node.selected")).ToHaveCountAsync(2);
         (await scroller.EvaluateAsync<double>("node => node.scrollLeft"))
             .Should()
