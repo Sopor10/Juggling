@@ -1,0 +1,87 @@
+name: SonarCloud Issue Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sonarcloud-issue-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: SonarCloud Issue Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Wait for SonarCloud analysis of this commit and enforce the gate
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PROJECT_KEY: Sopor10_Juggling
+        run: |
+          set -euo pipefail
+
+          api="https://sonarcloud.io/api"
+          analysis=""
+          quality_gate=""
+
+          for attempt in $(seq 1 30); do
+            pull_requests=$(curl --fail --silent --show-error \
+              --get "$api/project_pull_requests/list" \
+              --data-urlencode "project=$PROJECT_KEY")
+            analysis=$(jq -c --arg pr "$PR_NUMBER" \
+              '[.pullRequests[] | select(.key == $pr)][0] // empty' <<< "$pull_requests")
+            analyzed_sha=$(jq -r '.commit.sha // empty' <<< "${analysis:-null}")
+
+            if [[ "$analyzed_sha" == "$HEAD_SHA" ]]; then
+              quality_gate=$(curl --fail --silent --show-error \
+                --get "$api/qualitygates/project_status" \
+                --data-urlencode "projectKey=$PROJECT_KEY" \
+                --data-urlencode "pullRequest=$PR_NUMBER")
+              gate_status=$(jq -r '.projectStatus.status // empty' <<< "$quality_gate")
+              if [[ "$gate_status" == "OK" || "$gate_status" == "ERROR" ]]; then
+                break
+              fi
+            fi
+
+            echo "Waiting for SonarCloud analysis of $HEAD_SHA (attempt $attempt/30)."
+            sleep 30
+          done
+
+          if [[ "$(jq -r '.commit.sha // empty' <<< "${analysis:-null}")" != "$HEAD_SHA" ]]; then
+            echo "SonarCloud did not publish an analysis for PR $PR_NUMBER at $HEAD_SHA within 15 minutes." >&2
+            exit 1
+          fi
+
+          gate_status=$(jq -r '.projectStatus.status // empty' <<< "${quality_gate:-null}")
+          if [[ "$gate_status" != "OK" ]]; then
+            echo "SonarCloud quality gate status: ${gate_status:-missing}." >&2
+            jq -r '.projectStatus.conditions[]? | "\(.status): \(.metricKey) actual=\(.actualValue // "n/a") threshold=\(.comparator) \(.errorThreshold // "n/a")"' <<< "$quality_gate" >&2
+            exit 1
+          fi
+
+          issues=$(curl --fail --silent --show-error \
+            --get "$api/issues/search" \
+            --data-urlencode "componentKeys=$PROJECT_KEY" \
+            --data-urlencode "pullRequest=$PR_NUMBER" \
+            --data-urlencode "sinceLeakPeriod=true" \
+            --data-urlencode "statuses=OPEN,CONFIRMED" \
+            --data-urlencode "ps=100")
+          issue_count=$(jq -r '.total' <<< "$issues")
+          echo "SonarCloud quality gate: $gate_status. Open or confirmed issues in new code: $issue_count."
+
+          if (( issue_count > 0 )); then
+            jq -r '.issues[] | "\(.severity) \(.rule) \(.component | sub("^[^:]+:"; "")):\(.line // 0) — \(.message)"' <<< "$issues" >&2
+            echo "Resolve all open or confirmed SonarCloud issues in the PR's new code." >&2
+            exit 1
+          fi
