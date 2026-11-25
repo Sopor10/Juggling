@@ -64,7 +64,7 @@
 .causal-arrow { stroke-width: 2.5; opacity: .86; pointer-events: none; }
 .arrow-target-handle { fill: transparent; stroke: transparent; stroke-width: 2; cursor: grab; pointer-events: all; touch-action: none; }
 .arrow-target-handle:hover, .arrow-target-handle:focus-visible, .arrow-target-handle.dragging { fill: var(--decision-color-interaction-hover); stroke: var(--decision-color-brand-accent); outline: none; }
-.arrow-target-handle:hover, .arrow-target-handle:focus-visible { r: 7px; stroke-width: 2.5; }
+.arrow-target-handle:hover, .arrow-target-handle:focus-visible { stroke-width: 2.5; }
 .pd-arrow-stroke { fill: none; stroke: var(--decision-color-brand-accent); }
 .pd-arrow-fill { fill: var(--decision-color-brand-accent); }
 ::deep .juggler-add-target { cursor: pointer; touch-action: none; user-select: none; -webkit-touch-callout: none; }

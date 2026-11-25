@@ -188,7 +188,7 @@
                             ? (X: drag.X, Y: drag.Y)
                             : ArrowTargetPoint(edge, sourceCycle);
                         var isDraggingHandle = _edgeDragPreview is { } activeDrag && activeDrag.EdgeId == edge.Id && activeDrag.SourceCycle == sourceCycle;
-                        <circle class="arrow-target-handle @(isDraggingHandle ? "dragging" : "")" data-edge-id="@edge.Id" cx="@SvgNumber(targetHandle.X)" cy="@SvgNumber(targetHandle.Y)" r="18" role="button" tabindex="0" aria-label="Pfeilende ziehen, um den Zielknoten zu ändern" @onpointerdown="e => BeginEdgeDrag(edge.Id, sourceCycle, e)"><title>Pfeilende ziehen, um den Zielknoten zu ändern</title></circle>
+                        <circle class="arrow-target-handle @(isDraggingHandle ? "dragging" : "")" data-edge-id="@edge.Id" cx="@SvgNumber(targetHandle.X)" cy="@SvgNumber(targetHandle.Y)" r="22" role="button" tabindex="0" aria-label="Pfeilende ziehen, um den Zielknoten zu ändern" @onpointerdown="e => BeginEdgeDrag(edge.Id, sourceCycle, e)"><title>Pfeilende ziehen, um den Zielknoten zu ändern</title></circle>
                     }
                 }
             }
