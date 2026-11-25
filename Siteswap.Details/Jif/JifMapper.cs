@@ -141,7 +141,8 @@ public static class JifMapper
         string propType = "club",
         string patternType = "passingSiteswap",
         string? name = null,
-        string? description = null
+        string? description = null,
+        bool colorOrbits = false
     )
     {
         ArgumentNullException.ThrowIfNull(diagram);
@@ -166,6 +167,7 @@ public static class JifMapper
             diagram.StepCount,
             diagram.Hands.Count
         );
+        var orbitByProp = GetPropOrbitIndices(propPermutation, propCount);
         var expansionCount = LeastCommonMultiple(
             PermutationOrder(limbPermutation),
             PermutationOrder(propPermutation)
@@ -214,7 +216,9 @@ public static class JifMapper
                 .Range(0, propCount)
                 .Select(index => new JifObject
                 {
-                    Color = PropColors[index % PropColors.Length],
+                    Color = colorOrbits
+                        ? OrbitColorPalette.For(orbitByProp[index])
+                        : PropColors[index % PropColors.Length],
                     Type = propType,
                 })
                 .ToList(),
@@ -228,6 +232,27 @@ public static class JifMapper
             },
             Throws = expandedThrows,
         };
+    }
+
+    private static int[] GetPropOrbitIndices(IReadOnlyList<int> permutation, int propCount)
+    {
+        var orbitByProp = Enumerable.Repeat(-1, propCount).ToArray();
+        var orbitIndex = 0;
+        for (var start = 0; start < propCount; start++)
+        {
+            if (orbitByProp[start] >= 0)
+                continue;
+
+            var current = start;
+            while (orbitByProp[current] < 0)
+            {
+                orbitByProp[current] = orbitIndex;
+                current = permutation[current];
+            }
+            orbitIndex++;
+        }
+
+        return orbitByProp;
     }
 
     private static void ValidateDiagram(DiagramSet diagram)

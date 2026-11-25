@@ -4,10 +4,15 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Change animation layout" xml:space="preserve"><value>Jongleur-Anordnung ändern</value></data>
+  <data name="Animation layout" xml:space="preserve"><value>Animationsanordnung</value></data>
   <data name="Layout presets" xml:space="preserve"><value>Anordnungen</value></data>
   <data name="Circle" xml:space="preserve"><value>Kreis</value></data>
   <data name="W/V" xml:space="preserve"><value>W/V</value></data>
+  <data name="Current" xml:space="preserve"><value>Aktuell</value></data>
+  <data name="Default" xml:space="preserve"><value>Standard</value></data>
+  <data name="Customize positions" xml:space="preserve"><value>Positionen anpassen</value></data>
+  <data name="Close" xml:space="preserve"><value>Schließen</value></data>
+  <data name="Choose a preset or customize the positions." xml:space="preserve"><value>Wähle eine Anordnung oder passe die Positionen an.</value></data>
   <data name="Drag jugglers to move them. Drag the small handle to rotate them." xml:space="preserve"><value>Ziehe Jongleure zum Verschieben. Ziehe den kleinen Griff zum Drehen.</value></data>
   <data name="Show help" xml:space="preserve"><value>Hilfe anzeigen</value></data>
   <data name="Hide help" xml:space="preserve"><value>Hilfe ausblenden</value></data>

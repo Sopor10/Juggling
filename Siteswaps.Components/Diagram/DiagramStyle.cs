@@ -2,30 +2,26 @@ using VisNetwork.Blazor.Models;
 
 namespace Siteswaps.Components.Diagram;
 
-/// <summary>Passing Zone brand colors for vis-network state/transition graphs.</summary>
+/// <summary>Maps shared design decisions to the concrete values required by vis-network.</summary>
 internal static class DiagramStyle
 {
-    public const string Purple950 = "#241a3d";
-    public const string Purple700 = "#3c286d";
-    public const string Purple500 = "#552f8c";
-    public const string Purple100 = "#e8e1f7";
-    public const string Orange = "#f9a500";
-    public const string White = "#ffffff";
-
-    public static NetworkOptions Options(VisNetwork.Blazor.Network _) =>
+    public static NetworkOptions Options(
+        VisNetwork.Blazor.Network _,
+        DiagramDesignDecisions decisions
+    ) =>
         new()
         {
             Nodes = new NodeOption
             {
                 Shape = "circle",
                 BorderWidth = 2,
-                Color = NodeColor(),
-                Font = NodeFont(),
+                Color = NodeColor(decisions),
+                Font = NodeFont(decisions),
             },
             Edges = new EdgeOption
             {
-                Color = EdgeColor(false),
-                Font = EdgeFont(),
+                Color = EdgeColor(false, decisions),
+                Font = EdgeFont(decisions),
                 Width = 2,
                 SelectionWidth = 3,
             },
@@ -37,65 +33,71 @@ internal static class DiagramStyle
             },
         };
 
-    public static Node CreateStateNode(string id, string label) =>
+    public static Node CreateStateNode(string id, string label, DiagramDesignDecisions decisions) =>
         new(id, label, 1, "circle")
         {
             BorderWidth = 2,
-            Color = NodeColor(),
-            Font = NodeFont(),
+            Color = NodeColor(decisions),
+            Font = NodeFont(decisions),
             Mass = 1,
         };
 
-    public static Edge CreateEdge(string from, string to, string label, bool highlight = false) =>
+    public static Edge CreateEdge(
+        string from,
+        string to,
+        string label,
+        DiagramDesignDecisions decisions,
+        bool highlight = false
+    ) =>
         new(from, to, label)
         {
             Label = label,
             Arrows = new Arrows { To = new ArrowsOptions { Enabled = true } },
-            Color = EdgeColor(highlight),
-            Font = EdgeFont(),
+            Color = EdgeColor(highlight, decisions),
+            Font = EdgeFont(decisions),
             Width = highlight ? 3 : 2,
         };
 
-    private static NodeColorType NodeColor() =>
+    private static NodeColorType NodeColor(DiagramDesignDecisions decisions) =>
         new()
         {
-            Background = Purple100,
-            Border = Purple500,
+            Background = decisions.BorderSubtle,
+            Border = decisions.BrandAccent,
             Highlight = new NodeColorType.BorderBackgroundColor
             {
-                Background = White,
-                Border = Orange,
+                Background = decisions.White,
+                Border = decisions.ActionPrimary,
             },
             Hover = new NodeColorType.BorderBackgroundColor
             {
-                Background = White,
-                Border = Purple700,
+                Background = decisions.White,
+                Border = decisions.BrandStrong,
             },
         };
 
-    private static ColorType EdgeColor(bool highlight) =>
+    private static ColorType EdgeColor(bool highlight, DiagramDesignDecisions decisions) =>
         new()
         {
-            Color = highlight ? Orange : Purple700,
-            Highlight = Orange,
-            Hover = Orange,
+            Color = highlight ? decisions.ActionPrimary : decisions.BrandStrong,
+            Highlight = decisions.ActionPrimary,
+            Hover = decisions.ActionPrimary,
         };
 
-    private static Font NodeFont() =>
+    private static Font NodeFont(DiagramDesignDecisions decisions) =>
         new()
         {
-            Color = Purple950,
-            Face = "Nunito, system-ui, sans-serif",
+            Color = decisions.TextStrong,
+            Face = decisions.FontBody,
             Size = 14,
         };
 
-    private static Font EdgeFont() =>
+    private static Font EdgeFont(DiagramDesignDecisions decisions) =>
         new()
         {
-            Color = Purple950,
-            Face = "Nunito, system-ui, sans-serif",
+            Color = decisions.TextStrong,
+            Face = decisions.FontBody,
             Size = 12,
             StrokeWidth = 3,
-            StrokeColor = White,
+            StrokeColor = decisions.White,
         };
 }

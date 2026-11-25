@@ -3,26 +3,6 @@
    defined on .wizard-page so CSS custom properties inherit through the DOM
    to every child component regardless of Blazor CSS isolation scoping.
    ========================================================================== */.wizard-page {
-    --wizard-purple-950: #241a3d;
-    --wizard-purple-900: #2c1f52;
-    --wizard-purple-800: #33225d;
-    --wizard-purple-700: #3c286d;
-    --wizard-purple-600: #472779;
-    --wizard-purple-500: #552f8c;
-    --wizard-purple-400: #6b41a8;
-    --wizard-purple-300: #8a63c4;
-    --wizard-purple-100: #e8e1f7;
-    --wizard-orange: #f9a500;
-    --wizard-orange-dark: #db8f00;
-    --wizard-bg: #f5f3fb;
-    --wizard-card: #ffffff;
-    --wizard-radius-lg: 22px;
-    --wizard-radius-md: 14px;
-    --wizard-radius-sm: 10px;
-    --wizard-shadow: 0 8px 24px -8px rgba(44, 31, 82, 0.35);
-    --wizard-shadow-sm: 0 2px 8px -2px rgba(44, 31, 82, 0.25);
-    --wizard-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
-
     width: 100%;
     max-width: none;
     margin: 0;
@@ -31,9 +11,9 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    background: var(--wizard-bg);
-    font-family: 'Nunito', system-ui, sans-serif;
-    color: var(--wizard-purple-900);
+    background: var(--decision-color-surface-page);
+    font-family: var(--decision-font-body);
+    color: var(--decision-color-text-primary);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -41,7 +21,7 @@
 .wizard-page ::deep input:focus-visible,
 .wizard-page ::deep select:focus-visible,
 .wizard-page ::deep [tabindex="0"]:focus-visible {
-    outline: 3px solid #00b3ff;
+    outline: 3px solid var(--decision-color-focus);
     outline-offset: 2px;
     border-radius: 8px;
 }
@@ -51,11 +31,11 @@
 
 /* ---------- header ---------- */
 .wizard-header {
-    background: radial-gradient(120% 140% at 20% 0%, var(--wizard-purple-600) 0%, var(--wizard-purple-800) 45%, var(--wizard-purple-950) 100%);
-    color: white;
+    background: radial-gradient(120% 140% at 20% 0%, var(--decision-color-brand) 0%, var(--decision-color-text-secondary) 45%, var(--decision-color-text-strong) 100%);
+    color: var(--decision-color-white);
     /* Extra bottom padding clears the .wizard-steps negative-margin overlap
        so the swipe hint stays fully visible above the white sheet. */
-    padding: 14px 20px calc(14px + var(--wizard-radius-lg));
+    padding: 14px 20px calc(14px + var(--decision-radius-card));
     flex-shrink: 0;
 }
 
@@ -72,7 +52,7 @@
 
 .wizard-page ::deep .wizard-swipe-hint {
     text-align: center;
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--decision-color-text-on-brand-secondary);
     font-size: 12px;
     font-weight: 700;
     margin: 6px 0 0;
@@ -114,7 +94,7 @@
     background-clip: content-box;
     border: none;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: var(--decision-color-progress-inactive);
     transition: all 0.2s ease;
     cursor: pointer;
 }
@@ -125,11 +105,11 @@
 
 .wizard-page ::deep .wizard-dot.active {
     width: 22px;
-    background-color: var(--wizard-orange);
+    background-color: var(--decision-color-action-primary);
 }
 
 .wizard-page ::deep .wizard-dot.done {
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: var(--decision-color-progress-complete);
 }
 
 /* ---------- steps ---------- */
@@ -142,10 +122,10 @@
     position: relative;
     overflow: hidden;
     touch-action: pan-y;
-    margin-top: calc(-1 * var(--wizard-radius-lg));
-    background: var(--wizard-card);
-    border-radius: var(--wizard-radius-lg) var(--wizard-radius-lg) 0 0;
-    box-shadow: var(--wizard-shadow);
+    margin-top: calc(-1 * var(--decision-radius-card));
+    background: var(--decision-color-surface-card);
+    border-radius: var(--decision-radius-card) var(--decision-radius-card) 0 0;
+    box-shadow: var(--decision-shadow-card);
 }
 
 .wizard-page ::deep .wizard-steps.wizard-swipe-active,
@@ -191,7 +171,7 @@
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--wizard-purple-600);
+    color: var(--decision-color-brand);
     margin: 0 0 0.65rem;
 }
 
@@ -216,17 +196,17 @@
     font-size: 14px;
     padding: 8px 14px;
     border: 2px solid transparent;
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
     cursor: pointer;
     transition: all 0.15s ease;
     white-space: nowrap;
 }
 
 .wizard-page ::deep .wizard-pill.active {
-    background: var(--wizard-purple-700);
-    color: white;
-    box-shadow: var(--wizard-shadow-sm);
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
+    box-shadow: var(--decision-shadow-control);
 }
 
 .wizard-page ::deep .wizard-chip-row {
@@ -237,13 +217,13 @@
 }
 
 .wizard-page ::deep .wizard-chip {
-    border-radius: var(--wizard-radius-sm);
+    border-radius: var(--decision-radius-compact);
     font-weight: 800;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 13px;
-    border: 2px solid var(--wizard-purple-100);
-    background: white;
-    color: var(--wizard-purple-500);
+    border: 2px solid var(--decision-color-border-subtle);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-accent);
     padding: 10px 4px;
     min-height: 44px;
     min-width: 0;
@@ -255,21 +235,21 @@
 }
 
 .wizard-page ::deep .wizard-chip.active {
-    background: var(--wizard-purple-700);
-    border-color: var(--wizard-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    border-color: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .wizard-page ::deep .wizard-chip.free {
-    background: var(--wizard-purple-100);
-    border-color: var(--wizard-purple-300);
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-border-subtle);
+    border-color: var(--decision-color-brand-soft);
+    color: var(--decision-color-brand-strong);
 }
 
 .wizard-page ::deep .wizard-chip.dont-care {
-    background: white;
-    border-color: var(--wizard-purple-100);
-    color: var(--wizard-purple-400);
+    background: var(--decision-color-white);
+    border-color: var(--decision-color-border-subtle);
+    color: var(--decision-color-text-muted);
 }
 
 .wizard-page ::deep .wizard-chip:active {
@@ -287,7 +267,7 @@
 .wizard-page ::deep .wizard-juggler-exact-label {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
 }
 
 .wizard-page ::deep .wizard-chip-round {
@@ -313,13 +293,13 @@
     margin: 0 0 12px;
     padding: 12px 14px;
     border-radius: 14px;
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
     font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.08em;
     line-height: 1.35;
-    color: var(--wizard-purple-900);
+    color: var(--decision-color-text-primary);
     text-align: center;
     overflow-x: auto;
     white-space: nowrap;
@@ -341,8 +321,8 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
     font-size: 20px;
     font-weight: 800;
     border: none;
@@ -353,17 +333,17 @@
 }
 
 .wizard-page ::deep .wizard-stepper-btn:active {
-    background: var(--wizard-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
     transform: scale(0.9);
 }
 
 .wizard-page ::deep .wizard-period-value {
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 1.75rem;
     font-weight: 800;
     line-height: 1;
-    color: var(--wizard-purple-800);
+    color: var(--decision-color-text-secondary);
     width: 3.25rem;
     text-align: center;
 }
@@ -395,7 +375,7 @@
 /* ---------- nav ---------- */
 .wizard-page ::deep .wizard-nav {
     padding: 10px 20px 18px;
-    background: var(--wizard-bg);
+    background: var(--decision-color-surface-page);
     flex-shrink: 0;
 }
 
@@ -403,7 +383,7 @@
     text-align: center;
     font-size: 11px;
     font-weight: 600;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     height: 16px;
     margin: 0 0 8px;
 }
@@ -425,7 +405,7 @@
     min-height: 48px;
     padding: 0 20px;
     border-radius: 999px;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
     border: none;
@@ -435,9 +415,9 @@
 .wizard-page ::deep .wizard-btn-primary,
 .wizard-page ::deep .wizard-btn-generate,
 .wizard-page ::deep .wizard-btn-filter-primary {
-    background: linear-gradient(180deg, #ffb838, var(--wizard-orange));
-    color: var(--wizard-purple-950);
-    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
+    color: var(--decision-color-text-strong);
+    box-shadow: var(--decision-shadow-action-primary);
 }
 
 .wizard-page ::deep .wizard-btn-generate,
@@ -452,8 +432,8 @@
 }
 
 .wizard-page ::deep .wizard-btn-ghost {
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
 }
 
 .wizard-page ::deep .wizard-back-btn.wizard-invisible {
@@ -464,7 +444,7 @@
 .wizard-page ::deep .wizard-filters-empty {
     font-size: 14px;
     font-weight: 600;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     text-align: center;
     padding: 28px 12px;
 }
@@ -478,7 +458,7 @@
 
 .wizard-page ::deep .wizard-filters-hint {
     font-size: 11px;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     text-align: center;
     margin-top: 10px;
 }
@@ -490,8 +470,8 @@
 }
 
 .wizard-page ::deep .wizard-filter-group {
-    border: 2px dashed var(--wizard-purple-300);
-    background: rgba(138, 99, 196, 0.07);
+    border: 2px dashed var(--decision-color-brand-soft);
+    background: var(--decision-color-selection-subtle);
     border-radius: 16px;
     padding: 10px;
     display: flex;
@@ -502,12 +482,12 @@
 }
 
 .wizard-page ::deep .wizard-filter-group .wizard-filter-group {
-    background: rgba(138, 99, 196, 0.1);
-    border-color: var(--wizard-purple-400);
+    background: var(--decision-color-selection);
+    border-color: var(--decision-color-text-muted);
 }
 
 .wizard-page ::deep .wizard-filter-group .wizard-filter-group .wizard-filter-group {
-    background: rgba(138, 99, 196, 0.14);
+    background: var(--decision-color-selection-strong);
 }
 
 .wizard-page ::deep .wizard-filter-group-header {
@@ -519,7 +499,7 @@
 .wizard-page ::deep .wizard-filter-group-label {
     font-size: 10px;
     font-weight: 800;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
     padding: 0 4px;
@@ -529,9 +509,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--wizard-card);
-    border: 2px solid var(--wizard-purple-100);
-    border-radius: var(--wizard-radius-md);
+    background: var(--decision-color-surface-card);
+    border: 2px solid var(--decision-color-border-subtle);
+    border-radius: var(--decision-radius-control);
     padding: 10px 12px;
     min-width: 0;
 }
@@ -540,7 +520,7 @@
     flex: 1;
     font-size: 13px;
     font-weight: 700;
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
     min-width: 0;
     overflow-wrap: anywhere;
 }
@@ -550,15 +530,15 @@
     height: 40px;
     flex-shrink: 0;
     border-radius: 50%;
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-500);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-accent);
     border: none;
     cursor: pointer;
 }
 
 .wizard-page ::deep .wizard-icon-btn-danger {
-    background: #fde3e3;
-    color: #e05353;
+    background: var(--decision-color-status-error-surface);
+    color: var(--decision-color-status-error);
 }
 
 .wizard-page ::deep .wizard-connector-row {
@@ -573,16 +553,16 @@
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.04em;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 .wizard-page ::deep .wizard-wrap-btn {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1.5px dashed var(--wizard-purple-300);
+    border: 1.5px dashed var(--decision-color-brand-soft);
     background: transparent;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-size: 16px;
     font-weight: 800;
     cursor: pointer;
@@ -596,15 +576,15 @@
     font-weight: 700;
     min-height: 40px;
     border-radius: 10px;
-    border: 1.5px dashed var(--wizard-purple-300);
+    border: 1.5px dashed var(--decision-color-brand-soft);
     background: transparent;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     cursor: pointer;
 }
 
 .wizard-page ::deep .wizard-connector-or {
-    background: var(--wizard-orange);
-    color: white;
+    background: var(--decision-color-action-primary);
+    color: var(--decision-color-white);
     font-size: 12px;
     min-height: 40px;
     padding: 0 20px;
@@ -613,8 +593,8 @@
 }
 
 .wizard-page ::deep .wizard-connector-and {
-    background: var(--wizard-purple-100);
-    color: var(--wizard-purple-500);
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-accent);
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.03em;
@@ -630,9 +610,9 @@
     padding: 10px;
     margin-top: 10px;
     border-radius: 14px;
-    border: 2px dashed var(--wizard-purple-100);
+    border: 2px dashed var(--decision-color-border-subtle);
     background: none;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
@@ -642,7 +622,7 @@
 .wizard-page ::deep .wizard-sheet-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(36, 26, 61, 0.45);
+    background: var(--decision-color-overlay-sheet);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.28s ease;
@@ -661,9 +641,9 @@
     width: 100%;
     max-width: 480px;
     transform: translate(-50%, 100%);
-    background: white;
+    background: var(--decision-color-white);
     border-radius: 24px 24px 0 0;
-    box-shadow: 0 -10px 30px -10px rgba(36, 26, 61, 0.35);
+    box-shadow: var(--decision-shadow-bottom-sheet);
     transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
     max-height: 85vh;
     overflow-x: hidden;
@@ -681,7 +661,7 @@
 .wizard-page ::deep .wizard-sheet-handle {
     width: 40px;
     height: 6px;
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
     border-radius: 999px;
     margin: 0 auto 16px;
 }
@@ -712,9 +692,9 @@
 }
 
 .wizard-page ::deep .wizard-sheet-title {
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 18px;
-    color: var(--wizard-purple-800);
+    color: var(--decision-color-text-secondary);
     margin: 0 0 12px;
 }
 
@@ -722,7 +702,7 @@
     display: flex;
     gap: 0;
     margin: 0 0 16px;
-    border-bottom: 2px solid var(--wizard-purple-100);
+    border-bottom: 2px solid var(--decision-color-border-subtle);
 }
 
 .wizard-page ::deep .wizard-tab {
@@ -734,8 +714,8 @@
     margin-bottom: -2px;
     border-radius: 0;
     background: transparent;
-    color: var(--wizard-purple-400);
-    font-family: var(--wizard-font-display);
+    color: var(--decision-color-text-muted);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
     min-height: 44px;
@@ -746,12 +726,12 @@
 }
 
 .wizard-page ::deep .wizard-tab:hover {
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
 }
 
 .wizard-page ::deep .wizard-tab.active {
-    color: var(--wizard-purple-800);
-    border-bottom-color: var(--wizard-orange);
+    color: var(--decision-color-text-secondary);
+    border-bottom-color: var(--decision-color-action-primary);
     background: transparent;
     box-shadow: none;
 }
@@ -765,19 +745,19 @@
     gap: 8px;
     margin-top: 20px;
     flex-shrink: 0;
-    background: white;
+    background: var(--decision-color-white);
     padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .wizard-page ::deep .wizard-validation {
-    color: #b42318;
+    color: var(--decision-color-status-error);
     font-size: 13px;
     font-weight: 700;
     margin: 8px 0 0;
 }
 
 .wizard-page ::deep .wizard-clamp-feedback {
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
     font-size: 13px;
     font-weight: 700;
     margin: 8px 0 0;
@@ -785,7 +765,7 @@
 
 .wizard-page ::deep .wizard-hint {
     font-size: 13px;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     margin: 0 0 14px;
 }
 
@@ -817,24 +797,24 @@
     width: 100%;
     display: flex;
     align-items: center;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 12px;
     padding: 10px 26px 10px 8px;
-    font-family: 'Nunito', system-ui, sans-serif;
+    font-family: var(--decision-font-body);
     font-weight: 700;
     font-size: 13px;
     min-height: 44px;
-    background-color: white;
+    background-color: var(--decision-color-white);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b41a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
-    color: var(--wizard-purple-800);
+    color: var(--decision-color-text-secondary);
     cursor: pointer;
     text-align: left;
 }
 
 .wizard-page ::deep .wizard-select.open .wizard-select-trigger {
-    border-color: var(--wizard-purple-400);
+    border-color: var(--decision-color-text-muted);
 }
 
 .wizard-page ::deep .wizard-select-label {
@@ -852,10 +832,10 @@
     margin: 0;
     padding: 6px;
     list-style: none;
-    background: white;
-    border: 2px solid var(--wizard-purple-100);
+    background: var(--decision-color-white);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 14px;
-    box-shadow: var(--wizard-shadow);
+    box-shadow: var(--decision-shadow-card);
     max-height: 220px;
     overflow-y: auto;
 }
@@ -866,8 +846,8 @@
     border: none;
     border-radius: 10px;
     background: transparent;
-    color: var(--wizard-purple-800);
-    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--decision-color-text-secondary);
+    font-family: var(--decision-font-body);
     font-weight: 700;
     font-size: 13px;
     min-height: 40px;
@@ -878,18 +858,18 @@
 
 .wizard-page ::deep .wizard-select-option:hover,
 .wizard-page ::deep .wizard-select-option:focus-visible {
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
 }
 
 .wizard-page ::deep .wizard-select-option.active {
-    background: var(--wizard-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .wizard.page ::deep .wizard-input-number {
     flex: 0 0 64px;
     width: 64px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 12px;
     padding: 10px 8px;
     font-weight: 700;
@@ -901,7 +881,7 @@
 .wizard-page ::deep .wizard-input-number {
     flex: 0 0 64px;
     width: 64px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 12px;
     padding: 10px 8px;
     font-weight: 700;
@@ -914,7 +894,7 @@
     display: flex;
     border-radius: 12px;
     overflow: hidden;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
 }
 
 .wizard-page ::deep .wizard-segment {
@@ -928,7 +908,7 @@
     margin: 4px 0 14px;
     padding: 10px;
     border-radius: 16px;
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
     border: 2px solid transparent;
 }
 
@@ -938,7 +918,7 @@
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 .wizard-page ::deep .wizard-pattern-palette + .wizard-checkbox-row,
@@ -958,11 +938,11 @@
     min-width: 48px;
     min-height: 44px;
     padding: 8px 4px;
-    border: 2px dashed var(--wizard-purple-300);
+    border: 2px dashed var(--decision-color-brand-soft);
     border-radius: 12px;
-    background: white;
-    color: var(--wizard-purple-700);
-    font-family: var(--wizard-font-display);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
+    font-family: var(--decision-font-display);
     font-weight: 800;
     font-size: 13px;
     cursor: pointer;
@@ -970,10 +950,10 @@
 
 .wizard-page ::deep .wizard-pattern-slot.active {
     border-style: solid;
-    border-color: var(--wizard-orange);
-    background: var(--wizard-purple-700);
-    color: white;
-    box-shadow: 0 0 0 3px rgba(249, 165, 0, 0.28);
+    border-color: var(--decision-color-action-primary);
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
+    box-shadow: var(--decision-shadow-action-primary-focus);
 }
 
 .wizard-page ::deep .wizard-pattern-palette {
@@ -987,7 +967,7 @@
     gap: 8px;
     font-size: 13px;
     font-weight: 600;
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
 }
 
 /* ---------- results ---------- */
@@ -1024,9 +1004,9 @@
 }
 
 .wizard-page ::deep .wizard-results-title {
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 20px;
-    color: var(--wizard-purple-800);
+    color: var(--decision-color-text-secondary);
     margin: 0;
 }
 
@@ -1041,7 +1021,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: var(--wizard-purple-400);
+    background: var(--decision-color-text-muted);
     animation: wizard-bounce 1s infinite ease-in-out;
 }
 
@@ -1067,18 +1047,18 @@
 .wizard-page ::deep .wizard-loading-more {
     font-size: 13px;
     font-weight: 700;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     text-align: center;
     margin: 0 0 12px;
 }
 
 /* Siteswap result cards — Wizard styling */
 .wizard-page ::deep .pz-siteswap-card {
-    background: var(--wizard-card);
-    border-radius: var(--wizard-radius-lg);
-    box-shadow: var(--wizard-shadow-sm);
+    background: var(--decision-color-surface-card);
+    border-radius: var(--decision-radius-card);
+    box-shadow: var(--decision-shadow-control);
     padding: 14px 16px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     width: 100%;
 }
 
@@ -1086,17 +1066,17 @@
     display: flex;
     align-items: center;
     min-height: 44px;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 18px;
     font-weight: 800;
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
     text-decoration: none;
     margin-bottom: 10px;
 }
 
 .wizard-page ::deep .pz-siteswap-card-title:hover,
 .wizard-page ::deep .pz-siteswap-card-title:focus-visible {
-    color: var(--wizard-orange);
+    color: var(--decision-color-action-primary);
     outline: none;
 }
 
@@ -1116,20 +1096,20 @@
 
 .wizard-page ::deep .pz-siteswap-card-label {
     font-weight: 800;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
     min-width: 1.5em;
 }
 
 .wizard-page ::deep .pz-siteswap-card-notation {
     font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
     font-weight: 700;
-    color: var(--wizard-purple-900);
+    color: var(--decision-color-text-primary);
     letter-spacing: 0.02em;
 }
 
 .wizard-page ::deep .pz-siteswap-card-avg {
     font-size: 12px;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
 }
 
 .wizard-page ::deep .pz-siteswap-card-clubs {
@@ -1138,25 +1118,25 @@
     gap: 8px;
     margin: 0;
     padding-top: 8px;
-    border-top: 1px solid var(--wizard-purple-100);
+    border-top: 1px solid var(--decision-color-border-subtle);
     font-size: 13px;
 }
 
 .wizard-page ::deep .pz-siteswap-card-clubs-label {
     font-weight: 800;
-    color: var(--wizard-purple-500);
+    color: var(--decision-color-brand-accent);
 }
 
 .wizard-page ::deep .pz-siteswap-card-clubs-value {
     font-weight: 800;
-    color: var(--wizard-purple-800);
+    color: var(--decision-color-text-secondary);
 }
 
 .wizard-page ::deep .wizard-results-actions {
     flex-shrink: 0;
     margin-top: 0;
     padding: 10px 20px calc(18px + env(safe-area-inset-bottom, 0px));
-    background: var(--wizard-bg);
+    background: var(--decision-color-surface-page);
 }
 
 .wizard-page ::deep .wizard-results-actions .wizard-measure {

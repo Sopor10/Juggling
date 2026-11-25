@@ -1,8 +1,12 @@
 ﻿@using Siteswap.Details
 @using VisNetwork.Blazor.Models
 @using Siteswap.Details.StateDiagram
+@inject IJSRuntime JS
 
-<Network Id="@NetworkId" Data="@Data" Options="DiagramStyle.Options" style="width: 100%; max-width: 640px; height: 360px"/>
+@if (_designDecisions is { } decisions)
+{
+    <Network Id="@NetworkId" Data="@Data" Options="@(network => DiagramStyle.Options(network, decisions))" style="width: 100%; max-width: 640px; height: 360px"/>
+}
 
 @code {
     [Parameter]
@@ -15,11 +19,13 @@
 
     private Transition? _renderedTransition;
 
+    private DiagramDesignDecisions? _designDecisions;
+
     private NetworkData Data { get; set; } = new() { Nodes = [], Edges = [] };
 
     protected override void OnParametersSet()
     {
-        if (_renderedTransition?.PrettyPrint() != Transition?.PrettyPrint())
+        if (_designDecisions is not null && _renderedTransition?.PrettyPrint() != Transition?.PrettyPrint())
         {
             _renderedTransition = Transition;
             CreateNetworkData(Transition);
@@ -28,8 +34,26 @@
         base.OnParametersSet();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _designDecisions = await DesignDecisionTokens.ReadDiagramAsync(JS);
+        _renderedTransition = Transition;
+        CreateNetworkData(Transition);
+        await InvokeAsync(StateHasChanged);
+    }
+
     private void CreateNetworkData(Transition? transition)
     {
+        if (_designDecisions is not { } decisions)
+        {
+            return;
+        }
+
         var nodes = new List<Node>();
         var edges = new List<Edge>();
 
@@ -42,11 +66,11 @@
         var fromGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.From);
         var toGraph = StateGraphFromSiteswapGenerator.CalculateGraph(transition.To);
 
-        AddNodes(fromGraph, nodes);
-        AddNodes(toGraph, nodes);
+        AddNodes(fromGraph, nodes, decisions);
+        AddNodes(toGraph, nodes, decisions);
 
-        AddEdges(fromGraph, edges);
-        AddEdges(toGraph, edges);
+        AddEdges(fromGraph, edges, decisions);
+        AddEdges(toGraph, edges, decisions);
 
         var fromMatch = transition
             .From.AllStates()
@@ -63,14 +87,15 @@
         {
             var nextState = state.Advance().Throw(transitionThrow.Value);
 
-            AddState(nodes, state);
-            AddState(nodes, nextState);
+            AddState(nodes, state, decisions);
+            AddState(nodes, nextState, decisions);
 
             AddEdge(
                 edges,
                 state.StateRepresentation(),
                 nextState.StateRepresentation(),
                 transitionThrow.Value.ToSiteswapString(),
+                decisions,
                 highlight: true
             );
             state = nextState;
@@ -79,7 +104,7 @@
         Data = new NetworkData { Edges = edges, Nodes = nodes };
     }
 
-    private static void AddEdges(StateGraph fromGraph, List<Edge> edges)
+    private static void AddEdges(StateGraph fromGraph, List<Edge> edges, DiagramDesignDecisions decisions)
     {
         foreach (var edge in fromGraph.Graph.Edges)
         {
@@ -87,7 +112,8 @@
                 edges,
                 edge.N1.StateRepresentation(),
                 edge.N2.StateRepresentation(),
-                edge.Data.ToString()
+                edge.Data.ToString(),
+                decisions
             );
         }
     }
@@ -97,6 +123,7 @@
         string from,
         string to,
         string data,
+        DiagramDesignDecisions decisions,
         bool highlight = false
     )
     {
@@ -105,22 +132,36 @@
             return;
         }
 
-        edges.Add(DiagramStyle.CreateEdge(from, to, data, highlight));
+        edges.Add(DiagramStyle.CreateEdge(from, to, data, decisions, highlight));
     }
 
-    private static void AddNodes(StateGraph fromGraph, ICollection<Node> nodes)
+    private static void AddNodes(
+        StateGraph fromGraph,
+        ICollection<Node> nodes,
+        DiagramDesignDecisions decisions
+    )
     {
         foreach (var node in fromGraph.Graph.Nodes)
         {
-            AddState(nodes, node);
+            AddState(nodes, node, decisions);
         }
     }
 
-    private static void AddState(ICollection<Node> nodes, State node)
+    private static void AddState(
+        ICollection<Node> nodes,
+        State node,
+        DiagramDesignDecisions decisions
+    )
     {
         if (nodes.All(x => x.Id != node.StateRepresentation()))
         {
-            nodes.Add(DiagramStyle.CreateStateNode(node.StateRepresentation(), node.StateRepresentation()));
+            nodes.Add(
+                DiagramStyle.CreateStateNode(
+                    node.StateRepresentation(),
+                    node.StateRepresentation(),
+                    decisions
+                )
+            );
         }
     }
 }

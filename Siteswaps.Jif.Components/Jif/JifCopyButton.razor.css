@@ -9,10 +9,10 @@
     appearance: none;
     min-height: 36px;
     padding: 6px 12px;
-    border: 1px solid var(--wizard-purple-200);
+    border: 1px solid var(--decision-color-border);
     border-radius: 999px;
-    background: white;
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
     font: inherit;
     font-size: .8rem;
     font-weight: 800;
@@ -20,6 +20,6 @@
 }
 
 .jif-copy-status {
-    color: var(--wizard-purple-600);
+    color: var(--decision-color-brand);
     font-size: .8rem;
 }

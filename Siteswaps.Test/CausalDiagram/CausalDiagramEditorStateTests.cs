@@ -75,10 +75,25 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
-    public void PresetCatalog_ContainsLoadableSiteswapAndPolyrhythmStarters()
+    public void PresetCatalog_ContainsLoadableAsynchronousAndSynchronousStarters()
     {
-        CausalDiagramEditorPresets.All.Should().Contain(preset => preset.Group == "Siteswap");
-        CausalDiagramEditorPresets.All.Should().Contain(preset => preset.Group == "Polyrhythmus");
+        CausalDiagramEditorPresets
+            .VisibleAsynchronous.Select(preset => preset.Id)
+            .Should()
+            .BeEquivalentTo(
+                "siteswap-3",
+                "feeding-7-5",
+                "jugglers-1",
+                "jugglers-2",
+                "jugglers-3",
+                "jugglers-4"
+            );
+        CausalDiagramEditorPresets
+            .VisibleSynchronous.Select(preset => preset.Id)
+            .Should()
+            .ContainSingle()
+            .Which.Should()
+            .Be("jugglers-2-synchronous-4");
         foreach (var preset in CausalDiagramEditorPresets.All)
         {
             var state = preset.Create();

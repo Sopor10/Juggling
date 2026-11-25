@@ -17,7 +17,7 @@
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--wizard-purple-600);
+    color: var(--decision-color-brand);
     margin: 0 0 0.65rem;
 }
 
@@ -27,8 +27,8 @@
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
-    border: 2px solid var(--wizard-purple-100);
-    background: white;
+    border: 2px solid var(--decision-color-border-subtle);
+    background: var(--decision-color-white);
 }
 
 .settings-segment {
@@ -39,11 +39,11 @@
     padding: 10px 12px;
     border: none;
     border-radius: 0;
-    border-right: 2px solid var(--wizard-purple-100);
-    background: white;
-    color: var(--wizard-purple-500);
+    border-right: 2px solid var(--decision-color-border-subtle);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-accent);
     font-weight: 800;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 13px;
     cursor: pointer;
     transition: background 0.12s ease, color 0.12s ease;
@@ -54,8 +54,8 @@
 }
 
 .settings-segment.active {
-    background: var(--wizard-purple-700);
-    color: white;
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .settings-segment:active {
@@ -65,16 +65,16 @@
 .settings-input-number {
     display: block;
     width: 100%;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 12px;
     padding: 10px 12px;
     font-weight: 800;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 15px;
     min-height: 44px;
     text-align: center;
-    color: var(--wizard-purple-500);
-    background: white;
+    color: var(--decision-color-brand-accent);
+    background: var(--decision-color-white);
     box-sizing: border-box;
 }
 
@@ -100,14 +100,14 @@
     min-height: 48px;
     padding: 0 20px;
     border-radius: 999px;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
     border: none;
     cursor: pointer;
-    background: linear-gradient(180deg, #ffb838, var(--wizard-orange));
-    color: var(--wizard-purple-950);
-    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
+    color: var(--decision-color-text-strong);
+    box-shadow: var(--decision-shadow-action-primary);
 }
 
 .settings-btn-primary:active {
@@ -117,14 +117,14 @@
 .settings-update-section {
     margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--wizard-purple-100);
+    border-top: 1px solid var(--decision-color-border-subtle);
 }
 
 .settings-update-hint {
     margin: 0 0 1rem;
     text-align: center;
     font-size: 0.875rem;
-    color: var(--wizard-purple-600);
+    color: var(--decision-color-brand);
 }
 
 .settings-update-status {
@@ -132,7 +132,7 @@
     text-align: center;
     font-size: 0.875rem;
     font-weight: 700;
-    color: var(--wizard-purple-700);
+    color: var(--decision-color-brand-strong);
 }
 
 .settings-update-section .settings-actions {
@@ -150,13 +150,13 @@
     min-height: 48px;
     padding: 0 20px;
     border-radius: 999px;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
-    border: 2px solid var(--wizard-purple-100);
+    border: 2px solid var(--decision-color-border-subtle);
     cursor: pointer;
-    background: white;
-    color: var(--wizard-purple-700);
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
 }
 
 .settings-btn-secondary:disabled {

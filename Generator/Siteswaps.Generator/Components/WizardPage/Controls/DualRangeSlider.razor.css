@@ -11,9 +11,9 @@
 
 .wizard-dualrange-echo {
     text-align: center;
-    font-family: var(--wizard-font-display);
+    font-family: var(--decision-font-display);
     font-size: 28px;
-    color: var(--wizard-purple-800);
+    color: var(--decision-color-text-secondary);
     margin-bottom: 12px;
 }
 
@@ -36,14 +36,14 @@
     height: 6px;
     margin-top: -3px;
     border-radius: 6px;
-    background: var(--wizard-purple-100);
+    background: var(--decision-color-border-subtle);
 }
 
 .wizard-dualrange-fill {
     position: absolute;
     height: 6px;
     border-radius: 6px;
-    background: linear-gradient(90deg, var(--wizard-purple-400), var(--wizard-purple-700));
+    background: linear-gradient(90deg, var(--decision-color-text-muted), var(--decision-color-brand-strong));
 }
 
 .wizard-dualrange-input {
@@ -87,7 +87,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    box-shadow: var(--wizard-shadow-sm);
+    box-shadow: var(--decision-shadow-control);
     cursor: grab;
     margin-top: 0;
 }
@@ -97,28 +97,28 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    box-shadow: var(--wizard-shadow-sm);
+    box-shadow: var(--decision-shadow-control);
     cursor: grab;
 }
 
 .wizard-dualrange-input.is-low::-webkit-slider-thumb {
-    background: white;
-    border: 3px solid var(--wizard-purple-700);
+    background: var(--decision-color-white);
+    border: 3px solid var(--decision-color-brand-strong);
 }
 
 .wizard-dualrange-input.is-low::-moz-range-thumb {
-    background: white;
-    border: 3px solid var(--wizard-purple-700);
+    background: var(--decision-color-white);
+    border: 3px solid var(--decision-color-brand-strong);
 }
 
 .wizard-dualrange-input.is-high::-webkit-slider-thumb {
-    background: var(--wizard-orange);
-    border: 3px solid var(--wizard-purple-950);
+    background: var(--decision-color-action-primary);
+    border: 3px solid var(--decision-color-text-strong);
 }
 
 .wizard-dualrange-input.is-high::-moz-range-thumb {
-    background: var(--wizard-orange);
-    border: 3px solid var(--wizard-purple-950);
+    background: var(--decision-color-action-primary);
+    border: 3px solid var(--decision-color-text-strong);
 }
 
 .wizard-dualrange-bounds {
@@ -126,6 +126,6 @@
     justify-content: space-between;
     font-size: 11px;
     font-weight: 600;
-    color: var(--wizard-purple-400);
+    color: var(--decision-color-text-muted);
     margin: 4px 4px 0;
 }

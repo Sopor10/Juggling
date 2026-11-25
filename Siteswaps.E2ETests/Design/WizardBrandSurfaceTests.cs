@@ -16,23 +16,23 @@ public class WizardBrandSurfaceTests(SharedBlazorFixture host) : IClassFixture<S
         await using var design = await WizardDesignPage.OpenAsync(host.Fixture);
 
         DesignColor
-            .NormalizeHex(await design.CssVarAsync("--wizard-purple-800"))
+            .NormalizeHex(await design.CssVarAsync("--decision-color-text-secondary"))
             .Should()
             .Be(DesignColor.NormalizeHex(DesignColor.BrandPurple800));
         DesignColor
-            .NormalizeHex(await design.CssVarAsync("--wizard-purple-600"))
+            .NormalizeHex(await design.CssVarAsync("--decision-color-brand"))
             .Should()
             .Be(DesignColor.NormalizeHex(DesignColor.BrandPurple600));
         DesignColor
-            .NormalizeHex(await design.CssVarAsync("--wizard-purple-500"))
+            .NormalizeHex(await design.CssVarAsync("--decision-color-brand-accent"))
             .Should()
             .Be(DesignColor.NormalizeHex(DesignColor.BrandPurple500));
         DesignColor
-            .NormalizeHex(await design.CssVarAsync("--wizard-orange"))
+            .NormalizeHex(await design.CssVarAsync("--decision-color-action-primary"))
             .Should()
             .Be(DesignColor.NormalizeHex(DesignColor.BrandOrange));
         DesignColor
-            .NormalizeHex(await design.CssVarAsync("--wizard-bg"))
+            .NormalizeHex(await design.CssVarAsync("--decision-color-surface-page"))
             .Should()
             .Be(DesignColor.NormalizeHex(DesignColor.BrandLavenderBg));
     }

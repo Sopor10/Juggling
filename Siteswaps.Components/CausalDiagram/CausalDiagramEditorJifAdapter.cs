@@ -431,7 +431,8 @@ public static class CausalDiagramEditorJifAdapter
     public static bool TryMap(
         CausalDiagramEditorState state,
         out JifPattern? pattern,
-        out string error
+        out string error,
+        bool colorOrbits = false
     )
     {
         pattern = null;
@@ -442,7 +443,8 @@ public static class CausalDiagramEditorJifAdapter
             pattern = JifMapper.Map(
                 ExpandToHandPeriod(diagram),
                 propType: "club",
-                patternType: "passingSiteswap"
+                patternType: "passingSiteswap",
+                colorOrbits: colorOrbits
             );
             pattern = NormalizeAnimationTimeScale(state, pattern);
             error = string.Empty;

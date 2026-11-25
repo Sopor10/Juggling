@@ -1,7 +1,11 @@
 @using System.Globalization
 @using System.Reflection
+@using System.Text
+@using System.Text.Json
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.JSInterop
+@using Siteswaps.Components.Layout
+@using Siteswaps.Components.Wizard
 @using Siteswaps.Components.CausalDiagram
 @using Siteswaps.Jif.Components.Navigation
 @using Siteswaps.Components.Details.Diagrams
@@ -12,12 +16,74 @@
 @inject IJSRuntime JS
 @implements IAsyncDisposable
 
-<main class="causal-editor @(Embedded ? "embedded" : "sd-page")">
+<div class="causal-editor @(Embedded ? "embedded" : "sd-page")">
+  <WizardShell Enabled="@(!Embedded)" HeaderContent="@(Embedded ? null : WizardHeader)" FooterContent="@(Embedded ? null : WizardFooter)">
     @if (_invalidState)
     {
         <p class="editor-notice" role="status">Der Linkzustand war ungültig oder wird nicht unterstützt. Ein neues Diagramm wurde geladen.</p>
     }
-    <div class="sd-sheet editor-content">
+    <div class="wizard-steps causal-wizard-steps">
+      <WizardStepPanel StepIndex="0" IsActive="@(!Embedded && _wizardStep == 1)">
+        <section class="editor-setup">
+          <div class="editor-setup-grid">
+            <label class="editor-field editor-setup-preset">Diagrammvorlage
+              <select value="@_preset" @onchange="LoadSetupPreset">
+                  <option value="custom">Eigenes Diagramm</option>
+                  <optgroup label="Asynchron">
+                      @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
+                      {
+                          <option value="@preset.Id">@preset.Label</option>
+                      }
+                  </optgroup>
+                  <optgroup label="Synchron">
+                      @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
+                      {
+                          <option value="@preset.Id">@preset.Label</option>
+                      }
+                  </optgroup>
+              </select>
+            </label>
+          </div>
+          <section class="editor-jugglers" aria-labelledby="editor-jugglers-title">
+            <div class="editor-jugglers-heading">
+              <h2 id="editor-jugglers-title">Jongleure</h2>
+              <button type="button" class="editor-action" @onclick="AddSetupJuggler" disabled="@(_setupJugglers.Count >= 16)">+ Jongleur</button>
+            </div>
+            <div class="editor-juggler-rows">
+              @foreach (var (juggler, index) in _setupJugglers.Select((item, index) => (item, index)))
+              {
+                var currentJuggler = juggler;
+                <div class="editor-juggler-row">
+                  <label class="editor-field editor-juggler-name">
+                    <span>Jongleur @(index + 1) · Name</span>
+                    <input type="text" maxlength="32" value="@juggler.Name" @oninput="e => SetSetupJugglerName(currentJuggler.Id, e.Value?.ToString())" />
+                  </label>
+                  <label class="editor-field editor-juggler-beats">
+                    <span>Beats</span>
+                    <input type="number" min="1" max="64" value="@juggler.BeatCount" @onchange="e => SetSetupJugglerBeats(currentJuggler.Id, e.Value?.ToString())" />
+                  </label>
+                  <label class="editor-field editor-juggler-hands">
+                    <span>Handreihenfolge</span>
+                    <input type="text" maxlength="16" value="@juggler.HandOrder" aria-label="Handreihenfolge für Jongleur @(index + 1)" @oninput="e => SetSetupJugglerHands(currentJuggler.Id, e.Value?.ToString())" />
+                  </label>
+                  <label class="editor-field editor-juggler-offset">
+                    <span>Versatz</span>
+                    <input type="number" min="0" max="1" step="0.01" value="@FormatPhaseOffset(juggler.PhaseOffset)" @onchange="e => SetSetupJugglerOffset(currentJuggler.Id, e.Value?.ToString())" />
+                  </label>
+                  <button type="button" class="editor-action editor-remove-juggler" aria-label="Jongleur @(index + 1) löschen" title="Jongleur @(index + 1) löschen" @onclick="() => RemoveSetupJuggler(currentJuggler.Id)" disabled="@(_setupJugglers.Count <= 1)">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M4 7h16M10 11v6m4-6v6M5.5 7l1 14h11l1-14M9 7V4h6v3M3 7h18" /></svg>
+                  </button>
+                </div>
+              }
+            </div>
+          </section>
+          @if (_setupValidationError is not null)
+          {
+            <p class="editor-notice" role="alert">@_setupValidationError</p>
+          }
+        </section>
+      </WizardStepPanel>
+      <WizardStepPanel StepIndex="1" IsActive="@(Embedded || _wizardStep == 2)">
       <div class="diagram-shell">
         @if (ShowOptions)
         {
@@ -28,20 +94,14 @@
               <label class="editor-field">Diagrammvorlage
                 <select value="@_preset" @onchange="LoadPreset">
                     <option value="custom">Eigenes Diagramm</option>
-                    <optgroup label="Siteswap">
-                        @foreach (var preset in CausalDiagramEditorPresets.VisibleSiteswap)
+                    <optgroup label="Asynchron">
+                        @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
                         {
                             <option value="@preset.Id">@preset.Label</option>
                         }
                     </optgroup>
-                    <optgroup label="4-händige Siteswaps">
-                        @foreach (var preset in CausalDiagramEditorPresets.All.Where(preset => preset.Group == "4-händig"))
-                        {
-                            <option value="@preset.Id">@preset.Label</option>
-                        }
-                    </optgroup>
-                    <optgroup label="Polyrhythmus">
-                        @foreach (var preset in CausalDiagramEditorPresets.VisiblePolyrhythms)
+                    <optgroup label="Synchron">
+                        @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
                         {
                             <option value="@preset.Id">@preset.Label</option>
                         }
@@ -176,7 +236,15 @@
       @if (ShowAnimation)
       {
       <section class="causal-editor-animation sdv-card" aria-label="Passist-Animation">
-        <h2>Passist-Animation</h2>
+        <div class="causal-editor-animation-heading">
+          <h2>Passist-Animation</h2>
+          <div class="causal-animation-orbit-toggle" role="radiogroup" aria-label="Wurffarben">
+            <button type="button" role="radio" class="@(OrbitColorsEnabled ? "active" : null)"
+                    aria-checked="@OrbitColorsEnabled" @onclick="() => SetOrbitColors(true)">Orbits</button>
+            <button type="button" role="radio" class="@(!OrbitColorsEnabled ? "active" : null)"
+                    aria-checked="@(!OrbitColorsEnabled)" @onclick="() => SetOrbitColors(false)">Pass / Self</button>
+          </div>
+        </div>
         @if (_animationJif is not null)
         {
             <PassistAnimation Jif="@(new JifInput.Structured(_animationJif))" AnimationSpeed="0.8" Teaser="true" EnableSettings="false" ShowSpeedLabel="false" ShowLayoutEditor="false" />
@@ -187,12 +255,33 @@
         }
       </section>
       }
-    </div>
-</main>
+      </WizardStepPanel>
+      </div>
+  </WizardShell>
+</div>
 
 @code {
+    private RenderFragment WizardHeader => @<ProgressDots Total="2" Current="@(_wizardStep - 1)" Visited="_visitedWizardSteps" StepSelected="SelectWizardStep" />;
+
+    private RenderFragment WizardFooter => @<div class="wizard-nav">
+        <div class="wizard-measure">
+            <div class="wizard-nav-buttons">
+                <button type="button" class="wizard-btn-ghost wizard-back-btn @(_wizardStep == 1 ? "wizard-invisible" : "")"
+                        disabled="@(_wizardStep == 1)" @onclick="BackToSetup">Zurück</button>
+                @if (_wizardStep == 1)
+                {
+                    <button type="button" class="wizard-flex-1 wizard-btn-primary" @onclick="ContinueToEditor">Weiter zum Diagramm</button>
+                }
+            </div>
+        </div>
+    </div>;
+
     [Parameter]
     public string? StateToken { get; set; }
+    [Parameter]
+    public string? SetupToken { get; set; }
+    [Parameter]
+    public int? WizardStep { get; set; }
     [Parameter]
     public CausalDiagramEditorState? ExternalState { get; set; }
     [Parameter]
@@ -223,10 +312,26 @@
     private (string ThrowId, int Cycle)? _editingThrow;
     private (string ThrowId, int Cycle)? _handMenuThrow;
     private bool _invalidState;
+    private bool _wizardInitialized;
+    private int? _lastWizardStepParameter;
+    private int _wizardStep = 1;
+    private readonly HashSet<int> _visitedWizardSteps = [0];
+    private List<SetupJugglerSettings> _setupJugglers = [];
+    private List<SetupJugglerSettings> _stateSetupJugglers = [];
+    private string? _setupValidationError;
     private string _preset = "feeding-7-5";
     private (string EdgeId, int SourceCycle, decimal X, decimal Y)? _edgeDragPreview;
     private JifPattern? _animationJif;
+    private bool OrbitColorsEnabled { get; set; } = true;
     private string _animationUnavailable = "Für dieses Diagramm ist keine Passist-Animation verfügbar.";
+    private sealed record SetupJugglerSettings(
+        string Id,
+        string Name,
+        int BeatCount,
+        string HandOrder,
+        decimal PhaseOffset
+    );
+    private sealed record SetupDraft(string PresetId, SetupJugglerSettings[] Jugglers);
     private static string EditorBuildVersion =>
         typeof(CausalDiagramEditorView)
             .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -242,36 +347,92 @@
 
     protected override void OnParametersSet()
     {
+        InitializeWizardState();
+        UpdateWizardStepFromParameter();
+        LoadStateFromParameters();
+
+        if (!Embedded && _wizardStep == 1 && TryDecodeSetupDraft(SetupToken, out var setupDraft))
+        {
+            _preset = setupDraft.PresetId;
+            _setupJugglers = setupDraft.Jugglers.ToList();
+        }
+
+        if (ShowAnimation)
+            RefreshAnimation();
+    }
+
+    private void InitializeWizardState()
+    {
+        if (!_wizardInitialized)
+        {
+            _wizardStep = GetInitialWizardStep();
+            var hasState = ExternalState is not null || !string.IsNullOrEmpty(StateToken);
+            if (hasState || _wizardStep == 2)
+                _visitedWizardSteps.Add(1);
+            _lastWizardStepParameter = WizardStep;
+            _wizardInitialized = true;
+        }
+    }
+
+    private int GetInitialWizardStep()
+    {
+        if (Embedded)
+            return 2;
+        if (WizardStep is 1 or 2)
+            return WizardStep.Value;
+        if (!string.IsNullOrEmpty(SetupToken))
+            return 1;
+        return ExternalState is not null || !string.IsNullOrEmpty(StateToken) ? 2 : 1;
+    }
+
+    private void UpdateWizardStepFromParameter()
+    {
+        if (Embedded || WizardStep is not (1 or 2) || WizardStep == _lastWizardStepParameter)
+            return;
+        _wizardStep = WizardStep.Value;
+        _lastWizardStepParameter = WizardStep;
+    }
+
+    private void LoadStateFromParameters()
+    {
         if (ExternalState is not null)
         {
-            _state = ExternalState;
-            _preset = _state.PresetId;
-            _invalidState = false;
-            if (ShowAnimation) RefreshAnimation();
+            ApplyLoadedState(ExternalState, invalid: false);
             return;
         }
+
         if (CausalDiagramEditorState.TryDecode(StateToken, out var decoded) && decoded is not null)
         {
-            _state = decoded;
-            _preset = decoded.PresetId;
-            _invalidState = false;
-        }
-        else if (!string.IsNullOrEmpty(StateToken))
-        {
-            _state = CausalDiagramEditorState.CreateFeeding75();
-            _preset = _state.PresetId;
-            _invalidState = true;
+            ApplyLoadedState(decoded, invalid: false);
         }
         else
         {
-            _state = CausalDiagramEditorState.CreateFeeding75();
-            _preset = _state.PresetId;
+            ApplyLoadedState(CausalDiagramEditorState.CreateFeeding75(), invalid: !string.IsNullOrEmpty(StateToken));
         }
-        if (ShowAnimation) RefreshAnimation();
+    }
+
+    private void ApplyLoadedState(CausalDiagramEditorState state, bool invalid)
+    {
+        _state = state;
+        _preset = state.PresetId;
+        _invalidState = invalid;
+        SyncSetupFromState();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender && !Embedded)
+        {
+            if (_wizardStep == 1 && string.IsNullOrEmpty(SetupToken))
+                PersistSetupDraft();
+            else if (WizardStep is null)
+                UrlStateNavigation.SetQueryParameter(
+                    "step",
+                    _wizardStep.ToString(CultureInfo.InvariantCulture),
+                    replace: true
+                );
+        }
+
         if (firstRender && (ShowOptions || AllowNodeMove || AllowThrowActions || AllowJugglerActions || AllowArrowEditing))
         {
             _module = await JS.InvokeAsync<IJSObjectReference>(
@@ -651,7 +812,403 @@
         _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create() ?? CausalDiagramEditorState.CreateEmpty();
         _state.ActiveJugglerId = _state.Jugglers[0].Id;
         _selectedId = null;
+        SyncSetupFromState();
         StateChanged();
+    }
+
+    private void LoadSetupPreset(ChangeEventArgs e)
+    {
+        _preset = e.Value?.ToString() ?? "custom";
+        _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create()
+            ?? CausalDiagramEditorState.CreateEmpty();
+        if (_preset == "custom" && _state.Throws.Count == 0)
+            _state.Throws.Add(new EditorThrow("A1", _state.Jugglers[0].Id, "R", 0m, 1m));
+        _state.ActiveJugglerId = _state.Jugglers[0].Id;
+        _selectedId = null;
+        SyncSetupFromState();
+        RefreshAnimation();
+        PersistSetupDraft(includeBaseState: true);
+    }
+
+    private void SyncSetupFromState()
+    {
+        var setupRows = _state.Jugglers.Select(juggler =>
+        {
+            var throws = _state.Throws
+                .Where(item => item.JugglerId == juggler.Id)
+                .OrderBy(item => item.StartTime)
+                .ToList();
+            var beatCount = Math.Clamp(throws.Count, 1, 64);
+            var handSequence = throws.Count == 0
+                ? "R"
+                : string.Concat(throws.Select(item => item.Hand == "L" ? 'L' : 'R'));
+            var beatDuration = _state.CycleLength / beatCount;
+            var phaseOffset = throws.Count == 0 || beatDuration <= 0
+                ? 0m
+                : Math.Clamp(Math.Round(throws[0].StartTime / beatDuration, 2, MidpointRounding.AwayFromZero), 0m, 1m);
+
+            return new SetupJugglerSettings(
+                juggler.Id,
+                juggler.Name,
+                beatCount,
+                ShortestRepeatingHandOrder(handSequence),
+                phaseOffset
+            );
+        }).ToList();
+
+        if (setupRows.Count == 0)
+            setupRows.Add(new SetupJugglerSettings("setup-1", "A", 1, "R", 0m));
+
+        _setupJugglers = setupRows;
+        _stateSetupJugglers = setupRows.ToList();
+        _setupValidationError = null;
+    }
+
+    private static string ShortestRepeatingHandOrder(string sequence)
+    {
+        for (var length = 1; length <= Math.Min(16, sequence.Length); length++)
+        {
+            if (Enumerable.Range(length, sequence.Length - length)
+                .All(index => sequence[index] == sequence[index % length]))
+                return sequence[..length];
+        }
+
+        return sequence[..Math.Min(16, sequence.Length)];
+    }
+
+    private static string FormatPhaseOffset(decimal offset) =>
+        offset.ToString("0.##", CultureInfo.InvariantCulture);
+
+    private static string EncodeSetupDraft(SetupDraft draft) =>
+        Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(draft))
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+
+    private static bool TryDecodeSetupDraft(string? token, out SetupDraft draft)
+    {
+        draft = new SetupDraft("custom", []);
+        if (string.IsNullOrWhiteSpace(token) || token.Length > 8_000)
+            return false;
+
+        try
+        {
+            var base64 = token.Replace('-', '+').Replace('_', '/');
+            base64 = base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
+            var decoded = JsonSerializer.Deserialize<SetupDraft>(Convert.FromBase64String(base64));
+            if (
+                decoded is null
+                || !CausalDiagramEditorPresets.IsKnownId(decoded.PresetId)
+                || decoded.Jugglers is null
+                || decoded.Jugglers.Length is < 1 or > 16
+                || decoded.Jugglers.Any(juggler =>
+                    juggler is null
+                    || string.IsNullOrEmpty(juggler.Id)
+                    || juggler.Id.Length > 64
+                    || juggler.Name is null
+                    || juggler.Name.Length > 128
+                    || juggler.HandOrder is null
+                    || juggler.HandOrder.Length > 64
+                )
+                || decoded.Jugglers.Select(juggler => juggler.Id)
+                    .Distinct(StringComparer.Ordinal).Count() != decoded.Jugglers.Length
+            )
+                return false;
+
+            draft = decoded;
+            return true;
+        }
+        catch (Exception exception) when (exception is FormatException or JsonException or ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    private void PersistSetupDraft(bool includeBaseState = false)
+    {
+        if (Embedded)
+            return;
+
+        var token = EncodeSetupDraft(new SetupDraft(_preset, _setupJugglers.ToArray()));
+        var uri = UrlStateNavigation.GetUriWithQueryParameter("setup", token);
+        uri = UrlStateNavigation.WithQueryParameter(
+            uri,
+            "step",
+            _wizardStep.ToString(CultureInfo.InvariantCulture)
+        );
+        if (includeBaseState)
+            uri = UrlStateNavigation.WithQueryParameter(uri, "state", _state.Encode());
+
+        UrlStateNavigation.NavigateTo(uri, replace: true);
+    }
+
+    private void SetSetupJugglerName(string id, string? name) =>
+        UpdateSetupJuggler(id, juggler => juggler with { Name = name ?? string.Empty });
+
+    private void SetSetupJugglerBeats(string id, string? value)
+    {
+        if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var beats))
+            UpdateSetupJuggler(id, juggler => juggler with { BeatCount = beats });
+    }
+
+    private void SetSetupJugglerHands(string id, string? handOrder) =>
+        UpdateSetupJuggler(id, juggler => juggler with
+        {
+            HandOrder = (handOrder ?? string.Empty).Replace(" ", string.Empty, StringComparison.Ordinal).ToUpperInvariant(),
+        });
+
+    private void SetSetupJugglerOffset(string id, string? value)
+    {
+        if (decimal.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var offset))
+            UpdateSetupJuggler(id, juggler => juggler with { PhaseOffset = offset });
+    }
+
+    private void UpdateSetupJuggler(string id, Func<SetupJugglerSettings, SetupJugglerSettings> update)
+    {
+        var index = _setupJugglers.FindIndex(juggler => juggler.Id == id);
+        if (index >= 0)
+            _setupJugglers[index] = update(_setupJugglers[index]);
+        _setupValidationError = null;
+        PersistSetupDraft();
+    }
+
+    private void AddSetupJuggler()
+    {
+        if (_setupJugglers.Count >= 16)
+            return;
+
+        var index = _setupJugglers.Count;
+        var id = $"setup-{Guid.NewGuid():N}";
+        _setupJugglers.Add(new SetupJugglerSettings(id, ((char)('A' + index)).ToString(), 1, "R", 0m));
+        _setupValidationError = null;
+        PersistSetupDraft();
+    }
+
+    private void RemoveSetupJuggler(string id)
+    {
+        if (_setupJugglers.Count <= 1)
+            return;
+
+        _setupJugglers.RemoveAll(juggler => juggler.Id == id);
+        _setupValidationError = null;
+        PersistSetupDraft();
+    }
+
+    private void BackToSetup()
+    {
+        SyncSetupFromState();
+        _wizardStep = 1;
+        PersistSetupDraft();
+    }
+
+    private void SelectWizardStep(int step)
+    {
+        if (step == 0)
+            BackToSetup();
+        else if (step == 1 && _visitedWizardSteps.Contains(step))
+            ContinueToEditor();
+    }
+
+    private void ContinueToEditor()
+    {
+        if (!ValidateSetupJugglers(out var validationError))
+        {
+            _setupValidationError = validationError;
+            return;
+        }
+
+        if (!ApplySetupChanges(out validationError))
+        {
+            _setupValidationError = validationError;
+            return;
+        }
+
+        _setupValidationError = null;
+        CompleteEditorTransition();
+    }
+
+    private bool ApplySetupChanges(out string error)
+    {
+        if (SetupSettingsChanged())
+            return ApplyChangedJugglerSettings(out error);
+
+        ApplyJugglerNames();
+        error = string.Empty;
+        return true;
+    }
+
+    private bool SetupSettingsChanged() => _setupJugglers.Count != _stateSetupJugglers.Count
+        || _setupJugglers.Zip(_stateSetupJugglers).Any(pair =>
+            pair.First.Id != pair.Second.Id
+            || pair.First.BeatCount != pair.Second.BeatCount
+            || pair.First.HandOrder != pair.Second.HandOrder
+            || pair.First.PhaseOffset != pair.Second.PhaseOffset);
+
+    private bool ApplyChangedJugglerSettings(out string error)
+    {
+        if (!TryCreateSetupState(out var configuredState, out error) || configuredState is null)
+            return false;
+
+        configuredState.Repetitions = _state.Repetitions;
+        configuredState.SnapEnabled = _state.SnapEnabled;
+        configuredState.TimelineWidth = _state.TimelineWidth;
+        configuredState.LaneSpacing = _state.LaneSpacing;
+        configuredState.SnapStep = _state.SnapStep;
+        configuredState.PresetId = "custom";
+        _state = configuredState;
+        _preset = "custom";
+        return true;
+    }
+
+    private void ApplyJugglerNames()
+    {
+        var namesChanged = _setupJugglers.Count != _stateSetupJugglers.Count
+            || _setupJugglers.Zip(_stateSetupJugglers).Any(pair =>
+                pair.First.Id != pair.Second.Id || pair.First.Name != pair.Second.Name);
+        foreach (var setupJuggler in _setupJugglers)
+        {
+            var index = _state.Jugglers.FindIndex(juggler => juggler.Id == setupJuggler.Id);
+            if (index >= 0)
+                _state.Jugglers[index] = _state.Jugglers[index] with { Name = setupJuggler.Name.Trim() };
+        }
+
+        if (namesChanged)
+        {
+            _preset = "custom";
+            _state.PresetId = "custom";
+        }
+    }
+
+    private void CompleteEditorTransition()
+    {
+        if (!_state.Jugglers.Any(item => item.Id == _state.ActiveJugglerId))
+            _state.ActiveJugglerId = _state.Jugglers[0].Id;
+        _state.SynchronizeHeights();
+        _selectedId = null;
+        _visitedWizardSteps.Add(1);
+        _wizardStep = 2;
+        StateChanged();
+    }
+
+    private bool ValidateSetupJugglers(out string error)
+    {
+        if (_setupJugglers.Count is < 1 or > 16)
+        {
+            error = "Das Diagramm benötigt zwischen 1 und 16 Jongleure.";
+            return false;
+        }
+
+        if (_setupJugglers.Any(juggler =>
+            string.IsNullOrWhiteSpace(juggler.Name)
+            || juggler.Name.Trim().Length > 32
+            || juggler.Name.Any(char.IsControl)))
+        {
+            error = "Gib für jeden Jongleur einen Namen mit höchstens 32 Zeichen ein.";
+            return false;
+        }
+
+        if (_setupJugglers.Select(juggler => juggler.Name.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase).Count() != _setupJugglers.Count)
+        {
+            error = "Die Namen der Jongleure müssen eindeutig sein.";
+            return false;
+        }
+
+        if (_setupJugglers.Any(juggler => juggler.BeatCount is < 1 or > 64))
+        {
+            error = "Die Beat-Zahl pro Jongleur muss zwischen 1 und 64 liegen.";
+            return false;
+        }
+
+        if (_setupJugglers.Any(juggler =>
+            juggler.HandOrder.Length is < 1 or > 16
+            || juggler.HandOrder.Any(hand => hand is not ('R' or 'L'))))
+        {
+            error = "Die Handreihenfolge darf 1 bis 16 Zeichen enthalten: R und/oder L.";
+            return false;
+        }
+
+        if (_setupJugglers.Any(juggler => juggler.PhaseOffset is < 0m or > 1m))
+        {
+            error = "Der Versatz muss zwischen 0 und 1 liegen.";
+            return false;
+        }
+
+        if (_setupJugglers.Sum(juggler => juggler.BeatCount) > 500)
+        {
+            error = "Die Jongleur-Zeilen dürfen zusammen höchstens 500 Beats enthalten.";
+            return false;
+        }
+
+        error = string.Empty;
+        return true;
+    }
+
+    private bool TryCreateSetupState(out CausalDiagramEditorState? configuredState, out string error)
+    {
+        configuredState = null;
+        var lines = _setupJugglers
+            .Select((juggler, index) => CreateSetupJugglerLine(juggler, index))
+            .ToList();
+
+        if (!CausalDiagramEditorState.TryCreateFeeding(string.Join('\n', lines), out configuredState, out _)
+            || configuredState is null)
+        {
+            error = "Diese Beat-Kombination erzeugt ein zu langes gemeinsames Wiederholungsmuster. Verringere eine Beat-Zahl.";
+            return false;
+        }
+
+        for (var index = 0; index < _setupJugglers.Count; index++)
+            configuredState.Jugglers[index] = configuredState.Jugglers[index] with
+            {
+                Name = _setupJugglers[index].Name.Trim(),
+            };
+
+        configuredState.PresetId = "custom";
+        error = string.Empty;
+        return true;
+    }
+
+    private string CreateSetupJugglerLine(SetupJugglerSettings setupJuggler, int index)
+    {
+        var existingThrows = _state.Throws
+            .Where(item => item.JugglerId == setupJuggler.Id)
+            .OrderBy(item => item.StartTime)
+            .ToList();
+        var throwTokens = Enumerable
+            .Range(0, setupJuggler.BeatCount)
+            .Select(beat => CreateSetupThrowToken(existingThrows, beat, index));
+        var offset = setupJuggler.PhaseOffset.ToString("0.##", CultureInfo.InvariantCulture);
+        return $"J{index + 1}: ({setupJuggler.HandOrder} {offset}) {string.Join(", ", throwTokens)}";
+    }
+
+    private string CreateSetupThrowToken(
+        IReadOnlyList<EditorThrow> existingThrows,
+        int beat,
+        int defaultTargetIndex
+    )
+    {
+        if (existingThrows.Count == 0)
+            return $"1>J{defaultTargetIndex + 1}";
+
+        var source = existingThrows[beat % existingThrows.Count];
+        var height = Math.Clamp((int)Math.Round(source.Height, MidpointRounding.AwayFromZero), 1, 100);
+        var targetIndex = FindTargetJugglerIndex(source, defaultTargetIndex);
+        return $"{height}>J{targetIndex + 1}";
+    }
+
+    private int FindTargetJugglerIndex(EditorThrow source, int defaultTargetIndex)
+    {
+        var edge = _state.CausalEdges.FirstOrDefault(item => item.FromThrowId == source.Id);
+        if (edge is null)
+            return defaultTargetIndex;
+
+        var targetThrow = _state.Throws.FirstOrDefault(item => item.Id == edge.ToThrowId);
+        if (targetThrow is null)
+            return defaultTargetIndex;
+
+        var targetIndex = _setupJugglers.FindIndex(item => item.Id == targetThrow.JugglerId);
+        return targetIndex >= 0 ? targetIndex : defaultTargetIndex;
     }
 
     private void StateChanged() => PersistState(diagramChanged: false);
@@ -667,12 +1224,20 @@
         }
         _state.Repetitions = Math.Clamp(_state.Repetitions, 1, 20);
         RefreshAnimation();
-        UrlStateNavigation.SetQueryParameter("state", _state.Encode());
+        var uri = UrlStateNavigation.GetUriWithQueryParameter("state", _state.Encode());
+        uri = UrlStateNavigation.WithQueryParameter(
+            uri,
+            "step",
+            _wizardStep.ToString(CultureInfo.InvariantCulture)
+        );
+        if (_wizardStep == 2)
+            uri = UrlStateNavigation.WithQueryParameter(uri, "setup", null);
+        UrlStateNavigation.NavigateTo(uri);
     }
 
     private void RefreshAnimation()
     {
-        if (CausalDiagramEditorJifAdapter.TryMap(_state, out var pattern, out var error) && pattern is not null)
+        if (CausalDiagramEditorJifAdapter.TryMap(_state, out var pattern, out var error, OrbitColorsEnabled) && pattern is not null)
         {
             _animationJif = pattern;
             _animationUnavailable = "";
@@ -682,6 +1247,15 @@
             _animationJif = null;
             _animationUnavailable = error;
         }
+    }
+
+    private void SetOrbitColors(bool enabled)
+    {
+        if (OrbitColorsEnabled == enabled)
+            return;
+
+        OrbitColorsEnabled = enabled;
+        RefreshAnimation();
     }
 
     public async ValueTask DisposeAsync()

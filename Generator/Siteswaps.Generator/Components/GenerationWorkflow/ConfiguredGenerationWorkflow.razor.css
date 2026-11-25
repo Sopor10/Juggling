@@ -4,11 +4,11 @@
 .configured-generation-workflow ::deep .wizard-chip {
     border-radius: 10px;
     font-weight: 800;
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-family: var(--decision-font-display);
     font-size: 13px;
-    border: 2px solid #e8e1f7;
-    background: white;
-    color: #6b41a8;
+    border: 2px solid var(--decision-color-border-subtle);
+    background: var(--decision-color-white);
+    color: var(--decision-color-text-muted);
     padding: 10px 4px;
     min-height: 44px;
     min-width: 0;
@@ -20,9 +20,9 @@
 }
 
 .configured-generation-workflow ::deep .wizard-chip.active {
-    background: #3c286d;
-    border-color: #3c286d;
-    color: white;
+    background: var(--decision-color-brand-strong);
+    border-color: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
 }
 
 .configured-generation-workflow ::deep .wizard-chip:active {
@@ -42,12 +42,12 @@
     padding: 0 20px;
     border-radius: 999px;
     border: none;
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 16px;
-    background: linear-gradient(180deg, #ffb838, #f9a500);
-    color: #241a3d;
-    box-shadow: 0 6px 16px -4px rgba(249, 165, 0, 0.55);
+    background: linear-gradient(180deg, var(--decision-color-action-primary-highlight), var(--decision-color-action-primary));
+    color: var(--decision-color-text-strong);
+    box-shadow: var(--decision-shadow-action-primary);
     cursor: pointer;
 }
 
@@ -65,11 +65,11 @@
     padding: 0 20px;
     border-radius: 999px;
     border: none;
-    font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 15px;
-    background: #e8e1f7;
-    color: #3c286d;
+    background: var(--decision-color-border-subtle);
+    color: var(--decision-color-brand-strong);
     cursor: pointer;
 }
 
@@ -77,10 +77,10 @@
     min-height: 44px;
     margin-top: 10px;
     padding: 10px 14px;
-    border: 2px dashed #e8e1f7;
+    border: 2px dashed var(--decision-color-border-subtle);
     border-radius: 10px;
     background: transparent;
-    color: #6b41a8;
+    color: var(--decision-color-text-muted);
     font-weight: 700;
     cursor: pointer;
     width: 100%;
@@ -95,13 +95,13 @@
     min-height: 44px;
     text-align: center;
     font-weight: 700;
-    border: 2px solid #e8e1f7;
+    border: 2px solid var(--decision-color-border-subtle);
     border-radius: 10px;
 }
 
 .configured-generation-workflow ::deep .wizard-clamp-feedback {
     text-align: center;
     font-size: 0.75rem;
-    color: #6b41a8;
+    color: var(--decision-color-text-muted);
     margin: 8px 0 0;
 }

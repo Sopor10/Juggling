@@ -1,3 +1,5 @@
+@namespace Siteswaps.Components.Wizard
+
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.Localization
 @using Microsoft.JSInterop
@@ -48,7 +50,7 @@
         {
             _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>(
                 "import",
-                "./_content/Siteswaps.Generator/Components/WizardPage/WizardPage.razor.js");
+                "./_content/Siteswaps.Components/wizardProgress.js");
         }
 
         if (_focusTarget is { } target && _jsModule is not null)

@@ -1,4 +1,4 @@
-namespace Siteswaps.Generator.Components.Layout;
+namespace Siteswaps.Components.Layout;
 
 /// <summary>
 /// Section names for <see cref="WizardShell"/> outlets filled via <c>SectionContent</c>.

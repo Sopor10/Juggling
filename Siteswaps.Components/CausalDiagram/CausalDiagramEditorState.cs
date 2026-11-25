@@ -329,7 +329,7 @@ public sealed class CausalDiagramEditorState
                             NumberStyles.AllowDecimalPoint,
                             CultureInfo.InvariantCulture,
                             out offset
-                        ) || offset is not (0m or 0.5m or 1m)
+                        ) || offset is < 0m or > 1m
                     )
             )
                 return false;

@@ -1,17 +1,12 @@
 .pznav {
-    --pznav-purple-950: #241a3d;
-    --pznav-purple-800: #33225d;
-    --pznav-purple-600: #472779;
-    --pznav-font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
-
     width: 100%;
     background: radial-gradient(
         140% 180% at 15% 0%,
-        var(--pznav-purple-600) 0%,
-        var(--pznav-purple-800) 55%,
-        var(--pznav-purple-950) 100%
+        var(--decision-color-brand) 0%,
+        var(--decision-color-text-secondary) 55%,
+        var(--decision-color-text-strong) 100%
     );
-    box-shadow: 0 4px 16px -6px rgba(36, 26, 61, 0.45);
+    box-shadow: var(--decision-shadow-navigation);
 }
 
 .pznav-bar {
@@ -33,7 +28,7 @@
 }
 
 .pznav-brand-text {
-    font-family: var(--pznav-font-display);
+    font-family: var(--decision-font-display);
     font-weight: 700;
     font-size: 1rem;
 }

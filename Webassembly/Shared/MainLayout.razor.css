@@ -30,7 +30,7 @@ main {
 .content:has(.wizard-page),
 .content:has(.sd-page) {
     padding: 0;
-    background: #f5f3fb;
+    background: var(--decision-color-surface-page);
 }
 
 .content:has(.wizard-page) {
