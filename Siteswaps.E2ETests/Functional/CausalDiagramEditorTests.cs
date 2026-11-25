@@ -325,9 +325,10 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await target.EvaluateAsync(
             "node => node.addEventListener('pointerdown', event => window.__touchDragDownPrevented = event.defaultPrevented)"
         );
-        await page.Locator(".diagram-canvas").EvaluateAsync(
-            "svg => svg.addEventListener('gotpointercapture', event => window.__touchDragSvgCaptured = svg.hasPointerCapture(event.pointerId))"
-        );
+        await page.Locator(".diagram-canvas")
+            .EvaluateAsync(
+                "svg => svg.addEventListener('gotpointercapture', event => window.__touchDragSvgCaptured = svg.hasPointerCapture(event.pointerId))"
+            );
         await target.FocusAsync();
         var positionBeforeArrow = await target.GetAttributeAsync("cx");
         var urlBeforeArrow = page.Url;
