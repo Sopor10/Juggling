@@ -99,7 +99,7 @@ public static class CausalDiagramEditorPresets
             CausalDiagramEditorState.CreateFeeding75
         ),
         new("jugglers-1", "1 Jongleur", AsynchronousGroup, () => CreateJugglerDefault(1)),
-        new("jugglers-2", "2 Jongleure", AsynchronousGroup, () => CreateJugglerDefault(2)),
+        new("jugglers-2", "2 Jongleure · asynchron", AsynchronousGroup, () => CreateJugglerDefault(2)),
         new("jugglers-3", "3 Jongleure", AsynchronousGroup, () => CreateJugglerDefault(3)),
         new("jugglers-4", "4 Jongleure", AsynchronousGroup, () => CreateJugglerDefault(4)),
         new(
