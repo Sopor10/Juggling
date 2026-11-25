@@ -50,3 +50,11 @@ export function startRotate(svg, dotnet, person, pointerId, centerX, centerY) {
 export function stop() {
     if (activeDrag) activeDrag();
 }
+
+export function showDialog(dialog) {
+    if (!dialog.open) dialog.showModal();
+}
+
+export function closeDialog(dialog) {
+    if (dialog.open) dialog.close();
+}
