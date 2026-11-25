@@ -13,7 +13,7 @@
       "url": "_content\/Siteswaps.Components\/Siteswaps.Components.fg4axn04mv.bundle.scp.css"
     },
     {
-      "hash": "sha256-\/ov3aCMmrrMvqWA7D2slfikz0\/avfIrfqNlYmV48E3w=",
+      "hash": "sha256-I+mow4BuczB9FDJrQ2CREbCfXQU\/wnp0MU8DrtC0BnE=",
       "url": "_content\/Siteswaps.Components\/causalDiagramEditor.js"
     },
     {
@@ -185,28 +185,28 @@
       "url": "_framework\/MoreLinq.5njmhjv7yd.wasm.br"
     },
     {
-      "hash": "sha256-SgHRvVld1CsqdTKHuSOIC2T1vtKubPpbp7RixoUIIOI=",
-      "url": "_framework\/Siteswap.Details.xou9vrnelx.wasm.br"
+      "hash": "sha256-WZ\/T8BRJ0i9XPBUQh9NKXYxm2XMcjULb6t1P0RkX0HM=",
+      "url": "_framework\/Siteswap.Details.7u5fzdmdtr.wasm.br"
     },
     {
-      "hash": "sha256-qk56\/SVoadKoZkJObmb7qxnTW+rmCTzelyWCKAcXvjU=",
-      "url": "_framework\/Siteswaps.Components.pmycbw1i3i.wasm.br"
+      "hash": "sha256-hOybqyojetY217gGBjLYsU\/61fNgrT5kIpW\/qE0Q6Vc=",
+      "url": "_framework\/Siteswaps.Components.7gem9fsbhu.wasm.br"
     },
     {
-      "hash": "sha256-ZVmUFqDlxblwOLKnMa7lq3IxPcxD8j7Nu032HMZmuCc=",
-      "url": "_framework\/Siteswaps.Design.Fixtures.g55wg02cjt.wasm.br"
+      "hash": "sha256-4G53r4h4\/8hEKuZp\/KKZzVOeLzt6XXP64OgiTYMyPiY=",
+      "url": "_framework\/Siteswaps.Design.Fixtures.63yswyp8fo.wasm.br"
     },
     {
-      "hash": "sha256-wHwHjGdRkmjUIocGj2ToNgHX0t\/+XNudYIwto7mYlrE=",
-      "url": "_framework\/Siteswaps.Generator.Core.b2hbt12axj.wasm.br"
+      "hash": "sha256-y+jK0O691z9kY8OKwuZWA8dMqXxrnXp+ZCxchrbZOqw=",
+      "url": "_framework\/Siteswaps.Generator.Core.g42ylyvge7.wasm.br"
     },
     {
-      "hash": "sha256-hNQQsPpMbHxX9LBOoP4e6xoMykGdiHtr4\/V7O0omyCU=",
-      "url": "_framework\/Siteswaps.Generator.eqrl7y18op.wasm.br"
+      "hash": "sha256-EoEYWdVUymfi8aHV+Q0bY4GqFbixD9vU5IM8tofyGWU=",
+      "url": "_framework\/Siteswaps.Generator.ibf1glf3zz.wasm.br"
     },
     {
-      "hash": "sha256-SWbEnLXAnMPXDa3L33O0lp9mEn7VZebobLLTNfs4hoQ=",
-      "url": "_framework\/Siteswaps.Jif.Components.e58q47uvhc.wasm.br"
+      "hash": "sha256-WkZdtliMW45T97dTgid8HxKRuXZK7akR5yvdCetuQZk=",
+      "url": "_framework\/Siteswaps.Jif.Components.m4rh71xurb.wasm.br"
     },
     {
       "hash": "sha256-RounGNw\/XDw7csb6RhxKRdWumSB2jceqvjRKDQOj+ZM=",
@@ -405,8 +405,8 @@
       "url": "_framework\/VisNetwork.Blazor.nwvjgzqmt4.wasm.br"
     },
     {
-      "hash": "sha256-UZxSlRO76NlAFG8wn4wq2g1UAfnGoMdp\/+1vxlEsKcU=",
-      "url": "_framework\/Webassembly.ff7xwb60sd.wasm.br"
+      "hash": "sha256-xfYA7iS+56G41Erp5RN7rX07IownrWUIchagXlP0kJY=",
+      "url": "_framework\/Webassembly.6q7duryc3f.wasm.br"
     },
     {
       "hash": "sha256-h5BykV52WXDQQYSSeQYmnw2hLafu9fcAvqRQUCbYr2Q=",
@@ -417,23 +417,23 @@
       "url": "_framework\/blazor.webassembly.js.map.br"
     },
     {
-      "hash": "sha256-Xjb\/0Idx\/XW+B4zLqvQjmR1fMPUfJ3mUZ7uq91JxOJU=",
-      "url": "_framework\/de\/Siteswaps.Components.resources.w80slgcu2t.wasm.br"
+      "hash": "sha256-WqTxcRByjAEEuorIfdopiHAP9z3WTuT7IyLUNKnMDSA=",
+      "url": "_framework\/de\/Siteswaps.Components.resources.zwdquosdme.wasm.br"
     },
     {
-      "hash": "sha256-XtJRxh3\/EtUyIkpUJA2rl6i7WjHYZHYJKPGNwStzxI0=",
-      "url": "_framework\/de\/Siteswaps.Generator.resources.vz05rqik6j.wasm.br"
+      "hash": "sha256-hJDsrkEheG\/uT01bNYETuapdf3at9uAhlees3O5i1G8=",
+      "url": "_framework\/de\/Siteswaps.Generator.resources.sjon6f4x4s.wasm.br"
     },
     {
-      "hash": "sha256-Icgp6SPEQysvjK0MaifjaAL7zDo03xwclemNcn46Df8=",
-      "url": "_framework\/de\/Siteswaps.Jif.Components.resources.64ynqwn2a6.wasm.br"
+      "hash": "sha256-q44HfyT3OspTCePff+e3MD87IsSqHRuMnh6ZMzSg814=",
+      "url": "_framework\/de\/Siteswaps.Jif.Components.resources.fljpqi5xsw.wasm.br"
     },
     {
-      "hash": "sha256-PU0w+GaShCSlv+qf3W+vD4NajSEV1v8A9f8vyfjDuPs=",
-      "url": "_framework\/de\/Webassembly.resources.5r41nf6jl4.wasm.br"
+      "hash": "sha256-\/hSs9q8kph2WAIOh78lTRJXaoNMUEj6pnNHKpzWIYNs=",
+      "url": "_framework\/de\/Webassembly.resources.mxpxtt4r4b.wasm.br"
     },
     {
-      "hash": "sha256-w3ayHJNj8Jd02BGaV0eoHdmesj7Yo1EenEZYsvpa8mg=",
+      "hash": "sha256-4CR50ZgLddNDa\/EkNXUMVKOIqBXu3m0FS6Uk5Ivll4M=",
       "url": "_framework\/dotnet.js"
     },
     {
@@ -573,5 +573,5 @@
       "url": "brotliloader.min.js"
     }
   ],
-  "version": "P+0nvnJn"
+  "version": "k9i1uu7E"
 };
