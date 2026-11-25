@@ -95,12 +95,12 @@ export function stopJugglerHold() {
 
 export function startThrowInteraction(svg, dotnet, id, cycle, pointerId, originX, originY, pointerType, editingAlready) {
     stopDrag();
+    const touchInput = pointerType !== "mouse" || window.matchMedia("(pointer: coarse)").matches;
     // Blazor rerenders the SVG after each moved throw. Keep capture on this
     // stable ancestor so Chrome does not lose the touch stream with the node.
-    capturePointer(svg, pointerId);
+    if (touchInput) capturePointer(svg, pointerId);
     const target = [...svg.querySelectorAll(".throw-hit-target")]
         .find(item => item.dataset.throwId === id && item.dataset.cycle === String(cycle));
-    const touchInput = pointerType !== "mouse" || window.matchMedia("(pointer: coarse)").matches;
     let editing = editingAlready || touchInput;
     let timer;
     if (!editing) target?.classList.add("pressing");
@@ -154,9 +154,10 @@ export function stopDrag() {
     if (activeMove) activeMove();
 }
 
-export function startEdgeDrag(svg, dotnet, edgeId, sourceCycle, pointerId) {
+export function startEdgeDrag(svg, dotnet, edgeId, sourceCycle, pointerId, pointerType) {
     stopDrag();
-    capturePointer(svg, pointerId);
+    const touchInput = pointerType !== "mouse" || window.matchMedia("(pointer: coarse)").matches;
+    if (touchInput) capturePointer(svg, pointerId);
     const move = event => {
         if (event.pointerId !== pointerId) return;
         const bounds = svg.getBoundingClientRect();
