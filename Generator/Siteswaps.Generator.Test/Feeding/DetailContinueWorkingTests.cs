@@ -34,7 +34,7 @@ public class DetailContinueWorkingTests
             Path.Combine("Details", "Variants", "DetailVariantJif.razor")
         );
 
-        jif.Should().Contain("https://juggle.ch/jif");
+        jif.Should().Contain("https://passist.org");
         jif.Should().Contain("Passist");
         jif.Should().Contain("Danke an Passist");
     }
