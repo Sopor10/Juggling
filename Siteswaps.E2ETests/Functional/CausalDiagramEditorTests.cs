@@ -358,10 +358,10 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await DispatchTouchEnd(cdp);
         await page.WaitForTimeoutAsync(150);
         (await page.EvaluateAsync<bool>("() => window.__touchDragDownPrevented")).Should().BeTrue();
-        (await page.EvaluateAsync<bool>("() => window.__touchDragSvgCaptured")).Should().BeTrue();
         page.Url.Should().NotBe(urlBeforeTouchDrag);
         var positionAfterTouchDrag = await target.GetAttributeAsync("cx");
         positionAfterTouchDrag.Should().NotBe(positionBeforeTouchDrag);
+        (await page.EvaluateAsync<bool>("() => window.__touchDragSvgCaptured")).Should().BeTrue();
         await Assertions.Expect(page.Locator(".pd-node.selected")).ToHaveCountAsync(2);
         (await scroller.EvaluateAsync<double>("node => node.scrollLeft"))
             .Should()
