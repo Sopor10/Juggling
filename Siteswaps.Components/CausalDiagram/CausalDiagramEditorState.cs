@@ -705,113 +705,161 @@ public sealed class CausalDiagramEditorState
     {
         using var doc = JsonDocument.Parse(json, new JsonDocumentOptions { MaxDepth = 8 });
         var root = doc.RootElement;
-        if (
-            root.ValueKind != JsonValueKind.Object
-            || !root.TryGetProperty("v", out var version)
-            || !version.TryGetInt32(out var v)
-            || v != expectedVersion
-            || !root.TryGetProperty("p", out var preset)
-            || preset.ValueKind != JsonValueKind.String
-            || !root.TryGetProperty("a", out var active)
-            || active.ValueKind != JsonValueKind.String
-            || !root.TryGetProperty("c", out var cycle)
-            || !cycle.TryGetDecimal(out var c)
-            || !root.TryGetProperty("r", out var reps)
-            || !reps.TryGetInt32(out var repetitions)
-            || !root.TryGetProperty("s", out var snap)
-            || snap.ValueKind is not (JsonValueKind.True or JsonValueKind.False)
-            || !root.TryGetProperty("q", out var step)
-            || !step.TryGetDecimal(out var snapStep)
-            || !root.TryGetProperty("j", out var jugglers)
-            || jugglers.ValueKind != JsonValueKind.Array
-            || jugglers.GetArrayLength() > 16
-            || !root.TryGetProperty("t", out var throws)
-            || throws.ValueKind != JsonValueKind.Array
-            || throws.GetArrayLength() > 500
-            || !root.TryGetProperty("e", out var edges)
-            || edges.ValueKind != JsonValueKind.Array
-            || edges.GetArrayLength() > 2_000
-        )
+        if (root.ValueKind != JsonValueKind.Object)
             throw new JsonException("Invalid editor state shape.");
+        var version = ReadInt32Property(root, "v");
+        if (version != expectedVersion)
+            throw new JsonException("Unexpected editor state version.");
         var state = new CausalDiagramEditorState
         {
-            Version = v,
-            PresetId = preset.GetString() ?? throw new JsonException(),
-            ActiveJugglerId = active.GetString() ?? throw new JsonException(),
-            CycleLength = c,
-            Repetitions = repetitions,
-            SnapEnabled = snap.GetBoolean(),
-            SnapStep = snapStep,
+            Version = version,
+            PresetId = ReadStringProperty(root, "p"),
+            ActiveJugglerId = ReadStringProperty(root, "a"),
+            CycleLength = ReadDecimalProperty(root, "c"),
+            Repetitions = ReadInt32Property(root, "r"),
+            SnapEnabled = ReadBooleanProperty(root, "s"),
+            SnapStep = ReadDecimalProperty(root, "q"),
             TimelineWidth = ReadOptionalDecimal(root, "w", 560m),
             LaneSpacing = ReadOptionalDecimal(root, "l", 105m),
-            Jugglers = [],
-            Throws = [],
-            CausalEdges = [],
+            Jugglers = ReadJugglers(ReadArrayProperty(root, "j", 16)),
+            Throws = ReadThrows(ReadArrayProperty(root, "t", 500), expectedVersion),
+            CausalEdges = ReadCausalEdges(ReadArrayProperty(root, "e", 2_000)),
         };
-        foreach (var item in jugglers.EnumerateArray())
-        {
-            if (
-                item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != 2
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-            )
-                throw new JsonException();
-            state.Jugglers.Add(
-                new EditorJuggler(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException()
-                )
-            );
-        }
-        foreach (var item in throws.EnumerateArray())
-        {
-            if (
-                item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != (expectedVersion >= 4 ? 6 : 5)
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-                || item[2].ValueKind != JsonValueKind.String
-                || !item[3].TryGetDecimal(out var start)
-                || !item[4].TryGetDecimal(out var height)
-                || (
-                    expectedVersion >= 4
-                    && item[5].ValueKind is not (JsonValueKind.True or JsonValueKind.False)
-                )
-            )
-                throw new JsonException();
-            state.Throws.Add(
-                new EditorThrow(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException(),
-                    item[2].GetString() ?? throw new JsonException(),
-                    start,
-                    height,
-                    expectedVersion >= 4 && item[5].GetBoolean()
-                )
-            );
-        }
-        foreach (var item in edges.EnumerateArray())
-        {
-            if (
-                item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != 4
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-                || item[2].ValueKind != JsonValueKind.String
-                || !item[3].TryGetInt32(out var offset)
-            )
-                throw new JsonException();
-            state.CausalEdges.Add(
-                new EditorCausalEdge(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException(),
-                    item[2].GetString() ?? throw new JsonException(),
-                    offset
-                )
-            );
-        }
         return state;
+    }
+
+    private static JsonElement ReadArrayProperty(JsonElement root, string name, int maximumCount)
+    {
+        if (
+            !root.TryGetProperty(name, out var value)
+            || value.ValueKind != JsonValueKind.Array
+            || value.GetArrayLength() > maximumCount
+        )
+            throw new JsonException($"Invalid '{name}' array.");
+        return value;
+    }
+
+    private static string ReadStringProperty(JsonElement root, string name)
+    {
+        if (!root.TryGetProperty(name, out var value) || value.ValueKind != JsonValueKind.String)
+            throw new JsonException($"Invalid '{name}' value.");
+        return value.GetString() ?? throw new JsonException();
+    }
+
+    private static decimal ReadDecimalProperty(JsonElement root, string name)
+    {
+        if (!root.TryGetProperty(name, out var value) || !value.TryGetDecimal(out var result))
+            throw new JsonException($"Invalid '{name}' value.");
+        return result;
+    }
+
+    private static int ReadInt32Property(JsonElement root, string name)
+    {
+        if (!root.TryGetProperty(name, out var value) || !value.TryGetInt32(out var result))
+            throw new JsonException($"Invalid '{name}' value.");
+        return result;
+    }
+
+    private static bool ReadBooleanProperty(JsonElement root, string name)
+    {
+        if (
+            !root.TryGetProperty(name, out var value)
+            || value.ValueKind is not (JsonValueKind.True or JsonValueKind.False)
+        )
+            throw new JsonException($"Invalid '{name}' value.");
+        return value.GetBoolean();
+    }
+
+    private static List<EditorJuggler> ReadJugglers(JsonElement values)
+    {
+        var jugglers = new List<EditorJuggler>();
+        foreach (var item in values.EnumerateArray())
+            jugglers.Add(ReadJuggler(item));
+        return jugglers;
+    }
+
+    private static EditorJuggler ReadJuggler(JsonElement item)
+    {
+        if (
+            item.ValueKind != JsonValueKind.Array
+            || item.GetArrayLength() != 2
+            || item[0].ValueKind != JsonValueKind.String
+            || item[1].ValueKind != JsonValueKind.String
+        )
+            throw new JsonException();
+        return new EditorJuggler(
+            item[0].GetString() ?? throw new JsonException(),
+            item[1].GetString() ?? throw new JsonException()
+        );
+    }
+
+    private static List<EditorThrow> ReadThrows(JsonElement values, int expectedVersion)
+    {
+        var throws = new List<EditorThrow>();
+        foreach (var item in values.EnumerateArray())
+            throws.Add(ReadThrow(item, expectedVersion));
+        return throws;
+    }
+
+    private static EditorThrow ReadThrow(JsonElement item, int expectedVersion)
+    {
+        var expectedLength = expectedVersion >= 4 ? 6 : 5;
+        if (
+            item.ValueKind != JsonValueKind.Array
+            || item.GetArrayLength() != expectedLength
+            || item[0].ValueKind != JsonValueKind.String
+            || item[1].ValueKind != JsonValueKind.String
+            || item[2].ValueKind != JsonValueKind.String
+            || !item[3].TryGetDecimal(out var start)
+            || !item[4].TryGetDecimal(out var height)
+        )
+            throw new JsonException();
+        var heightIsExplicit = ReadOptionalHeightFlag(item, expectedVersion);
+        return new EditorThrow(
+            item[0].GetString() ?? throw new JsonException(),
+            item[1].GetString() ?? throw new JsonException(),
+            item[2].GetString() ?? throw new JsonException(),
+            start,
+            height,
+            heightIsExplicit
+        );
+    }
+
+    private static bool ReadOptionalHeightFlag(JsonElement item, int expectedVersion)
+    {
+        if (expectedVersion < 4)
+            return false;
+        var value = item[5];
+        if (value.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+            throw new JsonException();
+        return value.GetBoolean();
+    }
+
+    private static List<EditorCausalEdge> ReadCausalEdges(JsonElement values)
+    {
+        var edges = new List<EditorCausalEdge>();
+        foreach (var item in values.EnumerateArray())
+            edges.Add(ReadCausalEdge(item));
+        return edges;
+    }
+
+    private static EditorCausalEdge ReadCausalEdge(JsonElement item)
+    {
+        if (
+            item.ValueKind != JsonValueKind.Array
+            || item.GetArrayLength() != 4
+            || item[0].ValueKind != JsonValueKind.String
+            || item[1].ValueKind != JsonValueKind.String
+            || item[2].ValueKind != JsonValueKind.String
+            || !item[3].TryGetInt32(out var offset)
+        )
+            throw new JsonException();
+        return new EditorCausalEdge(
+            item[0].GetString() ?? throw new JsonException(),
+            item[1].GetString() ?? throw new JsonException(),
+            item[2].GetString() ?? throw new JsonException(),
+            offset
+        );
     }
 
     private static LegacyState DeserializeV1(byte[] json)
