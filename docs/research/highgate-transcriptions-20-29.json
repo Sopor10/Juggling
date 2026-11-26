@@ -165,5 +165,167 @@
     ],
     "notation": "Ben throws pass, self, double, hold, self, self, then resumes normal three count. The double pass starts two beats before the usual passing event and lands at the usual time in Anne’s pattern. Anne continues her normal three count.",
     "reviewStatus": "2017 p. 20 and 2014 p. 6 diagrams visually checked; all visible causal edges transcribed."
+  },
+  {
+    "id": "highgate-anearlytriple",
+    "label": "An early triple",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection: 2017 expanded printed p. 24 / PDF p. 25; The Highgate Collection 2014 printed p. 10 / PDF p. 10.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 24,
+        "pdfPage": 25
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 10,
+        "pdfPage": 10
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-threecount"
+    ],
+    "notation": "Ben throws pass, triple, hold, hold, self, self, then repeats. The triple pass is a straight right-to-left pass and lands at the normal time in Anne’s pattern; Anne otherwise continues her usual three count.",
+    "reviewStatus": "2017 p. 24 and 2014 p. 10 diagrams visually checked; all visible causal edges transcribed."
   }
 ]
