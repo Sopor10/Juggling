@@ -29,11 +29,9 @@ public static class CausalDiagramEditorLayout
     public static int ThrowY(CausalDiagramEditorState state, EditorThrow item)
     {
         var jugglerIndex = state.Jugglers.FindIndex(juggler => juggler.Id == item.JugglerId);
-        var offset = HasHandTracks(state, item.JugglerId)
-            ? item.Hand == "L"
-                ? -HandLaneOffset
-                : HandLaneOffset
-            : 0;
+        var offset = 0;
+        if (HasHandTracks(state, item.JugglerId))
+            offset = item.Hand == "L" ? -HandLaneOffset : HandLaneOffset;
         return JugglerY(state, jugglerIndex) + offset;
     }
 }
