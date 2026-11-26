@@ -101,8 +101,8 @@ and source pages rather than being dropped.
 ## Current coverage
 
 The inventory has 919 catalog candidates. At this checkpoint, 170 rows have
-visual source review: 134 are translated into 136 presets, 24 are retained with
-specific editor-model requirements, 8 still need their graph transcription,
+visual source review: 133 are translated into 135 presets, 24 are retained with
+specific editor-model requirements, 9 still need their graph transcription,
 and 4 are section/concept entries rather than independent patterns. The other
 749 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate

@@ -139,7 +139,6 @@ public class CausalDiagramEditorStateTests
         "highgate-thirteenclubonecountfeedingchocolatebar",
         "highgate-thirteenclubonecountfeedingbookends",
         "highgate-thirteenclubonecountfeedinginvertedbookends",
-        "highgate-thirteenclubfourcountbox",
         "highgate-thirteenclubdoubleurbanterrorfeed",
         "highgate-thirteenclubthreecountaccommodation",
         "highgate-thirteenclublowfatchocolatebox",
@@ -268,7 +267,7 @@ public class CausalDiagramEditorStateTests
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
 
-        presets.Should().HaveCount(136);
+        presets.Should().HaveCount(135);
         presets.Select(preset => preset.Id).Should().BeEquivalentTo(ReviewedHighgatePresetIds);
         var threeCount = presets.Single(preset => preset.Id == "highgate-three-count").Create();
         threeCount.CycleLength.Should().Be(6m);
