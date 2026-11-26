@@ -8,7 +8,8 @@ public class SiteswapGeneratorGuideResource
 {
     [McpServerResource]
     [Description("Overview of the Siteswap Generator - basic parameters and functionality")]
-    public string GetGeneratorOverview() => """
+    public string GetGeneratorOverview() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Siteswap Generator Overview
 
         The Siteswap Generator creates valid siteswap patterns based on defined parameters.
@@ -51,7 +52,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Occurrence filters - filtering by frequency of specific throw heights")]
-    public string GetOccurrenceFilters() => """
+    public string GetOccurrenceFilters() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Occurrence Filters (Frequency Filters)
 
         These filters control how often certain throw heights appear in the pattern.
@@ -107,7 +109,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Pattern filters - filtering by specific pattern templates")]
-    public string GetPatternFilters() => """
+    public string GetPatternFilters() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Pattern Filters (Pattern Templates)
 
         Pattern filters define which throw heights must appear at which positions.
@@ -157,7 +160,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Flexible pattern filters - complex pattern templates with groups")]
-    public string GetFlexiblePatternFilters() => """
+    public string GetFlexiblePatternFilters() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Flexible Pattern Filters
 
         Flexible patterns define groups of values that must appear in the pattern,
@@ -213,7 +217,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("State filters - filtering by juggling states")]
-    public string GetStateFilters() => """
+    public string GetStateFilters() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # State Filters
 
         State filters limit the search to patterns that pass through a specific state.
@@ -274,7 +279,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Passing filters - special filters for passing siteswaps")]
-    public string GetPassingFilters() => """
+    public string GetPassingFilters() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Passing Filters
 
         These filters are specifically designed for passing siteswaps (multiple jugglers).
@@ -352,7 +358,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Not filter and logical combinations - negation and complex logic")]
-    public string GetNotFilterAndLogic() => """
+    public string GetNotFilterAndLogic() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Not Filter and Logical Combinations
 
         ## Not Filter (Negation Filter)
@@ -417,7 +424,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Special filters and advanced options")]
-    public string GetSpecialFilters() => """
+    public string GetSpecialFilters() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Special Filters and Advanced Options
 
         ## useDefaultFilter
@@ -484,7 +492,8 @@ public class SiteswapGeneratorGuideResource
 
     [McpServerResource]
     [Description("Practical example scenarios for the Siteswap Generator")]
-    public string GetPracticalExamples() => """
+    public string GetPracticalExamples() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Practical Example Scenarios
 
         ## Scenario 1: Beginner-Friendly 3-Ball Patterns

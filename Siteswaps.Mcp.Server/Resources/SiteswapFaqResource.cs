@@ -8,7 +8,8 @@ public class SiteswapFaqResource
 {
     [McpServerResource]
     [Description("Basic concepts of siteswap notation - what it describes and how it works")]
-    public string GetBasics() => """
+    public string GetBasics() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Siteswap Basics
 
         The idea behind siteswap is to keep track of the order that balls are thrown and caught, 
@@ -34,7 +35,8 @@ public class SiteswapFaqResource
 
     [McpServerResource]
     [Description("How to read and write vanilla siteswap notation")]
-    public string GetNotation() => """
+    public string GetNotation() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Siteswap Notation (Vanilla)
 
         ## Numbers and Their Meaning
@@ -67,7 +69,8 @@ public class SiteswapFaqResource
 
     [McpServerResource]
     [Description("Understanding ground state vs excited state patterns")]
-    public string GetStates() => """
+    public string GetStates() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Juggling States
 
         ## What is a State?
@@ -107,7 +110,8 @@ public class SiteswapFaqResource
 
     [McpServerResource]
     [Description("Common siteswap patterns with explanations")]
-    public string GetExamples() => """
+    public string GetExamples() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         # Common Siteswap Examples
 
         ## 3-Ball Patterns

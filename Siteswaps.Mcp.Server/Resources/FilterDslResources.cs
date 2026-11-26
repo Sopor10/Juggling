@@ -11,7 +11,8 @@ public class FilterDslResources
 {
     [McpServerResource]
     [Description("filter:dsl:syntax:overview")]
-    public string FilterDslSyntaxOverview() => """
+    public string FilterDslSyntaxOverview() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         The Filter-DSL is a domain-specific language for filtering siteswaps. It supports:
         - Logical operators: AND, OR, NOT (case-insensitive)
         - Parentheses for grouping: (A OR B) AND C
@@ -25,7 +26,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:syntax:operators")]
-    public string FilterDslSyntaxOperators() => """
+    public string FilterDslSyntaxOperators() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Logical Operators:
 
         AND - Both conditions must be true
@@ -50,7 +52,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:syntax:arguments")]
-    public string FilterDslSyntaxArguments() => """
+    public string FilterDslSyntaxArguments() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Argument Types:
 
         1. Numbers - Integer values
@@ -74,7 +77,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:syntax:grammar")]
-    public string FilterDslSyntaxGrammar() => """
+    public string FilterDslSyntaxGrammar() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Formal Grammar (EBNF-style):
 
         Expression  = Term { "OR" Term }
@@ -93,7 +97,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:minOcc")]
-    public string FilterDslFunctionMinOcc() => """
+    public string FilterDslFunctionMinOcc() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         minOcc(throw, count)
 
         Filters siteswaps where a specific throw value appears at least 'count' times.
@@ -111,7 +116,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:maxOcc")]
-    public string FilterDslFunctionMaxOcc() => """
+    public string FilterDslFunctionMaxOcc() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         maxOcc(throw, count)
 
         Filters siteswaps where a specific throw value appears at most 'count' times.
@@ -129,7 +135,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:exactOcc")]
-    public string FilterDslFunctionExactOcc() => """
+    public string FilterDslFunctionExactOcc() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         exactOcc(throw, count)
 
         Filters siteswaps where a specific throw value appears exactly 'count' times.
@@ -147,7 +154,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:occ")]
-    public string FilterDslFunctionOcc() => """
+    public string FilterDslFunctionOcc() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         occ(throw, min, max)
 
         Filters siteswaps where a throw value appears between 'min' and 'max' times.
@@ -166,7 +174,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:pattern")]
-    public string FilterDslFunctionPattern() => """
+    public string FilterDslFunctionPattern() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         pattern(values...)
 
         Filters siteswaps that match a specific pattern with wildcards.
@@ -192,7 +201,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:startsWith")]
-    public string FilterDslFunctionStartsWith() => """
+    public string FilterDslFunctionStartsWith() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         startsWith(values...)
 
         Filters siteswaps that start with specific throw values.
@@ -210,7 +220,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:endsWith")]
-    public string FilterDslFunctionEndsWith() => """
+    public string FilterDslFunctionEndsWith() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         endsWith(values...)
 
         Filters siteswaps that end with specific throw values.
@@ -227,7 +238,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:contains")]
-    public string FilterDslFunctionContains() => """
+    public string FilterDslFunctionContains() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         contains(values...)
 
         Filters siteswaps that contain a specific subsequence.
@@ -244,7 +256,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:height")]
-    public string FilterDslFunctionHeight() => """
+    public string FilterDslFunctionHeight() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         height(min, max)
 
         Filters siteswaps where all throw values are within a height range.
@@ -262,7 +275,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:maxHeight")]
-    public string FilterDslFunctionMaxHeight() => """
+    public string FilterDslFunctionMaxHeight() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         maxHeight(max)
 
         Filters siteswaps where no throw exceeds the maximum height.
@@ -279,7 +293,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:minHeight")]
-    public string FilterDslFunctionMinHeight() => """
+    public string FilterDslFunctionMinHeight() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         minHeight(min)
 
         Filters siteswaps where all throws are at least the minimum height.
@@ -296,7 +311,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:ground")]
-    public string FilterDslFunctionGround() => """
+    public string FilterDslFunctionGround() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         ground
 
         Filters for ground-state siteswaps only.
@@ -315,7 +331,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:excited")]
-    public string FilterDslFunctionExcited() => """
+    public string FilterDslFunctionExcited() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         excited
 
         Filters for excited-state siteswaps only.
@@ -334,7 +351,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:state")]
-    public string FilterDslFunctionState() => """
+    public string FilterDslFunctionState() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         state(values...)
 
         Filters siteswaps with a specific starting state.
@@ -351,7 +369,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:noZeros")]
-    public string FilterDslFunctionNoZeros() => """
+    public string FilterDslFunctionNoZeros() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         noZeros
 
         Filters siteswaps that contain no zero throws.
@@ -370,7 +389,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:hasZeros")]
-    public string FilterDslFunctionHasZeros() => """
+    public string FilterDslFunctionHasZeros() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         hasZeros
 
         Filters siteswaps that contain at least one zero throw.
@@ -388,7 +408,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:passes")]
-    public string FilterDslFunctionPasses() => """
+    public string FilterDslFunctionPasses() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         passes(count)
 
         Filters passing patterns with exactly 'count' passes per period.
@@ -407,7 +428,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:function:passRatio")]
-    public string FilterDslFunctionPassRatio() => """
+    public string FilterDslFunctionPassRatio() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         passRatio(min, max)
 
         Filters passing patterns by the ratio of passes to total throws.
@@ -425,7 +447,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:examples:basic")]
-    public string FilterDslExamplesBasic() => """
+    public string FilterDslExamplesBasic() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Basic Filter Examples:
 
         1. Simple keywords:
@@ -445,7 +468,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:examples:pattern")]
-    public string FilterDslExamplesPattern() => """
+    public string FilterDslExamplesPattern() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Pattern Matching Examples:
 
         1. Exact pattern match:
@@ -473,7 +497,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:examples:occurrence")]
-    public string FilterDslExamplesOccurrence() => """
+    public string FilterDslExamplesOccurrence() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Occurrence Filter Examples:
 
         1. Minimum occurrences:
@@ -498,7 +523,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:examples:complex")]
-    public string FilterDslExamplesComplex() => """
+    public string FilterDslExamplesComplex() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Complex Filter Examples:
 
         1. Multiple conditions with AND:
@@ -526,7 +552,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:examples:passing")]
-    public string FilterDslExamplesPassing() => """
+    public string FilterDslExamplesPassing() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Passing Pattern Filter Examples:
 
         1. Basic passing filters:
@@ -543,7 +570,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:examples:use-cases")]
-    public string FilterDslExamplesUseCases() => """
+    public string FilterDslExamplesUseCases() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Practical Use Case Examples:
 
         1. Beginner-friendly patterns:
@@ -568,7 +596,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:reference:all-functions")]
-    public string FilterDslReferenceAllFunctions() => """
+    public string FilterDslReferenceAllFunctions() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Filter-DSL Function Quick Reference:
 
         OCCURRENCE FILTERS:
@@ -611,7 +640,8 @@ public class FilterDslResources
 
     [McpServerResource]
     [Description("filter:dsl:reference:cheat-sheet")]
-    public string FilterDslReferenceCheatSheet() => """
+    public string FilterDslReferenceCheatSheet() => //NOSONAR: MCP resource endpoints must be methods.
+        """
         Filter-DSL Cheat Sheet:
 
         SYNTAX:
