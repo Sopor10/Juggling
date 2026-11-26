@@ -88,6 +88,19 @@ def page_refs(value: str) -> list[int]:
     return refs
 
 
+def parse_reference_suffix(value: str) -> tuple[str, str] | None:
+    """Split a 2014 index line into its title and numeric page suffix."""
+    match = re.search(r"\s\d[\d\s,\u2013-]*$", value)
+    if not match:
+        return None
+    title = value[: match.start()].strip()
+    refs = match.group().strip()
+    parts = re.split(r"\s*,\s*", refs)
+    if not title or not all(re.fullmatch(r"\d+\s*(?:[-\u2013]\s*\d+)?", part) for part in parts):
+        return None
+    return title, refs
+
+
 def extract_index(pdf: Path, first: int, last: int, edition: str) -> dict[str, dict[str, str]]:
     pages = bbox_pages(pdf, first, last)
     entries: dict[str, dict[str, str]] = {}
@@ -104,19 +117,19 @@ def extract_index(pdf: Path, first: int, last: int, edition: str) -> dict[str, d
             for line in lines:
                 partial = f"{partial} {line}".strip()
                 if edition == "2017":
-                    match = re.search(r"\.{2,}\s*(\d+(?:\s*[-\u2013,]\s*\d+)*)\s*$", partial)
-                    if not match:
+                    separator = partial.rfind("..")
+                    if separator < 0:
                         continue
-                    title = re.sub(r"\.{2,}\s*\d+(?:\s*[-\u2013,]\s*\d+)*\s*$", "", partial).strip()
-                    refs = match.group(1)
+                    title = partial[:separator].strip(" .")
+                    refs = partial[separator + 2 :].strip()
+                    parts = re.split(r"\s*,\s*", refs)
+                    if not title or not all(re.fullmatch(r"\d+\s*(?:[-\u2013]\s*\d+)?", part) for part in parts):
+                        continue
                 else:
-                    match = re.fullmatch(
-                        r"(.+?)\s+((?:\d+\s*(?:[-\u2013,]\s*\d+)*)(?:\s*,\s*\d+(?:\s*[-\u2013,]\s*\d+)*)*)",
-                        partial,
-                    )
-                    if not match:
+                    parsed = parse_reference_suffix(partial)
+                    if not parsed:
                         continue
-                    title, refs = match.group(1).strip(), match.group(2).strip()
+                    title, refs = parsed
                 partial = ""
                 if title.casefold() in {"index", "user-defined index"}:
                     continue

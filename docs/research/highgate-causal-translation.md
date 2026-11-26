@@ -48,6 +48,7 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | `highgate-londonsburning` | London's burning | 2017 printed p. 272; 2014 printed p. 192 | Four 24-event alternating-hand rows and phase-shifted song-round cycles are represented; spatial layout remains source notation. |
 | Four four-person four-count route presets from 2017 printed pp. 257–259 | Drop-back line #1, Four count Y, Drop-back Y, Drop-back line #2 | 2014 PDF pp. 182–183 | Same route graph appears under multiple named formations; each catalog entry remains selectable, while spatial movement is noted separately. |
 | Ten presets from 2017 printed pp. 293–299 | Rotating Y; nine asynchronous thirteen-club feeds from Two count through Inverted Bookends | 2014 PDF pp. 211–216 | All event phases, hands, and edges are represented; spatial movement cases are listed separately in the research note. |
+| `highgate-thirteenclubfourcountbox` | Thirteen club four count box | 2017 printed p. 310; 2014 PDF p. 221 | Four event rows and eight pass routes are translated; the 2014 sequence is checked, while its diagram visual review remains open. |
 | `highgate-sixcount`, `highgate-fourcount`, `highgate-twocount` | Right-handed six-club counts | 2017 printed p. 45 (PDF p. 46); 2014 PDF p. 26 | Diagram and `3p` plus self-throw notation transcribed as repeating causal edges. |
 | `highgate-fivecount-ambidextrous`, `highgate-threecount-ambidextrous` | Ambidextrous six-club counts | 2017 printed p. 45 (PDF p. 46); 2014 PDF p. 26 | Same transcription; odd count lengths double to preserve hand parity. |
 | `highgate-passpassself`, `highgate-chocolatebar`, `highgate-bookends`, `highgate-invertedbookends` | Named six-club patterns | 2017 printed p. 48 (PDF p. 49); 2014 PDF p. 28 | Diagram and Prechac sequence transcribed into per-beat edges. |
@@ -99,11 +100,11 @@ and source pages rather than being dropped.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 169 rows have
-visual source review: 127 are translated into 129 presets, 24 are retained with
-specific editor-model requirements, 14 still need their graph transcription,
+The inventory has 919 catalog candidates. At this checkpoint, 170 rows have
+visual source review: 134 are translated into 136 presets, 24 are retained with
+specific editor-model requirements, 8 still need their graph transcription,
 and 4 are section/concept entries rather than independent patterns. The other
-750 candidates have not yet received page review. Each new preset is checked
+749 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 
