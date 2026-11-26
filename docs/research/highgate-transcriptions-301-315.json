@@ -716,12 +716,12 @@
       },
       {
         "from": "P3-2",
-        "to": "P3-3",
+        "to": "P2-4",
         "cycleOffset": 0
       },
       {
         "from": "P3-3",
-        "to": "P3-4",
+        "to": "P4-5",
         "cycleOffset": 0
       },
       {
@@ -731,12 +731,12 @@
       },
       {
         "from": "P3-5",
-        "to": "P3-6",
+        "to": "P4-7",
         "cycleOffset": 0
       },
       {
         "from": "P3-6",
-        "to": "P2-8",
+        "to": "P4-8",
         "cycleOffset": 0
       },
       {
@@ -746,17 +746,17 @@
       },
       {
         "from": "P3-8",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P2-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
         "from": "P4-2",
-        "to": "P2-3",
+        "to": "P4-3",
         "cycleOffset": 0
       },
       {
@@ -766,7 +766,7 @@
       },
       {
         "from": "P4-4",
-        "to": "P2-5",
+        "to": "P3-5",
         "cycleOffset": 0
       },
       {
@@ -776,12 +776,12 @@
       },
       {
         "from": "P4-6",
-        "to": "P4-7",
+        "to": "P3-7",
         "cycleOffset": 0
       },
       {
         "from": "P4-7",
-        "to": "P2-8",
+        "to": "P3-8",
         "cycleOffset": 0
       },
       {
@@ -809,7 +809,8 @@
     "modelLimits": "No zip, heff, or hold token occurs in this pattern.",
     "validation": {
       "modelCheck": "Direct CausalDiagramEditorState construction followed by SynchronizeHeights(): IsValidForEditor() returned true with registered placeholder PresetId highgate-three-count, and every serialized CycleOffset was unchanged. 32 throws and 32 edges; derived heights 3 and 3.5. New stable IDs have not yet been registered in the central preset catalog, so they cannot be used as PresetId until import. Completeness audit confirmed every throw has exactly one causal edge; no source edge is missing or duplicated."
-    }
+    },
+    "visualVerification": " Corrected Clare and Daniel destinations against the printed row sequences and both diagrams: Clare targets Ben, Ben, Daniel, Ben, Daniel, Daniel, Ben, Daniel; Daniel targets Clare, self, self, Clare, self, Clare, Clare, self."
   },
   {
     "id": "highgate-thirteenclubthreecountbox",

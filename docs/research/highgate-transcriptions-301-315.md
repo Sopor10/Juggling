@@ -20,7 +20,16 @@ The JSON contains nine records: the four-count box and eight additional patterns
 
 For each accepted record, I compared the printed throw rows and hand order to the diagram arrows in the 2017 page image, then checked the corresponding 2014 page image. The state records the written phase offsets and one event per listed throw. Single and double passes use their corresponding arrival intervals; self events connect to the next throw by the same juggler. Pass angle, formation, and starting club inventory remain source notes rather than editor state.
 
-The component `CausalDiagramEditorState` was built directly for every record, followed by `SynchronizeHeights()` and `IsValidForEditor()`. All nine states returned valid and every serialized `CycleOffset` remained unchanged. Since these new stable IDs are not registered centrally, validation temporarily used the registered preset ID `highgate-three-count`; the exact registered-ID limitation and node/edge counts are recorded per entry. A completeness audit checks one outgoing causal edge for every throw node in all nine records, without duplicate or missing source IDs. The four-count box now has all 32 edges: eight pass edges plus 24 self-throw continuation edges. These self edges follow the visible horizontal continuation arrows and wrap to the next cycle at each row’s final throw.
+The focused test in `Highgate301To315StandaloneRecordValidationTests` builds a `CausalDiagramEditorState` for every record, calls `SynchronizeHeights()`, and requires `IsValidForEditor()` with all offsets preserved. It also checks unique throw IDs, one outgoing edge per throw, and resolvable endpoints. A source-sequence assertion checks the four rows of the countdown feed directly against the printed per-juggler sequences.
+
+### Countdown feed revalidation
+
+Rechecking the countdown graph against the row sequences and both page diagrams found that the previous graph had copied Anne's destinations onto Clare's and Daniel's rows. The standalone record now has these source sequences:
+
+- Clare: Ben, Ben, Daniel, Ben, Daniel, Daniel, Ben, Daniel.
+- Daniel: Clare, self, self, Clare, self, Clare, Clare, self.
+
+The corrected Clare edges point to `P2-3`, `P2-4`, `P4-5`, `P2-6`, `P4-7`, `P4-8`, `P2-1` at offset 1, and `P4-2` at offset 1. Daniel's pass edges now point to Clare's corresponding opposite-hand events; his self throws continue along the Daniel row. The central preset with the same ID must be reconciled to these corrected source edges.
 
 ## What the model can encode for zip, heff, and pass spins
 
