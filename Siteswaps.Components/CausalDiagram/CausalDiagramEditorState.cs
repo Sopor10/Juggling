@@ -6,8 +6,9 @@ namespace Siteswaps.Components.CausalDiagram;
 
 public sealed class CausalDiagramEditorState
 {
-    private const string CompactTokenPrefix = "j3.";
-    private const string PreviousCompactTokenPrefix = "j2.";
+    private const string CompactTokenPrefix = "j4.";
+    private const string PreviousCompactTokenPrefix = "j3.";
+    private const string OlderCompactTokenPrefix = "j2.";
     private const string OldCompactTokenPrefix = "j1.";
     private const int MaximumTokenLength = 300_000;
     private const int MaximumDecodedPayloadBytes = 220_000;
@@ -20,7 +21,7 @@ public sealed class CausalDiagramEditorState
         List<(int Height, string Target)> Throws
     );
 
-    public int Version { get; set; } = 3;
+    public int Version { get; set; } = 4;
     public string PresetId { get; set; } = "custom";
     public string ActiveJugglerId { get; set; } = "A";
     public decimal CycleLength { get; set; } = 7m;
@@ -593,6 +594,7 @@ public sealed class CausalDiagramEditorState
                 writer.WriteStringValue(item.Hand);
                 writer.WriteNumberValue(item.StartTime);
                 writer.WriteNumberValue(item.Height);
+                writer.WriteBooleanValue(item.HeightIsExplicit);
                 writer.WriteEndArray();
             }
             writer.WriteEndArray();
@@ -623,12 +625,21 @@ public sealed class CausalDiagramEditorState
             if (token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
                 decoded = DeserializeCompact(
                     DecodePayload(token[CompactTokenPrefix.Length..]),
-                    expectedVersion: 3
+                    expectedVersion: 4
                 );
             else if (token.StartsWith(PreviousCompactTokenPrefix, StringComparison.Ordinal))
             {
                 decoded = DeserializeCompact(
                     DecodePayload(token[PreviousCompactTokenPrefix.Length..]),
+                    expectedVersion: 3
+                );
+                decoded.Version = 3;
+                decoded.NormalizeCausalEdges();
+            }
+            else if (token.StartsWith(OlderCompactTokenPrefix, StringComparison.Ordinal))
+            {
+                decoded = DeserializeCompact(
+                    DecodePayload(token[OlderCompactTokenPrefix.Length..]),
                     expectedVersion: 2
                 );
                 decoded.Version = 3;
@@ -655,6 +666,9 @@ public sealed class CausalDiagramEditorState
                     _ => decoded.PresetId,
                 };
                 MigrateLegacy75Heights(decoded);
+                if (decoded.Version < 4)
+                    decoded.SynchronizeLegacyHeights();
+                decoded.Version = 4;
                 decoded.SynchronizeHeights();
             }
             if (!IsValid(decoded))
@@ -751,12 +765,13 @@ public sealed class CausalDiagramEditorState
         {
             if (
                 item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != 5
+                || item.GetArrayLength() != (expectedVersion >= 4 ? 6 : 5)
                 || item[0].ValueKind != JsonValueKind.String
                 || item[1].ValueKind != JsonValueKind.String
                 || item[2].ValueKind != JsonValueKind.String
                 || !item[3].TryGetDecimal(out var start)
                 || !item[4].TryGetDecimal(out var height)
+                || (expectedVersion >= 4 && item[5].ValueKind is not (JsonValueKind.True or JsonValueKind.False))
             )
                 throw new JsonException();
             state.Throws.Add(
@@ -765,7 +780,8 @@ public sealed class CausalDiagramEditorState
                     item[1].GetString() ?? throw new JsonException(),
                     item[2].GetString() ?? throw new JsonException(),
                     start,
-                    height
+                    height,
+                    expectedVersion >= 4 && item[5].GetBoolean()
                 )
             );
         }
@@ -915,7 +931,7 @@ public sealed class CausalDiagramEditorState
     {
         if (
             state is null
-            || state.Version != 3
+            || state.Version != 4
             || state.Jugglers is null
             || state.Throws is null
             || state.CausalEdges is null
@@ -981,11 +997,28 @@ public sealed class CausalDiagramEditorState
             var source = state.Throws.First(node => node.Id == edge.FromThrowId);
             var target = state.Throws.First(node => node.Id == edge.ToThrowId);
             return source.Height >= 0
-                && source.Height == DerivedHeight(state, source, target, edge.CycleOffset);
+                && (source.HeightIsExplicit || source.Height == DerivedHeight(state, source, target, edge.CycleOffset));
         });
     }
 
     public void SynchronizeHeights()
+    {
+        for (var edgeIndex = 0; edgeIndex < CausalEdges.Count; edgeIndex++)
+        {
+            var edge = CausalEdges[edgeIndex];
+            var sourceIndex = Throws.FindIndex(node => node.Id == edge.FromThrowId);
+            var target = Throws.FirstOrDefault(node => node.Id == edge.ToThrowId);
+            if (sourceIndex < 0 || target is null)
+                continue;
+            var source = Throws[sourceIndex];
+            if (source.HeightIsExplicit)
+                continue;
+            var height = DerivedHeight(this, source, target, edge.CycleOffset);
+            Throws[sourceIndex] = source with { Height = Math.Max(0, height) };
+        }
+    }
+
+    private void SynchronizeLegacyHeights()
     {
         for (var edgeIndex = 0; edgeIndex < CausalEdges.Count; edgeIndex++)
         {
@@ -1174,7 +1207,8 @@ public sealed record EditorThrow(
     string JugglerId,
     string Hand,
     decimal StartTime,
-    decimal Height
+    decimal Height,
+    bool HeightIsExplicit = false
 );
 
 public sealed record EditorCausalEdge(

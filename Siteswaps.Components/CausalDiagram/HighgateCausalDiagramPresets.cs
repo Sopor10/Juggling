@@ -27,8 +27,18 @@ internal static class HighgateCausalDiagramPresets
         using var stream = typeof(HighgateCausalDiagramPresets).Assembly.GetManifestResourceStream(
             ResourceName
         ) ?? throw new InvalidOperationException($"Missing embedded resource {ResourceName}.");
-        return JsonSerializer.Deserialize<List<HighgatePatternData>>(stream, JsonOptions)
+        var patterns = JsonSerializer.Deserialize<List<HighgatePatternData>>(stream, JsonOptions)
             ?? throw new InvalidOperationException("The Highgate pattern data is empty.");
+        if (
+            patterns.SelectMany(pattern => pattern.Throws)
+                .Any(item => item.HeightIsExplicit && item.Height is null or < 0)
+        )
+        {
+            throw new InvalidDataException(
+                "Explicit Highgate throw heights must be present and nonnegative."
+            );
+        }
+        return patterns;
     }
 
     private static CausalDiagramEditorState CreateState(HighgatePatternData pattern)
@@ -47,7 +57,8 @@ internal static class HighgateCausalDiagramPresets
                     item.JugglerId,
                     item.Hand,
                     item.StartTime,
-                    0m
+                    item.Height ?? 0m,
+                    item.HeightIsExplicit
                 ))
                 .ToList(),
             CausalEdges = pattern
@@ -92,7 +103,14 @@ internal static class HighgateCausalDiagramPresets
 
     private sealed record JugglerData(string Id, string Name);
 
-    private sealed record ThrowData(string Id, string JugglerId, string Hand, decimal StartTime);
+    private sealed record ThrowData(
+        string Id,
+        string JugglerId,
+        string Hand,
+        decimal StartTime,
+        decimal? Height = null,
+        bool HeightIsExplicit = false
+    );
 
     private sealed record EdgeData(string From, string To, int CycleOffset);
 

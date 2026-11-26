@@ -63,7 +63,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await SaveDesignScreenshotAsync(session.Page, "causal-editor-desktop-node-selected.png");
 
         var url = session.Page.Url;
-        url.Should().Contain("state=j3.");
+        url.Should().Contain("state=j4.");
         url.Length.Should().BeLessThan(2_048);
         var sharedPage = await session.Context.NewPageAsync();
         var browserErrors = new List<string>();

@@ -179,10 +179,43 @@ public class CausalDiagramEditorStateTests
 
         var token = state.Encode();
 
-        token.Should().StartWith("j3.");
+        token.Should().StartWith("j4.");
         token.Length.Should().BeLessThan(2_048);
         CausalDiagramEditorState.TryDecode(token, out var decoded).Should().BeTrue();
         decoded.Should().BeEquivalentTo(state);
+    }
+
+    [Test]
+    public void J4_RoundTripsSignedOffsetsAndExplicitThrowHeight()
+    {
+        var state = CausalDiagramEditorState.CreateSiteswapPattern("3");
+        var edge = state.CausalEdges[0];
+        state.CausalEdges[0] = edge with { CycleOffset = -1 };
+        var sourceIndex = state.Throws.FindIndex(node => node.Id == edge.FromThrowId);
+        state.Throws[sourceIndex] = state.Throws[sourceIndex] with { Height = 5m, HeightIsExplicit = true };
+
+        state.Throws[sourceIndex] = EditorThrowPositioning.MoveStart(state, state.Throws[sourceIndex], 1m);
+        state.SynchronizeHeights();
+        var token = state.Encode();
+        token.Should().StartWith("j4.");
+        CausalDiagramEditorState.TryDecode(token, out var decoded).Should().BeTrue();
+        decoded!.CausalEdges[0].CycleOffset.Should().Be(-1);
+        decoded.Throws[sourceIndex].Height.Should().Be(5m);
+        decoded.Throws[sourceIndex].HeightIsExplicit.Should().BeTrue();
+        decoded.Throws[sourceIndex].StartTime.Should().Be(1m);
+    }
+
+    [Test]
+    public void SynchronizeHeights_PreservesSignedOffsetsAndClampsInvalidDerivedHeightForValidation()
+    {
+        var state = CausalDiagramEditorState.CreateSiteswapPattern("3");
+        state.CausalEdges[0] = state.CausalEdges[0] with { CycleOffset = -2 };
+
+        state.SynchronizeHeights();
+
+        state.CausalEdges[0].CycleOffset.Should().Be(-2);
+        state.Throws.First(node => node.Id == state.CausalEdges[0].FromThrowId).Height.Should().Be(0m);
+        CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeFalse();
     }
 
     [Test]
@@ -197,7 +230,7 @@ public class CausalDiagramEditorStateTests
         foreach (var token in new[] { compact, Base64Url(Encoding.UTF8.GetBytes(legacyJson)) })
         {
             CausalDiagramEditorState.TryDecode(token, out var decoded).Should().BeTrue();
-            decoded!.Version.Should().Be(3);
+            decoded!.Version.Should().Be(4);
             decoded.ActiveJugglerId.Should().Be("P1");
             decoded.PresetId.Should().Be("feeding-7-5");
             decoded.TimelineWidth.Should().Be(560m);
@@ -213,12 +246,29 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
+    public void TryDecode_MigratesJ3CompactLinksToJ4WithoutRejectingLegacyShape()
+    {
+        var current = CausalDiagramEditorState.CreateSiteswapPattern("531");
+        var root = JsonNode.Parse(Encoding.UTF8.GetString(FromBase64Url(current.Encode()[3..])))!.AsObject();
+        root["v"] = 3;
+        foreach (var throwNode in root["t"]!.AsArray())
+            throwNode!.AsArray().RemoveAt(5);
+        var legacyToken = "j3." + Base64Url(Encoding.UTF8.GetBytes(root.ToJsonString()));
+
+        CausalDiagramEditorState.TryDecode(legacyToken, out var migrated).Should().BeTrue();
+        migrated!.Version.Should().Be(4);
+        migrated.Encode().Should().StartWith("j4.");
+    }
+
+    [Test]
     public void TryDecode_PrunesConflictingEdgesFromPreviousJ2LinksAndKeepsTheirNodes()
     {
         var state = CausalDiagramEditorState.CreateSiteswapPattern("531");
         var payload = Encoding.UTF8.GetString(FromBase64Url(state.Encode()[3..]));
         var root = JsonNode.Parse(payload)!.AsObject();
         root["v"] = 2;
+        foreach (var throwNode in root["t"]!.AsArray())
+            throwNode!.AsArray().RemoveAt(5);
         var edges = root["e"]!.AsArray();
         edges.Add(new JsonArray("legacy-out", "A2", "A1", 5));
         edges.Add(new JsonArray("legacy-in", "A1", "A2", 5));
@@ -229,7 +279,7 @@ public class CausalDiagramEditorStateTests
         migrated.CausalEdges.Should().HaveCount(6);
         migrated.CausalEdges.Select(edge => edge.FromThrowId).Should().OnlyHaveUniqueItems();
         migrated.CausalEdges.Select(edge => edge.ToThrowId).Should().OnlyHaveUniqueItems();
-        migrated.Encode().Should().StartWith("j3.");
+        migrated.Encode().Should().StartWith("j4.");
     }
 
     [Test]
@@ -328,7 +378,7 @@ public class CausalDiagramEditorStateTests
             var state = preset.Create();
             state.Throws.Should().NotBeEmpty("preset {0}", preset.Id);
             state.CausalEdges.Should().NotBeEmpty("preset {0}", preset.Id);
-            state.Encode().Should().StartWith("j3.", "preset {0}", preset.Id);
+            state.Encode().Should().StartWith("j4.", "preset {0}", preset.Id);
         }
     }
 
@@ -491,18 +541,20 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
-    public void MovingPastCausalTargetKeepsTargetNodeAndShiftsToValidCycleHeight()
+    public void MovingPastCausalTargetClampsBeforeBreakingDerivedHeight()
     {
         var state = CausalDiagramEditorState.CreateFeeding75();
         var edgeIndex = state.CausalEdges.FindIndex(edge => edge.FromThrowId == "P1-1");
         var edge = state.CausalEdges[edgeIndex];
         var sourceIndex = state.Throws.FindIndex(node => node.Id == edge.FromThrowId);
-        state.Throws[sourceIndex] = state.Throws[sourceIndex] with { StartTime = 6.75m };
+        var moved = EditorThrowPositioning.MoveStart(state, state.Throws[sourceIndex], 6.75m);
+        state.Throws[sourceIndex] = moved;
         state.SynchronizeHeights();
 
         state.CausalEdges[edgeIndex].ToThrowId.Should().Be(edge.ToThrowId);
-        state.CausalEdges[edgeIndex].CycleOffset.Should().BeGreaterThanOrEqualTo(edge.CycleOffset);
+        state.CausalEdges[edgeIndex].CycleOffset.Should().Be(edge.CycleOffset);
         state.Throws[sourceIndex].Height.Should().BeGreaterThanOrEqualTo(0m);
+        CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeTrue();
         CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
         decoded!.Throws[sourceIndex].Height.Should().Be(state.Throws[sourceIndex].Height);
     }
