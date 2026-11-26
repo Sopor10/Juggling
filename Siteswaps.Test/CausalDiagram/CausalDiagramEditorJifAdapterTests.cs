@@ -30,56 +30,53 @@ public sealed class CausalDiagramEditorJifAdapterTests
     [Test]
     public void ValidFactoryGeneratedCausalPatterns_AlwaysMapToPeriodicJif()
     {
-        CheckProperty(
-            CausalPatternSeed.Arbitrary,
-            sample =>
-            {
-                var state = CreateFactoryGeneratedPattern(sample.Value);
-                if (
-                    !CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded)
-                    || decoded is null
-                )
-                    throw new InvalidOperationException($"Generated state is invalid: {sample}.");
+        CheckProperty(CausalPatternSeed.Arbitrary, sample =>
+        {
+            var state = CreateFactoryGeneratedPattern(sample.Value);
+            if (
+                !CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded)
+                || decoded is null
+            )
+                throw new InvalidOperationException($"Generated state is invalid: {sample}.");
 
-                if (
-                    !CausalDiagramEditorJifAdapter.TryMap(decoded, out var mapped, out var error)
-                    || mapped is not { Valid: true, Throws.Count: > 0, Repetition.Period: > 0 }
-                )
-                    throw new InvalidOperationException($"{sample}: {error}");
-                var table = CausalDiagramEditorTableAdapter.Map(decoded);
-                if (
-                    table.Rows.Count != decoded.Jugglers.Count
-                    || table.Rows.Sum(row => row.Cells.Count(chip => chip is not null))
-                        != decoded.Throws.Count * decoded.Repetitions
-                )
+            if (
+                !CausalDiagramEditorJifAdapter.TryMap(decoded, out var mapped, out var error)
+                || mapped is not { Valid: true, Throws.Count: > 0, Repetition.Period: > 0 }
+            )
+                throw new InvalidOperationException($"{sample}: {error}");
+            var table = CausalDiagramEditorTableAdapter.Map(decoded);
+            if (
+                table.Rows.Count != decoded.Jugglers.Count
+                || table.Rows.Sum(row => row.Cells.Count(chip => chip is not null))
+                    != decoded.Throws.Count * decoded.Repetitions
+            )
+                throw new InvalidOperationException(
+                    $"{sample}: the editor table lost juggler rows or repeated throws."
+                );
+            for (var jugglerIndex = 0; jugglerIndex < decoded.Jugglers.Count; jugglerIndex++)
+            {
+                var juggler = decoded.Jugglers[jugglerIndex];
+                var actualTimes = table
+                    .Times.Where(
+                        (_, timeIndex) => table.Rows[jugglerIndex].Cells[timeIndex] is not null
+                    )
+                    .ToList();
+                var expectedTimes = Enumerable
+                    .Range(0, decoded.Repetitions)
+                    .SelectMany(cycle =>
+                        decoded
+                            .Throws.Where(item => item.JugglerId == juggler.Id)
+                            .Select(item => item.StartTime + cycle * decoded.CycleLength)
+                    )
+                    .Order()
+                    .ToList();
+                if (!actualTimes.SequenceEqual(expectedTimes))
                     throw new InvalidOperationException(
-                        $"{sample}: the editor table lost juggler rows or repeated throws."
+                        $"{sample}: the table changed the timing for {juggler.Name}."
                     );
-                for (var jugglerIndex = 0; jugglerIndex < decoded.Jugglers.Count; jugglerIndex++)
-                {
-                    var juggler = decoded.Jugglers[jugglerIndex];
-                    var actualTimes = table
-                        .Times.Where(
-                            (_, timeIndex) => table.Rows[jugglerIndex].Cells[timeIndex] is not null
-                        )
-                        .ToList();
-                    var expectedTimes = Enumerable
-                        .Range(0, decoded.Repetitions)
-                        .SelectMany(cycle =>
-                            decoded
-                                .Throws.Where(item => item.JugglerId == juggler.Id)
-                                .Select(item => item.StartTime + cycle * decoded.CycleLength)
-                        )
-                        .Order()
-                        .ToList();
-                    if (!actualTimes.SequenceEqual(expectedTimes))
-                        throw new InvalidOperationException(
-                            $"{sample}: the table changed the timing for {juggler.Name}."
-                        );
-                }
-                return true;
             }
-        );
+            return true;
+        });
     }
 
     [Test]

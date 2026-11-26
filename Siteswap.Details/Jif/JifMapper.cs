@@ -197,8 +197,8 @@ public static class JifMapper
             HighLevelDescription = new JifHighLevelDescription
             {
                 Type = patternType,
-                Description =
-                    description ?? $"{diagram.Jugglers.Count} jugglers, period {diagram.StepCount}",
+                Description = description
+                    ?? $"{diagram.Jugglers.Count} jugglers, period {diagram.StepCount}",
             },
             Jugglers = diagram
                 .Jugglers.Select(

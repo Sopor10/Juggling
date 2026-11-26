@@ -35,9 +35,8 @@ public static class DslParser
     /// Parser für Identifier (Funktionsnamen, Keywords)
     /// </summary>
     private static readonly Parser<char, string> IdentifierParser = Token(char.IsLetter)
-        .Then(
-            Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(),
-            (first, rest) => first + rest
+        .Then(Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(), (first, rest) =>
+            first + rest
         )
         .Labelled("identifier");
 

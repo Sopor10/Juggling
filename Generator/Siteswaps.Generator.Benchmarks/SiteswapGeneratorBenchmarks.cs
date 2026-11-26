@@ -52,8 +52,7 @@ public class SiteswapGeneratorBenchmarks
     [Benchmark]
     public int GenerateSiteswaps()
     {
-        var generatorFactory =
-            createGenerator
+        var generatorFactory = createGenerator
             ?? throw new InvalidOperationException(
                 "Benchmark setup did not initialize the generator."
             );

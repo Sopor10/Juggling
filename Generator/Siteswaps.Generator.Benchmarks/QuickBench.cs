@@ -137,9 +137,8 @@ public static class QuickBench
 
     private static IEnumerable<GenerationScenario> GetScenarios(string[] args)
     {
-        var index = Array.FindIndex(
-            args,
-            arg => arg.Equals("--scenario", StringComparison.OrdinalIgnoreCase)
+        var index = Array.FindIndex(args, arg =>
+            arg.Equals("--scenario", StringComparison.OrdinalIgnoreCase)
         );
         if (index < 0)
             return GenerationScenarioFactory.AllScenarios;
@@ -153,9 +152,8 @@ public static class QuickBench
 
     private static string? GetJsonPath(string[] args)
     {
-        var index = Array.FindIndex(
-            args,
-            arg => arg.Equals("--json", StringComparison.OrdinalIgnoreCase)
+        var index = Array.FindIndex(args, arg =>
+            arg.Equals("--json", StringComparison.OrdinalIgnoreCase)
         );
         if (index < 0)
             return null;

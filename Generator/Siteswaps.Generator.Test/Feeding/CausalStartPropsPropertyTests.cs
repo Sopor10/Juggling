@@ -83,8 +83,7 @@ public sealed class CausalStartPropsPropertyTests
                         && item.Time == time
                     );
                     var cell = pattern.State.People[person].Cells[beat % pattern.Period];
-                    var targetPerson =
-                        cell.TargetPerson
+                    var targetPerson = cell.TargetPerson
                         ?? throw new InvalidOperationException("Generated feed target is missing.");
                     var targetZone = Array.IndexOf(
                         zones,
@@ -114,17 +113,14 @@ public sealed class CausalStartPropsPropertyTests
     [Test]
     public void Siteswap_distribution_algorithms_are_equal_for_generator_outputs()
     {
-        CheckProperty(
-            SiteSwapCase.Arbitrary,
-            testCase =>
-            {
-                var notation = testCase.Notation;
-                DetailSiteswap.TryCreate(notation, out var siteswap);
-                var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
-                var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram);
-                return SameDistribution(diagram.StartProps, causal);
-            }
-        );
+        CheckProperty(SiteSwapCase.Arbitrary, testCase =>
+        {
+            var notation = testCase.Notation;
+            DetailSiteswap.TryCreate(notation, out var siteswap);
+            var diagram = SiteswapDiagramBuilder.Build(siteswap!, numberOfJugglers: 1);
+            var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(diagram);
+            return SameDistribution(diagram.StartProps, causal);
+        });
     }
 
     [
@@ -135,52 +131,43 @@ public sealed class CausalStartPropsPropertyTests
     ]
     public void Feeding_distribution_algorithms_are_equal_for_random_valid_patterns()
     {
-        CheckProperty(
-            FeedingPattern.Arbitrary,
-            pattern =>
-            {
-                var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(
-                    pattern.Diagram
+        CheckProperty(FeedingPattern.Arbitrary, pattern =>
+        {
+            var causal = CausalStartPropsCalculator.CalculateFromPeriodicCausalDiagram(
+                pattern.Diagram
+            );
+            var inventory = pattern
+                .State.People.Select(
+                    (person, index) => (person.Name, Props: pattern.State.StartingClubsFor(index))
+                )
+                .ToDictionary(
+                    item => item.Name,
+                    item => new StartProps(item.Props.Left, item.Props.Right),
+                    StringComparer.Ordinal
                 );
-                var inventory = pattern
-                    .State.People.Select(
-                        (person, index) =>
-                            (person.Name, Props: pattern.State.StartingClubsFor(index))
-                    )
-                    .ToDictionary(
-                        item => item.Name,
-                        item => new StartProps(item.Props.Left, item.Props.Right),
-                        StringComparer.Ordinal
-                    );
-                return SameDistribution(inventory, causal);
-            }
-        );
+            return SameDistribution(inventory, causal);
+        });
     }
 
     [Test]
     public void FsCheck_feeding_generator_produces_valid_patterns_with_feasible_causal_starts()
     {
-        CheckProperty(
-            FeedingPattern.Arbitrary,
-            pattern =>
-            {
-                if (!pattern.State.IsValid)
-                    return false;
+        CheckProperty(FeedingPattern.Arbitrary, pattern =>
+        {
+            if (!pattern.State.IsValid)
+                return false;
 
-                var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(
-                    pattern.Diagram
-                );
-                return CanRun(
-                    pattern.Diagram,
-                    analysis.StartProps.ToDictionary(
-                        pair => pair.Key,
-                        pair => pair.Value,
-                        StringComparer.Ordinal
-                    ),
-                    analysis.FullPeriodMultiplier
-                );
-            }
-        );
+            var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
+            return CanRun(
+                pattern.Diagram,
+                analysis.StartProps.ToDictionary(
+                    pair => pair.Key,
+                    pair => pair.Value,
+                    StringComparer.Ordinal
+                ),
+                analysis.FullPeriodMultiplier
+            );
+        });
     }
 
     [Test]
@@ -695,9 +682,8 @@ public sealed class CausalStartPropsPropertyTests
     {
         public static Arbitrary<FeedingPattern> Arbitrary { get; } =
             new DelegateArbitrary<FeedingPattern>(
-                FsCheck.Fluent.Gen.Select(
-                    FsCheck.Fluent.Gen.Choose(0, int.MaxValue),
-                    seed => Create(seed)
+                FsCheck.Fluent.Gen.Select(FsCheck.Fluent.Gen.Choose(0, int.MaxValue), seed =>
+                    Create(seed)
                 )
             );
 

@@ -25,41 +25,35 @@ public sealed class BlazorWebassemblyFixture<TProgram> : IAsyncLifetime, IAsyncD
         await _fixture.InitializeAsync();
         _httpClient = _webApplicationFactory.CreateClient();
         Context = await _fixture.Browser.NewContextAsync();
-        await Context.RouteAsync(
-            $"{RootUri.AbsoluteUri}**",
-            async route =>
+        await Context.RouteAsync($"{RootUri.AbsoluteUri}**", async route =>
+        {
+            var request = route.Request;
+            var content = request.PostDataBuffer is { } postDataBuffer
+                ? new ByteArrayContent(postDataBuffer)
+                : null;
+            var requestMessage = new HttpRequestMessage(new HttpMethod(request.Method), request.Url)
             {
-                var request = route.Request;
-                var content = request.PostDataBuffer is { } postDataBuffer
-                    ? new ByteArrayContent(postDataBuffer)
-                    : null;
-                var requestMessage = new HttpRequestMessage(
-                    new HttpMethod(request.Method),
-                    request.Url
-                )
-                {
-                    Content = content,
-                };
-                foreach (var header in request.Headers)
-                {
-                    requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
-
-                var response = await _httpClient.SendAsync(requestMessage);
-                var responseBody = await response.Content.ReadAsByteArrayAsync();
-                var responseHeaders = response.Content.Headers.Select(h =>
-                    KeyValuePair.Create(h.Key, string.Join(",", h.Value))
-                );
-                await route.FulfillAsync(
-                    new RouteFulfillOptions
-                    {
-                        BodyBytes = responseBody,
-                        Headers = responseHeaders,
-                        Status = (int)response.StatusCode,
-                    }
-                );
+                Content = content,
+            };
+            foreach (var header in request.Headers)
+            {
+                requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
-        );
+
+            var response = await _httpClient.SendAsync(requestMessage);
+            var responseBody = await response.Content.ReadAsByteArrayAsync();
+            var responseHeaders = response.Content.Headers.Select(h =>
+                KeyValuePair.Create(h.Key, string.Join(",", h.Value))
+            );
+            await route.FulfillAsync(
+                new RouteFulfillOptions
+                {
+                    BodyBytes = responseBody,
+                    Headers = responseHeaders,
+                    Status = (int)response.StatusCode,
+                }
+            );
+        });
     }
 
     public async Task DisposeAsync()

@@ -44,8 +44,7 @@ public sealed class DesignTestHostFixture
         factory.StartServer();
 
         using var probe = factory.CreateClient();
-        RootUri =
-            probe.BaseAddress
+        RootUri = probe.BaseAddress
             ?? throw new InvalidOperationException(
                 "Kestrel WebApplicationFactory has no BaseAddress."
             );

@@ -14,99 +14,29 @@ public static class CausalDiagramEditorPresets
 
     public static IReadOnlyList<CausalDiagramEditorPreset> All { get; } =
     [
-        new(
-            "siteswap-3",
-            "3 · 3-Keulen-Kaskade",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("3", "siteswap-3")
-        ),
-        new(
-            "siteswap-4",
-            "4 · Fountain",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("4", "siteswap-4")
-        ),
-        new(
-            "siteswap-5",
-            "5 · Cascade",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("5", "siteswap-5")
-        ),
-        new(
-            "siteswap-531",
-            "531",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("531", "siteswap-531")
-        ),
-        new(
-            "siteswap-441",
-            "441",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("441", "siteswap-441")
-        ),
-        new(
-            "siteswap-423",
-            "423",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("423", "siteswap-423")
-        ),
-        new(
-            "siteswap-97531",
-            "97531",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateSiteswapPattern("97531", "siteswap-97531")
-        ),
-        new(
-            "four-hand-period-3",
-            "4-händig · Periode 3",
-            SynchronousGroup,
-            () => CreateFourHanded(3)
-        ),
-        new(
-            "four-hand-period-4",
-            "4-händig · Periode 4",
-            SynchronousGroup,
-            () => CreateFourHanded(4)
-        ),
-        new(
-            "four-hand-period-5",
-            "4-händig · Periode 5",
-            SynchronousGroup,
-            () => CreateFourHanded(5)
-        ),
-        new(
-            "feeding-3-3",
-            "3:3 Polyrhythmus",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateFeedingPattern(3, 3, "feeding-3-3")
-        ),
-        new(
-            "feeding-3-4",
-            "3:4 Polyrhythmus",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateFeedingPattern(3, 4, "feeding-3-4")
-        ),
-        new(
-            "feeding-5-3",
-            "5:3 Polyrhythmus",
-            AsynchronousGroup,
-            () => CausalDiagramEditorState.CreateFeedingPattern(5, 3, "feeding-5-3")
-        ),
+        Siteswap("siteswap-3", "3 · 3-Keulen-Kaskade", "3"),
+        Siteswap("siteswap-4", "4 · Fountain", "4"),
+        Siteswap("siteswap-5", "5 · Cascade", "5"),
+        Siteswap("siteswap-531", "531", "531"),
+        Siteswap("siteswap-441", "441", "441"),
+        Siteswap("siteswap-423", "423", "423"),
+        Siteswap("siteswap-97531", "97531", "97531"),
+        FourHanded("four-hand-period-3", "4-händig · Periode 3", 3),
+        FourHanded("four-hand-period-4", "4-händig · Periode 4", 4),
+        FourHanded("four-hand-period-5", "4-händig · Periode 5", 5),
+        Feeding("feeding-3-3", "3:3 Polyrhythmus", 3, 3),
+        Feeding("feeding-3-4", "3:4 Polyrhythmus", 3, 4),
+        Feeding("feeding-5-3", "5:3 Polyrhythmus", 5, 3),
         new(
             "feeding-7-5",
             "2 Jongleure · Polyrhythmus 7:5",
             AsynchronousGroup,
             CausalDiagramEditorState.CreateFeeding75
         ),
-        new("jugglers-1", "1 Jongleur", AsynchronousGroup, () => CreateJugglerDefault(1)),
-        new(
-            "jugglers-2",
-            "2 Jongleure · asynchron",
-            AsynchronousGroup,
-            () => CreateJugglerDefault(2)
-        ),
-        new("jugglers-3", "3 Jongleure", AsynchronousGroup, () => CreateJugglerDefault(3)),
-        new("jugglers-4", "4 Jongleure", AsynchronousGroup, () => CreateJugglerDefault(4)),
+        Juggler("jugglers-1", "1 Jongleur", 1),
+        Juggler("jugglers-2", "2 Jongleure · asynchron", 2),
+        Juggler("jugglers-3", "3 Jongleure", 3),
+        Juggler("jugglers-4", "4 Jongleure", 4),
         new(
             "jugglers-2-synchronous-4",
             "2 Jongleure · synchron (4 Beats)",
@@ -128,6 +58,27 @@ public static class CausalDiagramEditorPresets
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleSynchronous =>
         All.Where(preset => preset.Id == "jugglers-2-synchronous-4");
+
+    private static CausalDiagramEditorPreset Siteswap(string id, string label, string pattern) =>
+        new(id, label, AsynchronousGroup, () =>
+            CausalDiagramEditorState.CreateSiteswapPattern(pattern, id)
+        );
+
+    private static CausalDiagramEditorPreset FourHanded(string id, string label, int period) =>
+        new(id, label, SynchronousGroup, () => CreateFourHanded(period));
+
+    private static CausalDiagramEditorPreset Feeding(
+        string id,
+        string label,
+        int first,
+        int second
+    ) =>
+        new(id, label, AsynchronousGroup, () =>
+            CausalDiagramEditorState.CreateFeedingPattern(first, second, id)
+        );
+
+    private static CausalDiagramEditorPreset Juggler(string id, string label, int count) =>
+        new(id, label, AsynchronousGroup, () => CreateJugglerDefault(count));
 
     private static CausalDiagramEditorState CreateJugglerDefault(int jugglerCount)
     {

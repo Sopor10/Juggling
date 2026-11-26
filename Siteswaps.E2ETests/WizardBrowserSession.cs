@@ -23,8 +23,7 @@ public sealed class WizardBrowserSession : IAsyncDisposable
         BlazorWebassemblyFixture<Program> fixture
     )
     {
-        var browser =
-            fixture.Context?.Browser
+        var browser = fixture.Context?.Browser
             ?? throw new InvalidOperationException("Playwright browser is not available.");
         var context = await browser.NewContextAsync(E2ECulture.NewContextOptions());
         await BlazorTestServerProxy.InstallAsync(context, fixture);
