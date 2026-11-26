@@ -31,10 +31,10 @@
               <span>Diagrammvorlage</span>
               <div class="editor-preset-list" role="group" aria-label="Vorlagen auswählen">
                 <h3>Asynchron</h3>
-                <button type="button" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadSetupPreset("custom")'>Eigenes Diagramm</button>
+                <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadSetupPreset("custom")'>Eigenes Diagramm</button>
                 @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
                 {
-                  <button type="button" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
                 }
                 <h3>Synchron</h3>
                 @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
@@ -104,13 +104,14 @@
             <div class="diagram-options-grid">
               <div class="editor-field">Diagrammvorlage
                 <div class="editor-preset-list editor-preset-list-compact" role="group" aria-label="Diagrammvorlage auswählen">
+                  <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadPreset("custom")'>Eigenes Diagramm</button>
                   @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous.Concat(CausalDiagramEditorPresets.VisibleSynchronous))
                   {
-                    <button type="button" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
                   }
                   @foreach (var saved in _savedPresets)
                   {
-                    <button type="button" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(saved.Id)" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
+                    <button type="button" data-preset-id="@saved.Id" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(saved.Id)" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
                   }
                 </div>
               </div>
