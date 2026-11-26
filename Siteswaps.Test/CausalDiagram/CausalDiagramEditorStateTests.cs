@@ -37,6 +37,28 @@ public class CausalDiagramEditorStateTests
         "highgate-alatesingle",
         "highgate-aselfdouble",
         "highgate-fiveclubthreecount",
+        "highgate-parsnip",
+        "highgate-fiveclubwhynot",
+        "highgate-fiveclubnotwhy",
+        "highgate-jimsthreecountasynchversion",
+        "highgate-synchronousonecount",
+        "highgate-synchronousonecountwithheffs",
+        "highgate-asailorwenttosea",
+        "highgate-countdown",
+        "highgate-geometriccountdown",
+        "highgate-fizzbuzz",
+        "highgate-jimsfizzbuzzsynchronousversion",
+        "highgate-779667withcrossingdoubles",
+        "highgate-777966withstraightdoubles",
+        "highgate-sevenclubthreecountondoubles",
+        "highgate-sevenclubthreecountonsinglestechno",
+        "highgate-sevenclubfourcounttripleself",
+        "highgate-sevenclubfourcountondoubles",
+        "highgate-8x6x68x8x6withcrossingsinglesandstraightdoubles",
+        "highgate-sevenclubwhynotstylepattern",
+        "highgate-sevenclubnotwhystylepattern",
+        "highgate-sevenclubmaybestylepattern1",
+        "highgate-sevenclubmaybestylepattern2",
         "highgate-fiveclubonecount",
         "highgate-jims-one-count-async",
         "highgate-jims-two-count-async",
@@ -272,6 +294,25 @@ public class CausalDiagramEditorStateTests
         "highgate-thirteenonecountlinefeedfeedingfourcountandtwocount",
         "highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount",
         "highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn",
+        "highgate-thirteenclubfunkybookendslinefeedfeedingfivecoun-cde45e90c5",
+        "highgate-thirteenclubmartinsonecountlinefeedfeedingfiveco-44febdca3e",
+        "highgate-thirteenclubonecountlinefeedfeedingfivecountpopcornandparsnip",
+        "highgate-thirteenclubonecountlinefeedfeedingwhynotandfivecountpopcorn",
+        "highgate-thirteenclubonecountlinefeedfeedingmaybeandfivecountpopcorn",
+        "highgate-thirteenclubweave",
+        "highgate-thirteenclubdresserdrawerweave",
+        "highgate-thirteenclubgorillaweave",
+        "highgate-sevenclubjimstwocountvariation1",
+        "highgate-sevenclubjimstwocountvariation2",
+        "highgate-sevenclubjimstwocountvariation3",
+        "highgate-sevenclubwhynotvariation",
+        "highgate-notlikely",
+        "highgate-maybenot",
+        "highgate-fivecountpopcornvsfiveclubwhynot",
+        "highgate-fiveclubwhynotvsfivecountpopcorn",
+        "highgate-97586",
+        "highgate-78956",
+        "highgate-79685",
     };
 
     [Test]
@@ -481,7 +522,7 @@ public class CausalDiagramEditorStateTests
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
 
-        presets.Should().HaveCount(262);
+        presets.Should().HaveCount(303);
         presets.Select(preset => preset.Id).Should().BeEquivalentTo(ReviewedHighgatePresetIds);
         var threeCount = presets.Single(preset => preset.Id == "highgate-three-count").Create();
         threeCount.CycleLength.Should().Be(6m);

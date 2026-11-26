@@ -2464,5 +2464,615 @@
     ],
     "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
     "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
+  },
+  {
+    "id": "highgate-jims-three-count-async",
+    "label": "Jim's three count · asynchronous",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 49 / PDF p. 50; 2014 PDF p. 29",
+    "notation": "7746666 · 3.5p2333.5p33",
+    "cycleLength": 28,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3.5
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 2,
+        "height": 0
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3.5
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 14,
+        "height": 3.5
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16,
+        "height": 0
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 22,
+        "height": 3.5
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 24,
+        "height": 3
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 26,
+        "height": 3
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1,
+        "height": 3.5
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3.5
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 9,
+        "height": 0
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3.5
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 21,
+        "height": 3.5
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 23,
+        "height": 0
+      },
+      {
+        "id": "P2-13",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 25,
+        "height": 3
+      },
+      {
+        "id": "P2-14",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 27,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-P1-1",
+        "fromThrowId": "P1-1",
+        "toThrowId": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-3",
+        "fromThrowId": "P1-3",
+        "toThrowId": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-4",
+        "fromThrowId": "P1-4",
+        "toThrowId": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-5",
+        "fromThrowId": "P1-5",
+        "toThrowId": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-6",
+        "fromThrowId": "P1-6",
+        "toThrowId": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-7",
+        "fromThrowId": "P1-7",
+        "toThrowId": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-8",
+        "fromThrowId": "P1-8",
+        "toThrowId": "P2-9",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-10",
+        "fromThrowId": "P1-10",
+        "toThrowId": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-11",
+        "fromThrowId": "P1-11",
+        "toThrowId": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-12",
+        "fromThrowId": "P1-12",
+        "toThrowId": "P2-13",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-13",
+        "fromThrowId": "P1-13",
+        "toThrowId": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-14",
+        "fromThrowId": "P1-14",
+        "toThrowId": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-P2-1",
+        "fromThrowId": "P2-1",
+        "toThrowId": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-2",
+        "fromThrowId": "P2-2",
+        "toThrowId": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-3",
+        "fromThrowId": "P2-3",
+        "toThrowId": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-4",
+        "fromThrowId": "P2-4",
+        "toThrowId": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-6",
+        "fromThrowId": "P2-6",
+        "toThrowId": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-7",
+        "fromThrowId": "P2-7",
+        "toThrowId": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-8",
+        "fromThrowId": "P2-8",
+        "toThrowId": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-9",
+        "fromThrowId": "P2-9",
+        "toThrowId": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-10",
+        "fromThrowId": "P2-10",
+        "toThrowId": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-11",
+        "fromThrowId": "P2-11",
+        "toThrowId": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-13",
+        "fromThrowId": "P2-13",
+        "toThrowId": "P2-14",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-14",
+        "fromThrowId": "P2-14",
+        "toThrowId": "P2-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 49,
+        "pdfPage": 50
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 28,
+        "pdfPage": 29
+      }
+    ],
+    "notes": "Anne: pass, hold, self/3, self/3, pass, self/3, self/3 with straight passes. Ben starts half a beat later: pass, self/3, self/3, pass, hold, self/3, self/3 with crossing passes. Each seven-event sequence repeats twice to restore hand parity. Causal lines follow the source diagram: self routes continue within the row, pass routes move to the other row, and a hold has no outgoing throw; where a receiving row includes a hold, the causal line continues to the next active event.",
+    "stable_id": "highgate-jimsthreecountasynchversion",
+    "variants": [
+      "Asynchronous, half-beat phase offset; the seven-event sequence repeats twice to preserve right/left hand parity."
+    ],
+    "modelLimits": "Colour-coded club inventory and straight/crossing trajectory are source notes, not separate causal state. Holds are events without outgoing causal edges.",
+    "validation": "Unique event IDs/endpoints; all non-hold throws have an outgoing edge, holds do not; hands alternate in each row. Event sequence and edge destinations follow the printed causal chart, including its explicit half-beat phase and hold positions."
+  },
+  {
+    "id": "highgate-synchronous-one-count",
+    "stable_id": "highgate-synchronousonecount",
+    "label": "Synchronous one count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 47 / PDF p. 48; compared against The Highgate Collection (2014), printed/PDF p. 27. Both editions give the same synchronous row diagram and sequence.",
+    "notation": "Two simultaneous straight single passes per pair; Anne starts at beat 0, Ben starts one beat later.",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L1",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 2
+      },
+      {
+        "from": "B-L1",
+        "to": "A-R1",
+        "cycleOffset": 2
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 47,
+        "pdfPage": 48
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 27,
+        "pdfPage": 27
+      }
+    ],
+    "notes": "Anne makes one simultaneous R/L pair on each even beat; Ben makes the matching pair one beat later. Each straight single pass lands in the receiver’s opposite-hand node, as shown by the causal lines in the source diagram. The two-beat cycle repeats both phases; each throw has height 3.",
+    "variants": [
+      "Synchronous pair of straight singles on each juggler event."
+    ],
+    "modelLimits": "The graph records only causal club transfer; starting club counts remain source notes.",
+    "reviewStatus": "The event phases and all four throw-to-catch links were transcribed from 2017 printed p. 47 and compared with the matching 2014 diagram on p. 27. The paired hand events are simultaneous; state validity still needs to be checked on catalog import."
+  },
+  {
+    "id": "highgate-synchronous-one-count-heffs",
+    "stable_id": "highgate-synchronousonecountwithheffs",
+    "label": "Synchronous one count with heffs",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 47 / PDF p. 48; compared against The Highgate Collection (2014), printed/PDF p. 27. Both diagrams and written order match.",
+    "notation": "Anne: synchronous straight singles, then synchronous heffs. Ben starts one beat later with synchronous heffs, then synchronous straight singles.",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2,
+        "height": 4
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2,
+        "height": 4
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1,
+        "height": 4
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1,
+        "height": 4
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R2",
+        "to": "A-R2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L1",
+        "to": "B-L1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 47,
+        "pdfPage": 48
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 27,
+        "pdfPage": 27
+      }
+    ],
+    "notes": "Each paired R/L set is simultaneous. Anne passes at t=0 and heffs at t=2; Ben heffs at t=1 and passes at t=3. Straight pass lines switch to the opposite hand; heff lines return to the same hand in the same juggler. Pass height 3 and heff height 4 align with the next event receiving each club, including the cycle wraps.",
+    "modelLimits": "Colour coding (two always-passed red clubs, four always-heff green clubs) is not an editor-state field.",
+    "reviewStatus": "All eight nodes and outgoing causal lines are traced from the 2017 diagram and compared with the matching 2014 diagram; hand labels, simultaneous phases, sequence order, and cycle offsets are checked. State validation is pending catalog import."
   }
 ]

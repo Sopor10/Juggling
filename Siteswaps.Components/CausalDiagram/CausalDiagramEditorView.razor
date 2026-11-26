@@ -31,20 +31,25 @@
               <span>Diagrammvorlage</span>
               <div class="editor-preset-list" role="group" aria-label="Vorlagen auswählen">
                 <h3>Asynchron</h3>
-                <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadSetupPreset("custom")'>Eigenes Diagramm</button>
+                <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@(IsPresetSelected("custom") ? "true" : "false")" @onclick='() => LoadSetupPreset("custom")'>Eigenes Diagramm</button>
                 @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
                 {
-                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
                 }
                 <h3>Synchron</h3>
                 @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
                 {
-                  <button type="button" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                  <button type="button" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
                 }
                 <h3>Highgate Collection</h3>
                 @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgate)
                 {
-                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                }
+                <h3>Endliche Sequenz</h3>
+                @foreach (var phase in RunawaySequence.Phases.Select((phase, index) => (phase, index)))
+                {
+                  <button type="button" data-preset-id="@phase.phase.StateId" class="editor-preset-option @(IsRunawayPhaseSelected(phase.index) ? "selected" : null)" aria-pressed="@(IsRunawayPhaseSelected(phase.index) ? "true" : "false")" @onclick="() => LoadRunawayPhase(phase.index)">@phase.phase.Label</button>
                 }
                 @if (_savedPresets.Count > 0)
                 {
@@ -52,7 +57,7 @@
                   @foreach (var saved in _savedPresets)
                   {
                     <div class="editor-saved-preset">
-                      <button type="button" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(saved.Id)" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
+                      <button type="button" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(saved.Id) ? "true" : "false")" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
                       <button type="button" class="editor-preset-delete" aria-label="Vorlage @saved.Name löschen" @onclick="() => DeleteSavedPreset(saved.Id)">Löschen</button>
                     </div>
                   }
@@ -109,19 +114,24 @@
             <div class="diagram-options-grid">
               <div class="editor-field">Diagrammvorlage
                 <div class="editor-preset-list editor-preset-list-compact" role="group" aria-label="Diagrammvorlage auswählen">
-                  <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadPreset("custom")'>Eigenes Diagramm</button>
+                  <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@(IsPresetSelected("custom") ? "true" : "false")" @onclick='() => LoadPreset("custom")'>Eigenes Diagramm</button>
                   @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous.Concat(CausalDiagramEditorPresets.VisibleSynchronous))
                   {
-                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
                   }
                   <h3>Highgate Collection</h3>
                   @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgate)
                   {
-                    <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                    <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                  }
+                  <h3>Endliche Sequenz · Thirteen club runaway</h3>
+                  @foreach (var phase in RunawaySequence.Phases.Select((phase, index) => (phase, index)))
+                  {
+                    <button type="button" data-preset-id="@phase.phase.StateId" class="editor-preset-option @(IsRunawayPhaseSelected(phase.index) ? "selected" : null)" aria-pressed="@(IsRunawayPhaseSelected(phase.index) ? "true" : "false")" @onclick="() => LoadRunawayPhase(phase.index)">@phase.phase.Label</button>
                   }
                   @foreach (var saved in _savedPresets)
                   {
-                    <button type="button" data-preset-id="@saved.Id" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(saved.Id)" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
+                    <button type="button" data-preset-id="@saved.Id" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(saved.Id) ? "true" : "false")" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
                   }
                 </div>
               </div>
@@ -135,7 +145,7 @@
               </label>
               <label class="editor-field">Abstand zwischen Jongleuren
                 <input type="range" min="80" max="180" step="5" @bind="_state.LaneSpacing" @bind:after="StateChanged" />
-                <output>@_state.LaneSpacing px</output>
+                <output>@LaneSpacingSummary</output>
               </label>
             </div>
             <div class="editor-save-preset">
@@ -150,17 +160,43 @@
           </div>
         </details>
         }
+        @if (_state.SequenceId == RunawaySequence.Id && _state.SequencePhaseIndex is int phaseIndex)
+        {
+          <nav class="runaway-sequence" aria-label="Thirteen club runaway phases">
+            <strong>@RunawaySequence.Label</strong>
+            <div class="editor-preset-list" role="group" aria-label="Sequence phase auswählen">
+              @foreach (var phase in RunawaySequence.Phases.Select((phase, index) => (phase, index)))
+              {
+                <button type="button" class="editor-preset-option @(IsRunawayPhaseSelected(phase.index) ? "selected" : null)" aria-pressed="@(IsRunawayPhaseSelected(phase.index) ? "true" : "false")" @onclick="() => LoadRunawayPhase(phase.index)">@($"{phase.index + 1}. {phase.phase.Label}")</button>
+              }
+            </div>
+            @foreach (var transition in RunawaySequence.Transitions.Where(item => item.AfterPhaseIndex == phaseIndex))
+            {
+              <p>@transition.Actor: @transition.Action (@transition.DurationBeats Beats; @transition.SelfThrows self throws)</p>
+            }
+          </nav>
+        }
       <div class="diagram-scroll pd-wrap">
         @{ var connectionIssueIds = ShowConnectionIssues ? ConnectionIssues().Select(issue => issue.ThrowId).ToHashSet(StringComparer.Ordinal) : new HashSet<string>(StringComparer.Ordinal); }
         <svg @ref="_svg" class="diagram-canvas pd-svg" width="@SvgWidth" style="width: @(SvgWidth)px" viewBox="0 0 @SvgWidth @SvgHeight" role="group" aria-label="Kausales Jonglierdiagramm" @onpointerup="EndDrag" @onpointercancel="EndDrag">
             @foreach (var juggler in _state.Jugglers.Select((item, index) => (item, index)))
             {
-                var y = RowY(juggler.index);
-                <g class="juggler-add-target @(!AllowJugglerActions ? "read-only" : "")" data-juggler-id="@juggler.item.Id" role="@(AllowJugglerActions ? "button" : null)" tabindex="@(AllowJugglerActions ? 0 : -1)" aria-pressed="@(AllowJugglerActions && _state.ActiveJugglerId == juggler.item.Id)" aria-label="@(AllowJugglerActions ? JugglerActionLabel(juggler.item.Name) : juggler.item.Name)" @onclick="() => SelectJuggler(juggler.item.Id)" @onkeydown="e => HandleJugglerKey(juggler.item.Id, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginJugglerHold(juggler.item.Id, e)">
+                var y = CausalDiagramEditorLayout.JugglerY(_state, juggler.index);
+                <g class="juggler-add-target @(!AllowJugglerActions ? "read-only" : "")" data-juggler-id="@juggler.item.Id" role="@(AllowJugglerActions ? "button" : null)" tabindex="@(AllowJugglerActions ? 0 : -1)" aria-pressed="@(AllowJugglerActions && _state.ActiveJugglerId == juggler.item.Id ? "true" : "false")" aria-label="@(AllowJugglerActions ? JugglerActionLabel(juggler.item.Name) : juggler.item.Name)" @onclick="() => SelectJuggler(juggler.item.Id)" @onkeydown="e => HandleJugglerKey(juggler.item.Id, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginJugglerHold(juggler.item.Id, e)">
                     <rect class="juggler-add-target-bg" x="8" y="@(y - 22)" width="96" height="44" rx="10" />
                     <SvgText CssClass="pd-juggler-label" X="18" Y="@((y + 5).ToString(CultureInfo.InvariantCulture))">@juggler.item.Name</SvgText>
                 </g>
-                <line class="timeline" x1="110" x2="@(SvgWidth - 20)" y1="@y" y2="@y" />
+                @if (CausalDiagramEditorLayout.HasHandTracks(_state, juggler.item.Id))
+                {
+                    <line class="timeline hand-timeline" x1="110" x2="@(SvgWidth - 20)" y1="@(y - 30)" y2="@(y - 30)" />
+                    <line class="timeline hand-timeline" x1="110" x2="@(SvgWidth - 20)" y1="@(y + 30)" y2="@(y + 30)" />
+                    <SvgText CssClass="pd-hand-lane-label" X="104" Y="@((y - 26).ToString(CultureInfo.InvariantCulture))" TextAnchor="end">L</SvgText>
+                    <SvgText CssClass="pd-hand-lane-label" X="104" Y="@((y + 34).ToString(CultureInfo.InvariantCulture))" TextAnchor="end">R</SvgText>
+                }
+                else
+                {
+                    <line class="timeline" x1="110" x2="@(SvgWidth - 20)" y1="@y" y2="@y" />
+                }
             }
             <defs><marker id="causal-arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path class="pd-arrow-fill" d="M0,0 L0,6 L9,3 z" /></marker></defs>
             @foreach (var edge in _state.CausalEdges)
@@ -187,10 +223,10 @@
                 {
                     var nodeTime = item.StartTime + cycle * _state.CycleLength;
                     var nodeX = X(nodeTime);
-                    var nodeY = RowY(JugglerIndex(item.JugglerId));
+                    var nodeY = CausalDiagramEditorLayout.ThrowY(_state, item);
                     @if (AllowNodeMove || AllowThrowActions)
                     {
-                        <circle class="throw-hit-target @(IsEditingThrow(item.Id, currentCycle) ? "editing" : "")" data-throw-id="@item.Id" data-cycle="@currentCycle" cx="@SvgNumber(nodeX)" cy="@nodeY" r="28" tabindex="0" role="button" aria-label="Wurf @DerivedHeightLabel(item), Hand @item.Hand von @JugglerName(item.JugglerId), Wiederholung @(currentCycle + 1). Kurz drücken zum Auswählen, lange drücken zum Bearbeiten." aria-pressed="@(item.Id == _selectedId)" @onclick="() => ToggleSelection(item.Id)" @onkeydown="e => HandleThrowKey(item.Id, currentCycle, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginThrowInteraction(item.Id, currentCycle, e)" />
+                        <circle class="throw-hit-target @(IsEditingThrow(item.Id, currentCycle) ? "editing" : "")" data-throw-id="@item.Id" data-cycle="@currentCycle" cx="@SvgNumber(nodeX)" cy="@nodeY" r="@CausalDiagramEditorLayout.ThrowHitTargetRadius" tabindex="0" role="button" aria-label="Wurf @DerivedHeightLabel(item), Hand @item.Hand von @JugglerName(item.JugglerId), Wiederholung @(currentCycle + 1). Kurz drücken zum Auswählen, lange drücken zum Bearbeiten." aria-pressed="@(item.Id == _selectedId ? "true" : "false")" @onclick="() => ToggleSelection(item.Id)" @onkeydown="e => HandleThrowKey(item.Id, currentCycle, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginThrowInteraction(item.Id, currentCycle, e)" />
                     }
                     <g class="throw-node-visual @(IsEditingThrow(item.Id, currentCycle) ? "wiggling" : "")">
                         <circle class="pd-node @(item.Hand == "L" ? "left" : "right") @(item.Id == _selectedId ? "selected" : "") @(connectionIssueIds.Contains(item.Id) ? "connection-error" : "")" data-juggler-id="@item.JugglerId" data-throw-id="@item.Id" cx="@SvgNumber(nodeX)" cy="@nodeY" r="20" pointer-events="none" />
@@ -231,7 +267,7 @@
                 @foreach (var item in _state.Throws.Where(item => IsEditingThrow(item.Id, currentCycle)))
                 {
                     var nodeX = X(item.StartTime + currentCycle * _state.CycleLength);
-                    var nodeY = RowY(JugglerIndex(item.JugglerId));
+                    var nodeY = CausalDiagramEditorLayout.ThrowY(_state, item);
                     var menuX = nodeX > SvgWidth - 150 ? nodeX - 142 : nodeX + 30;
                     <g class="throw-edit-actions">
                         <g class="throw-delete-action" role="button" tabindex="0" aria-label="Wurf löschen" @onclick="() => DeleteThrow(item.Id)" @onkeydown="e => HandleThrowActionKey(item.Id, e, delete: true)" @onkeydown:preventDefault="true">
@@ -272,13 +308,13 @@
                 @foreach (var row in EditorTable.Rows)
                 {
                   <tr>
-                    <th scope="row">@row.Juggler</th>
+                    <th scope="row">@row.Juggler@(row.Hand is null ? "" : $" · {row.Hand}")</th>
                     @foreach (var chip in row.Cells)
                     {
                       <td>
-                        @if (chip is not null)
+                        @if (chip.Count > 0)
                         {
-                          <ThrowChipRow Chips="SingleChip(chip)" ColorOrbits="false" AriaLabel="@($"Wurf {row.Juggler}")" />
+                          <ThrowChipRow Chips="chip" ColorOrbits="false" AriaLabel="@($"Wurf {row.Juggler}{(row.Hand is null ? "" : $", Hand {row.Hand}")}")" ShowHands="@(row.Hand is null)" />
                         }
                       </td>
                     }
@@ -405,9 +441,11 @@
             return Math.Max(1m, _state.CycleLength * _state.Repetitions);
         }
     }
-    private int SvgHeight => Math.Max(180, RowY(_state.Jugglers.Count - 1) + 75);
+    private int SvgHeight => Math.Max(
+        180,
+        CausalDiagramEditorLayout.JugglerY(_state, _state.Jugglers.Count - 1) + 75
+    );
     private CausalDiagramEditorTableAdapter.Table EditorTable => CausalDiagramEditorTableAdapter.Map(_state);
-    private static IReadOnlyList<DetailViewModel.ThrowChip> SingleChip(DetailViewModel.ThrowChip chip) => [chip];
 
     protected override void OnParametersSet()
     {
@@ -518,7 +556,9 @@
 
     private int JugglerIndex(string id) => _state.Jugglers.FindIndex(j => j.Id == id);
     private string JugglerName(string id) => _state.Jugglers.FirstOrDefault(j => j.Id == id)?.Name ?? id;
-    private int RowY(int index) => 70 + (int)(_state.LaneSpacing * index);
+    private string LaneSpacingSummary => CausalDiagramEditorLayout.HasAnyHandTracks(_state)
+        ? $"{_state.LaneSpacing}px eingestellt · effektiv {CausalDiagramEditorLayout.EffectiveLaneSpacing(_state)}px für getrennte Handspuren"
+        : $"{_state.LaneSpacing}px";
     private decimal TimeScale => Math.Clamp(_state.TimelineWidth / Math.Max(1m, _state.CycleLength), 6m, 120m);
     private int SvgWidth => Math.Max(640, (int)Math.Ceiling((double)(X(_timeMax) + 50m)));
     private decimal X(decimal time) => 120m + time * TimeScale;
@@ -594,9 +634,9 @@
         var sourceLine = JugglerIndex(source.JugglerId);
         var targetLine = JugglerIndex(target.JugglerId);
         var x1 = X(source.StartTime + sourceCycle * _state.CycleLength);
-        var y1 = RowY(sourceLine);
+        var y1 = CausalDiagramEditorLayout.ThrowY(_state, source);
         var x2 = X(target.StartTime + (sourceCycle + edge.CycleOffset) * _state.CycleLength);
-        var y2 = RowY(targetLine);
+        var y2 = CausalDiagramEditorLayout.ThrowY(_state, target);
         var dx = x2 - x1;
         var dy = y2 - y1;
         var length = Math.Max(1d, Math.Sqrt((double)(dx * dx + dy * dy)));
@@ -618,7 +658,7 @@
     {
         var source = _state.Throws.First(node => node.Id == edge.FromThrowId);
         var x1 = X(source.StartTime + sourceCycle * _state.CycleLength);
-        var y1 = RowY(JugglerIndex(source.JugglerId));
+        var y1 = CausalDiagramEditorLayout.ThrowY(_state, source);
         var dx = x - x1;
         var dy = y - y1;
         var length = Math.Max(1d, Math.Sqrt((double)(dx * dx + dy * dy)));
@@ -634,9 +674,9 @@
         var source = _state.Throws.First(node => node.Id == edge.FromThrowId);
         var target = _state.Throws.First(node => node.Id == edge.ToThrowId);
         var x1 = X(source.StartTime + sourceCycle * _state.CycleLength);
-        var y1 = RowY(JugglerIndex(source.JugglerId));
+        var y1 = CausalDiagramEditorLayout.ThrowY(_state, source);
         var x2 = X(target.StartTime + (sourceCycle + edge.CycleOffset) * _state.CycleLength);
-        var y2 = RowY(JugglerIndex(target.JugglerId));
+        var y2 = CausalDiagramEditorLayout.ThrowY(_state, target);
         var dx = x2 - x1;
         var dy = y2 - y1;
         if (Math.Abs(dx) < 1m && Math.Abs(dy) < 1m)
@@ -701,18 +741,33 @@
         }
 
         var time = (decimal)Math.Clamp((normalizedX * SvgWidth - 120d) / (double)TimeScale, 0, (double)_timeMax);
-        var row = Enumerable.Range(0, _state.Jugglers.Count)
-            .OrderBy(index => Math.Abs(RowY(index) - normalizedY * SvgHeight))
+        var pointerY = normalizedY * SvgHeight;
+        var row = _state.Jugglers
+            .Select((juggler, index) => new
+            {
+                Juggler = juggler,
+                Distance = _state.Throws
+                    .Where(node => node.JugglerId == juggler.Id)
+                    .Select(node => Math.Abs(CausalDiagramEditorLayout.ThrowY(_state, node) - pointerY))
+                    .DefaultIfEmpty(Math.Abs(CausalDiagramEditorLayout.JugglerY(_state, index) - pointerY))
+                    .Min(),
+            })
+            .OrderBy(item => item.Distance)
             .First();
-        var jugglerId = _state.Jugglers[row].Id;
-        var target = _state.Throws.Where(node => node.JugglerId == jugglerId)
+        var target = _state.Throws.Where(node => node.JugglerId == row.Juggler.Id)
             .Select(node =>
             {
                 var targetCycle = (int)Math.Round((time - node.StartTime) / _state.CycleLength, MidpointRounding.AwayFromZero);
                 var absoluteTime = node.StartTime + targetCycle * _state.CycleLength;
-                return (Node: node, Cycle: targetCycle, Distance: Math.Abs(absoluteTime - time));
+                return (
+                    Node: node,
+                    Cycle: targetCycle,
+                    Distance: Math.Abs(absoluteTime - time),
+                    VerticalDistance: Math.Abs(CausalDiagramEditorLayout.ThrowY(_state, node) - pointerY)
+                );
             })
             .OrderBy(candidate => candidate.Distance)
+            .ThenBy(candidate => candidate.VerticalDistance)
             .FirstOrDefault();
         if (target.Node is null)
         {
@@ -876,6 +931,31 @@
     }
 
     private bool IsPresetSelected(string id) => _preset == id || _selectedSavedPresetId == id;
+
+    private static CausalDiagramEditorSequence RunawaySequence =>
+        CausalDiagramEditorSequences.All.Single(sequence => sequence.Id == "highgate-thirteenclubrunaway");
+
+    private bool IsRunawayPhaseSelected(int index) =>
+        _state.SequenceId == RunawaySequence.Id && _state.SequencePhaseIndex == index;
+
+    private async Task LoadRunawayPhase(int index)
+    {
+        if (index < 0 || index >= RunawaySequence.Phases.Count)
+            return;
+        var phase = RunawaySequence.Phases[index];
+        _state = CausalDiagramEditorSequences.CreateRunawayPhase(phase.StateId);
+        _state.Version = 5;
+        _state.SequenceId = RunawaySequence.Id;
+        _state.SequencePhaseIndex = index;
+        _preset = phase.StateId;
+        _selectedSavedPresetId = null;
+        _selectedId = null;
+        SyncSetupFromState();
+        RefreshAnimation();
+        StateChanged();
+        if (_module is not null)
+            await _module.InvokeVoidAsync("closeDetails", _diagramOptions);
+    }
 
     private void LoadPreset(string id)
     {
@@ -1348,6 +1428,9 @@
             _preset = "custom";
             _selectedSavedPresetId = null;
             _state.PresetId = _preset;
+            _state.Version = 4;
+            _state.SequenceId = null;
+            _state.SequencePhaseIndex = null;
         }
         _state.Repetitions = Math.Clamp(_state.Repetitions, 1, 20);
         RefreshAnimation();

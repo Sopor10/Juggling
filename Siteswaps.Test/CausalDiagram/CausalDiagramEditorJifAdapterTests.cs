@@ -46,8 +46,8 @@ public sealed class CausalDiagramEditorJifAdapterTests
                 throw new InvalidOperationException($"{sample}: {error}");
             var table = CausalDiagramEditorTableAdapter.Map(decoded);
             if (
-                table.Rows.Count != decoded.Jugglers.Count
-                || table.Rows.Sum(row => row.Cells.Count(chip => chip is not null))
+                table.Rows.Select(row => row.JugglerId).Distinct().Count() != decoded.Jugglers.Count
+                || table.Rows.Sum(row => row.Cells.Sum(cell => cell.Count))
                     != decoded.Throws.Count * decoded.Repetitions
             )
                 throw new InvalidOperationException(
@@ -57,9 +57,13 @@ public sealed class CausalDiagramEditorJifAdapterTests
             {
                 var juggler = decoded.Jugglers[jugglerIndex];
                 var actualTimes = table
-                    .Times.Where(
-                        (_, timeIndex) => table.Rows[jugglerIndex].Cells[timeIndex] is not null
+                    .Rows.Where(row => row.JugglerId == juggler.Id)
+                    .SelectMany(row =>
+                        row.Cells.SelectMany(
+                            (chips, timeIndex) => chips.Select(_ => table.Times[timeIndex])
+                        )
                     )
+                    .Order()
                     .ToList();
                 var expectedTimes = Enumerable
                     .Range(0, decoded.Repetitions)
@@ -92,11 +96,43 @@ public sealed class CausalDiagramEditorJifAdapterTests
         table.Rows.Should().HaveCount(2);
         table
             .Rows.SelectMany(row => row.Cells)
-            .Count(cell => cell is not null)
+            .Sum(cell => cell.Count)
             .Should()
             .Be(state.Throws.Count * state.Repetitions);
-        table.Rows[0].Cells.Any(cell => cell is null).Should().BeTrue();
-        table.Rows[1].Cells.Any(cell => cell is null).Should().BeTrue();
+        table.Rows[0].Cells.Any(cell => cell.Count == 0).Should().BeTrue();
+        table.Rows[1].Cells.Any(cell => cell.Count == 0).Should().BeTrue();
+    }
+
+    [Test]
+    public void EditorTable_PreservesSimultaneousEventsOnSeparateHandRows()
+    {
+        var state = new CausalDiagramEditorState
+        {
+            CycleLength = 4m,
+            Repetitions = 1,
+            Jugglers = [new EditorJuggler("A", "Anne"), new EditorJuggler("B", "Ben")],
+            Throws =
+            [
+                new EditorThrow("A-R", "A", "R", 0m, 3m),
+                new EditorThrow("A-L", "A", "L", 0m, 4m),
+                new EditorThrow("B-R", "B", "R", 0m, 3m),
+            ],
+            CausalEdges =
+            [
+                new EditorCausalEdge("A-R-e", "A-R", "B-R"),
+                new EditorCausalEdge("A-L-e", "A-L", "B-R"),
+            ],
+        };
+
+        var table = CausalDiagramEditorTableAdapter.Map(state);
+        var timeZero = Array.IndexOf(table.Times.ToArray(), 0m);
+        var anneRows = table.Rows.Where(row => row.JugglerId == "A").ToArray();
+
+        anneRows.Should().HaveCount(2);
+        anneRows.Select(row => row.Hand).Should().BeEquivalentTo(new[] { "L", "R" });
+        anneRows.Sum(row => row.Cells[timeZero].Count).Should().Be(2);
+        anneRows.Single(row => row.Hand == "L").Cells[timeZero].Single().Hand.Should().Be("L");
+        anneRows.Single(row => row.Hand == "R").Cells[timeZero].Single().Hand.Should().Be("R");
     }
 
     [Test]

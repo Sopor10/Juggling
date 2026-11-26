@@ -1,6 +1,6 @@
 # Highgate transcription batch: 2017 printed pages 316–330
 
-Work file: [highgate-transcriptions-316-330.json](highgate-transcriptions-316-330.json). It contains four checked, importable graph records. No central preset catalog, inventory, or test file was changed.
+Work file: [highgate-transcriptions-316-330.json](highgate-transcriptions-316-330.json). It now contains ten checked, importable graph records: the four standalone thirteen-club counts, five remaining line-feed variants, and Thirteen club weave. No central preset catalog, inventory, or test file was changed.
 
 ## Included patterns
 
@@ -17,27 +17,39 @@ For the four-count pattern, the 2014 book also has a differently named `Thirteen
 
 ## State validation
 
-A temporary validator constructed each record, called `Create()`, ran `SynchronizeHeights()`, and compared all serialized cycle offsets. Results:
+The focused source-record validator checks all ten records: each graph has unique event IDs and outgoing edges, creates a valid editor state, and preserves its cycle offsets after height synchronization. The five line-feed graphs also check every source row's recipient, hand route, endpoint, and arrival offset. The separate Runaway state validator checks all four periodic components; those components are not registered as editor presets because none is the whole named pattern.
 
-- `Create()` succeeded for all four graphs (16/16, 12/12, 8/8, and 4/4 nodes/edges).
-- Graph invariants passed `IsValidForEditor()` when the new preset ID was temporarily replaced with registered placeholder ID `highgate-three-count`.
-- `SynchronizeHeights()` preserved all four graphs' serialized cycle offsets.
-- The intended IDs are not centrally registered yet, so `IsValidForEditor()` returns false with those IDs until catalog import. Rerun after import with the real IDs.
-- The initial pass-only graphs were incomplete and have been replaced with full graphs containing every self-throw edge. No source action is a hold in these four patterns.
+- `Highgate316To330StandaloneRecordValidationTests`: 2 passed.
+- `HighgateRunawayStandaloneStateValidationTests`: 2 passed.
+- The catalog imports the six standalone patterns from this chunk that represent complete periodic patterns; Runaway's four cyclic states remain research components until the editor can represent their finite transitions.
 
-## Other patterns in the requested span
+## Additional line-feed diagrams transcribed
 
-The following named entries are visible in the section and remain untranscribed in this chunk; they must stay discoverable in the inventory and receive separate presets if later found representable:
+| Stable inventory ID | Pattern | 2017 body page | 2014 page | Graph |
+|---|---|---|---|---|
+| `highgate-thirteenclubfunkybookendslinefeedfeedingfivecoun-cde45e90c5` | Funky bookends line feed feeding five-count popcorn and five-club why-not | printed p. 316 / PDF p. 317 | p. 226 | 40 nodes / 40 edges |
+| `highgate-thirteenclubmartinsonecountlinefeedfeedingfiveco-44febdca3e` | Martin's one-count line feed feeding five-count popcorn and why-not | printed p. 316 / PDF p. 317 | p. 226 | 40 nodes / 40 edges |
+| `highgate-thirteenclubonecountlinefeedfeedingfivecountpopcornandparsnip` | One-count line feed feeding five-count popcorn and Parsnip | printed pp. 316–317 / PDF pp. 317–318 | p. 226 | 40 nodes / 40 edges |
+| `highgate-thirteenclubonecountlinefeedfeedingwhynotandfivecountpopcorn` | One-count line feed feeding Why Not? and five-count popcorn | printed p. 317 / PDF p. 318 | p. 227 | 40 nodes / 40 edges |
+| `highgate-thirteenclubonecountlinefeedfeedingmaybeandfivecountpopcorn` | One-count line feed feeding Maybe and five-count popcorn | printed p. 318 / PDF p. 319 | p. 227 | 40 nodes / 40 edges |
 
-- Printed pp. 316–318: `Thirteen club funky bookends line feed, feeding five count popcorn and five club why not?`; `Thirteen club Martin's one count line feed, feeding five count popcorn and why not?`; `Thirteen club one count line feed, feeding five count popcorn and parsnip`; `Thirteen club one count line feed, feeding why not? and five count popcorn`; and `Thirteen club one count line feed, feeding maybe and five count popcorn`.
-- Printed pp. 320–323: `Thirteen club double urban terror feed`; `Thirteen club three count accommodation`; `Thirteen club low fat chocolate box`; `Thirteen club bookshelf`; `Thirteen club chocolate bookshelf`; `Thirteen club countdown accommodation`; and `Thirteen club runaway`.
-- Printed pp. 325–330: `Thirteen club weave`; `Thirteen club dresser drawer weave`; `Thirteen club it's a good one (countdown weave)`; `Thirteen club gorilla weave`; and `Thirteen club synchronous gorilla weave`.
+The records preserve each actor's source row, starting phase, first hand where specified, crossing/straight route, and each edge's arrival offset. Heff and zip remain named in the source-row metadata; their endpoints follow the diagram's same-hand/earlier-event conventions. All five diagrams and row sequences match the 2014 diagrams on pp. 226–227. Their static event and causal routing is represented; the editor still does not model line formations or club color/count inventories.
 
-The line-feed pages repeatedly use explicit `heff` and `zip` tokens; those actions need exact semantics and cannot safely be turned into self-holds or ordinary passes. Several other patterns have longer or alternating sequences and require each diagram arrow to be traced before graph acceptance. The weave and runaway entries describe changing spatial formations and walking paths; the current editor can retain a causal throw graph but cannot represent those positions, paths, or transition cues. I have not marked these named entries unrepresentable solely because they are not in this batch.
+## Thirteen club weave transcribed
+
+| Stable inventory ID | Pattern | 2017 body page | 2014 page | Graph |
+|---|---|---|---|---|
+| `highgate-thirteenclubweave` | Thirteen club weave | printed p. 326 / PDF p. 327 | p. 234 | 24 nodes / 24 causal edges |
+
+The diagram has six event positions per juggler in a six-beat repeat. I traced all eight cross-lane edges and the remaining same-lane edges from the diagram image; the row metadata records the target juggler at every event. The 2014 figure is pixel-for-pixel the same causal-row drawing. The book also describes the moving figure-eight formation and feeder's left/middle/right sweep; those spatial paths are recorded as notes because the editor state has no formation field.
+
+## Remaining patterns in the requested span
+
+The `Thirteen club runaway` phase records and model boundary are documented in [highgate-runaway-transition-review.md](highgate-runaway-transition-review.md). Its inventory row is classified as requiring finite-transition support. The four later weave diagrams on pp. 327–330 are being handled in the adjacent source batch.
 
 ## Manipulation review
 
-The included four patterns and the visible candidate entries in this span describe ordinary passing, feeding, accommodation, boxes, and walking/weaving. The source does not describe an external manipulator, takeout, hijack, or lo-jack in this span. Walking and movement are not classified as manipulation.
+The included patterns and the visible candidate entries in this span describe ordinary passing, feeding, accommodation, boxes, and walking/weaving. The source does not describe an external manipulator, takeout, hijack, or lo-jack in this span. Walking and movement are not classified as manipulation.
 
 ## Source coverage
 

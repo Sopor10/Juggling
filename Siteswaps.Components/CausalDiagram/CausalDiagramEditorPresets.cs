@@ -46,6 +46,7 @@ public static class CausalDiagramEditorPresets
             ),
         }
             .Concat(HighgateCausalDiagramPresets.All)
+            .Concat(CausalDiagramEditorSequences.RunawayPhasePresets)
             .ToArray();
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>

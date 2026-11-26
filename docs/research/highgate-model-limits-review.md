@@ -1,6 +1,6 @@
 # Highgate causal-diagram model-limit review
 
-This note audits the 8 inventory rows still marked `model extension required; source retained` against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
+This note audits the 3 inventory rows still marked `model extension required; source retained` against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
 
 ## Findings and priority
 
@@ -8,7 +8,7 @@ This note audits the 8 inventory rows still marked `model extension required; so
 
 The JSON and token state can store `CycleOffset` values from −1000 to 1000, and the SVG path renderer places the endpoint at `target.StartTime + (sourceCycle + edge.CycleOffset) * CycleLength`. The earlier implementation incremented an offset when its derived height was negative, which changed backward arrows. That behavior is fixed: `SynchronizeHeights()` now preserves the signed offset and recalculates only non-explicit heights. Zip/gap rows still require exact source transcription, but backward timing is no longer an editor-model blocker.
 
-The backward-arrow support is now implemented. Six source-checked ordinary graphs that were previously held back by signed offsets are now translated; seven other periodic patterns have moved to graph-transcription-pending status. The remaining true model limits are the finite-transition and simultaneous-event cases below.
+The backward-arrow support is now implemented. Six source-checked ordinary graphs that were previously held back by signed offsets are now translated; seven other periodic patterns have moved to graph-transcription-pending status. The remaining true model limit in the current inventory is finite transitions; simultaneous-event layout is now implemented.
 
 | IDs | Source pages (2017 printed / 2014 PDF) | Evidence |
 |---|---|---|
@@ -20,7 +20,7 @@ The backward-arrow support is now implemented. Six source-checked ordinary graph
 | `highgate-heffzipzap`, `highgate-zapzipheff`, `highgate-zapzipheffalternativestart` | 43 / 25 | Backward zip routes in heff/zap sequences. |
 | `highgate-convertingsymmetricasynchronousfourhandedsiteswa-0987b5f53e`, `highgate-convertingsymmetricsynchronousfourhandedsiteswap-d9ed3bf63a` | 39 / 22 | Conversion examples contain backward zip arrows; these are explanatory examples and may not be independent catalog patterns. |
 
-`highgate-thesynchronousrecipe` and `highgate-triplepassholdinsynchonecount6424` also need signed offsets; they additionally need simultaneous-event layout described below.
+`highgate-thesynchronousrecipe` and `highgate-triplepassholdinsynchonecount6424` previously also needed simultaneous-event layout. Signed offsets and the same-time layout are now supported; only source transcription remains.
 
 **Early-page audit update:** `highgate-fourfourone`, `highgate-fourfourfourzero`, `highgate-aselftriple`, `highgate-doublezapzip531`, `highgate-therecipe`, and the 2014-only `highgate-58552` now have source-checked graph records in [highgate-signed-zip-transcriptions.json](highgate-signed-zip-transcriptions.json) and are imported in the central catalog. NUnit validates the source graphs and preset editor states. `highgate-doubletriplezip561` and `highgate-doublezip51` remain finite-transition cases, separately described below.
 
@@ -30,9 +30,9 @@ State tests cover negative-offset round trips, explicit-height round trips, lega
 
 `highgate-passselfzip` (siteswap 726) is now translated and imported with twelve events, twelve edges, and a source-matched −1 cycle offset on Anne's final zip. This verifies a backward zip loop through the runtime catalog and its validity test.
 
-### P1 — Allow distinct events at the same juggler and time
+### P1 — Implemented: distinct same-time events on separate hand tracks
 
-The current data model has a `Hand` on each node, but the SVG assigns every node for a juggler to `RowY(JugglerIndex(...))`; its x coordinate is derived from `StartTime`. Two same-time events by that juggler therefore occupy the same position. The table adapter also selects the first event in a juggler/time cell, silently hiding any additional event.
+The earlier renderer put every event for one juggler on the same y-coordinate, and the table kept only the first event in a juggler/time cell. The editor now detects simultaneous events and places left- and right-hand nodes on separate tracks at ±30 SVG units. It raises the effective spacing between jugglers to 120 units when those tracks are needed. Causal paths, drag targets, and edit controls all use the same event coordinate. The table splits that juggler into L/R rows and retains multiple chips in every cell.
 
 | IDs | Source pages (2017 printed / 2014 PDF) | Evidence |
 |---|---|---|
@@ -42,19 +42,21 @@ The current data model has a `Hand` on each node, but the SVG assigns every node
 | `highgate-thesynchronousrecipe` | 35–36 / 20–21 | Simultaneous events plus backward zips. |
 | `highgate-triplepassholdinsynchonecount6424` | 29 / 15 | Synchronous two-hand throws plus zip variant. |
 
-**Code work:** define whether a juggler row is one track or two hand tracks. For fidelity with the source diagrams, a hand sub-lane or a deterministic same-time node offset is needed in the SVG; edge endpoints must use that same position. The event table must represent multiple events in one time column, for example with hand-specific subcells, instead of taking `FirstOrDefault()`. Preserve keyboard/touch hit targets and test an actual phone-width view because two-hand nodes will be closer together.
+The unit test checks distinct hand tracks and target separation. The Playwright test renders a same-time R/L state at 390×844 with touch enabled, verifies both 56×56 targets and separate table rows, and performs a touch drag. The focused E2E passes.
 
-### P2 — Add finite entry/exit or transition events where the source is not periodic
+### P2 — Partial implementation: finite sequence phases and transitions
 
 `CausalDiagramEditorState` stores a repeating `CycleLength` and the renderer repeats each node across `Repetitions`. This fits a steady-state cycle. It cannot faithfully express a finite lead-in, excited section, and exit whose events occur only once. The inventory has a related candidate, `highgate-tripleself73` (printed p. 30), still open for transcription: source review describes it as entry → excited cycle → exit, so it needs a finite-transition representation, not just a periodic preset. The separate `highgate-aselftriple` is periodic but has the backward zip described in P0.
 
-**Code work:** model a pattern as a steady-state cycle plus optional finite prefix/suffix (or as a finite event graph with explicit repeat segments). Serialization, link state, rendering, table projection, and generation/export must preserve which nodes repeat. Do not encode a finite transition by duplicating it into the cycle; that changes the pattern.
+The editor now has a separate finite-sequence catalog and `j5.` state links. Thirteen-club Runaway exposes its four source-backed periodic phases in the Highgate preset list, supports phase navigation, and describes the two walk transitions. Existing periodic `j4.` links remain unchanged. Its intermediate three-self-throw intervals and movement paths are not drawn as event graphs because the source does not specify a full event-by-event transition chart.
+
+**Remaining code work:** represent finite entry/exit actions as causal events and connect the transition graph to rendering, table projection, and animation. Do not encode a finite transition by duplicating it into the repeating cycle; that changes the pattern. Runaway's transition summary is useful but does not complete this requirement; the triple-self entry/exit candidate and the finite zip patterns still need source transcription and full transition graph support.
 
 ### P3 — Keep event/action semantics explicit across editor and playback
 
 Static causal graphs can show holds as disconnected event nodes: several existing presets contain explicit hold nodes and remain valid. This is distinct from the missing-edge fallback in `CausalDiagramEditorJifAdapter`: it infers a self target for an unconnected node, then derives duration from its height. A hold has height zero, which fails the adapter’s positive-duration check. Thus a static hold can be represented today, but it cannot yet be exported as a faithful Passist animation.
 
-The reviewed set above is classified as ordinary patterns in the inventory; the separate manipulator research has additional candidates. Before importing zaps, heffs, steals, or hijacks, the model needs a declared event vocabulary (for example pass, self, hold, zip, heff, manipulation/transition), with a documented meaning for each edge and playback behavior. Preserve the actor/recipient and event kind rather than turning an unfamiliar action into a normal self edge. This is especially relevant to the `why not` families, whose inventory classification currently says ordinary but whose transition semantics still need source-level review.
+The reviewed set above is classified as ordinary patterns in the inventory; the separate manipulator research has additional candidates. For static diagrams, the imported records keep unfamiliar action names, explicit heights, hand routes, and source references in notation and source notes; the 11 audited periodic patterns now pass edge-by-edge checks, including the three 2.5-beat half-spin zap patterns. Passist export still lacks a full action vocabulary for zaps, holds, steals, and hijacks. Do not infer a playback action from a causal edge alone.
 
 ## Representable today, with limits stated accurately
 
@@ -74,4 +76,4 @@ The reviewed set above is classified as ordinary patterns in the inventory; the 
 
 ## Scope note
 
-This audit covers the 8 rows currently labeled model-limited. It is not a full audit of all 919 inventory candidates, and it does not establish that the other open candidates are representable or fully transcribed.
+This audit covers the 3 rows currently labeled model-limited. It is not a full audit of all 919 inventory candidates, and it does not establish that the other open candidates are representable or fully transcribed.

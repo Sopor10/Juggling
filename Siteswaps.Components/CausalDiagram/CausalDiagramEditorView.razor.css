@@ -28,6 +28,8 @@
 .editor-saved-preset .editor-preset-option { flex: 1; min-width: 0; }
 .editor-preset-delete { min-width: 68px; min-height: 44px; padding: .35rem; border: 1px solid var(--decision-color-status-error-border); border-radius: var(--decision-radius-compact); background: var(--decision-color-status-error-surface); color: var(--decision-color-status-error-text); font: 700 .75rem var(--decision-font-body); }
 .editor-preset-list-compact { grid-template-columns: 1fr; max-height: 12rem; }
+.runaway-sequence { display: grid; gap: .5rem; margin-block: .75rem; padding: .75rem; border: 1px solid var(--decision-color-border); border-radius: var(--decision-radius-compact); background: var(--decision-color-surface-subtle); }
+.runaway-sequence p { margin: 0; color: var(--decision-color-text-muted); }
 .editor-save-preset { display: grid; gap: .35rem; }
 .editor-save-preset-row { display: flex; gap: .5rem; }
 .editor-save-preset-row input { flex: 1; min-width: 0; min-height: 44px; border: 1px solid var(--decision-color-border); border-radius: var(--decision-radius-compact); padding: .5rem .75rem; font: 700 .9rem var(--decision-font-body); }
@@ -74,6 +76,8 @@
 .diagram-canvas { display: block; max-width: none; touch-action: pan-x pan-y; }
 .pd-frame { fill: var(--decision-color-surface-subtle); stroke: var(--decision-color-border-subtle); }
 .timeline { stroke: var(--decision-color-border); stroke-width: 2; }
+.hand-timeline { stroke-width: 1.5; stroke-dasharray: 4 4; }
+::deep .pd-hand-lane-label { fill: var(--decision-color-text-muted); font: 800 12px var(--decision-font-body); }
 .causal-arrow { stroke-width: 2.5; opacity: .86; pointer-events: none; }
 .arrow-target-handle { fill: transparent; stroke: transparent; stroke-width: 2; cursor: grab; pointer-events: all; touch-action: none; }
 .arrow-target-handle:hover, .arrow-target-handle:focus-visible, .arrow-target-handle.dragging { fill: var(--decision-color-interaction-hover); stroke: var(--decision-color-brand-accent); outline: none; }

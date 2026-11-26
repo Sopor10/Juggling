@@ -7,6 +7,7 @@ namespace Siteswaps.Components.CausalDiagram;
 public sealed class CausalDiagramEditorState
 {
     private const string CompactTokenPrefix = "j4.";
+    private const string SequenceCompactTokenPrefix = "j5.";
     private const string PreviousCompactTokenPrefix = "j3.";
     private const string OlderCompactTokenPrefix = "j2.";
     private const string OldCompactTokenPrefix = "j1.";
@@ -22,6 +23,9 @@ public sealed class CausalDiagramEditorState
     );
 
     public int Version { get; set; } = 4;
+    /// <summary>Optional finite-sequence selection; the graph remains the ordinary periodic state.</summary>
+    public string? SequenceId { get; set; }
+    public int? SequencePhaseIndex { get; set; }
     public string PresetId { get; set; } = "custom";
     public string ActiveJugglerId { get; set; } = "A";
     public decimal CycleLength { get; set; } = 7m;
@@ -568,6 +572,11 @@ public sealed class CausalDiagramEditorState
         {
             writer.WriteStartObject();
             writer.WriteNumber("v", Version);
+            if (Version >= 5)
+            {
+                writer.WriteString("x", SequenceId);
+                writer.WriteNumber("z", SequencePhaseIndex ?? 0);
+            }
             writer.WriteString("p", PresetId);
             writer.WriteString("a", ActiveJugglerId);
             writer.WriteNumber("c", CycleLength);
@@ -611,7 +620,7 @@ public sealed class CausalDiagramEditorState
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
-        return CompactTokenPrefix + ToBase64Url(output.ToArray());
+        return (Version >= 5 ? SequenceCompactTokenPrefix : CompactTokenPrefix) + ToBase64Url(output.ToArray());
     }
 
     public static bool TryDecode(string? token, out CausalDiagramEditorState? state)
@@ -633,7 +642,8 @@ public sealed class CausalDiagramEditorState
                 MigrateLegacy75Heights(decoded);
                 if (decoded.Version < 4)
                     decoded.SynchronizeLegacyHeights();
-                decoded.Version = 4;
+                if (decoded.Version < 5)
+                    decoded.Version = 4;
                 decoded.SynchronizeHeights();
             }
             if (!IsValid(decoded))
@@ -657,6 +667,8 @@ public sealed class CausalDiagramEditorState
 
     private static CausalDiagramEditorState? DeserializeToken(string token)
     {
+        if (token.StartsWith(SequenceCompactTokenPrefix, StringComparison.Ordinal))
+            return DeserializeCompact(DecodePayload(token[SequenceCompactTokenPrefix.Length..]), expectedVersion: 5);
         if (token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
             return DeserializeCompact(
                 DecodePayload(token[CompactTokenPrefix.Length..]),
@@ -713,6 +725,8 @@ public sealed class CausalDiagramEditorState
         var state = new CausalDiagramEditorState
         {
             Version = version,
+            SequenceId = version >= 5 ? ReadStringProperty(root, "x") : null,
+            SequencePhaseIndex = version >= 5 ? ReadInt32Property(root, "z") : null,
             PresetId = ReadStringProperty(root, "p"),
             ActiveJugglerId = ReadStringProperty(root, "a"),
             CycleLength = ReadDecimalProperty(root, "c"),
@@ -985,11 +999,13 @@ public sealed class CausalDiagramEditorState
     {
         if (
             state is null
-            || state.Version != 4
+            || state.Version is not (4 or 5)
             || state.Jugglers is null
             || state.Throws is null
             || state.CausalEdges is null
             || !CausalDiagramEditorPresets.IsKnownId(state.PresetId)
+            || (state.Version == 5 && (state.SequenceId is null || state.SequencePhaseIndex is null || !CausalDiagramEditorSequences.IsValidSelection(state.SequenceId, state.SequencePhaseIndex.Value)))
+            || (state.Version == 4 && (state.SequenceId is not null || state.SequencePhaseIndex is not null))
             || state.CycleLength <= 0
             || state.CycleLength > 10_000
             || state.Repetitions is < 1 or > 20

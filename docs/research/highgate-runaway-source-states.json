@@ -1,0 +1,1418 @@
+[
+  {
+    "id": "highgate-thirteenclubrunaway-initial-urban-terror",
+    "stable_id": "highgate-thirteenclubrunaway",
+    "label": "Thirteen club runaway · initial urban-terror feed",
+    "group": "Highgate Collection · Runaway state",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 323 / PDF p. 324; matching 2014 PDF printed p. 232 / PDF p. 232. This is a periodic phase from the larger walking pattern, not a standalone repeat of the whole named pattern.",
+    "notation": "initial state: urban-terror feed before Daniel walks. Printed action rows: Anne: self Ben self; Ben: Daniel Anne Clare; Clare: self self Ben; Daniel: Ben self self.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      },
+      {
+        "id": "P4",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 4
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P4-1",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P4-2",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P4-3",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P4-4",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P4-5",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P4-6",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P4-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P3-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-6",
+        "to": "P4-2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P4-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-2",
+        "to": "P4-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-3",
+        "to": "P4-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-5",
+        "to": "P4-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-6",
+        "to": "P4-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 323,
+        "pdfPage": 324
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 232,
+        "pdfPage": 232
+      }
+    ],
+    "sourceRows": {
+      "Anne": [
+        "self",
+        "Ben",
+        "self"
+      ],
+      "Ben": [
+        "Daniel",
+        "Anne",
+        "Clare"
+      ],
+      "Clare": [
+        "self",
+        "self",
+        "Ben"
+      ],
+      "Daniel": [
+        "Ben",
+        "self",
+        "self"
+      ]
+    },
+    "sourceRowOffsetByJuggler": {
+      "Ben": 1
+    },
+    "passDirectionByJuggler": {
+      "Anne": "crossing",
+      "Ben": "straight",
+      "Clare": "crossing",
+      "Daniel": "crossing"
+    },
+    "sourcePhases": {
+      "Anne": 0,
+      "Ben": 0,
+      "Clare": 0,
+      "Daniel": 0
+    },
+    "sourceFirstHands": {
+      "Ben": "L"
+    },
+    "notes": "The four periodic phases preserve their listed throwing rows. The complete named pattern also requires walking and finite transitions between phases; do not select one phase as a complete Runaway preset.",
+    "reviewStatus": {
+      "source": "2017 printed pages 323/325 and 2014 pages 232/233 were compared. The action rows and hand-lane diagram images are identical between editions.",
+      "modelLimit": "Current editor models a repeating graph only. It cannot encode the order of the Daniel/Ana walks, the transitional 2.5-beat interval, or the changing urban-terror/pass-pass-self formation."
+    }
+  },
+  {
+    "id": "highgate-thirteenclubrunaway-after-daniel-walk",
+    "stable_id": "highgate-thirteenclubrunaway",
+    "label": "Thirteen club runaway · pass-pass-self feed after Daniel walks",
+    "group": "Highgate Collection · Runaway state",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 323 / PDF p. 324; matching 2014 PDF printed p. 232 / PDF p. 232. This is a periodic phase from the larger walking pattern, not a standalone repeat of the whole named pattern.",
+    "notation": "after Daniel walks across; pass-pass-self feed phase. Printed action rows: Anne: self Daniel self; Ben: Clare self self; Clare: Daniel self Ben; Daniel: self Anne Clare.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      },
+      {
+        "id": "P4",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 4
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P4-1",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P4-2",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P4-3",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P4-4",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P4-5",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P4-6",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P4-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P4-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P3-2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P4-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P4-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P4-1",
+        "to": "P4-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-4",
+        "to": "P4-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-6",
+        "to": "P3-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 323,
+        "pdfPage": 324
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 232,
+        "pdfPage": 232
+      }
+    ],
+    "sourceRows": {
+      "Anne": [
+        "self",
+        "Daniel",
+        "self"
+      ],
+      "Ben": [
+        "Clare",
+        "self",
+        "self"
+      ],
+      "Clare": [
+        "Daniel",
+        "self",
+        "Ben"
+      ],
+      "Daniel": [
+        "self",
+        "Anne",
+        "Clare"
+      ]
+    },
+    "sourceRowOffsetByJuggler": {
+      "Ben": 1
+    },
+    "passDirectionByJuggler": {
+      "Anne": "crossing",
+      "Ben": "straight",
+      "Clare": "crossing",
+      "Daniel": "straight"
+    },
+    "sourcePhases": {
+      "Anne": 0,
+      "Ben": 0,
+      "Clare": 0,
+      "Daniel": 0
+    },
+    "sourceFirstHands": {
+      "Ben": "L"
+    },
+    "notes": "The four periodic phases preserve their listed throwing rows. The complete named pattern also requires walking and finite transitions between phases; do not select one phase as a complete Runaway preset.",
+    "reviewStatus": {
+      "source": "2017 printed pages 323/325 and 2014 pages 232/233 were compared. The action rows and hand-lane diagram images are identical between editions.",
+      "modelLimit": "Current editor models a repeating graph only. It cannot encode the order of the Daniel/Ana walks, the transitional 2.5-beat interval, or the changing urban-terror/pass-pass-self formation."
+    }
+  },
+  {
+    "id": "highgate-thirteenclubrunaway-before-anne-walk",
+    "stable_id": "highgate-thirteenclubrunaway",
+    "label": "Thirteen club runaway · pass-pass-self feed before Anne walks",
+    "group": "Highgate Collection · Runaway state",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 325 / PDF p. 326; matching 2014 PDF printed p. 233 / PDF p. 233. This is a periodic phase from the larger walking pattern, not a standalone repeat of the whole named pattern.",
+    "notation": "pass-pass-self feed phase before Anne walks. Printed action rows: Anne: Daniel self self; Ben: self self Clare; Clare: self Ben Daniel; Daniel: Anne Clare self.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      },
+      {
+        "id": "P4",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 4
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P4-1",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P4-2",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P4-3",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P4-4",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P4-5",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P4-6",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P4-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P4-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P3-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P4-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P4-2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P4-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-3",
+        "to": "P4-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-6",
+        "to": "P4-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 325,
+        "pdfPage": 326
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 233,
+        "pdfPage": 233
+      }
+    ],
+    "sourceRows": {
+      "Anne": [
+        "Daniel",
+        "self",
+        "self"
+      ],
+      "Ben": [
+        "self",
+        "self",
+        "Clare"
+      ],
+      "Clare": [
+        "self",
+        "Ben",
+        "Daniel"
+      ],
+      "Daniel": [
+        "Anne",
+        "Clare",
+        "self"
+      ]
+    },
+    "sourceRowOffsetByJuggler": {
+      "Ben": 1
+    },
+    "passDirectionByJuggler": {
+      "Anne": "crossing",
+      "Ben": "straight",
+      "Clare": "crossing",
+      "Daniel": "straight"
+    },
+    "sourcePhases": {
+      "Anne": 0,
+      "Ben": 0,
+      "Clare": 0,
+      "Daniel": 0
+    },
+    "sourceFirstHands": {
+      "Ben": "L"
+    },
+    "notes": "The four periodic phases preserve their listed throwing rows. The complete named pattern also requires walking and finite transitions between phases; do not select one phase as a complete Runaway preset.",
+    "reviewStatus": {
+      "source": "2017 printed pages 323/325 and 2014 pages 232/233 were compared. The action rows and hand-lane diagram images are identical between editions.",
+      "modelLimit": "Current editor models a repeating graph only. It cannot encode the order of the Daniel/Ana walks, the transitional 2.5-beat interval, or the changing urban-terror/pass-pass-self formation."
+    }
+  },
+  {
+    "id": "highgate-thirteenclubrunaway-after-anne-walk",
+    "stable_id": "highgate-thirteenclubrunaway",
+    "label": "Thirteen club runaway · urban-terror feed after Anne walks",
+    "group": "Highgate Collection · Runaway state",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 325 / PDF p. 326; matching 2014 PDF printed p. 233 / PDF p. 233. This is a periodic phase from the larger walking pattern, not a standalone repeat of the whole named pattern.",
+    "notation": "after Anne walks across; urban-terror feed phase. Printed action rows: Anne: self Clare self; Ben: self self Clare; Clare: Anne Ben Daniel; Daniel: Clare self self.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      },
+      {
+        "id": "P4",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 4
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P4-1",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P4-2",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P4-3",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P4-4",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P4-5",
+        "jugglerId": "P4",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P4-6",
+        "jugglerId": "P4",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P3-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P4-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P4-2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P4-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-2",
+        "to": "P4-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-3",
+        "to": "P4-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-5",
+        "to": "P4-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P4-6",
+        "to": "P4-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 325,
+        "pdfPage": 326
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 233,
+        "pdfPage": 233
+      }
+    ],
+    "sourceRows": {
+      "Anne": [
+        "self",
+        "Clare",
+        "self"
+      ],
+      "Ben": [
+        "self",
+        "self",
+        "Clare"
+      ],
+      "Clare": [
+        "Anne",
+        "Ben",
+        "Daniel"
+      ],
+      "Daniel": [
+        "Clare",
+        "self",
+        "self"
+      ]
+    },
+    "sourceRowOffsetByJuggler": {
+      "Ben": 1
+    },
+    "passDirectionByJuggler": {
+      "Anne": "straight",
+      "Ben": "straight",
+      "Clare": "crossing",
+      "Daniel": "straight"
+    },
+    "sourcePhases": {
+      "Anne": 0,
+      "Ben": 0,
+      "Clare": 0,
+      "Daniel": 0
+    },
+    "sourceFirstHands": {
+      "Ben": "L"
+    },
+    "notes": "The four periodic phases preserve their listed throwing rows. The complete named pattern also requires walking and finite transitions between phases; do not select one phase as a complete Runaway preset.",
+    "reviewStatus": {
+      "source": "2017 printed pages 323/325 and 2014 pages 232/233 were compared. The action rows and hand-lane diagram images are identical between editions.",
+      "modelLimit": "Current editor models a repeating graph only. It cannot encode the order of the Daniel/Ana walks, the transitional 2.5-beat interval, or the changing urban-terror/pass-pass-self formation."
+    }
+  }
+]

@@ -70,9 +70,38 @@ public class Highgate76To90StandaloneRecordValidationTests
 
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
+
+            var imported = CausalDiagramEditorPresets.All
+                .Single(preset => preset.Id == record.Id)
+                .Create();
+            imported.IsValidForEditor().Should().BeTrue(record.Id);
+            imported.CycleLength.Should().Be(state.CycleLength, record.Id);
+            imported.Jugglers.Select(item => (item.Id, item.Name))
+                .Should()
+                .Equal(state.Jugglers.Select(item => (item.Id, item.Name)), record.Id);
+            imported.Throws.Select(item =>
+                    (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+                )
+                .Should()
+                .Equal(
+                    state.Throws.Select(item =>
+                        (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+                    ),
+                    record.Id
+                );
+            imported.CausalEdges.Select(item =>
+                    (item.FromThrowId, item.ToThrowId, item.CycleOffset)
+                )
+                .Should()
+                .Equal(
+                    state.CausalEdges.Select(item =>
+                        (item.FromThrowId, item.ToThrowId, item.CycleOffset)
+                    ),
+                    record.Id
+                );
         }
 
-        records.Should().HaveCount(6);
+        records.Should().HaveCount(13);
     }
 
     private sealed record Record(

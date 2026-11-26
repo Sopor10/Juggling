@@ -43,3 +43,21 @@ Printed p. 91 contains the section heading “Popcorn patterns”; it is not an 
 ## Coverage boundary
 
 This remains a partial translation of the candidate families in this range. Eight seven-count graphs were already in the runtime catalog; the seven additional ordinary popcorn graphs above are now imported as well. The catalog-wide validity test checks every graph under its intended preset ID, and the focused standalone test checks source chunk consistency plus offset preservation. Other ordinary popcorn patterns remain open until their event cycles and target endpoints are transcribed; simultaneous and manipulation families need a model decision first.
+
+## Additional seven-club style patterns transcribed
+
+Four more independent, non-manipulation patterns are now recorded in the same source JSON:
+
+| Stable ID | Pattern | 2017 source | 2014 source | Events / edges |
+| --- | --- | --- | --- | ---: |
+| `highgate-sevenclubwhynotstylepattern` | Seven club why not? style pattern | printed p. 101 / PDF p. 102 | PDF p. 65 | 28 / 28 |
+| `highgate-sevenclubnotwhystylepattern` | Seven club not why style pattern | printed p. 101 / PDF p. 102 | PDF p. 65 | 28 / 28 |
+| `highgate-sevenclubmaybestylepattern1` | Seven club maybe style pattern #1 | printed p. 103 / PDF p. 104 | PDF p. 66 | 28 / 28 |
+| `highgate-sevenclubmaybestylepattern2` | Seven club maybe style pattern #2 | printed p. 103 / PDF p. 104 | PDF p. 66 | 28 / 28 |
+
+Each source row is seven or five actions per person. I repeat the odd-length rows to restore the starting hand phase. The action names, stated start hands, and half-beat / one-and-a-half-beat starts determine each event's hand and phase. For the four style patterns, the source prints Prechac heights; the Why rei? graph uses its explicitly named double/self/heff/zip actions and visible diagram. I checked every resulting target hand, event time, and cycle wrap against the diagrams in both editions. Every node has one incoming and one outgoing edge, with no unresolved target.
+
+These four source records remain separate from the runtime preset JSON, and all four have been imported into the causal editor's select list. The catalog validity test now checks each imported state directly. I excluded `highgate-whyrei`: the 2014 inventory classifies its sequence as pattern-transition manipulation, so it does not meet this batch’s non-manipulation criterion. The zap/heff-zap family is also excluded. Synchronous patterns with same-time hand events and the remaining non-zap seven-club patterns still need source transcription and verification.
+
+
+For the four new records, each explicit source height equals the elapsed time from its throw node to the landing/action node, including backward zip arrows (height 1). This agrees with the labeled Prechac sequences and visible diagram edges in both editions. All four are complete periodic cycles: every node has exactly one incoming and one outgoing edge, and each edge’s cycle offset yields the printed throw height.
