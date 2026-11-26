@@ -13,7 +13,8 @@ public static class CausalDiagramEditorPresets
     private const string SynchronousGroup = "Synchron";
 
     public static IReadOnlyList<CausalDiagramEditorPreset> All { get; } =
-    [
+    new CausalDiagramEditorPreset[]
+    {
         new(
             "siteswap-3",
             "3 · 3-Keulen-Kaskade",
@@ -113,7 +114,7 @@ public static class CausalDiagramEditorPresets
             SynchronousGroup,
             CreateSynchronousFourBeatPair
         ),
-    ];
+    }.Concat(HighgateCausalDiagramPresets.All).ToArray();
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>
         All.Where(preset =>
@@ -128,6 +129,9 @@ public static class CausalDiagramEditorPresets
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleSynchronous =>
         All.Where(preset => preset.Id == "jugglers-2-synchronous-4");
+
+    public static IEnumerable<CausalDiagramEditorPreset> VisibleHighgate =>
+        All.Where(preset => preset.Group == "Highgate Collection");
 
     private static CausalDiagramEditorState CreateJugglerDefault(int jugglerCount)
     {

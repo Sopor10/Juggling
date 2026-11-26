@@ -1,0 +1,1043 @@
+[
+  {
+    "id": "highgate-fourcounttriangleonins",
+    "label": "Four count triangle on ins",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 154 / PDF p. 155; diagram and Prechac/action sequence cross-checked against the 2014 edition printed p. 103.",
+    "notation": "3p333",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 154,
+        "pdfPage": 155
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 103,
+        "pdfPage": 103
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-fourcounttriangleonins"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "printedPage": 154
+        },
+        {
+          "edition": "2014 edition",
+          "printedPage": 103
+        }
+      ],
+      "checks": [
+        "three juggler lanes",
+        "throw hand labels",
+        "pass destinations",
+        "cycle/phase",
+        "Prechac and action sequence"
+      ]
+    }
+  },
+  {
+    "id": "highgate-threecounttriangleonins",
+    "label": "Three count triangle on ins",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 154 / PDF p. 155; diagram and Prechac/action sequence cross-checked against the 2014 edition printed p. 103.",
+    "notation": "3p33",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R5",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "C-L6",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "C-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R5",
+        "to": "C-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L6",
+        "to": "C-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 154,
+        "pdfPage": 155
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 103,
+        "pdfPage": 103
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-threecounttriangleonins"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "printedPage": 154
+        },
+        {
+          "edition": "2014 edition",
+          "printedPage": 103
+        }
+      ],
+      "checks": [
+        "three juggler lanes",
+        "throw hand labels",
+        "pass destinations",
+        "cycle/phase",
+        "Prechac and action sequence"
+      ]
+    }
+  },
+  {
+    "id": "highgate-twocounttriangleoninsandouts",
+    "label": "Two count triangle on ins and outs",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 155 / PDF p. 156; diagram and Prechac/action sequence cross-checked against the 2014 edition printed p. 104.",
+    "notation": "3p3",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 155,
+        "pdfPage": 156
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 104,
+        "pdfPage": 104
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-twocounttriangleoninsandouts"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "printedPage": 155
+        },
+        {
+          "edition": "2014 edition",
+          "printedPage": 104
+        }
+      ],
+      "checks": [
+        "three juggler lanes",
+        "throw hand labels",
+        "pass destinations",
+        "cycle/phase",
+        "Prechac and action sequence"
+      ]
+    }
+  },
+  {
+    "id": "highgate-onecounttriangleoninsandouts",
+    "label": "One count triangle on ins and outs",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 156 / PDF p. 157; diagram and Prechac/action sequence cross-checked against the 2014 edition printed p. 105.",
+    "notation": "3p",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 156,
+        "pdfPage": 157
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 105,
+        "pdfPage": 105
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-onecounttriangleoninsandouts"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "printedPage": 156
+        },
+        {
+          "edition": "2014 edition",
+          "printedPage": 105
+        }
+      ],
+      "checks": [
+        "three juggler lanes",
+        "throw hand labels",
+        "pass destinations",
+        "cycle/phase",
+        "Prechac and action sequence"
+      ]
+    }
+  },
+  {
+    "id": "highgate-passpassselftriangle",
+    "label": "Pass pass self triangle",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 157 / PDF p. 158; diagram and Prechac/action sequence cross-checked against the 2014 edition printed p. 106.",
+    "notation": "3p3p3",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R5",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "C-L6",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "C-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "C-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L6",
+        "to": "C-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 157,
+        "pdfPage": 158
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 106,
+        "pdfPage": 106
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-passpassselftriangle"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "printedPage": 157
+        },
+        {
+          "edition": "2014 edition",
+          "printedPage": 106
+        }
+      ],
+      "checks": [
+        "three juggler lanes",
+        "throw hand labels",
+        "pass destinations",
+        "cycle/phase",
+        "Prechac and action sequence"
+      ]
+    }
+  }
+]

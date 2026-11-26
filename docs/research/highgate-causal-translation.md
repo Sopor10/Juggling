@@ -1,0 +1,118 @@
+# Highgate causal diagram translations
+
+The editor imports curated Highgate entries from
+[`highgate-causal-patterns.json`](../../Siteswaps.Components/CausalDiagram/Data/highgate-causal-patterns.json).
+This JSON is the source dataset; `HighgateCausalDiagramPresets` converts its
+throw nodes and causal edges into editor state, and the editor exposes them in a
+separate **Highgate Collection** select group. The ordinary pattern generator
+and its notation logic are not changed.
+
+The source links are recorded per pattern in the JSON: the expanded edition is
+[Aidan Burns's 2017 PDF](https://jugglingedge.com/pdf/highgate.pdf), and the
+2014 edition is [the passing.zone PDF](https://passing.zone/wp-content/uploads/highgate.pdf).
+
+## Completed translation
+
+| Stable ID | Pattern | Source evidence | Representation |
+| --- | --- | --- | --- |
+| `highgate-three-count` | Three count | 2017 expanded PDF printed p. 19 (PDF p. 20); 2014 PDF p. 5 | Two jugglers, six beat positions each, and twelve causal arrows copied from the book's causal-diagram explanation. |
+| `highgate-fiveclubthreecount` | Five club three count | 2017 printed p. 20 (PDF p. 21); 2014 PDF p. 6 | Half-beat phase offset, 3.5-beat floaty passes, explicit hold beats, and the repeating causal chain from the diagram and accompanying explanation. |
+| `highgate-aselfdouble` | A self double (heff) | 2017 printed p. 21 (PDF p. 22); 2014 PDF p. 7 | Replace the two single self edges with one same-hand double edge; retain the empty intermediate beat as a node with no outgoing edge. |
+| `highgate-jimsthreecount` | Jim's three count | 2017 printed p. 25 (PDF p. 26); 2014 PDF p. 11 | The source explicitly says to relabel the ordinary three-count diagram. The twelve hand labels are transcribed while preserving its causal edges. |
+| `highgate-threecount-both-crossing` | Three count, both passes crossing (unnamed variation) | 2017 printed p. 25 (PDF p. 26); 2014 PDF p. 11 | Same causal graph with hand labels from the second, both-crossing variation. |
+| `highgate-frenchthreecount` | French three count | 2017 printed p. 26 (PDF p. 27); 2014 PDF p. 12 | Anne's `pass, self, heff` and Ben's `heff, pass, self` sequence with a half-beat phase offset; direct graph preserves 3.5- and 4-beat throws. |
+| `highgate-alatesingle` | A late single | 2017 printed p. 23 (PDF p. 24); 2014 PDF p. 9 | Ben substitutes a heff for the usual pass, then passes on the next beat; Anne's unlinked beat remains a hold before the late catch. |
+| `highgate-alatedouble` | A late double | 2017 printed p. 21 (PDF p. 22); 2014 PDF p. 7 | Ben's usual pass is retargeted two beats later; Anne holds the intermediate beat, catches on her right, and then self-throws before the next pass. |
+| `highgate-fiveclubonecount` | Five club one count | 2017 printed p. 40 (PDF p. 41); 2014 PDF p. 23 | Half-beat phase offset, pass/hold/hold rows, and all unconnected hold positions are preserved. |
+| `highgate-zapholdself` | Zap hold self | 2017 printed p. 40 (PDF p. 41); 2014 PDF p. 23 | Zap, hold, and self actions use the source's half-beat phase and causal edges. |
+| `highgate-onecountwithzaps` | One count with zaps | 2017 printed p. 41 (PDF p. 42); 2014 PDF p. 24 | Alternating hands, half-beat phase, and straight/crossing zap destinations are transcribed. |
+| `highgate-jims-one-count-async`, `highgate-jims-two-count-async` | Jim's one count and two count, asynchronous | 2017 printed pp. 49, 51 (PDF pp. 50, 52); 2014 PDF pp. 29–30 | Hand phases, holds, crossings, and the odd-period hand-parity repeats are represented as separate event nodes and causal edges. |
+| 23 presets from 2017 pp. 61, 66–73 | Funky Bookends/Parsnip comparisons, period-seven patterns, Jim's three-count variations, 972 variants, Brolly/zap patterns | 2014 diagrams visually checked on printed pp. 35, 39–45; exact links are in the data | Each graph keeps its hand labels, phase, holds, and causal destinations. The full titles and source links are in the JSON. |
+| Six presets from 2017 printed pp. 106–108 | Three Seven club Not Why variations, Seven club Maybe, Copenhagen countdown, Oslo countdown | 2014 printed pp. 68–69 | Arrow destinations, hands, phase, sequence, and notation are visually checked against both editions. |
+| Eight presets from 2017 printed pp. 94–97 | Seven count popcorn patterns with double passes, heffs, single passes, and triple-self variations | 2014 PDF pp. 61–63 | The seven-event cycles are doubled to preserve hand parity; all eight graphs pass editor validity and retain source offsets after height synchronization. |
+| Three presets from 2017 printed pp. 76, 80 | Jim's Fizz Buzz and asynchronous Bookends/Brainstorm, plus Seven club one count on singles | 2014 Fizz Buzz / base pattern are related references; see per-pattern links | Full causal lanes and holds are retained; source offsets pass synchronization. |
+| `highgate-jimsinvertedbookendsfeed` | Jim's inverted bookends feed | 2017 printed p. 122; 2014 printed p. 81 | Three juggler lanes, half-beat phase, full 34-beat hand period, holds, and pass destinations are transcribed. Holds and hurry are represented geometrically, not as text labels. |
+| Eleven three-person feast presets from 2017 printed pp. 137–140 | Chocolate bar, Bookends, Inverted Bookends, Two count, and One count feasts | 2014 PDF pp. 91–93 | Each translated graph has three juggler lanes, direct pass destinations, and explicit cyclic event positions. All pass editor-state validation. |
+| `highgate-threepersoncountdownfeast` | Three person countdown feast | 2017 printed p. 141; 2014 PDF p. 94 | Three 24-event sequences are matched against the source diagram; all pass destinations, hand alternation, and cycle offsets are checked. |
+| Five triangle presets from 2017 printed pp. 154–157 | Four, Three, Two, and One count triangles; Pass pass self triangle | 2014 printed pp. 103–106 | Three juggler lanes, inside/outside pass destinations, hands, phases, and Prechac sequences are visually checked in both editions. |
+| `highgate-twocountfeastrunaround` | Two count feast runaround | 2017 printed p. 171; 2014 PDF p. 116 | Three two-beat feed phases and their opposite-hand repeats are represented; walking route is described in the source note because the editor has no movement animation. |
+| `highgate-trafficlightspattern` | Traffic lights pattern | 2017 printed p. 167; 2014 printed p. 114 | Full three-feeder cycle, all three lanes, hand labels, pass destinations, and cycle transition are transcribed. |
+| `highgate-antiquasarrunaround`, `highgate-quasarrunaround` | Anti quasar runaround and Quasar runaround | 2017 printed pp. 174, 176; 2014 printed pp. 117–118 | Complete feeder rotation cycles with all throw events and causal edges; walking positions remain documented separately from the throw graph. |
+| `highgate-anticlockwisepulsarrunaround` | Anticlockwise pulsar runaround | 2017 printed pp. 169–170 | Three-person feed/phase cycle and all 72 causal edges are transcribed. |
+| `highgate-tenclubonecountfeedingcountdown` | Ten club one count feeding countdown | 2017 printed p. 196 | Three target sequences, phase offsets, and pass destinations are represented in a three-person eight-beat cycle. |
+| Four ten-club feed presets from 2017 printed pp. 192–193 | Two count on singles; one count feeding pass-pass-self/three count; Bookends/inverted Bookends; Suburban Terror | 2014 PDF pp. 134, 136 | Four complete graphs use only single-club edges; club inventory/color and walking routes remain source notes. |
+| Thirteen four-person, mixed-count, box, and line-feed presets from 2017 printed pp. 226–240 | One-count feeders; Chocolate bar/Bookends/Countdown; Civil War; Mixed count; Pass pass self/Chocolate square/Bookends boxes; Two count and Urban Terror line feeds | 2014 PDF pp. 158–169 | Complete event rows and phase offsets are transcribed; simultaneous, zip, and hold variants outside these records remain separate model-boundary candidates. |
+| Four ten-club triangle presets from 2017 printed pp. 211–213 | Four-, Three-, Two-, and asynchronous One-count triangles | 2014 printed pp. 148–149 | Ordinary nonsynchronous causal graphs; synchronous and multiple-club variants are tracked separately. |
+| Three ten-club triangle presets from 2017 printed p. 215 | One count with single/double passes #1/#2; Pass pass self triangle | 2014 printed p. 150 | Row destinations and cycle links are transcribed; the data notes that the editor graph does not encode double-pass multiplicity or straight/crossed trajectory. |
+| Four four-person feast presets from 2017 printed pp. 245–246 | Four-, Three-, Two-, and One-count feasts | 2014 PDF pp. 173–174 | All event rows, hand labels, and causal edges are cross-checked against both editions. |
+| `highgate-londonsburning` | London's burning | 2017 printed p. 272; 2014 printed p. 192 | Four 24-event alternating-hand rows and phase-shifted song-round cycles are represented; spatial layout remains source notation. |
+| Four four-person four-count route presets from 2017 printed pp. 257–259 | Drop-back line #1, Four count Y, Drop-back Y, Drop-back line #2 | 2014 PDF pp. 182–183 | Same route graph appears under multiple named formations; each catalog entry remains selectable, while spatial movement is noted separately. |
+| Ten presets from 2017 printed pp. 293–299 | Rotating Y; nine asynchronous thirteen-club feeds from Two count through Inverted Bookends | 2014 PDF pp. 211–216 | All event phases, hands, and edges are represented; spatial movement cases are listed separately in the research note. |
+| `highgate-sixcount`, `highgate-fourcount`, `highgate-twocount` | Right-handed six-club counts | 2017 printed p. 45 (PDF p. 46); 2014 PDF p. 26 | Diagram and `3p` plus self-throw notation transcribed as repeating causal edges. |
+| `highgate-fivecount-ambidextrous`, `highgate-threecount-ambidextrous` | Ambidextrous six-club counts | 2017 printed p. 45 (PDF p. 46); 2014 PDF p. 26 | Same transcription; odd count lengths double to preserve hand parity. |
+| `highgate-passpassself`, `highgate-chocolatebar`, `highgate-bookends`, `highgate-invertedbookends` | Named six-club patterns | 2017 printed p. 48 (PDF p. 49); 2014 PDF p. 28 | Diagram and Prechac sequence transcribed into per-beat edges. |
+
+These source pages show the diagrams and name each repeating pattern. On the
+count-pattern pages, a pass connects to the other juggler's next opposite-hand
+beat; a self throw connects to the same juggler's next beat. The repeated
+sequence and its rendered arrow graph were checked against both PDF editions.
+The reviewed pages describe ordinary passing and contain no manipulation
+instructions. The CSV marks the corresponding candidates as visually reviewed
+and translated. Other inventory rows remain open or explicitly require an
+editor-model extension.
+
+The five-club three-count entry stores all beat positions, including positions
+with no causal arrow. Highgate explains these as holds. A half-beat phase offset
+and causal-edge-derived heights preserve the 3.5-beat passes; nodes with no
+outgoing edge remain unlabelled in the editor, matching the source diagram's
+hold convention.
+
+## Reviewed but still open
+
+The causal diagrams on 2017 printed pp. 20–29 (PDF pp. 21–30) and matching
+2014 PDF pp. 6–15 have also been inspected. The early double, triple variants,
+combination tricks, seven-club three count, double self (53), and triple-pass
+hold (642) are ordinary passing patterns with explicit causal diagrams; these
+remain open until their edges are transcribed and checked. French three count
+and the late single/double are transcribed above. The source reveals concrete
+current model limits:
+
+- **Four four one** uses a one-beat backward arrow for a zip. **Four four four
+  zero** uses a two-beat backward arrow for a gap. `SynchronizeHeights` raises
+  negative cycle offsets until throw heights are nonnegative, which turns a
+  backward edge into a longer forward edge. The source diagram cannot be
+  preserved by the current state normalizer.
+- **Simultaneous heffs** has two events by the same juggler at one time, one in
+  each hand. The editor has one timeline lane per juggler, so those nodes would
+  overlap. Rendering needs separate hand lanes or an equivalent same-time
+  layout first. The same issue affects Techno, Scratch your head, Oddz godz,
+  and simultaneous one-count Brolly variants.
+- The zip in **Double triple zip** has the same backward-edge requirement as
+  Tarim's 441. The gap in Four four four zero is a separate empty-hand event;
+  its source diagram also points backward two beats. These patterns need the
+  edge model to preserve direction and distinguish a gap from a throw.
+
+All of these patterns are visually confirmed as ordinary two-person passing.
+Nine candidate rows are affected by these model limits (the self triple also
+contains a zip); they remain in the inventory with their model requirement
+and source pages rather than being dropped.
+
+## Current coverage
+
+The inventory has 919 catalog candidates. At this checkpoint, 169 rows have
+visual source review: 127 are translated into 129 presets, 24 are retained with
+specific editor-model requirements, 14 still need their graph transcription,
+and 4 are section/concept entries rather than independent patterns. The other
+750 candidates have not yet received page review. Each new preset is checked
+against `IsValidForEditor()` before it can pass the catalog test; the Highgate
+loader also rejects data if height synchronization changes a source edge offset.
+
+## Translation limits and next work
+
+The JSON representation records diagram event times and causal edges directly,
+so these translations preserve the source arrows without changing the general
+pattern builder. Other Highgate pages contain holds, zips, walking, and other
+non-throw events; each still needs a source-page review and a concrete model
+decision. This is not a full translation of the collection: the 919-row catalog
+remains a title/alias candidate list, and unreviewed entries must not be treated
+as normal or supported patterns.

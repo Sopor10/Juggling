@@ -1,0 +1,840 @@
+[
+  {
+    "id": "highgate-threepersoncountdownfeast",
+    "stable_id": "highgate-threepersoncountdownfeast",
+    "label": "Three person countdown feast",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 141 / PDF p. 142; 2014 PDF p. 94",
+    "notation": "3p333p333p33p33333p3p33333p33p33",
+    "cycleLength": 24,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "P1-15",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "P1-16",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P1-17",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "P1-18",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "P1-19",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "P1-20",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "P1-21",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "P1-22",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "P1-23",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "P1-24",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "P2-25",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P2-26",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P2-27",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P2-28",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P2-29",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P2-30",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P2-31",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "P2-32",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P2-33",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P2-34",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "P2-35",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "P2-36",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P2-37",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P2-38",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "P2-39",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "P2-40",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P2-41",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "P2-42",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "P2-43",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "P2-44",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "P2-45",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "P2-46",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "P2-47",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "P2-48",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "P3-49",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P3-50",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P3-51",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P3-52",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-53",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P3-54",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P3-55",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "P3-56",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P3-57",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P3-58",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "P3-59",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "P3-60",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P3-61",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P3-62",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "P3-63",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "P3-64",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P3-65",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "P3-66",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "P3-67",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "P3-68",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "P3-69",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "P3-70",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "P3-71",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "P3-72",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 23
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P2-26",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P3-55",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P2-32",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P3-61",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-13",
+        "to": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-14",
+        "to": "P2-39",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-15",
+        "to": "P1-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-16",
+        "to": "P1-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-17",
+        "to": "P3-66",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-18",
+        "to": "P1-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-19",
+        "to": "P1-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-20",
+        "to": "P2-45",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-21",
+        "to": "P1-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-22",
+        "to": "P1-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-23",
+        "to": "P3-72",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-24",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-25",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-26",
+        "to": "P2-27",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-27",
+        "to": "P2-28",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-28",
+        "to": "P3-53",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-29",
+        "to": "P2-30",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-30",
+        "to": "P2-31",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-31",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-32",
+        "to": "P2-33",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-33",
+        "to": "P3-58",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-34",
+        "to": "P2-35",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-35",
+        "to": "P2-36",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-36",
+        "to": "P2-37",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-37",
+        "to": "P2-38",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-38",
+        "to": "P1-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-39",
+        "to": "P3-64",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-40",
+        "to": "P2-41",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-41",
+        "to": "P2-42",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-42",
+        "to": "P2-43",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-43",
+        "to": "P2-44",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-44",
+        "to": "P1-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-45",
+        "to": "P2-46",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-46",
+        "to": "P3-71",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-47",
+        "to": "P2-48",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-48",
+        "to": "P2-25",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-49",
+        "to": "P3-50",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-50",
+        "to": "P3-51",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-51",
+        "to": "P3-52",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-52",
+        "to": "P2-29",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-53",
+        "to": "P3-54",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-54",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-55",
+        "to": "P3-56",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-56",
+        "to": "P3-57",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-57",
+        "to": "P2-34",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-58",
+        "to": "P3-59",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-59",
+        "to": "P3-60",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-60",
+        "to": "P1-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-61",
+        "to": "P3-62",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-62",
+        "to": "P3-63",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-63",
+        "to": "P2-40",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-64",
+        "to": "P3-65",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-65",
+        "to": "P1-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-66",
+        "to": "P3-67",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-67",
+        "to": "P3-68",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-68",
+        "to": "P3-69",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-69",
+        "to": "P3-70",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-70",
+        "to": "P2-47",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-71",
+        "to": "P1-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-72",
+        "to": "P3-49",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 141,
+        "pdfPage": 142
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 94
+      }
+    ],
+    "notes": "Anne, Ben, Clare sequences transcribed verbatim from the source text/diagram. Three-person selfless countdown feast; every listed throw has height 3. Every juggler throws once per beat, with alternating R/L hands. No holds, zips, or same-time multiple throws.",
+    "variants": [
+      "One 24-beat repeating cycle; all jugglers start with two clubs in R and one in L."
+    ],
+    "modelLimits": "No unsupported event types; one event per juggler per beat.",
+    "validation": "IsValidForEditor() true after SynchronizeHeights(); all cycle offsets unchanged."
+  }
+]

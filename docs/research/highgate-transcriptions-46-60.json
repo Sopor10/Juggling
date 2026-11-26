@@ -1,0 +1,454 @@
+[
+  {
+    "id": "highgate-jims-two-count-async",
+    "label": "Jim's two count · asynchronous",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 49 / PDF p. 50; 2014 PDF p. 29",
+    "notation": "77466 · 3.5p233.5p3",
+    "cycleLength": 20,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3.5
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 2,
+        "height": 0
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 6,
+        "height": 3.5
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 10,
+        "height": 3.5
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12,
+        "height": 0
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3.5
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1,
+        "height": 3.5
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-13",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5,
+        "height": 3.5
+      },
+      {
+        "id": "P2-14",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 0
+      },
+      {
+        "id": "P2-15",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P2-16",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3.5
+      },
+      {
+        "id": "P2-17",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P2-18",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3.5
+      },
+      {
+        "id": "P2-19",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 17,
+        "height": 0
+      },
+      {
+        "id": "P2-20",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-P1-1",
+        "fromThrowId": "P1-1",
+        "toThrowId": "P2-12",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-3",
+        "fromThrowId": "P1-3",
+        "toThrowId": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-4",
+        "fromThrowId": "P1-4",
+        "toThrowId": "P2-15",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-5",
+        "fromThrowId": "P1-5",
+        "toThrowId": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-6",
+        "fromThrowId": "P1-6",
+        "toThrowId": "P2-17",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-8",
+        "fromThrowId": "P1-8",
+        "toThrowId": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-9",
+        "fromThrowId": "P1-9",
+        "toThrowId": "P2-20",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-10",
+        "fromThrowId": "P1-10",
+        "toThrowId": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-P2-11",
+        "fromThrowId": "P2-11",
+        "toThrowId": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-12",
+        "fromThrowId": "P2-12",
+        "toThrowId": "P2-13",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-13",
+        "fromThrowId": "P2-13",
+        "toThrowId": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-15",
+        "fromThrowId": "P2-15",
+        "toThrowId": "P2-16",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-16",
+        "fromThrowId": "P2-16",
+        "toThrowId": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-17",
+        "fromThrowId": "P2-17",
+        "toThrowId": "P2-18",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-18",
+        "fromThrowId": "P2-18",
+        "toThrowId": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-20",
+        "fromThrowId": "P2-20",
+        "toThrowId": "P2-11",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 49,
+        "pdfPage": 50
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 29
+      }
+    ],
+    "notes": "Anne: pass, hold, self/3, pass, self/3 with straight passes. Ben starts half a beat later: pass, self/3, pass, hold, self/3 with crossing passes.",
+    "stable_id": "highgate-jims-two-count-async",
+    "variants": [
+      "Asynchronous, half-beat phase offset; the same siteswap is cyclically repeated."
+    ],
+    "modelLimits": "No backward zip/gap arrows or simultaneous same-juggler throws. Holds are represented by nodes without outgoing causal edges; odd pattern periods are doubled to preserve hand parity.",
+    "validation": "IsValidForEditor() true after SynchronizeHeights(); all causal edges retain their source cycle offset."
+  },
+  {
+    "id": "highgate-jims-one-count-async",
+    "label": "Jim's one count · asynchronous",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 51 / PDF p. 52; 2014 PDF p. 30",
+    "notation": "774 · 3.5p23.5p",
+    "cycleLength": 12,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3.5
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 2,
+        "height": 0
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3.5
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 6,
+        "height": 3.5
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 0
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 10,
+        "height": 3.5
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 1,
+        "height": 3.5
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3.5
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 5,
+        "height": 0
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3.5
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 9,
+        "height": 3.5
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 0
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-P1-1",
+        "fromThrowId": "P1-1",
+        "toThrowId": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-3",
+        "fromThrowId": "P1-3",
+        "toThrowId": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-4",
+        "fromThrowId": "P1-4",
+        "toThrowId": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P1-6",
+        "fromThrowId": "P1-6",
+        "toThrowId": "P2-7",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-P2-7",
+        "fromThrowId": "P2-7",
+        "toThrowId": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-8",
+        "fromThrowId": "P2-8",
+        "toThrowId": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-10",
+        "fromThrowId": "P2-10",
+        "toThrowId": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-P2-11",
+        "fromThrowId": "P2-11",
+        "toThrowId": "P1-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 51,
+        "pdfPage": 52
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 30
+      }
+    ],
+    "notes": "Anne: pass, hold, pass with straight passes. Ben: pass, pass, hold with crossing passes; Ben starts half a beat later.",
+    "stable_id": "highgate-jims-one-count-async",
+    "variants": [
+      "Asynchronous, half-beat phase offset; the same siteswap is cyclically repeated."
+    ],
+    "modelLimits": "No backward zip/gap arrows or simultaneous same-juggler throws. Holds are represented by nodes without outgoing causal edges; odd pattern periods are doubled to preserve hand parity.",
+    "validation": "IsValidForEditor() true after SynchronizeHeights(); all causal edges retain their source cycle offset."
+  }
+]

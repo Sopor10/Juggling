@@ -41,6 +41,11 @@
                 {
                   <button type="button" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
                 }
+                <h3>Highgate Collection</h3>
+                @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgate)
+                {
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                }
                 @if (_savedPresets.Count > 0)
                 {
                   <h3>Eigene Vorlagen</h3>
@@ -108,6 +113,11 @@
                   @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous.Concat(CausalDiagramEditorPresets.VisibleSynchronous))
                   {
                   <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                  }
+                  <h3>Highgate Collection</h3>
+                  @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgate)
+                  {
+                    <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
                   }
                   @foreach (var saved in _savedPresets)
                   {

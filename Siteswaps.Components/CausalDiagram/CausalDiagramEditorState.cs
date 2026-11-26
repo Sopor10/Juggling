@@ -33,6 +33,9 @@ public sealed class CausalDiagramEditorState
     public List<EditorThrow> Throws { get; set; } = [];
     public List<EditorCausalEdge> CausalEdges { get; set; } = [];
 
+    /// <summary>Checks editor invariants without repairing or normalizing the state.</summary>
+    public bool IsValidForEditor() => IsValid(this);
+
     public static CausalDiagramEditorState CreateSiteswap531() =>
         CreateSiteswapPattern("531", "siteswap-531");
 

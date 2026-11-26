@@ -1,0 +1,307 @@
+[
+  {
+    "id": "highgate-tenclubonecountfeedingcountdown",
+    "stable_id": "highgate-tenclubonecountfeedingcountdown",
+    "label": "Ten club one count feeding countdown",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 196 / PDF p. 197; no corresponding entry found in 2014 PDF",
+    "notation": "Anticlockwise: b9ab9aab9b9aab9ab9b9aab9; Clockwise: ab9ab9b9aab9b9ab9aab9b9a",
+    "cycleLength": 16,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 9
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 13
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 6
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 10
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 14
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 9
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P3-7",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 13
+      },
+      {
+        "id": "P3-8",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P3-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-8",
+        "to": "P3-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-7",
+        "to": "P3-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-8",
+        "to": "P2-2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 196,
+        "pdfPage": 197
+      }
+    ],
+    "notes": "Eight-beat, asynchronous three-person feed transcribed from the diagram and listed throw sequences. Ben starts at phase 0; Anne and Clare start one half-beat later. Ben passes single clubs to Anne/Clare; Anne/Clare use crossing single passes to Ben and self throws. Half-beat timeline coordinates are retained; the siteswap variants are included verbatim.",
+    "variants": [
+      "Anticlockwise and clockwise siteswap forms are listed in the source."
+    ],
+    "modelLimits": "The pattern is an ordinary three-person feed. No manipulation, zip, simultaneous same-person throws, or holds are represented.",
+    "validation": "IsValidForEditor() true after SynchronizeHeights(); cycle offsets unchanged."
+  }
+]

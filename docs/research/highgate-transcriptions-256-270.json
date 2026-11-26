@@ -1,0 +1,910 @@
+[
+  {
+    "id": "highgate-fourpersonfourcountdropbackline1",
+    "label": "Four person four count drop-back line #1",
+    "group": "Highgate Collection",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "D-R3",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "D-L4",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "D-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L2",
+        "to": "D-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R3",
+        "to": "D-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L4",
+        "to": "D-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 257 / PDF p. 258; same pattern in 2014 PDF p. 182",
+    "notation": "The group stands in two facing pairs. Anne passes to Clare, Daniel to Ben, and Ben and Clare throw drop-backs over their heads to Anne and Daniel. Everyone starts with two clubs in the right hand and one in the left.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 257,
+        "pdfPage": 258
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 182
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-fourpersonfourcountdropbackline1",
+      "visualReview": "Visually checked against the exact 2017 body diagram and pattern text; each route and cycle-wrap edge was checked.",
+      "editionComparison": "The same title, sequences and causal diagram were visually checked in the cited 2014 PDF page.",
+      "modelCheck": "Create succeeded; IsValidForEditor returned false with this new ID because it is not centrally registered, and true after temporarily substituting registered ID highgate-three-count; SynchronizeHeights preserved all serialized offsets. Rerun with real IDs after import.",
+      "modelLimit": "Spatial formation and drop-back style are described in notation; the editor data model stores only the causal pass/self graph.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulation."
+    }
+  },
+  {
+    "id": "highgate-fourcounty",
+    "label": "Four count y",
+    "group": "Highgate Collection",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "D-R3",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "D-L4",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "D-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L2",
+        "to": "D-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R3",
+        "to": "D-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L4",
+        "to": "D-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 258 / PDF p. 259; same pattern in 2014 PDF p. 183",
+    "notation": "The four jugglers stand in a Y formation: Anne and Clare face Ben, and Ben and Daniel face Anne and Clare. Anne passes to Daniel, Daniel to Clare, Clare to Ben, and Ben to Anne; everyone else self-throws. All pass four count.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 258,
+        "pdfPage": 259
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 183
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-fourcounty",
+      "visualReview": "Visually checked against the exact 2017 body diagram and pattern text; each route and cycle-wrap edge was checked.",
+      "editionComparison": "The same title, sequences and causal diagram were visually checked in the cited 2014 PDF page.",
+      "modelCheck": "Create succeeded; IsValidForEditor returned false with this new ID because it is not centrally registered, and true after temporarily substituting registered ID highgate-three-count; SynchronizeHeights preserved all serialized offsets. Rerun with real IDs after import.",
+      "modelLimit": "Spatial formation and drop-back style are described in notation; the editor data model stores only the causal pass/self graph.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulation."
+    }
+  },
+  {
+    "id": "highgate-fourcountdropbacky",
+    "label": "Four count drop-back y",
+    "group": "Highgate Collection",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "D-R3",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "D-L4",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "D-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L2",
+        "to": "D-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R3",
+        "to": "D-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L4",
+        "to": "D-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 259 / PDF p. 260; same pattern in 2014 PDF p. 184",
+    "notation": "Everyone passes four count in the Y formation; Ben throws drop-backs to Daniel. All start with two clubs in the right hand and one in the left.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 259,
+        "pdfPage": 260
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 184
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-fourcountdropbacky",
+      "visualReview": "Visually checked against the exact 2017 body diagram and pattern text; each route and cycle-wrap edge was checked.",
+      "editionComparison": "The same title, sequences and causal diagram were visually checked in the cited 2014 PDF page.",
+      "modelCheck": "Create succeeded; IsValidForEditor returned false with this new ID because it is not centrally registered, and true after temporarily substituting registered ID highgate-three-count; SynchronizeHeights preserved all serialized offsets. Rerun with real IDs after import.",
+      "modelLimit": "Spatial formation and drop-back style are described in notation; the editor data model stores only the causal pass/self graph.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulation."
+    }
+  },
+  {
+    "id": "highgate-fourpersonfourcountdropbackline2",
+    "label": "Four person four count drop-back line #2",
+    "group": "Highgate Collection",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "D-R3",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "D-L4",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "D-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L2",
+        "to": "D-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R3",
+        "to": "D-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L4",
+        "to": "D-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 258 / PDF p. 259; same named pattern in 2014 PDF p. 183",
+    "notation": "Anne, Ben, and Clare face Daniel. Anne passes to Daniel and Daniel to Clare; Ben and Clare throw drop-backs over their heads to Anne and Ben. Everyone starts with two clubs in the right hand and one in the left. Its pass/self edge topology matches Four count y, but it is kept as its own named catalog preset; formation and drop-back style are not editor fields.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 258,
+        "pdfPage": 259
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 183
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-fourpersonfourcountdropbackline2",
+      "visualReview": "Visually checked against the exact 2017 body diagram and pattern text; routes and cycle-wrap edges match Four count y.",
+      "editionComparison": "The same named line formation, drop-back text and causal diagram were visually checked in the cited 2014 page.",
+      "modelCheck": "Create succeeded; IsValidForEditor returned false with this new ID because it is not centrally registered, and true after temporarily substituting registered ID highgate-three-count; SynchronizeHeights preserved all serialized offsets. Rerun with real IDs after import.",
+      "modelLimit": "Same causal edge topology as Four count y. Spatial formation and over-the-head drop-back style are described in notation but not separately represented in editor state.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulation."
+    }
+  }
+]

@@ -23,4 +23,7 @@
     <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
     <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CausalDiagram\Data\highgate-causal-patterns.json" />
+  </ItemGroup>
 </Project>
