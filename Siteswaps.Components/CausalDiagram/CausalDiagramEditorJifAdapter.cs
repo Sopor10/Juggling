@@ -345,14 +345,17 @@ public static class CausalDiagramEditorJifAdapter
             .Throws.Where(node => node.JugglerId == targetJugglerId)
             .OrderBy(node => node.StartTime)
             .ToArray();
-        var beatDuration = state.CycleLength / targetNodes.Length;
-        var beatIndex = decimal.ToInt32(
-            decimal.Floor((landingTime - targetNodes[0].StartTime) / beatDuration)
+        var cycle = decimal.ToInt32(
+            decimal.Floor((landingTime - targetNodes[0].StartTime) / state.CycleLength)
         );
-        var cycle = (int)Math.Floor((double)beatIndex / targetNodes.Length);
-        var localIndex =
-            ((beatIndex % targetNodes.Length) + targetNodes.Length) % targetNodes.Length;
-        var target = targetNodes[localIndex];
+        var localTime = landingTime - cycle * state.CycleLength;
+        var targetIndex = Array.FindIndex(targetNodes, node => node.StartTime >= localTime);
+        if (targetIndex < 0)
+        {
+            targetIndex = 0;
+            cycle++;
+        }
+        var target = targetNodes[targetIndex];
         return LandingLimbIndex(target, cycle, jugglerIndex, handIndex, rowCounts);
     }
 

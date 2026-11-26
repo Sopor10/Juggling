@@ -64,6 +64,43 @@
     color: var(--decision-color-white);
 }
 
+.sdv-hero-jugglers ::deep .sdv-throw-details-toggle {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.sdv-hero-jugglers ::deep .sdv-throw-details-toggle button {
+    min-height: 40px;
+    padding: 7px 10px;
+    border: 1px solid var(--decision-color-border-subtle);
+    border-radius: 999px;
+    background: var(--decision-color-surface-page);
+    color: var(--decision-color-text-muted);
+    font: 700 12px var(--decision-font-display);
+    cursor: pointer;
+}
+
+.sdv-hero-jugglers ::deep .sdv-throw-details-toggle button.active {
+    background: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
+}
+
+.sdv-hero-jugglers ::deep .sdv-beat-destination {
+    align-self: center;
+    margin-left: 1px;
+    font-size: .65em;
+    line-height: 1;
+}
+
+.sdv-hero-jugglers ::deep .sdv-beat-hand {
+    align-self: center;
+    margin-left: 2px;
+    font-size: .58em;
+    line-height: 1;
+    color: var(--decision-color-text-muted);
+}
+
 .sdv-hero-jugglers ::deep .sdv-hero-juggler {
     margin-bottom: 14px;
 }

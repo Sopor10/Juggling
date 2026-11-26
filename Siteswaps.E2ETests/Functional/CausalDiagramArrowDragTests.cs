@@ -17,7 +17,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
         );
         await page.GetByRole(AriaRole.Button, new() { Name = "Weiter zum Diagramm" }).ClickAsync();
         await page.Locator(".arrow-target-handle").First.WaitForAsync();
-        Assert.Equal("1", await page.Locator(".pd-node-label").First.TextContentAsync());
+        Assert.Equal("2.5", await page.Locator(".pd-node-label").First.TextContentAsync());
         Assert.Equal(0, await page.Locator(".animation-unavailable").CountAsync());
 
         await page.Locator(".diagram-options summary").ClickAsync();
