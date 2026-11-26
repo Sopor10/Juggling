@@ -1,9 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
-  <ItemGroup>
-    <ProjectReference Include="..\Siteswaps.Mcp.Server\Siteswaps.Mcp.Server.csproj" />
-    <ProjectReference Include="..\Webassembly\Webassembly.csproj" />
-  </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net11.0</TargetFramework>
@@ -12,4 +7,9 @@
     <AspireUseCliBundle>true</AspireUseCliBundle>
     <UserSecretsId>2f659e02-6283-45f1-b01c-746bfeadd186</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.Dotnet" />
+  </ItemGroup>
 </Project>

@@ -63,8 +63,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
     [Fact]
     public async Task TouchDraggingArrowHandleDoesNotScrollTimelineOrCancelPointer()
     {
-        var browser =
-            host.Fixture.Context?.Browser
+        var browser = host.Fixture.Context?.Browser
             ?? throw new InvalidOperationException("Playwright browser is not available.");
         await using var context = await browser.NewContextAsync(
             new BrowserNewContextOptions

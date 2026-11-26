@@ -56,9 +56,8 @@ public class EnumerableIntExtensionTests
 
         result
             .Should()
-            .BeEquivalentTo(
-                new[] { new[] { 1 }, new[] { 2, 1 }, new[] { 3, 3, 2 } },
-                options => options.WithStrictOrdering()
+            .BeEquivalentTo(new[] { new[] { 1 }, new[] { 2, 1 }, new[] { 3, 3, 2 } }, options =>
+                options.WithStrictOrdering()
             );
     }
 

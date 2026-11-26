@@ -99,9 +99,8 @@ public sealed class CausalDiagramEditorState
             var sourceId = FindThrowId(source.From, diagram.Throws, throws);
             if (sourceId is null)
                 continue;
-            var targetPerson = Array.FindIndex(
-                jugglers.ToArray(),
-                juggler => juggler.Name == source.To.Hand.Person.Name
+            var targetPerson = Array.FindIndex(jugglers.ToArray(), juggler =>
+                juggler.Name == source.To.Hand.Person.Name
             );
             if (targetPerson < 0)
                 continue;

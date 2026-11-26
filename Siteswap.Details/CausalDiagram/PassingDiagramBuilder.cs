@@ -204,8 +204,7 @@ public static class PassingDiagramBuilder
         var ladderArrows = ImmutableList.CreateBuilder<DiagramArrow>();
         foreach (var node in nodes)
         {
-            var toLimb =
-                node.ToLimb
+            var toLimb = node.ToLimb
                 ?? throw new InvalidOperationException(
                     "Every throw must identify its destination limb."
                 );

@@ -37,47 +37,41 @@ internal static class BlazorTestServerProxy
         context.SetDefaultTimeout(60_000);
 
         var root = fixture.RootUri.AbsoluteUri.TrimEnd('/') + "/";
-        await context.RouteAsync(
-            root + "**",
-            async route =>
+        await context.RouteAsync(root + "**", async route =>
+        {
+            var request = route.Request;
+            using var message = new HttpRequestMessage(new HttpMethod(request.Method), request.Url);
+
+            if (request.PostDataBuffer is { Length: > 0 } body)
             {
-                var request = route.Request;
-                using var message = new HttpRequestMessage(
-                    new HttpMethod(request.Method),
-                    request.Url
-                );
-
-                if (request.PostDataBuffer is { Length: > 0 } body)
-                {
-                    message.Content = new ByteArrayContent(body);
-                }
-
-                foreach (var header in request.Headers)
-                {
-                    if (
-                        !message.Headers.TryAddWithoutValidation(header.Key, header.Value)
-                        && message.Content is not null
-                    )
-                    {
-                        message.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                    }
-                }
-
-                using var response = await httpClient.SendAsync(message);
-                var bodyBytes = await response.Content.ReadAsByteArrayAsync();
-                var headers = response
-                    .Content.Headers.Concat(response.Headers)
-                    .Select(h => KeyValuePair.Create(h.Key, string.Join(",", h.Value)));
-
-                await route.FulfillAsync(
-                    new RouteFulfillOptions
-                    {
-                        BodyBytes = bodyBytes,
-                        Headers = headers,
-                        Status = (int)response.StatusCode,
-                    }
-                );
+                message.Content = new ByteArrayContent(body);
             }
-        );
+
+            foreach (var header in request.Headers)
+            {
+                if (
+                    !message.Headers.TryAddWithoutValidation(header.Key, header.Value)
+                    && message.Content is not null
+                )
+                {
+                    message.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            using var response = await httpClient.SendAsync(message);
+            var bodyBytes = await response.Content.ReadAsByteArrayAsync();
+            var headers = response
+                .Content.Headers.Concat(response.Headers)
+                .Select(h => KeyValuePair.Create(h.Key, string.Join(",", h.Value)));
+
+            await route.FulfillAsync(
+                new RouteFulfillOptions
+                {
+                    BodyBytes = bodyBytes,
+                    Headers = headers,
+                    Status = (int)response.StatusCode,
+                }
+            );
+        });
     }
 }

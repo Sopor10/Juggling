@@ -664,8 +664,8 @@ public partial class FeedingPage : ComponentBase, IAsyncDisposable
 
     private void RefreshInterfaceMoveTargets()
     {
-        _interfaceMoveTargets =
-            _session?.SelectablePassInterfaceBeatsFor(PartnerB1, _b1Results) ?? [];
+        _interfaceMoveTargets = _session?.SelectablePassInterfaceBeatsFor(PartnerB1, _b1Results)
+            ?? [];
     }
 
     private async Task MoveB1PassInterface(int beat)
