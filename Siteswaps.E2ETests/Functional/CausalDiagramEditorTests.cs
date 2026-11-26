@@ -16,10 +16,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
         await OpenEditor(session.Page, E2EBaseUrl.FromFixture(host.Fixture));
 
-        await SelectPresetAsync(
-            session.Page,
-            "highgate-thirteenclubrunaway-initial-urban-terror"
-        );
+        await SelectPresetAsync(session.Page, "highgate-thirteenclubrunaway-initial-urban-terror");
         var navigation = session.Page.Locator(".runaway-sequence");
         await Assertions
             .Expect(
@@ -31,16 +28,19 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             .ToHaveAttributeAsync("aria-pressed", "true");
         var firstPhaseToken = GetStateToken(session.Page.Url);
         firstPhaseToken.Should().StartWith("j5.");
-        CausalDiagramEditorState.TryDecode(firstPhaseToken, out var firstPhaseState)
+        CausalDiagramEditorState
+            .TryDecode(firstPhaseToken, out var firstPhaseState)
             .Should()
             .BeTrue();
         firstPhaseState!.SequenceId.Should().Be("highgate-thirteenclubrunaway");
         firstPhaseState.SequencePhaseIndex.Should().Be(0);
-        firstPhaseState
-            .PresetId.Should()
-            .Be("highgate-thirteenclubrunaway-initial-urban-terror");
+        firstPhaseState.PresetId.Should().Be("highgate-thirteenclubrunaway-initial-urban-terror");
         await Assertions
-            .Expect(navigation.GetByText(new System.Text.RegularExpressions.Regex("Daniel: Walks across")))
+            .Expect(
+                navigation.GetByText(
+                    new System.Text.RegularExpressions.Regex("Daniel: Walks across")
+                )
+            )
             .ToBeVisibleAsync();
 
         await navigation

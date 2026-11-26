@@ -23,6 +23,7 @@ public sealed class CausalDiagramEditorState
     );
 
     public int Version { get; set; } = 4;
+
     /// <summary>Optional finite-sequence selection; the graph remains the ordinary periodic state.</summary>
     public string? SequenceId { get; set; }
     public int? SequencePhaseIndex { get; set; }
@@ -620,7 +621,8 @@ public sealed class CausalDiagramEditorState
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
-        return (Version >= 5 ? SequenceCompactTokenPrefix : CompactTokenPrefix) + ToBase64Url(output.ToArray());
+        return (Version >= 5 ? SequenceCompactTokenPrefix : CompactTokenPrefix)
+            + ToBase64Url(output.ToArray());
     }
 
     public static bool TryDecode(string? token, out CausalDiagramEditorState? state)
@@ -668,7 +670,10 @@ public sealed class CausalDiagramEditorState
     private static CausalDiagramEditorState? DeserializeToken(string token)
     {
         if (token.StartsWith(SequenceCompactTokenPrefix, StringComparison.Ordinal))
-            return DeserializeCompact(DecodePayload(token[SequenceCompactTokenPrefix.Length..]), expectedVersion: 5);
+            return DeserializeCompact(
+                DecodePayload(token[SequenceCompactTokenPrefix.Length..]),
+                expectedVersion: 5
+            );
         if (token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
             return DeserializeCompact(
                 DecodePayload(token[CompactTokenPrefix.Length..]),
@@ -1004,8 +1009,21 @@ public sealed class CausalDiagramEditorState
             || state.Throws is null
             || state.CausalEdges is null
             || !CausalDiagramEditorPresets.IsKnownId(state.PresetId)
-            || (state.Version == 5 && (state.SequenceId is null || state.SequencePhaseIndex is null || !CausalDiagramEditorSequences.IsValidSelection(state.SequenceId, state.SequencePhaseIndex.Value)))
-            || (state.Version == 4 && (state.SequenceId is not null || state.SequencePhaseIndex is not null))
+            || (
+                state.Version == 5
+                && (
+                    state.SequenceId is null
+                    || state.SequencePhaseIndex is null
+                    || !CausalDiagramEditorSequences.IsValidSelection(
+                        state.SequenceId,
+                        state.SequencePhaseIndex.Value
+                    )
+                )
+            )
+            || (
+                state.Version == 4
+                && (state.SequenceId is not null || state.SequencePhaseIndex is not null)
+            )
             || state.CycleLength <= 0
             || state.CycleLength > 10_000
             || state.Repetitions is < 1 or > 20

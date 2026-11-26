@@ -95,15 +95,17 @@ public class Highgate91To105StandaloneRecordValidationTests
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets);
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
-            var imported = CausalDiagramEditorPresets.All
-                .Single(preset => preset.Id == record.Id)
+            var imported = CausalDiagramEditorPresets
+                .All.Single(preset => preset.Id == record.Id)
                 .Create();
             imported.IsValidForEditor().Should().BeTrue(record.Id);
             imported.CycleLength.Should().Be(state.CycleLength, record.Id);
-            imported.Jugglers.Select(item => (item.Id, item.Name))
+            imported
+                .Jugglers.Select(item => (item.Id, item.Name))
                 .Should()
                 .Equal(state.Jugglers.Select(item => (item.Id, item.Name)), record.Id);
-            imported.Throws.Select(item =>
+            imported
+                .Throws.Select(item =>
                     (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
                 )
                 .Should()
@@ -113,9 +115,8 @@ public class Highgate91To105StandaloneRecordValidationTests
                     ),
                     record.Id
                 );
-            imported.CausalEdges.Select(item =>
-                    (item.FromThrowId, item.ToThrowId, item.CycleOffset)
-                )
+            imported
+                .CausalEdges.Select(item => (item.FromThrowId, item.ToThrowId, item.CycleOffset))
                 .Should()
                 .Equal(
                     state.CausalEdges.Select(item =>

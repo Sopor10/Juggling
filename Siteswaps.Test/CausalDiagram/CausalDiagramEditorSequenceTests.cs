@@ -10,15 +10,25 @@ public sealed class CausalDiagramEditorSequenceTests
     {
         var sequence = CausalDiagramEditorSequences.All.Should().ContainSingle().Subject;
         sequence.Id.Should().Be("highgate-thirteenclubrunaway");
-        sequence.Phases.Select(phase => phase.StateId).Should().Equal(
-            "highgate-thirteenclubrunaway-initial-urban-terror",
-            "highgate-thirteenclubrunaway-after-daniel-walk",
-            "highgate-thirteenclubrunaway-before-anne-walk",
-            "highgate-thirteenclubrunaway-after-anne-walk"
-        );
+        sequence
+            .Phases.Select(phase => phase.StateId)
+            .Should()
+            .Equal(
+                "highgate-thirteenclubrunaway-initial-urban-terror",
+                "highgate-thirteenclubrunaway-after-daniel-walk",
+                "highgate-thirteenclubrunaway-before-anne-walk",
+                "highgate-thirteenclubrunaway-after-anne-walk"
+            );
         sequence.Transitions.Select(transition => transition.AfterPhaseIndex).Should().Equal(0, 2);
-        sequence.Transitions.Select(transition => transition.Actor).Should().Equal("Daniel", "Anne");
-        sequence.Transitions.Should().OnlyContain(transition => transition.DurationBeats == 2.5m && transition.SelfThrows == 3);
+        sequence
+            .Transitions.Select(transition => transition.Actor)
+            .Should()
+            .Equal("Daniel", "Anne");
+        sequence
+            .Transitions.Should()
+            .OnlyContain(transition =>
+                transition.DurationBeats == 2.5m && transition.SelfThrows == 3
+            );
     }
 
     [Test]
@@ -27,7 +37,11 @@ public sealed class CausalDiagramEditorSequenceTests
         var state = CausalDiagramEditorSequences.CreateRunawayPhase(
             "highgate-thirteenclubrunaway-before-anne-walk"
         );
-        var originalGraph = state.Throws.Select(item => (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)).ToArray();
+        var originalGraph = state
+            .Throws.Select(item =>
+                (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+            )
+            .ToArray();
         state.Version = 5;
         state.SequenceId = "highgate-thirteenclubrunaway";
         state.SequencePhaseIndex = 2;
@@ -38,7 +52,12 @@ public sealed class CausalDiagramEditorSequenceTests
         decoded!.SequenceId.Should().Be(state.SequenceId);
         decoded.SequencePhaseIndex.Should().Be(2);
         decoded.PresetId.Should().Be("highgate-thirteenclubrunaway-before-anne-walk");
-        decoded.Throws.Select(item => (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)).Should().Equal(originalGraph);
+        decoded
+            .Throws.Select(item =>
+                (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+            )
+            .Should()
+            .Equal(originalGraph);
         decoded.CausalEdges.Should().BeEquivalentTo(state.CausalEdges);
     }
 
@@ -58,7 +77,9 @@ public sealed class CausalDiagramEditorSequenceTests
     [Test]
     public void ExistingPeriodicLink_RemainsJ4AndDecodesWithoutSequenceMetadata()
     {
-        var state = CausalDiagramEditorPresets.All.First(preset => preset.Id == "siteswap-531").Create();
+        var state = CausalDiagramEditorPresets
+            .All.First(preset => preset.Id == "siteswap-531")
+            .Create();
         var token = state.Encode();
         token.Should().StartWith("j4.");
         CausalDiagramEditorState.TryDecode(token, out var decoded).Should().BeTrue();
@@ -71,6 +92,9 @@ public sealed class CausalDiagramEditorSequenceTests
     public void SequenceSelection_RejectsUnknownSequenceAndOutOfRangePhase()
     {
         CausalDiagramEditorSequences.IsValidSelection("missing", 0).Should().BeFalse();
-        CausalDiagramEditorSequences.IsValidSelection("highgate-thirteenclubrunaway", 4).Should().BeFalse();
+        CausalDiagramEditorSequences
+            .IsValidSelection("highgate-thirteenclubrunaway", 4)
+            .Should()
+            .BeFalse();
     }
 }

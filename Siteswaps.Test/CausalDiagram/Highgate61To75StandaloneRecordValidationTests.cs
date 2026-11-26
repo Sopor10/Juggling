@@ -19,7 +19,10 @@ public sealed class Highgate61To75StandaloneRecordValidationTests
         while (
             repository is not null
             && !File.Exists(
-                Path.Combine(repository.FullName, "docs/research/highgate-transcriptions-61-75.json")
+                Path.Combine(
+                    repository.FullName,
+                    "docs/research/highgate-transcriptions-61-75.json"
+                )
             )
         )
             repository = repository.Parent;
@@ -27,7 +30,10 @@ public sealed class Highgate61To75StandaloneRecordValidationTests
 
         var records = JsonSerializer.Deserialize<List<Record>>(
             File.ReadAllText(
-                Path.Combine(repository!.FullName, "docs/research/highgate-transcriptions-61-75.json")
+                Path.Combine(
+                    repository!.FullName,
+                    "docs/research/highgate-transcriptions-61-75.json"
+                )
             ),
             JsonOptions
         )!;
@@ -54,12 +60,14 @@ public sealed class Highgate61To75StandaloneRecordValidationTests
             record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
             record.CausalEdges.Select(edge => edge.From).Should().OnlyHaveUniqueItems(record.Id);
             record.CausalEdges.Select(edge => edge.To).Should().OnlyHaveUniqueItems(record.Id);
-            record.CausalEdges.Should().OnlyContain(
-                edge => throwById.ContainsKey(edge.From) && throwById.ContainsKey(edge.To),
-                record.Id
-            );
-            record.SourceLinks
-                .Select(link => link.Edition)
+            record
+                .CausalEdges.Should()
+                .OnlyContain(
+                    edge => throwById.ContainsKey(edge.From) && throwById.ContainsKey(edge.To),
+                    record.Id
+                );
+            record
+                .SourceLinks.Select(link => link.Edition)
                 .Should()
                 .Contain(edition => edition.Contains("2017", StringComparison.Ordinal))
                 .And.Contain(edition => edition.Contains("2014", StringComparison.Ordinal));
@@ -69,35 +77,46 @@ public sealed class Highgate61To75StandaloneRecordValidationTests
                 PresetId = "highgate-three-count",
                 CycleLength = record.CycleLength,
                 ActiveJugglerId = record.Jugglers[0].Id,
-                Jugglers = record.Jugglers.Select(item => new EditorJuggler(item.Id, item.Name)).ToList(),
-                Throws = record.Throws.Select(item => new EditorThrow(
-                    item.Id,
-                    item.JugglerId,
-                    item.Hand,
-                    item.StartTime,
-                    item.Height ?? 0m,
-                    item.HeightIsExplicit
-                )).ToList(),
-                CausalEdges = record.CausalEdges.Select((edge, index) => new EditorCausalEdge(
-                    $"{record.Id}-e{index + 1}",
-                    edge.From,
-                    edge.To,
-                    edge.CycleOffset
-                )).ToList(),
+                Jugglers = record
+                    .Jugglers.Select(item => new EditorJuggler(item.Id, item.Name))
+                    .ToList(),
+                Throws = record
+                    .Throws.Select(item => new EditorThrow(
+                        item.Id,
+                        item.JugglerId,
+                        item.Hand,
+                        item.StartTime,
+                        item.Height ?? 0m,
+                        item.HeightIsExplicit
+                    ))
+                    .ToList(),
+                CausalEdges = record
+                    .CausalEdges.Select(
+                        (edge, index) =>
+                            new EditorCausalEdge(
+                                $"{record.Id}-e{index + 1}",
+                                edge.From,
+                                edge.To,
+                                edge.CycleOffset
+                            )
+                    )
+                    .ToList(),
             };
             var offsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
             state.SynchronizeHeights();
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
-            var imported = CausalDiagramEditorPresets.All
-                .Single(preset => preset.Id == record.Id)
+            var imported = CausalDiagramEditorPresets
+                .All.Single(preset => preset.Id == record.Id)
                 .Create();
             imported.CycleLength.Should().Be(state.CycleLength, record.Id);
-            imported.Jugglers.Select(item => (item.Id, item.Name))
+            imported
+                .Jugglers.Select(item => (item.Id, item.Name))
                 .Should()
                 .Equal(state.Jugglers.Select(item => (item.Id, item.Name)), record.Id);
-            imported.Throws.Select(item =>
+            imported
+                .Throws.Select(item =>
                     (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
                 )
                 .Should()
@@ -107,9 +126,8 @@ public sealed class Highgate61To75StandaloneRecordValidationTests
                     ),
                     record.Id
                 );
-            imported.CausalEdges.Select(item =>
-                    (item.FromThrowId, item.ToThrowId, item.CycleOffset)
-                )
+            imported
+                .CausalEdges.Select(item => (item.FromThrowId, item.ToThrowId, item.CycleOffset))
                 .Should()
                 .Equal(
                     state.CausalEdges.Select(item =>
