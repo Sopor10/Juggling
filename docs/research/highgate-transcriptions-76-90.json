@@ -1272,5 +1272,83 @@
       "modelCheck": "Preset.Create succeeded; IsValidForEditor returned true after graph creation; SynchronizeHeights preserved all serialized cycle offsets. State counts and offset count recorded in docs/research/highgate-transcriptions-76-90.md. New IDs are not yet centrally registered, so catalog registration must be rechecked after import.",
       "manipulationReview": "Visual/text review found no third-person manipulation; these are ordinary two-person passing patterns."
     }
+  },
+  {
+    "id": "highgate-sevenclubtwocountonsingles",
+    "stable_id": "highgate-sevenclubtwocountonsingles",
+    "label": "Seven club two count on singles",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 81 / PDF p. 82; compared against The Highgate Collection (2014), printed p. 51. Both diagrams visually checked.",
+    "notation": "Both jugglers pass self on two count with straight single passes. Anne starts with two clubs in each hand; Ben starts with two right, one left, one beat after Anne.",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      "https://jugglingedge.com/pdf/highgate.pdf",
+      "https://passing.zone/wp-content/uploads/highgate.pdf"
+    ],
+    "catalogStableIds": [
+      "highgate-sevenclubtwocountonsingles"
+    ],
+    "visualVerification": "The two diagrams show the same two-count rows, alternating R/L events, straight singles and one-beat phase difference. Each pass/self token maps to its corresponding next row event; all four arrows were checked against both diagrams.",
+    "modelLimitations": [
+      "Starting club counts and pass spin/style are not separate editor fields; they are retained in the source notation."
+    ]
   }
 ]

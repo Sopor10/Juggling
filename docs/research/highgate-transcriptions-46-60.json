@@ -450,5 +450,87 @@
     ],
     "modelLimits": "No backward zip/gap arrows or simultaneous same-juggler throws. Holds are represented by nodes without outgoing causal edges; odd pattern periods are doubled to preserve hand parity.",
     "validation": "IsValidForEditor() true after SynchronizeHeights(); all causal edges retain their source cycle offset."
+  },
+  {
+    "id": "highgate-onecount",
+    "stable_id": "highgate-onecount",
+    "label": "One count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 47 / PDF p. 48; compared against The Highgate Collection (2014), printed p. 27. Both diagrams visually checked.",
+    "notation": "Siteswap (6x,6x); Prechac 3p. Both jugglers pass straight singles on every alternating-hand event. The diagram has two event nodes per juggler in its repeating cycle.",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 47,
+        "pdfPage": 48
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 27,
+        "pdfPage": 27
+      }
+    ],
+    "reviewStatus": "Visually checked against 2017 printed p. 47 and 2014 printed p. 27; direct C# state and cycle-offset validation passed. Every node is a pass to the partner; all four causal edges are present."
   }
 ]

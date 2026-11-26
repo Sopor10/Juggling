@@ -1,61 +1,46 @@
-# Highgate transcription batch: 2017 printed pages 301–315
+# Highgate transcription batch: 2017 printed pp. 301–315
 
-Work file: [highgate-transcriptions-301-315.json](highgate-transcriptions-301-315.json). The first accepted graph is `Thirteen club four count box`; the other candidates below remain open and are not implied complete by this batch.
+Work file: [highgate-transcriptions-301-315.json](highgate-transcriptions-301-315.json). Source: Aidan Burns, *The Highgate Collection*, [2017 expanded PDF](https://jugglingedge.com/pdf/highgate.pdf), body PDF pp. 302–316; compared with the [2014 PDF](https://passing.zone/wp-content/uploads/highgate.pdf). The 2014 PDF page footer and physical PDF page agree for the pages cited below.
 
-## Coverage and source mapping
+## Accepted graphs
 
-The 2017 expanded PDF body pages are PDF pp. 302–316 (printed pp. 301–315). The full text layer has been extracted for that range and the diagrams are present as raster/vector artwork. The 2014 edition is available at [passing.zone/wp-content/uploads/highgate.pdf](https://passing.zone/wp-content/uploads/highgate.pdf); the 2017 expanded edition is [jugglingedge.com/pdf/highgate.pdf](https://jugglingedge.com/pdf/highgate.pdf). The bundled 2014 copy is the same edition noted in the inventory. I have not completed the page-by-page 2014 visual comparison, so no 2014 equivalence is asserted below.
+The JSON contains nine records: the four-count box and eight additional patterns. Every record has a stable inventory ID, event nodes, a complete set of causal edges, source pages, and direct state validation.
 
-The section contains these named patterns or named pattern variants (one-count countdown's continuation and the headings on adjoining pages are retained as separate candidates where the book names them separately):
+| Stable ID | Pattern | 2017 printed page | 2014 printed page | Causal edges |
+|---|---|---:|---:|---:|
+| `highgate-thirteenclubfourcountbox` | Thirteen club four count box | 310 | 221 | 32/32; diagrams checked in both editions |
+| `highgate-thirteenclubonecountfeedingcountdown` | Thirteen club one count feeding countdown | 301 | 216 | 32/32 |
+| `highgate-thirteenclubthreecountbox` | Thirteen club three count box | 311 | 222 | 24/24 |
+| `highgate-thirteenclubthreecountboxvariation` | Thirteen club three count box variation | 311 | 222 | 48/48 |
+| `highgate-thirteenclubtwocountbox` | Thirteen club two count box | 312 | 223 | 16/16 |
+| `highgate-thirteenclubchocolatesquare` | Thirteen club chocolate square | 312 | 223 | 16/16 |
+| `highgate-weirdpasspassselfbox` | Weird pass pass self box | 312 | 223 | 12/12 |
+| `highgate-thirteenclubtwocountlinefeed` | Thirteen club two count line feed | 313 | 224 | 24/24 |
+| `highgate-thirteencluburbanterrorfeedonecountlinefeed` | Urban terror feed (one count line feed) | 313 | 224 | 48/48 |
 
-| Printed page | Pattern | Inventory match / review note |
+For each accepted record, I compared the printed throw rows and hand order to the diagram arrows in the 2017 page image, then checked the corresponding 2014 page image. The state records the written phase offsets and one event per listed throw. Single and double passes use their corresponding arrival intervals; self events connect to the next throw by the same juggler. Pass angle, formation, and starting club inventory remain source notes rather than editor state.
+
+The component `CausalDiagramEditorState` was built directly for every record, followed by `SynchronizeHeights()` and `IsValidForEditor()`. All nine states returned valid and every serialized `CycleOffset` remained unchanged. Since these new stable IDs are not registered centrally, validation temporarily used the registered preset ID `highgate-three-count`; the exact registered-ID limitation and node/edge counts are recorded per entry. A completeness audit checks one outgoing causal edge for every throw node in all nine records, without duplicate or missing source IDs. The four-count box now has all 32 edges: eight pass edges plus 24 self-throw continuation edges. These self edges follow the visible horizontal continuation arrows and wrap to the next cycle at each row’s final throw.
+
+## What the model can encode for zip, heff, and pass spins
+
+The editor state has no separate `ActionType` field. It stores throw nodes (hand, time, derived height) and causal edges (source, destination, cycle offset). That still allows several special actions to be represented when the source diagram identifies the destination node:
+
+- [Modern Club Passing notation](https://modernpassing.com/4a-4hsw-notation.html) defines zip as hand-across without rotation (4-handed siteswap `2`, solo siteswap `1`) and heff as a double-spin self to the same hand (4-handed `8`, solo `4`). A temporary state check confirmed a graph edge deriving height 1 with offset −1 and a same-hand self edge deriving height 4; both states passed `IsValidForEditor()` and retained their offsets. This verifies numeric/causal representability, not an automatic zip/heff parser.
+- The editor also accepts pass heights 4 and 5; the accepted box records include double and triple passes. A double/triple here is represented as one causal throw edge with its height and endpoint, not as multiple independent club objects on one node.
+- The source notation (`zip`, `heff`, straight/crossing, double/triple) therefore needs to stay in each entry's source notes. The graph can encode timing and causality, but does not store a separate label for the action's name or club inventory.
+
+## Remaining named candidates and classification
+
+I reviewed the full pp. 301–315 block. The descriptions and diagrams show cooperative feeds, boxes, and line feeds; I found no solo manipulator, takeout, hijack, or lo-jack role in this range. The following candidates are not accepted as graphs here because their exact arrow endpoints or full phase cycle have not been transcribed and checked. This is a source-specific gap, not a claim that the editor cannot represent zip/heff heights.
+
+| 2017 printed pages | Pattern / stable inventory ID | Reason left out |
 |---|---|---|
-| 301 | Thirteen club one count feeding countdown | `highgate-thirteenclubonecountfeedingcountdown305thirteenc-9dcb228c44` (inventory title also contains next title due a catalog-heading merge) |
-| 301 | Thirteen club pass pass self feeding French three count | `highgate-thirteenclubpasspassselffeedingfrenchthreecount` |
-| 301 | Thirteen club pass pass heff feeding three count | `highgate-thirteenclubpasspasshefffeedingthreecount` |
-| 302–303 | Thirteen club 972 feeding three count | inventory family `highgate-972feeds4people13clubs`; individual title `highgate-thirteenclub972feedingthreecount` |
-| 303 | Thirteen club 972 feeding French three count | `highgate-thirteenclub972feedingfrenchthreecount` |
-| 303 | One count feeding 972 | inventory candidate needs exact-title ID reconciliation |
-| 303–304 | Thirteen club why not? feeding five count popcorn | `highgate-thirteenclubwhynotfeedingfivecountpopcorn` |
-| 304 | Thirteen club maybe feeding five count popcorn | `highgate-thirteenclubmaybefeedingfivecountpopcorn` |
-| 305 | Thirteen club funky bookends feeding maybe | `highgate-thirteenclubfunkybookendsfeedingmaybe` |
-| 305–306 | Thirteen club Martin's one count feeding five count popcorn | `highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn` |
-| 306–307 | Thirteen club Martin's one count feeding funky bookends | `highgate-thirteenclubmartinsonecountfeedingfunkybookends` |
-| 307 | Thirteen club one count feeding why not? | `highgate-thirteenclubonecountfeedingwhynot` |
-| 307–308 | Thirteen club one count feeding maybe | `highgate-thirteenclubonecountfeedingmaybe` |
-| 308–309 | Thirteen club one count feeding Martin's one count | `highgate-thirteenclubonecountfeedingmartinsonecount` |
-| 310 | Thirteen club four count box | `highgate-thirteenclubfourcountbox` |
-| 310 | Thirteen club three count box | `highgate-thirteenclubthreecountbox` |
-| 310–311 | Thirteen club three count box variation | `highgate-thirteenclubthreecountboxvariation` |
-| 311 | Thirteen club two count box | `highgate-thirteenclubtwocountbox` |
-| 311–312 | Thirteen club chocolate square | `highgate-thirteenclubchocolatesquare` |
-| 312 | Weird pass pass self box | `highgate-weirdpasspassselfbox` |
-| 313 | Thirteen club two count line feed | `highgate-thirteenclubtwocountlinefeed` |
-| 313 | Thirteen club urban terror feed (one count line feed) | `highgate-thirteencluburbanterrorfeedonecountlinefeed` |
-| 314 | Thirteen club one count line feed, feeding four count and two count | title/ID reconciliation needed against inventory's combined line-feed candidate |
-| 314 | Thirteen club one count line feed, feeding French three count | `highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount` |
-| 314–315 | Thirteen club parsnip line feed, feeding five count popcorn | `highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn` |
+| 301–302 | Thirteen club pass pass self feeding French three count — `highgate-thirteenclubpasspassselffeedingfrenchthreecount`; Thirteen club pass pass heff feeding three count — `highgate-thirteenclubpasspasshefffeedingthreecount` | Heff actions; per-arrow destination and same-hand timing need an audit |
+| 302–303 | Thirteen club 972 feeding three count — `highgate-thirteenclub972feedingthreecount`; Thirteen club 972 feeding French three count — `highgate-thirteenclub972feedingfrenchthreecount`; One count feeding 972 — `highgate-onecountfeeding972` | Zip/heff actions, unequal starts/hand assignments, and doubles; full edge audit remains |
+| 303–309 | Thirteen club why not? feeding five count popcorn — `highgate-thirteenclubwhynotfeedingfivecountpopcorn`; maybe feeding five count popcorn — `highgate-thirteenclubmaybefeedingfivecountpopcorn`; funky bookends feeding why not?/maybe — `highgate-thirteenclubfunkybookendsfeedingwhynot`, `highgate-thirteenclubfunkybookendsfeedingmaybe`; Martin's one count feeding five count popcorn/funky bookends — `highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn`, `highgate-thirteenclubmartinsonecountfeedingfunkybookends`; one count feeding why not?/maybe/Martin's one count — `highgate-thirteenclubonecountfeedingwhynot`, `highgate-thirteenclubonecountfeedingmaybe`, `highgate-thirteenclubonecountfeedingmartinsonecount` | Zip/heff sequences with several half-beat starts; no speculative token conversion |
+| 314 | Thirteen one count line feed, feeding four count and two count — `highgate-thirteenonecountlinefeedfeedingfourcountandtwocount` | Different individual periods (four, four, four, and two events); exact endpoints need a full diagram read |
+| 314 | Thirteen club one count line feed, feeding French three count — `highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount` | Heff actions and phase details require exact destination audit |
+| 314–315 | Thirteen club parsnip line feed, feeding five count popcorn — `highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn` | Zip actions and staggered starts require exact destination audit |
 
-This roster follows body headings and the extracted pattern descriptions; it is not yet a completed catalog-ID audit. In particular, the inventory merges some adjacent headings into a single candidate row, so those IDs need to be split or mapped before import.
-
-## Accepted first graph
-
-`Thirteen club four count box` is transcribed as 32 event nodes and 8 pass edges over an 8-beat cycle. The 2017 diagram on printed p. 310 and its four sequences were checked; each single/triple pass is routed to the named recipient's landing event, including cycle wrap. The 2014 PDF p. 221 title and sequence text match; a full visual comparison of that edition's diagram remains open. The state retains all self-event nodes but cannot encode starting club inventories.
-
-## Manipulation classification
-
-The reviewed text and visible examples describe ordinary four-person passing, feeding, boxes, and line feeds. I found no external manipulator role, takeout, hijack, or lo-jack description in the reviewed material. This is a negative finding from this section only; it does not imply that feeding or movement patterns elsewhere in Highgate cannot be manipulative.
-
-## Model questions before graph acceptance
-
-- The pages use `zip` and `heff` as explicit sequence tokens, including on pp. 301–303, 307–309, and 314–315. The current record schema has pass/self/hold nodes and causal edges but no explicit action type for these tokens. They must not be silently converted to empty holds or ordinary passes.
-- Several patterns have half-beat or one-and-a-half-beat phase differences and different individual sequence periods. Decimal start times are supported, but each full cycle and hand alternation must be proven from the diagram before a state is accepted.
-- Some sequences specify double or triple passes. Their causal arrival node and cycle offset must be read from the drawn arrows; a label alone is insufficient to invent edge endpoints.
-- The editor has no spatial formation, crossing/straight path, club-count/color coding, or club inventory fields. These can be preserved as explanatory notes only if the causal graph itself is otherwise exact.
-- Some starts state clubs in each hand; these are initial inventories, not throw-node events, and the current state schema cannot encode them.
-
-## Validation status
-
-The temporary validator built the preset and called `Create()`, then `SynchronizeHeights()` and compared serialized offsets. The four-count box created successfully with 32 nodes and 8 edges; offsets were unchanged; `IsValidForEditor()` passed after substituting registered placeholder ID `highgate-three-count`. The actual new ID is not registered centrally yet, so rerun with the intended ID after import. No central preset, inventory, or test file was changed.
-
-The remaining candidates have not yet been transcribed, compared visually with both editions, or validated. The chunk is a verified partial batch, not a claim of completeness for pp. 301–315. A follow-up should include each stable inventory ID, named aliases as separate records even when graphs match, direct state validation and offset checks, and source-specific model limits.
+The period-five section heading on p. 303 is not itself a pattern. The inventory’s merged countdown/four-count row is resolved by retaining the stable IDs on the actual named headings. No inventory or central preset file was changed.

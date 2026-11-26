@@ -1,0 +1,646 @@
+[
+  {
+    "id": "highgate-thirteenclubfourcount",
+    "label": "Thirteen club four count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 319 / PDF p. 320; matching 2014 PDF p. 228.",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "D-R3",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "D-L4",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "D-L4",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L4",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L4",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R1",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R3",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "C-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-L2",
+        "to": "D-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R3",
+        "to": "D-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-L4",
+        "to": "D-R3",
+        "cycleOffset": 0
+      }
+    ],
+    "notation": "Everyone passes on four count (Prechac 4p333). Anne and Clare begin at time 0; Ben and Daniel begin one beat later. Sequence: Anne passes Daniel, Clare passes Ben, Ben passes Anne, Daniel passes Clare; each pass is straight and height 4. The other actions are self throws. Starting club inventories are given in the source but are not editor fields.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 319,
+        "pdfPage": 320
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 228
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-thirteenclubfourcount",
+      "visualReview": "2017 printed p. 319/PDF p. 320 diagrams and written sequence rows checked; every pass and self-throw causal edge matches the stated destination and arrival time.",
+      "editionComparison": "2014 PDF p. 228 diagram and sequence visually compared; title, phase offsets and pass routing match.",
+      "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
+      "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    }
+  },
+  {
+    "id": "highgate-thirteenclubthreecount",
+    "label": "Thirteen club three count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 319 / PDF p. 320; matching 2014 PDF p. 228.",
+    "cycleLength": 3,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1.25
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 2.25
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.25
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 2.5
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 0.75
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 1.75
+      },
+      {
+        "id": "D-R3",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 2.75
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "D-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R3",
+        "to": "A-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R1",
+        "cycleOffset": 2
+      },
+      {
+        "from": "B-R3",
+        "to": "B-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L2",
+        "to": "C-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R3",
+        "to": "C-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-L2",
+        "to": "D-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R3",
+        "to": "D-R3",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Everyone passes on three count (Prechac 3.7p33, interpreted as 3¾-beat pass height). Phases from Anne are Daniel +¾, Ben +1¼, Clare +1½ beats. Anne→Daniel, Daniel→Clare, Ben→Anne, Clare→Ben; single passes. Self throws have causal arrows to the next same-juggler event at height 3. The source also gives club color coding and a square or Y formation; those visual/style properties are not editor fields.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 319,
+        "pdfPage": 320
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 228
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-thirteenclubthreecount",
+      "visualReview": "2017 printed p. 319/PDF p. 320 diagrams and written sequence rows checked; every pass and self-throw causal edge matches the stated destination and arrival time.",
+      "editionComparison": "2014 PDF p. 228 diagram and sequence visually compared; title, phase offsets and pass routing match.",
+      "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
+      "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    }
+  },
+  {
+    "id": "highgate-thirteenclubtwocount",
+    "label": "Thirteen club two count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 320 / PDF p. 321; matching 2014 PDF p. 229.",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "D-L2",
+        "jugglerId": "D",
+        "hand": "L",
+        "startTime": 0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "D-L2",
+        "cycleOffset": 2
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R1",
+        "cycleOffset": 2
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 2
+      },
+      {
+        "from": "C-R1",
+        "to": "B-L2",
+        "cycleOffset": 2
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "D-R1",
+        "to": "C-L2",
+        "cycleOffset": 2
+      },
+      {
+        "from": "D-L2",
+        "to": "D-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Everyone passes on two count (Prechac 3.5p3). Ben begins at time 0; Anne, Daniel and Clare at +½, +1 and +1½ beats. Pass route Ben→Anne→Daniel→Clare→Ben; all passes are straight singles. Self throws have causal arrows to the next same-juggler event at height 3. Starting inventories are not editor fields.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 320,
+        "pdfPage": 321
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 229
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-thirteenclubtwocount",
+      "visualReview": "2017 printed p. 320/PDF p. 321 diagrams and written sequence rows checked; every pass and self-throw causal edge matches the stated destination and arrival time.",
+      "editionComparison": "2014 PDF p. 229 diagram and sequence visually compared; title, phase offsets and pass routing match.",
+      "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
+      "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    }
+  },
+  {
+    "id": "highgate-thirteenclubonecount",
+    "label": "Thirteen club one count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 320 / PDF p. 321; matching 2014 PDF p. 229.",
+    "cycleLength": 1,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      },
+      {
+        "id": "D",
+        "name": "Daniel"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.25
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0.75
+      },
+      {
+        "id": "D-R1",
+        "jugglerId": "D",
+        "hand": "R",
+        "startTime": 0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R1",
+        "cycleOffset": 3
+      },
+      {
+        "from": "B-R1",
+        "to": "C-R1",
+        "cycleOffset": 3
+      },
+      {
+        "from": "C-R1",
+        "to": "D-R1",
+        "cycleOffset": 4
+      },
+      {
+        "from": "D-R1",
+        "to": "A-R1",
+        "cycleOffset": 3
+      }
+    ],
+    "notation": "Everyone passes on one count (Prechac 3.2p, interpreted as 3¼-beat pass height). Daniel begins at time 0; Anne, Ben and Clare at +¼, +½ and +¾ beats. Pass route Daniel→Anne→Ben→Clare→Daniel; each pass is straight except Clare’s crossing pass to Daniel. The editor does not store crossing/straight trajectory or starting club inventories.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 320,
+        "pdfPage": 321
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 229
+      }
+    ],
+    "reviewStatus": {
+      "inventoryId": "highgate-thirteenclubonecount",
+      "visualReview": "2017 printed p. 320/PDF p. 321 diagrams and written sequence rows checked; every pass and self-throw causal edge matches the stated destination and arrival time.",
+      "editionComparison": "2014 PDF p. 229 diagram and sequence visually compared; title, phase offsets and pass routing match.",
+      "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
+      "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
+      "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    }
+  }
+]
