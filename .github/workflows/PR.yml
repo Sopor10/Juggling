@@ -1,16 +1,164 @@
-﻿# This is ".github/workflows/gh-pages.yml" file.
-# This is an EXAMPLE of "GitHub Actions Workflow file".
-
+# Every PR runs the complete suite from Juggling.slnx. Browser tests are split
+# by test namespace; coverage validation fails closed if the inventory changes.
 name: PR Validation
 
 on:
-  pull_request: 
+  pull_request:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  deploy:
+  formatting:
+    name: Formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ./.github/workflows/steps
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 11.0.100
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Check formatting
+        run: dotnet csharpier check .
+
+  non-e2e-tests:
+    name: All non-E2E tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 11.0.100
+      - name: Run every non-E2E test from the single solution
+        run: >-
+          dotnet test Juggling.slnx -m
+          --filter "FullyQualifiedName!~Siteswaps.E2ETests"
+          --logger "trx;LogFileName=ci-non-e2e.trx"
+      - name: Upload non-E2E test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: non-e2e-results
+          path: "**/TestResults/ci-non-e2e.trx"
+          if-no-files-found: ignore
+          retention-days: 3
+
+  e2e-tests:
+    name: E2E tests (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Functional
+            filter: FullyQualifiedName~Siteswaps.E2ETests.Functional
+          - name: UX
+            filter: FullyQualifiedName~Siteswaps.E2ETests.Ux
+          - name: DesignAndOther
+            filter: >-
+              FullyQualifiedName~Siteswaps.E2ETests
+              &FullyQualifiedName!~Siteswaps.E2ETests.Functional
+              &FullyQualifiedName!~Siteswaps.E2ETests.Ux
+    env:
+      PLAYWRIGHT_CHANNEL: chrome
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 11.0.100
+      - name: Build and run E2E namespace shard without workload installation
+        env:
+          SHARD_FILTER: ${{ matrix.filter }}
+          SHARD_NAME: ${{ matrix.name }}
+        shell: bash
+        run: >-
+          dotnet test Siteswaps.E2ETests/Siteswaps.E2ETests.csproj -m
+          --filter "$SHARD_FILTER"
+          --logger "trx;LogFileName=ci-e2e-${SHARD_NAME}.trx"
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-results-${{ matrix.name }}
+          path: "**/TestResults/ci-e2e-*.trx"
+          if-no-files-found: ignore
+          retention-days: 3
+
+  verify-full-coverage:
+    name: Verify full test coverage
+    if: always()
+    needs: [non-e2e-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: non-e2e-results
+          path: results/non-e2e
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: e2e-results-*
+          merge-multiple: true
+          path: results/e2e
+      - name: Verify all suites ran exactly once and passed
+        run: |
+          python3 - <<'PY'
+          import glob
+          import os
+          import xml.etree.ElementTree as ET
+
+          expected_non_e2e = {
+              "Siteswaps.Mcp.Server.Test": 197,
+              "Siteswaps.Test": 136,
+              "Siteswaps.Generator.Test": 510,
+              "Siteswaps.Design.Tests": 10,
+              "Siteswaps.E2ETests": 0,
+          }
+          actual_non_e2e = {}
+          non_e2e_paths = glob.glob("results/non-e2e/**/*.trx", recursive=True)
+          if len(non_e2e_paths) != len(expected_non_e2e):
+              raise SystemExit(f"Expected 5 non-E2E TRX files, got {len(non_e2e_paths)}")
+          for path in non_e2e_paths:
+              assembly = os.path.basename(os.path.dirname(os.path.dirname(path)))
+              if assembly not in expected_non_e2e:
+                  raise SystemExit(f"Unexpected non-E2E test assembly: {assembly}")
+              root = ET.parse(path).getroot()
+              tests = [node for node in root.iter() if node.tag.endswith("UnitTestResult")]
+              if any(node.attrib.get("outcome") not in ("Passed", "NotExecuted") for node in tests):
+                  raise SystemExit(f"A non-E2E test failed in {path}")
+              actual_non_e2e[assembly] = len(tests)
+          if actual_non_e2e != expected_non_e2e:
+              raise SystemExit(
+                  f"Non-E2E inventory mismatch: expected {expected_non_e2e}, got {actual_non_e2e}"
+              )
+
+          expected_e2e_files = {
+              "ci-e2e-Functional.trx",
+              "ci-e2e-UX.trx",
+              "ci-e2e-DesignAndOther.trx",
+          }
+          seen_e2e_ids = set()
+          e2e_paths = glob.glob("results/e2e/**/*.trx", recursive=True)
+          actual_e2e_files = {os.path.basename(path) for path in e2e_paths}
+          if actual_e2e_files != expected_e2e_files:
+              raise SystemExit(
+                  f"Expected E2E TRX files {expected_e2e_files}, got {actual_e2e_files}"
+              )
+          e2e_test_count = 0
+          for path in e2e_paths:
+              root = ET.parse(path).getroot()
+              tests = [node for node in root.iter() if node.tag.endswith("UnitTestResult")]
+              e2e_test_count += len(tests)
+              for node in tests:
+                  if node.attrib.get("outcome") not in ("Passed", "NotExecuted"):
+                      raise SystemExit(f"An E2E test failed in {path}")
+                  test_id = node.attrib.get("testId")
+                  if not test_id or test_id in seen_e2e_ids:
+                      raise SystemExit(f"Missing or duplicate E2E testId in {path}")
+                  seen_e2e_ids.add(test_id)
+          if e2e_test_count != 53:
+              raise SystemExit(f"Expected all 53 E2E tests, got {e2e_test_count}")
+          print("Verified all 853 non-E2E tests and all 53 E2E tests")
+          PY
