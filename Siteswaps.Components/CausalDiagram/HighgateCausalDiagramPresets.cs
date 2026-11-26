@@ -38,11 +38,11 @@ internal static class HighgateCausalDiagramPresets
             PresetId = pattern.Id,
             CycleLength = pattern.CycleLength,
             ActiveJugglerId = pattern.Jugglers[0].Id,
-            Jugglers = pattern.Jugglers
-                .Select(juggler => new EditorJuggler(juggler.Id, juggler.Name))
+            Jugglers = pattern
+                .Jugglers.Select(juggler => new EditorJuggler(juggler.Id, juggler.Name))
                 .ToList(),
-            Throws = pattern.Throws
-                .Select(item => new EditorThrow(
+            Throws = pattern
+                .Throws.Select(item => new EditorThrow(
                     item.Id,
                     item.JugglerId,
                     item.Hand,
@@ -50,19 +50,23 @@ internal static class HighgateCausalDiagramPresets
                     0m
                 ))
                 .ToList(),
-            CausalEdges = pattern.CausalEdges
-                .Select((edge, index) => new EditorCausalEdge(
-                    $"{pattern.Id}-e{index + 1}",
-                    edge.From,
-                    edge.To,
-                    edge.CycleOffset
-                ))
+            CausalEdges = pattern
+                .CausalEdges.Select(
+                    (edge, index) =>
+                        new EditorCausalEdge(
+                            $"{pattern.Id}-e{index + 1}",
+                            edge.From,
+                            edge.To,
+                            edge.CycleOffset
+                        )
+                )
                 .ToList(),
         };
         var sourceCycleOffsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
         state.SynchronizeHeights();
         if (
-            state.CausalEdges.Where((edge, index) => edge.CycleOffset != sourceCycleOffsets[index])
+            state
+                .CausalEdges.Where((edge, index) => edge.CycleOffset != sourceCycleOffsets[index])
                 .Any()
         )
         {
