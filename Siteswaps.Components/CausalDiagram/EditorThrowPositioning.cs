@@ -21,12 +21,28 @@ public static class EditorThrowPositioning
             if (source is null || target is null || source.HeightIsExplicit)
                 continue;
 
-            var sourceBeat = state.CycleLength / Math.Max(1, state.Throws.Count(node => node.JugglerId == source.JugglerId));
-            var targetBeat = state.CycleLength / Math.Max(1, state.Throws.Count(node => node.JugglerId == target.JugglerId));
+            var sourceBeat =
+                state.CycleLength
+                / Math.Max(1, state.Throws.Count(node => node.JugglerId == source.JugglerId));
+            var targetBeat =
+                state.CycleLength
+                / Math.Max(1, state.Throws.Count(node => node.JugglerId == target.JugglerId));
             if (source.Id == item.Id)
-                latestAllowedStart = Math.Min(latestAllowedStart, target.StartTime + edge.CycleOffset * state.CycleLength + 2m * targetBeat - 2m * sourceBeat);
+                latestAllowedStart = Math.Min(
+                    latestAllowedStart,
+                    target.StartTime
+                        + edge.CycleOffset * state.CycleLength
+                        + 2m * targetBeat
+                        - 2m * sourceBeat
+                );
             if (target.Id == item.Id)
-                earliestStart = Math.Max(earliestStart, source.StartTime + 2m * sourceBeat - edge.CycleOffset * state.CycleLength - 2m * targetBeat);
+                earliestStart = Math.Max(
+                    earliestStart,
+                    source.StartTime
+                        + 2m * sourceBeat
+                        - edge.CycleOffset * state.CycleLength
+                        - 2m * targetBeat
+                );
         }
 
         if (earliestStart > latestAllowedStart)

@@ -30,7 +30,8 @@ internal static class HighgateCausalDiagramPresets
         var patterns = JsonSerializer.Deserialize<List<HighgatePatternData>>(stream, JsonOptions)
             ?? throw new InvalidOperationException("The Highgate pattern data is empty.");
         if (
-            patterns.SelectMany(pattern => pattern.Throws)
+            patterns
+                .SelectMany(pattern => pattern.Throws)
                 .Any(item => item.HeightIsExplicit && item.Height is null or < 0)
         )
         {

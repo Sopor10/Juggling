@@ -192,9 +192,17 @@ public class CausalDiagramEditorStateTests
         var edge = state.CausalEdges[0];
         state.CausalEdges[0] = edge with { CycleOffset = -1 };
         var sourceIndex = state.Throws.FindIndex(node => node.Id == edge.FromThrowId);
-        state.Throws[sourceIndex] = state.Throws[sourceIndex] with { Height = 5m, HeightIsExplicit = true };
+        state.Throws[sourceIndex] = state.Throws[sourceIndex] with
+        {
+            Height = 5m,
+            HeightIsExplicit = true,
+        };
 
-        state.Throws[sourceIndex] = EditorThrowPositioning.MoveStart(state, state.Throws[sourceIndex], 1m);
+        state.Throws[sourceIndex] = EditorThrowPositioning.MoveStart(
+            state,
+            state.Throws[sourceIndex],
+            1m
+        );
         state.SynchronizeHeights();
         var token = state.Encode();
         token.Should().StartWith("j4.");
@@ -214,7 +222,10 @@ public class CausalDiagramEditorStateTests
         state.SynchronizeHeights();
 
         state.CausalEdges[0].CycleOffset.Should().Be(-2);
-        state.Throws.First(node => node.Id == state.CausalEdges[0].FromThrowId).Height.Should().Be(0m);
+        state
+            .Throws.First(node => node.Id == state.CausalEdges[0].FromThrowId)
+            .Height.Should()
+            .Be(0m);
         CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeFalse();
     }
 
@@ -249,7 +260,9 @@ public class CausalDiagramEditorStateTests
     public void TryDecode_MigratesJ3CompactLinksToJ4WithoutRejectingLegacyShape()
     {
         var current = CausalDiagramEditorState.CreateSiteswapPattern("531");
-        var root = JsonNode.Parse(Encoding.UTF8.GetString(FromBase64Url(current.Encode()[3..])))!.AsObject();
+        var root = JsonNode
+            .Parse(Encoding.UTF8.GetString(FromBase64Url(current.Encode()[3..])))!
+            .AsObject();
         root["v"] = 3;
         foreach (var throwNode in root["t"]!.AsArray())
             throwNode!.AsArray().RemoveAt(5);

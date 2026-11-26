@@ -621,42 +621,7 @@ public sealed class CausalDiagramEditorState
             return false;
         try
         {
-            CausalDiagramEditorState? decoded;
-            if (token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
-                decoded = DeserializeCompact(
-                    DecodePayload(token[CompactTokenPrefix.Length..]),
-                    expectedVersion: 4
-                );
-            else if (token.StartsWith(PreviousCompactTokenPrefix, StringComparison.Ordinal))
-            {
-                decoded = DeserializeCompact(
-                    DecodePayload(token[PreviousCompactTokenPrefix.Length..]),
-                    expectedVersion: 3
-                );
-                decoded.Version = 3;
-                decoded.NormalizeCausalEdges();
-            }
-            else if (token.StartsWith(OlderCompactTokenPrefix, StringComparison.Ordinal))
-            {
-                decoded = DeserializeCompact(
-                    DecodePayload(token[OlderCompactTokenPrefix.Length..]),
-                    expectedVersion: 2
-                );
-                decoded.Version = 3;
-                decoded.NormalizeCausalEdges();
-            }
-            else if (token.StartsWith(OldCompactTokenPrefix, StringComparison.Ordinal))
-                decoded = MigrateLegacy(
-                    DeserializeV1(DecodePayload(token[OldCompactTokenPrefix.Length..]))
-                );
-            else
-            {
-                if (token.Contains('.', StringComparison.Ordinal))
-                    return false;
-                var json = DecodePayload(token);
-                var legacy = JsonSerializer.Deserialize<LegacyState>(StrictUtf8.GetString(json));
-                decoded = legacy is null ? null : MigrateLegacy(legacy);
-            }
+            var decoded = DeserializeToken(token);
             if (decoded is not null)
             {
                 decoded.PresetId = decoded.PresetId switch
@@ -688,6 +653,44 @@ public sealed class CausalDiagramEditorState
         {
             return false;
         }
+    }
+
+    private static CausalDiagramEditorState? DeserializeToken(string token)
+    {
+        if (token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
+            return DeserializeCompact(
+                DecodePayload(token[CompactTokenPrefix.Length..]),
+                expectedVersion: 4
+            );
+        if (token.StartsWith(PreviousCompactTokenPrefix, StringComparison.Ordinal))
+        {
+            var decoded = DeserializeCompact(
+                DecodePayload(token[PreviousCompactTokenPrefix.Length..]),
+                expectedVersion: 3
+            );
+            decoded.Version = 3;
+            decoded.NormalizeCausalEdges();
+            return decoded;
+        }
+        if (token.StartsWith(OlderCompactTokenPrefix, StringComparison.Ordinal))
+        {
+            var decoded = DeserializeCompact(
+                DecodePayload(token[OlderCompactTokenPrefix.Length..]),
+                expectedVersion: 2
+            );
+            decoded.Version = 3;
+            decoded.NormalizeCausalEdges();
+            return decoded;
+        }
+        if (token.StartsWith(OldCompactTokenPrefix, StringComparison.Ordinal))
+            return MigrateLegacy(
+                DeserializeV1(DecodePayload(token[OldCompactTokenPrefix.Length..]))
+            );
+        if (token.Contains('.', StringComparison.Ordinal))
+            return null;
+        var json = DecodePayload(token);
+        var legacy = JsonSerializer.Deserialize<LegacyState>(StrictUtf8.GetString(json));
+        return legacy is null ? null : MigrateLegacy(legacy);
     }
 
     private static byte[] DecodePayload(string token)
@@ -771,7 +774,10 @@ public sealed class CausalDiagramEditorState
                 || item[2].ValueKind != JsonValueKind.String
                 || !item[3].TryGetDecimal(out var start)
                 || !item[4].TryGetDecimal(out var height)
-                || (expectedVersion >= 4 && item[5].ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+                || (
+                    expectedVersion >= 4
+                    && item[5].ValueKind is not (JsonValueKind.True or JsonValueKind.False)
+                )
             )
                 throw new JsonException();
             state.Throws.Add(
@@ -997,7 +1003,10 @@ public sealed class CausalDiagramEditorState
             var source = state.Throws.First(node => node.Id == edge.FromThrowId);
             var target = state.Throws.First(node => node.Id == edge.ToThrowId);
             return source.Height >= 0
-                && (source.HeightIsExplicit || source.Height == DerivedHeight(state, source, target, edge.CycleOffset));
+                && (
+                    source.HeightIsExplicit
+                    || source.Height == DerivedHeight(state, source, target, edge.CycleOffset)
+                );
         });
     }
 
