@@ -18,8 +18,7 @@ public sealed class ExternalBlazorAppFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var configured =
-            Environment.GetEnvironmentVariable(E2EBaseUrl.EnvironmentVariableName)
+        var configured = Environment.GetEnvironmentVariable(E2EBaseUrl.EnvironmentVariableName)
             ?? E2EBaseUrl.AspireDefault;
         BaseUri = E2EBaseUrl.EnsureTrailingSlash(new Uri(configured.Trim()));
 

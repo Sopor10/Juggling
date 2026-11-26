@@ -223,8 +223,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
     [Fact]
     public async Task MobileViewport_HasScrollableTimelineLargeTouchTargetsAndVisibleKeyboardFocus()
     {
-        var browser =
-            host.Fixture.Context?.Browser
+        var browser = host.Fixture.Context?.Browser
             ?? throw new InvalidOperationException("Playwright browser is not available.");
         await using var context = await browser.NewContextAsync(
             new BrowserNewContextOptions
@@ -314,8 +313,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
 
         await target.EvaluateAsync("node => node.blur()");
         await scroller.EvaluateAsync("node => node.scrollLeft = 0");
-        var targetBox =
-            await target.BoundingBoxAsync()
+        var targetBox = await target.BoundingBoxAsync()
             ?? throw new InvalidOperationException("The throw target has no layout box.");
         var startX = targetBox.X + targetBox.Width / 2;
         var startY = targetBox.Y + targetBox.Height / 2;
@@ -347,8 +345,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
     [Fact]
     public async Task MobileTimeline_TwentyRepetitionsKeepNodesSpacedAndFocusableAfterScroll()
     {
-        var browser =
-            host.Fixture.Context?.Browser
+        var browser = host.Fixture.Context?.Browser
             ?? throw new InvalidOperationException("Playwright browser is not available.");
         await using var context = await browser.NewContextAsync(
             new BrowserNewContextOptions
@@ -394,8 +391,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         scrollLeft.Should().BeGreaterThan(0);
         var lastThrow = page.Locator(".throw-hit-target").Last;
         await lastThrow.FocusAsync();
-        var visibleBox =
-            await lastThrow.BoundingBoxAsync()
+        var visibleBox = await lastThrow.BoundingBoxAsync()
             ?? throw new InvalidOperationException("The final repeated throw is not laid out.");
         var visibleCenterX = visibleBox.X + visibleBox.Width / 2;
         visibleCenterX.Should().BeGreaterThan(0);

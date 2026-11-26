@@ -36,13 +36,12 @@ public sealed class PlaywrightDockerFixture
         }
 
         var sw = timing ? Stopwatch.StartNew() : null;
-        var version =
-            typeof(Playwright)
-                .Assembly.CustomAttributes.Single(x =>
-                    x.AttributeType == typeof(AssemblyFileVersionAttribute)
-                )
-                .ConstructorArguments.First()
-                .Value?.ToString()
+        var version = typeof(Playwright)
+            .Assembly.CustomAttributes.Single(x =>
+                x.AttributeType == typeof(AssemblyFileVersionAttribute)
+            )
+            .ConstructorArguments.First()
+            .Value?.ToString()
             ?? string.Empty;
         Timing.Log(sw, "playwright.resolve-version");
 

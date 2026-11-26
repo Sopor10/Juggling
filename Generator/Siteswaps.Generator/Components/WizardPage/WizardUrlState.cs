@@ -281,8 +281,9 @@ internal static class WizardUrlState
                 {
                     Amount = value.Amount,
                     Type = (EasyNumberFilter.NumberFilterType)value.NumberType,
-                    Throw =
-                        ThrowByHeight((value.Heights ?? throw new InvalidOperationException())[0])
+                    Throw = ThrowByHeight(
+                        (value.Heights ?? throw new InvalidOperationException())[0]
+                    )
                         ?? throw new InvalidOperationException(
                             "The filter contains an invalid throw."
                         ),

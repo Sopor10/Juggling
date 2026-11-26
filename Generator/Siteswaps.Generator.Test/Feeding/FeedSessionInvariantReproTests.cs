@@ -255,8 +255,7 @@ public class FeedSessionInvariantReproTests
         session.AssignPass(1, "B1");
 
         var type = typeof(NormalFeedSession);
-        var coded =
-            type.GetProperty("GenerationBlockCode")
+        var coded = type.GetProperty("GenerationBlockCode")
             ?? type.GetProperty("GenerationBlockReasonCode");
         var reasonProperty = type.GetProperty("GenerationBlockReason");
         var reasonIsEnum = reasonProperty is not null && reasonProperty.PropertyType.IsEnum;

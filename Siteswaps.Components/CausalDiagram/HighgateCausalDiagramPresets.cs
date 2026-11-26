@@ -24,9 +24,9 @@ internal static class HighgateCausalDiagramPresets
 
     private static List<HighgatePatternData> Load()
     {
-        using var stream =
-            typeof(HighgateCausalDiagramPresets).Assembly.GetManifestResourceStream(ResourceName)
-            ?? throw new InvalidOperationException($"Missing embedded resource {ResourceName}.");
+        using var stream = typeof(HighgateCausalDiagramPresets).Assembly.GetManifestResourceStream(
+            ResourceName
+        ) ?? throw new InvalidOperationException($"Missing embedded resource {ResourceName}.");
         return JsonSerializer.Deserialize<List<HighgatePatternData>>(stream, JsonOptions)
             ?? throw new InvalidOperationException("The Highgate pattern data is empty.");
     }
