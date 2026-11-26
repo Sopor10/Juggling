@@ -424,6 +424,30 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
+    public void HighgateThirteenClubOneCountCountdown_MatchesSourceRowDestinations()
+    {
+        var state = CausalDiagramEditorPresets
+            .All.Single(preset => preset.Id == "highgate-thirteenclubonecountfeedingcountdown")
+            .Create();
+        var targets = state.CausalEdges.ToDictionary(
+            edge => edge.FromThrowId,
+            edge => edge.ToThrowId
+        );
+
+        targets["P3-2"].Should().Be("P2-4");
+        targets["P3-3"].Should().Be("P4-5");
+        targets["P3-5"].Should().Be("P4-7");
+        targets["P3-6"].Should().Be("P4-8");
+        targets["P3-8"].Should().Be("P4-2");
+        targets["P4-1"].Should().Be("P3-2");
+        targets["P4-2"].Should().Be("P4-3");
+        targets["P4-4"].Should().Be("P3-5");
+        targets["P4-6"].Should().Be("P3-7");
+        targets["P4-7"].Should().Be("P3-8");
+        state.CausalEdges.Single(edge => edge.FromThrowId == "P3-8").CycleOffset.Should().Be(1);
+    }
+
+    [Test]
     public void PresetCatalog_ImportsTheReviewedHighgateCausalDiagrams()
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
