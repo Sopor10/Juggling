@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.JSInterop
 @using Siteswaps.Components.Layout
+@using Siteswaps.Components.Details
 @using Siteswaps.Components.Wizard
 @using Siteswaps.Components.CausalDiagram
 @using Siteswaps.Jif.Components.Navigation
@@ -145,8 +146,8 @@
             {
                 var y = RowY(juggler.index);
                 <g class="juggler-add-target @(!AllowJugglerActions ? "read-only" : "")" data-juggler-id="@juggler.item.Id" role="@(AllowJugglerActions ? "button" : null)" tabindex="@(AllowJugglerActions ? 0 : -1)" aria-pressed="@(AllowJugglerActions && _state.ActiveJugglerId == juggler.item.Id)" aria-label="@(AllowJugglerActions ? JugglerActionLabel(juggler.item.Name) : juggler.item.Name)" @onclick="() => SelectJuggler(juggler.item.Id)" @onkeydown="e => HandleJugglerKey(juggler.item.Id, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginJugglerHold(juggler.item.Id, e)">
-                    <rect class="juggler-add-target-bg" x="8" y="@(y - 54)" width="96" height="40" rx="10" />
-                    <SvgText CssClass="pd-juggler-label" X="18" Y="@((y - 28).ToString(CultureInfo.InvariantCulture))">@juggler.item.Name</SvgText>
+                    <rect class="juggler-add-target-bg" x="8" y="@(y - 22)" width="96" height="44" rx="10" />
+                    <SvgText CssClass="pd-juggler-label" X="18" Y="@((y + 5).ToString(CultureInfo.InvariantCulture))">@juggler.item.Name</SvgText>
                 </g>
                 <line class="timeline" x1="110" x2="@(SvgWidth - 20)" y1="@y" y2="@y" />
             }
@@ -246,6 +247,37 @@
         </svg>
       </div>
       </div>
+      <section class="causal-editor-table-section" aria-label="Tabellarische Wurfübersicht">
+        <button type="button" class="editor-action causal-editor-table-toggle" aria-expanded="@_showTable"
+                @onclick="() => _showTable = !_showTable">
+          @(_showTable ? "Tabelle ausblenden" : "Tabelle einblenden")
+        </button>
+        @if (_showTable)
+        {
+          <div class="causal-editor-table-scroll" tabindex="0" aria-label="Zeitleiste horizontal scrollen">
+            <table class="causal-editor-pattern-table">
+              <thead><tr><th scope="col">Jongleur</th>@foreach (var time in EditorTable.Times) { <th scope="col">@time.ToString("0.##", CultureInfo.InvariantCulture)</th> }</tr></thead>
+              <tbody>
+                @foreach (var row in EditorTable.Rows)
+                {
+                  <tr>
+                    <th scope="row">@row.Juggler</th>
+                    @foreach (var chip in row.Cells)
+                    {
+                      <td>
+                        @if (chip is not null)
+                        {
+                          <ThrowChipRow Chips="SingleChip(chip)" ColorOrbits="false" AriaLabel="@($"Wurf {row.Juggler}")" />
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
       @if (ShowAnimation)
       {
       <section class="causal-editor-animation sdv-card" aria-label="Passist-Animation">
@@ -340,6 +372,7 @@
     private (string EdgeId, int SourceCycle, decimal X, decimal Y)? _edgeDragPreview;
     private JifPattern? _animationJif;
     private bool OrbitColorsEnabled { get; set; } = true;
+    private bool _showTable;
     private string _animationUnavailable = "Für dieses Diagramm ist keine Passist-Animation verfügbar.";
     private sealed record SetupJugglerSettings(
         string Id,
@@ -362,6 +395,8 @@
         }
     }
     private int SvgHeight => Math.Max(180, RowY(_state.Jugglers.Count - 1) + 75);
+    private CausalDiagramEditorTableAdapter.Table EditorTable => CausalDiagramEditorTableAdapter.Map(_state);
+    private static IReadOnlyList<DetailViewModel.ThrowChip> SingleChip(DetailViewModel.ThrowChip chip) => [chip];
 
     protected override void OnParametersSet()
     {

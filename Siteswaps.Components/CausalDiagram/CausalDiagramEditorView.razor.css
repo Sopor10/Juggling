@@ -118,6 +118,18 @@
 .connection-issues button:hover { text-decoration: underline; }
 
 .causal-editor-animation { display: grid; gap: .7rem; padding: 14px 16px; border: 2px solid var(--decision-color-border-subtle); border-radius: var(--decision-radius-control); background: var(--decision-color-surface-page); box-shadow: var(--decision-shadow-control); }
+.causal-editor-table-section { display: grid; justify-items: start; gap: .75rem; }
+.causal-editor-table-toggle { min-height: 44px; }
+.causal-editor-table-scroll { width: 100%; max-width: 100%; overflow: auto; box-sizing: border-box; padding: 4px 6px 12px; border: 1px solid var(--decision-color-border-subtle); border-radius: var(--decision-radius-control); background: var(--decision-color-white); }
+.causal-editor-pattern-table { width: max-content; border-collapse: separate; border-spacing: 3px 4px; }
+.causal-editor-pattern-table th { position: sticky; left: 0; z-index: 1; padding: 4px 8px; background: var(--decision-color-white); color: var(--decision-color-brand-strong); font: 700 12px var(--decision-font-display); white-space: nowrap; }
+.causal-editor-pattern-table th[scope="row"] { text-align: left; }
+.causal-editor-pattern-table td { width: 38px; min-width: 38px; height: 38px; padding: 0; text-align: center; }
+.causal-editor-table-section ::deep .causal-editor-pattern-table .sdv-beat-row { display: flex; justify-content: center; margin: 0; }
+.causal-editor-table-section ::deep .causal-editor-pattern-table .sdv-beat { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: 36px; min-height: 36px; padding: 5px 6px; border: 2px solid transparent; border-radius: var(--decision-radius-compact); font-family: var(--decision-font-display); font-weight: 800; }
+.causal-editor-table-section ::deep .causal-editor-pattern-table .sdv-beat.pass { background: color-mix(in srgb, var(--decision-color-action-primary) 28%, var(--decision-color-white)); border-color: color-mix(in srgb, var(--decision-color-action-primary) 55%, var(--decision-color-white)); }
+.causal-editor-table-section ::deep .causal-editor-pattern-table .sdv-beat.self { background: var(--decision-color-border-subtle); border-color: color-mix(in srgb, var(--decision-color-text-muted) 45%, var(--decision-color-white)); }
+.causal-editor-table-section ::deep .causal-editor-pattern-table .sdv-beat-throw { color: var(--decision-color-text-primary); font-size: 15px; line-height: 1; }
 .causal-editor-animation-heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .causal-editor-animation h2 { margin: 0; color: var(--decision-color-brand-strong); font: 800 1.1rem var(--decision-font-display); }
 .causal-animation-orbit-toggle { display: inline-flex; overflow: hidden; border: 2px solid var(--decision-color-border-subtle); border-radius: 999px; background: transparent; }

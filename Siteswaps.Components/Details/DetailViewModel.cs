@@ -25,9 +25,19 @@ public sealed class DetailViewModel
         PassOrSelf = value.GetPassOrSelf(NumberOfJugglers).ToList();
         InterfacePassOrSelf = value.Interface.GetPassOrSelf(NumberOfJugglers).ToList();
         var orbitIndices = GetOrbitIndices(value);
+        var passingHands = global::Siteswap.Details.CausalDiagram.PassingHandOrder.Create(
+            NumberOfJugglers
+        );
         ThrowChips = Throws
             .Select(
-                (height, i) => new ThrowChip(FormatThrow(height), PassOrSelf[i], orbitIndices[i])
+                (height, i) =>
+                    new ThrowChip(
+                        FormatThrow(height),
+                        PassOrSelf[i],
+                        orbitIndices[i],
+                        Destination: passingHands[(i + height) % passingHands.Length].Person.Name,
+                        Hand: passingHands[i % passingHands.Length].Name
+                    )
             )
             .ToList();
         ThrowPassSelfChips = PassOrSelf
@@ -72,7 +82,11 @@ public sealed class DetailViewModel
                             GlobalDisplay: FormatThrow(height),
                             NameDisplay: FormatThrowName(height, NumberOfJugglers),
                             Kind: PassOrSelf[globalIndex],
-                            OrbitIndex: orbitIndices[globalIndex]
+                            OrbitIndex: orbitIndices[globalIndex],
+                            Destination: passingHands[(globalIndex + height) % passingHands.Length]
+                                .Person
+                                .Name,
+                            Hand: passingHands[globalIndex % passingHands.Length].Name
                         );
                     })
                     .ToList();
@@ -189,7 +203,9 @@ public sealed class DetailViewModel
     public record ThrowChip(
         string Display,
         global::Siteswap.Details.PassOrSelf Kind,
-        int OrbitIndex = -1
+        int OrbitIndex = -1,
+        string? Destination = null,
+        string? Hand = null
     );
 
     public record JugglerThrow(
@@ -197,15 +213,29 @@ public sealed class DetailViewModel
         string GlobalDisplay,
         string NameDisplay,
         global::Siteswap.Details.PassOrSelf Kind,
-        int OrbitIndex
+        int OrbitIndex,
+        string? Destination = null,
+        string? Hand = null
     )
     {
         public ThrowChip ForMode(ThrowDisplayMode mode) =>
             mode switch
             {
-                ThrowDisplayMode.Global => new ThrowChip(GlobalDisplay, Kind, OrbitIndex),
-                ThrowDisplayMode.Name => new ThrowChip(NameDisplay, Kind, OrbitIndex),
-                _ => new ThrowChip(LocalDisplay, Kind, OrbitIndex),
+                ThrowDisplayMode.Global => new ThrowChip(
+                    GlobalDisplay,
+                    Kind,
+                    OrbitIndex,
+                    Destination,
+                    Hand
+                ),
+                ThrowDisplayMode.Name => new ThrowChip(
+                    NameDisplay,
+                    Kind,
+                    OrbitIndex,
+                    Destination,
+                    Hand
+                ),
+                _ => new ThrowChip(LocalDisplay, Kind, OrbitIndex, Destination, Hand),
             };
     }
 

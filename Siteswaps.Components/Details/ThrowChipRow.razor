@@ -12,11 +12,14 @@
         var kindClass = chip.Kind == PassOrSelf.Pass ? "pass" : "self";
         var kindTitle = chip.Kind == PassOrSelf.Pass ? "Pass" : "Self";
         var orbitColor = ColorOrbits && chip.OrbitIndex >= 0 ? OrbitColorPalette.For(chip.OrbitIndex) : null;
+        var destination = ShowPassDestinations && chip.Kind == PassOrSelf.Pass ? chip.Destination : null;
+        var accessibleLabel = $"{chip.Display} {kindTitle}{(destination is null ? "" : $", Ziel {destination}")}{(ShowHands && chip.Hand is not null ? $", Hand {chip.Hand}" : "")}{(orbitColor is null ? "" : $", Orbit {chip.OrbitIndex + 1}")}";
         <div class="sdv-beat @kindClass @(orbitColor is null ? null : "orbit-colored")"
              style="@(orbitColor is null ? null : $"--orbit-color:{orbitColor}")"
              title="@(orbitColor is null ? kindTitle : $"{kindTitle}, Orbit {chip.OrbitIndex + 1}")"
-             aria-label="@(orbitColor is null ? $"{chip.Display} {kindTitle}" : $"{chip.Display} {kindTitle}, Orbit {chip.OrbitIndex + 1}")">
-            <span class="sdv-beat-throw">@chip.Display</span>
+             aria-label="@accessibleLabel">
+            <span class="sdv-beat-throw">@chip.Display</span>@if (destination is not null) {<sub class="sdv-beat-destination">@destination</sub>}
+            @if (ShowHands && chip.Hand is not null) {<small class="sdv-beat-hand">@chip.Hand</small>}
         </div>
     }
 </div>
@@ -25,4 +28,6 @@
     [Parameter] public IReadOnlyList<DetailViewModel.ThrowChip>? Chips { get; set; }
     [Parameter] public string AriaLabel { get; set; } = "Throws";
     [Parameter] public bool ColorOrbits { get; set; }
+    [Parameter] public bool ShowPassDestinations { get; set; }
+    [Parameter] public bool ShowHands { get; set; }
 }
