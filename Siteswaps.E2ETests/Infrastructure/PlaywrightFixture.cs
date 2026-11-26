@@ -17,7 +17,11 @@ public sealed class PlaywrightFixture : IAsyncLifetime
     {
         PlaywrightInstance = await Playwright.CreateAsync();
         Browser = await PlaywrightInstance.Chromium.LaunchAsync(
-            new BrowserTypeLaunchOptions { Headless = true }
+            new BrowserTypeLaunchOptions
+            {
+                Headless = true,
+                Channel = Environment.GetEnvironmentVariable("PLAYWRIGHT_CHANNEL"),
+            }
         );
     }
 
