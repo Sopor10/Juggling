@@ -1123,5 +1123,561 @@
         "holds"
       ]
     }
+  },
+  {
+    "id": "highgate-passpasszipfeedingthreecount",
+    "label": "Pass pass zip feeding three count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 120 / PDF p. 121; compared with The Highgate Collection (2014), PDF p. 80. The body diagram and per-juggler sequences agree. The inventory index points to p. 123, not the body diagram page.",
+    "notation": "Siteswap b9aab9399 (anticlockwise), ab9b9a399 (clockwise); Ben passes to Anne, Clare, then zips; Anne and Clare pass three count to Ben.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L1",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R2",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 4.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L3",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 5.5,
+        "height": 3,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "C-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "C-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "C-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R2",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L3",
+        "to": "C-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF body diagram",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 120,
+        "pdfPage": 121
+      },
+      {
+        "edition": "2014 PDF body diagram",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 80,
+        "pdfPage": 80
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-passpasszipfeedingthreecount"
+    ],
+    "notes": "Body diagrams include alternating hand nodes and explicitly drawn zip arrows. All events in the six-beat cycle are transcribed; source direction is preserved by cycleOffset and explicit throw height."
+  },
+  {
+    "id": "highgate-passpasszipfeedingfrenchthreecount",
+    "label": "Pass pass zip feeding French three count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 120 / PDF p. 121; compared with The Highgate Collection (2014), PDF p. 80. The body diagram and per-juggler sequences agree. The inventory index points to p. 123, not the body diagram page.",
+    "notation": "Siteswap b9aab9399 (anticlockwise), ab9b9a399 (clockwise); Ben passes to Anne, Clare, then zips; Anne throws heff, pass, self; Clare throws self, heff, pass.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L1",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R2",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 4,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L3",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "C-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "C-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "C-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R2",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L3",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF body diagram",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 120,
+        "pdfPage": 121
+      },
+      {
+        "edition": "2014 PDF body diagram",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 80,
+        "pdfPage": 80
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-passpasszipfeedingfrenchthreecount"
+    ],
+    "notes": "Body diagrams include alternating hand nodes and explicitly drawn zip arrows. All events in the six-beat cycle are transcribed; source direction is preserved by cycleOffset and explicit throw height."
   }
 ]
