@@ -360,6 +360,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         var page = await context.NewPageAsync();
         await OpenEditor(page, E2EBaseUrl.FromFixture(host.Fixture));
         await SelectPresetAsync(page, "feeding-7-5");
+        await page.Locator(".juggler-add-target[data-juggler-id='P1']").PressAsync("Enter");
         await OpenDiagramOptions(page);
         var repetitions = page.Locator(".diagram-options").GetByLabel("Wiederholungen");
         await repetitions.FillAsync("20");

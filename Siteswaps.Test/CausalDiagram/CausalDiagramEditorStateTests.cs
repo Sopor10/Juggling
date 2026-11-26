@@ -66,6 +66,7 @@ public class CausalDiagramEditorStateTests
         "highgate-sevencountpopcornwithsinglepassesand534",
         "highgate-sevencountpopcornwithsinglepassesand453",
         "highgate-sevencountpopcornwithsinglepassesandheffs",
+        "highgate-doublehold42",
         "highgate-7778686",
         "highgate-7786786",
         "highgate-7777786",
@@ -349,7 +350,7 @@ public class CausalDiagramEditorStateTests
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
 
-        presets.Should().HaveCount(154);
+        presets.Should().HaveCount(155);
         presets.Select(preset => preset.Id).Should().BeEquivalentTo(ReviewedHighgatePresetIds);
         var threeCount = presets.Single(preset => preset.Id == "highgate-three-count").Create();
         threeCount.CycleLength.Should().Be(6m);
@@ -367,6 +368,19 @@ public class CausalDiagramEditorStateTests
         var selfDouble = presets.Single(preset => preset.Id == "highgate-aselfdouble").Create();
         selfDouble.Throws.Single(item => item.Id == "A-R3").Height.Should().Be(4m);
         selfDouble.Throws.Single(item => item.Id == "A-L3").Height.Should().Be(0m);
+        var doubleHold = presets.Single(preset => preset.Id == "highgate-doublehold42").Create();
+        doubleHold.Throws.Single(item => item.Id == "A-R1").Height.Should().Be(3m);
+        doubleHold.Throws.Single(item => item.Id == "A-R1").HeightIsExplicit.Should().BeTrue();
+        doubleHold.Throws.Single(item => item.Id == "B-R1").Height.Should().Be(4m);
+        doubleHold.Throws.Single(item => item.Id == "B-R1").HeightIsExplicit.Should().BeTrue();
+        doubleHold
+            .CausalEdges.Should()
+            .ContainSingle(edge => edge.FromThrowId == "A-R1" && edge.ToThrowId == "B-R1");
+        doubleHold
+            .CausalEdges.Should()
+            .ContainSingle(edge => edge.FromThrowId == "B-R1" && edge.ToThrowId == "A-L2");
+        doubleHold.CausalEdges.Select(edge => edge.FromThrowId).Should().NotContain("A-L2");
+        doubleHold.CausalEdges.Select(edge => edge.FromThrowId).Should().NotContain("B-L2");
         var jimThreeCount = presets
             .Single(preset => preset.Id == "highgate-jimsthreecount")
             .Create();
