@@ -1,6 +1,6 @@
 # Highgate causal-diagram model-limit review
 
-This note audits Highgate entries against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
+This note audits the 23 inventory rows still marked `model extension required; source retained` against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
 
 ## Findings and priority
 
@@ -15,7 +15,7 @@ Inventory entries whose notes explicitly require backward arrows are:
 | `highgate-58552` | 2014 p. 25 only | 2014-only 58552 diagram contains backward zip arrows. |
 | `highgate-aselftriple`, `highgate-doubletriplezip561` | 24, 28 / 10, 14 | The follow-up zip requires a backward causal edge. |
 | `highgate-doublezip51`, `highgate-doublezapzip531`, `highgate-fourfourone`, `highgate-fourfourfourzero` | 22–23, 31 / 8–9, 17 | Zip requires a one-beat backward edge; Four four four zero's gap points two beats backward. |
-| `highgate-passselfzip`, `highgate-therecipe` | 32–33, 40 / 18–19, 23 | Source notes require backward zip arrows; The Recipe uses a −2 zip. |
+| `highgate-therecipe` | 32–33 / 18–19 | Source notes require backward zip arrows; The Recipe uses a −2 zip. |
 | `highgate-parsnip`, `highgate-fiveclubwhynot`, `highgate-fiveclubnotwhy`, `highgate-fiveclubnotwhyalternativestart` | 41–43 / 24–25 | Why-not/Parsnip graphs include backward zip routes. |
 | `highgate-heffzipzap`, `highgate-zapzipheff`, `highgate-zapzipheffalternativestart` | 43 / 25 | Backward zip routes in heff/zap sequences. |
 | `highgate-convertingsymmetricasynchronousfourhandedsiteswa-0987b5f53e`, `highgate-convertingsymmetricsynchronousfourhandedsiteswap-d9ed3bf63a` | 39 / 22 | Conversion examples contain backward zip arrows; these are explanatory examples and may not be independent catalog patterns. |
@@ -25,6 +25,8 @@ Inventory entries whose notes explicitly require backward arrows are:
 **Implementation status:** the editor state now uses compact link format `j4` and stores an explicit-height flag per throw. `SynchronizeHeights()` preserves signed edge offsets; graph-derived heights are recalculated only for non-explicit throws. Older `j3`, `j2`, `j1`, and JSON links migrate through the previous positive-height normalization. Manual node drags clamp to timing positions that keep derived heights valid; arrow retargeting remains the operation that changes the causal destination/offset.
 
 State tests cover negative-offset round trips, explicit-height round trips, legacy-link migration, and drag clamping. The Highgate JSON importer accepts an explicit nonnegative `height` plus `heightIsExplicit: true` on source throw nodes, and rejects a missing/negative explicit height. Current unit tests exercise every imported preset's editor validity; the three-person *Pass pass zip feeding* diagrams also exercise backward zip edges with source heights. The signed-offset blocker is resolved, while untranscribed zip/gap rows still need source diagrams checked edge by edge.
+
+`highgate-passselfzip` (siteswap 726) is now translated and imported with twelve events, twelve edges, and a source-matched −1 cycle offset on Anne's final zip. This verifies a backward zip loop through the runtime catalog and its validity test.
 
 ### P1 — Allow distinct events at the same juggler and time
 

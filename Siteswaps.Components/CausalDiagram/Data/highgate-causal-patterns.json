@@ -65529,5 +65529,201 @@
       "modelCheck": "Three six-event lanes, one outgoing edge per event, each edge targets the next event of the named juggler, and all derived heights are 3. Every event has exactly one incoming edge.",
       "manipulationReview": "Ordinary three-person passing; no manipulator or external action."
     }
+  },
+  {
+    "id": "highgate-passselfzip",
+    "label": "Pass self zip",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 40 / PDF p. 41; prose continues printed p. 41 / PDF p. 42. 2014 edition sequence text cross-checked at PDF pp. 23–24.",
+    "notation": "Siteswap 726; Prechac 3.5p31. Ben: pass self zip; Anne: pass self zip.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5,
+        "height": 1,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "B-R1",
+        "to": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R3",
+        "cycleOffset": -1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 40,
+        "pdfPage": 41
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 23
+      }
+    ],
+    "notes": "Ben starts at time 0; Anne starts 1.5 beats later. Each 3-event odd sequence is repeated twice across a 6-beat cycle to preserve hand parity. For each event, target time is source time + notation height − 2; pass routes to the partner and self/zip to the same juggler. Backward zip edges are retained with signed cycle offsets.",
+    "variants": [
+      "Asynchronous two-person pattern; the three-token sequence is repeated twice per 6-beat cycle."
+    ],
+    "reviewStatus": "2017 source diagram and sequence visually checked; 2014 sequence text cross-checked. All six event nodes per juggler have one exact causal edge; edge timing rule matches the one-beat-back zip loops and signed offsets survive editor validation."
   }
 ]
