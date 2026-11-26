@@ -7,6 +7,7 @@
     margin: 0 auto;
     padding: clamp(1.5rem, 4vw, 3.75rem) 0 4rem;
     color: var(--intro-ink);
+    font-family: var(--decision-font-body);
 }
 
 .intro-hero {
@@ -235,5 +236,3 @@
 }
 
 .passing-intro :is(a, button):focus-visible { outline: 3px solid var(--decision-color-focus); outline-offset: 3px; }
-
-.passing-intro { font-family: var(--decision-font-body); }
