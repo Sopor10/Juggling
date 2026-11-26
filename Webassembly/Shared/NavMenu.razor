@@ -16,6 +16,7 @@
             <button type="button" class="pznav-link pznav-tool-link" @onclick="OpenSiteswapDialog">@L["Open siteswap"]</button>
             <PwaInstallButton OnClicked="CloseNavMenu" />
             <a class="pznav-link @(IsCurrentRoute("") ? "active" : "")" href="" aria-current="@(IsCurrentRoute("") ? "page" : null)" @onclick="CloseNavMenu">@L["Generator"]</a>
+            <a class="pznav-link @(IsCurrentRoute("introduction-to-passing") ? "active" : "")" href="introduction-to-passing" aria-current="@(IsCurrentRoute("introduction-to-passing") ? "page" : null)" @onclick="CloseNavMenu">@L["Introduction to passing"]</a>
             <a class="pznav-link @(IsCurrentRoute("siteswap-lab") ? "active" : "")" href="siteswap-lab" aria-current="@(IsCurrentRoute("siteswap-lab") ? "page" : null)" @onclick="CloseNavMenu">@L["Siteswap lab"]</a>
             <a class="pznav-link @(IsCurrentRoute("causal-diagram-editor") ? "active" : "")" href="causal-diagram-editor" aria-current="@(IsCurrentRoute("causal-diagram-editor") ? "page" : null)" @onclick="CloseNavMenu">@L["Causal diagram editor"]</a>
             <a class="pznav-link @(IsCurrentRoute("Settings") ? "active" : "")" href="Settings" aria-current="@(IsCurrentRoute("Settings") ? "page" : null)" @onclick="CloseNavMenu">@L["Settings"]</a>
@@ -70,6 +71,7 @@
             return CurrentRoute.ToLowerInvariant() switch
             {
                 "feeding" => L["Feed combination"].Value,
+                "introduction-to-passing" => L["Introduction to passing"].Value,
                 "siteswap-lab" => L["Siteswap lab"].Value,
                 "causal-diagram-editor" => L["Causal diagram editor"].Value,
                 "settings" => L["Settings"].Value,

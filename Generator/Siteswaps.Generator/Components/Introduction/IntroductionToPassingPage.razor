@@ -1,0 +1,240 @@
+@page "/introduction-to-passing"
+@inject IStringLocalizer<IntroductionToPassingPage> L
+
+<PageTitle>@L["Introduction to passing"]</PageTitle>
+
+<main class="passing-intro">
+    <header class="intro-hero">
+        <p class="intro-eyebrow">@L["A field guide to this site"]</p>
+        <h1>@L["Introduction to passing"]</h1>
+        <p class="intro-deck">@L["Passing is a shared rhythm: every throw changes what someone else can catch, throw, or invent next. This guide connects the notation to the tools on this site."]</p>
+        <nav class="intro-jump-links" aria-label="@L["Guide sections"]">
+            <a href="#start">@L["Start with a rhythm"]</a>
+            <a href="#notation">@L["Read a pattern"]</a>
+            <a href="#tools">@L["Explore the tools"]</a>
+            <a href="#make-one">@L["Make your own"]</a>
+        </nav>
+    </header>
+
+    <section id="start" class="intro-section" aria-labelledby="intro-start-title">
+        <div class="intro-section-heading">
+            <span class="intro-index">01</span>
+            <div>
+                <p class="intro-eyebrow">@L["The shared beat"]</p>
+                <h2 id="intro-start-title">@L["Begin with who throws when"]</h2>
+            </div>
+        </div>
+        <p>@L["In passing, a pattern is more than a list of throws. It includes the people, their positions, the timing between them, and the route each prop takes. Agree on a steady beat first; then decide which beat sends a prop to a partner."]</p>
+        <p>@L["In familiar two-person club passing, a six-club two-count alternates pass and self: pass, self, pass, self. Both jugglers share the rhythm. A pass replaces a self throw, and the incoming club becomes part of the receiver’s own pattern. The Highgate Collection starts beginners with this kind of shared count and gives many variations for two to four people."] <a href="https://jugglingedge.com/pdf/highgate.pdf" target="_blank" rel="noopener">@L["Read The Highgate Collection (PDF)"]</a>.</p>
+
+        <div class="example-explorer" aria-labelledby="example-explorer-title">
+            <div class="example-explorer-heading">
+                <div>
+                    <p class="intro-eyebrow">@L["Try a small pattern"]</p>
+                    <h3 id="example-explorer-title">@L["Choose a lens"]</h3>
+                </div>
+                <span class="example-period">@L["Three examples"]</span>
+            </div>
+            <div class="example-tabs" role="group" aria-label="@L["Choose a pattern example"]">
+                <button type="button" aria-pressed="@(_example == ExampleKind.SixClub)" class="@ExampleClass(ExampleKind.SixClub)" @onclick="() => SelectExample(ExampleKind.SixClub)">@L["6 clubs · two-count"]</button>
+                <button type="button" aria-pressed="@(_example == ExampleKind.SevenClub)" class="@ExampleClass(ExampleKind.SevenClub)" @onclick="() => SelectExample(ExampleKind.SevenClub)">@L["7 clubs · 966"]</button>
+                <button type="button" aria-pressed="@(_example == ExampleKind.Feeding)" class="@ExampleClass(ExampleKind.Feeding)" @onclick="() => SelectExample(ExampleKind.Feeding)">@L["A three-person feed"]</button>
+            </div>
+            <article class="example-card" aria-live="polite" aria-atomic="true">
+                @if (_example == ExampleKind.SixClub)
+                {
+                    <p class="example-kicker">@L["The shared count"]</p>
+                    <h3><code>&lt;3p 3|3p 3&gt;</code></h3>
+                    <p>@L["Each side of | is one juggler. Read p as pass: each person throws a pass, then a self, and repeats. The 3 gives the beat timing; p says the prop goes to the other juggler. This is the six-prop two-count described in Juggling Lab’s passing notation."]</p>
+                    <a class="example-link" href="siteswap-lab">@L["Open the Siteswap Lab"] <span aria-hidden="true">↗</span></a>
+                }
+                else if (_example == ExampleKind.SevenClub)
+                {
+                    <p class="example-kicker">@L["The global view"]</p>
+                    <h3><code>966</code></h3>
+                    <p>@L["This is a seven-club three-count example from the Highgate Collection. In four-handed siteswap, the sequence tracks throws from all four hands in turn; it is not three separate solo digits. The pattern gives each juggler room for a double pass in a repeating pass-self-self rhythm. In the causal diagram, arrows show which throw forces the next; in the ladder diagram, lines trace the club paths. The animation lets you see which hand sends each pass."]</p>
+                    <div class="example-links">
+                        <a class="example-link" href="details?s=966&n=2&v=jif">@L["Watch 966 in this site's animation"] <span aria-hidden="true">↗</span></a>
+                        <a class="example-link" href="details?s=966&n=2&v=diagrams">@L["Open its causal and ladder diagrams"] <span aria-hidden="true">↗</span></a>
+                        <a class="example-link" href="https://jugglingedge.com/pdf/highgate.pdf" target="_blank" rel="noopener">@L["Find seven-club patterns in Highgate"] <span aria-hidden="true">↗</span></a>
+                    </div>
+                }
+                else
+                {
+                    <p class="example-kicker">@L["One feeder, two feedees"]</p>
+                    <h3>@L["Choose the recipient for each pass"]</h3>
+                    <p>@L["A feeder sends props into the patterns of two partners (the feedees). The group has one shared flow, but each person can have a different local sequence. This site builds the feeder’s pass interface first, then finds compatible local patterns for each feedee and combines them. To feed two partners, the feeder’s repeating sequence needs at least two pass beats so each partner receives one. In 78627, the two 7s are the passes; assign beat 1 to B1 and beat 5 to B2 (or swap them). The average (7 + 8 + 6 + 2 + 7) / 5 is 6 clubs."]</p>
+                    <a class="example-link" href="details?s=78627&n=2">@L["Open a working feeder example: 6 clubs, 78627"] <span aria-hidden="true">↗</span></a>
+                }
+            </article>
+        </div>
+    </section>
+
+    <section id="notation" class="intro-section" aria-labelledby="intro-notation-title">
+        <div class="intro-section-heading">
+            <span class="intro-index">02</span>
+            <div>
+                <p class="intro-eyebrow">@L["Three complementary views"]</p>
+                <h2 id="intro-notation-title">@L["A pattern has timing, destinations, and causes"]</h2>
+            </div>
+        </div>
+        <div class="concept-grid">
+            <article class="concept-card" id="siteswap">
+                <span class="concept-symbol">n</span>
+                <h3>@L["Siteswap: when does it land?"]</h3>
+                <p>@L["In basic asynchronous siteswap, each number says how many beats after a throw that prop is thrown again. Odd throws cross to the other hand; even throws return to the same hand. The sequence repeats. For example, 3 is the three-ball cascade; 531 changes the throw heights while keeping the landing slots distinct. A p suffix marks a pass in passing siteswap. Siteswap records timing and destination structure, not the exact body movement or the whole spatial choreography."]</p>
+                <p class="concept-connection">@L["Use it to describe local rhythms and to generate valid patterns."]</p>
+                <a href="./">@L["Build patterns in the Generator"]</a>
+            </article>
+            <article class="concept-card" id="causal-diagram">
+                <span class="concept-symbol">↗</span>
+                <h3>@L["Causal diagrams: what makes the next throw possible?"]</h3>
+                <p>@L["A causal diagram links hand positions across beats to show what causes a throw to happen. The arrows trace the incoming ‘problem’ that makes a juggler throw; they are not simply the flight paths of the props. A link crossing between jugglers shows that a pass from one person causes a throw by the other. This makes dependencies visible: a quick incoming pass can free a hand for its next action, while a missing or conflicting cause flags a gap or collision."]</p>
+                <p class="concept-connection">@L["A causal view is especially useful for building handoffs and takeouts, where one person’s action triggers another person’s next action."]</p>
+                <a href="causal-diagram-editor">@L["Open the Causal Diagram Editor"]</a>
+                <a href="details?s=966&n=2&v=diagrams">@L["See the causal diagram for 966"]</a>
+            </article>
+            <article class="concept-card" id="four-handed">
+                <span class="concept-symbol">4h</span>
+                <h3>@L["Four-handed siteswap: whose hand throws next?"]</h3>
+                <p>@L["For two asynchronous jugglers, four hands take turns in a shared sequence. A global four-handed siteswap follows that order, so a number is interpreted against four hands rather than the two hands in solo vanilla siteswap. This is a compact way to express the joint flow; local notation can then show each juggler’s own view. Keep the notation label in mind when comparing numbers across systems."]</p>
+                <p class="concept-connection">@L["The Highgate Collection pairs numeric sequences with hand-by-hand diagrams so the global sequence stays grounded in a playable pattern."]</p>
+                <a href="https://jugglingedge.com/pdf/highgate.pdf" target="_blank" rel="noopener">@L["Browse the source patterns"]</a>
+            </article>
+            <article class="concept-card" id="feeding">
+                <span class="concept-symbol">↗↘</span>
+                <h3>@L["Feeding: one rhythm, several local patterns"]</h3>
+                <p>@L["A feeder passes to one or more partners, who are called feedees. Think in time zones: jugglers assigned to the same zone throw at the same time; different zones are staggered. A pass assignment determines who receives the feeder’s pass. To make a normal three-person feed here, start with a two-person pattern that has at least two pass beats per repeat; assign at least one to each feedee. Each feedee’s own siteswap must fit the incoming and outgoing prop flow, but the whole group does not need to share one solo-valid sequence."]</p>
+                <p class="concept-connection">@L["This is the idea behind your Feeding note: the common timeline matters more than requiring every person to juggle the same pattern."]</p>
+                <a href="details?s=78627&n=2">@L["Open a two-pass pattern to start Feeding"]</a>
+            </article>
+            <article class="concept-card" id="takeouts">
+                <span class="concept-symbol">↻</span>
+                <h3>@L["Takeouts: change the flow together"]</h3>
+                <p>@L["In a takeout, a manipulator temporarily steps into a passing pattern and changes who receives or throws a prop. It works best as a shared, repeatable recipe: agree on the base rhythm, identify the exact pass or self that triggers the action, and rehearse the exit back into the base pattern. A pass substitute replaces a scheduled pass; a pop is a quick direct throw used as a transition. A clear count and early signals keep the pattern legible to everyone."]</p>
+                <p class="concept-connection">@L["Your note Takeouts for beginners names Pop, Pass substitute, Self substitute, and Single pass as building blocks. Aidan Burns’ guide develops classic group patterns such as Roundabout and Scrambled V."]</p>
+                <a href="https://jongliertreff-frankfurt.de/nerd-corner" target="_blank" rel="noopener">@L["Read How to Steal from Your Friends and related PDFs"]</a>
+            </article>
+            <article class="concept-card" id="period-and-validity">
+                <span class="concept-symbol">⟳</span>
+                <h3>@L["Period and validity: can the flow repeat?"]</h3>
+                <p>@L["The period is the number of beats before the written sequence loops. A valid pattern assigns props to distinct future landing slots, so two props never demand the same hand at the same moment. For ordinary siteswap, the average throw value gives the number of props; in multi-person patterns, also check the shared hand order, timing phases, and pass destinations. A mathematically valid pattern is a starting point: height, dwell time, spacing, and skill still decide whether it is comfortable to juggle."]</p>
+                <p class="concept-connection">@L["Use filters when you want to search for a useful subset instead of browsing every valid sequence."]</p>
+                <a href="./">@L["Choose a period, props, throws, and filters"]</a>
+            </article>
+        </div>
+        <div class="guided-pattern" aria-labelledby="guided-pattern-title">
+            <div class="guided-pattern-copy">
+                <p class="intro-eyebrow">@L["A complete first search"]</p>
+                <h3 id="guided-pattern-title">@L["Generate the seven-club pattern 966"]</h3>
+                <p>@L["This reproduces the Highgate example above in this site's Generator. The settings narrow the search to a two-juggler, three-beat pattern made only from self and double-pass throws."]</p>
+                <ol>
+                    <li>@L["Open the Generator and keep Jugglers at 2."]</li>
+                    <li>@L["Set Period to 3."]</li>
+                    <li>@L["Set both club limits to 7."]</li>
+                    <li>@L["In Allowed throws, keep Self (height 6) and Double (height 9) selected; turn off the other heights. Double is the double pass for two jugglers."]</li>
+                    <li>@L["Leave filters empty, continue, generate, then open 966 in the results."]</li>
+                </ol>
+                <div class="guided-pattern-links">
+                    <a class="intro-primary-link" href="./">@L["Open the Generator"] <span aria-hidden="true">↗</span></a>
+                    <a href="details?s=966&n=2&v=jif">@L["Watch 966 in the animation"]</a>
+                    <a href="details?s=966&n=2&v=diagrams">@L["Inspect its causal diagram"]</a>
+                </div>
+            </div>
+            <div class="guided-pattern-notation" aria-label="@L["Pattern 966: 9 plus 6 plus 6 divided by 3 equals seven clubs"]">
+                <span class="guided-pattern-label">@L["4-handed global siteswap"]</span>
+                <strong>966</strong>
+                <span>9 + 6 + 6</span>
+                <span>÷ 3 = 7</span>
+                <span class="guided-pattern-result">@L["7 clubs"]</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="tools" class="intro-section" aria-labelledby="intro-tools-title">
+        <div class="intro-section-heading">
+            <span class="intro-index">03</span>
+            <div>
+                <p class="intro-eyebrow">@L["A route through the app"]</p>
+                <h2 id="intro-tools-title">@L["Choose the tool that matches your question"]</h2>
+            </div>
+        </div>
+        <div class="tool-path">
+            <a class="tool-card" href="./">
+                <span class="tool-step">A</span><h3>@L["Generator"]</h3>
+                <p>@L["Set jugglers, pattern period, prop count, and allowed throw heights. Add number, sequence, or state filters, then browse the generated results."]</p>
+                <span class="tool-action">@L["Find patterns"] →</span>
+            </a>
+            <a class="tool-card" href="siteswap-lab">
+                <span class="tool-step">B</span><h3>@L["Siteswap Lab"]</h3>
+                <p>@L["Set up people and time zones, then edit a passing sequence beat by beat. Change throw heights or destinations and inspect the JIF animation and causal diagram."]</p>
+                <span class="tool-action">@L["Design a passing pattern"] →</span>
+            </a>
+            <a class="tool-card" href="details?s=78627&n=2">
+                <span class="tool-step">C</span><h3>@L["Feed combination"]</h3>
+                <p>@L["Feeding starts from a two-person pattern's details page. Use 78627 as a concrete example: its two pass beats can be assigned to separate partners. Then find compatible local patterns for them and combine the results into one group flow."]</p>
+                <span class="tool-action">@L["Open 78627 to start a feed"] →</span>
+            </a>
+            <a class="tool-card" href="causal-diagram-editor">
+                <span class="tool-step">D</span><h3>@L["Causal Diagram Editor"]</h3>
+                <p>@L["Work directly with a diagram of throws and dependencies. Use it when you have an idea for how a prop should move and want to reason from the causes and catches."]</p>
+                <span class="tool-action">@L["Draw the prop flow"] →</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="make-one" class="intro-section make-one" aria-labelledby="intro-make-title">
+        <div class="intro-section-heading">
+            <span class="intro-index">04</span>
+            <div>
+                <p class="intro-eyebrow">@L["From idea to pattern"]</p>
+                <h2 id="intro-make-title">@L["A practical recipe for your first interesting pattern"]</h2>
+            </div>
+        </div>
+        <ol class="recipe-list">
+            <li><span>1</span><div><h3>@L["Choose a base you can already juggle"]</h3><p>@L["Start with a count and prop number your group knows. Six-club two-count or seven-club three-count are useful anchors; the Highgate Collection provides variations and diagrams."]</p></div></li>
+            <li><span>2</span><div><h3>@L["Change one relationship at a time"]</h3><p>@L["Try a different pass height, swap which hand passes, or replace one pass with a self. In the Siteswap Lab, edit one throw and watch where it lands before changing another."]</p></div></li>
+            <li><span>3</span><div><h3>@L["Follow causes and prop paths separately"]</h3><p>@L["In a causal diagram, an arrow shows what forces the next throw. In a ladder diagram, a line follows a prop from throw to catch. Use both views: check that each throw has a cause and that each hand has one prop ready when its turn comes."]</p></div></li>
+            <li><span>4</span><div><h3>@L["Make the rhythm readable to your partners"]</h3><p>@L["Say the count, name the triggering pass, and decide how to return to the base pattern. For takeouts, agree on the recipe and signal early; then test the pattern slowly before adding height or speed."]</p></div></li>
+            <li><span>5</span><div><h3>@L["Use the site as a thinking partner"]</h3><p>@L["Generate candidates, inspect the animation, and compare the local sequence with the group diagram. If a pattern looks mathematically valid but feels awkward, change the timing, spacing, or throw height and try again."]</p></div></li>
+        </ol>
+        <div class="intro-cta-row">
+            <a class="intro-primary-link" href="siteswap-lab">@L["Start designing in the Siteswap Lab"] <span aria-hidden="true">↗</span></a>
+            <a href="./">@L["Or generate a list of candidates"]</a>
+        </div>
+    </section>
+
+    <footer class="intro-sources" aria-labelledby="intro-sources-title">
+        <div>
+            <p class="intro-eyebrow">@L["Further reading"]</p>
+            <h2 id="intro-sources-title">@L["Sources and pattern books"]</h2>
+            <p>@L["The explanations here are original summaries. Follow the links for notation details, diagrams, historical pattern collections, and community examples."]</p>
+        </div>
+        <ul>
+            <li><a href="https://jugglinglab.org/html/ssnotation.html" target="_blank" rel="noopener">Juggling Lab: siteswap notation</a> <span>— @L["notation reference and passing examples"]</span></li>
+            <li><a href="https://jugglingedge.com/pdf/highgate.pdf" target="_blank" rel="noopener">The Highgate Collection</a> <span>— @L["Aidan Burns’ pattern collection"]</span></li>
+            <li><a href="https://www.jugglingedge.com/pdf/PassingPatternsAug06.pdf" target="_blank" rel="noopener">Passing Patterns Compendium</a> <span>— @L["notation, rhythms, feeding, and diagrams"]</span></li>
+            <li><a href="https://jugglingedge.com/help/causaldiagrams.php" target="_blank" rel="noopener">Juggling Edge: Causal diagram guide</a> <span>— @L["causal arrows and passing examples"]</span></li>
+            <li><a href="https://juggle.fandom.com/wiki/Passing" target="_blank" rel="noopener">Juggle Wiki: Passing</a> <span>— @L["passing vocabulary and notation overview"]</span></li>
+            <li><a href="https://jongliertreff-frankfurt.de/nerd-corner" target="_blank" rel="noopener">How to Steal from Your Friends and takeout PDFs</a> <span>— @L["Aidan Burns’ guide to group takeouts"]</span></li>
+            <li><a href="https://homepages.inf.ed.ac.uk/imurray2/juggling/workshops/seven.html" target="_blank" rel="noopener">Iain Murray: seven passing patterns with seven clubs</a> <span>— @L["workshop notes and pattern references"]</span></li>
+            <li><a href="https://arxiv.org/abs/2410.19591" target="_blank" rel="noopener">Beyond the Cascade: Juggling Vanilla Siteswap Patterns</a> <span>— @L["research on generating and executing siteswap patterns"]</span></li>
+            <li><a href="https://arxiv.org/abs/1111.3660" target="_blank" rel="noopener">Positroid Varieties: Juggling and Geometry</a> <span>— @L["mathematical research connecting juggling patterns and geometry"]</span></li>
+        </ul>
+    </footer>
+</main>
+
+@code {
+    private ExampleKind _example = ExampleKind.SixClub;
+
+    private string ExampleClass(ExampleKind kind) => _example == kind ? "example-tab is-active" : "example-tab";
+
+    private void SelectExample(ExampleKind kind) => _example = kind;
+
+    private enum ExampleKind
+    {
+        SixClub,
+        SevenClub,
+        Feeding
+    }
+}
