@@ -1,16 +1,26 @@
-# Highgate transcription audit: printed pp. 196–210
+# Highgate transcription review: printed pp. 196–210
 
-## Included
+This page-range chunk is stored separately in [highgate-transcriptions-196-210.json](highgate-transcriptions-196-210.json). It contains the existing ten-club one-count feeding countdown record and three newly source-checked asynchronous three-count feeds. No central catalog or inventory changes are made by this chunk.
 
-- `highgate-tenclubonecountfeedingcountdown` — 2017 expanded PDF printed p. 196 / PDF p. 197. The diagram and three written throw sequences were visually checked. Ben's eight throws go to Anne, Anne, Clare, Anne, Clare, Clare, Anne, Clare; Anne and Clare each have the listed self throws and crossing single passes to Ben. Ben starts at phase 0; Anne and Clare start half a beat later. The two listed cyclic siteswaps are retained in the JSON. No corresponding entry was found in the local 2014 PDF.
-- This is a regular three-person feed, not a manipulator pattern. “Gorilla” on the following pages describes a feeder splitting ten clubs between two partners; it does not describe a solo manipulator.
+## Added ordinary causal diagrams
 
-The JSON stores 24 events, one per person per beat over an eight-beat cycle, including their hands, phase offsets, throw routes, and source provenance. A state reconstructed from the serialized graph passed `IsValidForEditor()` after `SynchronizeHeights()`. All source cycle offsets survived synchronization unchanged.
+| Stable ID | Pattern | 2017 source | 2014 comparison | Graph |
+|---|---|---|---|---|
+| `highgate-passpassselffeedingfrenchthreecount` | Pass pass self feeding French three count | printed p. 199 / PDF p. 200 | p. 140 | Six-beat cycle; 18 events and 18 causal edges. Anne and Ben start in phase; Clare is half a beat later. |
+| `highgate-passpasshefffeedingfrenchthreecount` | Pass pass heff feeding French three count | printed p. 199 / PDF p. 200 | p. 140 | Six-beat cycle; 18 events and 18 causal edges. All lanes start in phase. |
+| `highgate-asynchronouspasspasshefffeedingthreecount` | Asynchronous pass pass heff feeding three count | printed p. 200 / PDF p. 201 | p. 141 | Six-beat cycle; 18 events and 18 causal edges. Ben starts in phase; Anne and Clare are half a beat later. |
 
-## Visually reviewed, omitted from the chunk
+For each record, the per-juggler sequences and printed arrow endpoints were checked against both editions. Each three-event sequence is repeated twice to preserve alternating right/left hands over the six-beat cycle. Self throws point to the next event; heffs point two beats forward to the same hand. Passes land on the receiving juggler's next available event: after one beat for synchronized lanes and 1.5 beats when the receiver is offset by half a beat. The JSON retains explicit throw heights separately from causal time and stores any wraparound in `cycleOffset`.
 
-- The synchronous one-count feed and the dark/ambidextrous/itchy gorilla examples include same-person throws from both hands at one instant. The editor has one event lane per person, so those events overlap and cannot be represented faithfully.
-- The 972 feeds and ten-club period-five feeds include zip or gap arrows. The current editor normalization does not preserve those backward arrows. Hijacking in period five is a transition between patterns rather than a stationary repeating pattern; it is documented separately in the source.
-- Ten-club one-count feasts have simultaneous hand throws, so they need the same-time lane support before they can be imported.
+The source text also identifies synchronous feeds and simultaneous double passes in this page range. Those are excluded because this editor state represents a single event per hand timeline and the required simultaneous-event semantics are not established here. Zip patterns are excluded from this ordinary-pattern chunk and handled by the signed-zip work. Other period-five and two-hand patterns require separate model review before translation; no incomplete endpoint has been guessed.
 
-The reviewed pages provide no solo manipulator pattern. The period-five hijacking discussion concerns transitions between ordinary passing patterns; it should be classified separately from stationary manipulator patterns.
+## Validation
+
+The focused standalone test reads all four records from the chunk, substitutes the registered `highgate-three-count` preset ID, calls `SynchronizeHeights()`, verifies that all serialized cycle offsets remain stable, and requires `IsValidForEditor()` for each record. Structural checks also require each new graph to have 18 unique events, 18 unique edges, and resolvable edge endpoints.
+
+```text
+dotnet test Siteswaps.Test/Siteswaps.Test.csproj --no-restore --filter EveryStandaloneRecordCreatesAValidEditorStateAndPreservesOffsets
+Passed: 5, Failed: 0
+```
+
+The existing ten-club countdown is retained in this file and included in the same standalone validation. These records remain separate from the catalog until explicitly imported.

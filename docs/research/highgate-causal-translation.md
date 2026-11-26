@@ -48,6 +48,7 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | `highgate-antiquasarrunaround`, `highgate-quasarrunaround` | Anti quasar runaround and Quasar runaround | 2017 printed pp. 174, 176; 2014 printed pp. 117–118 | Complete feeder rotation cycles with all throw events and causal edges; walking positions remain documented separately from the throw graph. |
 | `highgate-anticlockwisepulsarrunaround` | Anticlockwise pulsar runaround | 2017 printed pp. 169–170 | Three-person feed/phase cycle and all 72 causal edges are transcribed. |
 | `highgate-tenclubonecountfeedingcountdown` | Ten club one count feeding countdown | 2017 printed p. 196 | Three target sequences, phase offsets, and pass destinations are represented in a three-person eight-beat cycle. |
+| `highgate-passpassselffeedingfrenchthreecount`, `highgate-passpasshefffeedingfrenchthreecount`, `highgate-asynchronouspasspasshefffeedingthreecount` | Three-person French and asynchronous three-count feeds | 2017 printed pp. 199–200; 2014 printed pp. 140–141 | All 18 throw events and causal edges per graph were checked against both editions, including half-beat lane phases and cycle offsets. |
 | Four ten-club feed presets from 2017 printed pp. 192–193 | Two count on singles; one count feeding pass-pass-self/three count; Bookends/inverted Bookends; Suburban Terror | 2014 PDF pp. 134, 136 | Four complete graphs use only single-club edges; club inventory/color and walking routes remain source notes. |
 | Thirteen four-person, mixed-count, box, and line-feed presets from 2017 printed pp. 226–240 | One-count feeders; Chocolate bar/Bookends/Countdown; Civil War; Mixed count; Pass pass self/Chocolate square/Bookends boxes; Two count and Urban Terror line feeds | 2014 PDF pp. 158–169 | Complete event rows and phase offsets are transcribed; simultaneous, zip, and hold variants outside these records remain separate model-boundary candidates. |
 | Four ten-club triangle presets from 2017 printed pp. 211–213 | Four-, Three-, Two-, and asynchronous One-count triangles | 2014 printed pp. 148–149 | Ordinary nonsynchronous causal graphs; synchronous and multiple-club variants are tracked separately. |
@@ -101,7 +102,7 @@ two-person passing unless separately classified otherwise.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 216 rows have visual source review: 180 translated rows map to 183 presets, 23 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 703 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 219 rows have visual source review: 183 translated rows map to 186 presets, 23 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 700 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 
