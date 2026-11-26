@@ -163,6 +163,34 @@
 .concept-card > a { display: inline-flex; min-height: 44px; align-items: center; font-weight: 800; }
 .concept-card > a + a { margin-left: .75rem; }
 
+.height-explorer {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+    padding: clamp(1rem, 3vw, 1.6rem);
+    border: 1px solid var(--decision-color-border);
+    border-radius: var(--decision-radius-card);
+    background: var(--decision-color-surface-subtle);
+    box-shadow: var(--decision-shadow-control);
+}
+.height-explorer-intro h3 { margin: .3rem 0 .45rem; font-size: clamp(1.25rem, 3vw, 1.65rem); }
+.height-explorer-intro p:last-child { max-width: 60rem; margin: 0; color: var(--decision-color-text-primary); line-height: 1.65; }
+.height-example-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
+.height-example-button { display: flex; min-height: 4.25rem; align-items: center; justify-content: center; gap: .6rem; padding: .65rem; border: 1px solid var(--decision-color-border); border-radius: var(--decision-radius-control); color: var(--decision-color-text-strong); background: var(--decision-color-surface-card); font: inherit; cursor: pointer; }
+.height-example-button strong { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.65rem; }
+.height-example-button span { color: var(--decision-color-text-secondary); font-size: .85rem; font-weight: 750; }
+.height-example-button:hover { border-color: var(--decision-color-action-primary); }
+.height-example-button.is-active { border-color: var(--decision-color-brand-strong); color: var(--decision-color-text-on-brand); background: var(--decision-color-brand-strong); box-shadow: var(--decision-shadow-brand-active); }
+.height-example-button.is-active span { color: var(--decision-color-text-on-brand-secondary); }
+.height-pattern-summary { display: flex; align-items: center; gap: 1rem; padding: .8rem 1rem; border-radius: var(--decision-radius-control); background: var(--decision-color-surface-card); }
+.height-pattern-summary code { color: var(--decision-color-brand-strong); font-size: 2rem; font-weight: 900; }
+.height-pattern-summary p { margin: 0; color: var(--decision-color-text-primary); line-height: 1.5; }
+.height-view-tabs { display: flex; flex-wrap: wrap; gap: .4rem; border-bottom: 1px solid var(--decision-color-border); }
+.height-view-tabs button { min-height: 44px; padding: .55rem .8rem; border: 0; border-bottom: 3px solid transparent; color: var(--decision-color-text-secondary); background: transparent; font: inherit; font-weight: 800; cursor: pointer; }
+.height-view-tabs button.is-active { border-bottom-color: var(--decision-color-action-primary); color: var(--decision-color-brand-strong); }
+.height-view-panel { min-width: 0; overflow-x: auto; border-radius: var(--decision-radius-control); background: var(--decision-color-surface-card); }
+.height-view-panel > * { min-width: 0; }
+
 .guided-pattern {
     display: grid;
     grid-template-columns: 1fr minmax(12rem, .36fr);
@@ -228,6 +256,10 @@
     .example-tabs { display: grid; grid-template-columns: 1fr; }
     .example-tab { width: 100%; text-align: left; }
     .example-card { min-height: 0; }
+    .height-example-button { min-height: 3.8rem; flex-direction: column; gap: .05rem; }
+    .height-view-tabs { display: grid; grid-template-columns: 1fr; border-bottom: 0; }
+    .height-view-tabs button { border: 1px solid var(--decision-color-border); border-radius: var(--decision-radius-control); text-align: left; }
+    .height-view-tabs button.is-active { border-color: var(--decision-color-brand-strong); }
     .intro-sources { gap: .6rem; }
 }
 
