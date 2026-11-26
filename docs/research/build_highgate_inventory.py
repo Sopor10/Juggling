@@ -284,8 +284,7 @@ def index_lines(pdf: Path, first: int, last: int, edition: str):
                 continue
             page_columns[side].append(line)
         for lines in page_columns:
-            for line in lines:
-                yield line
+            yield from lines
 
 
 def consume_index_line(
