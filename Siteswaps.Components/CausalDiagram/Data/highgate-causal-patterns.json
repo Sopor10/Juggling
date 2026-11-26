@@ -55827,5 +55827,166 @@
     "catalogStableIds": [
       "highgate-anearlytriple"
     ]
+  },
+  {
+    "id": "highgate-alatetriple",
+    "label": "A late triple",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection: 2017 expanded printed p. 24 / PDF p. 25; The Highgate Collection 2014 printed p. 10 / PDF p. 10.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R2",
+        "to": "A-L3",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 24,
+        "pdfPage": 25
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 10,
+        "pdfPage": 10
+      }
+    ],
+    "notation": "Ben throws pass, self, triple, hold, self, self, then repeats. The triple is a straight pass. Anne has a pause before catching it, then throws one self before her next pass.",
+    "catalogStableIds": [
+      "highgate-alatetriple"
+    ]
   }
 ]
