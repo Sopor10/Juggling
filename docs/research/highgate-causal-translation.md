@@ -35,6 +35,7 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | `highgate-777786`, `highgate-777867` | Seven-club pass pass self variants | 2017 printed pp. 83–84; 2014 PDF p. 53 for 777786 | Both diagrams use a six-beat cycle with twelve events and twelve checked edges; the 2017-only variant is separately sourced. |
 | `highgate-passpasszipfeedingthreecount`, `highgate-passpasszipfeedingfrenchthreecount` | Three-person pass pass zip feeds | 2017 printed p. 120; 2014 PDF p. 80 | Three lanes and 18 events per graph; backward zip edges and source heights are preserved, with the index/body page mismatch recorded. |
 | Seven presets from 2017 printed pp. 88–90 | Classic six-count popcorn; six-, five-, and four-count popcorn variants with heffs/double passes | 2014 PDF pp. 57–59 | Every event and edge in the seven diagrams is transcribed and checked; patterns that require simultaneous throws remain outside the import. |
+| Five three-person feast presets from 2017 printed pp. 135, 137, 140 | JED's nightmare, Anti Quasar, Double Three Count, Trifle, Trilogy | 2014 PDF pp. 90–93 | Three source sequences and two explicit lane-compositions become 288 events and edges; all are checked by the catalog validity test. |
 | `highgate-jimsinvertedbookendsfeed` | Jim's inverted bookends feed | 2017 printed p. 122; 2014 printed p. 81 | Three juggler lanes, half-beat phase, full 34-beat hand period, holds, and pass destinations are transcribed. Holds and hurry are represented geometrically, not as text labels. |
 | Eleven three-person feast presets from 2017 printed pp. 137–140 | Chocolate bar, Bookends, Inverted Bookends, Two count, and One count feasts | 2014 PDF pp. 91–93 | Each translated graph has three juggler lanes, direct pass destinations, and explicit cyclic event positions. All pass editor-state validation. |
 | `highgate-threepersoncountdownfeast` | Three person countdown feast | 2017 printed p. 141; 2014 PDF p. 94 | Three 24-event sequences are matched against the source diagram; all pass destinations, hand alternation, and cycle offsets are checked. |
@@ -104,7 +105,7 @@ and source pages rather than being dropped.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 206 rows have visual source review: 169 translated rows map to 172 presets, 24 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 713 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 211 rows have visual source review: 174 translated rows map to 177 presets, 24 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 708 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 
