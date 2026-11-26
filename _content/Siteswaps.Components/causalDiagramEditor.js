@@ -2,6 +2,35 @@ let activeMove;
 let activePressCleanup;
 const outsideCloseHandlers = new WeakMap();
 const touchDragHandlers = new WeakMap();
+const savedEditorPresetsKey = "siteswaps.causal-diagram-editor.presets.v1";
+
+export function getSavedEditorPresets() {
+    try {
+        const presets = JSON.parse(localStorage.getItem(savedEditorPresetsKey) || "[]");
+        return Array.isArray(presets) ? presets.filter(isSavedEditorPreset) : [];
+    } catch {
+        return [];
+    }
+}
+
+export function saveEditorPreset(preset) {
+    if (!isSavedEditorPreset(preset)) throw new Error("Ungültige Diagrammvorlage.");
+    const presets = getSavedEditorPresets().filter(item => item.id !== preset.id);
+    presets.unshift(preset);
+    localStorage.setItem(savedEditorPresetsKey, JSON.stringify(presets.slice(0, 30)));
+    return getSavedEditorPresets();
+}
+
+export function deleteEditorPreset(id) {
+    const presets = getSavedEditorPresets().filter(item => item.id !== id);
+    localStorage.setItem(savedEditorPresetsKey, JSON.stringify(presets));
+    return presets;
+}
+
+function isSavedEditorPreset(value) {
+    return value && typeof value.id === "string" && typeof value.name === "string"
+        && typeof value.stateToken === "string" && value.name.trim().length > 0;
+}
 
 function capturePointer(element, pointerId) {
     try {
