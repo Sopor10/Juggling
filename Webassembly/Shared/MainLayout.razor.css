@@ -36,3 +36,10 @@ main {
 .content:has(.wizard-page) {
     overflow: hidden;
 }
+
+.content:has(.passing-intro) {
+    display: block;
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
+}
