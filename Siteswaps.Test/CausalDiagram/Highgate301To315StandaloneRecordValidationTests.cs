@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using FluentAssertions;
 using NUnit.Framework;
@@ -87,7 +88,7 @@ public class Highgate301To315StandaloneRecordValidationTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
 
-        records.Should().HaveCount(9);
+        records.Should().HaveCount(26);
     }
 
     [Test]
@@ -142,12 +143,151 @@ public class Highgate301To315StandaloneRecordValidationTests
         }
     }
 
+    [Test]
+    public void AddedRecordsFollowThePrintedTargetRowsAndPassDirections()
+    {
+        var repository = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+        while (
+            repository is not null
+            && !File.Exists(
+                Path.Combine(
+                    repository.FullName,
+                    "docs/research/highgate-transcriptions-301-315.json"
+                )
+            )
+        )
+            repository = repository.Parent;
+        repository.Should().NotBeNull();
+        var records = JsonSerializer.Deserialize<List<Record>>(
+            File.ReadAllText(
+                Path.Combine(
+                    repository!.FullName,
+                    "docs/research/highgate-transcriptions-301-315.json"
+                )
+            ),
+            JsonOptions
+        )!;
+
+        foreach (var record in records.Where(item => item.SourceRows is not null))
+        {
+            var idByName = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+            var throwById = record.Throws.ToDictionary(item => item.Id, StringComparer.Ordinal);
+            var edgeBySource = record.CausalEdges.ToDictionary(
+                item => item.From,
+                item => item.To,
+                StringComparer.Ordinal
+            );
+            foreach (var (name, row) in record.SourceRows!)
+            {
+                var jugglerId = idByName[name];
+                var events = record
+                    .Throws.Where(item => item.JugglerId == jugglerId)
+                    .OrderBy(item => item.StartTime)
+                    .ToArray();
+                events.Should().HaveCount((int)record.CycleLength, $"{record.Id} {name}");
+                var sourceRows = row.ToArray();
+                foreach (var source in events)
+                {
+                    var index =
+                        int.Parse(
+                            source.Id[(source.Id.LastIndexOf('-') + 1)..],
+                            CultureInfo.InvariantCulture
+                        ) - 1;
+                    var token = sourceRows[index % sourceRows.Length];
+                    var tokenParts = token.Split(':');
+                    var targetName =
+                        token is "self" or "zip" or "heff" ? name
+                        : tokenParts.Length > 1 ? tokenParts[1]
+                        : token;
+                    var target = throwById[edgeBySource[source.Id]];
+                    target.JugglerId.Should().Be(idByName[targetName], $"{record.Id} {source.Id}");
+
+                    string? route = null;
+                    if (token is "self" or "zip")
+                        route = "opposite";
+                    else if (token == "heff")
+                        route = "same";
+                    else
+                    {
+                        var routeKey = $"{name}->{targetName}";
+                        route =
+                            tokenParts.Length == 3
+                                ? tokenParts[2]
+                                : record.SourceRouteOverrides?.GetValueOrDefault(routeKey)
+                                    ?? record.PassDirectionByJuggler?.GetValueOrDefault(name);
+                    }
+                    if (route is not null)
+                    {
+                        var expectedHand = route switch
+                        {
+                            "same" or "crossing" => source.Hand,
+                            "opposite" or "straight" => source.Hand == "R" ? "L" : "R",
+                            _ => throw new AssertionException(
+                                $"Unknown route {route} in {record.Id}"
+                            ),
+                        };
+                        target.Hand.Should().Be(expectedHand, $"{record.Id} {source.Id} ({token})");
+                    }
+                    if (route is not null)
+                    {
+                        var expectedHand = route switch
+                        {
+                            "same" or "crossing" => source.Hand,
+                            "opposite" or "straight" => source.Hand == "R" ? "L" : "R",
+                            _ => throw new AssertionException(
+                                $"Unknown route {route} in {record.Id}"
+                            ),
+                        };
+                        var isZip = token == "zip";
+                        var minimumDelta = token switch
+                        {
+                            "zip" => -1m,
+                            "heff" => 2m,
+                            "self" => 1m,
+                            _ when tokenParts[0] == "double" => 2m,
+                            _ => 1m,
+                        };
+                        var threshold = source.StartTime + minimumDelta;
+                        var candidates = record
+                            .Throws.Where(item => item.JugglerId == target.JugglerId)
+                            .SelectMany(item =>
+                                Enumerable
+                                    .Range(-2, 5)
+                                    .Select(offset => new
+                                    {
+                                        Throw = item,
+                                        Offset = offset,
+                                        Time = item.StartTime + offset * record.CycleLength,
+                                    })
+                            )
+                            .Where(item => item.Throw.Hand == expectedHand)
+                            .Where(item => isZip ? item.Time <= threshold : item.Time >= threshold)
+                            .ToArray();
+                        var expected = isZip
+                            ? candidates.OrderByDescending(item => item.Time).First()
+                            : candidates.OrderBy(item => item.Time).First();
+                        target
+                            .Id.Should()
+                            .Be(expected.Throw.Id, $"{record.Id} {source.Id} endpoint");
+                        record
+                            .CausalEdges.Single(item => item.From == source.Id)
+                            .CycleOffset.Should()
+                            .Be(expected.Offset, $"{record.Id} {source.Id} cycle offset");
+                    }
+                }
+            }
+        }
+    }
+
     private sealed record Record(
         string Id,
         decimal CycleLength,
         List<Juggler> Jugglers,
         List<Throw> Throws,
-        List<Edge> CausalEdges
+        List<Edge> CausalEdges,
+        Dictionary<string, string[]>? SourceRows = null,
+        Dictionary<string, string>? PassDirectionByJuggler = null,
+        Dictionary<string, string>? SourceRouteOverrides = null
     );
 
     private sealed record Juggler(string Id, string Name);

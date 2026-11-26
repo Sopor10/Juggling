@@ -41,9 +41,49 @@ public class HighgateSignedZipStandaloneRecordValidationTests
             JsonOptions
         );
         records.Should().NotBeNull();
-        records.Should().Contain(record => record.Id == "highgate-passselfzip");
+        records!
+            .Select(record => record.Id)
+            .Should()
+            .BeEquivalentTo(
+                "highgate-passselfzip",
+                "highgate-therecipe",
+                "highgate-fourfourone",
+                "highgate-fourfourfourzero",
+                "highgate-aselftriple",
+                "highgate-58552",
+                "highgate-doublezapzip531"
+            );
+        records
+            .Single(record => record.Id == "highgate-therecipe")
+            .CausalEdges.Should()
+            .HaveCount(14);
+        records
+            .Single(record => record.Id == "highgate-fourfourone")
+            .CausalEdges.Should()
+            .Contain(edge =>
+                edge.FromThrowId == "B-R1" && edge.ToThrowId == "B-L3" && edge.CycleOffset == -1
+            );
+        records
+            .Single(record => record.Id == "highgate-fourfourfourzero")
+            .CausalEdges.Should()
+            .Contain(edge =>
+                edge.FromThrowId == "B-L1" && edge.ToThrowId == "B-L3" && edge.CycleOffset == -1
+            );
+        records
+            .Single(record => record.Id == "highgate-aselftriple")
+            .CausalEdges.Should()
+            .Contain(edge =>
+                edge.FromThrowId == "B-L2" && edge.ToThrowId == "B-R1" && edge.CycleOffset == 1
+            );
+        records.Single(record => record.Id == "highgate-58552").CausalEdges.Should().HaveCount(20);
+        records
+            .Single(record => record.Id == "highgate-doublezapzip531")
+            .CausalEdges.Should()
+            .Contain(edge =>
+                edge.FromThrowId == "B-L1" && edge.ToThrowId == "B-R1" && edge.CycleOffset == 0
+            );
 
-        foreach (var record in records!)
+        foreach (var record in records)
         {
             var state = new CausalDiagramEditorState
             {

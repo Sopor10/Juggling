@@ -94,6 +94,12 @@ public class CausalDiagramEditorStateTests
         "highgate-anticlockwisepasspassselfrunaround",
         "highgate-clockwisepasspassselfrunaround",
         "highgate-passselfzip",
+        "highgate-therecipe",
+        "highgate-fourfourone",
+        "highgate-fourfourfourzero",
+        "highgate-aselftriple",
+        "highgate-58552",
+        "highgate-doublezapzip531",
         "highgate-doublehold42",
         "highgate-7778686",
         "highgate-7786786",
@@ -243,6 +249,29 @@ public class CausalDiagramEditorStateTests
         "highgate-thirteenclubbookshelf",
         "highgate-thirteenclubchocolatebookshelf",
         "highgate-thirteenclubcountdownaccommodation",
+        "highgate-karamazovshuffle",
+        "highgate-rotatingλ",
+        "highgate-cyclone",
+        "highgate-seattleshuffle",
+        "highgate-itsagoodonecountdownweave",
+        "highgate-gorillaweave",
+        "highgate-thirteenclubpasspassselffeedingfrenchthreecount",
+        "highgate-thirteenclubpasspasshefffeedingthreecount",
+        "highgate-thirteenclub972feedingthreecount",
+        "highgate-thirteenclub972feedingfrenchthreecount",
+        "highgate-onecountfeeding972",
+        "highgate-thirteenclubwhynotfeedingfivecountpopcorn",
+        "highgate-thirteenclubmaybefeedingfivecountpopcorn",
+        "highgate-thirteenclubfunkybookendsfeedingwhynot",
+        "highgate-thirteenclubfunkybookendsfeedingmaybe",
+        "highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn",
+        "highgate-thirteenclubmartinsonecountfeedingfunkybookends",
+        "highgate-thirteenclubonecountfeedingwhynot",
+        "highgate-thirteenclubonecountfeedingmaybe",
+        "highgate-thirteenclubonecountfeedingmartinsonecount",
+        "highgate-thirteenonecountlinefeedfeedingfourcountandtwocount",
+        "highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount",
+        "highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn",
     };
 
     [Test]
@@ -452,7 +481,7 @@ public class CausalDiagramEditorStateTests
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
 
-        presets.Should().HaveCount(233);
+        presets.Should().HaveCount(262);
         presets.Select(preset => preset.Id).Should().BeEquivalentTo(ReviewedHighgatePresetIds);
         var threeCount = presets.Single(preset => preset.Id == "highgate-three-count").Create();
         threeCount.CycleLength.Should().Be(6m);

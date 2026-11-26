@@ -1,6 +1,6 @@
 # Highgate causal-diagram model-limit review
 
-This note audits the 23 inventory rows still marked `model extension required; source retained` against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
+This note audits the 8 inventory rows still marked `model extension required; source retained` against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
 
 ## Findings and priority
 
@@ -8,7 +8,7 @@ This note audits the 23 inventory rows still marked `model extension required; s
 
 The JSON and token state can store `CycleOffset` values from −1000 to 1000, and the SVG path renderer places the endpoint at `target.StartTime + (sourceCycle + edge.CycleOffset) * CycleLength`. The earlier implementation incremented an offset when its derived height was negative, which changed backward arrows. That behavior is fixed: `SynchronizeHeights()` now preserves the signed offset and recalculates only non-explicit heights. Zip/gap rows still require exact source transcription, but backward timing is no longer an editor-model blocker.
 
-Inventory entries whose notes explicitly require backward arrows are:
+The backward-arrow support is now implemented. Six source-checked ordinary graphs that were previously held back by signed offsets are now translated; seven other periodic patterns have moved to graph-transcription-pending status. The remaining true model limits are the finite-transition and simultaneous-event cases below.
 
 | IDs | Source pages (2017 printed / 2014 PDF) | Evidence |
 |---|---|---|
@@ -21,6 +21,8 @@ Inventory entries whose notes explicitly require backward arrows are:
 | `highgate-convertingsymmetricasynchronousfourhandedsiteswa-0987b5f53e`, `highgate-convertingsymmetricsynchronousfourhandedsiteswap-d9ed3bf63a` | 39 / 22 | Conversion examples contain backward zip arrows; these are explanatory examples and may not be independent catalog patterns. |
 
 `highgate-thesynchronousrecipe` and `highgate-triplepassholdinsynchonecount6424` also need signed offsets; they additionally need simultaneous-event layout described below.
+
+**Early-page audit update:** `highgate-fourfourone`, `highgate-fourfourfourzero`, `highgate-aselftriple`, `highgate-doublezapzip531`, `highgate-therecipe`, and the 2014-only `highgate-58552` now have source-checked graph records in [highgate-signed-zip-transcriptions.json](highgate-signed-zip-transcriptions.json) and are imported in the central catalog. NUnit validates the source graphs and preset editor states. `highgate-doubletriplezip561` and `highgate-doublezip51` remain finite-transition cases, separately described below.
 
 **Implementation status:** the editor state now uses compact link format `j4` and stores an explicit-height flag per throw. `SynchronizeHeights()` preserves signed edge offsets; graph-derived heights are recalculated only for non-explicit throws. Older `j3`, `j2`, `j1`, and JSON links migrate through the previous positive-height normalization. Manual node drags clamp to timing positions that keep derived heights valid; arrow retargeting remains the operation that changes the causal destination/offset.
 
@@ -72,4 +74,4 @@ The reviewed set above is classified as ordinary patterns in the inventory; the 
 
 ## Scope note
 
-This audit covers the 24 rows currently labeled model-limited. It is not a full audit of all 919 inventory candidates, and it does not establish that the other open candidates are representable or fully transcribed.
+This audit covers the 8 rows currently labeled model-limited. It is not a full audit of all 919 inventory candidates, and it does not establish that the other open candidates are representable or fully transcribed.

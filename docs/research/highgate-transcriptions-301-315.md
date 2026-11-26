@@ -4,7 +4,7 @@ Work file: [highgate-transcriptions-301-315.json](highgate-transcriptions-301-31
 
 ## Accepted graphs
 
-The JSON contains nine records: the four-count box and eight additional patterns. Every record has a stable inventory ID, event nodes, a complete set of causal edges, source pages, and direct state validation.
+The JSON contains 26 records: the nine original accepted patterns plus 17 diagram transcriptions added in this batch. Every record has a stable inventory ID, event nodes, a complete set of causal edges, source pages, and direct state validation.
 
 | Stable ID | Pattern | 2017 printed page | 2014 printed page | Causal edges |
 |---|---|---:|---:|---:|
@@ -17,8 +17,25 @@ The JSON contains nine records: the four-count box and eight additional patterns
 | `highgate-weirdpasspassselfbox` | Weird pass pass self box | 312 | 223 | 12/12 |
 | `highgate-thirteenclubtwocountlinefeed` | Thirteen club two count line feed | 313 | 224 | 24/24 |
 | `highgate-thirteencluburbanterrorfeedonecountlinefeed` | Urban terror feed (one count line feed) | 313 | 224 | 48/48 |
+| `highgate-thirteenclubpasspassselffeedingfrenchthreecount` | Pass pass self feeding French three count | 301 | 216 | 24/24 |
+| `highgate-thirteenclubpasspasshefffeedingthreecount` | Pass pass heff feeding three count | 301 | 216 | 24/24 |
+| `highgate-thirteenclub972feedingthreecount` | 972 feeding three count | 303 | 217 | 24/24 |
+| `highgate-thirteenclub972feedingfrenchthreecount` | 972 feeding French three count | 303 | 217 | 24/24 |
+| `highgate-onecountfeeding972` | One count feeding 972 | 303 | 217 | 24/24 |
+| `highgate-thirteenclubwhynotfeedingfivecountpopcorn` | Why Not? feeding Five Count Popcorn | 304 | 218 | 40/40 |
+| `highgate-thirteenclubmaybefeedingfivecountpopcorn` | Maybe feeding Five Count Popcorn | 304 | 218 | 40/40 |
+| `highgate-thirteenclubfunkybookendsfeedingwhynot` | Funky Bookends feeding Why Not? | 306 | 219 | 40/40 |
+| `highgate-thirteenclubfunkybookendsfeedingmaybe` | Funky Bookends feeding Maybe | 306 | 219 | 40/40 |
+| `highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn` | Martin’s one count feeding Five Count Popcorn | 306 | 219 | 40/40 |
+| `highgate-thirteenclubmartinsonecountfeedingfunkybookends` | Martin’s one count feeding Funky Bookends | 308 | 220 | 40/40 |
+| `highgate-thirteenclubonecountfeedingwhynot` | One count feeding Why Not? | 308 | 220 | 40/40 |
+| `highgate-thirteenclubonecountfeedingmaybe` | One count feeding Maybe | 308 | 220 | 40/40 |
+| `highgate-thirteenclubonecountfeedingmartinsonecount` | One count feeding Martin’s one count | 310 | 221 | 40/40 |
+| `highgate-thirteenonecountlinefeedfeedingfourcountandtwocount` | One count line feed, feeding Four Count and Two Count | 315 | 225 | 16/16 |
+| `highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount` | One count line feed, feeding French Three Count | 315 | 225 | 18/18 |
+| `highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn` | Parsnip line feed, feeding Five Count Popcorn | 315–316 | 225 | 40/40 |
 
-For each accepted record, I compared the printed throw rows and hand order to the diagram arrows in the 2017 page image, then checked the corresponding 2014 page image. The state records the written phase offsets and one event per listed throw. Single and double passes use their corresponding arrival intervals; self events connect to the next throw by the same juggler. Pass angle, formation, and starting club inventory remain source notes rather than editor state.
+For the original nine records, I compared the printed throw rows and hand order to the diagram arrows in the 2017 page image, then checked the corresponding 2014 page image. For the 17 additions, I transcribed the printed throw rows, start phases and route directions. I checked row hand order and pass directions against the 2017 diagrams, reconstructed periodic endpoints from recipient/action/hand timing, then compared titles, rows, phases, routes, and diagrams with the 2014 edition. The 17 are present on 2014 pp. 216–221 and 225, with no sequence or diagram differences found. In the added JSON records, `sourceRows` stores a normalized per-throw transcription; forms such as `double:Ben:straight` encode a double pass to Ben with a straight route. `edgeMethod` records the endpoint rule, and the focused test recomputes each endpoint/offset from the token, phase, and route. The state records the written phase offsets and one event per listed throw. Single and double passes use their corresponding arrival intervals; self events connect to the next throw by the same juggler. Pass angle, formation, and starting club inventory remain source notes rather than editor state.
 
 The focused test in `Highgate301To315StandaloneRecordValidationTests` builds a `CausalDiagramEditorState` for every record, calls `SynchronizeHeights()`, and requires `IsValidForEditor()` with all offsets preserved. It also checks unique throw IDs, one outgoing edge per throw, and resolvable endpoints. A source-sequence assertion checks the four rows of the countdown feed directly against the printed per-juggler sequences.
 
@@ -33,23 +50,14 @@ The corrected Clare edges point to `P2-3`, `P2-4`, `P4-5`, `P2-6`, `P4-7`, `P4-8
 
 ## What the model can encode for zip, heff, and pass spins
 
-The editor state has no separate `ActionType` field. It stores throw nodes (hand, time, derived height) and causal edges (source, destination, cycle offset). That still allows several special actions to be represented when the source diagram identifies the destination node:
+The editor state has no separate `ActionType` field. It stores throw nodes (hand, time, derived height) and causal edges (source, destination, cycle offset). Action height and route determine the destination event; source notes retain zip/heff labels and club inventory.
 
 - [Modern Club Passing notation](https://modernpassing.com/4a-4hsw-notation.html) defines zip as hand-across without rotation (4-handed siteswap `2`, solo siteswap `1`) and heff as a double-spin self to the same hand (4-handed `8`, solo `4`). A temporary state check confirmed a graph edge deriving height 1 with offset −1 and a same-hand self edge deriving height 4; both states passed `IsValidForEditor()` and retained their offsets. This verifies numeric/causal representability, not an automatic zip/heff parser.
 - The editor also accepts pass heights 4 and 5; the accepted box records include double and triple passes. A double/triple here is represented as one causal throw edge with its height and endpoint, not as multiple independent club objects on one node.
 - The source notation (`zip`, `heff`, straight/crossing, double/triple) therefore needs to stay in each entry's source notes. The graph can encode timing and causality, but does not store a separate label for the action's name or club inventory.
 
-## Remaining named candidates and classification
+## Coverage and edition comparison
 
-I reviewed the full pp. 301–315 block. The descriptions and diagrams show cooperative feeds, boxes, and line feeds; I found no solo manipulator, takeout, hijack, or lo-jack role in this range. The following candidates are not accepted as graphs here because their exact arrow endpoints or full phase cycle have not been transcribed and checked. This is a source-specific gap, not a claim that the editor cannot represent zip/heff heights.
+All 17 added graphs are also present in the 2014 edition: pp. 216–221 cover the pass-pass, 972, one-count and period-five feeds; p. 225 contains the three line feeds. I compared their names, start phases, written rows, pass directions, and diagrams with the matching 2014 pages. I found no differences. The parsnip line-feed diagram begins on 2017 printed p. 315 and its written rows continue on p. 316; the 2014 edition has the complete pattern on p. 225.
 
-| 2017 printed pages | Pattern / stable inventory ID | Reason left out |
-|---|---|---|
-| 301–302 | Thirteen club pass pass self feeding French three count — `highgate-thirteenclubpasspassselffeedingfrenchthreecount`; Thirteen club pass pass heff feeding three count — `highgate-thirteenclubpasspasshefffeedingthreecount` | Heff actions; per-arrow destination and same-hand timing need an audit |
-| 302–303 | Thirteen club 972 feeding three count — `highgate-thirteenclub972feedingthreecount`; Thirteen club 972 feeding French three count — `highgate-thirteenclub972feedingfrenchthreecount`; One count feeding 972 — `highgate-onecountfeeding972` | Zip/heff actions, unequal starts/hand assignments, and doubles; full edge audit remains |
-| 303–309 | Thirteen club why not? feeding five count popcorn — `highgate-thirteenclubwhynotfeedingfivecountpopcorn`; maybe feeding five count popcorn — `highgate-thirteenclubmaybefeedingfivecountpopcorn`; funky bookends feeding why not?/maybe — `highgate-thirteenclubfunkybookendsfeedingwhynot`, `highgate-thirteenclubfunkybookendsfeedingmaybe`; Martin's one count feeding five count popcorn/funky bookends — `highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn`, `highgate-thirteenclubmartinsonecountfeedingfunkybookends`; one count feeding why not?/maybe/Martin's one count — `highgate-thirteenclubonecountfeedingwhynot`, `highgate-thirteenclubonecountfeedingmaybe`, `highgate-thirteenclubonecountfeedingmartinsonecount` | Zip/heff sequences with several half-beat starts; no speculative token conversion |
-| 314 | Thirteen one count line feed, feeding four count and two count — `highgate-thirteenonecountlinefeedfeedingfourcountandtwocount` | Different individual periods (four, four, four, and two events); exact endpoints need a full diagram read |
-| 314 | Thirteen club one count line feed, feeding French three count — `highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount` | Heff actions and phase details require exact destination audit |
-| 314–315 | Thirteen club parsnip line feed, feeding five count popcorn — `highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn` | Zip actions and staggered starts require exact destination audit |
-
-The period-five section heading on p. 303 is not itself a pattern. The inventory’s merged countdown/four-count row is resolved by retaining the stable IDs on the actual named headings. No inventory or central preset file was changed.
+Within printed pp. 301–315, all named cooperative pattern diagrams with periodic throw rows are transcribed. The period-five section introduction on p. 304 describes interchangeable substitutions but is not itself a pattern. None of these pages describes a solo manipulator, takeout, hijack, or lo-jack role. Zip and heff are actions within cooperative feeds here. No inventory or central preset file was changed.
