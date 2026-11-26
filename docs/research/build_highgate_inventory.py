@@ -47,6 +47,7 @@ TOC_PAGES_FIELD = "toc_printed_pages"
 EDITION_2017 = "2017"
 EDITION_2014 = "2014"
 MANIPULATION = "manipulation"
+MANIPULATOR_ACTION = "manipulator action"
 
 
 def is_digit(char: str) -> bool:
@@ -221,36 +222,10 @@ def page_refs(value: str) -> list[int]:
 def parse_reference_suffix(value: str) -> tuple[str, str] | None:
     """Split a 2014 index line into its title and numeric page suffix."""
     line = value.rstrip()
-    position = len(line)
-    refs_start = position
-    while True:
-        while position > 0 and line[position - 1].isspace():
-            position -= 1
-        final_page = parse_digits_backwards(line, position)
-        if final_page is None:
-            return None
-        _, number_start = final_page
-        position = number_start
-        while position > 0 and line[position - 1].isspace():
-            position -= 1
-        if position > 0 and line[position - 1] in "-–":
-            position -= 1
-            while position > 0 and line[position - 1].isspace():
-                position -= 1
-            first_page = parse_digits_backwards(line, position)
-            if first_page is None:
-                return None
-            _, position = first_page
-        refs_start = position
-        while position > 0 and line[position - 1].isspace():
-            position -= 1
-        if position > 0 and line[position - 1] == ",":
-            position -= 1
-            continue
-        break
-    boundary = refs_start
-    while boundary > 0 and line[boundary - 1].isspace():
-        boundary -= 1
+    refs_start = find_reference_suffix_start(line)
+    if refs_start is None:
+        return None
+    boundary = skip_spaces_backwards(line, refs_start)
     title = line[:boundary].strip()
     refs = line[refs_start:].strip()
     if not title or not is_page_reference_list(refs):
@@ -258,13 +233,44 @@ def parse_reference_suffix(value: str) -> tuple[str, str] | None:
     return title, refs
 
 
+def skip_spaces_backwards(value: str, position: int) -> int:
+    while position > 0 and value[position - 1].isspace():
+        position -= 1
+    return position
+
+
+def find_reference_suffix_start(line: str) -> int | None:
+    position = len(line)
+    refs_start = position
+    while True:
+        position = skip_spaces_backwards(line, position)
+        final_page = parse_digits_backwards(line, position)
+        if final_page is None:
+            return None
+        _, number_start = final_page
+        position = number_start
+        position = skip_spaces_backwards(line, position)
+        if position > 0 and line[position - 1] in "-–":
+            position -= 1
+            position = skip_spaces_backwards(line, position)
+            first_page = parse_digits_backwards(line, position)
+            if first_page is None:
+                return None
+            _, position = first_page
+        refs_start = position
+        position = skip_spaces_backwards(line, position)
+        if position > 0 and line[position - 1] == ",":
+            position -= 1
+            continue
+        return refs_start
+
+
 def extract_index(pdf: Path, first: int, last: int, edition: str) -> dict[str, dict[str, str]]:
-    pages = bbox_pages(pdf, first, last)
     entries: dict[str, dict[str, str]] = {}
     partial = EMPTY
     # Preserve page order and the two-column reading flow. A wrapped index title
     # can continue from the bottom of a right column onto the next page's left.
-    for page in pages:
+    for page in bbox_pages(pdf, first, last):
         page_columns: list[list[str]] = [[], []]
         for side, line in indexed_columns(page, edition == EDITION_2017):
             if line in INDEX_HEADERS or (line and all(is_digit(char) for char in line)):
@@ -272,51 +278,53 @@ def extract_index(pdf: Path, first: int, last: int, edition: str) -> dict[str, d
             page_columns[side].append(line)
         for lines in page_columns:
             for line in lines:
-                partial = f"{partial} {line}".strip()
-                if edition == EDITION_2017:
-                    separator = partial.rfind("..")
-                    if separator < 0:
-                        continue
-                    title = partial[:separator].strip(" .")
-                    refs = partial[separator + 2 :].strip()
-                    if not title or not is_page_reference_list(refs):
-                        continue
-                else:
-                    parsed = parse_reference_suffix(partial)
-                    if not parsed:
-                        continue
-                    title, refs = parsed
+                partial = append_index_line(partial, line)
+                parsed = parse_index_entry(partial, edition)
+                if parsed is None:
+                    continue
                 partial = EMPTY
-                if title.casefold() in INDEX_HEADERS_CASEFOLDED:
-                    continue
-                key = normalized(title)
-                if not key:
-                    continue
-                if key in entries:
-                    old = entries[key][PRINTED_PAGES_FIELD]
-                    entries[key][PRINTED_PAGES_FIELD] = COMMA_SPACE.join(dict.fromkeys([old, refs]))
-                else:
-                    entries[key] = {TITLE_FIELD: title, PRINTED_PAGES_FIELD: refs}
+                add_index_entry(entries, *parsed)
     if partial:
         print(f"Unparsed {edition} index tail: {partial}", file=sys.stderr)
     return entries
 
 
+def append_index_line(partial: str, line: str) -> str:
+    return f"{partial} {line}".strip()
+
+
+def parse_index_entry(partial: str, edition: str) -> tuple[str, str] | None:
+    if edition == EDITION_2017:
+        separator = partial.rfind("..")
+        if separator < 0:
+            return None
+        title = partial[:separator].strip(" .")
+        refs = partial[separator + 2 :].strip()
+        return (title, refs) if title and is_page_reference_list(refs) else None
+    return parse_reference_suffix(partial)
+
+
+def add_index_entry(entries: dict[str, dict[str, str]], title: str, refs: str) -> None:
+    if title.casefold() in INDEX_HEADERS_CASEFOLDED:
+        return
+    key = normalized(title)
+    if not key:
+        return
+    if key in entries:
+        old = entries[key][PRINTED_PAGES_FIELD]
+        entries[key][PRINTED_PAGES_FIELD] = COMMA_SPACE.join(dict.fromkeys([old, refs]))
+        return
+    entries[key] = {TITLE_FIELD: title, PRINTED_PAGES_FIELD: refs}
+
+
 def extract_toc(pdf: Path, first: int, last: int, edition: str) -> list[tuple[int, str]]:
-    rows: list[tuple[int, float, str]] = []
-    for page in bbox_pages(pdf, first, last):
-        for x, line in line_values(page):
-            if line in TOC_HEADERS:
-                continue
-            parsed = dotted_reference_suffix(line)
-            if parsed:
-                title, references = parsed
-                page_ref = parse_page_reference_part(references)
-                if page_ref:
-                    rows.append((page_ref[0], x, title))
-    rows.sort(key=lambda item: item[0])
+    rows = read_toc_rows(pdf, first, last, TOC_HEADERS)
     if edition == EDITION_2014:
         return [(page, title) for page, _, title in rows]
+    return chapter_toc_rows(rows)
+
+
+def chapter_toc_rows(rows: list[tuple[int, float, str]]) -> list[tuple[int, str]]:
     result: list[tuple[int, str]] = []
     chapter = EMPTY
     for page, x, title in rows:
@@ -327,10 +335,15 @@ def extract_toc(pdf: Path, first: int, last: int, edition: str) -> list[tuple[in
 
 
 def extract_toc_candidates(pdf: Path, first: int, last: int) -> dict[str, dict[str, str]]:
+    rows = read_toc_rows(pdf, first, last, {"Table of Contents"})
+    return merge_toc_candidates(rows)
+
+
+def read_toc_rows(pdf: Path, first: int, last: int, headers: set[str]) -> list[tuple[int, float, str]]:
     rows: list[tuple[int, float, str]] = []
     for page in bbox_pages(pdf, first, last):
         for x, line in line_values(page):
-            if line == "Table of Contents":
+            if line in headers:
                 continue
             parsed = dotted_reference_suffix(line)
             if parsed:
@@ -339,6 +352,10 @@ def extract_toc_candidates(pdf: Path, first: int, last: int) -> dict[str, dict[s
                 if page_ref:
                     rows.append((page_ref[0], x, title))
     rows.sort(key=lambda item: item[0])
+    return rows
+
+
+def merge_toc_candidates(rows: list[tuple[int, float, str]]) -> dict[str, dict[str, str]]:
     result: dict[str, dict[str, str]] = {}
     chapter = EMPTY
     for page, x, title in rows:
@@ -394,26 +411,33 @@ def has_intervening_character(text: str, left: str, right: str) -> bool:
     lowered = text.casefold()
     position = lowered.find(left)
     while position >= 0:
-        before = lowered[position - 1] if position else SPACE
-        middle = position + len(left)
-        end = middle
-        if end < len(lowered) and lowered[end].isspace():
-            while end < len(lowered) and lowered[end].isspace():
-                end += 1
-        elif end < len(lowered) and lowered[end] != HYPHEN:
-            end += 1
-        elif end < len(lowered):
-            end += 1
-        after = lowered[end - 1] if end else SPACE
-        if (
-            not before.isalnum()
-            and end > middle
-            and lowered.startswith(right, end)
-            and (end + len(right) == len(lowered) or not lowered[end + len(right)].isalnum())
-        ):
+        if has_intervening_match(lowered, position, left, right):
             return True
         position = lowered.find(left, position + 1)
     return False
+
+
+def has_intervening_match(text: str, position: int, left: str, right: str) -> bool:
+    before = text[position - 1] if position else SPACE
+    end = skip_intervening_characters(text, position + len(left))
+    right_end = end + len(right)
+    return (
+        not before.isalnum()
+        and end > position + len(left)
+        and text.startswith(right, end)
+        and (right_end == len(text) or not text[right_end].isalnum())
+    )
+
+
+def skip_intervening_characters(text: str, position: int) -> int:
+    if position >= len(text):
+        return position
+    if text[position].isspace():
+        while position < len(text) and text[position].isspace():
+            position += 1
+    else:
+        position += 1
+    return position
 
 
 def has_colon_marker(text: str, choices: tuple[str, ...]) -> bool:
@@ -464,7 +488,7 @@ def manipulation_tags(text: str) -> list[str]:
     ):
         tags.append("zips/hand-across")
     if any(word.startswith("steal") for word in words) or "manipulator" in words:
-        tags.append("manipulator action")
+        tags.append(MANIPULATOR_ACTION)
     if (
         any("hijack" in word for word in words)
         or has_lo_jack
@@ -477,7 +501,7 @@ def manipulation_tags(text: str) -> list[str]:
 def manipulation_classification(tags: list[str], sequence_data: str) -> tuple[str, str]:
     if "pattern-transition manipulation" in tags:
         return "manipulation", "pattern transition / hijack"
-    if "manipulator action" in tags:
+    if MANIPULATOR_ACTION in tags:
         return UNCLEAR, "possible external manipulator is used to enter/describe the pattern"
     if sequence_data == YES:
         return "not_detected_in_extracted_text", "explicit siteswap/Prechac/throw sequence; no manipulator signal in extracted text (not visually reviewed)"
@@ -485,7 +509,7 @@ def manipulation_classification(tags: list[str], sequence_data: str) -> tuple[st
 
 
 def model_candidate(tags: list[str], sequence_data: str) -> str:
-    unmodeled = {"movement/walking", "holds", "zips/hand-across", "manipulator action"}
+    unmodeled = {"movement/walking", "holds", "zips/hand-across", MANIPULATOR_ACTION}
     if any(tag in unmodeled for tag in tags):
         return NO
     return YES if sequence_data == YES else UNCLEAR
@@ -504,7 +528,6 @@ def evidence(edition: str, printed_pages: str, text_by_page: dict[int, str], ima
     sequence_markers = has_sequence_marker(text)
     sequence_text = YES if sequence_markers else NO
     sequence_data = YES if sequence_markers else UNCLEAR
-    words = text_words(text)
     tags = manipulation_tags(text)
     manipulation, kind = manipulation_classification(tags, sequence_data)
     representable = model_candidate(tags, sequence_data)
@@ -701,18 +724,13 @@ def write_inventory(
             writer.writerow(csv_row(key, local.get(key), current.get(key), contexts, hashes))
 
 
-def main() -> None:
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: build_highgate_inventory.py /path/to/2017-highgate.pdf")
-    current_pdf = Path(sys.argv[1]).resolve()
+def build_contexts(current_pdf: Path):
     local, local_toc_candidates, local_toc, local_toc_only = catalog_for_edition(
         LOCAL_PDF, EDITION_2014, (239, 246), (2, 3)
     )
     current, current_toc_candidates, current_toc, current_toc_only = catalog_for_edition(
         current_pdf, EDITION_2017, (332, 340), (3, 17)
     )
-    print_candidate_counts(local, current, local_toc_only, current_toc_only)
-
     local_text = pdf_text_pages(LOCAL_PDF, 246, 0)
     current_text = pdf_text_pages(current_pdf, 339, 1)
     contexts = {
@@ -720,6 +738,15 @@ def main() -> None:
         EDITION_2017: (current_text, image_pages(current_pdf), current_toc, current_toc_candidates),
     }
     hashes = {EDITION_2014: sha(LOCAL_PDF), EDITION_2017: sha(current_pdf)}
+    print_candidate_counts(local, current, local_toc_only, current_toc_only)
+    return local, current, contexts, hashes
+
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        raise SystemExit("Usage: build_highgate_inventory.py /path/to/2017-highgate.pdf")
+    current_pdf = Path(sys.argv[1]).resolve()
+    local, current, contexts, hashes = build_contexts(current_pdf)
     write_inventory(local, current, contexts, hashes)
 
 
