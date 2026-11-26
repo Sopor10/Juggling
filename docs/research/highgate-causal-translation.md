@@ -36,6 +36,7 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | `highgate-passpasszipfeedingthreecount`, `highgate-passpasszipfeedingfrenchthreecount` | Three-person pass pass zip feeds | 2017 printed p. 120; 2014 PDF p. 80 | Three lanes and 18 events per graph; backward zip edges and source heights are preserved, with the index/body page mismatch recorded. |
 | Seven presets from 2017 printed pp. 88–90 | Classic six-count popcorn; six-, five-, and four-count popcorn variants with heffs/double passes | 2014 PDF pp. 57–59 | Every event and edge in the seven diagrams is transcribed and checked; patterns that require simultaneous throws remain outside the import. |
 | Five three-person feast presets from 2017 printed pp. 135, 137, 140 | JED's nightmare, Anti Quasar, Double Three Count, Trifle, Trilogy | 2014 PDF pp. 90–93 | Three source sequences and two explicit lane-compositions become 288 events and edges; all are checked by the catalog validity test. |
+| `highgate-threepersonfourcountdropbackline` | Three-person four-count drop-back line | 2017 printed p. 154; 2014 PDF p. 103 | The source says the causal diagram matches Four count triangle on ins; formation and walking path are recorded as spatial notes. |
 | `highgate-jimsinvertedbookendsfeed` | Jim's inverted bookends feed | 2017 printed p. 122; 2014 printed p. 81 | Three juggler lanes, half-beat phase, full 34-beat hand period, holds, and pass destinations are transcribed. Holds and hurry are represented geometrically, not as text labels. |
 | Eleven three-person feast presets from 2017 printed pp. 137–140 | Chocolate bar, Bookends, Inverted Bookends, Two count, and One count feasts | 2014 PDF pp. 91–93 | Each translated graph has three juggler lanes, direct pass destinations, and explicit cyclic event positions. All pass editor-state validation. |
 | `highgate-threepersoncountdownfeast` | Three person countdown feast | 2017 printed p. 141; 2014 PDF p. 94 | Three 24-event sequences are matched against the source diagram; all pass destinations, hand alternation, and cycle offsets are checked. |
@@ -80,32 +81,25 @@ The causal diagrams on 2017 printed pp. 20–29 (PDF pp. 21–30) and matching
 combination tricks, seven-club three count, double self (53), and triple-pass
 hold (642) are ordinary passing patterns with explicit causal diagrams; these
 remain open until their edges are transcribed and checked. French three count
-and the late single/double are transcribed above. The source reveals concrete
-current model limits:
+and the late single/double are transcribed above. Signed cycle offsets and
+explicit source heights are now supported by the editor; the ordinary zip/gap
+patterns below remain open because their source edges still need transcription.
+Simultaneous same-time throws remain a layout limitation:
 
-- **Four four one** uses a one-beat backward arrow for a zip. **Four four four
-  zero** uses a two-beat backward arrow for a gap. `SynchronizeHeights` raises
-  negative cycle offsets until throw heights are nonnegative, which turns a
-  backward edge into a longer forward edge. The source diagram cannot be
-  preserved by the current state normalizer.
 - **Simultaneous heffs** has two events by the same juggler at one time, one in
   each hand. The editor has one timeline lane per juggler, so those nodes would
   overlap. Rendering needs separate hand lanes or an equivalent same-time
   layout first. The same issue affects Techno, Scratch your head, Oddz godz,
   and simultaneous one-count Brolly variants.
-- The zip in **Double triple zip** has the same backward-edge requirement as
-  Tarim's 441. The gap in Four four four zero is a separate empty-hand event;
-  its source diagram also points backward two beats. These patterns need the
-  edge model to preserve direction and distinguish a gap from a throw.
-
-All of these patterns are visually confirmed as ordinary two-person passing.
-Nine candidate rows are affected by these model limits (the self triple also
-contains a zip); they remain in the inventory with their model requirement
-and source pages rather than being dropped.
+**Four four one**, **Four four four zero**, **Double triple zip**, and other zip
+patterns can now preserve their signed arrow direction. Their exact source
+endpoints still need transcription; a gap must also remain distinguishable
+from a throw in the pattern description. The reviewed rows are ordinary
+two-person passing unless separately classified otherwise.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 211 rows have visual source review: 174 translated rows map to 177 presets, 24 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 708 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 212 rows have visual source review: 175 translated rows map to 178 presets, 24 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 707 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 

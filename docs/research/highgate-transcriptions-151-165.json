@@ -1039,5 +1039,205 @@
         "Prechac and action sequence"
       ]
     }
+  },
+  {
+    "id": "highgate-threepersonfourcountdropbackline",
+    "label": "Three person four count drop-back line",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 154 / PDF p. 155; the source explicitly says this has the same causal diagram as Four count triangle on ins. Compared with The Highgate Collection (2014), printed p. 103.",
+    "notation": "3p333. Same causal graph as Four count triangle on ins; Anne passes to Clare, Ben passes over his head to Anne, Clare passes to Ben. The drop-back trajectory and formation are spatial details outside the causal throw graph.",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 154,
+        "pdfPage": 155
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 103,
+        "pdfPage": 103
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-threepersonfourcountdropbackline"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "page": 155
+        },
+        {
+          "edition": "2014",
+          "page": 103
+        }
+      ],
+      "diagramComparison": "The causal-diagram edges are explicitly stated to be the same as Four count triangle on ins."
+    },
+    "notes": [
+      "The source explicitly identifies this causal diagram with Four count triangle on ins. The overhead drop-back trajectory and line formation are not throw-causality edges."
+    ],
+    "modelLimits": [
+      "Formation and overhead drop-back flight path are spatial movement, not represented in the causal throw diagram."
+    ],
+    "reviewStatus": {
+      "visualReview": "Body description and diagram checked against both editions; source explicitly says same causal graph as Four count triangle on ins.",
+      "manipulationReview": "No manipulator; ordinary three-person passing pattern.",
+      "modelCheck": "All causal throw events are representable. Formation and overhead drop-back trajectory remain source-note metadata."
+    }
   }
 ]

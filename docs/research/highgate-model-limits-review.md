@@ -1,12 +1,12 @@
 # Highgate causal-diagram model-limit review
 
-This note audits the 24 inventory rows currently marked `model extension required; source retained` against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed.
+This note audits Highgate entries against the editor state, SVG renderer, table adapter, and Passist/JIF adapter. It distinguishes limitations of the static causal editor from limitations of playback/export. A row marked as a model limit is not evidence that its source diagram has been fully transcribed. Since the first audit, the signed-offset editor work has landed; read the implementation-status updates below before interpreting the original inventory labels.
 
 ## Findings and priority
 
-### P0 — Preserve signed causal-cycle offsets
+### P0 — Preserve signed causal-cycle offsets (implemented)
 
-The JSON and token state can store `CycleOffset` values from −1000 to 1000, and the SVG path renderer places the endpoint at `target.StartTime + (sourceCycle + edge.CycleOffset) * CycleLength`. However, `SynchronizeHeights()` increments an offset while the height derived from it is negative. The loader already detects this mutation and rejects a preset, but the editor's normalization still changes the source arrow. For Highgate zips and gaps, this can move a backward arrow into a later cycle and turn the diagram into a different graph.
+The JSON and token state can store `CycleOffset` values from −1000 to 1000, and the SVG path renderer places the endpoint at `target.StartTime + (sourceCycle + edge.CycleOffset) * CycleLength`. The earlier implementation incremented an offset when its derived height was negative, which changed backward arrows. That behavior is fixed: `SynchronizeHeights()` now preserves the signed offset and recalculates only non-explicit heights. Zip/gap rows still require exact source transcription, but backward timing is no longer an editor-model blocker.
 
 Inventory entries whose notes explicitly require backward arrows are:
 
@@ -24,7 +24,7 @@ Inventory entries whose notes explicitly require backward arrows are:
 
 **Implementation status:** the editor state now uses compact link format `j4` and stores an explicit-height flag per throw. `SynchronizeHeights()` preserves signed edge offsets; graph-derived heights are recalculated only for non-explicit throws. Older `j3`, `j2`, `j1`, and JSON links migrate through the previous positive-height normalization. Manual node drags clamp to timing positions that keep derived heights valid; arrow retargeting remains the operation that changes the causal destination/offset.
 
-State tests now cover negative-offset round trips, explicit-height round trips, legacy-link migration, and drag clamping. The Highgate JSON importer accepts an explicit nonnegative `height` plus `heightIsExplicit: true` on source throw nodes, and rejects a missing/negative explicit height. The 141 `Siteswaps.Test` tests and the four `CausalDiagramArrowDragTests` pass. **This does not yet make the Highgate zip/gap rows translated:** no source-reviewed explicit-height graph has been imported yet, and source diagrams must be transcribed and visually checked before those rows can leave the retained/model-review status. A rendered SVG assertion for the leftward target is also still needed.
+State tests cover negative-offset round trips, explicit-height round trips, legacy-link migration, and drag clamping. The Highgate JSON importer accepts an explicit nonnegative `height` plus `heightIsExplicit: true` on source throw nodes, and rejects a missing/negative explicit height. Current unit tests exercise every imported preset's editor validity; the three-person *Pass pass zip feeding* diagrams also exercise backward zip edges with source heights. The signed-offset blocker is resolved, while untranscribed zip/gap rows still need source diagrams checked edge by edge.
 
 ### P1 — Allow distinct events at the same juggler and time
 
