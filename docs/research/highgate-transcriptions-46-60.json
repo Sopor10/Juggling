@@ -532,5 +532,1937 @@
       }
     ],
     "reviewStatus": "Visually checked against 2017 printed p. 47 and 2014 printed p. 27; direct C# state and cycle-offset validation passed. Every node is a pass to the partner; all four causal edges are present."
+  },
+  {
+    "id": "highgate-whynot",
+    "stable_id": "highgate-whynot",
+    "label": "Why not?",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 58 / PDF p. 59; 2014 PDF p. 32. Diagram and text compared in both editions.",
+    "notation": "Siteswap 77862; Prechac 3.5p413.5p3. Anne: pass heff zip pass self; Ben: pass self pass heff zip.",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5,
+        "height": 1,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-A-R1",
+        "fromThrowId": "A-R1",
+        "toThrowId": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L1",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L1",
+        "fromThrowId": "B-L1",
+        "toThrowId": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R2",
+        "fromThrowId": "A-R2",
+        "toThrowId": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R2",
+        "fromThrowId": "B-R2",
+        "toThrowId": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "fromThrowId": "A-L2",
+        "toThrowId": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R3",
+        "fromThrowId": "A-R3",
+        "toThrowId": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R3",
+        "fromThrowId": "B-R3",
+        "toThrowId": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L3",
+        "fromThrowId": "A-L3",
+        "toThrowId": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L3",
+        "fromThrowId": "B-L3",
+        "toThrowId": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R4",
+        "fromThrowId": "A-R4",
+        "toThrowId": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R4",
+        "fromThrowId": "B-R4",
+        "toThrowId": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L4",
+        "fromThrowId": "A-L4",
+        "toThrowId": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L4",
+        "fromThrowId": "B-L4",
+        "toThrowId": "A-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R5",
+        "fromThrowId": "A-R5",
+        "toThrowId": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R5",
+        "fromThrowId": "B-R5",
+        "toThrowId": "B-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-L5",
+        "fromThrowId": "A-L5",
+        "toThrowId": "A-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L5",
+        "fromThrowId": "B-L5",
+        "toThrowId": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 58,
+        "pdfPage": 59
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 32
+      }
+    ],
+    "notes": "Anne starts at time 0; Ben starts half a beat later. Anne’s passes are straight and Ben’s passes are crossing. Each throw is linked to the next causal event at its source siteswap height; the five-throw odd period is repeated twice so hand parity returns.",
+    "variants": [
+      "Asynchronous two-person pattern; repeating five-throw sequence, represented over two periods for hand parity."
+    ],
+    "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
+    "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
+  },
+  {
+    "id": "highgate-whynotalternativestart",
+    "stable_id": "highgate-whynotalternativestart",
+    "label": "Why not? · alternative start",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 58 / PDF p. 59; 2014 PDF p. 32. Diagram and text compared in both editions.",
+    "notation": "Siteswap 78627; Prechac 3.5p33.5p41. Anne: pass self pass heff zip; Ben: heff zip pass self pass.",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-A-R1",
+        "fromThrowId": "A-R1",
+        "toThrowId": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L1",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L1",
+        "fromThrowId": "B-L1",
+        "toThrowId": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R2",
+        "fromThrowId": "A-R2",
+        "toThrowId": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R2",
+        "fromThrowId": "B-R2",
+        "toThrowId": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "fromThrowId": "A-L2",
+        "toThrowId": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R3",
+        "fromThrowId": "A-R3",
+        "toThrowId": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R3",
+        "fromThrowId": "B-R3",
+        "toThrowId": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L3",
+        "fromThrowId": "A-L3",
+        "toThrowId": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L3",
+        "fromThrowId": "B-L3",
+        "toThrowId": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R4",
+        "fromThrowId": "A-R4",
+        "toThrowId": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R4",
+        "fromThrowId": "B-R4",
+        "toThrowId": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L4",
+        "fromThrowId": "A-L4",
+        "toThrowId": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L4",
+        "fromThrowId": "B-L4",
+        "toThrowId": "A-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R5",
+        "fromThrowId": "A-R5",
+        "toThrowId": "A-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R5",
+        "fromThrowId": "B-R5",
+        "toThrowId": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-L5",
+        "fromThrowId": "A-L5",
+        "toThrowId": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L5",
+        "fromThrowId": "B-L5",
+        "toThrowId": "A-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 58,
+        "pdfPage": 59
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 32
+      }
+    ],
+    "notes": "Anne starts at time 0; Ben starts half a beat later. Anne’s passes are straight and Ben’s passes are crossing. Each throw is linked to the next causal event at its source siteswap height; the five-throw odd period is repeated twice so hand parity returns.",
+    "variants": [
+      "Asynchronous two-person pattern; repeating five-throw sequence, represented over two periods for hand parity."
+    ],
+    "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
+    "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
+  },
+  {
+    "id": "highgate-notwhy",
+    "stable_id": "highgate-notwhy",
+    "label": "Not why",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 58 / PDF p. 59; 2014 PDF p. 32. Diagram and text compared in both editions.",
+    "notation": "Siteswap 77286; Prechac 3.5p133.5p4. Anne: pass zip self pass heff; Ben: pass heff pass zip self.",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5,
+        "height": 3,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-A-R1",
+        "fromThrowId": "A-R1",
+        "toThrowId": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L1",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L1",
+        "fromThrowId": "B-L1",
+        "toThrowId": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R2",
+        "fromThrowId": "A-R2",
+        "toThrowId": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R2",
+        "fromThrowId": "B-R2",
+        "toThrowId": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "fromThrowId": "A-L2",
+        "toThrowId": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R3",
+        "fromThrowId": "A-R3",
+        "toThrowId": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R3",
+        "fromThrowId": "B-R3",
+        "toThrowId": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L3",
+        "fromThrowId": "A-L3",
+        "toThrowId": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L3",
+        "fromThrowId": "B-L3",
+        "toThrowId": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R4",
+        "fromThrowId": "A-R4",
+        "toThrowId": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R4",
+        "fromThrowId": "B-R4",
+        "toThrowId": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-L4",
+        "fromThrowId": "A-L4",
+        "toThrowId": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L4",
+        "fromThrowId": "B-L4",
+        "toThrowId": "A-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R5",
+        "fromThrowId": "A-R5",
+        "toThrowId": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R5",
+        "fromThrowId": "B-R5",
+        "toThrowId": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L5",
+        "fromThrowId": "A-L5",
+        "toThrowId": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L5",
+        "fromThrowId": "B-L5",
+        "toThrowId": "B-R2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 58,
+        "pdfPage": 59
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 32
+      }
+    ],
+    "notes": "Anne starts with a right-hand throw despite the stated starting club counts; Ben starts half a beat later. Anne’s passes are straight and Ben’s passes are crossing. Each throw is linked to the next causal event at its source siteswap height; the five-throw odd period is repeated twice so hand parity returns.",
+    "variants": [
+      "Asynchronous two-person pattern; repeating five-throw sequence, represented over two periods for hand parity."
+    ],
+    "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
+    "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
+  },
+  {
+    "id": "highgate-notwhyalternativestart",
+    "stable_id": "highgate-notwhyalternativestart",
+    "label": "Not why · alternative start",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 60 / PDF p. 61; 2014 PDF p. 33. Diagram and text compared in both editions.",
+    "notation": "Siteswap 72867; Prechac 3.5p43.5p13. Ben: pass heff pass zip self; Anne: self pass heff pass zip.",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 6.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 7.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 8.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 9.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-B-R1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L1",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L1",
+        "fromThrowId": "B-L1",
+        "toThrowId": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R1",
+        "fromThrowId": "A-R1",
+        "toThrowId": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R2",
+        "fromThrowId": "B-R2",
+        "toThrowId": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "fromThrowId": "A-L2",
+        "toThrowId": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R2",
+        "fromThrowId": "A-R2",
+        "toThrowId": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R3",
+        "fromThrowId": "B-R3",
+        "toThrowId": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L3",
+        "fromThrowId": "A-L3",
+        "toThrowId": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L3",
+        "fromThrowId": "B-L3",
+        "toThrowId": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R3",
+        "fromThrowId": "A-R3",
+        "toThrowId": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R4",
+        "fromThrowId": "B-R4",
+        "toThrowId": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-L4",
+        "fromThrowId": "A-L4",
+        "toThrowId": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L4",
+        "fromThrowId": "B-L4",
+        "toThrowId": "A-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R4",
+        "fromThrowId": "A-R4",
+        "toThrowId": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R5",
+        "fromThrowId": "B-R5",
+        "toThrowId": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L5",
+        "fromThrowId": "A-L5",
+        "toThrowId": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L5",
+        "fromThrowId": "B-L5",
+        "toThrowId": "B-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R5",
+        "fromThrowId": "A-R5",
+        "toThrowId": "B-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 60,
+        "pdfPage": 61
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 33
+      }
+    ],
+    "notes": "Ben starts at time 0; Anne starts one and a half beats later. Ben’s passes are crossing and Anne’s passes are straight. Each throw is linked to the next causal event at its source siteswap height; the five-throw odd period is repeated twice so hand parity returns.",
+    "variants": [
+      "Asynchronous two-person pattern; repeating five-throw sequence, represented over two periods for hand parity."
+    ],
+    "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
+    "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
+  },
+  {
+    "id": "highgate-maybe",
+    "stable_id": "highgate-maybe",
+    "label": "Maybe",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 60 / PDF p. 61; 2014 PDF p. 33. Diagram and text compared in both editions.",
+    "notation": "Siteswap 78672; Prechac 3.5p3143.5p. Anne: pass self zip heff pass; Ben: heff pass pass self zip.",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5,
+        "height": 1,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-A-R1",
+        "fromThrowId": "A-R1",
+        "toThrowId": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L1",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L1",
+        "fromThrowId": "B-L1",
+        "toThrowId": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R2",
+        "fromThrowId": "A-R2",
+        "toThrowId": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R2",
+        "fromThrowId": "B-R2",
+        "toThrowId": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "fromThrowId": "A-L2",
+        "toThrowId": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R3",
+        "fromThrowId": "A-R3",
+        "toThrowId": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R3",
+        "fromThrowId": "B-R3",
+        "toThrowId": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L3",
+        "fromThrowId": "A-L3",
+        "toThrowId": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L3",
+        "fromThrowId": "B-L3",
+        "toThrowId": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R4",
+        "fromThrowId": "A-R4",
+        "toThrowId": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R4",
+        "fromThrowId": "B-R4",
+        "toThrowId": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-L4",
+        "fromThrowId": "A-L4",
+        "toThrowId": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L4",
+        "fromThrowId": "B-L4",
+        "toThrowId": "A-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R5",
+        "fromThrowId": "A-R5",
+        "toThrowId": "A-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R5",
+        "fromThrowId": "B-R5",
+        "toThrowId": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-L5",
+        "fromThrowId": "A-L5",
+        "toThrowId": "B-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L5",
+        "fromThrowId": "B-L5",
+        "toThrowId": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 60,
+        "pdfPage": 61
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 33
+      }
+    ],
+    "notes": "Anne starts at time 0; Ben starts half a beat later. Anne’s passes are straight and Ben’s passes are crossing. Each throw is linked to the next causal event at its source siteswap height; the five-throw odd period is repeated twice so hand parity returns.",
+    "variants": [
+      "Asynchronous two-person pattern; repeating five-throw sequence, represented over two periods for hand parity."
+    ],
+    "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
+    "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
+  },
+  {
+    "id": "highgate-maybealternativestart",
+    "stable_id": "highgate-maybealternativestart",
+    "label": "Maybe · alternative start",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 60 / PDF p. 61; 2014 PDF p. 33. Diagram and text compared in both editions.",
+    "notation": "Siteswap 72786; Prechac 3.5p3.5p314. Ben: pass pass self zip heff; Anne: heff pass pass self zip.",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 6.5,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 7.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.0,
+        "height": 1,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 8.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 9.5,
+        "height": 3,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-B-R1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L1",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L1",
+        "fromThrowId": "B-L1",
+        "toThrowId": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R1",
+        "fromThrowId": "A-R1",
+        "toThrowId": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R2",
+        "fromThrowId": "B-R2",
+        "toThrowId": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "fromThrowId": "A-L2",
+        "toThrowId": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R2",
+        "fromThrowId": "A-R2",
+        "toThrowId": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R3",
+        "fromThrowId": "B-R3",
+        "toThrowId": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L3",
+        "fromThrowId": "A-L3",
+        "toThrowId": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-L3",
+        "fromThrowId": "B-L3",
+        "toThrowId": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-R3",
+        "fromThrowId": "A-R3",
+        "toThrowId": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R4",
+        "fromThrowId": "B-R4",
+        "toThrowId": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L4",
+        "fromThrowId": "A-L4",
+        "toThrowId": "A-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L4",
+        "fromThrowId": "B-L4",
+        "toThrowId": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R4",
+        "fromThrowId": "A-R4",
+        "toThrowId": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-R5",
+        "fromThrowId": "B-R5",
+        "toThrowId": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L5",
+        "fromThrowId": "A-L5",
+        "toThrowId": "B-R2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-B-L5",
+        "fromThrowId": "B-L5",
+        "toThrowId": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-A-R5",
+        "fromThrowId": "A-R5",
+        "toThrowId": "A-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 60,
+        "pdfPage": 61
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 33
+      }
+    ],
+    "notes": "Ben starts at time 0; Anne starts one and a half beats later. Ben’s passes are crossing and Anne’s passes are straight. Each throw is linked to the next causal event at its source siteswap height; the five-throw odd period is repeated twice so hand parity returns.",
+    "variants": [
+      "Asynchronous two-person pattern; repeating five-throw sequence, represented over two periods for hand parity."
+    ],
+    "modelLimits": "No simultaneous same-juggler throws. Source heights are explicit because layout time and causal throw value are independent in the diagram.",
+    "reviewStatus": "Source text, hand starts, sequences, and diagram arrows checked against the 2017 and 2014 pages; every source event has one resolved causal edge and all edge cycle offsets are exact."
   }
 ]

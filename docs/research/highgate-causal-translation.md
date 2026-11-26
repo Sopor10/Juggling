@@ -31,6 +31,8 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | Six presets from 2017 printed pp. 106–108 | Three Seven club Not Why variations, Seven club Maybe, Copenhagen countdown, Oslo countdown | 2014 printed pp. 68–69 | Arrow destinations, hands, phase, sequence, and notation are visually checked against both editions. |
 | Eight presets from 2017 printed pp. 94–97 | Seven count popcorn patterns with double passes, heffs, single passes, and triple-self variations | 2014 PDF pp. 61–63 | The seven-event cycles are doubled to preserve hand parity; all eight graphs pass editor validity and retain source offsets after height synchronization. |
 | Three presets from 2017 printed pp. 76, 80 | Jim's Fizz Buzz and asynchronous Bookends/Brainstorm, plus Seven club one count on singles | 2014 Fizz Buzz / base pattern are related references; see per-pattern links | Full causal lanes and holds are retained; source offsets pass synchronization. |
+| Six presets from 2017 printed pp. 58–60 | Why not? and Not why with alternative starts; Maybe and its alternative start | 2014 PDF pp. 32–33 | Ten-beat period-five sequences are doubled to preserve hand parity; all 120 edges retain their source heights and cycle offsets. |
+| `highgate-777786`, `highgate-777867` | Seven-club pass pass self variants | 2017 printed pp. 83–84; 2014 PDF p. 53 for 777786 | Both diagrams use a six-beat cycle with twelve events and twelve checked edges; the 2017-only variant is separately sourced. |
 | `highgate-jimsinvertedbookendsfeed` | Jim's inverted bookends feed | 2017 printed p. 122; 2014 printed p. 81 | Three juggler lanes, half-beat phase, full 34-beat hand period, holds, and pass destinations are transcribed. Holds and hurry are represented geometrically, not as text labels. |
 | Eleven three-person feast presets from 2017 printed pp. 137–140 | Chocolate bar, Bookends, Inverted Bookends, Two count, and One count feasts | 2014 PDF pp. 91–93 | Each translated graph has three juggler lanes, direct pass destinations, and explicit cyclic event positions. All pass editor-state validation. |
 | `highgate-threepersoncountdownfeast` | Three person countdown feast | 2017 printed p. 141; 2014 PDF p. 94 | Three 24-event sequences are matched against the source diagram; all pass destinations, hand alternation, and cycle offsets are checked. |
@@ -100,7 +102,7 @@ and source pages rather than being dropped.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 190 rows have visual source review: 152 translated rows map to 155 presets, 24 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 729 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 197 rows have visual source review: 160 translated rows map to 163 presets, 24 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 722 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 

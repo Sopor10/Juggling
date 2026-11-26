@@ -66,6 +66,14 @@ public class CausalDiagramEditorStateTests
         "highgate-sevencountpopcornwithsinglepassesand534",
         "highgate-sevencountpopcornwithsinglepassesand453",
         "highgate-sevencountpopcornwithsinglepassesandheffs",
+        "highgate-whynot",
+        "highgate-whynotalternativestart",
+        "highgate-notwhy",
+        "highgate-notwhyalternativestart",
+        "highgate-maybe",
+        "highgate-maybealternativestart",
+        "highgate-777786",
+        "highgate-777867",
         "highgate-doublehold42",
         "highgate-7778686",
         "highgate-7786786",
@@ -350,7 +358,7 @@ public class CausalDiagramEditorStateTests
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
 
-        presets.Should().HaveCount(155);
+        presets.Should().HaveCount(163);
         presets.Select(preset => preset.Id).Should().BeEquivalentTo(ReviewedHighgatePresetIds);
         var threeCount = presets.Single(preset => preset.Id == "highgate-three-count").Create();
         threeCount.CycleLength.Should().Be(6m);
@@ -358,6 +366,24 @@ public class CausalDiagramEditorStateTests
         threeCount.Throws.Should().HaveCount(12);
         threeCount.CausalEdges.Should().HaveCount(12);
         threeCount.Throws.Select(item => item.Height).Should().OnlyContain(height => height == 3m);
+        foreach (
+            var patternId in new[]
+            {
+                "highgate-whynot",
+                "highgate-whynotalternativestart",
+                "highgate-notwhy",
+                "highgate-notwhyalternativestart",
+                "highgate-maybe",
+                "highgate-maybealternativestart",
+            }
+        )
+        {
+            var periodFivePattern = presets.Single(preset => preset.Id == patternId).Create();
+            periodFivePattern.Throws.Should().HaveCount(20, patternId);
+            periodFivePattern.CausalEdges.Should().HaveCount(20, patternId);
+            periodFivePattern.Throws.Should().OnlyContain(item => item.HeightIsExplicit, patternId);
+            periodFivePattern.IsValidForEditor().Should().BeTrue(patternId);
+        }
         var fiveClub = presets
             .Single(preset => preset.Id == "highgate-fiveclubthreecount")
             .Create();

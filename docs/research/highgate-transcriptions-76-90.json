@@ -1350,5 +1350,346 @@
     "modelLimitations": [
       "Starting club counts and pass spin/style are not separate editor fields; they are retained in the source notation."
     ]
+  },
+  {
+    "id": "highgate-777786",
+    "label": "777786",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed pp. 83–84 / PDF pp. 84–85; compared with The Highgate Collection (2014), PDF pp. 52–53. Diagram and the per-juggler throw sequences agree.",
+    "notation": "Siteswap 777786; Anne throws pass, pass, heff with straight passes; Ben throws pass, pass, self with crossing passes. The three-beat siteswap period is doubled to a six-beat graph cycle so each hand keeps its parity.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R5",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R5",
+        "to": "A-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L6",
+        "to": "A-L4",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R3",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 83,
+        "pdfPage": 84
+      },
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 84,
+        "pdfPage": 85
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 53
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-777786"
+    ]
+  },
+  {
+    "id": "highgate-777867",
+    "label": "777867",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 84 / PDF p. 85. Diagram and the per-juggler throw sequences agree; no matching 2014 entry was located.",
+    "notation": "Siteswap 777867; Anne throws pass, pass, self with straight passes; Ben throws pass, heff, pass with crossing passes. The three-beat siteswap period is doubled to a six-beat graph cycle so each hand keeps its parity.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R5",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L6",
+        "to": "A-L4",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 84,
+        "pdfPage": 85
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-777867"
+    ]
   }
 ]
