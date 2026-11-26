@@ -56,6 +56,7 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | Three ten-club triangle presets from 2017 printed p. 215 | One count with single/double passes #1/#2; Pass pass self triangle | 2014 printed p. 150 | Row destinations and cycle links are transcribed; the data notes that the editor graph does not encode double-pass multiplicity or straight/crossed trajectory. |
 | Four four-person feast presets from 2017 printed pp. 245–246 | Four-, Three-, Two-, and One-count feasts | 2014 PDF pp. 173–174 | All event rows, hand labels, and causal edges are cross-checked against both editions. |
 | `highgate-londonsburning` | London's burning | 2017 printed p. 272; 2014 printed p. 192 | Four 24-event alternating-hand rows and phase-shifted song-round cycles are represented; spatial layout remains source notation. |
+| Nine walking and formation patterns from 2017 printed pp. 279–285 | Rotator, Three Leaf Clover, Pistons, Flying Trapeze, Benzene Ring, Dosado, Sticky Triangle, The Weave, Dresser Drawer Weave | 2014 PDF pp. 197–202 | Repeating throws and role rotations are encoded across each full graph cycle; walking and spatial arrangement remain source notation. |
 | Four four-person four-count route presets from 2017 printed pp. 257–259 | Drop-back line #1, Four count Y, Drop-back Y, Drop-back line #2 | 2014 PDF pp. 182–183 | Same route graph appears under multiple named formations; each catalog entry remains selectable, while spatial movement is noted separately. |
 | Ten presets from 2017 printed pp. 293–299 | Rotating Y; nine asynchronous thirteen-club feeds from Two count through Inverted Bookends | 2014 PDF pp. 211–216 | All event phases, hands, and edges are represented; spatial movement cases are listed separately in the research note. |
 | `highgate-thirteenclubfourcountbox` | Thirteen club four count box | 2017 printed p. 310; 2014 PDF p. 221 | Four event rows and eight pass routes are translated; the 2014 sequence is checked, while its diagram visual review remains open. |
@@ -103,7 +104,7 @@ two-person passing unless separately classified otherwise.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 238 rows have visual source review: 202 translated rows map to 205 presets, 23 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 681 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 247 rows have visual source review: 211 translated rows map to 214 presets, 23 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 672 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 
