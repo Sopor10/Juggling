@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.JSInterop
 @using Siteswaps.Components.Layout
+@using Siteswaps.Components.Details
 @using Siteswaps.Components.Wizard
 @using Siteswaps.Components.CausalDiagram
 @using Siteswaps.Jif.Components.Navigation
@@ -26,23 +27,33 @@
       <WizardStepPanel StepIndex="0" IsActive="@(!Embedded && _wizardStep == 1)">
         <section class="editor-setup">
           <div class="editor-setup-grid">
-            <label class="editor-field editor-setup-preset">Diagrammvorlage
-              <select value="@_preset" @onchange="LoadSetupPreset">
-                  <option value="custom">Eigenes Diagramm</option>
-                  <optgroup label="Asynchron">
-                      @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
-                      {
-                          <option value="@preset.Id">@preset.Label</option>
-                      }
-                  </optgroup>
-                  <optgroup label="Synchron">
-                      @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
-                      {
-                          <option value="@preset.Id">@preset.Label</option>
-                      }
-                  </optgroup>
-              </select>
-            </label>
+            <section class="editor-field editor-setup-preset" aria-label="Diagrammvorlage">
+              <span>Diagrammvorlage</span>
+              <div class="editor-preset-list" role="group" aria-label="Vorlagen auswählen">
+                <h3>Asynchron</h3>
+                <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadSetupPreset("custom")'>Eigenes Diagramm</button>
+                @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
+                {
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                }
+                <h3>Synchron</h3>
+                @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
+                {
+                  <button type="button" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                }
+                @if (_savedPresets.Count > 0)
+                {
+                  <h3>Eigene Vorlagen</h3>
+                  @foreach (var saved in _savedPresets)
+                  {
+                    <div class="editor-saved-preset">
+                      <button type="button" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(saved.Id)" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
+                      <button type="button" class="editor-preset-delete" aria-label="Vorlage @saved.Name löschen" @onclick="() => DeleteSavedPreset(saved.Id)">Löschen</button>
+                    </div>
+                  }
+                }
+              </div>
+            </section>
           </div>
           <section class="editor-jugglers" aria-labelledby="editor-jugglers-title">
             <div class="editor-jugglers-heading">
@@ -91,23 +102,19 @@
           <summary aria-label="Diagrammoptionen" title="Diagrammoptionen">⋮</summary>
           <div class="diagram-options-content">
             <div class="diagram-options-grid">
-              <label class="editor-field">Diagrammvorlage
-                <select value="@_preset" @onchange="LoadPreset">
-                    <option value="custom">Eigenes Diagramm</option>
-                    <optgroup label="Asynchron">
-                        @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous)
-                        {
-                            <option value="@preset.Id">@preset.Label</option>
-                        }
-                    </optgroup>
-                    <optgroup label="Synchron">
-                        @foreach (var preset in CausalDiagramEditorPresets.VisibleSynchronous)
-                        {
-                            <option value="@preset.Id">@preset.Label</option>
-                        }
-                    </optgroup>
-                </select>
-              </label>
+              <div class="editor-field">Diagrammvorlage
+                <div class="editor-preset-list editor-preset-list-compact" role="group" aria-label="Diagrammvorlage auswählen">
+                  <button type="button" data-preset-id="custom" class="editor-preset-option @(IsPresetSelected("custom") ? "selected" : null)" aria-pressed="@IsPresetSelected("custom")" @onclick='() => LoadPreset("custom")'>Eigenes Diagramm</button>
+                  @foreach (var preset in CausalDiagramEditorPresets.VisibleAsynchronous.Concat(CausalDiagramEditorPresets.VisibleSynchronous))
+                  {
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(preset.Id)" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                  }
+                  @foreach (var saved in _savedPresets)
+                  {
+                    <button type="button" data-preset-id="@saved.Id" class="editor-preset-option @(IsPresetSelected(saved.Id) ? "selected" : null)" aria-pressed="@IsPresetSelected(saved.Id)" @onclick="() => LoadSavedPreset(saved)">@saved.Name</button>
+                  }
+                </div>
+              </div>
               <label class="editor-field">Wiederholungen
                 <input type="number" min="1" max="20" @bind="_state.Repetitions" @bind:after="StateChanged" />
               </label>
@@ -121,6 +128,14 @@
                 <output>@_state.LaneSpacing px</output>
               </label>
             </div>
+            <div class="editor-save-preset">
+              <label class="editor-field" for="saved-preset-name">Eigene Vorlage speichern</label>
+              <div class="editor-save-preset-row">
+                <input id="saved-preset-name" maxlength="48" placeholder="Name der Vorlage" @bind="_presetName" />
+                <button type="button" class="editor-action" @onclick="SaveCurrentPreset" disabled="@string.IsNullOrWhiteSpace(_presetName)">Speichern</button>
+              </div>
+              @if (_presetMessage is not null) { <p class="editor-notice" role="status">@_presetMessage</p> }
+            </div>
             <button type="button" class="editor-action" aria-label="Jongleur hinzufügen" @onclick="AddJuggler" disabled="@(_state.Jugglers.Count >= 16)">+ Jongleur hinzufügen</button>
           </div>
         </details>
@@ -132,8 +147,8 @@
             {
                 var y = RowY(juggler.index);
                 <g class="juggler-add-target @(!AllowJugglerActions ? "read-only" : "")" data-juggler-id="@juggler.item.Id" role="@(AllowJugglerActions ? "button" : null)" tabindex="@(AllowJugglerActions ? 0 : -1)" aria-pressed="@(AllowJugglerActions && _state.ActiveJugglerId == juggler.item.Id)" aria-label="@(AllowJugglerActions ? JugglerActionLabel(juggler.item.Name) : juggler.item.Name)" @onclick="() => SelectJuggler(juggler.item.Id)" @onkeydown="e => HandleJugglerKey(juggler.item.Id, e)" @onkeydown:preventDefault="true" @onpointerdown="e => BeginJugglerHold(juggler.item.Id, e)">
-                    <rect class="juggler-add-target-bg" x="8" y="@(y - 54)" width="96" height="40" rx="10" />
-                    <SvgText CssClass="pd-juggler-label" X="18" Y="@((y - 28).ToString(CultureInfo.InvariantCulture))">@juggler.item.Name</SvgText>
+                    <rect class="juggler-add-target-bg" x="8" y="@(y - 22)" width="96" height="44" rx="10" />
+                    <SvgText CssClass="pd-juggler-label" X="18" Y="@((y + 5).ToString(CultureInfo.InvariantCulture))">@juggler.item.Name</SvgText>
                 </g>
                 <line class="timeline" x1="110" x2="@(SvgWidth - 20)" y1="@y" y2="@y" />
             }
@@ -221,9 +236,9 @@
                     @if (IsHandMenuOpen(item.Id, currentCycle))
                     {
                         <g class="throw-hand-menu" role="group" aria-label="Hand wechseln">
-                            <rect x="@menuX" y="@(nodeY - 25)" width="132" height="38" rx="10" />
                             <g role="button" tabindex="0" aria-label="Hand wechseln von @(item.Hand == "R" ? "Rechts zu Links" : "Links zu Rechts")" @onclick="() => ToggleThrowHand(item.Id)" @onkeydown="e => HandleHandMenuKey(item.Id, e)" @onkeydown:preventDefault="true">
-                                <SvgText X="@((menuX + 66).ToString(CultureInfo.InvariantCulture))" Y="@((nodeY + 1).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">Hand wechseln: @(item.Hand == "R" ? "R → L" : "L → R")</SvgText>
+                                <rect x="@menuX" y="@(nodeY - 28)" width="144" height="44" rx="10" />
+                                <SvgText X="@((menuX + 72).ToString(CultureInfo.InvariantCulture))" Y="@((nodeY + 1).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">Hand wechseln: @(item.Hand == "R" ? "R → L" : "L → R")</SvgText>
                             </g>
                         </g>
                     }
@@ -233,6 +248,37 @@
         </svg>
       </div>
       </div>
+      <section class="causal-editor-table-section" aria-label="Tabellarische Wurfübersicht">
+        <button type="button" class="editor-action causal-editor-table-toggle" aria-expanded="@_showTable"
+                @onclick="() => _showTable = !_showTable">
+          @(_showTable ? "Tabelle ausblenden" : "Tabelle einblenden")
+        </button>
+        @if (_showTable)
+        {
+          <div class="causal-editor-table-scroll" tabindex="0" aria-label="Zeitleiste horizontal scrollen">
+            <table class="causal-editor-pattern-table">
+              <thead><tr><th scope="col">Jongleur</th>@foreach (var time in EditorTable.Times) { <th scope="col">@time.ToString("0.##", CultureInfo.InvariantCulture)</th> }</tr></thead>
+              <tbody>
+                @foreach (var row in EditorTable.Rows)
+                {
+                  <tr>
+                    <th scope="row">@row.Juggler</th>
+                    @foreach (var chip in row.Cells)
+                    {
+                      <td>
+                        @if (chip is not null)
+                        {
+                          <ThrowChipRow Chips="SingleChip(chip)" ColorOrbits="false" AriaLabel="@($"Wurf {row.Juggler}")" />
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
       @if (ShowAnimation)
       {
       <section class="causal-editor-animation sdv-card" aria-label="Passist-Animation">
@@ -247,7 +293,7 @@
         </div>
         @if (_animationJif is not null)
         {
-            <PassistAnimation Jif="@(new JifInput.Structured(_animationJif))" AnimationSpeed="0.8" Teaser="true" EnableSettings="false" ShowSpeedLabel="false" ShowLayoutEditor="false" />
+            <PassistAnimation Jif="@(new JifInput.Structured(_animationJif))" AnimationSpeed="0.8" Teaser="true" EnableSettings="false" ShowSpeedLabel="false" />
         }
         else
         {
@@ -303,7 +349,7 @@
     [Parameter]
     public bool ShowConnectionIssues { get; set; } = true;
 
-    private CausalDiagramEditorState _state = CausalDiagramEditorState.CreateFeeding75();
+    private CausalDiagramEditorState _state = CausalDiagramEditorPresets.All.First(preset => preset.Id == "jugglers-2").Create();
     private ElementReference _svg;
     private ElementReference _diagramOptions;
     private IJSObjectReference? _module;
@@ -319,10 +365,15 @@
     private List<SetupJugglerSettings> _setupJugglers = [];
     private List<SetupJugglerSettings> _stateSetupJugglers = [];
     private string? _setupValidationError;
-    private string _preset = "feeding-7-5";
+    private string _preset = "jugglers-2";
+    private string _presetName = "";
+    private string? _presetMessage;
+    private string? _selectedSavedPresetId;
+    private List<SavedEditorPreset> _savedPresets = [];
     private (string EdgeId, int SourceCycle, decimal X, decimal Y)? _edgeDragPreview;
     private JifPattern? _animationJif;
     private bool OrbitColorsEnabled { get; set; } = true;
+    private bool _showTable;
     private string _animationUnavailable = "Für dieses Diagramm ist keine Passist-Animation verfügbar.";
     private sealed record SetupJugglerSettings(
         string Id,
@@ -332,6 +383,7 @@
         decimal PhaseOffset
     );
     private sealed record SetupDraft(string PresetId, SetupJugglerSettings[] Jugglers);
+    private sealed record SavedEditorPreset(string Id, string Name, string StateToken);
     private static string EditorBuildVersion =>
         typeof(CausalDiagramEditorView)
             .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -344,6 +396,8 @@
         }
     }
     private int SvgHeight => Math.Max(180, RowY(_state.Jugglers.Count - 1) + 75);
+    private CausalDiagramEditorTableAdapter.Table EditorTable => CausalDiagramEditorTableAdapter.Map(_state);
+    private static IReadOnlyList<DetailViewModel.ThrowChip> SingleChip(DetailViewModel.ThrowChip chip) => [chip];
 
     protected override void OnParametersSet()
     {
@@ -407,7 +461,7 @@
         }
         else
         {
-            ApplyLoadedState(CausalDiagramEditorState.CreateFeeding75(), invalid: !string.IsNullOrEmpty(StateToken));
+            ApplyLoadedState(CausalDiagramEditorPresets.All.First(preset => preset.Id == "jugglers-2").Create(), invalid: !string.IsNullOrEmpty(StateToken));
         }
     }
 
@@ -444,6 +498,11 @@
             _dotNetRef = DotNetObjectReference.Create(this);
             await _module.InvokeVoidAsync("bindTouchDragTargets", _svg);
             if (ShowOptions) await _module.InvokeVoidAsync("bindOutsideClose", _diagramOptions);
+            if (!Embedded)
+            {
+                _savedPresets = (await _module.InvokeAsync<SavedEditorPreset[]>("getSavedEditorPresets"))?.ToList() ?? [];
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 
@@ -806,9 +865,12 @@
         PatternChanged();
     }
 
-    private void LoadPreset(ChangeEventArgs e)
+    private bool IsPresetSelected(string id) => _preset == id || _selectedSavedPresetId == id;
+
+    private void LoadPreset(string id)
     {
-        _preset = e.Value?.ToString() ?? "custom";
+        _preset = id;
+        _selectedSavedPresetId = null;
         _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create() ?? CausalDiagramEditorState.CreateEmpty();
         _state.ActiveJugglerId = _state.Jugglers[0].Id;
         _selectedId = null;
@@ -816,9 +878,10 @@
         StateChanged();
     }
 
-    private void LoadSetupPreset(ChangeEventArgs e)
+    private void LoadSetupPreset(string id)
     {
-        _preset = e.Value?.ToString() ?? "custom";
+        _preset = id;
+        _selectedSavedPresetId = null;
         _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create()
             ?? CausalDiagramEditorState.CreateEmpty();
         if (_preset == "custom" && _state.Throws.Count == 0)
@@ -828,6 +891,59 @@
         SyncSetupFromState();
         RefreshAnimation();
         PersistSetupDraft(includeBaseState: true);
+    }
+
+    private void LoadSavedPreset(SavedEditorPreset preset)
+    {
+        if (!CausalDiagramEditorState.TryDecode(preset.StateToken, out var savedState) || savedState is null)
+        {
+            _presetMessage = "Diese gespeicherte Vorlage ist beschädigt.";
+            return;
+        }
+
+        _state = savedState;
+        _preset = "custom";
+        _selectedSavedPresetId = preset.Id;
+        _state.PresetId = "custom";
+        _selectedId = null;
+        _handMenuThrow = null;
+        SyncSetupFromState();
+        RefreshAnimation();
+        if (!Embedded && _wizardStep == 1)
+            PersistSetupDraft(includeBaseState: true);
+        else
+            StateChanged();
+    }
+
+    private async Task SaveCurrentPreset()
+    {
+        var name = _presetName.Trim();
+        if (_module is null || name.Length == 0)
+            return;
+
+        _state.PresetId = "custom";
+        var saved = new SavedEditorPreset(Guid.NewGuid().ToString("N"), name, _state.Encode());
+        try
+        {
+            _savedPresets = (await _module.InvokeAsync<SavedEditorPreset[]>("saveEditorPreset", saved))?.ToList() ?? _savedPresets;
+            _selectedSavedPresetId = saved.Id;
+            _presetName = "";
+            _presetMessage = $"Vorlage „{name}“ wurde auf diesem Gerät gespeichert.";
+        }
+        catch (JSException)
+        {
+            _presetMessage = "Die Vorlage konnte im lokalen Speicher nicht gespeichert werden.";
+        }
+    }
+
+    private async Task DeleteSavedPreset(string id)
+    {
+        if (_module is null)
+            return;
+
+        _savedPresets = (await _module.InvokeAsync<SavedEditorPreset[]>("deleteEditorPreset", id))?.ToList() ?? _savedPresets;
+        if (_selectedSavedPresetId == id)
+            _selectedSavedPresetId = null;
     }
 
     private void SyncSetupFromState()
@@ -1220,6 +1336,7 @@
         if (diagramChanged)
         {
             _preset = "custom";
+            _selectedSavedPresetId = null;
             _state.PresetId = _preset;
         }
         _state.Repetitions = Math.Clamp(_state.Repetitions, 1, 20);

@@ -11,6 +11,8 @@ public sealed class PersistedSettings
     public bool ShowThrowNames { get; set; } = true;
     public int MaxHeight { get; set; } = 13;
     public string ThrowDisplayMode { get; set; } = "Global";
+    public bool ShowPassDestinations { get; set; }
+    public bool ShowThrowingHands { get; set; }
 
     public static DetailViewModel.ThrowDisplayMode ParseThrowDisplayMode(string? value) =>
         Enum.TryParse<DetailViewModel.ThrowDisplayMode>(value, ignoreCase: true, out var mode)

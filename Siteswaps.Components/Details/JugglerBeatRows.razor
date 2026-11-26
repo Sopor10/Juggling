@@ -30,7 +30,7 @@
             <RowTemplate Context="tableRow">
                 @{ var juggler = Model.Jugglers.First(row => row.Label == tableRow.Label); }
                 @{ var chips = juggler.Throws.Select(item => item.ForMode(_mode)).ToList(); }
-                <ThrowChipRow Chips="chips" ColorOrbits="ColorOrbits" AriaLabel="@($"Throws {juggler.Label}")" />
+                <ThrowChipRow Chips="chips" ColorOrbits="ColorOrbits" ShowPassDestinations="_showPassDestinations" ShowHands="_showHands" AriaLabel="@($"Throws {juggler.Label}")" />
             </RowTemplate>
             <Legend>
                 <div class="sdv-hero-footer">
@@ -62,6 +62,10 @@
                         <button type="button" role="radio" class="@ModeClass(DetailViewModel.ThrowDisplayMode.Global)" aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Global)" @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Global)">Global</button>
                         <button type="button" role="radio" class="@ModeClass(DetailViewModel.ThrowDisplayMode.Name)" aria-checked="@(_mode == DetailViewModel.ThrowDisplayMode.Name)" @onclick="() => SetModeAsync(DetailViewModel.ThrowDisplayMode.Name)">Namen</button>
                     </div>
+                    <div class="sdv-throw-details-toggle" role="group" aria-label="Zusatzinformationen">
+                        <button type="button" aria-pressed="@_showPassDestinations" class="@(_showPassDestinations ? "active" : null)" @onclick="TogglePassDestinationsAsync">Pass-Ziele</button>
+                        <button type="button" aria-pressed="@_showHands" class="@(_showHands ? "active" : null)" @onclick="ToggleHandsAsync">Hände</button>
+                    </div>
                 </div>
             </Legend>
         </PatternTable>
@@ -90,6 +94,8 @@
     }).ToList();
 
     private DetailViewModel.ThrowDisplayMode _mode = DetailViewModel.ThrowDisplayMode.Global;
+    private bool _showPassDestinations;
+    private bool _showHands;
     private IEnumerable<int> OrbitIndexes => Model!.Jugglers
         .SelectMany(juggler => juggler.Throws)
         .Select(throwItem => throwItem.OrbitIndex)
@@ -101,6 +107,8 @@
     {
         var settings = await LocalStorage.GetItemAsync<PersistedSettings>(PersistedSettings.StorageKey);
         _mode = PersistedSettings.ParseThrowDisplayMode(settings?.ThrowDisplayMode);
+        _showPassDestinations = settings?.ShowPassDestinations ?? false;
+        _showHands = settings?.ShowThrowingHands ?? false;
     }
 
     private async Task SetModeAsync(DetailViewModel.ThrowDisplayMode mode)
@@ -114,6 +122,21 @@
         var settings = await LocalStorage.GetItemAsync<PersistedSettings>(PersistedSettings.StorageKey)
                        ?? new PersistedSettings();
         settings.ThrowDisplayMode = mode.ToString();
+        await LocalStorage.SetItemAsync(PersistedSettings.StorageKey, settings);
+    }
+
+    private Task TogglePassDestinationsAsync() => SaveToggleAsync(showPassDestinations: !_showPassDestinations);
+
+    private Task ToggleHandsAsync() => SaveToggleAsync(showHands: !_showHands);
+
+    private async Task SaveToggleAsync(bool? showPassDestinations = null, bool? showHands = null)
+    {
+        if (showPassDestinations is bool destinations) _showPassDestinations = destinations;
+        if (showHands is bool hands) _showHands = hands;
+        var settings = await LocalStorage.GetItemAsync<PersistedSettings>(PersistedSettings.StorageKey)
+                       ?? new PersistedSettings();
+        settings.ShowPassDestinations = _showPassDestinations;
+        settings.ShowThrowingHands = _showHands;
         await LocalStorage.SetItemAsync(PersistedSettings.StorageKey, settings);
     }
 
