@@ -1,32 +1,47 @@
-# Highgate transcription batch: 2017 printed pages 256–270
+# Highgate transcription audit: 2017 printed pp. 256–270
 
-The first checked batch is in [highgate-transcriptions-256-270.json](highgate-transcriptions-256-270.json). It contains four named presets, including a separate catalog entry for the drop-back-line variant even though its causal graph matches Four count y.
+Sources: Aidan Burns, *The New Highgate Collection* (2017 expanded edition, [PDF](https://jugglingedge.com/pdf/highgate.pdf)); compared with *The Highgate Collection* (2014, [PDF](https://passing.zone/wp-content/uploads/highgate.pdf), also bundled in the repository). For the 2017 file in this chunk, the PDF page number is one greater than the printed footer.
 
-## Included graph records
+I checked actual body pages and their printed footers rather than trusting the index. This matters here: several index references drift. Aidan's feasts are printed pp. 252–254 and Four Person Lunch Boxes pp. 254–255, so they fall outside this requested body range even though their index entries point later. The Rick's picnic diagrams are printed pp. 256–257 and are in range.
 
-| Stable/catalog ID | Pattern | 2017 body page | 2014 body page | Graph |
-|---|---|---|---|---|
-| `highgate-fourpersonfourcountdropbackline1` | Four person four count drop-back line #1 | printed p. 257 / PDF p. 258 | PDF p. 182 | 16 nodes / 16 edges |
-| `highgate-fourcounty` | Four count y | printed p. 258 / PDF p. 259 | PDF p. 183 | 16 / 16 |
-| `highgate-fourpersonfourcountdropbackline2` | Four person four count drop-back line #2 | printed p. 258 / PDF p. 259 | PDF p. 183 | same edge graph as Four count y |
-| `highgate-fourcountdropbacky` | Four count drop-back y | printed p. 259 / PDF p. 260 | PDF p. 184 | 16 / 16 |
+## Standalone causal graph records
 
-All four IDs match the union inventory and are unique. A scan of central preset data found no existing records for these IDs. The source links are recorded per pattern: [2017 expanded PDF](https://jugglingedge.com/pdf/highgate.pdf), [2014 PDF](https://passing.zone/wp-content/uploads/highgate.pdf).
+The separate [JSON data](highgate-transcriptions-256-270.json) currently holds 23 records. Sequences, phases, and causal arrows were checked against the corresponding diagram pages.
 
-`Four person four count drop-back line #2` (2017 printed p. 258 / PDF p. 259; 2014 PDF p. 183) is included under its own inventory ID and label. Its throw-target graph is identical to `Four count y`; its line formation and drop-back-over-the-head details differ, but the current editor state has no position or pass-style property to distinguish those details.
+| Stable ID | Pattern | 2017 printed page | 2014 PDF page | Graph |
+|---|---|---:|---:|---|
+| `highgate-fourpersonfourcountdropbackline1` | Four person four count drop-back line #1 | 257 | 182 | 16 events / 16 edges |
+| `highgate-fourcounty` | Four count y | 258 | 183 | 16 / 16 |
+| `highgate-fourpersonfourcountdropbackline2` | Four person four count drop-back line #2 | 258 | 183 | same throw-target graph as Four count y |
+| `highgate-fourcountdropbacky` | Four count drop-back y | 259 | 184 | 16 / 16 |
+| `highgate-threecounty` | Three count y | 259 | 184 | 24 / 24 |
+| `highgate-fourcounttrapeze` | Four count trapeze | 261 | 185 | 32 / 32 |
+| `highgate-alloutcivilwarfeed` | All out civil war feed | 261 | 185 | 48 / 48 |
+| `highgate-bookendsinvertedbookendsbox` | Bookends / inverted bookends box | 262 | 186 | 40 / 40 |
+| `highgate-doubleurbanterrorfeed` | Double urban terror feed | 262 | 186 | 24 / 24 |
+| `highgate-threecountaccommodation` | Three count accommodation | 264 | 187 | 24 / 24 |
+| `highgate-lowfatchocolatebox` | Low fat chocolate box | 264 | 187 | 48 / 48 |
+| `highgate-bookshelf` | Bookshelf | 264 | 187 | 120 / 120 |
+| `highgate-chocolatebookshelf` | Chocolate bookshelf | 265 | 188 | 80 / 80 |
+| `highgate-countdownaccommodation1` | Countdown accommodation #1 | 265 | 188 | 32 / 32 |
+| `highgate-countdownaccommodation2` | Countdown accommodation #2 | 265 | 188 | 48 / 48 |
+| `highgate-jimsthreecounty` | Jim's three count y | 259–260 | 184 | 56 nodes / 48 edges; half-beat lane phase and holds |
+| `highgate-rowrowrowyourboat` | Row, row, row your boat | 267–268 | 189 | 128 / 128 |
+| `highgate-rowrowrowyourboatambidextrousvariation` | Row, row, row your boat (ambidextrous variation) | 269 | 190 | 64 / 64 |
+| `highgate-frerejacques` | Frere Jacques | 270 | 191 | 128 / 128; same causal graph as Row, row, row your boat |
+| `highgate-fourpersonthreecountrickspicnic` | Four person three count Rick's picnic | 256 | 181 | 96 / 96; hurried hand repetitions preserved |
+| `highgate-fourpersontwocountrickspicnic` | Four person two count Rick's picnic | 256 | 181 | 64 / 64; hurried hand repetitions preserved |
+| `highgate-fourpersononecountrickspicnic` | Four person one count Rick's picnic | 257 | 182 | 32 / 32; hurried hand repetitions preserved |
+| `highgate-funkybookendsparsnipbox` | Funky bookends / parsnip box | 262 | 186 | 40 / 40; phase offsets, heffs, and zip edges preserved |
 
-## Visual and semantic review
+Odd-length source periods are doubled so each editor cycle returns to the same hand assignment. Thus the five-event Bookends / inverted bookends box has a ten-beat cycle, and the 15-event Bookshelf half-period is repeated with opposite hands in a 30-beat cycle. Jim's three-count y preserves the half-beat offset between Anne/Clare and Ben/Daniel; hold positions remain event nodes without outgoing edges. The song diagrams rotate four line-specific sequences across four juggler rows; “opposite”, “left”, and “right” destinations were read from the source graph.
 
-All pages in printed pp. 256–270 (PDF pp. 257–271) were rendered and reviewed. For each included preset, I compared its 4-event row sequence and every arrow in the source diagram. The source says everyone starts with two clubs in the right hand and one in the left; this is included in the notation. Each four-event period returns to the same hand assignment, so a four-beat cycle suffices.
+The four-count drop-back line #2 has its own named ID even though its throw-target graph matches Four count y. Its formation and over-the-head route are retained in notation because the editor does not encode spatial positions or pass style. Club colors, formations, straight/crossing style, and walking routes likewise remain source notation where the editor has no property for them.
 
-The drop-back lines and Y formation are described in the notation. The graph captures the complete pass/self routing, but cannot encode the jugglers' positions or the visual over-the-head path. No holds, zips, or multi-club edges occur in these records.
+## Validity test
 
-## State validation
+`Highgate256To270StandaloneRecordValidationTests` reads all 23 records, verifies the complete expected ID set and resolvable edge endpoints, builds an editor state for each, calls `SynchronizeHeights()`, checks that all cycle offsets remain unchanged, and requires `IsValidForEditor()`.
 
-A temporary validator built a `CausalDiagramEditorPreset` for each JSON record and called `Create()`, then `SynchronizeHeights()` and compared every serialized cycle offset. All `Create()` calls succeeded; each graph has 16 nodes and 16 edges; offsets were unchanged. `IsValidForEditor()` is false with the new IDs until the central known-preset list contains them. Temporarily setting the existing registered ID `highgate-three-count` made each graph pass editor validation. Rerun with intended IDs after import.
+## Scope notes
 
-## Other patterns reviewed in this span
-
-The section contains more independent structures that remain for follow-up: four-person Rick's picnics (three-, two-, and one-count); Three count y and Jim's three count y; four-count trapeze and all-out civil war feed; bookends/inverted bookends box; double urban terror feed; accommodation/chocolate boxes/bookcases; countdown accommodation patterns; and the sung round patterns. Several have hurried half-beat timing, holds, or special formations. They have not been labeled unrepresentable merely because they are not in this first batch. The generalised Y explanation is a construction recipe rather than a single pattern. Printed pp. 267–270 contain the Row, row, row your boat patterns, its ambidextrous variation, and Frère Jacques; their explicit diagrams remain for a follow-up batch.
-
-No central preset, inventory, or test files were edited for this chunk.
+All individual causal diagrams found on actual printed pp. 256–270 are represented in the 23-record chunk. The “Generalised y pattern” passage (p. 261) is a construction method, not an individual pattern. Four-person lunch boxes and Aidan’s feasts are outside printed pp. 256–270 based on their actual body pages, despite misleading index entries. No central catalog or inventory files are changed by this audit chunk.

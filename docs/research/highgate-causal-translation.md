@@ -52,6 +52,7 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | Four ten-club feed presets from 2017 printed pp. 192–193 | Two count on singles; one count feeding pass-pass-self/three count; Bookends/inverted Bookends; Suburban Terror | 2014 PDF pp. 134, 136 | Four complete graphs use only single-club edges; club inventory/color and walking routes remain source notes. |
 | Thirteen four-person, mixed-count, box, and line-feed presets from 2017 printed pp. 226–240 | One-count feeders; Chocolate bar/Bookends/Countdown; Civil War; Mixed count; Pass pass self/Chocolate square/Bookends boxes; Two count and Urban Terror line feeds | 2014 PDF pp. 158–169 | Complete event rows and phase offsets are transcribed; simultaneous, zip, and hold variants outside these records remain separate model-boundary candidates. |
 | Four ten-club triangle presets from 2017 printed pp. 211–213 | Four-, Three-, Two-, and asynchronous One-count triangles | 2014 printed pp. 148–149 | Ordinary nonsynchronous causal graphs; synchronous and multiple-club variants are tracked separately. |
+| Nineteen four-person Y, feed, box, accommodation, and song-round presets from 2017 printed pp. 256–270 | Three count Y; Rick’s picnics; trapeze and civil-war feeds; box/bookshelf families; Row, Row, Row Your Boat and Frère Jacques | 2014 PDF pp. 181–191 | All 19 standalone graphs preserve the diagrammed event rows, phases, causal destinations, and cycle offsets; spatial routes and club details remain in notation. |
 | Three ten-club triangle presets from 2017 printed p. 215 | One count with single/double passes #1/#2; Pass pass self triangle | 2014 printed p. 150 | Row destinations and cycle links are transcribed; the data notes that the editor graph does not encode double-pass multiplicity or straight/crossed trajectory. |
 | Four four-person feast presets from 2017 printed pp. 245–246 | Four-, Three-, Two-, and One-count feasts | 2014 PDF pp. 173–174 | All event rows, hand labels, and causal edges are cross-checked against both editions. |
 | `highgate-londonsburning` | London's burning | 2017 printed p. 272; 2014 printed p. 192 | Four 24-event alternating-hand rows and phase-shifted song-round cycles are represented; spatial layout remains source notation. |
@@ -102,7 +103,7 @@ two-person passing unless separately classified otherwise.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 219 rows have visual source review: 183 translated rows map to 186 presets, 23 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 700 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 238 rows have visual source review: 202 translated rows map to 205 presets, 23 are retained with specific editor-model requirements, 9 still need their graph transcription, and 4 are section/concept entries rather than independent patterns. The other 681 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 
