@@ -241,7 +241,6 @@ def skip_spaces_backwards(value: str, position: int) -> int:
 
 def find_reference_suffix_start(line: str) -> int | None:
     position = len(line)
-    refs_start = position
     while True:
         position = skip_spaces_backwards(line, position)
         final_page = parse_digits_backwards(line, position)
@@ -270,6 +269,14 @@ def extract_index(pdf: Path, first: int, last: int, edition: str) -> dict[str, d
     partial = EMPTY
     # Preserve page order and the two-column reading flow. A wrapped index title
     # can continue from the bottom of a right column onto the next page's left.
+    for line in index_lines(pdf, first, last, edition):
+        partial = consume_index_line(entries, partial, line, edition)
+    if partial:
+        print(f"Unparsed {edition} index tail: {partial}", file=sys.stderr)
+    return entries
+
+
+def index_lines(pdf: Path, first: int, last: int, edition: str):
     for page in bbox_pages(pdf, first, last):
         page_columns: list[list[str]] = [[], []]
         for side, line in indexed_columns(page, edition == EDITION_2017):
@@ -278,15 +285,18 @@ def extract_index(pdf: Path, first: int, last: int, edition: str) -> dict[str, d
             page_columns[side].append(line)
         for lines in page_columns:
             for line in lines:
-                partial = append_index_line(partial, line)
-                parsed = parse_index_entry(partial, edition)
-                if parsed is None:
-                    continue
-                partial = EMPTY
-                add_index_entry(entries, *parsed)
-    if partial:
-        print(f"Unparsed {edition} index tail: {partial}", file=sys.stderr)
-    return entries
+                yield line
+
+
+def consume_index_line(
+    entries: dict[str, dict[str, str]], partial: str, line: str, edition: str
+) -> str:
+    combined = append_index_line(partial, line)
+    parsed = parse_index_entry(combined, edition)
+    if parsed is None:
+        return combined
+    add_index_entry(entries, *parsed)
+    return EMPTY
 
 
 def append_index_line(partial: str, line: str) -> str:
