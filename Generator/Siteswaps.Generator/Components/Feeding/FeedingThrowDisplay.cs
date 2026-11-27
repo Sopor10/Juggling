@@ -60,7 +60,7 @@ public static class FeedingThrowDisplay
             var height = siteswap.Items[(juggler + i * numberOfJugglers) % siteswap.Items.Length];
             chips[i] = new Chip(
                 Format(height, numberOfJugglers, mode),
-                Kind(height, numberOfJugglers),
+                KindFor(height, numberOfJugglers),
                 height,
                 i
             );
@@ -77,7 +77,7 @@ public static class FeedingThrowDisplay
             _ => FormatGlobal(height),
         };
 
-    public static PassOrSelf Kind(int height, int numberOfJugglers) =>
+    public static PassOrSelf KindFor(int height, int numberOfJugglers) =>
         height % Math.Max(1, numberOfJugglers) == 0 ? PassOrSelf.Self : PassOrSelf.Pass;
 
     public static string FormatAverage(double average) =>
