@@ -1514,92 +1514,92 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "B-L4",
+        "to": "B-L2",
         "cycleOffset": 0
       },
       {
         "from": "A-L2",
-        "to": "B-R5",
+        "to": "B-R3",
         "cycleOffset": 0
       },
       {
         "from": "A-R3",
-        "to": "A-R1",
-        "cycleOffset": 1
-      },
-      {
-        "from": "A-L4",
-        "to": "B-R1",
-        "cycleOffset": 1
-      },
-      {
-        "from": "A-R5",
-        "to": "B-L2",
-        "cycleOffset": 1
-      },
-      {
-        "from": "A-L6",
-        "to": "A-L4",
-        "cycleOffset": 1
-      },
-      {
-        "from": "B-R1",
-        "to": "C-L4",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L2",
-        "to": "B-L6",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-R3",
-        "to": "C-L6",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L4",
-        "to": "C-R1",
-        "cycleOffset": 1
-      },
-      {
-        "from": "B-R5",
-        "to": "B-R3",
-        "cycleOffset": 1
-      },
-      {
-        "from": "B-L6",
-        "to": "C-R3",
-        "cycleOffset": 1
-      },
-      {
-        "from": "C-R1",
-        "to": "C-R5",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-L2",
         "to": "A-R5",
         "cycleOffset": 0
       },
       {
-        "from": "C-R3",
-        "to": "A-L6",
+        "from": "A-L4",
+        "to": "B-R5",
         "cycleOffset": 0
       },
       {
-        "from": "C-L4",
-        "to": "C-L2",
-        "cycleOffset": 1
+        "from": "A-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
       },
       {
-        "from": "C-R5",
+        "from": "A-L6",
         "to": "A-L2",
         "cycleOffset": 1
       },
       {
-        "from": "C-L6",
+        "from": "B-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "C-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L6",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
         "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "C-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L6",
+        "to": "A-R1",
         "cycleOffset": 1
       }
     ],
@@ -1610,11 +1610,11 @@
     "catalogStableIds": [
       "highgate-tenclubpasspasshefftriangle"
     ],
-    "visualVerification": "Checked the 2017 and 2014 source text for the title, prose, Prechac notation and explicit row sequences. Causal edges were derived by advancing each listed throw by its Prechac height to the named recipient row. The diagram artwork itself has not yet been checked edge by edge; that final visual audit remains open.",
+    "visualVerification": "Visually checked against the 2017 diagram and matching 2014 body page. The explicit Prechac row sequence yields each throw height (3 for pass/self, 4 for heff); each causal edge connects to the event at its landing time.",
     "modelLimitations": [
       "The graph records one event per throw and its causal destination. Club multiplicity and straight/crossing spatial trajectory are not separate editor edge properties."
     ],
-    "modelCheck": "CausalDiagramEditorState check with temporary registered preset ID highgate-three-count: SynchronizeHeights preserved all serialized cycle offsets and IsValidForEditor() returned true. This confirms state validity, not source diagram edge accuracy."
+    "modelCheck": "Verified exact arrow destinations from each row action and Prechac height; 18 nodes, one outgoing edge per node, all endpoints resolve, edge timing is consistent with the stated height."
   },
   {
     "id": "highgate-tenclubfrenchthreecounttriangle",
@@ -1750,92 +1750,92 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "B-L4",
+        "to": "B-L2",
         "cycleOffset": 0
       },
       {
         "from": "A-L2",
-        "to": "A-R5",
+        "to": "A-R3",
         "cycleOffset": 0
       },
       {
         "from": "A-R3",
-        "to": "A-R1",
-        "cycleOffset": 1
+        "to": "A-R5",
+        "cycleOffset": 0
       },
       {
         "from": "A-L4",
-        "to": "B-R1",
-        "cycleOffset": 1
-      },
-      {
-        "from": "A-R5",
-        "to": "A-L2",
-        "cycleOffset": 1
-      },
-      {
-        "from": "A-L6",
-        "to": "A-L4",
-        "cycleOffset": 1
-      },
-      {
-        "from": "B-R1",
         "to": "B-R5",
         "cycleOffset": 0
       },
       {
-        "from": "B-L2",
-        "to": "C-R5",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-R3",
-        "to": "B-L6",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L4",
-        "to": "B-L2",
-        "cycleOffset": 1
-      },
-      {
-        "from": "B-R5",
-        "to": "C-L2",
-        "cycleOffset": 1
-      },
-      {
-        "from": "B-L6",
-        "to": "B-R3",
-        "cycleOffset": 1
-      },
-      {
-        "from": "C-R1",
-        "to": "C-L4",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-L2",
-        "to": "C-L6",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-R3",
+        "from": "A-R5",
         "to": "A-L6",
         "cycleOffset": 0
       },
       {
+        "from": "A-L6",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "C-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
         "from": "C-L4",
+        "to": "C-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R5",
         "to": "C-R1",
         "cycleOffset": 1
       },
       {
-        "from": "C-R5",
-        "to": "C-R3",
-        "cycleOffset": 1
-      },
-      {
         "from": "C-L6",
-        "to": "A-R3",
+        "to": "A-R1",
         "cycleOffset": 1
       }
     ],
@@ -1846,10 +1846,10 @@
     "catalogStableIds": [
       "highgate-tenclubfrenchthreecounttriangle"
     ],
-    "visualVerification": "Checked the 2017 and 2014 source text for the title, prose, Prechac notation and explicit row sequences. Causal edges were derived by advancing each listed throw by its Prechac height to the named recipient row. The diagram artwork itself has not yet been checked edge by edge; that final visual audit remains open.",
+    "visualVerification": "Visually checked against the 2017 diagram and matching 2014 body page. The explicit Prechac row sequence yields each throw height (3 for pass/self, 4 for heff); each causal edge connects to the event at its landing time.",
     "modelLimitations": [
       "The graph records one event per throw and its causal destination. Club multiplicity and straight/crossing spatial trajectory are not separate editor edge properties."
     ],
-    "modelCheck": "CausalDiagramEditorState check with temporary registered preset ID highgate-three-count: SynchronizeHeights preserved all serialized cycle offsets and IsValidForEditor() returned true. This confirms state validity, not source diagram edge accuracy."
+    "modelCheck": "Verified exact arrow destinations from each row action and Prechac height; 18 nodes, one outgoing edge per node, all endpoints resolve, edge timing is consistent with the stated height."
   }
 ]

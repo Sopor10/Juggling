@@ -103,6 +103,8 @@ public class Highgate286To300StandaloneRecordValidationTests
             record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
             record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
             var throwIds = record.Throws.Select(item => item.Id).ToHashSet();
+            record.CausalEdges.Select(edge => edge.From).Should().OnlyHaveUniqueItems(record.Id);
+            record.CausalEdges.Select(edge => edge.From).Should().BeEquivalentTo(throwIds);
             record
                 .CausalEdges.SelectMany(edge => new[] { edge.From, edge.To })
                 .Should()
@@ -144,6 +146,16 @@ public class Highgate286To300StandaloneRecordValidationTests
 
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
+
+            var synchronizedThrows = state.Throws.ToDictionary(item => item.Id);
+            foreach (var edge in state.CausalEdges)
+            {
+                var source = synchronizedThrows[edge.FromThrowId];
+                var target = synchronizedThrows[edge.ToThrowId];
+                (target.StartTime + edge.CycleOffset * state.CycleLength + 2 - source.StartTime)
+                    .Should()
+                    .Be(source.Height, record.Id);
+            }
         }
     }
 

@@ -45,6 +45,10 @@ The source links are recorded per pattern in the JSON: the expanded edition is
 | `highgate-777786`, `highgate-777867` | Seven-club pass pass self variants | 2017 printed pp. 83–84; 2014 PDF p. 53 for 777786 | Both diagrams use a six-beat cycle with twelve events and twelve checked edges; the 2017-only variant is separately sourced. |
 | `highgate-passpasszipfeedingthreecount`, `highgate-passpasszipfeedingfrenchthreecount` | Three-person pass pass zip feeds | 2017 printed p. 120; 2014 PDF p. 80 | Three lanes and 18 events per graph; backward zip edges and source heights are preserved, with the index/body page mismatch recorded. |
 | Seven presets from 2017 printed pp. 88–90 | Classic six-count popcorn; six-, five-, and four-count popcorn variants with heffs/double passes | 2014 PDF pp. 57–59 | Every event and edge in the seven diagrams is transcribed and checked; patterns that require simultaneous throws remain outside the import. |
+| `highgate-tenclubpasspasshefftriangle`, `highgate-tenclubfrenchthreecounttriangle` | Ten club pass-pass-heff and French three-count triangles | 2017 printed p. 216 / PDF p. 217; 2014 p. 151 | Corrected source endpoints follow the printed arrows and Prechac heights; both graphs pass the standalone and catalog validity tests. |
+| `highgate-fourpersonparsnipfeedingfivecountpopcorn` | Four person Parsnip feeding five count popcorn | 2017 printed p. 229 / PDF p. 230; 2014 p. 161 | Forty events preserve half-beat phases and pass/self/zip/heff arrows, checked against action rows and editor timing. |
+| `highgate-tenclubgorilla` | Ten club gorilla | 2017 printed p. 197 / PDF p. 198; 2014 PDF p. 138 | Alternating three-juggler routes, half-beat phases, explicit heights, and cycle offsets are checked against both diagrams. |
+| `highgate-clockwiseonecountrunaround` | Clockwise one count runaround | 2017 printed p. 178 / PDF p. 179; 2014 p. 116 | The 54-event destination cycle is checked against source rows; the diagram graph is validated independently of the physical walking route. |
 | Five three-person feast presets from 2017 printed pp. 135, 137, 140 | JED's nightmare, Anti Quasar, Double Three Count, Trifle, Trilogy | 2014 PDF pp. 90–93 | Three source sequences and two explicit lane-compositions become 288 events and edges; all are checked by the catalog validity test. |
 | `highgate-threepersonfourcountdropbackline` | Three-person four-count drop-back line | 2017 printed p. 154; 2014 PDF p. 103 | The source says the causal diagram matches Four count triangle on ins; formation and walking path are recorded as spatial notes. |
 | Four three-person runarounds from 2017 printed pp. 167–176 | Clockwise/anticlockwise two count and pass pass self runarounds | 2014 PDF pp. 114, 117–118 | Their cycle phases encode the changing feeder; source descriptions carry the walking direction. |
@@ -131,7 +135,7 @@ two-person passing unless separately classified otherwise.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 362 rows have visual source review: 324 translated rows map to 327 presets, 3 are retained with specific editor-model requirements, 22 still need their graph transcription, and 13 are section, alias, or combined-index entries rather than independent patterns. The other 557 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 367 rows have visual source review: 329 translated rows map to 332 presets, 3 are retained with specific editor-model requirements, 22 still need their graph transcription, and 13 are section, alias, or combined-index entries rather than independent patterns. The other 552 candidates have not yet received page review. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 

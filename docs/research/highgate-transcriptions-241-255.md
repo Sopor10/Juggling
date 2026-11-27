@@ -1,6 +1,6 @@
 # Highgate transcription batch: 2017 printed pages 241–255
 
-The source records for this chunk are in [highgate-transcriptions-241-255.json](highgate-transcriptions-241-255.json). The range audit is still in progress. These records cover 23 patterns from the four-person feeds and feasts; the other ordinary patterns are enumerated below and remain to be transcribed or reviewed for editor-model fit.
+The source records for this chunk are in [highgate-transcriptions-241-255.json](highgate-transcriptions-241-255.json). The page-range review is complete for the 23 included four-person feeds and feasts. The remaining candidates are explicitly listed below; none was added because its graph or timing remains ambiguous, changes pattern state over time, or includes hurried throws whose timing or endpoints are unresolved.
 
 ## Included patterns
 
@@ -40,13 +40,13 @@ The source gives the initial inventory as two clubs in the right hand and one in
 
 ## State validation
 
-The focused NUnit test constructs an editor state for every JSON record, runs `SynchronizeHeights()`, verifies every `CycleOffset` is preserved, and requires `IsValidForEditor()`. All 23 records pass. The test uses a registered baseline preset ID because the 19 new records are not yet in the central preset list. The four earlier records are byte-for-byte aligned with their existing central event and edge data. For `highgate-onecountfeedingwhynotandfiveclubwhynot`, `C-R10` has explicit height 1: the source lists the final handoff as a zip, while the normalized cyclic diagram edge points to the preceding displayed event and otherwise derives a negative height. This preserves the source arrow and gives the throw a positive physical height. No central runtime or inventory files were changed.
+The focused NUnit test constructs an editor state for every JSON record, checks unique record and throw IDs plus resolvable edge endpoints and a single outgoing edge per source throw, runs `SynchronizeHeights()`, verifies every `CycleOffset` is preserved, and requires `IsValidForEditor()`. All 23 records pass. The test uses a registered baseline preset ID because the 19 new records are not yet in the central preset list. The four earlier records are byte-for-byte aligned with their existing central event and edge data. For `highgate-onecountfeedingwhynotandfiveclubwhynot`, `C-R10` has explicit height 1: the source lists the final handoff as a zip, while the normalized cyclic diagram edge points to the preceding displayed event and otherwise derives a negative height. This preserves the source arrow and gives the throw a positive physical height. No central runtime or inventory files were changed.
 
 ## Remaining material in this page range
 
 The following source patterns remain unresolved or outside this printed-page range:
 
-- Printed p. 250: Countdown feast. The printed row sequences have lengths 30, 30, 29, and 30; the diagram contains two displayed starts. The Clare row and the diagram’s cycle need closer tracing before the missing event or phase can be determined. It remains open rather than guessing an event.
+- Printed p. 251 / PDF p. 252: Four person countdown feast. The four printed action rows have lengths 30, 30, 29, and 30, but the diagram shows a 30-event cycle for each person. The matching 2014 page (PDF p. 176) repeats the same Clare-row omission, so the absent action cannot be resolved by edition comparison. The graph remains open rather than inventing the missing throw.
 - Printed p. 253: Extended Aidan’s feast #1 switches between four-count and three-count every twelve beats. This finite transition needs explicit prefix/loop/suffix support before it can be represented faithfully.
 - Printed pp. 254–255: Four-person three-, two-, and one-count lunch boxes. The source labels several throws “hurried”. Crossing/straight trajectory is only spatial notation, but the hurried marker’s exact endpoint/timing has not been resolved from the arrow drawings. This is a transcription question, not yet an established editor-model blocker; the graph data should not guess those endpoints.
 - Printed pp. 256–257: Four-person three- and two-count Rick’s picnics. These fall outside the requested printed pp. 241–255 range even though the inventory currently associates them with this page range; keep them for the following chunk, and correct their source-page references during inventory reconciliation.

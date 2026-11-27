@@ -1,6 +1,6 @@
 # Highgate causal transcription batch: printed pp. 211–225
 
-The records are in [highgate-transcriptions-211-225.json](highgate-transcriptions-211-225.json). This batch is incomplete. Seven records from printed pp. 211–215 are visually checked against the 2017 diagrams and 2014 edition. Two further p. 216 records have matching explicit row-sequence prose in the 2017 and 2014 editions and pass editor state validation; their causal edges still need an edge-by-edge visual audit against both diagrams.
+The records are in [highgate-transcriptions-211-225.json](highgate-transcriptions-211-225.json). This batch remains incomplete. Seven records from printed pp. 211–215 and two records from printed p. 216 are visually checked against the 2017 diagrams and 2014 edition.
 
 ## Source-checked records
 
@@ -14,28 +14,26 @@ The records are in [highgate-transcriptions-211-225.json](highgate-transcription
 | `highgate-tenclubonecounttrianglewithsingleanddoublepasses2` | Ten club one count triangle with single and double passes #2 | 215 | 150 | 18 nodes, 18 edges; visual comparison in both editions |
 | `highgate-tenclubpasspassselftriangle` | Ten club pass pass self triangle | 215 | 150 | 18 nodes, 18 edges; visual comparison in both editions |
 
-## Candidate records: source prose checked, diagrams not yet fully verified
+| `highgate-tenclubpasspasshefftriangle` | Ten club pass pass heff triangle | 216 | 151 | 18 nodes, 18 edges; artwork, Prechac heights, endpoints checked in both editions |
+| `highgate-tenclubfrenchthreecounttriangle` | Ten club French three count triangle | 216 | 151 | 18 nodes, 18 edges; artwork, Prechac heights, endpoints checked in both editions |
 
-| Inventory stable ID | Pattern | 2017 printed page | State check | Remaining review |
-|---|---|---:|---|---|
-| `highgate-tenclubpasspasshefftriangle` | Ten club pass pass heff triangle | 216 | valid; offsets preserved | visually compare every edge against both editions |
-| `highgate-tenclubfrenchthreecounttriangle` | Ten club French three count triangle | 216 | valid; offsets preserved | visually compare every edge against both editions |
-
-These two graphs are checked against explicit row-sequence prose in both editions, but have not yet been confirmed edge by edge against diagram artwork. Treat them as text-verified candidates pending visual graph audit.
+These two graphs were checked against explicit row sequences, Prechac heights, and diagram artwork in both editions.
 
 ## Transcription method and limits
 
-For visually checked records, the source row sequence determines which person receives each event. Self entries stay on the same row, hand labels alternate R/L, and cycle offsets record wraparound. The p. 216 candidates use their explicit Prechac heights to determine landing events; their artwork comparison remains open.
+For visually checked records, the source row sequence and arrows determine the receiving person and landing event. Self entries stay on the same row, hand labels alternate R/L, and cycle offsets record wraparound. On p. 216 the `3p3p4` and `3p34` Prechac strings determine heights 3 for passes/self throws and 4 for heffs. The graph edges connect to the events at those landing times; the standalone test checks each endpoint and offset directly against the printed action rows.
 
 The editor's causal-edge representation does not separately encode straight/crossing trajectory or double-pass multiplicity. Keep those mechanics in notation and do not infer them from the graph.
 
 ## State and offset validation
 
-A focused NUnit test constructed a `CausalDiagramEditorState` for every JSON record, called `SynchronizeHeights()`, checked `IsValidForEditor()`, and compared serialized cycle offsets before and after synchronization. Result: **9 records checked, 0 errors**. This verifies editor-state validity, not semantic correctness of unverified source edges.
+A permanent standalone NUnit test constructs a `CausalDiagramEditorState` for every JSON record, checks unique record/throw/source IDs, edge counts and resolvable endpoints, calls `SynchronizeHeights()`, checks `IsValidForEditor()`, and compares serialized cycle offsets before and after synchronization. For both p. 216 graphs it also checks all 18 source-row actions against their exact landing endpoints and Prechac-derived heights. Result: **9 records checked, 0 errors**.
 
 ## Remaining work
 
 - Printed p. 213 synchronous one-count triangle and synchronous one-count triangle with heffs: paired simultaneous throws and same-time events need supported semantics.
 - Printed p. 216 why-not? triangle: zip and fractional phases require careful diagram tracing.
-- Printed pp. 217–225: maybe, isosceles, isosceles variation, asynchronous pass-pass-self, feeding variations, mixed triangles, Tarim's triangle and remaining listed patterns need source comparison and transcription.
-- Confirm the two p. 216 candidate graphs visually in both editions before import.
+- Printed pp. 217–218 isosceles, isosceles variation, Maybe, and asynchronous pass-pass-self graphs include double-pass multiplicity, which the current editor cannot represent as one causal edge per action.
+- Printed pp. 218–222 still have independent single-throw candidates to transcribe: the two one-count variations; two-count/two-count/four-count and Tarim's triangles; pass-pass-self/pass-pass-self/one-count; one-count/one-count/three-count; one-count/one-count/pass-pass-self; and one-count/one-count countdown triangles.
+- Printed pp. 224–225 four-person two-count, pass-pass-self, and one-count feeds remain to transcribe from their four lanes.
+- Printed p. 223 clockwise one-count runaround changes feeder roles and crossing/pass direction after each walk; represent it as phased transitions rather than flattening it into one static graph.

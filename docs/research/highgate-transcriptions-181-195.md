@@ -21,14 +21,14 @@ The source gives starting club counts and, on some pages, color-coded club ident
 
 ## Validation
 
-A temporary validator constructed a `CausalDiagramEditorPreset` from every JSON record, called `Create()` and `SynchronizeHeights()`, and checked offsets before and after. Results:
+`Highgate181To195StandaloneRecordValidationTests` reads every JSON record, verifies unique record/throw IDs, one outgoing edge per throw, unique source endpoints, and resolvable targets, constructs an editor state, calls `SynchronizeHeights()`, checks offsets before and after, and requires `IsValidForEditor()`. Results:
 
 - Two count feed on singles: 12 nodes / 12 edges; `Create()` succeeded; offsets unchanged.
 - One count feeding pass pass self and three count: 18 / 18; `Create()` succeeded; offsets unchanged.
 - One count feeding bookends and inverted bookends: 30 / 30; `Create()` succeeded; offsets unchanged.
 - Suburban terror feed: 12 / 12; `Create()` succeeded; offsets unchanged.
 
-All four records are already imported into the central Highgate select list and are covered by `PresetCatalog_EveryPresetCreatesAValidEditorState`. The loader checks that each serialized edge offset is preserved through `SynchronizeHeights()`.
+All four records are already imported into the central Highgate select list and are covered by `PresetCatalog_EveryPresetCreatesAValidEditorState`; this standalone test also validates the source JSON independently of catalog registration.
 
 ## Reviewed patterns not in this chunk
 
@@ -48,4 +48,4 @@ The index/body discrepancy does not change the four translated ten-club feeds ab
 
 Five static ten-club patterns on printed pp. 192–193 were not added because their source says a throw is a double pass or contains double-pass actions: Ten club two count feed on doubles; Asynchronous ten club pass pass self feed (feeder throws single passes); Synchronous ten club pass pass self feed (feeder throws double passes); Synchronous ten club pass pass self feed (feeder throws single double self); and Asynchronous ten club pass pass self feed (feeder throws single double self). The editor permits only one outgoing causal edge per throw node and has no multiplicity field, so representing these as single arrows would lose the double-club action. Printed p. 195 adds color-coding instructions only, no new pattern.
 
-No additional graph was added in this audit: the four source-checked ten-club feed graphs were already present in both the separate JSON chunk and the central list. The remaining ordinary patterns above are recorded as open pending full-cycle derivation; no endpoints were guessed.
+No additional graph was added in this audit: the four source-checked ten-club feed graphs were already present in both the separate JSON chunk and the central list. The remaining Bruno’s Nightmare variants need full-cycle derivation from the changing role phases. The other static ten-club variants require multi-club throw multiplicity that the editor does not currently represent; no endpoints were guessed.

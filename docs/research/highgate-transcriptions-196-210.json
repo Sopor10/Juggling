@@ -1197,5 +1197,153 @@
     ],
     "visualVerification": "Every event destination follows the printed per-juggler sequence. Single pass arrows connect to the next eligible receiver event: one beat for in-phase lanes and 1.5 beats for half-beat-offset lanes. Self throws connect to the next event; heffs connect to the same hand two beats later. This reproduces the drawn arrow endpoints.",
     "notes": "The three-event source cycles are repeated twice so alternating right/left hand labels remain consistent across the six-beat causal period. Explicit heights are kept separate from diagram row layout."
+  },
+  {
+    "id": "highgate-tenclubgorilla",
+    "stable_id": "highgate-tenclubgorilla",
+    "label": "Ten club gorilla",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 197 / PDF p. 198; visually compared with The Highgate Collection (2014), PDF p. 138.",
+    "notation": "Anticlockwise ab9b9a; clockwise b9aab9",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1,
+        "height": 2.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0.5,
+        "height": 2.5,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1.5,
+        "height": 3,
+        "heightIsExplicit": true
+      }
+    ],
+    "causalEdges": [
+      {
+        "id": "e-1",
+        "fromThrowId": "B-R1",
+        "toThrowId": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-2",
+        "fromThrowId": "B-L2",
+        "toThrowId": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-3",
+        "fromThrowId": "C-R1",
+        "toThrowId": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-4",
+        "fromThrowId": "C-L2",
+        "toThrowId": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "id": "e-5",
+        "fromThrowId": "A-L1",
+        "toThrowId": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-6",
+        "fromThrowId": "A-R2",
+        "toThrowId": "B-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 197,
+        "pdfPage": 198
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 138,
+        "pdfPage": 138
+      }
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "editions": [
+        {
+          "edition": "2017 expanded PDF",
+          "printedPage": 197
+        },
+        {
+          "edition": "2014 edition",
+          "printedPage": 138
+        }
+      ],
+      "checks": [
+        "siteswap notation",
+        "juggler start phases",
+        "hand labels",
+        "one-count receiver order",
+        "two-count self/pass order",
+        "all causal arrow endpoints"
+      ]
+    },
+    "notes": "The graph repeats the source action rows over a two-beat cycle. Ben starts at time 0; Clare starts at 0.5; Anne starts at 1.5. Anne’s cycle-normalized events therefore appear at 0.5 (L) and 1.5 (R). Ben alternates passes to Clare then Anne; Clare and Anne each pass to Ben then self. The two passes to phase-shifted receivers land 1.5 beats after the source event (height 3.5); passes from Clare to Ben and Ben to Anne land 0.5 beats later (height 2.5). The two self throws land one beat later (height 3). The simultaneous gorilla variants on the same page are separate excluded patterns.",
+    "validation": "Six unique events and six causal edges; every throw has one outgoing and incoming edge, all endpoints resolve, and target time + cycle offset × 2 + 2 − source time equals explicit height."
   }
 ]

@@ -7,6 +7,22 @@ namespace Siteswaps.Test.CausalDiagram;
 
 public class Highgate211To225StandaloneRecordValidationTests
 {
+    private static readonly Dictionary<string, string[][]> SourceRows = new()
+    {
+        ["highgate-tenclubpasspasshefftriangle"] =
+        [
+            ["Ben", "Ben", "heff"],
+            ["Clare", "heff", "Clare"],
+            ["heff", "Anne", "Anne"],
+        ],
+        ["highgate-tenclubfrenchthreecounttriangle"] =
+        [
+            ["Ben", "self", "heff"],
+            ["heff", "Clare", "self"],
+            ["self", "heff", "Anne"],
+        ],
+    };
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -36,9 +52,51 @@ public class Highgate211To225StandaloneRecordValidationTests
             ),
             JsonOptions
         )!;
+        records.Select(record => record.Id).Should().OnlyHaveUniqueItems();
 
         foreach (var record in records)
         {
+            record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
+            record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
+            record.CausalEdges.Select(edge => edge.FromId).Should().OnlyHaveUniqueItems(record.Id);
+            var throwIds = record.Throws.Select(item => item.Id).ToHashSet();
+            foreach (var edge in record.CausalEdges)
+            {
+                throwIds.Should().Contain(edge.FromId, record.Id);
+                throwIds.Should().Contain(edge.ToIdValue, record.Id);
+            }
+
+            if (SourceRows.TryGetValue(record.Id, out var sourceRows))
+            {
+                var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+                foreach (
+                    var (jugglerIndex, sourceRow) in sourceRows.Select((row, index) => (index, row))
+                )
+                {
+                    var sourceJuggler = record.Jugglers[jugglerIndex].Id;
+                    foreach (
+                        var source in record.Throws.Where(item => item.JugglerId == sourceJuggler)
+                    )
+                    {
+                        var action = sourceRow[(int)source.StartTime % sourceRow.Length];
+                        var height = action == "heff" ? 4m : 3m;
+                        var landingTime = source.StartTime + height - 2m;
+                        var cycleOffset = (int)Math.Floor(landingTime / record.CycleLength);
+                        var targetJuggler = action is "self" or "heff"
+                            ? sourceJuggler
+                            : jugglerIds[action];
+                        var targetTime = landingTime - cycleOffset * record.CycleLength;
+                        var expectedTarget = record.Throws.Single(item =>
+                            item.JugglerId == targetJuggler && item.StartTime == targetTime
+                        );
+                        var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
+
+                        edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
+                        edge.CycleOffset.Should().Be(cycleOffset, record.Id);
+                    }
+                }
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",

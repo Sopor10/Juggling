@@ -31,7 +31,7 @@ These exclusions concern a missing fixed repeating event cycle in the cited page
 
 ## Validation
 
-`Highgate271To285StandaloneRecordValidationTests` reads all ten records, checks the expected stable IDs, constructs editor states, calls `SynchronizeHeights()`, verifies that every serialized `CycleOffset` is preserved, and requires `IsValidForEditor()` for each record.
+`Highgate271To285StandaloneRecordValidationTests` reads all ten records, checks the expected stable ID set, unique juggler/throw IDs, valid throw-to-juggler references, one unique outgoing edge per throw, edge-count parity, and resolvable endpoints. For explicitly stated source heights it checks the edge timing equation. It then constructs editor states, calls `SynchronizeHeights()`, verifies that every serialized `CycleOffset` is preserved, and requires `IsValidForEditor()` for each record. The separate source review compares arrow destinations and per-juggler action rows in both editions; London’s Burning legitimately has multiple incoming edges at some events because the song lines converge.
 
 ```text
 dotnet test Siteswaps.Test/Siteswaps.Test.csproj --no-restore --filter FullyQualifiedName~Highgate271To285StandaloneRecordValidationTests

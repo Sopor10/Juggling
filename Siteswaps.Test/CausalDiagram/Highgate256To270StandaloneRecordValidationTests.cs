@@ -65,14 +65,36 @@ public class Highgate256To270StandaloneRecordValidationTests
             JsonOptions
         )!;
         records.Select(record => record.Id).Should().BeEquivalentTo(ExpectedIds);
+        records.Should().HaveCount(ExpectedIds.Count);
+        records.Select(record => record.Id).Should().OnlyHaveUniqueItems();
 
         foreach (var record in records)
         {
             var throwIds = record.Throws.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
             record.Throws.Should().OnlyHaveUniqueItems(item => item.Id);
+            record.Jugglers.Should().OnlyHaveUniqueItems(item => item.Id);
+            record.CausalEdges.Should().NotBeEmpty(record.Id);
+            record.CausalEdges.Select(edge => edge.From).Should().OnlyHaveUniqueItems(record.Id);
             record
                 .CausalEdges.Should()
                 .OnlyContain(edge => throwIds.Contains(edge.From) && throwIds.Contains(edge.To));
+            var throwsById = record.Throws.ToDictionary(item => item.Id, StringComparer.Ordinal);
+            foreach (var edge in record.CausalEdges)
+            {
+                var source = throwsById[edge.From];
+                var target = throwsById[edge.To];
+                if (source.HeightIsExplicit && source.Height is not null)
+                {
+                    (
+                        target.StartTime
+                        + edge.CycleOffset * record.CycleLength
+                        + 2
+                        - source.StartTime
+                    )
+                        .Should()
+                        .Be(source.Height.Value, record.Id);
+                }
+            }
 
             var state = new CausalDiagramEditorState
             {
@@ -111,8 +133,6 @@ public class Highgate256To270StandaloneRecordValidationTests
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
-
-        records.Should().HaveCount(ExpectedIds.Count);
     }
 
     private sealed record Record(

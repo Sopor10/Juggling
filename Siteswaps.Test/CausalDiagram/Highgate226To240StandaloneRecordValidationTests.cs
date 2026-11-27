@@ -27,6 +27,15 @@ public class Highgate226To240StandaloneRecordValidationTests
         "highgate-invertedbookendsbox",
         "highgate-twocountlinefeed",
         "highgate-urbanterrorfeedonecountlinefeed",
+        "highgate-fourpersonparsnipfeedingfivecountpopcorn",
+    ];
+
+    private static readonly string[][] FourPersonParsnipFeedingFiveCountPopcornRows =
+    [
+        ["heff", "heff", "Ben", "self", "self"],
+        ["Anne", "Clare", "zip", "Clare", "zip"],
+        ["Ben", "zip", "Daniel", "Ben", "zip"],
+        ["Clare", "self", "self", "heff", "heff"],
     ];
 
     [Test]
@@ -55,9 +64,34 @@ public class Highgate226To240StandaloneRecordValidationTests
             JsonOptions
         )!;
         records.Select(record => record.Id).Should().BeEquivalentTo(ExpectedIds);
+        records.Select(record => record.Id).Should().OnlyHaveUniqueItems();
 
         foreach (var record in records)
         {
+            record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
+            record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
+            record.CausalEdges.Select(edge => edge.From).Should().OnlyHaveUniqueItems(record.Id);
+            var throwsById = record.Throws.ToDictionary(item => item.Id);
+            var throwIds = throwsById.Keys.ToHashSet();
+            foreach (var edge in record.CausalEdges)
+            {
+                throwIds.Should().Contain(edge.From, record.Id);
+                throwIds.Should().Contain(edge.To, record.Id);
+                var source = throwsById[edge.From];
+                var target = throwsById[edge.To];
+                if (source.HeightIsExplicit)
+                {
+                    (
+                        target.StartTime
+                        + edge.CycleOffset * record.CycleLength
+                        + 2
+                        - source.StartTime
+                    )
+                        .Should()
+                        .Be(source.Height, record.Id);
+                }
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",
@@ -94,6 +128,78 @@ public class Highgate226To240StandaloneRecordValidationTests
 
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
+
+            if (record.Id == "highgate-fourpersonparsnipfeedingfivecountpopcorn")
+                ValidateFourPersonParsnipFeedingFiveCountPopcorn(record);
+        }
+    }
+
+    private static void ValidateFourPersonParsnipFeedingFiveCountPopcorn(Record record)
+    {
+        record.CausalEdges.Select(edge => edge.To).Should().OnlyHaveUniqueItems(record.Id);
+        var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+        foreach (
+            var (jugglerIndex, row) in FourPersonParsnipFeedingFiveCountPopcornRows.Select(
+                (row, index) => (index, row)
+            )
+        )
+        {
+            var jugglerId = record.Jugglers[jugglerIndex].Id;
+            var firstEventTime = record
+                .Throws.Where(item => item.JugglerId == jugglerId)
+                .Min(item => item.StartTime);
+            foreach (var source in record.Throws.Where(item => item.JugglerId == jugglerId))
+            {
+                var beat = (int)(source.StartTime - firstEventTime);
+                var action = row[beat % row.Length];
+                string expectedJuggler;
+                decimal expectedTime;
+                if (action == "self")
+                {
+                    expectedJuggler = jugglerId;
+                    expectedTime = source.StartTime + 1;
+                }
+                else if (action == "zip")
+                {
+                    expectedJuggler = jugglerId;
+                    expectedTime = source.StartTime - 1;
+                }
+                else if (action == "heff")
+                {
+                    expectedJuggler = jugglerId;
+                    expectedTime = source.StartTime + 2;
+                }
+                else
+                {
+                    expectedJuggler = jugglerIds[action];
+                    var receiverTimes = record
+                        .Throws.Where(item => item.JugglerId == expectedJuggler)
+                        .Select(item => item.StartTime);
+                    expectedTime = receiverTimes
+                        .SelectMany(time =>
+                            Enumerable
+                                .Range(-1, 3)
+                                .Select(offset =>
+                                    (Time: time + offset * record.CycleLength, Offset: offset)
+                                )
+                        )
+                        .Where(candidate => candidate.Time >= source.StartTime + 1)
+                        .Min(candidate => candidate.Time);
+                }
+
+                var target = record.Throws.Single(item =>
+                    item.JugglerId == expectedJuggler
+                    && item.StartTime
+                        + Math.Floor((expectedTime - item.StartTime) / record.CycleLength)
+                            * record.CycleLength
+                        == expectedTime
+                );
+                var edge = record.CausalEdges.Single(item => item.From == source.Id);
+                edge.To.Should().Be(target.Id, source.Id);
+                (target.StartTime + edge.CycleOffset * record.CycleLength)
+                    .Should()
+                    .Be(expectedTime, source.Id);
+            }
         }
     }
 

@@ -36,9 +36,21 @@ public class Highgate241To255StandaloneRecordValidationTests
             ),
             JsonOptions
         )!;
+        records.Should().HaveCount(23);
+        records.Select(record => record.Id).Should().OnlyHaveUniqueItems();
 
         foreach (var record in records)
         {
+            record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
+            var throwIds = record.Throws.Select(item => item.Id).ToHashSet();
+            var outgoingThrowIds = new HashSet<string>();
+            foreach (var edge in record.CausalEdges)
+            {
+                throwIds.Should().Contain(edge.FromId, record.Id);
+                throwIds.Should().Contain(edge.ToIdValue, record.Id);
+                outgoingThrowIds.Add(edge.FromId).Should().BeTrue(record.Id);
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",
@@ -76,8 +88,6 @@ public class Highgate241To255StandaloneRecordValidationTests
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
-
-        records.Should().HaveCount(23);
     }
 
     private sealed record Record(

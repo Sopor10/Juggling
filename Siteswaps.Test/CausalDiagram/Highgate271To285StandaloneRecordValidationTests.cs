@@ -37,6 +37,7 @@ public class Highgate271To285StandaloneRecordValidationTests
             ),
             JsonOptions
         )!;
+        records.Should().HaveCount(10);
 
         records
             .Select(record => record.Id)
@@ -59,13 +60,40 @@ public class Highgate271To285StandaloneRecordValidationTests
 
         foreach (var record in records)
         {
+            record.Jugglers.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
             record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
+            var jugglerIds = record.Jugglers.Select(item => item.Id).ToHashSet();
+            record
+                .Throws.Should()
+                .OnlyContain(item => jugglerIds.Contains(item.JugglerId), record.Id);
             record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
             var throwIds = record.Throws.Select(item => item.Id).ToHashSet();
+            record.CausalEdges.Select(edge => edge.From).Should().OnlyHaveUniqueItems(record.Id);
+            record
+                .CausalEdges.Select(edge => edge.From)
+                .Should()
+                .BeEquivalentTo(throwIds, record.Id);
             record
                 .CausalEdges.SelectMany(edge => new[] { edge.From, edge.To })
                 .Should()
                 .OnlyContain(id => throwIds.Contains(id), record.Id);
+            var throwsById = record.Throws.ToDictionary(item => item.Id);
+            foreach (var edge in record.CausalEdges)
+            {
+                var source = throwsById[edge.From];
+                var target = throwsById[edge.To];
+                if (source.HeightIsExplicit)
+                {
+                    (
+                        target.StartTime
+                        + edge.CycleOffset * record.CycleLength
+                        + 2
+                        - source.StartTime
+                    )
+                        .Should()
+                        .Be(source.Height, record.Id);
+                }
+            }
 
             var state = new CausalDiagramEditorState
             {
