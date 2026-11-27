@@ -49,6 +49,8 @@ The standalone validator assigns the registered ID `highgate-three-count` so it 
 
 This is a checked partial batch, not completion of printed pp. 76–90. The four independent non-manipulation patterns shown on printed p. 82 are now transcribed as separate source records; the rest of the page range has not been exhaustively inventoried here. The editor graph stores causal nodes and edges; it does not store the club-count starting inventory or the book's color-coded club identity. Those annotations are therefore not reproduced in these records. No included pattern required a model extension.
 
+The slow-fast diagrams on printed pp. 78–79 are documented separately in [highgate-transcriptions-78-79.md](highgate-transcriptions-78-79.md). Three static graphs from this section are registered in the runtime preset list; two other slow-fast graphs still need a complete endpoint/tempo audit.
+
 ## Additional seven-club count graphs
 
 I added `highgate-777786` and `highgate-777867` to the separate JSON chunk after transcribing their event cycles from the diagrams and per-juggler throw descriptions. The 2017 diagrams are on PDF pp. 84–85 (printed pp. 83–84); the 2014 PDF p. 53 reproduces the 777786 diagram and its text. The 777867 pattern is present in the 2017 edition, and I did not find an exact 2014 counterpart.

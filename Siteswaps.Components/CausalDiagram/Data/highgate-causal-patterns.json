@@ -140486,5 +140486,1458 @@
         "cycleOffset": 1
       }
     ]
+  },
+  {
+    "id": "highgate-fourcountvsthreecount",
+    "label": "Four count vs three count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 78 / PDF p. 79; compared against The Highgate Collection (2014), printed p. 50 / PDF p. 50.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.75
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.25
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.0
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.75
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.25
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.0
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.0
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.0
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.0
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Anne throws every 3/4 beat: pass, self, self, self, crossing pass, self, self, self. Ben throws every beat: pass, self, self, crossing pass, self, self. Both begin on R.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 78,
+        "pdfPage": 79
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 50,
+        "pdfPage": 50
+      }
+    ]
+  },
+  {
+    "id": "highgate-threecountvstwocount",
+    "label": "Three count vs two count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 78 / PDF p. 79; compared against The Highgate Collection (2014), printed p. 50 / PDF p. 50.",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.666667
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.333333
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.0
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.666667
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.333333
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.0
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.0
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Anne throws every 2/3 beat: pass, self, self, crossing pass, self, self. Ben throws every beat: pass, self, crossing pass, self. Both begin on R.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 78,
+        "pdfPage": 79
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 50,
+        "pdfPage": 50
+      }
+    ]
+  },
+  {
+    "id": "highgate-quasar",
+    "label": "Quasar",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 142 / PDF p. 143; 2014 PDF p. 94 (printed p. 94).",
+    "cycleLength": 30,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "P1-15",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "P1-16",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P1-17",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "P1-18",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "P1-19",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "P1-20",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "P1-21",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "P1-22",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "P1-23",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "P1-24",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "P1-25",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 24
+      },
+      {
+        "id": "P1-26",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 25
+      },
+      {
+        "id": "P1-27",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 26
+      },
+      {
+        "id": "P1-28",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 27
+      },
+      {
+        "id": "P1-29",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 28
+      },
+      {
+        "id": "P1-30",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 29
+      },
+      {
+        "id": "P2-31",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P2-32",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P2-33",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P2-34",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P2-35",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P2-36",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P2-37",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "P2-38",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P2-39",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P2-40",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "P2-41",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "P2-42",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P2-43",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P2-44",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "P2-45",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "P2-46",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P2-47",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "P2-48",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "P2-49",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "P2-50",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "P2-51",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "P2-52",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "P2-53",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "P2-54",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "P2-55",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 24
+      },
+      {
+        "id": "P2-56",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 25
+      },
+      {
+        "id": "P2-57",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 26
+      },
+      {
+        "id": "P2-58",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 27
+      },
+      {
+        "id": "P2-59",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 28
+      },
+      {
+        "id": "P2-60",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 29
+      },
+      {
+        "id": "P3-61",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "P3-62",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "P3-63",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "P3-64",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "P3-65",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "P3-66",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "P3-67",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "P3-68",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "P3-69",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "P3-70",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "P3-71",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "P3-72",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "P3-73",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "P3-74",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "P3-75",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "P3-76",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "P3-77",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "P3-78",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "P3-79",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "P3-80",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "P3-81",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "P3-82",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "P3-83",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "P3-84",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "P3-85",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 24
+      },
+      {
+        "id": "P3-86",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 25
+      },
+      {
+        "id": "P3-87",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 26
+      },
+      {
+        "id": "P3-88",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 27
+      },
+      {
+        "id": "P3-89",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 28
+      },
+      {
+        "id": "P3-90",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 29
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P2-32",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P3-64",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P3-67",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P2-41",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P1-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-13",
+        "to": "P2-44",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-14",
+        "to": "P1-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-15",
+        "to": "P3-76",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-16",
+        "to": "P2-47",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-17",
+        "to": "P1-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-18",
+        "to": "P3-79",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-19",
+        "to": "P1-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-20",
+        "to": "P1-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-21",
+        "to": "P3-82",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-22",
+        "to": "P1-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-23",
+        "to": "P1-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-24",
+        "to": "P1-25",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-25",
+        "to": "P2-56",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-26",
+        "to": "P1-27",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-27",
+        "to": "P1-28",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-28",
+        "to": "P2-59",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-29",
+        "to": "P1-30",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-30",
+        "to": "P3-61",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-31",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-32",
+        "to": "P2-33",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-33",
+        "to": "P2-34",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-34",
+        "to": "P2-35",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-35",
+        "to": "P3-66",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-36",
+        "to": "P2-37",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-37",
+        "to": "P2-38",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-38",
+        "to": "P3-69",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-39",
+        "to": "P2-40",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-40",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-41",
+        "to": "P3-72",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-42",
+        "to": "P2-43",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-43",
+        "to": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-44",
+        "to": "P2-45",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-45",
+        "to": "P2-46",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-46",
+        "to": "P1-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-47",
+        "to": "P2-48",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-48",
+        "to": "P2-49",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-49",
+        "to": "P2-50",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-50",
+        "to": "P3-81",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-51",
+        "to": "P2-52",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-52",
+        "to": "P2-53",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-53",
+        "to": "P3-84",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-54",
+        "to": "P2-55",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-55",
+        "to": "P1-26",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-56",
+        "to": "P3-87",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-57",
+        "to": "P2-58",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-58",
+        "to": "P1-29",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-59",
+        "to": "P2-60",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-60",
+        "to": "P2-31",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-61",
+        "to": "P3-62",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-62",
+        "to": "P3-63",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-63",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-64",
+        "to": "P3-65",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-65",
+        "to": "P2-36",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-66",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-67",
+        "to": "P3-68",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-68",
+        "to": "P2-39",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-69",
+        "to": "P3-70",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-70",
+        "to": "P3-71",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-71",
+        "to": "P2-42",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-72",
+        "to": "P3-73",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-73",
+        "to": "P3-74",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-74",
+        "to": "P3-75",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-75",
+        "to": "P1-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-76",
+        "to": "P3-77",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-77",
+        "to": "P3-78",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-78",
+        "to": "P1-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-79",
+        "to": "P3-80",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-80",
+        "to": "P2-51",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-81",
+        "to": "P1-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-82",
+        "to": "P3-83",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-83",
+        "to": "P2-54",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-84",
+        "to": "P3-85",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-85",
+        "to": "P3-86",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-86",
+        "to": "P2-57",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-87",
+        "to": "P3-88",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-88",
+        "to": "P3-89",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-89",
+        "to": "P3-90",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-90",
+        "to": "P1-1",
+        "cycleOffset": 1
+      }
+    ]
+  },
+  {
+    "id": "highgate-twocountvsonecount",
+    "label": "Two count vs one count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 79 / PDF p. 80; compared against The Highgate Collection (2014), printed p. 50 / PDF p. 50. Both diagrams visually checked.",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      }
+    ],
+    "notation": "Anne event interval 1/2 beat: pass, self, crossing pass, self. Ben event interval 1 beat: pass, crossing pass. Both begin on R; starting inventories are two clubs in R and one in L.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 79,
+        "pdfPage": 80
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 50,
+        "pdfPage": 50
+      }
+    ]
   }
 ]

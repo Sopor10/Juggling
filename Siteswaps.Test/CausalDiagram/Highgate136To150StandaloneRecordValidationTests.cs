@@ -63,6 +63,14 @@ public class Highgate136To150StandaloneRecordValidationTests
             "Clare Anne Clare self Anne self Anne Clare self Clare self Anne".Split(' '),
             "Ben self Ben Anne self Anne self Ben Anne Ben Anne self".Split(' '),
         ],
+        ["highgate-quasar"] =
+        [
+            "Ben self Clare self self Clare self self self Ben self self Ben self Clare".Split(' '),
+            "Anne self self self Clare self self Clare self Anne Clare self Anne self self".Split(
+                ' '
+            ),
+            "self self Anne self Ben Anne self Ben self self Ben self self self Anne".Split(' '),
+        ],
     };
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -176,7 +184,7 @@ public class Highgate136To150StandaloneRecordValidationTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
 
-        records.Should().HaveCount(11);
+        records.Should().HaveCount(12);
     }
 
     private sealed record Record(
