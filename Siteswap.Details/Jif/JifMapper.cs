@@ -103,6 +103,29 @@ public static class JifMapper
         int propCount
     )
     {
+        var orbitByBeat = GetOrbitByBeat(siteswap);
+        var assignedProps = new bool[throws.Count];
+        var colors = new List<string>(propCount);
+        for (var beat = 0; beat < throws.Count; beat++)
+        {
+            if (assignedProps[beat] || (diagram.HeightOf(throws[beat]) ?? 0) <= 0)
+                continue;
+
+            var orbitIndex = orbitByBeat[beat % siteswap.Length];
+            colors.Add(OrbitColorPalette.For(orbitIndex));
+            MarkPropOrbit(beat, diagram, throws, assignedProps);
+        }
+
+        if (colors.Count != propCount)
+            throw new InvalidOperationException(
+                "Siteswap orbit sizes do not match its prop count."
+            );
+
+        return colors.ToArray();
+    }
+
+    private static int[] GetOrbitByBeat(global::Siteswap.Details.Siteswap siteswap)
+    {
         var orbitByBeat = Enumerable.Repeat(-1, siteswap.Length).ToArray();
         var orbits = siteswap.GetOrbits();
         var orbitCount = Math.Min(orbits.Count, siteswap.Length);
@@ -114,33 +137,25 @@ public static class JifMapper
                     orbitByBeat[beat] = orbitIndex;
             }
         }
+        return orbitByBeat;
+    }
 
-        var assignedProps = new bool[throws.Count];
-        var colors = new List<string>(propCount);
-        for (var beat = 0; beat < throws.Count; beat++)
+    private static void MarkPropOrbit(
+        int startBeat,
+        DiagramSet diagram,
+        IReadOnlyList<DiagramThrow> throws,
+        bool[] assignedProps
+    )
+    {
+        var landingBeat = startBeat;
+        while (landingBeat < throws.Count)
         {
-            if (assignedProps[beat] || (diagram.HeightOf(throws[beat]) ?? 0) <= 0)
-                continue;
-
-            var orbitIndex = orbitByBeat[beat % siteswap.Length];
-            colors.Add(OrbitColorPalette.For(orbitIndex));
-            var landingBeat = beat;
-            while (landingBeat < throws.Count)
-            {
-                var landingHeight = diagram.HeightOf(throws[landingBeat % throws.Count]);
-                if (landingHeight is not > 0)
-                    break;
-                assignedProps[landingBeat % throws.Count] = true;
-                landingBeat += landingHeight.Value;
-            }
+            var landingHeight = diagram.HeightOf(throws[landingBeat % throws.Count]);
+            if (landingHeight is not > 0)
+                break;
+            assignedProps[landingBeat % throws.Count] = true;
+            landingBeat += landingHeight.Value;
         }
-
-        if (colors.Count != propCount)
-            throw new InvalidOperationException(
-                "Siteswap orbit sizes do not match its prop count."
-            );
-
-        return colors.ToArray();
     }
 
     /// <summary>Maps a causal throw diagram to a complete JIF pattern.</summary>

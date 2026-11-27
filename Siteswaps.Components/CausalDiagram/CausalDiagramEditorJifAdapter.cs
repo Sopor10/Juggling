@@ -75,13 +75,11 @@ public static class CausalDiagramEditorJifAdapter
             .Select(item => (item.Node.JugglerId, item.Node.Hand))
             .Distinct()
             .ToList();
-        foreach (var juggler in state.Jugglers)
-        {
-            if (!handOrder.Contains((juggler.Id, "R")))
-                handOrder.Add((juggler.Id, "R"));
-            if (!handOrder.Contains((juggler.Id, "L")))
-                handOrder.Add((juggler.Id, "L"));
-        }
+        handOrder.AddRange(
+            state
+                .Jugglers.SelectMany(juggler => new[] { (juggler.Id, "R"), (juggler.Id, "L") })
+                .Where(hand => !handOrder.Contains(hand))
+        );
 
         var hands = handOrder
             .Select(hand => new Hand(hand.Hand, jugglers[jugglerIndex[hand.JugglerId]]))
@@ -159,7 +157,6 @@ public static class CausalDiagramEditorJifAdapter
                 outgoing,
                 nodesById,
                 durations,
-                inferredTargets,
                 jugglers,
                 jugglerIndex,
                 hands,
@@ -219,7 +216,6 @@ public static class CausalDiagramEditorJifAdapter
         Dictionary<string, EditorCausalEdge> outgoing,
         Dictionary<string, EditorThrow> nodesById,
         Dictionary<string, decimal> durations,
-        Dictionary<string, string> inferredTargets,
         Person[] jugglers,
         Dictionary<string, int> jugglerIndex,
         ImmutableList<Hand> hands,

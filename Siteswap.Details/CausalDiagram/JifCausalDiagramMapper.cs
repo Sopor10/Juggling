@@ -18,10 +18,9 @@ public static class JifCausalDiagramMapper
 
         var jugglers = CreateJugglers(sourceJugglers);
         var hands = CreateHands(sourceLimbs, jugglers, nameof(jif));
-        var period =
-            jif.Repetition?.Period is > 0 ? jif.Repetition.Period.Value
-            : sourceThrows.Count == 0 ? 1
-            : decimal.ToInt32(decimal.Ceiling(sourceThrows.Max(node => node.Time ?? 0m) + 1m));
+        var period = jif.Repetition?.Period is > 0
+            ? jif.Repetition.Period.Value
+            : GetSourcePeriod(sourceThrows);
         var (nodes, arrows) = CreateThrows(sourceThrows, hands, period, nameof(jif));
         if (nodes.Count == 0)
             throw new ArgumentException(
@@ -74,6 +73,11 @@ public static class JifCausalDiagramMapper
         ImmutableList<Person> jugglers,
         string parameterName
     ) => sourceLimbs.Select(limb => CreateHand(limb, jugglers, parameterName)).ToImmutableList();
+
+    private static int GetSourcePeriod(IReadOnlyList<JifThrow> sourceThrows) =>
+        sourceThrows.Count == 0
+            ? 1
+            : decimal.ToInt32(decimal.Ceiling(sourceThrows.Max(node => node.Time ?? 0m) + 1m));
 
     private static Hand CreateHand(
         JifLimb limb,

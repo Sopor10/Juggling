@@ -199,7 +199,6 @@ public sealed class CausalDiagramEditorState
         var nodes = new List<EditorThrow>(handPeriod);
         for (var beat = 0; beat < handPeriod; beat++)
         {
-            var height = siteswap.Items[beat % siteswap.Length];
             nodes.Add(new EditorThrow($"A{beat + 1}", "A", beat % 2 == 0 ? "R" : "L", beat));
         }
 
@@ -633,42 +632,30 @@ public sealed class CausalDiagramEditorState
     {
         using var doc = JsonDocument.Parse(json, new JsonDocumentOptions { MaxDepth = 8 });
         var root = doc.RootElement;
-        if (
-            root.ValueKind != JsonValueKind.Object
-            || !root.TryGetProperty("v", out var version)
-            || !version.TryGetInt32(out var v)
-            || v != expectedVersion
-            || !root.TryGetProperty("p", out var preset)
-            || preset.ValueKind != JsonValueKind.String
-            || !root.TryGetProperty("a", out var active)
-            || active.ValueKind != JsonValueKind.String
-            || !root.TryGetProperty("c", out var cycle)
-            || !cycle.TryGetDecimal(out var c)
-            || !root.TryGetProperty("r", out var reps)
-            || !reps.TryGetInt32(out var repetitions)
-            || !root.TryGetProperty("s", out var snap)
-            || snap.ValueKind is not (JsonValueKind.True or JsonValueKind.False)
-            || !root.TryGetProperty("q", out var step)
-            || !step.TryGetDecimal(out var snapStep)
-            || !root.TryGetProperty("j", out var jugglers)
-            || jugglers.ValueKind != JsonValueKind.Array
-            || jugglers.GetArrayLength() > 16
-            || !root.TryGetProperty("t", out var throws)
-            || throws.ValueKind != JsonValueKind.Array
-            || throws.GetArrayLength() > 500
-            || !root.TryGetProperty("e", out var edges)
-            || edges.ValueKind != JsonValueKind.Array
-            || edges.GetArrayLength() > 2_000
-        )
+        if (root.ValueKind != JsonValueKind.Object)
             throw new JsonException("Invalid editor state shape.");
+
+        var version = RequiredInt(root, "v");
+        if (version != expectedVersion)
+            throw new JsonException("Unsupported editor state version.");
+
+        var preset = RequiredString(root, "p");
+        var active = RequiredString(root, "a");
+        var cycle = RequiredDecimal(root, "c");
+        var repetitions = RequiredInt(root, "r");
+        var snap = RequiredBoolean(root, "s");
+        var snapStep = RequiredDecimal(root, "q");
+        var jugglers = RequiredArray(root, "j", 16);
+        var throws = RequiredArray(root, "t", 500);
+        var edges = RequiredArray(root, "e", 2_000);
         var state = new CausalDiagramEditorState
         {
-            Version = v,
-            PresetId = preset.GetString() ?? throw new JsonException(),
-            ActiveJugglerId = active.GetString() ?? throw new JsonException(),
-            CycleLength = c,
+            Version = version,
+            PresetId = preset,
+            ActiveJugglerId = active,
+            CycleLength = cycle,
             Repetitions = repetitions,
-            SnapEnabled = snap.GetBoolean(),
+            SnapEnabled = snap,
             SnapStep = snapStep,
             TimelineWidth = ReadOptionalDecimal(root, "w", 560m),
             LaneSpacing = ReadOptionalDecimal(root, "l", 105m),
@@ -696,7 +683,7 @@ public sealed class CausalDiagramEditorState
         {
             if (
                 item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != (expectedVersion >= 4 ? 4 : 5)
+                || item.GetArrayLength() != 4
                 || item[0].ValueKind != JsonValueKind.String
                 || item[1].ValueKind != JsonValueKind.String
                 || item[2].ValueKind != JsonValueKind.String
@@ -733,6 +720,54 @@ public sealed class CausalDiagramEditorState
             );
         }
         return state;
+    }
+
+    private static JsonElement RequiredProperty(JsonElement root, string name) =>
+        root.TryGetProperty(name, out var value)
+            ? value
+            : throw new JsonException($"Missing {name}.");
+
+    private static string RequiredString(JsonElement root, string name)
+    {
+        var value = RequiredProperty(root, name);
+        return value.ValueKind == JsonValueKind.String
+            ? value.GetString() ?? throw new JsonException($"Invalid {name}.")
+            : throw new JsonException($"Invalid {name}.");
+    }
+
+    private static int RequiredInt(JsonElement root, string name)
+    {
+        var value = RequiredProperty(root, name);
+        return value.TryGetInt32(out var parsed)
+            ? parsed
+            : throw new JsonException($"Invalid {name}.");
+    }
+
+    private static decimal RequiredDecimal(JsonElement root, string name)
+    {
+        var value = RequiredProperty(root, name);
+        return value.TryGetDecimal(out var parsed)
+            ? parsed
+            : throw new JsonException($"Invalid {name}.");
+    }
+
+    private static bool RequiredBoolean(JsonElement root, string name)
+    {
+        var value = RequiredProperty(root, name);
+        return value.ValueKind switch
+        {
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            _ => throw new JsonException($"Invalid {name}."),
+        };
+    }
+
+    private static JsonElement RequiredArray(JsonElement root, string name, int maximumLength)
+    {
+        var value = RequiredProperty(root, name);
+        if (value.ValueKind != JsonValueKind.Array || value.GetArrayLength() > maximumLength)
+            throw new JsonException($"Invalid {name}.");
+        return value;
     }
 
     private static bool IsValid(CausalDiagramEditorState? state)
@@ -899,7 +934,10 @@ public sealed class CausalDiagramEditorState
 
         public static BeatFraction GreatestCommonDivisor(BeatFraction left, BeatFraction right)
         {
-            var commonDenominator = LeastCommonMultiple(left.Denominator, right.Denominator);
+            var commonDenominator = LeastCommonMultipleFractions(
+                left.Denominator,
+                right.Denominator
+            );
             var leftNumerator = left.Numerator * (commonDenominator / left.Denominator);
             var rightNumerator = right.Numerator * (commonDenominator / right.Denominator);
             return Create(
@@ -923,7 +961,7 @@ public sealed class CausalDiagramEditorState
             return new BeatFraction(numerator / divisor, denominator / divisor);
         }
 
-        private static BigInteger LeastCommonMultiple(BigInteger left, BigInteger right) =>
+        private static BigInteger LeastCommonMultipleFractions(BigInteger left, BigInteger right) =>
             left / BigInteger.GreatestCommonDivisor(left, right) * right;
     }
 

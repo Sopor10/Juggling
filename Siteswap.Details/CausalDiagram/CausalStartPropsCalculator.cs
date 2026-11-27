@@ -60,7 +60,7 @@ public static class CausalStartPropsCalculator
         {
             var node = positiveThrows[index];
             var key = Key(node);
-            var landingHand = GetLandingHand(node, diagram, outgoingArrows);
+            var landingHand = GetLandingHand(node, outgoingArrows);
             var landingTime = GetLandingTime(node, handCount, outgoingArrows);
             if (!throwsByHand.TryGetValue(HandKey(landingHand), out var candidates))
                 throw new InvalidOperationException(
@@ -190,7 +190,6 @@ public static class CausalStartPropsCalculator
 
     private static Hand GetLandingHand(
         DiagramThrow node,
-        DiagramSet diagram,
         IReadOnlyDictionary<NodeKey, DiagramArrow[]> outgoingArrows
     )
     {

@@ -5,6 +5,17 @@ namespace Siteswap.Details.CausalDiagram;
 /// <summary>Builds the causal event model for a phased, person-to-person passing pattern.</summary>
 public static class PassingDiagramBuilder
 {
+    private sealed record ThrowBuildContext(
+        IReadOnlyList<int> TimeZones,
+        IReadOnlyList<IReadOnlyList<int>> Heights,
+        IReadOnlyList<IReadOnlyList<int>> Targets,
+        IReadOnlyList<int> NormalizedTimeZones,
+        int TimeStretch,
+        int Period,
+        int DiagramPatternPeriod,
+        ImmutableList<Hand> Hands
+    );
+
     public static DiagramSet Build(
         IReadOnlyList<int> timeZones,
         IReadOnlyList<IReadOnlyList<int>> heights,
@@ -24,14 +35,16 @@ public static class PassingDiagramBuilder
         var jugglers = CreateJugglers(timeZones.Count);
         var hands = CreateHands(jugglers);
         var throwEntries = CreateThrows(
-            timeZones,
-            heights,
-            targets,
-            normalizedTimeZones,
-            timeStretch,
-            period,
-            diagramPatternPeriod,
-            hands
+            new ThrowBuildContext(
+                timeZones,
+                heights,
+                targets,
+                normalizedTimeZones,
+                timeStretch,
+                period,
+                diagramPatternPeriod,
+                hands
+            )
         );
         if (throwEntries.Count == 0)
             throw new ArgumentException(
@@ -132,23 +145,14 @@ public static class PassingDiagramBuilder
             )
             .ToImmutableList();
 
-    private static List<(DiagramThrow Node, int Height)> CreateThrows(
-        IReadOnlyList<int> timeZones,
-        IReadOnlyList<IReadOnlyList<int>> heights,
-        IReadOnlyList<IReadOnlyList<int>> targets,
-        IReadOnlyList<int> normalizedTimeZones,
-        int timeStretch,
-        int period,
-        int diagramPatternPeriod,
-        ImmutableList<Hand> hands
-    )
+    private static List<(DiagramThrow Node, int Height)> CreateThrows(ThrowBuildContext context)
     {
         var nodes = new List<(DiagramThrow Node, int Height)>();
-        for (var person = 0; person < timeZones.Count; person++)
+        for (var person = 0; person < context.TimeZones.Count; person++)
         {
-            for (var beat = 0; beat < diagramPatternPeriod; beat++)
+            for (var beat = 0; beat < context.DiagramPatternPeriod; beat++)
             {
-                var height = heights[person][beat % period];
+                var height = context.Heights[person][beat % context.Period];
                 if (height == 0)
                     continue;
                 nodes.Add(
@@ -156,10 +160,10 @@ public static class PassingDiagramBuilder
                         person,
                         beat,
                         height,
-                        targets,
-                        normalizedTimeZones,
-                        timeStretch,
-                        hands
+                        context.Targets,
+                        context.NormalizedTimeZones,
+                        context.TimeStretch,
+                        context.Hands
                     )
                 );
             }
