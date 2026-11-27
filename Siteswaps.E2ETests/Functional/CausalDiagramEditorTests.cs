@@ -58,17 +58,26 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         var phaseTwoToken = GetStateToken(phaseTwoUrl);
         phaseTwoToken.Should().StartWith("j5.");
         CausalDiagramEditorState.TryDecode(phaseTwoToken, out var phaseTwoState).Should().BeTrue();
+        phaseTwoState!.SequenceId.Should().Be("highgate-thirteenclubrunaway");
         phaseTwoState!.SequencePhaseIndex.Should().Be(1);
         phaseTwoState.PresetId.Should().Be("highgate-thirteenclubrunaway-after-daniel-walk");
 
         var restoredPage = await session.Context.NewPageAsync();
-        await restoredPage.GotoAsync(phaseTwoUrl);
-        var continueButton = restoredPage.GetByRole(
-            AriaRole.Button,
-            new() { Name = "Weiter zum Diagramm" }
+        var restoredUri = new UriBuilder(phaseTwoUrl);
+        restoredUri.Query = string.Join(
+            '&',
+            restoredUri
+                .Query.TrimStart('?')
+                .Split('&', StringSplitOptions.RemoveEmptyEntries)
+                .Where(parameter => !parameter.StartsWith("step=", StringComparison.Ordinal))
+                .Append("step=2")
         );
-        if (await continueButton.CountAsync() > 0)
-            await continueButton.ClickAsync();
+        await restoredPage.GotoAsync(restoredUri.Uri.ToString());
+        await restoredPage
+            .Locator(".diagram-scroll")
+            .WaitForAsync(
+                new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30_000 }
+            );
         await Assertions.Expect(restoredPage.Locator(".runaway-sequence")).ToBeVisibleAsync();
         await Assertions
             .Expect(
