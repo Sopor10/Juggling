@@ -37,10 +37,13 @@ public class Highgate301To315StandaloneRecordValidationTests
             ),
             JsonOptions
         )!;
+        records.Select(record => record.Id).Should().OnlyHaveUniqueItems();
+        records.Should().HaveCount(26);
 
         foreach (var record in records)
         {
             var throwIds = record.Throws.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
+            throwIds.Should().HaveCount(record.Throws.Count, record.Id);
             record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
             record.CausalEdges.Select(edge => edge.From).Should().OnlyHaveUniqueItems(record.Id);
             record
@@ -49,6 +52,23 @@ public class Highgate301To315StandaloneRecordValidationTests
                     edge => throwIds.Contains(edge.From) && throwIds.Contains(edge.To),
                     record.Id
                 );
+            var throwsById = record.Throws.ToDictionary(item => item.Id, StringComparer.Ordinal);
+            foreach (var edge in record.CausalEdges)
+            {
+                var source = throwsById[edge.From];
+                if (source.HeightIsExplicit)
+                {
+                    var target = throwsById[edge.To];
+                    (
+                        target.StartTime
+                        + edge.CycleOffset * record.CycleLength
+                        + 2
+                        - source.StartTime
+                    )
+                        .Should()
+                        .Be(source.Height, $"{record.Id} {source.Id} height/edge timing");
+                }
+            }
 
             var state = new CausalDiagramEditorState
             {
@@ -215,18 +235,6 @@ public class Highgate301To315StandaloneRecordValidationTests
                                 ? tokenParts[2]
                                 : record.SourceRouteOverrides?.GetValueOrDefault(routeKey)
                                     ?? record.PassDirectionByJuggler?.GetValueOrDefault(name);
-                    }
-                    if (route is not null)
-                    {
-                        var expectedHand = route switch
-                        {
-                            "same" or "crossing" => source.Hand,
-                            "opposite" or "straight" => source.Hand == "R" ? "L" : "R",
-                            _ => throw new AssertionException(
-                                $"Unknown route {route} in {record.Id}"
-                            ),
-                        };
-                        target.Hand.Should().Be(expectedHand, $"{record.Id} {source.Id} ({token})");
                     }
                     if (route is not null)
                     {

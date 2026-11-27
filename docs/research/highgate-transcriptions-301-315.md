@@ -37,7 +37,7 @@ The JSON contains 26 records: the nine original accepted patterns plus 17 diagra
 
 For the original nine records, I compared the printed throw rows and hand order to the diagram arrows in the 2017 page image, then checked the corresponding 2014 page image. For the 17 additions, I transcribed the printed throw rows, start phases and route directions. I checked row hand order and pass directions against the 2017 diagrams, reconstructed periodic endpoints from recipient/action/hand timing, then compared titles, rows, phases, routes, and diagrams with the 2014 edition. The 17 are present on 2014 pp. 216–221 and 225, with no sequence or diagram differences found. In the added JSON records, `sourceRows` stores a normalized per-throw transcription; forms such as `double:Ben:straight` encode a double pass to Ben with a straight route. `edgeMethod` records the endpoint rule, and the focused test recomputes each endpoint/offset from the token, phase, and route. The state records the written phase offsets and one event per listed throw. Single and double passes use their corresponding arrival intervals; self events connect to the next throw by the same juggler. Pass angle, formation, and starting club inventory remain source notes rather than editor state.
 
-The focused test in `Highgate301To315StandaloneRecordValidationTests` builds a `CausalDiagramEditorState` for every record, calls `SynchronizeHeights()`, and requires `IsValidForEditor()` with all offsets preserved. It also checks unique throw IDs, one outgoing edge per throw, and resolvable endpoints. A source-sequence assertion checks the four rows of the countdown feed directly against the printed per-juggler sequences.
+The focused test in `Highgate301To315StandaloneRecordValidationTests` builds a `CausalDiagramEditorState` for every record, calls `SynchronizeHeights()`, and requires `IsValidForEditor()` with all offsets preserved. It checks unique record and throw IDs, one outgoing edge per throw, resolvable endpoints, and the explicit height/time equation. Source-sequence assertions check the countdown feed and each of the 17 added graphs directly against the printed target rows and routes.
 
 ### Countdown feed revalidation
 
@@ -46,7 +46,7 @@ Rechecking the countdown graph against the row sequences and both page diagrams 
 - Clare: Ben, Ben, Daniel, Ben, Daniel, Daniel, Ben, Daniel.
 - Daniel: Clare, self, self, Clare, self, Clare, Clare, self.
 
-The corrected Clare edges point to `P2-3`, `P2-4`, `P4-5`, `P2-6`, `P4-7`, `P4-8`, `P2-1` at offset 1, and `P4-2` at offset 1. Daniel's pass edges now point to Clare's corresponding opposite-hand events; his self throws continue along the Daniel row. The central preset with the same ID must be reconciled to these corrected source edges.
+The corrected Clare edges point to `P2-3`, `P2-4`, `P4-5`, `P2-6`, `P4-7`, `P4-8`, `P2-1` at offset 1, and `P4-2` at offset 1. Daniel's pass edges now point to Clare's corresponding opposite-hand events; his self throws continue along the Daniel row. The central preset with the same ID was compared against the corrected source graph and already matches it; `HighgateThirteenClubOneCountCountdown_MatchesSourceRowDestinations` checks the key Clare and Daniel routes in the runtime catalog.
 
 ## What the model can encode for zip, heff, and pass spins
 

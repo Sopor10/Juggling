@@ -13,7 +13,7 @@ public class Highgate331To340StandaloneRecordValidationTests
     };
 
     [Test]
-    public void TranscribedRecordsMatchTheirBaseGraphsAndCreateValidEditorStates()
+    public void EveryStandaloneRecordHasVerifiedSourcesAndCreatesAValidEditorState()
     {
         var repository = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
         while (
@@ -63,13 +63,7 @@ public class Highgate331To340StandaloneRecordValidationTests
         records
             .Select(record => record.Id)
             .Should()
-            .BeEquivalentTo(
-                new[]
-                {
-                    "highgate-thirteenclubdresserdrawerweave",
-                    "highgate-thirteenclubgorillaweave",
-                }
-            );
+            .Equal("highgate-thirteenclubdresserdrawerweave", "highgate-thirteenclubgorillaweave");
 
         foreach (var record in records)
         {
@@ -84,14 +78,20 @@ public class Highgate331To340StandaloneRecordValidationTests
             record.Jugglers.Should().BeEquivalentTo(baseRecord.Jugglers, record.Id);
             record.Throws.Should().BeEquivalentTo(baseRecord.Throws, record.Id);
             record.CausalEdges.Should().BeEquivalentTo(baseRecord.CausalEdges, record.Id);
-            record
-                .SourceLinks.EnumerateArray()
-                .Select(link => link.GetProperty("edition").GetString())
-                .Should()
-                .Contain("2017 expanded PDF")
-                .And.Contain("2014 PDF");
+            AssertSourceAnchors(record);
             record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
             record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
+            record
+                .CausalEdges.GroupBy(edge => edge.From)
+                .Should()
+                .OnlyContain(
+                    group => group.Count() == 1,
+                    $"each throw needs one outgoing edge in {record.Id}"
+                );
+            record
+                .CausalEdges.Select(edge => edge.From)
+                .Should()
+                .BeEquivalentTo(record.Throws.Select(item => item.Id), record.Id);
 
             var throwIds = record.Throws.Select(item => item.Id).ToHashSet();
             record
@@ -99,42 +99,83 @@ public class Highgate331To340StandaloneRecordValidationTests
                 .Should()
                 .OnlyContain(id => throwIds.Contains(id), record.Id);
 
-            var state = new CausalDiagramEditorState
-            {
-                PresetId = "highgate-three-count",
-                ActiveJugglerId = record.Jugglers[0].Id,
-                CycleLength = record.CycleLength,
-                Jugglers = record
-                    .Jugglers.Select(item => new EditorJuggler(item.Id, item.Name))
-                    .ToList(),
-                Throws = record
-                    .Throws.Select(item => new EditorThrow(
-                        item.Id,
-                        item.JugglerId,
-                        item.Hand,
-                        item.StartTime,
-                        item.Height ?? 0m,
-                        item.HeightIsExplicit
-                    ))
-                    .ToList(),
-                CausalEdges = record
-                    .CausalEdges.Select(
-                        (item, index) =>
-                            new EditorCausalEdge(
-                                $"check-{index}",
-                                item.From,
-                                item.To,
-                                item.CycleOffset
-                            )
-                    )
-                    .ToList(),
-            };
+            var state = CreateEditorState(record);
             var offsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
             state.SynchronizeHeights();
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
     }
+
+    private static void AssertSourceAnchors(Record record)
+    {
+        var sourceLinks = record.SourceLinks.EnumerateArray().ToArray();
+        sourceLinks.Should().HaveCount(2, record.Id);
+        sourceLinks
+            .Select(link => link.GetProperty("edition").GetString())
+            .Should()
+            .Contain("2017 expanded PDF")
+            .And.Contain("2014 PDF");
+        var expectedPages = record.Id switch
+        {
+            "highgate-thirteenclubdresserdrawerweave" => (
+                printed2017: 327,
+                pdf2017: 328,
+                printed2014: 235
+            ),
+            "highgate-thirteenclubgorillaweave" => (
+                printed2017: 329,
+                pdf2017: 330,
+                printed2014: 237
+            ),
+            _ => throw new AssertionException($"Unexpected source record {record.Id}"),
+        };
+        sourceLinks
+            .Single(link => link.GetProperty("edition").GetString() == "2017 expanded PDF")
+            .GetProperty("printedPage")
+            .GetInt32()
+            .Should()
+            .Be(expectedPages.printed2017, record.Id);
+        sourceLinks
+            .Single(link => link.GetProperty("edition").GetString() == "2017 expanded PDF")
+            .GetProperty("pdfPage")
+            .GetInt32()
+            .Should()
+            .Be(expectedPages.pdf2017, record.Id);
+        sourceLinks
+            .Single(link => link.GetProperty("edition").GetString() == "2014 PDF")
+            .GetProperty("printedPage")
+            .GetInt32()
+            .Should()
+            .Be(expectedPages.printed2014, record.Id);
+    }
+
+    private static CausalDiagramEditorState CreateEditorState(Record record) =>
+        new()
+        {
+            PresetId = "highgate-three-count",
+            ActiveJugglerId = record.Jugglers[0].Id,
+            CycleLength = record.CycleLength,
+            Jugglers = record
+                .Jugglers.Select(item => new EditorJuggler(item.Id, item.Name))
+                .ToList(),
+            Throws = record
+                .Throws.Select(item => new EditorThrow(
+                    item.Id,
+                    item.JugglerId,
+                    item.Hand,
+                    item.StartTime,
+                    item.Height ?? 0m,
+                    item.HeightIsExplicit
+                ))
+                .ToList(),
+            CausalEdges = record
+                .CausalEdges.Select(
+                    (item, index) =>
+                        new EditorCausalEdge($"check-{index}", item.From, item.To, item.CycleOffset)
+                )
+                .ToList(),
+        };
 
     private sealed record Record(
         string Id,

@@ -87,7 +87,98 @@ public class Highgate316To330StandaloneRecordValidationTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
 
-        records.Should().HaveCount(10);
+        records
+            .Select(record => record.Id)
+            .Should()
+            .BeEquivalentTo(
+                new[]
+                {
+                    "highgate-thirteenclubfourcount",
+                    "highgate-thirteenclubthreecount",
+                    "highgate-thirteenclubtwocount",
+                    "highgate-thirteenclubonecount",
+                    "highgate-thirteenclubfunkybookendslinefeedfeedingfivecoun-cde45e90c5",
+                    "highgate-thirteenclubmartinsonecountlinefeedfeedingfiveco-44febdca3e",
+                    "highgate-thirteenclubonecountlinefeedfeedingfivecountpopcornandparsnip",
+                    "highgate-thirteenclubonecountlinefeedfeedingwhynotandfivecountpopcorn",
+                    "highgate-thirteenclubonecountlinefeedfeedingmaybeandfivecountpopcorn",
+                    "highgate-thirteenclubweave",
+                }
+            );
+        records.Select(record => record.Id).Should().OnlyHaveUniqueItems();
+    }
+
+    [Test]
+    public void EverySourceRowMatchesItsTargetAndFeasibleThrowHeight()
+    {
+        var records = LoadRecords();
+
+        foreach (var record in records)
+        {
+            record.SourceRows.Should().NotBeNull(record.Id);
+            var idByName = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+            var throwById = record.Throws.ToDictionary(item => item.Id, StringComparer.Ordinal);
+            var edgeBySource = record.CausalEdges.ToDictionary(
+                item => item.From,
+                StringComparer.Ordinal
+            );
+
+            record.SourceLinks.ValueKind.Should().Be(JsonValueKind.Array, record.Id);
+            record
+                .SourceLinks.EnumerateArray()
+                .Select(item => item.GetProperty("edition").GetString())
+                .Should()
+                .Contain(item => item!.Contains("2017", StringComparison.Ordinal))
+                .And.Contain(item => item!.Contains("2014", StringComparison.Ordinal));
+
+            foreach (var (name, row) in record.SourceRows!)
+            {
+                var jugglerId = idByName[name];
+                var events = record.Throws.Where(item => item.JugglerId == jugglerId).ToArray();
+                events.Should().HaveCount((int)record.CycleLength, $"{record.Id} {name}");
+
+                foreach (var source in events)
+                {
+                    var sequenceSuffix = string.Concat(
+                        source.Id.Reverse().TakeWhile(char.IsDigit).Reverse()
+                    );
+                    var sequenceIndex = int.Parse(sequenceSuffix, CultureInfo.InvariantCulture) - 1;
+                    var token = row[sequenceIndex % row.Length];
+                    var targetName =
+                        token is "self" or "zip" or "heff" ? name
+                        : token.Contains(':', StringComparison.Ordinal) ? token.Split(':')[1]
+                        : token;
+                    var target = throwById[edgeBySource[source.Id].To];
+                    target.JugglerId.Should().Be(idByName[targetName], $"{record.Id} {source.Id}");
+
+                    var height =
+                        target.StartTime
+                        + edgeBySource[source.Id].CycleOffset * record.CycleLength
+                        - source.StartTime;
+                    var action = token is "self" or "zip" or "heff" ? token : "pass";
+
+                    if (record.SourceActionHeights is not null)
+                    {
+                        height
+                            .Should()
+                            .Be(record.SourceActionHeights[action], $"{record.Id} {source.Id}");
+                    }
+                    else
+                    {
+                        var minimums = record.SourceMinimumActionHeights!;
+                        var minimum = minimums[action];
+                        if (action == "zip")
+                            height
+                                .Should()
+                                .BeLessThanOrEqualTo(minimum, $"{record.Id} {source.Id}");
+                        else
+                            height
+                                .Should()
+                                .BeGreaterThanOrEqualTo(minimum, $"{record.Id} {source.Id}");
+                    }
+                }
+            }
+        }
     }
 
     [Test]
@@ -115,7 +206,7 @@ public class Highgate316To330StandaloneRecordValidationTests
             JsonOptions
         )!;
 
-        foreach (var record in records.Where(item => item.SourceRows is not null))
+        foreach (var record in records.Where(item => item.PassDirectionByJuggler is not null))
         {
             var idByName = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
             var throwById = record.Throws.ToDictionary(item => item.Id, StringComparer.Ordinal);
@@ -201,7 +292,32 @@ public class Highgate316To330StandaloneRecordValidationTests
             }
         }
 
-        records.Where(item => item.SourceRows is not null).Should().HaveCount(6);
+        records.Where(item => item.PassDirectionByJuggler is not null).Should().HaveCount(6);
+    }
+
+    private static List<Record> LoadRecords()
+    {
+        var repository = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+        while (
+            repository is not null
+            && !File.Exists(
+                Path.Combine(
+                    repository.FullName,
+                    "docs/research/highgate-transcriptions-316-330.json"
+                )
+            )
+        )
+            repository = repository.Parent;
+        repository.Should().NotBeNull();
+        return JsonSerializer.Deserialize<List<Record>>(
+            File.ReadAllText(
+                Path.Combine(
+                    repository!.FullName,
+                    "docs/research/highgate-transcriptions-316-330.json"
+                )
+            ),
+            JsonOptions
+        )!;
     }
 
     private sealed record Record(
@@ -211,7 +327,10 @@ public class Highgate316To330StandaloneRecordValidationTests
         List<Throw> Throws,
         List<Edge> CausalEdges,
         Dictionary<string, string[]>? SourceRows = null,
-        Dictionary<string, string>? PassDirectionByJuggler = null
+        Dictionary<string, string>? PassDirectionByJuggler = null,
+        Dictionary<string, decimal>? SourceActionHeights = null,
+        Dictionary<string, decimal>? SourceMinimumActionHeights = null,
+        JsonElement SourceLinks = default
     );
 
     private sealed record Juggler(string Id, string Name);

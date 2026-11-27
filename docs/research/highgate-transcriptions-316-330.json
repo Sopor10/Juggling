@@ -224,6 +224,36 @@
       "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
       "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
       "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    },
+    "sourceRows": {
+      "Anne": [
+        "Daniel",
+        "self",
+        "self",
+        "self"
+      ],
+      "Ben": [
+        "self",
+        "self",
+        "Anne",
+        "self"
+      ],
+      "Clare": [
+        "self",
+        "self",
+        "Ben",
+        "self"
+      ],
+      "Daniel": [
+        "Clare",
+        "self",
+        "self",
+        "self"
+      ]
+    },
+    "sourceActionHeights": {
+      "pass": 4,
+      "self": 3
     }
   },
   {
@@ -407,6 +437,32 @@
       "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
       "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
       "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    },
+    "sourceRows": {
+      "Anne": [
+        "Daniel",
+        "self",
+        "self"
+      ],
+      "Daniel": [
+        "Clare",
+        "self",
+        "self"
+      ],
+      "Ben": [
+        "self",
+        "Anne",
+        "self"
+      ],
+      "Clare": [
+        "Ben",
+        "self",
+        "self"
+      ]
+    },
+    "sourceActionHeights": {
+      "pass": 3.75,
+      "self": 3
     }
   },
   {
@@ -546,6 +602,28 @@
       "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
       "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
       "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    },
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "self"
+      ],
+      "Anne": [
+        "Daniel",
+        "self"
+      ],
+      "Daniel": [
+        "Clare",
+        "self"
+      ],
+      "Clare": [
+        "Ben",
+        "self"
+      ]
+    },
+    "sourceActionHeights": {
+      "pass": 3.5,
+      "self": 3
     }
   },
   {
@@ -641,6 +719,23 @@
       "modelCheck": "Direct validator after including all self-throw continuations: Create succeeded; IsValidForEditor passed after substituting registered placeholder ID highgate-three-count; SynchronizeHeights preserved all serialized cycle offsets. Rerun after central import with the intended ID.",
       "modelLimit": "The editor stores causal hand/event routing but not starting club inventory, spatial formation or crossing/straight trajectory.",
       "manipulationReview": "Ordinary four-person passing pattern; no manipulator, takeout, hijack, or lo-jack described."
+    },
+    "sourceRows": {
+      "Daniel": [
+        "Anne"
+      ],
+      "Anne": [
+        "Ben"
+      ],
+      "Ben": [
+        "Clare"
+      ],
+      "Clare": [
+        "Daniel"
+      ]
+    },
+    "sourceActionHeights": {
+      "pass": 3.25
     }
   },
   {
@@ -1178,6 +1273,12 @@
     "reviewStatus": {
       "2017": "Diagram and written pattern rows visually checked on the cited page.",
       "2014": "Matching diagram, rows, phases, and route annotations visually checked on the cited page."
+    },
+    "sourceActionHeights": {
+      "pass": 1.5,
+      "self": 1,
+      "heff": 2,
+      "zip": -1
     }
   },
   {
@@ -1713,6 +1814,12 @@
     "reviewStatus": {
       "2017": "Diagram and written pattern rows visually checked on the cited page.",
       "2014": "Matching diagram, rows, phases, and route annotations visually checked on the cited page."
+    },
+    "sourceActionHeights": {
+      "pass": 1.5,
+      "self": 1,
+      "heff": 2,
+      "zip": -1
     }
   },
   {
@@ -2248,6 +2355,12 @@
     "reviewStatus": {
       "2017": "Diagram and written pattern rows visually checked on the cited page.",
       "2014": "Matching diagram, rows, phases, and route annotations visually checked on the cited page."
+    },
+    "sourceActionHeights": {
+      "pass": 1.5,
+      "self": 1,
+      "heff": 2,
+      "zip": -1
     }
   },
   {
@@ -2783,6 +2896,12 @@
     "reviewStatus": {
       "2017": "Diagram and written pattern rows visually checked on the cited page.",
       "2014": "Matching diagram, rows, phases, and route annotations visually checked on the cited page."
+    },
+    "sourceActionHeights": {
+      "pass": 1.5,
+      "self": 1,
+      "heff": 2,
+      "zip": -1
     }
   },
   {
@@ -3320,6 +3439,12 @@
     "reviewStatus": {
       "2017": "Diagram and written pattern rows visually checked on the cited page.",
       "2014": "Matching diagram, rows, phases, and route annotations visually checked on the cited page."
+    },
+    "sourceActionHeights": {
+      "pass": 1.5,
+      "self": 1,
+      "heff": 2,
+      "zip": -1
     }
   },
   {
@@ -3685,6 +3810,10 @@
       "2017": "Causal-diagram image and pattern description checked on printed p. 326 / PDF p. 327; event rows, hand sequence, and cross-lane endpoints were traced from the image.",
       "2014": "Matching causal diagram and description visually compared on printed/PDF p. 234; title, event graph, and pass routes agree.",
       "modelLimit": "The cyclic graph can be represented, but the path of the weave and the sweep feeder’s spatial left/middle/right positions are not part of the causal editor state."
+    },
+    "sourceMinimumActionHeights": {
+      "pass": 1,
+      "self": 1
     }
   }
 ]

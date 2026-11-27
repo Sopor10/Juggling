@@ -17,11 +17,11 @@ For the four-count pattern, the 2014 book also has a differently named `Thirteen
 
 ## State validation
 
-The focused source-record validator checks all ten records: each graph has unique event IDs and outgoing edges, creates a valid editor state, and preserves its cycle offsets after height synchronization. The five line-feed graphs also check every source row's recipient, hand route, endpoint, and arrival offset. The separate Runaway state validator checks all four periodic components; those components are not registered as editor presets because none is the whole named pattern.
+The permanent source-record validator checks all ten IDs, unique throw IDs, one outgoing edge per throw, and valid edge endpoints, source destinations, and feasible edge heights. The first four count patterns assert the exact heights stated by their Prechac sequences. The five line-feed graphs and the weave also check each source row's recipient, hand route where annotated, endpoint, and arrival offset. All ten states pass `IsValidForEditor()` after height synchronization, which must preserve every source `cycleOffset`. The separate Runaway validator checks its four periodic source components; none is a complete standalone Runaway cycle.
 
-- `Highgate316To330StandaloneRecordValidationTests`: 2 passed.
+- `Highgate316To330StandaloneRecordValidationTests`: 3 passed.
 - `HighgateRunawayStandaloneStateValidationTests`: 2 passed.
-- The catalog imports the six standalone patterns from this chunk that represent complete periodic patterns; Runaway's four cyclic states remain research components until the editor can represent their finite transitions.
+- The ten source records are separate from the catalog data. Runaway's four cyclic states remain research components until the editor can represent their finite transitions.
 
 ## Additional line-feed diagrams transcribed
 
@@ -45,7 +45,7 @@ The diagram has six event positions per juggler in a six-beat repeat. I traced a
 
 ## Remaining patterns in the requested span
 
-The `Thirteen club runaway` phase records and model boundary are documented in [highgate-runaway-transition-review.md](highgate-runaway-transition-review.md). Its inventory row is classified as requiring finite-transition support. The four later weave diagrams on pp. 327–330 are being handled in the adjacent source batch.
+The `Thirteen club runaway` phase records and model boundary are documented in [highgate-runaway-transition-review.md](highgate-runaway-transition-review.md). Its inventory row is classified as requiring finite-transition support. The adjacent index chunk maps printed pp. 327–330 to 2017 PDF pp. 328–331 and 2014 pp. 235–238. It includes verified records for *Dresser drawer weave* and *Gorilla weave*. *It's a good one (countdown weave)* remains out because its cross-lane endpoints have not been confirmed. *Synchronous gorilla weave* was checked against both editions, but its same-time hand events still collide in the editor's current graph/table presentation; it is documented as a model/UI boundary rather than added as a selectable graph. The four printed-index pages themselves contain titles and locators, not additional pattern diagrams.
 
 ## Manipulation review
 
@@ -53,4 +53,4 @@ The included patterns and the visible candidate entries in this span describe or
 
 ## Source coverage
 
-The requested body range is 2017 printed pp. 316–330, corresponding to physical PDF pp. 317–331. Each source page in this range was visually scanned for named patterns and diagrams. The four included graphs were individually compared with both edition diagrams and the accompanying sequences. The 2017 expanded PDF is [jugglingedge.com/pdf/highgate.pdf](https://jugglingedge.com/pdf/highgate.pdf); the 2014 PDF is [passing.zone/wp-content/uploads/highgate.pdf](https://passing.zone/wp-content/uploads/highgate.pdf).
+The requested body range is 2017 printed pp. 316–330, corresponding to physical PDF pp. 317–331. Each source page in this range was visually scanned for named patterns and diagrams. Every graph included in this file was compared with its 2017 diagram and explanatory row sequence; the five line feeds and four standalone counts were also compared with their corresponding 2014 diagrams. The 2017 expanded PDF is [jugglingedge.com/pdf/highgate.pdf](https://jugglingedge.com/pdf/highgate.pdf); the 2014 PDF is [passing.zone/wp-content/uploads/highgate.pdf](https://passing.zone/wp-content/uploads/highgate.pdf).
