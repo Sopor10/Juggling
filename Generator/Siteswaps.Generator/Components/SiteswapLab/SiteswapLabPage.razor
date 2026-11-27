@@ -147,6 +147,7 @@
                                                          SelectedLocalBeat="@SelectedBeatFor(personIndex)"
                                                          LandingLocalBeat="@LandingBeatFor(personIndex)"
                                                          EnableDragDrop="true"
+                                                         ShowPassDestinations="_showPassDestinations"
                                                          RowPersonIndex="@personIndex"
                                                          DragScope="_dragScope"
                                                          ShowHeightSteppers="@(_direct.HasSelection && _direct.SelectedPerson == personIndex)"
@@ -181,6 +182,10 @@
                                 <div class="lab-pattern-footer">
                                     <button type="button" class="lab-legend-toggle" aria-expanded="@_showThrowLegend" @onclick="() => _showThrowLegend = !_showThrowLegend">
                                         @(_showThrowLegend ? "Legende ausblenden" : "Legende einblenden")
+                                    </button>
+                                    <button type="button" class="lab-destination-toggle @(_showPassDestinations ? "active" : null)"
+                                            aria-pressed="@_showPassDestinations" @onclick="TogglePassDestinationsAsync">
+                                        @L["Pass destinations"]
                                     </button>
                                     <FeedingThrowDisplayModeToggle Mode="_throwDisplayMode" ModeChanged="OnThrowDisplayModeChanged" />
                                 </div>
@@ -280,6 +285,7 @@
     private int? _dropTargetBeat;
     private string? _passingJifError;
     private bool _showThrowLegend;
+    private bool _showPassDestinations;
     private bool _stateInitialized;
     private string? _lastAppliedState;
 
@@ -354,6 +360,7 @@
         var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings");
         _direct = new PassingEditorState(maxThrowHeight: settings?.MaxHeight);
         _throwDisplayMode = FeedingThrowDisplay.ParseMode(settings?.ThrowDisplayMode);
+        _showPassDestinations = settings?.ShowPassDestinations ?? false;
         var restored = TryRestoreState(StateQuery, settings?.MaxHeight);
         _stateInitialized = true;
         _lastAppliedState = StateQuery;
@@ -667,10 +674,19 @@
                         ),
                         cell.TargetPerson == person ? PassOrSelf.Self : PassOrSelf.Pass,
                         cell.Height,
-                        beat
+                        beat,
+                        cell.TargetPerson is int targetPerson ? _direct.People[targetPerson].Name : null
                     )
             )
             .ToArray();
+
+    private async Task TogglePassDestinationsAsync()
+    {
+        _showPassDestinations = !_showPassDestinations;
+        var settings = await LocalStorage.GetItemAsync<SettingsDto>("settings") ?? new SettingsDto();
+        settings.ShowPassDestinations = _showPassDestinations;
+        await LocalStorage.SetItemAsync("settings", settings);
+    }
 
     private int? LandingBeatFor(int person) =>
         _direct.HasSelection && SelectedPassingLanding.TargetPerson == person

@@ -17,7 +17,13 @@ public static class FeedingThrowDisplay
         Name,
     }
 
-    public readonly record struct Chip(string Display, PassOrSelf Kind, int Height, int LocalBeat);
+    public readonly record struct Chip(
+        string Display,
+        PassOrSelf Kind,
+        int Height,
+        int LocalBeat,
+        string? Destination = null
+    );
 
     private sealed record NamedThrow(string Display, int BaseHeight);
 

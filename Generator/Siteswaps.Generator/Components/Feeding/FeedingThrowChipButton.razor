@@ -27,12 +27,20 @@
             @onpointerleave="OnPointerLeave"
             @onpointercancel="OnPointerCancel">
         <span class="feeding-beat-throw" aria-hidden="true">@Chip.Display</span>
+        @if (ShowDestination && Chip.Kind == PassOrSelf.Pass && Chip.Destination is not null)
+        {
+            <sub class="feeding-beat-destination" aria-hidden="true">@Chip.Destination</sub>
+        }
     </button>
 }
 else
 {
     <div class="feeding-beat @KindClass" title="@KindTitle" aria-label="@AccessibleName">
         <span class="feeding-beat-throw">@Chip.Display</span>
+        @if (ShowDestination && Chip.Kind == PassOrSelf.Pass && Chip.Destination is not null)
+        {
+            <sub class="feeding-beat-destination" aria-hidden="true">@Chip.Destination</sub>
+        }
     </div>
 }
 
@@ -57,6 +65,9 @@ else
 
     [Parameter]
     public bool IsSelected { get; set; }
+
+    [Parameter]
+    public bool ShowDestination { get; set; }
 
     [Parameter]
     public bool IsDragging { get; set; }

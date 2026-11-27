@@ -637,6 +637,34 @@
     cursor: pointer;
 }
 
+::deep .lab-destination-toggle {
+    appearance: none;
+    min-height: 44px;
+    padding: 6px 12px;
+    border: 1px solid var(--decision-color-border);
+    border-radius: 999px;
+    background: var(--decision-color-white);
+    color: var(--decision-color-brand-strong);
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+::deep .lab-destination-toggle.active {
+    background: var(--decision-color-brand-strong);
+    border-color: var(--decision-color-brand-strong);
+    color: var(--decision-color-white);
+}
+
+::deep .lab-overview-throws .feeding-beat-destination {
+    display: block;
+    margin-top: -2px;
+    font-size: .65rem;
+    font-style: normal;
+    line-height: 1;
+}
+
 ::deep .lab-chip-legend {
     display: flex;
     flex-wrap: wrap;

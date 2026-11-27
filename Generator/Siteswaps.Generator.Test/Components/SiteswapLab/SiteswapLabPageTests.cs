@@ -464,6 +464,34 @@ public class SiteswapLabPageTests
     }
 
     [Test]
+    public void Pass_Destinations_Can_Be_Toggled_And_Appear_On_Passes()
+    {
+        var page = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor")
+        );
+        var chipRow = ReadGeneratorSource(
+            Path.Combine("Components", "Feeding", "FeedingThrowChipRow.razor")
+        );
+        var chipButton = ReadGeneratorSource(
+            Path.Combine("Components", "Feeding", "FeedingThrowChipButton.razor")
+        );
+        var css = ReadGeneratorSource(
+            Path.Combine("Components", "SiteswapLab", "SiteswapLabPage.razor.css")
+        );
+
+        page.Should().Contain("@L[\"Pass destinations\"]");
+        page.Should().Contain("aria-pressed=\"@_showPassDestinations\"");
+        page.Should().Contain("ShowPassDestinations=\"_showPassDestinations\"");
+        page.Should().Contain("cell.TargetPerson is int targetPerson ? _direct.People[targetPerson].Name : null");
+        page.Should().Contain("settings.ShowPassDestinations = _showPassDestinations");
+        chipRow.Should().Contain("ShowPassDestinations");
+        chipButton.Should().Contain("ShowDestination && Chip.Kind == PassOrSelf.Pass");
+        chipButton.Should().Contain("class=\"feeding-beat-destination\"");
+        css.Should().Contain(".lab-destination-toggle");
+        css.Should().Contain("min-height: 44px");
+    }
+
+    [Test]
     public void Page_Is_Localized_And_Has_A_Mobile_Layout()
     {
         var page = ReadGeneratorSource(

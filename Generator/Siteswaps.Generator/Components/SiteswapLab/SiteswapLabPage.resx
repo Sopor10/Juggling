@@ -42,6 +42,7 @@
   <data name="Remove last beat, Period" xml:space="preserve"><value>Remove last beat, Period</value></data>
   <data name="Append beat, Period" xml:space="preserve"><value>Append beat, Period</value></data>
   <data name="Pass" xml:space="preserve"><value>Pass</value></data>
+  <data name="Pass destinations" xml:space="preserve"><value>Pass destinations</value></data>
   <data name="Self" xml:space="preserve"><value>Self</value></data>
   <data name="Selected throw" xml:space="preserve"><value>Selected throw</value></data>
   <data name="Throws {0}" xml:space="preserve"><value>Throws {0}</value></data>
