@@ -1094,35 +1094,46 @@ public sealed class CausalDiagramEditorState
 
     private static bool IsValidCanonicalSingleJugglerPattern(CausalDiagramEditorState state)
     {
-        if (
-            !state.PresetId.StartsWith("siteswap-", StringComparison.Ordinal)
-            || state.Jugglers.Count != 1
-            || state.CycleLength != decimal.Truncate(state.CycleLength)
-            || state.CycleLength is < 1 or > global::Siteswap.Details.Siteswap.MaxPeriodLength
-        )
+        if (!IsCanonicalSiteswapPreset(state))
             return true;
 
         var period = decimal.ToInt32(state.CycleLength);
         var ordered = state.Throws.OrderBy(node => node.StartTime).ToArray();
-        if (
-            ordered.Length != period
-            || ordered.Where((node, index) => node.StartTime != index).Any()
-            || ordered.Where((node, index) => node.Hand != (index % 2 == 0 ? "R" : "L")).Any()
-            || ordered.Any(node =>
-                decimal.Truncate(node.Height) != node.Height
-                || node.Height < 0
-                || node.Height > int.MaxValue
-            )
-        )
+        if (!IsCanonicalSiteswapTimeline(ordered, period))
             return true;
 
         var heights = ordered.Select(node => decimal.ToInt32(node.Height)).ToArray();
-        if (
-            !global::Siteswap.Details.Siteswap.TryCreate(heights, out var siteswap)
-            || siteswap is null
-        )
+        if (!global::Siteswap.Details.Siteswap.TryCreate(heights, out _))
             return false;
 
+        return HasCanonicalSiteswapEdges(state, ordered, heights, period);
+    }
+
+    private static bool IsCanonicalSiteswapPreset(CausalDiagramEditorState state) =>
+        state.PresetId.StartsWith("siteswap-", StringComparison.Ordinal)
+        && state.Jugglers.Count == 1
+        && state.CycleLength == decimal.Truncate(state.CycleLength)
+        && state.CycleLength is >= 1 and <= global::Siteswap.Details.Siteswap.MaxPeriodLength;
+
+    private static bool IsCanonicalSiteswapTimeline(EditorThrow[] ordered, int period) =>
+        ordered.Length == period
+        && ordered
+            .Select(
+                (node, index) =>
+                    node.StartTime == index
+                    && node.Hand == (index % 2 == 0 ? "R" : "L")
+                    && decimal.Truncate(node.Height) == node.Height
+                    && node.Height <= int.MaxValue
+            )
+            .All(isCanonical => isCanonical);
+
+    private static bool HasCanonicalSiteswapEdges(
+        CausalDiagramEditorState state,
+        EditorThrow[] ordered,
+        int[] heights,
+        int period
+    )
+    {
         var edges = state.CausalEdges.ToDictionary(
             edge => edge.FromThrowId,
             StringComparer.Ordinal
