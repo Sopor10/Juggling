@@ -13,17 +13,21 @@ runs:
     - name: Csharpier
       run: dotnet csharpier check .
       shell: bash
-    - name: Install workload
-      run: dotnet workload install wasm-tools
-      shell: bash
-    - name: Install Playwright browsers
-      run: |
-        dotnet build Siteswaps.E2ETests/Siteswaps.E2ETests.csproj
-        pwsh Siteswaps.E2ETests/bin/Debug/net11.0/playwright.ps1 install --with-deps chromium
-      shell: bash
     - name: Test
-      run: dotnet test
+      run: |
+        dotnet test Juggling.slnx -m --logger "trx;LogFileName=ci-tests.trx"
       shell: bash
+      env:
+        PLAYWRIGHT_CHANNEL: chrome
+    - name: Upload test timings
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: test-timings
+        path: |
+          **/TestResults/ci-tests.trx
+        if-no-files-found: ignore
+        retention-days: 3
     - name: Upload design screenshot diffs
       if: failure()
       uses: actions/upload-artifact@v7
