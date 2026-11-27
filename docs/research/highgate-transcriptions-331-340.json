@@ -343,109 +343,109 @@
         "id": "P1-1",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.5
       },
       {
         "id": "P1-2",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.5
       },
       {
         "id": "P1-3",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.5
       },
       {
         "id": "P1-4",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.5
       },
       {
         "id": "P1-5",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 4
+        "startTime": 4.5
       },
       {
         "id": "P1-6",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 5
+        "startTime": 5.5
       },
       {
         "id": "P1-7",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 6
+        "startTime": 6.5
       },
       {
         "id": "P1-8",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 7
+        "startTime": 7.5
       },
       {
         "id": "P1-9",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 8
+        "startTime": 8.5
       },
       {
         "id": "P1-10",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 9
+        "startTime": 9.5
       },
       {
         "id": "P1-11",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 10
+        "startTime": 10.5
       },
       {
         "id": "P1-12",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 11
+        "startTime": 11.5
       },
       {
         "id": "P1-13",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 12
+        "startTime": 12.5
       },
       {
         "id": "P1-14",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 13
+        "startTime": 13.5
       },
       {
         "id": "P1-15",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 14
+        "startTime": 14.5
       },
       {
         "id": "P1-16",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 15
+        "startTime": 15.5
       },
       {
         "id": "P1-17",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 16
+        "startTime": 16.5
       },
       {
         "id": "P1-18",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 17
+        "startTime": 17.5
       },
       {
         "id": "P2-1",
@@ -559,217 +559,217 @@
         "id": "P3-1",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.5
       },
       {
         "id": "P3-2",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.5
       },
       {
         "id": "P3-3",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.5
       },
       {
         "id": "P3-4",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.5
       },
       {
         "id": "P3-5",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 4
+        "startTime": 4.5
       },
       {
         "id": "P3-6",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 5
+        "startTime": 5.5
       },
       {
         "id": "P3-7",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 6
+        "startTime": 6.5
       },
       {
         "id": "P3-8",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 7
+        "startTime": 7.5
       },
       {
         "id": "P3-9",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 8
+        "startTime": 8.5
       },
       {
         "id": "P3-10",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 9
+        "startTime": 9.5
       },
       {
         "id": "P3-11",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 10
+        "startTime": 10.5
       },
       {
         "id": "P3-12",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 11
+        "startTime": 11.5
       },
       {
         "id": "P3-13",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 12
+        "startTime": 12.5
       },
       {
         "id": "P3-14",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 13
+        "startTime": 13.5
       },
       {
         "id": "P3-15",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 14
+        "startTime": 14.5
       },
       {
         "id": "P3-16",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 15
+        "startTime": 15.5
       },
       {
         "id": "P3-17",
         "jugglerId": "P3",
         "hand": "R",
-        "startTime": 16
+        "startTime": 16.5
       },
       {
         "id": "P3-18",
         "jugglerId": "P3",
         "hand": "L",
-        "startTime": 17
+        "startTime": 17.5
       },
       {
         "id": "P4-1",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.5
       },
       {
         "id": "P4-2",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.5
       },
       {
         "id": "P4-3",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.5
       },
       {
         "id": "P4-4",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.5
       },
       {
         "id": "P4-5",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 4
+        "startTime": 4.5
       },
       {
         "id": "P4-6",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 5
+        "startTime": 5.5
       },
       {
         "id": "P4-7",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 6
+        "startTime": 6.5
       },
       {
         "id": "P4-8",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 7
+        "startTime": 7.5
       },
       {
         "id": "P4-9",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 8
+        "startTime": 8.5
       },
       {
         "id": "P4-10",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 9
+        "startTime": 9.5
       },
       {
         "id": "P4-11",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 10
+        "startTime": 10.5
       },
       {
         "id": "P4-12",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 11
+        "startTime": 11.5
       },
       {
         "id": "P4-13",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 12
+        "startTime": 12.5
       },
       {
         "id": "P4-14",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 13
+        "startTime": 13.5
       },
       {
         "id": "P4-15",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 14
+        "startTime": 14.5
       },
       {
         "id": "P4-16",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 15
+        "startTime": 15.5
       },
       {
         "id": "P4-17",
         "jugglerId": "P4",
         "hand": "R",
-        "startTime": 16
+        "startTime": 16.5
       },
       {
         "id": "P4-18",
         "jugglerId": "P4",
         "hand": "L",
-        "startTime": 17
+        "startTime": 17.5
       }
     ],
     "causalEdges": [
@@ -865,7 +865,7 @@
       },
       {
         "from": "P2-1",
-        "to": "P2-2",
+        "to": "P1-2",
         "cycleOffset": 0
       },
       {
@@ -875,7 +875,7 @@
       },
       {
         "from": "P2-3",
-        "to": "P2-4",
+        "to": "P1-4",
         "cycleOffset": 0
       },
       {
@@ -905,7 +905,7 @@
       },
       {
         "from": "P2-9",
-        "to": "P2-10",
+        "to": "P3-10",
         "cycleOffset": 0
       },
       {
@@ -1139,7 +1139,7 @@
     "label": "Thirteen club gorilla weave",
     "group": "Highgate Collection",
     "source": "Aidan Burns, The Highgate Collection (2017 expanded PDF), printed p. 329 / PDF p. 330; compared with The Highgate Collection (2014), printed/PDF p. 237. Both diagrams were visually checked.",
-    "notation": "The throw schedule is the same as Gorilla weave: Ben makes three passes to each walker with his right hand, begins the left-hand sweep with Clare, then passes Daniel, Anne, Clare; each walker uses a two, two, five count and makes three consecutive passes to Ben. Figure-eight movement and the 13-club color/hand assignment remain in notation.",
+    "notation": "Ben begins half a beat before the other jugglers, as stated in the source. His right hand makes three passes each to Anne, Clare, and Daniel; his left starts with Clare, then passes to Daniel, Anne, and Clare. Each walker uses a two, two, five count and makes three consecutive passes to Ben. Figure-eight movement and the 13-club color/hand assignment remain in notation.",
     "sourceLinks": [
       {
         "edition": "2017 expanded PDF",
@@ -1155,7 +1155,7 @@
       }
     ],
     "notes": [
-      "The throw schedule is the same as Gorilla weave: Ben makes three passes to each walker with his right hand, begins the left-hand sweep with Clare, then passes Daniel, Anne, Clare; each walker uses a two, two, five count and makes three consecutive passes to Ben. Figure-eight movement and the 13-club color/hand assignment remain in notation."
+      "Ben begins half a beat before the other jugglers, as stated in the source. His right hand makes three passes each to Anne, Clare, and Daniel; his left starts with Clare, then passes to Daniel, Anne, and Clare. Each walker uses a two, two, five count and makes three consecutive passes to Ben. Figure-eight movement and the 13-club color/hand assignment remain in notation."
     ],
     "variants": [
       "highgate-gorillaweave"

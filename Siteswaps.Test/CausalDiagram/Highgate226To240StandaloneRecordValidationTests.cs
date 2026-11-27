@@ -56,7 +56,7 @@ public class Highgate226To240StandaloneRecordValidationTests
         ],
         ["highgate-fourpersonpasspassselffeed"] =
         [
-            ["Ben", "Ben", "self"],
+            ["Ben", "self", "self"],
             ["Anne", "Clare", "self"],
             ["Daniel", "Ben", "self"],
             ["Clare", "self", "self"],

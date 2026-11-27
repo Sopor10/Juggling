@@ -1096,12 +1096,12 @@
       },
       {
         "from": "A-L6",
-        "to": "C-R7",
+        "to": "A-R7",
         "cycleOffset": 0
       },
       {
         "from": "A-R7",
-        "to": "A-L8",
+        "to": "C-L8",
         "cycleOffset": 0
       },
       {
@@ -1111,12 +1111,12 @@
       },
       {
         "from": "A-R9",
-        "to": "D-L10",
+        "to": "A-L10",
         "cycleOffset": 0
       },
       {
         "from": "A-L10",
-        "to": "A-R11",
+        "to": "D-R11",
         "cycleOffset": 0
       },
       {
@@ -1276,12 +1276,12 @@
       },
       {
         "from": "D-L6",
-        "to": "B-R7",
+        "to": "D-R7",
         "cycleOffset": 0
       },
       {
         "from": "D-R7",
-        "to": "D-L8",
+        "to": "B-L8",
         "cycleOffset": 0
       },
       {
@@ -1291,12 +1291,12 @@
       },
       {
         "from": "D-R9",
-        "to": "A-L10",
+        "to": "D-L10",
         "cycleOffset": 0
       },
       {
         "from": "D-L10",
-        "to": "D-R11",
+        "to": "A-R11",
         "cycleOffset": 0
       },
       {
@@ -11209,203 +11209,203 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "A-L2",
+        "to": "A-R3",
         "cycleOffset": 0
       },
       {
         "from": "A-L2",
-        "to": "C-R3",
-        "cycleOffset": 0
-      },
-      {
-        "from": "A-R3",
-        "to": "A-L2",
-        "cycleOffset": 0
-      },
-      {
-        "from": "A-L4",
-        "to": "D-R4",
-        "cycleOffset": 0
-      },
-      {
-        "from": "A-R5",
         "to": "A-L4",
         "cycleOffset": 0
       },
       {
+        "from": "A-R3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
         "from": "A-L6",
-        "to": "A-R7",
+        "to": "A-L8",
         "cycleOffset": 0
       },
       {
         "from": "A-R7",
-        "to": "C-L8",
-        "cycleOffset": 0
-      },
-      {
-        "from": "A-L8",
-        "to": "A-R7",
-        "cycleOffset": 0
-      },
-      {
-        "from": "A-R9",
-        "to": "D-L9",
-        "cycleOffset": 0
-      },
-      {
-        "from": "A-L10",
         "to": "A-R9",
         "cycleOffset": 0
       },
       {
+        "from": "A-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
         "from": "B-R1",
-        "to": "B-R3",
+        "to": "A-L2",
         "cycleOffset": 0
       },
       {
         "from": "B-L2",
-        "to": "B-L4",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-R3",
-        "to": "B-L4",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L4",
-        "to": "B-R5",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-R5",
-        "to": "B-L6",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L6",
-        "to": "B-L8",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-R7",
-        "to": "B-R9",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L8",
-        "to": "B-R9",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-R9",
-        "to": "B-L10",
-        "cycleOffset": 0
-      },
-      {
-        "from": "B-L10",
-        "to": "B-R1",
-        "cycleOffset": 1
-      },
-      {
-        "from": "C-R1",
-        "to": "B-L2",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-L2",
         "to": "C-R3",
         "cycleOffset": 0
       },
       {
-        "from": "C-R3",
-        "to": "C-L4",
+        "from": "B-R3",
+        "to": "B-L2",
         "cycleOffset": 0
       },
       {
-        "from": "C-L4",
-        "to": "C-L6",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-R5",
-        "to": "C-R7",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-L6",
-        "to": "B-R7",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-R7",
-        "to": "C-L8",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-L8",
-        "to": "C-R9",
-        "cycleOffset": 0
-      },
-      {
-        "from": "C-R9",
-        "to": "C-R1",
-        "cycleOffset": 1
-      },
-      {
-        "from": "C-L10",
-        "to": "C-L2",
-        "cycleOffset": 1
-      },
-      {
-        "from": "D-L1",
-        "to": "D-L3",
-        "cycleOffset": 0
-      },
-      {
-        "from": "D-R2",
-        "to": "D-L1",
-        "cycleOffset": 0
-      },
-      {
-        "from": "D-L3",
-        "to": "B-R5",
-        "cycleOffset": 0
-      },
-      {
-        "from": "D-R4",
-        "to": "D-L5",
-        "cycleOffset": 0
-      },
-      {
-        "from": "D-L5",
+        "from": "B-L4",
         "to": "D-R4",
         "cycleOffset": 0
       },
       {
-        "from": "D-R6",
-        "to": "D-R8",
+        "from": "B-R5",
+        "to": "B-L4",
         "cycleOffset": 0
       },
       {
-        "from": "D-L7",
+        "from": "B-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "C-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "D-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "C-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R5",
+        "to": "C-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L6",
+        "to": "C-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R7",
+        "to": "C-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L8",
+        "to": "C-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R9",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L10",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "C-L10",
+        "cycleOffset": -1
+      },
+      {
+        "from": "D-R10",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L1",
+        "to": "D-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R2",
+        "to": "D-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L3",
+        "to": "D-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R4",
         "to": "D-R6",
         "cycleOffset": 0
       },
       {
-        "from": "D-R8",
-        "to": "B-L10",
+        "from": "D-L5",
+        "to": "B-L8",
         "cycleOffset": 0
       },
       {
-        "from": "D-L9",
+        "from": "D-R6",
+        "to": "D-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-L7",
+        "to": "D-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "D-R8",
         "to": "D-R10",
         "cycleOffset": 1
       },
       {
-        "from": "D-R10",
-        "to": "D-L9",
-        "cycleOffset": -1
+        "from": "D-L9",
+        "to": "D-L1",
+        "cycleOffset": 1
       }
     ],
     "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), 2017 printed p. 242 / PDF p. 243; 2014 PDF p. 170. Compared with The Highgate Collection (2014), PDF p. 170.",
@@ -11422,7 +11422,52 @@
         "pdfPage": 170
       }
     ],
-    "reviewStatus": "Both editions’ source rows, start phases, and diagram arrows were visually checked. Zip connects to the previous node; heff connects to the same hand two beats later; holds have no outgoing edge."
+    "reviewStatus": "Both editions’ source rows, start phases, and diagram arrows were visually checked. Zip connects to the previous node; heff connects to the same hand two beats later; holds have no outgoing edge.",
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "Clare",
+        "zip",
+        "Daniel",
+        "zip"
+      ],
+      "Anne": [
+        "heff",
+        "heff",
+        "Ben",
+        "self",
+        "self"
+      ],
+      "Daniel": [
+        "Ben",
+        "self",
+        "self",
+        "heff",
+        "heff"
+      ],
+      "Clare": [
+        "heff",
+        "zip",
+        "Ben",
+        "self",
+        "zip"
+      ]
+    },
+    "sourcePhases": {
+      "Ben": 0,
+      "Anne": 0.5,
+      "Daniel": 0.5,
+      "Clare": 1.5
+    },
+    "sourceFirstHands": {
+      "Clare": "L"
+    },
+    "passDirectionByJuggler": {
+      "Ben": "straight",
+      "Anne": "crossing",
+      "Daniel": "crossing",
+      "Clare": "crossing"
+    }
   },
   {
     "id": "highgate-mobneurosispsychosis",
@@ -12173,7 +12218,7 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "A-L2",
+        "to": "B-R3",
         "cycleOffset": 0
       },
       {
@@ -12293,7 +12338,7 @@
       },
       {
         "from": "B-R1",
-        "to": "B-L2",
+        "to": "A-L2",
         "cycleOffset": 0
       },
       {
@@ -12666,7 +12711,89 @@
         "pdfPage": 170
       }
     ],
-    "reviewStatus": "Row sequences and diagram arrows visually checked in both editions. The printed half-cycle is duplicated to encode the stated other-hand repeat; hold nodes have no outgoing edge."
+    "reviewStatus": "2014 PDF p.170 and expanded 2017 printed p.242 / PDF p.243 action rows and diagrams compared. Verified the first two directed pass routes against both printed text and diagram: A-R1→B-R3 and B-R1→A-L2. Remaining graph edges and hold-node representation still require audit.",
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "Clare",
+        "hold",
+        "Daniel",
+        "Anne",
+        "Clare",
+        "hold",
+        "Daniel",
+        "Anne",
+        "Clare",
+        "Daniel",
+        "hold",
+        "Anne",
+        "Clare",
+        "Daniel"
+      ],
+      "Anne": [
+        "Ben",
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self"
+      ],
+      "Clare": [
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self",
+        "Ben",
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self"
+      ],
+      "Daniel": [
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self",
+        "Ben",
+        "hold",
+        "self",
+        "self",
+        "Ben",
+        "self",
+        "self",
+        "Ben",
+        "hold"
+      ]
+    },
+    "sourcePhases": {
+      "Ben": 0,
+      "Anne": 0.5,
+      "Clare": 0.5,
+      "Daniel": 0.5
+    },
+    "passDirectionByJuggler": {
+      "Ben": "straight",
+      "Anne": "crossing",
+      "Clare": "crossing",
+      "Daniel": "crossing"
+    }
   },
   {
     "id": "highgate-funkybookendslinefeed",
@@ -12937,62 +13064,62 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "A-L2",
+        "to": "A-R3",
         "cycleOffset": 0
       },
       {
         "from": "A-L2",
-        "to": "C-R3",
+        "to": "A-R1",
         "cycleOffset": 0
       },
       {
         "from": "A-R3",
-        "to": "A-L4",
+        "to": "B-R5",
         "cycleOffset": 0
       },
       {
         "from": "A-L4",
-        "to": "D-R5",
+        "to": "A-R5",
         "cycleOffset": 0
       },
       {
         "from": "A-R5",
-        "to": "A-R7",
+        "to": "A-L4",
         "cycleOffset": 0
       },
       {
         "from": "A-L6",
-        "to": "A-R7",
+        "to": "A-L8",
         "cycleOffset": 0
       },
       {
         "from": "A-R7",
-        "to": "C-L8",
+        "to": "A-L6",
         "cycleOffset": 0
       },
       {
         "from": "A-L8",
-        "to": "A-R9",
+        "to": "B-L10",
         "cycleOffset": 0
       },
       {
         "from": "A-R9",
-        "to": "D-L10",
+        "to": "A-L10",
         "cycleOffset": 0
       },
       {
         "from": "A-L10",
-        "to": "A-L2",
-        "cycleOffset": 1
+        "to": "A-R9",
+        "cycleOffset": 0
       },
       {
         "from": "B-R1",
-        "to": "B-R3",
+        "to": "A-L2",
         "cycleOffset": 0
       },
       {
         "from": "B-L2",
-        "to": "B-R1",
+        "to": "C-R3",
         "cycleOffset": 0
       },
       {
@@ -13002,22 +13129,22 @@
       },
       {
         "from": "B-L4",
-        "to": "B-R5",
+        "to": "D-R5",
         "cycleOffset": 0
       },
       {
         "from": "B-R5",
-        "to": "B-L4",
+        "to": "B-R7",
         "cycleOffset": 0
       },
       {
         "from": "B-L6",
-        "to": "B-L8",
+        "to": "A-R7",
         "cycleOffset": 0
       },
       {
         "from": "B-R7",
-        "to": "B-L6",
+        "to": "C-L8",
         "cycleOffset": 0
       },
       {
@@ -13027,13 +13154,13 @@
       },
       {
         "from": "B-R9",
-        "to": "B-L10",
+        "to": "D-L10",
         "cycleOffset": 0
       },
       {
         "from": "B-L10",
-        "to": "B-R9",
-        "cycleOffset": 0
+        "to": "B-L2",
+        "cycleOffset": 1
       },
       {
         "from": "C-R1",
@@ -13052,7 +13179,7 @@
       },
       {
         "from": "C-L4",
-        "to": "B-R5",
+        "to": "B-L6",
         "cycleOffset": 0
       },
       {
@@ -13077,8 +13204,8 @@
       },
       {
         "from": "C-R9",
-        "to": "B-L10",
-        "cycleOffset": 0
+        "to": "B-R1",
+        "cycleOffset": 1
       },
       {
         "from": "C-L10",
@@ -13087,7 +13214,7 @@
       },
       {
         "from": "D-R1",
-        "to": "B-L2",
+        "to": "B-R3",
         "cycleOffset": 0
       },
       {
@@ -13112,7 +13239,7 @@
       },
       {
         "from": "D-L6",
-        "to": "B-R7",
+        "to": "B-L8",
         "cycleOffset": 0
       },
       {
@@ -13150,7 +13277,49 @@
         "pdfPage": 171
       }
     ],
-    "reviewStatus": "Printed 2017 and 2014 row sequences, start phases, initial hands, and causal arrows visually checked. Zip edges go to the preceding event; heffs go to the same hand two beats later; hold nodes have no outgoing edge."
+    "reviewStatus": "Printed 2017 and 2014 row sequences, start phases, initial hands, and causal arrows visually checked. Zip edges go to the preceding event; heffs go to the same hand two beats later; hold nodes have no outgoing edge.",
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "Clare",
+        "self",
+        "Daniel",
+        "heff"
+      ],
+      "Anne": [
+        "heff",
+        "zip",
+        "Ben",
+        "self",
+        "zip"
+      ],
+      "Clare": [
+        "self",
+        "heff",
+        "heff",
+        "Ben",
+        "self"
+      ],
+      "Daniel": [
+        "Ben",
+        "self",
+        "zip",
+        "heff",
+        "zip"
+      ]
+    },
+    "sourcePhases": {
+      "Ben": 0,
+      "Anne": 0.5,
+      "Clare": 0.5,
+      "Daniel": 0.5
+    },
+    "passDirectionByJuggler": {
+      "Ben": "straight",
+      "Anne": "crossing",
+      "Clare": "crossing",
+      "Daniel": "crossing"
+    }
   },
   {
     "id": "highgate-onecountfeedingfiveclubwhynotandfunkybookends",
@@ -13421,7 +13590,7 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "A-L2",
+        "to": "A-R3",
         "cycleOffset": 0
       },
       {
@@ -13446,7 +13615,7 @@
       },
       {
         "from": "A-L6",
-        "to": "A-R7",
+        "to": "A-L8",
         "cycleOffset": 0
       },
       {
@@ -13634,7 +13803,52 @@
         "pdfPage": 171
       }
     ],
-    "reviewStatus": "Printed 2017 and 2014 row sequences, start phases, initial hands, and causal arrows visually checked. Zip edges go to the preceding event; heffs go to the same hand two beats later; hold nodes have no outgoing edge."
+    "reviewStatus": "Compared the expanded 2017 action rows and causal diagram (printed pp. 243–244 / PDF pp. 244–245) with the standalone graph. Anne’s heff arcs were corrected to the same hand two beats later. The production graphs remain degree-unbalanced; the remaining arrows and hold-node mapping are unresolved.",
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "Clare",
+        "Daniel",
+        "Clare",
+        "Clare"
+      ],
+      "Anne": [
+        "heff",
+        "zip",
+        "Ben",
+        "self",
+        "zip"
+      ],
+      "Clare": [
+        "self",
+        "Ben",
+        "heff",
+        "Daniel",
+        "Ben"
+      ],
+      "Daniel": [
+        "Anne",
+        "Clare",
+        "zip",
+        "Anne",
+        "zip"
+      ]
+    },
+    "sourcePhases": {
+      "Ben": 0,
+      "Anne": 0.5,
+      "Clare": 1.5,
+      "Daniel": 0.5
+    },
+    "sourceFirstHands": {
+      "Clare": "L"
+    },
+    "passDirectionByJuggler": {
+      "Ben": "straight",
+      "Anne": "crossing",
+      "Clare": "crossing",
+      "Daniel": "crossing"
+    }
   },
   {
     "id": "highgate-onecountfeedingwhynotandfiveclubwhynot",
@@ -13922,7 +14136,7 @@
       },
       {
         "from": "A-L4",
-        "to": "A-R5",
+        "to": "A-L6",
         "cycleOffset": 0
       },
       {
@@ -13947,8 +14161,8 @@
       },
       {
         "from": "A-R9",
-        "to": "A-L10",
-        "cycleOffset": 0
+        "to": "A-R1",
+        "cycleOffset": 1
       },
       {
         "from": "A-L10",
@@ -14120,7 +14334,52 @@
         "pdfPage": 172
       }
     ],
-    "reviewStatus": "Printed 2017 and 2014 row sequences, start phases, initial hands, and causal arrows visually checked. Zip edges go to the preceding event; heffs go to the same hand two beats later; hold nodes have no outgoing edge."
+    "reviewStatus": "Compared the expanded 2017 action rows and causal diagram (printed pp. 243–244 / PDF pp. 244–245) with the standalone graph. Anne’s heff arcs were corrected to the same hand two beats later. The production graphs remain degree-unbalanced; the remaining arrows and hold-node mapping are unresolved.",
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "Clare",
+        "Daniel",
+        "Anne",
+        "Daniel"
+      ],
+      "Anne": [
+        "Ben",
+        "self",
+        "Ben",
+        "heff",
+        "zip"
+      ],
+      "Clare": [
+        "heff",
+        "zip",
+        "Ben",
+        "self",
+        "zip"
+      ],
+      "Daniel": [
+        "self",
+        "Ben",
+        "heff",
+        "zip",
+        "Ben"
+      ]
+    },
+    "sourcePhases": {
+      "Ben": 0,
+      "Anne": 0.5,
+      "Clare": 1.5,
+      "Daniel": 0.5
+    },
+    "sourceFirstHands": {
+      "Clare": "L"
+    },
+    "passDirectionByJuggler": {
+      "Ben": "straight",
+      "Anne": "crossing",
+      "Clare": "crossing",
+      "Daniel": "crossing"
+    }
   },
   {
     "id": "highgate-onecountfeedingmaybeandfiveclubwhynot",
@@ -14391,7 +14650,7 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "A-L2",
+        "to": "A-R3",
         "cycleOffset": 0
       },
       {
@@ -14416,7 +14675,7 @@
       },
       {
         "from": "A-L6",
-        "to": "A-R7",
+        "to": "A-L8",
         "cycleOffset": 0
       },
       {
@@ -14604,6 +14863,51 @@
         "pdfPage": 172
       }
     ],
-    "reviewStatus": "Printed 2017 and 2014 row sequences, start phases, initial hands, and causal arrows visually checked. Zip edges go to the preceding event; heffs go to the same hand two beats later; hold nodes have no outgoing edge."
+    "reviewStatus": "Compared the expanded 2017 action rows and causal diagram (printed pp. 243–244 / PDF pp. 244–245) with the standalone graph. Anne’s heff arcs were corrected to the same hand two beats later. The production graphs remain degree-unbalanced; the remaining arrows and hold-node mapping are unresolved.",
+    "sourceRows": {
+      "Ben": [
+        "Anne",
+        "Clare",
+        "Daniel",
+        "Daniel",
+        "Anne"
+      ],
+      "Anne": [
+        "heff",
+        "Ben",
+        "Ben",
+        "self",
+        "zip"
+      ],
+      "Clare": [
+        "heff",
+        "zip",
+        "Ben",
+        "self",
+        "zip"
+      ],
+      "Daniel": [
+        "Ben",
+        "self",
+        "zip",
+        "heff",
+        "Ben"
+      ]
+    },
+    "sourcePhases": {
+      "Ben": 0,
+      "Anne": 0.5,
+      "Clare": 1.5,
+      "Daniel": 0.5
+    },
+    "sourceFirstHands": {
+      "Clare": "L"
+    },
+    "passDirectionByJuggler": {
+      "Ben": "straight",
+      "Anne": "crossing",
+      "Clare": "crossing",
+      "Daniel": "crossing"
+    }
   }
 ]

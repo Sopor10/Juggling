@@ -142,7 +142,7 @@ public class Highgate78To79SlowFastFollowupSourceTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
             var imported = CausalDiagramEditorPresets
-                .All.Single(preset => preset.Id == record.Id)
+                .AllForLoading.Single(preset => preset.Id == record.Id)
                 .Create();
             imported.IsValidForEditor().Should().BeTrue(record.Id);
             imported.CycleLength.Should().Be(state.CycleLength, record.Id);

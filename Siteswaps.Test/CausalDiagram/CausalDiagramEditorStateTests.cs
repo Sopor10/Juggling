@@ -526,22 +526,66 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
-    public void PresetCatalog_EveryPresetCreatesAValidEditorState()
+    public void PresetCatalog_EveryPresetCreatesAValidPattern()
     {
-        var invalidPresetIds = CausalDiagramEditorPresets
-            .All.Where(preset => !preset.Create().IsValidForEditor())
-            .Select(preset => preset.Id)
-            .ToArray();
+        var invalidPresetIds = new List<string>();
+        foreach (var preset in CausalDiagramEditorPresets.All)
+        {
+            var state = preset.Create();
+            if (state.IsValidPattern())
+                continue;
+            CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error);
+            invalidPresetIds.Add($"{preset.Id}: {error}");
+        }
 
-        invalidPresetIds
-            .Should()
-            .BeEmpty(
-                "every preset shown in the editor must be valid before serialization or decoding"
-            );
+        invalidPresetIds.Should().BeEmpty(string.Join("; ", invalidPresetIds));
     }
 
     [Test]
-    public void IsValidForEditor_RejectsAnInvalidSiteswapInAProductionEditorState()
+    public void WorkInProgressPatterns_RemainSelectableAndEditableButAreNotValidPresets()
+    {
+        var presets = CausalDiagramEditorPresets.VisibleHighgateWorkInProgress.ToArray();
+
+        presets.Should().HaveCount(31);
+        foreach (var preset in presets)
+        {
+            var state = preset.Create();
+            state.PresetId.Should().Be(preset.Id);
+            state.IsValidForEditor().Should().BeTrue(preset.Id);
+            state.IsValidPattern().Should().BeFalse(preset.Id);
+        }
+    }
+
+    [Test]
+    public void IsValidPattern_RejectsAProductionPresetWithUnbalancedCausalNodes()
+    {
+        var state = CausalDiagramEditorPresets
+            .All.Single(preset => preset.Id == "highgate-74685")
+            .Create();
+        state.IsValidPattern().Should().BeTrue();
+
+        state.CausalEdges.RemoveAt(0);
+
+        state.IsValidPattern().Should().BeFalse();
+        state.IsValidForEditor().Should().BeTrue();
+        CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
+        decoded!.IsValidForEditor().Should().BeTrue();
+        decoded.IsValidPattern().Should().BeFalse();
+    }
+
+    [Test]
+    public void IsValidPattern_Highgate74685CanBeMappedToAPeriodicJuggle()
+    {
+        var state = CausalDiagramEditorPresets
+            .All.Single(preset => preset.Id == "highgate-74685")
+            .Create();
+
+        state.IsValidPattern().Should().BeTrue();
+        CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error).Should().BeTrue(error);
+    }
+
+    [Test]
+    public void IsValidPattern_RejectsAnInvalidSiteswapInAProductionEditorState()
     {
         var state = CausalDiagramEditorState.CreateSiteswapPattern("97531", "siteswap-97531");
         var heights = new[] { 7, 4, 5, 8, 5, 7, 4, 5, 8, 5 };
@@ -569,7 +613,8 @@ public class CausalDiagramEditorStateTests
             )
             .ToList();
 
-        state.IsValidForEditor().Should().BeFalse();
+        state.IsValidForEditor().Should().BeTrue();
+        state.IsValidPattern().Should().BeFalse();
     }
 
     [Test]
@@ -600,9 +645,15 @@ public class CausalDiagramEditorStateTests
     public void PresetCatalog_ImportsTheReviewedHighgateCausalDiagrams()
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
+        var workInProgressIds = CausalDiagramEditorPresets.VisibleHighgateWorkInProgress
+            .Select(preset => preset.Id)
+            .ToArray();
 
-        presets.Should().HaveCount(350);
-        presets.Select(preset => preset.Id).Should().BeEquivalentTo(ReviewedHighgatePresetIds);
+        presets.Should().HaveCount(319);
+        presets.Select(preset => preset.Id)
+            .Concat(workInProgressIds)
+            .Should()
+            .BeEquivalentTo(ReviewedHighgatePresetIds);
         var threeCount = presets.Single(preset => preset.Id == "highgate-three-count").Create();
         threeCount.CycleLength.Should().Be(6m);
         threeCount.Jugglers.Select(item => item.Name).Should().Equal("Anne", "Ben");
@@ -648,7 +699,9 @@ public class CausalDiagramEditorStateTests
         doubleHold
             .CausalEdges.Should()
             .ContainSingle(edge => edge.FromThrowId == "B-R1" && edge.ToThrowId == "A-L2");
-        doubleHold.CausalEdges.Select(edge => edge.FromThrowId).Should().NotContain("A-L2");
+        doubleHold
+            .CausalEdges.Should()
+            .ContainSingle(edge => edge.FromThrowId == "A-L2" && edge.ToThrowId == "A-R1");
         doubleHold.CausalEdges.Select(edge => edge.FromThrowId).Should().NotContain("B-L2");
         var jimThreeCount = presets
             .Single(preset => preset.Id == "highgate-jimsthreecount")

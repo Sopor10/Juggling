@@ -25,73 +25,73 @@
         "id": "A-R1",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.0
       },
       {
         "id": "A-L2",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.0
       },
       {
         "id": "A-R3",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.0
       },
       {
         "id": "A-L4",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.0
       },
       {
         "id": "B-R1",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 1.333333
+        "startTime": 1.333333333333
       },
       {
         "id": "B-L2",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 2.333333
+        "startTime": 2.333333333333
       },
       {
         "id": "B-R3",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 3.333333
+        "startTime": 3.333333333333
       },
       {
         "id": "B-L4",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 0.333333
+        "startTime": 0.333333333333
       },
       {
         "id": "C-R1",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 0.666667
+        "startTime": 0.666666666667
       },
       {
         "id": "C-L2",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 1.666667
+        "startTime": 1.666666666667
       },
       {
         "id": "C-R3",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 2.666667
+        "startTime": 2.666666666667
       },
       {
         "id": "C-L4",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 3.666667
+        "startTime": 3.666666666667
       }
     ],
     "causalEdges": [
@@ -117,7 +117,7 @@
       },
       {
         "from": "B-R1",
-        "to": "C-L2",
+        "to": "C-L4",
         "cycleOffset": 0
       },
       {
@@ -147,8 +147,8 @@
       },
       {
         "from": "C-R3",
-        "to": "A-L4",
-        "cycleOffset": 0
+        "to": "A-L2",
+        "cycleOffset": 1
       },
       {
         "from": "C-L4",
@@ -194,115 +194,115 @@
         "id": "A-R1",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.0
       },
       {
         "id": "A-L2",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.0
       },
       {
         "id": "A-R3",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.0
       },
       {
         "id": "A-L4",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.0
       },
       {
         "id": "A-R5",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 4
+        "startTime": 4.0
       },
       {
         "id": "A-L6",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 5
+        "startTime": 5.0
       },
       {
         "id": "B-R1",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.0
       },
       {
         "id": "B-L2",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.0
       },
       {
         "id": "B-R3",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.0
       },
       {
         "id": "B-L4",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.0
       },
       {
         "id": "B-R5",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 4
+        "startTime": 4.0
       },
       {
         "id": "B-L6",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 5
+        "startTime": 5.0
       },
       {
         "id": "C-R1",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.0
       },
       {
         "id": "C-L2",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.0
       },
       {
         "id": "C-R3",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.0
       },
       {
         "id": "C-L4",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.0
       },
       {
         "id": "C-R5",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 4
+        "startTime": 4.0
       },
       {
         "id": "C-L6",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 5
+        "startTime": 5.0
       }
     ],
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "B-L2",
+        "to": "B-R3",
         "cycleOffset": 0
       },
       {
@@ -317,7 +317,7 @@
       },
       {
         "from": "A-L4",
-        "to": "B-R5",
+        "to": "B-L6",
         "cycleOffset": 0
       },
       {
@@ -337,7 +337,7 @@
       },
       {
         "from": "B-L2",
-        "to": "C-R3",
+        "to": "C-L4",
         "cycleOffset": 0
       },
       {
@@ -352,8 +352,8 @@
       },
       {
         "from": "B-R5",
-        "to": "C-L6",
-        "cycleOffset": 0
+        "to": "C-R1",
+        "cycleOffset": 1
       },
       {
         "from": "B-L6",
@@ -372,7 +372,7 @@
       },
       {
         "from": "C-R3",
-        "to": "A-L4",
+        "to": "A-R5",
         "cycleOffset": 0
       },
       {
@@ -387,7 +387,7 @@
       },
       {
         "from": "C-L6",
-        "to": "A-R1",
+        "to": "A-L2",
         "cycleOffset": 1
       }
     ],
@@ -429,73 +429,73 @@
         "id": "A-R1",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.0
       },
       {
         "id": "A-L2",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.0
       },
       {
         "id": "A-R3",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 2
+        "startTime": 2.0
       },
       {
         "id": "A-L4",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 3
+        "startTime": 3.0
       },
       {
         "id": "B-R1",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 0.666667
+        "startTime": 0.666666666667
       },
       {
         "id": "B-L2",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 1.666667
+        "startTime": 1.666666666667
       },
       {
         "id": "B-R3",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 2.666667
+        "startTime": 2.666666666667
       },
       {
         "id": "B-L4",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 3.666667
+        "startTime": 3.666666666667
       },
       {
         "id": "C-R1",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 1.333333
+        "startTime": 1.333333333333
       },
       {
         "id": "C-L2",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 2.333333
+        "startTime": 2.333333333333
       },
       {
         "id": "C-R3",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 3.333333
+        "startTime": 3.333333333333
       },
       {
         "id": "C-L4",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 0.333333
+        "startTime": 0.333333333333
       }
     ],
     "causalEdges": [
@@ -598,37 +598,37 @@
         "id": "A-R1",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 0
+        "startTime": 0.0
       },
       {
         "id": "A-L2",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 1
+        "startTime": 1.0
       },
       {
         "id": "B-R1",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 1.333333
+        "startTime": 1.333333333333
       },
       {
         "id": "B-L2",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 0.333333
+        "startTime": 0.333333333333
       },
       {
         "id": "C-R1",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 0.666667
+        "startTime": 0.666666666667
       },
       {
         "id": "C-L2",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 1.666667
+        "startTime": 1.666666666667
       }
     ],
     "causalEdges": [
@@ -809,7 +809,7 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "B-L2",
+        "to": "B-R3",
         "cycleOffset": 0
       },
       {
@@ -824,7 +824,7 @@
       },
       {
         "from": "A-L4",
-        "to": "B-R5",
+        "to": "B-L6",
         "cycleOffset": 0
       },
       {
@@ -844,7 +844,7 @@
       },
       {
         "from": "B-L2",
-        "to": "C-R3",
+        "to": "C-L4",
         "cycleOffset": 0
       },
       {
@@ -859,8 +859,8 @@
       },
       {
         "from": "B-R5",
-        "to": "C-L6",
-        "cycleOffset": 0
+        "to": "C-R1",
+        "cycleOffset": 1
       },
       {
         "from": "B-L6",
@@ -879,7 +879,7 @@
       },
       {
         "from": "C-R3",
-        "to": "A-L4",
+        "to": "A-R5",
         "cycleOffset": 0
       },
       {
@@ -894,7 +894,7 @@
       },
       {
         "from": "C-L6",
-        "to": "A-R1",
+        "to": "A-L2",
         "cycleOffset": 1
       }
     ],
@@ -1049,7 +1049,7 @@
       },
       {
         "from": "A-L2",
-        "to": "B-R3",
+        "to": "B-L4",
         "cycleOffset": 0
       },
       {
@@ -1064,8 +1064,8 @@
       },
       {
         "from": "A-R5",
-        "to": "B-L6",
-        "cycleOffset": 0
+        "to": "B-R1",
+        "cycleOffset": 1
       },
       {
         "from": "A-L6",
@@ -1074,7 +1074,7 @@
       },
       {
         "from": "B-R1",
-        "to": "C-L2",
+        "to": "C-R3",
         "cycleOffset": 0
       },
       {
@@ -1089,7 +1089,7 @@
       },
       {
         "from": "B-L4",
-        "to": "C-R5",
+        "to": "C-L6",
         "cycleOffset": 0
       },
       {
@@ -1114,7 +1114,7 @@
       },
       {
         "from": "C-R3",
-        "to": "A-L4",
+        "to": "A-R5",
         "cycleOffset": 0
       },
       {
@@ -1129,7 +1129,7 @@
       },
       {
         "from": "C-L6",
-        "to": "A-R1",
+        "to": "A-L2",
         "cycleOffset": 1
       }
     ],
@@ -1284,7 +1284,7 @@
       },
       {
         "from": "A-L2",
-        "to": "B-R3",
+        "to": "B-L4",
         "cycleOffset": 0
       },
       {
@@ -1299,8 +1299,8 @@
       },
       {
         "from": "A-R5",
-        "to": "B-L6",
-        "cycleOffset": 0
+        "to": "B-R1",
+        "cycleOffset": 1
       },
       {
         "from": "A-L6",
@@ -1309,7 +1309,7 @@
       },
       {
         "from": "B-R1",
-        "to": "C-L2",
+        "to": "C-R3",
         "cycleOffset": 0
       },
       {
@@ -1324,7 +1324,7 @@
       },
       {
         "from": "B-L4",
-        "to": "C-R5",
+        "to": "C-L6",
         "cycleOffset": 0
       },
       {
@@ -1349,7 +1349,7 @@
       },
       {
         "from": "C-R3",
-        "to": "A-L4",
+        "to": "A-R5",
         "cycleOffset": 0
       },
       {
@@ -1364,7 +1364,7 @@
       },
       {
         "from": "C-L6",
-        "to": "A-R1",
+        "to": "A-L2",
         "cycleOffset": 1
       }
     ],
@@ -1914,8 +1914,8 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "C-R1",
-        "cycleOffset": 1
+        "to": "C-L2",
+        "cycleOffset": 0
       },
       {
         "from": "A-L2",
@@ -1924,7 +1924,7 @@
       },
       {
         "from": "B-L1",
-        "to": "A-L2",
+        "to": "A-R1",
         "cycleOffset": 0
       },
       {
@@ -2150,37 +2150,37 @@
         "id": "A-R1",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 0.333333
+        "startTime": 0.333333333333
       },
       {
         "id": "A-L2",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 1.333333
+        "startTime": 1.333333333333
       },
       {
         "id": "A-R3",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 2.333333
+        "startTime": 2.333333333333
       },
       {
         "id": "A-L4",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 3.333333
+        "startTime": 3.333333333333
       },
       {
         "id": "A-R5",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 4.333333
+        "startTime": 4.333333333333
       },
       {
         "id": "A-L6",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 5.333333
+        "startTime": 5.333333333333
       },
       {
         "id": "B-R1",
@@ -2222,37 +2222,37 @@
         "id": "C-R1",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 0.666667
+        "startTime": 0.666666666667
       },
       {
         "id": "C-L2",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 1.666667
+        "startTime": 1.666666666667
       },
       {
         "id": "C-R3",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 2.666667
+        "startTime": 2.666666666667
       },
       {
         "id": "C-L4",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 3.666667
+        "startTime": 3.666666666667
       },
       {
         "id": "C-R5",
         "jugglerId": "C",
         "hand": "R",
-        "startTime": 4.666667
+        "startTime": 4.666666666667
       },
       {
         "id": "C-L6",
         "jugglerId": "C",
         "hand": "L",
-        "startTime": 5.666667
+        "startTime": 5.666666666667
       }
     ],
     "causalEdges": [
@@ -2293,7 +2293,7 @@
       },
       {
         "from": "B-L2",
-        "to": "C-L2",
+        "to": "C-R3",
         "cycleOffset": 0
       },
       {
@@ -2308,7 +2308,7 @@
       },
       {
         "from": "B-R5",
-        "to": "C-R5",
+        "to": "C-L6",
         "cycleOffset": 0
       },
       {
@@ -2354,7 +2354,7 @@
     "catalogStableIds": [
       "highgate-tenclubtarimstriangle"
     ],
-    "visualVerification": "Compared the complete arrow diagrams, hand labels and action rows in 2017 printed p. 219 (with action text continued on printed p. 220) and 2014 printed p. 154. The arrows establish Anne→Ben at the second subsequent event, Anne self to her next event; Ben→Anne at the next lane event, Ben→Clare at the same lane index (phase-shifted by 2/3 beat), Ben self to his next event; Clare self to her next event, Clare→Anne two lane events later, Clare self to her next event. The three-action rows repeat over a six-beat hand cycle.",
+    "visualVerification": "Compared the complete arrow diagrams, hand labels and action rows in 2017 printed p. 219 (with action text continued on printed p. 220) and 2014 printed p. 154. The arrows establish Anne→Ben at the second subsequent event, Anne self to her next event; Ben→Anne at the next lane event, Ben→Clare at the next lane event (phase-shifted by 2/3 beat), Ben self to his next event; Clare self to her next event, Clare→Anne two lane events later, Clare self to her next event. The three-action rows repeat over a six-beat hand cycle.",
     "modelLimitations": [
       "The graph records causal endpoints and cycle wraps. It does not separately encode the printed straight/crossing trajectory, initial club inventory, or siteswap direction."
     ]

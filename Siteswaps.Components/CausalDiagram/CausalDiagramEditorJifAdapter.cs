@@ -7,7 +7,8 @@ namespace Siteswaps.Components.CausalDiagram;
 /// <summary>Projects an editor graph into the established domain DiagramSet used by JifMapper.</summary>
 public static class CausalDiagramEditorJifAdapter
 {
-    private const int MaximumTimeScale = 1_000;
+    private const int MaximumTimeScale = 100_000;
+    private const decimal ScaledTimeTolerance = 0.000_001m;
 
     public static bool TryCreateDiagramSet(
         CausalDiagramEditorState state,
@@ -18,6 +19,13 @@ public static class CausalDiagramEditorJifAdapter
         ArgumentNullException.ThrowIfNull(state);
         diagram = null;
         error = "Dieses Diagramm kann nicht als Passist-Animation dargestellt werden.";
+
+        if (!state.HasBalancedCausalEdges())
+        {
+            error =
+                "Jeder Kausalknoten muss gleich viele eingehende und ausgehende Pfeile haben; prüfe mehrere eingehende Pfeile oder fehlende Verbindungen.";
+            return false;
+        }
 
         if (state.Jugglers.Count == 0 || state.Throws.Count == 0 || state.CycleLength <= 0)
             return false;
@@ -77,7 +85,13 @@ public static class CausalDiagramEditorJifAdapter
         );
         var nodesById = state.Throws.ToDictionary(node => node.Id, StringComparer.Ordinal);
         var rowCounts = state
-            .Jugglers.Select(juggler => state.Throws.Count(node => node.JugglerId == juggler.Id))
+            .Jugglers.Select(juggler =>
+                state
+                    .Throws.Where(node => node.JugglerId == juggler.Id)
+                    .Select(node => node.StartTime)
+                    .Distinct()
+                    .Count()
+            )
             .ToArray();
         var inferredTargets = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var node in state.Throws)
@@ -121,12 +135,15 @@ public static class CausalDiagramEditorJifAdapter
             }
             else
             {
+                if (node.Height == 0)
+                    continue;
+
                 var sourceBeatDuration =
                     state.CycleLength
                     / state.Throws.Count(candidate => candidate.JugglerId == node.JugglerId);
                 duration = node.Height * sourceBeatDuration;
             }
-            if (duration <= 0 || duration > int.MaxValue)
+            if (duration < 0 || duration > int.MaxValue)
                 return false;
 
             durations.Add(node.Id, duration);
@@ -134,7 +151,10 @@ public static class CausalDiagramEditorJifAdapter
         }
 
         var scale = FindIntegerScale(scaleInputs);
-        if (scale is null || state.CycleLength * scale > int.MaxValue)
+        if (
+            scale is null
+            || !TryScaleToInteger(state.CycleLength, scale.Value, out var scaledStepCount)
+        )
         {
             error = "Die Zeitwerte dieses Diagramms benötigen eine zu große Passist-Zeitskala.";
             return false;
@@ -184,7 +204,7 @@ public static class CausalDiagramEditorJifAdapter
             CausalArrows: causalArrows.ToImmutableList(),
             LadderArrows: ImmutableList<DiagramArrow>.Empty,
             TimeStretchFactor: scale.Value,
-            StepCount: decimal.ToInt32(state.CycleLength * scale.Value),
+            StepCount: scaledStepCount,
             LimbPermutation: limbPermutation,
             StartProps: ImmutableDictionary<string, StartProps>.Empty
         );
@@ -216,14 +236,12 @@ public static class CausalDiagramEditorJifAdapter
             var height = 0;
             if (durations.TryGetValue(node.Id, out var duration))
             {
-                var scaledHeight = duration * scale;
-                if (decimal.Truncate(scaledHeight) != scaledHeight || scaledHeight > int.MaxValue)
+                if (!TryScaleToInteger(duration, scale, out height))
                 {
                     error =
                         "Eine Wurfhöhe lässt sich nicht als ganzzahliger Passist-Zeitschritt darstellen.";
                     return false;
                 }
-                height = decimal.ToInt32(scaledHeight);
                 if (outgoing.TryGetValue(node.Id, out var edge))
                 {
                     var target = nodesById[edge.ToThrowId];
@@ -256,7 +274,7 @@ public static class CausalDiagramEditorJifAdapter
                 new Throw(
                     hands[handIndex[(node.JugglerId, node.Hand)]],
                     height,
-                    node.StartTime * scale,
+                    ScaleTime(node.StartTime, scale),
                     destination
                 )
             );
@@ -285,12 +303,10 @@ public static class CausalDiagramEditorJifAdapter
         {
             var target = nodesById[edge.ToThrowId];
             var from = domainThrows[edge.FromThrowId];
-            var targetTime = (target.StartTime + edge.CycleOffset * state.CycleLength) * scale;
+            var unscaledTargetTime = target.StartTime + edge.CycleOffset * state.CycleLength;
+            var targetTime = ScaleTime(unscaledTargetTime, scale);
             var stepValue = targetTime - from.Time;
-            if (
-                decimal.Truncate(stepValue) != stepValue
-                || stepValue is > int.MaxValue or < int.MinValue
-            )
+            if (!TryScaleToInteger(stepValue, 1, out var scaledStepValue))
             {
                 error = "Ein Kausalziel lässt sich nicht auf der Passist-Zeitskala darstellen.";
                 return false;
@@ -308,7 +324,7 @@ public static class CausalDiagramEditorJifAdapter
                 new DiagramArrow(
                     from,
                     to,
-                    decimal.ToInt32(stepValue),
+                    scaledStepValue,
                     jugglers[jugglerIndex[target.JugglerId]],
                     OrbitIndex: -1
                 )
@@ -587,10 +603,33 @@ public static class CausalDiagramEditorJifAdapter
     {
         for (var scale = 1; scale <= MaximumTimeScale; scale++)
         {
-            if (values.All(value => decimal.Truncate(value * scale) == value * scale))
+            if (values.All(value => IsNearInteger(value * scale)))
                 return scale;
         }
 
         return null;
     }
+
+    private static bool TryScaleToInteger(decimal value, int scale, out int scaled)
+    {
+        var scaledValue = decimal.Round(value * scale, 0, MidpointRounding.AwayFromZero);
+        if (
+            decimal.Abs(value * scale - scaledValue) > ScaledTimeTolerance
+            || scaledValue is > int.MaxValue or < int.MinValue
+        )
+        {
+            scaled = 0;
+            return false;
+        }
+
+        scaled = decimal.ToInt32(scaledValue);
+        return true;
+    }
+
+    private static decimal ScaleTime(decimal time, int scale) =>
+        decimal.Round(time * scale, 0, MidpointRounding.AwayFromZero);
+
+    private static bool IsNearInteger(decimal value) =>
+        decimal.Abs(value - decimal.Round(value, 0, MidpointRounding.AwayFromZero))
+        <= ScaledTimeTolerance;
 }

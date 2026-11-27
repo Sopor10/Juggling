@@ -255,8 +255,8 @@
       },
       {
         "from": "D-R7",
-        "to": "A-L2",
-        "cycleOffset": 1
+        "to": "A-L8",
+        "cycleOffset": 0
       },
       {
         "from": "B-L2",
@@ -1601,7 +1601,7 @@
       },
       {
         "from": "P3-8",
-        "to": "P2-10",
+        "to": "P2-11",
         "cycleOffset": 0
       },
       {
@@ -1616,7 +1616,7 @@
       },
       {
         "from": "P3-11",
-        "to": "P2-1",
+        "to": "P2-2",
         "cycleOffset": 1
       },
       {
@@ -1699,7 +1699,7 @@
         "pdfPage": 222
       }
     ],
-    "notes": "Transcribed from the named rows and visually checked against the causal diagram. Per-person phase: {'Anne': 0.5, 'Ben': 0, 'Clare': 0.5, 'Daniel': 0.5}. Edges follow the named recipient to the first eligible recipient event after the shortest arrival interval supported by the printed throw class (single=one beat, double=two beats); self throws lead to the next event of the same person.",
+    "notes": "Transcribed from the named rows and visually checked against the causal diagram. Per-person phase: {'Anne': 0.5, 'Ben': 0, 'Clare': 0.5, 'Daniel': 0.5}. Edges follow the named recipient to the first eligible recipient event after the shortest arrival interval supported by the printed throw class (single=one beat, double=two beats); self throws lead to the next event of the same person. Clare’s straight doubles to Ben target P2-11 and P2-2 across the cycle boundary, on the opposite hands from Clare’s source throws.",
     "variants": "Straight/crossing pass orientation and starting club inventory follow the source prose; the editor state stores the causal event graph and hands/times, not formation geometry or club colors.",
     "modelLimits": "No zip, heff, or hold token occurs in this pattern.",
     "validation": {
@@ -1863,8 +1863,8 @@
       },
       {
         "from": "P2-3",
-        "to": "P2-4",
-        "cycleOffset": 0
+        "to": "P3-4",
+        "cycleOffset": 1
       },
       {
         "from": "P2-4",
@@ -1883,7 +1883,7 @@
       },
       {
         "from": "P3-3",
-        "to": "P3-4",
+        "to": "P2-2",
         "cycleOffset": 1
       },
       {
@@ -1903,7 +1903,7 @@
       },
       {
         "from": "P4-3",
-        "to": "P2-1",
+        "to": "P1-4",
         "cycleOffset": 1
       },
       {
@@ -1926,7 +1926,7 @@
         "pdfPage": 223
       }
     ],
-    "notes": "Transcribed from the named rows and visually checked against the causal diagram. Per-person phase: {'Anne': 1, 'Ben': 0, 'Clare': 1, 'Daniel': 1}. Edges follow the named recipient to the first eligible recipient event after the shortest arrival interval supported by the printed throw class (single=one beat, double=two beats); self throws lead to the next event of the same person.",
+    "notes": "Transcribed from the named rows and visually checked against the causal diagram. Per-person phase: {'Anne': 1, 'Ben': 0, 'Clare': 1, 'Daniel': 1}. Edges follow the named recipient to the first eligible recipient event after the shortest arrival interval supported by the printed throw class (single=one beat, double=two beats); self throws lead to the next event of the same person. Ben’s P2-3 Clare pass lands at P3-4; Clare’s P3-3 Ben pass lands at P2-2; Daniel’s P4-3 Anne pass lands at P1-4. Each endpoint matches the printed recipient and straight opposite-hand route.",
     "variants": "Straight/crossing pass orientation and starting club inventory follow the source prose; the editor state stores the causal event graph and hands/times, not formation geometry or club colors.",
     "modelLimits": "No zip, heff, or hold token occurs in this pattern.",
     "validation": {
@@ -3591,7 +3591,7 @@
       "editionComparison": "2014 printed/PDF p. 216: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 301 and compared with the matching 2014 diagram on p. 216; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubpasspasshefffeedingthreecount",
@@ -3947,7 +3947,7 @@
       "editionComparison": "2014 printed/PDF p. 216: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 301 and compared with the matching 2014 diagram on p. 216; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclub972feedingthreecount",
@@ -4305,7 +4305,7 @@
       "editionComparison": "2014 printed/PDF p. 217: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 303 and compared with the matching 2014 diagram on p. 217; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclub972feedingfrenchthreecount",
@@ -4664,7 +4664,7 @@
       "editionComparison": "2014 printed/PDF p. 217: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 303 and compared with the matching 2014 diagram on p. 217; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-onecountfeeding972",
@@ -5020,7 +5020,7 @@
       "editionComparison": "2014 printed/PDF p. 217: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 303 and compared with the matching 2014 diagram on p. 217; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubwhynotfeedingfivecountpopcorn",
@@ -5560,7 +5560,7 @@
       "editionComparison": "2014 printed/PDF p. 218: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 304 and compared with the matching 2014 diagram on p. 218; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubmaybefeedingfivecountpopcorn",
@@ -6100,7 +6100,7 @@
       "editionComparison": "2014 printed/PDF p. 218: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 304 and compared with the matching 2014 diagram on p. 218; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubfunkybookendsfeedingwhynot",
@@ -6640,7 +6640,7 @@
       "editionComparison": "2014 printed/PDF p. 219: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 306 and compared with the matching 2014 diagram on p. 219; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubfunkybookendsfeedingmaybe",
@@ -7180,7 +7180,7 @@
       "editionComparison": "2014 printed/PDF p. 219: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 306 and compared with the matching 2014 diagram on p. 219; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn",
@@ -7720,7 +7720,7 @@
       "editionComparison": "2014 printed/PDF p. 219: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 306 and compared with the matching 2014 diagram on p. 219; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubmartinsonecountfeedingfunkybookends",
@@ -8260,7 +8260,7 @@
       "editionComparison": "2014 printed/PDF p. 220: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 308 and compared with the matching 2014 diagram on p. 220; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubonecountfeedingwhynot",
@@ -8800,7 +8800,7 @@
       "editionComparison": "2014 printed/PDF p. 220: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 308 and compared with the matching 2014 diagram on p. 220; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubonecountfeedingmaybe",
@@ -9340,7 +9340,7 @@
       "editionComparison": "2014 printed/PDF p. 220: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 308 and compared with the matching 2014 diagram on p. 220; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubonecountfeedingmartinsonecount",
@@ -9880,7 +9880,7 @@
       "editionComparison": "2014 printed/PDF p. 221: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 310 and compared with the matching 2014 diagram on p. 221; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenonecountlinefeedfeedingfourcountandtwocount",
@@ -10152,7 +10152,7 @@
       "editionComparison": "2014 printed/PDF p. 225: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 315 and compared with the matching 2014 diagram on p. 225; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount",
@@ -10508,7 +10508,7 @@
       "editionComparison": "2014 printed/PDF p. 225: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source.",
       "visualReview": "Printed throw rows, hand order, and route directions were checked against the 2017 diagram on printed p. 315 and compared with the matching 2014 diagram on p. 225; periodic edges follow the stated recipient, action height, route hand, and event timing."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   },
   {
     "id": "highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn",
@@ -11053,9 +11053,9 @@
     "reviewStatus": {
       "inventoryId": "highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn",
       "manipulationReview": "Cooperative feed; no manipulator/takeout/hijack/lo-jack described.",
-      "editionComparison": "2014 printed/PDF p. 225: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source. The 2014 edition contains the complete pattern on p. 225; the 2017 expanded edition splits its diagram/title and written throw rows across printed pp. 315–316.",
+      "editionComparison": "2014 printed/PDF p. 225: title, start phase/hand notes, throw rows, pass directions, and diagram agree with the 2017 expanded source. The 2014 edition contains the complete pattern on p. 225; the 2017 expanded edition splits its diagram/title and written throw rows across printed pp. 315\u2013316.",
       "visualReview": "2017 diagram begins on printed p. 315 and throw rows continue on p. 316; both were checked. The matching complete title, rows and diagram are on 2014 p. 225. The editions agree."
     },
-    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (−1). CycleOffset records cycle wrap."
+    "edgeMethod": "Recipient is encoded by each printed row token; zip/self/heff are self actions, and pass route comes from the printed straight/crossing text or token override. Edges select the earliest target event on the required hand at or after the action timing (self/single +1, double/heff +2); zip selects the prior opposite-hand event (\u22121). CycleOffset records cycle wrap."
   }
 ]

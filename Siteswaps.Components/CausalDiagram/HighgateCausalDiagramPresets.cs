@@ -7,26 +7,38 @@ internal static class HighgateCausalDiagramPresets
 {
     private const string ResourceName =
         "Siteswaps.Components.CausalDiagram.Data.highgate-causal-patterns.json";
+    private const string WorkInProgressResourceName =
+        "Siteswaps.Components.CausalDiagram.Data.highgate-causal-patterns-work-in-progress.json";
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
     };
 
-    private static readonly List<HighgatePatternData> Patterns = Load();
+    private static readonly List<HighgatePatternData> Patterns = Load(ResourceName);
+    private static readonly List<HighgatePatternData> WorkInProgressPatterns = Load(
+        WorkInProgressResourceName
+    );
 
     public static IEnumerable<CausalDiagramEditorPreset> All =>
-        Patterns.Select(pattern => new CausalDiagramEditorPreset(
+        ToPresets(Patterns);
+
+    public static IEnumerable<CausalDiagramEditorPreset> WorkInProgress =>
+        ToPresets(WorkInProgressPatterns);
+
+    private static IEnumerable<CausalDiagramEditorPreset> ToPresets(
+        IEnumerable<HighgatePatternData> patterns
+    ) => patterns.Select(pattern => new CausalDiagramEditorPreset(
             pattern.Id,
             pattern.Label,
             pattern.Group,
             () => CreateState(pattern)
         ));
 
-    private static List<HighgatePatternData> Load()
+    private static List<HighgatePatternData> Load(string resourceName)
     {
         using var stream = typeof(HighgateCausalDiagramPresets).Assembly.GetManifestResourceStream(
-            ResourceName
-        ) ?? throw new InvalidOperationException($"Missing embedded resource {ResourceName}.");
+            resourceName
+        ) ?? throw new InvalidOperationException($"Missing embedded resource {resourceName}.");
         var patterns = JsonSerializer.Deserialize<List<HighgatePatternData>>(stream, JsonOptions)
             ?? throw new InvalidOperationException("The Highgate pattern data is empty.");
         if (

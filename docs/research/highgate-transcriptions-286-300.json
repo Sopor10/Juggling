@@ -808,32 +808,32 @@
       },
       {
         "from": "P3-2",
-        "to": "P3-3",
+        "to": "P2-4",
         "cycleOffset": 0
       },
       {
         "from": "P3-3",
-        "to": "P3-4",
-        "cycleOffset": 0
+        "to": "P2-1",
+        "cycleOffset": 1
       },
       {
         "from": "P3-4",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P2-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
         "from": "P4-2",
-        "to": "P2-3",
+        "to": "P4-3",
         "cycleOffset": 0
       },
       {
         "from": "P4-3",
-        "to": "P2-4",
+        "to": "P4-4",
         "cycleOffset": 0
       },
       {
@@ -1001,22 +1001,22 @@
       },
       {
         "from": "P3-2",
-        "to": "P3-3",
-        "cycleOffset": 0
+        "to": "P2-1",
+        "cycleOffset": 1
       },
       {
         "from": "P3-3",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P2-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
         "from": "P4-2",
-        "to": "P2-3",
+        "to": "P4-3",
         "cycleOffset": 0
       },
       {
@@ -1150,12 +1150,12 @@
       },
       {
         "from": "P3-2",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P2-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
@@ -1323,22 +1323,22 @@
       },
       {
         "from": "P3-2",
-        "to": "P4-1",
+        "to": "P2-1",
         "cycleOffset": 1
       },
       {
         "from": "P3-3",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P4-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
         "from": "P4-2",
-        "to": "P2-3",
+        "to": "P3-3",
         "cycleOffset": 0
       },
       {
@@ -1540,32 +1540,32 @@
       },
       {
         "from": "P3-2",
-        "to": "P4-4",
+        "to": "P2-4",
         "cycleOffset": 0
       },
       {
         "from": "P3-3",
-        "to": "P3-4",
-        "cycleOffset": 0
+        "to": "P2-1",
+        "cycleOffset": 1
       },
       {
         "from": "P3-4",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P4-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
         "from": "P4-2",
-        "to": "P2-3",
+        "to": "P3-3",
         "cycleOffset": 0
       },
       {
         "from": "P4-3",
-        "to": "P2-4",
+        "to": "P4-4",
         "cycleOffset": 0
       },
       {
@@ -1801,32 +1801,32 @@
       },
       {
         "from": "P3-2",
-        "to": "P4-4",
+        "to": "P2-4",
         "cycleOffset": 0
       },
       {
         "from": "P3-3",
-        "to": "P3-4",
+        "to": "P4-5",
         "cycleOffset": 0
       },
       {
         "from": "P3-4",
-        "to": "P4-1",
+        "to": "P2-1",
         "cycleOffset": 1
       },
       {
         "from": "P3-5",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P4-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
         "from": "P4-2",
-        "to": "P2-3",
+        "to": "P3-3",
         "cycleOffset": 0
       },
       {
@@ -1836,7 +1836,7 @@
       },
       {
         "from": "P4-4",
-        "to": "P2-5",
+        "to": "P3-5",
         "cycleOffset": 0
       },
       {
@@ -2067,32 +2067,32 @@
       },
       {
         "from": "P3-1",
-        "to": "P4-3",
+        "to": "P2-3",
         "cycleOffset": 0
       },
       {
         "from": "P3-2",
-        "to": "P3-3",
+        "to": "P4-4",
         "cycleOffset": 0
       },
       {
         "from": "P3-3",
-        "to": "P4-5",
+        "to": "P2-5",
         "cycleOffset": 0
       },
       {
         "from": "P3-4",
-        "to": "P3-5",
-        "cycleOffset": 0
+        "to": "P2-1",
+        "cycleOffset": 1
       },
       {
         "from": "P3-5",
-        "to": "P3-1",
+        "to": "P4-2",
         "cycleOffset": 1
       },
       {
         "from": "P4-1",
-        "to": "P2-2",
+        "to": "P3-2",
         "cycleOffset": 0
       },
       {
@@ -2102,12 +2102,12 @@
       },
       {
         "from": "P4-3",
-        "to": "P2-4",
+        "to": "P3-4",
         "cycleOffset": 0
       },
       {
         "from": "P4-4",
-        "to": "P2-5",
+        "to": "P4-5",
         "cycleOffset": 0
       },
       {
@@ -5838,7 +5838,7 @@
       },
       {
         "from": "P4-9",
-        "to": "P2-10",
+        "to": "P3-10",
         "cycleOffset": 0
       },
       {
@@ -5873,7 +5873,7 @@
     "stable_id": "highgate-gorillaweave",
     "label": "Gorilla weave",
     "group": "Highgate Collection",
-    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 287 / PDF p. 288; 2014 PDF printed p. 204 / PDF p. 205.",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 287 / PDF p. 288; 2014 PDF printed/PDF p. 204.",
     "notation": "Ben feeds on one count: right hand three passes each with Anne, Clare, Daniel; left hand one pass with Clare, then three each with Daniel, Anne, Clare. The walkers use a 2, 2, 5 count and a figure-eight path; each makes three consecutive passes to Ben before the five-count pass. Their first, second, and third feeder passes use green, yellow, and red clubs respectively.",
     "cycleLength": 18,
     "jugglers": [
@@ -6421,7 +6421,7 @@
       },
       {
         "from": "P2-1",
-        "to": "P2-2",
+        "to": "P1-2",
         "cycleOffset": 0
       },
       {
@@ -6431,7 +6431,7 @@
       },
       {
         "from": "P2-3",
-        "to": "P2-4",
+        "to": "P1-4",
         "cycleOffset": 0
       },
       {
@@ -6461,7 +6461,7 @@
       },
       {
         "from": "P2-9",
-        "to": "P2-10",
+        "to": "P3-10",
         "cycleOffset": 0
       },
       {
@@ -6701,7 +6701,7 @@
         "edition": "2014 PDF",
         "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
         "printedPage": 204,
-        "pdfPage": 205
+        "pdfPage": 204
       }
     ],
     "notes": "The source causal diagram has four alternating R/L lanes and shows the repeated boundary event at the right. The serialized cycle contains 18 events per juggler. Cross-lane edges are transcribed from the printed graph; horizontal links are self throws. The club-color rule and figure-eight walking remain in notation.",

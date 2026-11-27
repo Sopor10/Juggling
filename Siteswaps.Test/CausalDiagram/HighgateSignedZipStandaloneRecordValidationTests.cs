@@ -73,7 +73,7 @@ public class HighgateSignedZipStandaloneRecordValidationTests
             .Single(record => record.Id == "highgate-aselftriple")
             .CausalEdges.Should()
             .Contain(edge =>
-                edge.FromThrowId == "B-L2" && edge.ToThrowId == "B-R1" && edge.CycleOffset == 1
+                edge.FromThrowId == "B-L3" && edge.ToThrowId == "B-R1" && edge.CycleOffset == 1
             );
         records.Single(record => record.Id == "highgate-58552").CausalEdges.Should().HaveCount(20);
         records

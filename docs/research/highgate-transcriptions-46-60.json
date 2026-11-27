@@ -2774,7 +2774,7 @@
       {
         "id": "e-P2-4",
         "fromThrowId": "P2-4",
-        "toThrowId": "P1-5",
+        "toThrowId": "P1-6",
         "cycleOffset": 0
       },
       {
@@ -2810,7 +2810,7 @@
       {
         "id": "e-P2-11",
         "fromThrowId": "P2-11",
-        "toThrowId": "P1-12",
+        "toThrowId": "P1-13",
         "cycleOffset": 0
       },
       {
@@ -2840,7 +2840,7 @@
         "pdfPage": 29
       }
     ],
-    "notes": "Anne: pass, hold, self/3, self/3, pass, self/3, self/3 with straight passes. Ben starts half a beat later: pass, self/3, self/3, pass, hold, self/3, self/3 with crossing passes. Each seven-event sequence repeats twice to restore hand parity. Causal lines follow the source diagram: self routes continue within the row, pass routes move to the other row, and a hold has no outgoing throw; where a receiving row includes a hold, the causal line continues to the next active event.",
+    "notes": "Anne: pass, hold, self/3, self/3, pass, self/3, self/3 with straight passes. Ben starts half a beat later: pass, self/3, self/3, pass, hold, self/3, self/3 with crossing passes. Each seven-event sequence repeats twice to restore hand parity. Causal lines follow the source diagram: self routes continue within the row, pass routes move to the other row, and a hold has no outgoing throw; where a receiving row includes a hold, the causal line continues to the next active event. Ben’s crossing passes retain their same-hand endpoints, including P2-4→P1-6 and P2-11→P1-13, as confirmed by the asynchronous diagram.",
     "stable_id": "highgate-jimsthreecountasynchversion",
     "variants": [
       "Asynchronous, half-beat phase offset; the seven-event sequence repeats twice to preserve right/left hand parity."

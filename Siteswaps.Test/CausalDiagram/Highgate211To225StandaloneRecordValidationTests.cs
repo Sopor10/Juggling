@@ -25,17 +25,27 @@ public class Highgate211To225StandaloneRecordValidationTests
 
     private static readonly Dictionary<string, string[][]> OneCountFeedRows = new()
     {
-        ["highgate-tenclubonecountvariation1"] =
-        [
-            ["Clare", "Ben"],
-            ["Anne", "Clare"],
-            ["Ben", "Anne"],
-        ],
         ["highgate-tenclubonecountvariation2"] =
         [
             ["Clare", "Clare", "Ben", "Ben"],
             ["Anne", "Anne", "Clare", "Clare"],
             ["Ben", "Ben", "Anne", "Anne"],
+        ],
+    };
+
+    private static readonly Dictionary<
+        string,
+        (string Source, string Target, int CycleOffset)[]
+    > OneCountFeedDiagramEdges = new()
+    {
+        ["highgate-tenclubonecountvariation1"] =
+        [
+            ("A-R1", "C-L2", 0),
+            ("A-L2", "B-R2", 1),
+            ("B-L1", "A-R1", 0),
+            ("B-R2", "C-R1", 1),
+            ("C-R1", "B-L1", 1),
+            ("C-L2", "A-L2", 1),
         ],
     };
 
@@ -47,7 +57,7 @@ public class Highgate211To225StandaloneRecordValidationTests
         ["highgate-tenclubtarimstriangle"] =
         [
             [("Ben", 2), ("Anne", 1), ("Ben", 2)],
-            [("Anne", 1), ("Clare", 0), ("Ben", 1)],
+            [("Anne", 1), ("Clare", 1), ("Ben", 1)],
             [("Clare", 1), ("Anne", 2), ("Clare", 1)],
         ],
     };
@@ -97,6 +107,7 @@ public class Highgate211To225StandaloneRecordValidationTests
 
             ValidateHeightDerivedRows(record);
             ValidateOneCountFeedRows(record);
+            ValidateOneCountFeedDiagramEdges(record);
             ValidateTarimEndpoints(record);
 
             var state = new CausalDiagramEditorState
@@ -211,6 +222,19 @@ public class Highgate211To225StandaloneRecordValidationTests
         }
     }
 
+    private static void ValidateOneCountFeedDiagramEdges(Record record)
+    {
+        if (OneCountFeedDiagramEdges.TryGetValue(record.Id, out var expectedEdges))
+        {
+            foreach (var (source, target, cycleOffset) in expectedEdges)
+            {
+                var edge = record.CausalEdges.Single(item => item.FromId == source);
+                edge.ToIdValue.Should().Be(target, record.Id);
+                edge.CycleOffset.Should().Be(cycleOffset, record.Id);
+            }
+        }
+    }
+
     private static void ValidateTarimEndpoints(Record record)
     {
         if (SourceEndpointRows.TryGetValue(record.Id, out var endpointRows))
@@ -248,7 +272,7 @@ public class Highgate211To225StandaloneRecordValidationTests
                         ("Anne", "Ben") => 5m / 3m,
                         ("Anne", "Anne") => 1m,
                         ("Ben", "Anne") => 4m / 3m,
-                        ("Ben", "Clare") => 2m / 3m,
+                        ("Ben", "Clare") => 5m / 3m,
                         ("Ben", "Ben") => 1m,
                         ("Clare", "Anne") => 5m / 3m,
                         ("Clare", "Clare") => 1m,
@@ -257,6 +281,19 @@ public class Highgate211To225StandaloneRecordValidationTests
                     sourceToLanding
                         .Should()
                         .BeApproximately(expectedPhaseDelta, 0.000002m, record.Id);
+                }
+            }
+
+            if (record.Id == "highgate-tenclubtarimstriangle")
+            {
+                foreach (var item in record.Throws)
+                {
+                    record.CausalEdges.Count(edge => edge.ToIdValue == item.Id)
+                        .Should()
+                        .Be(
+                            record.CausalEdges.Count(edge => edge.FromId == item.Id),
+                            $"{record.Id}: {item.Id}"
+                        );
                 }
             }
         }

@@ -24,7 +24,7 @@ public class Highgate78To79SlowFastSourceRecordTests
                 ("Anne", 1),
                 ("Anne", 1),
             ],
-            [("Anne", 1), ("Ben", 1), ("Ben", 1), ("Anne", 1), ("Ben", 1), ("Ben", 1)],
+            [("Anne", 1), ("Ben", 1), ("Ben", 1), ("Anne", 2), ("Ben", 1), ("Ben", 1)],
         ],
         ["highgate-threecountvstwocount"] =
         [
@@ -45,11 +45,11 @@ public class Highgate78To79SlowFastSourceRecordTests
         ["highgate-threecountvstwocount:Anne"] =
         [
             0m,
-            0.666667m,
-            1.333333m,
+            0.666666666667m,
+            1.333333333333m,
             2m,
-            2.666667m,
-            3.333333m,
+            2.666666666667m,
+            3.333333333333m,
         ],
         ["highgate-threecountvstwocount:Ben"] = [0m, 1m, 2m, 3m],
         ["highgate-twocountvsonecount:Anne"] = [0m, 0.5m, 1m, 1.5m],
@@ -130,7 +130,7 @@ public class Highgate78To79SlowFastSourceRecordTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
             var imported = CausalDiagramEditorPresets
-                .All.Single(preset => preset.Id == record.Id)
+                .AllForLoading.Single(preset => preset.Id == record.Id)
                 .Create();
             imported.IsValidForEditor().Should().BeTrue(record.Id);
             imported.CycleLength.Should().Be(record.CycleLength, record.Id);

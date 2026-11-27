@@ -49,6 +49,11 @@ public static class CausalDiagramEditorPresets
             .Concat(CausalDiagramEditorSequences.RunawayPhasePresets)
             .ToArray();
 
+    public static IReadOnlyList<CausalDiagramEditorPreset> WorkInProgress { get; } =
+        HighgateCausalDiagramPresets.WorkInProgress.ToArray();
+
+    public static IEnumerable<CausalDiagramEditorPreset> AllForLoading => All.Concat(WorkInProgress);
+
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>
         All.Where(preset =>
             preset.Id
@@ -65,6 +70,9 @@ public static class CausalDiagramEditorPresets
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleHighgate =>
         All.Where(preset => preset.Group == "Highgate Collection");
+
+    public static IEnumerable<CausalDiagramEditorPreset> VisibleHighgateWorkInProgress =>
+        WorkInProgress.Where(preset => preset.Group == "Highgate Collection");
 
     private static CausalDiagramEditorPreset Siteswap(string id, string label, string pattern) =>
         new(id, label, AsynchronousGroup, () =>
@@ -156,5 +164,6 @@ public static class CausalDiagramEditorPresets
 
     public static bool IsKnownId(string? id) =>
         id is "custom" or "siteswap531" or "feeding75" or "feeding-5-3"
-        || All.Any(preset => preset.Id == id);
+        || All.Any(preset => preset.Id == id)
+        || WorkInProgress.Any(preset => preset.Id == id);
 }

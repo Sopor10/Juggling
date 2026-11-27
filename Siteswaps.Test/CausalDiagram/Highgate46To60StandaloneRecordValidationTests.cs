@@ -57,6 +57,18 @@ public sealed class Highgate46To60StandaloneRecordValidationTests
         foreach (var record in selected.Values)
             ValidateRecord(record);
 
+        var jimAsync = selected["highgate-jimsthreecountasynchversion"];
+        jimAsync.CausalEdges.Single(edge => edge.SourceId == "P2-4")
+            .TargetId.Should().Be("P1-6");
+        jimAsync.CausalEdges.Single(edge => edge.SourceId == "P2-11")
+            .TargetId.Should().Be("P1-13");
+        CausalDiagramEditorPresets.AllForLoading
+            .Single(preset => preset.Id == "highgate-jimsthreecountasynchversion")
+            .Create()
+            .IsValidPattern()
+            .Should()
+            .BeTrue("the source-confirmed asynchronous pattern must map as a valid juggle");
+
         selected["highgate-jimsthreecountasynchversion"].Throws.Should().HaveCount(28);
         selected["highgate-jimsthreecountasynchversion"].CausalEdges.Should().HaveCount(24);
         selected["highgate-synchronousonecount"].Throws.Should().HaveCount(4);
@@ -144,7 +156,7 @@ public sealed class Highgate46To60StandaloneRecordValidationTests
         state.IsValidForEditor().Should().BeTrue(record.StableId);
 
         var imported = CausalDiagramEditorPresets
-            .All.Single(preset => preset.Id == record.StableId)
+            .AllForLoading.Single(preset => preset.Id == record.StableId)
             .Create();
         imported.CycleLength.Should().Be(state.CycleLength, record.StableId);
         imported

@@ -8,7 +8,7 @@ The JSON contains 26 records: the nine original accepted patterns plus 17 diagra
 
 | Stable ID | Pattern | 2017 printed page | 2014 printed page | Causal edges |
 |---|---|---:|---:|---:|
-| `highgate-thirteenclubfourcountbox` | Thirteen club four count box | 310 | 221 | 32/32; diagrams checked in both editions |
+| `highgate-thirteenclubfourcountbox` | Thirteen club four count box | 310 | 221 | 32/32; corrected Daniel’s final pass to Anne from `A-L2` next cycle to `A-L8` in-cycle, matching the single-pass endpoint in the diagram; catalog now passes `IsValidPattern` |
 | `highgate-thirteenclubonecountfeedingcountdown` | Thirteen club one count feeding countdown | 301 | 216 | 32/32 |
 | `highgate-thirteenclubthreecountbox` | Thirteen club three count box | 311 | 222 | 24/24 |
 | `highgate-thirteenclubthreecountboxvariation` | Thirteen club three count box variation | 311 | 222 | 48/48 |

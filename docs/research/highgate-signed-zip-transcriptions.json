@@ -903,7 +903,7 @@
           "jugglerId": "B",
           "hand": "R",
           "startTime": 2,
-          "height": 3,
+          "height": 5,
           "heightIsExplicit": true
         },
         {
@@ -911,7 +911,7 @@
           "jugglerId": "B",
           "hand": "L",
           "startTime": 3,
-          "height": 5,
+          "height": 3,
           "heightIsExplicit": true
         },
         {
@@ -919,7 +919,7 @@
           "jugglerId": "B",
           "hand": "R",
           "startTime": 4,
-          "height": 3,
+          "height": 1,
           "heightIsExplicit": true
         },
         {
@@ -927,7 +927,7 @@
           "jugglerId": "B",
           "hand": "L",
           "startTime": 5,
-          "height": 1,
+          "height": 3,
           "heightIsExplicit": true
         }
       ],
@@ -964,33 +964,33 @@
         },
         {
           "fromThrowId": "B-R1",
-          "toThrowId": "B-L1",
+          "toThrowId": "A-L1",
           "cycleOffset": 0
         },
         {
           "fromThrowId": "B-L1",
-          "toThrowId": "A-R2",
+          "toThrowId": "B-R2",
           "cycleOffset": 0
         },
         {
           "fromThrowId": "B-R2",
-          "toThrowId": "B-L2",
+          "toThrowId": "B-L3",
           "cycleOffset": 0
         },
         {
           "fromThrowId": "B-L2",
-          "toThrowId": "B-R1",
-          "cycleOffset": 1
+          "toThrowId": "A-R3",
+          "cycleOffset": 0
         },
         {
           "fromThrowId": "B-R3",
-          "toThrowId": "A-L3",
+          "toThrowId": "B-L2",
           "cycleOffset": 0
         },
         {
           "fromThrowId": "B-L3",
-          "toThrowId": "B-R3",
-          "cycleOffset": 0
+          "toThrowId": "B-R1",
+          "cycleOffset": 1
         }
       ],
       "sourceLinks": [

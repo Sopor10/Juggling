@@ -125,7 +125,7 @@
       },
       {
         "from": "B-R1",
-        "to": "A-R1",
+        "to": "A-L2",
         "cycleOffset": 0
       },
       {
@@ -135,7 +135,7 @@
       },
       {
         "from": "B-R3",
-        "to": "C-R3",
+        "to": "C-L4",
         "cycleOffset": 0
       },
       {

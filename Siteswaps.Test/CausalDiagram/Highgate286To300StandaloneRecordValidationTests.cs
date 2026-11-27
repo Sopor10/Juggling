@@ -110,6 +110,14 @@ public class Highgate286To300StandaloneRecordValidationTests
                 .Should()
                 .OnlyContain(id => throwIds.Contains(id), record.Id);
 
+            if (record.Id == "highgate-gorillaweave")
+            {
+                var outgoing = record.CausalEdges.ToDictionary(edge => edge.From);
+                outgoing["P2-1"].To.Should().Be("P1-2");
+                outgoing["P2-3"].To.Should().Be("P1-4");
+                outgoing["P2-9"].To.Should().Be("P3-10");
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",

@@ -76,8 +76,41 @@ public class Highgate331To340StandaloneRecordValidationTests
             var baseRecord = baseRecords[baseId];
             record.CycleLength.Should().Be(baseRecord.CycleLength, record.Id);
             record.Jugglers.Should().BeEquivalentTo(baseRecord.Jugglers, record.Id);
-            record.Throws.Should().BeEquivalentTo(baseRecord.Throws, record.Id);
-            record.CausalEdges.Should().BeEquivalentTo(baseRecord.CausalEdges, record.Id);
+            record
+                .Throws.Select(item => (item.Id, item.StartTime))
+                .Should()
+                .BeEquivalentTo(
+                    baseRecord.Throws.Select(item =>
+                        (
+                            item.Id,
+                            item.StartTime
+                                + (
+                                    record.Id == "highgate-thirteenclubgorillaweave"
+                                        && item.JugglerId != "P2"
+                                        ? 0.5m
+                                        : 0m
+                                )
+                        )
+                    ),
+                    record.Id
+                );
+            var expectedEdges = baseRecord.CausalEdges
+                .Select(edge =>
+                    record.Id == "highgate-thirteenclubgorillaweave"
+                        ? edge with
+                        {
+                            To = edge.From switch
+                            {
+                                "P2-1" => "P1-2",
+                                "P2-3" => "P1-4",
+                                "P2-9" => "P3-10",
+                                _ => edge.To,
+                            },
+                        }
+                        : edge
+                )
+                .ToList();
+            record.CausalEdges.Should().BeEquivalentTo(expectedEdges, record.Id);
             AssertSourceAnchors(record);
             record.Throws.Select(item => item.Id).Should().OnlyHaveUniqueItems(record.Id);
             record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);

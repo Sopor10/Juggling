@@ -46,6 +46,11 @@
                 {
                   <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
                 }
+                <h3>Highgate · Work in progress (ungültig)</h3>
+                @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgateWorkInProgress)
+                {
+                  <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadSetupPreset(preset.Id)">@preset.Label</button>
+                }
                 <h3>Endliche Sequenz</h3>
                 @foreach (var phase in RunawaySequence.Phases.Select((phase, index) => (phase, index)))
                 {
@@ -121,6 +126,11 @@
                   }
                   <h3>Highgate Collection</h3>
                   @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgate)
+                  {
+                    <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
+                  }
+                  <h3>Highgate · Work in progress (ungültig)</h3>
+                  @foreach (var preset in CausalDiagramEditorPresets.VisibleHighgateWorkInProgress)
                   {
                     <button type="button" data-preset-id="@preset.Id" class="editor-preset-option @(IsPresetSelected(preset.Id) ? "selected" : null)" aria-pressed="@(IsPresetSelected(preset.Id) ? "true" : "false")" @onclick="() => LoadPreset(preset.Id)">@preset.Label</button>
                   }
@@ -961,7 +971,7 @@
     {
         _preset = id;
         _selectedSavedPresetId = null;
-        _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create() ?? CausalDiagramEditorState.CreateEmpty();
+        _state = CausalDiagramEditorPresets.AllForLoading.FirstOrDefault(preset => preset.Id == _preset)?.Create() ?? CausalDiagramEditorState.CreateEmpty();
         _state.ActiveJugglerId = _state.Jugglers[0].Id;
         _selectedId = null;
         SyncSetupFromState();
@@ -972,7 +982,7 @@
     {
         _preset = id;
         _selectedSavedPresetId = null;
-        _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create()
+        _state = CausalDiagramEditorPresets.AllForLoading.FirstOrDefault(preset => preset.Id == _preset)?.Create()
             ?? CausalDiagramEditorState.CreateEmpty();
         if (_preset == "custom" && _state.Throws.Count == 0)
             _state.Throws.Add(new EditorThrow("A1", _state.Jugglers[0].Id, "R", 0m, 1m));

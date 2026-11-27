@@ -3208,7 +3208,7 @@
       },
       {
         "from": "P1-2",
-        "to": "P1-3",
+        "to": "P2-15",
         "cycleOffset": 0
       },
       {
@@ -3223,12 +3223,12 @@
       },
       {
         "from": "P1-5",
-        "to": "P1-6",
+        "to": "P3-30",
         "cycleOffset": 0
       },
       {
         "from": "P1-6",
-        "to": "P3-31",
+        "to": "P1-7",
         "cycleOffset": 0
       },
       {
@@ -3243,12 +3243,12 @@
       },
       {
         "from": "P1-9",
-        "to": "P3-34",
+        "to": "P1-10",
         "cycleOffset": 0
       },
       {
         "from": "P1-10",
-        "to": "P2-23",
+        "to": "P3-35",
         "cycleOffset": 0
       },
       {
@@ -3268,7 +3268,7 @@
       },
       {
         "from": "P2-14",
-        "to": "P3-27",
+        "to": "P1-3",
         "cycleOffset": 0
       },
       {
@@ -3288,7 +3288,7 @@
       },
       {
         "from": "P2-18",
-        "to": "P1-7",
+        "to": "P3-31",
         "cycleOffset": 0
       },
       {
@@ -3343,7 +3343,7 @@
       },
       {
         "from": "P3-29",
-        "to": "P2-18",
+        "to": "P1-6",
         "cycleOffset": 0
       },
       {
@@ -3363,7 +3363,7 @@
       },
       {
         "from": "P3-33",
-        "to": "P1-10",
+        "to": "P2-22",
         "cycleOffset": 0
       },
       {
@@ -3403,7 +3403,62 @@
       "composition": "Each juggler lane takes its event sequence and outgoing edges from the named component feast; all targets resolve to a juggler lane in the composite graph.",
       "modelCheck": "36 event nodes and 36 edges; cycle length 12; checked by standalone state validation.",
       "manipulationReview": "Ordinary three-person passing; no manipulation role or action in the source."
-    }
+    },
+    "sourceRows": {
+      "Anne": [
+        "Ben",
+        "Ben",
+        "self",
+        "self",
+        "Clare",
+        "self",
+        "self",
+        "self",
+        "self",
+        "Clare",
+        "self",
+        "self"
+      ],
+      "Ben": [
+        "Anne",
+        "Anne",
+        "self",
+        "self",
+        "self",
+        "Clare",
+        "self",
+        "self",
+        "Clare",
+        "self",
+        "self",
+        "self"
+      ],
+      "Clare": [
+        "self",
+        "self",
+        "self",
+        "self",
+        "Anne",
+        "Ben",
+        "self",
+        "self",
+        "Ben",
+        "Anne",
+        "self",
+        "self"
+      ]
+    },
+    "sourcePhases": {
+      "Anne": 0,
+      "Ben": 0,
+      "Clare": 0
+    },
+    "sourceFirstHands": {
+      "Anne": "R",
+      "Ben": "R",
+      "Clare": "R"
+    },
+    "edgeMethod": "Every row action routes the club from this event to the named juggler’s next event; each complete printed row repeats over its other-hand cycle."
   },
   {
     "id": "highgate-trilogy",
@@ -4066,7 +4121,7 @@
       },
       {
         "from": "P1-2",
-        "to": "P2-33",
+        "to": "P1-3",
         "cycleOffset": 0
       },
       {
@@ -4091,17 +4146,17 @@
       },
       {
         "from": "P1-7",
-        "to": "P3-68",
+        "to": "P1-8",
         "cycleOffset": 0
       },
       {
         "from": "P1-8",
-        "to": "P1-9",
+        "to": "P3-69",
         "cycleOffset": 0
       },
       {
         "from": "P1-9",
-        "to": "P2-40",
+        "to": "P1-10",
         "cycleOffset": 0
       },
       {
@@ -4121,12 +4176,12 @@
       },
       {
         "from": "P1-13",
-        "to": "P1-14",
+        "to": "P2-44",
         "cycleOffset": 0
       },
       {
         "from": "P1-14",
-        "to": "P3-75",
+        "to": "P1-15",
         "cycleOffset": 0
       },
       {
@@ -4141,7 +4196,7 @@
       },
       {
         "from": "P1-17",
-        "to": "P2-48",
+        "to": "P1-18",
         "cycleOffset": 0
       },
       {
@@ -4166,17 +4221,17 @@
       },
       {
         "from": "P1-22",
-        "to": "P3-83",
+        "to": "P1-23",
         "cycleOffset": 0
       },
       {
         "from": "P1-23",
-        "to": "P1-24",
+        "to": "P3-84",
         "cycleOffset": 0
       },
       {
         "from": "P1-24",
-        "to": "P2-55",
+        "to": "P1-25",
         "cycleOffset": 0
       },
       {
@@ -4196,12 +4251,12 @@
       },
       {
         "from": "P1-28",
-        "to": "P1-29",
+        "to": "P2-59",
         "cycleOffset": 0
       },
       {
         "from": "P1-29",
-        "to": "P3-90",
+        "to": "P1-30",
         "cycleOffset": 0
       },
       {
@@ -4216,17 +4271,17 @@
       },
       {
         "from": "P2-32",
-        "to": "P3-63",
+        "to": "P2-33",
         "cycleOffset": 0
       },
       {
         "from": "P2-33",
-        "to": "P2-34",
+        "to": "P3-64",
         "cycleOffset": 0
       },
       {
         "from": "P2-34",
-        "to": "P3-65",
+        "to": "P2-35",
         "cycleOffset": 0
       },
       {
@@ -4241,7 +4296,7 @@
       },
       {
         "from": "P2-37",
-        "to": "P1-8",
+        "to": "P2-38",
         "cycleOffset": 0
       },
       {
@@ -4251,7 +4306,7 @@
       },
       {
         "from": "P2-39",
-        "to": "P1-10",
+        "to": "P2-40",
         "cycleOffset": 0
       },
       {
@@ -4271,7 +4326,7 @@
       },
       {
         "from": "P2-43",
-        "to": "P2-44",
+        "to": "P1-14",
         "cycleOffset": 0
       },
       {
@@ -4291,17 +4346,17 @@
       },
       {
         "from": "P2-47",
-        "to": "P3-78",
+        "to": "P2-48",
         "cycleOffset": 0
       },
       {
         "from": "P2-48",
-        "to": "P2-49",
+        "to": "P3-79",
         "cycleOffset": 0
       },
       {
         "from": "P2-49",
-        "to": "P3-80",
+        "to": "P2-50",
         "cycleOffset": 0
       },
       {
@@ -4316,7 +4371,7 @@
       },
       {
         "from": "P2-52",
-        "to": "P1-23",
+        "to": "P2-53",
         "cycleOffset": 0
       },
       {
@@ -4326,7 +4381,7 @@
       },
       {
         "from": "P2-54",
-        "to": "P1-25",
+        "to": "P2-55",
         "cycleOffset": 0
       },
       {
@@ -4346,7 +4401,7 @@
       },
       {
         "from": "P2-58",
-        "to": "P2-59",
+        "to": "P1-29",
         "cycleOffset": 0
       },
       {
@@ -4366,17 +4421,17 @@
       },
       {
         "from": "P3-62",
-        "to": "P2-33",
+        "to": "P3-63",
         "cycleOffset": 0
       },
       {
         "from": "P3-63",
-        "to": "P3-64",
+        "to": "P2-34",
         "cycleOffset": 0
       },
       {
         "from": "P3-64",
-        "to": "P1-5",
+        "to": "P3-65",
         "cycleOffset": 0
       },
       {
@@ -4396,12 +4451,12 @@
       },
       {
         "from": "P3-68",
-        "to": "P3-69",
+        "to": "P1-9",
         "cycleOffset": 0
       },
       {
         "from": "P3-69",
-        "to": "P2-40",
+        "to": "P3-70",
         "cycleOffset": 0
       },
       {
@@ -4416,7 +4471,7 @@
       },
       {
         "from": "P3-72",
-        "to": "P1-13",
+        "to": "P3-73",
         "cycleOffset": 0
       },
       {
@@ -4441,17 +4496,17 @@
       },
       {
         "from": "P3-77",
-        "to": "P2-48",
+        "to": "P3-78",
         "cycleOffset": 0
       },
       {
         "from": "P3-78",
-        "to": "P3-79",
+        "to": "P2-49",
         "cycleOffset": 0
       },
       {
         "from": "P3-79",
-        "to": "P1-20",
+        "to": "P3-80",
         "cycleOffset": 0
       },
       {
@@ -4471,12 +4526,12 @@
       },
       {
         "from": "P3-83",
-        "to": "P3-84",
+        "to": "P1-24",
         "cycleOffset": 0
       },
       {
         "from": "P3-84",
-        "to": "P2-55",
+        "to": "P3-85",
         "cycleOffset": 0
       },
       {
@@ -4491,7 +4546,7 @@
       },
       {
         "from": "P3-87",
-        "to": "P1-28",
+        "to": "P3-88",
         "cycleOffset": 0
       },
       {
@@ -4531,7 +4586,71 @@
       "composition": "Each juggler lane takes its event sequence and outgoing edges from the named component feast; all targets resolve to a juggler lane in the composite graph.",
       "modelCheck": "90 event nodes and 90 edges; cycle length 30; checked by standalone state validation.",
       "manipulationReview": "Ordinary three-person passing; no manipulation role or action in the source."
-    }
+    },
+    "sourceRows": {
+      "Anne": [
+        "Ben",
+        "self",
+        "self",
+        "self",
+        "self",
+        "Clare",
+        "self",
+        "Clare",
+        "self",
+        "self",
+        "self",
+        "self",
+        "Ben",
+        "self",
+        "self"
+      ],
+      "Ben": [
+        "Anne",
+        "self",
+        "Clare",
+        "self",
+        "self",
+        "self",
+        "self",
+        "self",
+        "self",
+        "self",
+        "Clare",
+        "self",
+        "Anne",
+        "self",
+        "self"
+      ],
+      "Clare": [
+        "self",
+        "self",
+        "Ben",
+        "self",
+        "self",
+        "Anne",
+        "self",
+        "Anne",
+        "self",
+        "self",
+        "Ben",
+        "self",
+        "self",
+        "self",
+        "self"
+      ]
+    },
+    "sourcePhases": {
+      "Anne": 0,
+      "Ben": 0,
+      "Clare": 0
+    },
+    "sourceFirstHands": {
+      "Anne": "R",
+      "Ben": "R",
+      "Clare": "R"
+    },
+    "edgeMethod": "Every row action routes the club from this event to the named juggler’s next event; each complete printed row repeats over its other-hand cycle."
   },
   {
     "id": "highgate-pulsar",

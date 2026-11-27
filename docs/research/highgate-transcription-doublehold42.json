@@ -7,18 +7,64 @@
     "notation": "Siteswap 42; five-club one-count zap notation. Ben's repeating right-hand 4 is a crossing single pass; his left-hand 2 is a hold. Anne has a hold in the corresponding cycle.",
     "cycleLength": 2,
     "jugglers": [
-      { "id": "A", "name": "Anne" },
-      { "id": "B", "name": "Ben" }
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
     ],
     "throws": [
-      { "id": "A-R1", "jugglerId": "A", "hand": "R", "startTime": 0, "height": 3, "heightIsExplicit": true },
-      { "id": "A-L2", "jugglerId": "A", "hand": "L", "startTime": 1 },
-      { "id": "B-R1", "jugglerId": "B", "hand": "R", "startTime": 0, "height": 4, "heightIsExplicit": true },
-      { "id": "B-L2", "jugglerId": "B", "hand": "L", "startTime": 1 }
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0,
+        "height": 4,
+        "heightIsExplicit": true
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      }
     ],
     "causalEdges": [
-      { "id": "e-A-R1", "from": "A-R1", "to": "B-R1", "cycleOffset": 0 },
-      { "id": "e-B-R1", "from": "B-R1", "to": "A-L2", "cycleOffset": 0 }
+      {
+        "id": "e-A-R1",
+        "from": "A-R1",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-B-R1",
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "id": "e-A-L2",
+        "from": "A-L2",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
     ],
     "sourceLinks": [
       {
@@ -36,8 +82,8 @@
     ],
     "reviewStatus": {
       "visualReview": "Compared the Double hold (42) diagram on both edition pages; labels and arrow arrangement agree.",
-      "sequenceCrossCheck": "The prose says Ben throws a crossing right-hand single pass (4) followed by a left-hand hold (2), and Anne gets a hold. The visible arrows are A-R1→B-R1 and B-R1→A-L2. A-R1 is the ordinary 3 zap, B-R1 is the 4 pass, and A-L2/B-L2 have no outgoing throws.",
-      "modelCheck": "Endpoints resolve, each source has at most one outgoing edge, and the two explicit source heights 3 and 4 are preserved. A-L2 is a sink because it receives the pass and then holds; B-L2 is an unlinked hold. Heights are explicit because the diagram's layout coordinates do not derive the book's Brolly values through the generic event-time formula.",
+      "sequenceCrossCheck": "The prose says Ben throws a crossing right-hand single pass (4) followed by a left-hand hold (2), and Anne gets a hold. The visible arrows are A-R1→B-R1 and B-R1→A-L2. A-R1 is the ordinary 3 zap, B-R1 is the 4 pass, and A-L2/B-L2 have no outgoing throws. The editor graph continues the held prop from A-L2 to Anne’s next right-hand event A-R1 across the cycle boundary.",
+      "modelCheck": "The two printed arrows preserve source heights 3 and 4. To model the object retained in Anne’s left hand, the editor graph adds a cycle-boundary continuity edge A-L2→A-R1; Ben’s unlinked B-L2 remains an isolated hold. This closes the periodic prop path without changing the two source throws.",
       "uncertainty": "None identified in the visible arrow endpoints or hold locations after comparing the 2017 and 2014 diagrams. The event-time coordinates are layout positions; explicit heights carry the source's Brolly siteswap values."
     }
   }

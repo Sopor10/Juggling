@@ -108,7 +108,7 @@ public sealed class Highgate61To75StandaloneRecordValidationTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
             var imported = CausalDiagramEditorPresets
-                .All.Single(preset => preset.Id == record.Id)
+                .AllForLoading.Single(preset => preset.Id == record.Id)
                 .Create();
             imported.CycleLength.Should().Be(state.CycleLength, record.Id);
             imported

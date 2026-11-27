@@ -39,8 +39,18 @@ public sealed class CausalDiagramEditorState
     public List<EditorThrow> Throws { get; set; } = [];
     public List<EditorCausalEdge> CausalEdges { get; set; } = [];
 
-    /// <summary>Checks editor invariants without repairing or normalizing the state.</summary>
+    /// <summary>Checks whether the state can be safely displayed and edited.</summary>
     public bool IsValidForEditor() => IsValid(this);
+
+    /// <summary>Checks graph balance and whether the mapped throws form a periodic juggle.</summary>
+    public bool IsValidPattern() =>
+        IsValidForEditor()
+        && HasBalancedCausalEdges(this)
+        && HasNoUnconnectedPositiveThrows(this)
+        && IsValidCanonicalSingleJugglerPattern(this)
+        && CausalDiagramEditorJifAdapter.TryMap(this, out _, out _);
+
+    internal bool HasBalancedCausalEdges() => HasBalancedCausalEdges(this);
 
     public static CausalDiagramEditorState CreateSiteswap531() =>
         CreateSiteswapPattern("531", "siteswap-531");
@@ -1081,15 +1091,39 @@ public sealed class CausalDiagramEditorState
         )
             return false;
         return state.CausalEdges.All(edge =>
-            {
-                var source = state.Throws.First(node => node.Id == edge.FromThrowId);
-                var target = state.Throws.First(node => node.Id == edge.ToThrowId);
-                return source.Height >= 0
-                    && (
-                        source.HeightIsExplicit
-                        || source.Height == DerivedHeight(state, source, target, edge.CycleOffset)
-                    );
-            }) && IsValidCanonicalSingleJugglerPattern(state);
+        {
+            var source = state.Throws.First(node => node.Id == edge.FromThrowId);
+            var target = state.Throws.First(node => node.Id == edge.ToThrowId);
+            return source.Height >= 0
+                && (
+                    source.HeightIsExplicit
+                    || source.Height == DerivedHeight(state, source, target, edge.CycleOffset)
+                );
+        });
+    }
+
+    private static bool HasBalancedCausalEdges(CausalDiagramEditorState state)
+    {
+        var incomingCounts = state
+            .CausalEdges.GroupBy(edge => edge.ToThrowId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+        var outgoingCounts = state
+            .CausalEdges.GroupBy(edge => edge.FromThrowId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+
+        return state.Throws.All(node =>
+            incomingCounts.GetValueOrDefault(node.Id) == outgoingCounts.GetValueOrDefault(node.Id)
+        );
+    }
+
+    private static bool HasNoUnconnectedPositiveThrows(CausalDiagramEditorState state)
+    {
+        var nodesWithOutgoingEdges = state
+            .CausalEdges.Select(edge => edge.FromThrowId)
+            .ToHashSet(StringComparer.Ordinal);
+        return state.Throws.All(node =>
+            nodesWithOutgoingEdges.Contains(node.Id) || node.Height == 0
+        );
     }
 
     private static bool IsValidCanonicalSingleJugglerPattern(CausalDiagramEditorState state)

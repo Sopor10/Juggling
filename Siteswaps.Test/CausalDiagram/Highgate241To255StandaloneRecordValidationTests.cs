@@ -90,12 +90,77 @@ public class Highgate241To255StandaloneRecordValidationTests
         }
     }
 
+    [TestCase("highgate-parsniplinefeed")]
+    [TestCase("highgate-funkybookendslinefeed")]
+    public void CorrectedLineFeedGraphsAreBalancedAndImportedIntoTheProductionPreset(string id)
+    {
+        var repository = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+        while (
+            repository is not null
+            && !File.Exists(
+                Path.Combine(
+                    repository.FullName,
+                    "docs/research/highgate-transcriptions-241-255.json"
+                )
+            )
+        )
+            repository = repository.Parent;
+        repository.Should().NotBeNull();
+
+        var source = JsonSerializer
+            .Deserialize<List<Record>>(
+                File.ReadAllText(
+                    Path.Combine(
+                        repository!.FullName,
+                        "docs/research/highgate-transcriptions-241-255.json"
+                    )
+                ),
+                JsonOptions
+            )!
+            .Single(record => record.Id == id);
+        source.SourceRows.Should().NotBeNull(id);
+        source.SourcePhases.Should().NotBeNull(id);
+        source.PassDirectionByJuggler.Should().NotBeNull(id);
+
+        var degrees = source.Throws.ToDictionary(
+            item => item.Id,
+            item => (Incoming: 0, Outgoing: 0)
+        );
+        foreach (var edge in source.CausalEdges)
+        {
+            degrees[edge.FromId] = degrees[edge.FromId] with
+            {
+                Outgoing = degrees[edge.FromId].Outgoing + 1,
+            };
+            degrees[edge.ToIdValue] = degrees[edge.ToIdValue] with
+            {
+                Incoming = degrees[edge.ToIdValue].Incoming + 1,
+            };
+        }
+        degrees.Should().OnlyContain(pair => pair.Value.Incoming == pair.Value.Outgoing, id);
+
+        var preset = CausalDiagramEditorPresets.AllForLoading.Single(item => item.Id == id);
+        var production = preset.Create();
+        production.IsValidPattern().Should().BeTrue(id);
+        production.Throws.Select(item => item.Id).Should().BeEquivalentTo(source.Throws.Select(item => item.Id), id);
+        production
+            .CausalEdges.Select(edge => (edge.FromThrowId, edge.ToThrowId, edge.CycleOffset))
+            .Should()
+            .BeEquivalentTo(
+                source.CausalEdges.Select(edge => (edge.FromId, edge.ToIdValue, edge.CycleOffset)),
+                id
+            );
+    }
+
     private sealed record Record(
         string Id,
         decimal CycleLength,
         List<Juggler> Jugglers,
         List<Throw> Throws,
-        List<Edge> CausalEdges
+        List<Edge> CausalEdges,
+        Dictionary<string, string[]>? SourceRows = null,
+        Dictionary<string, decimal>? SourcePhases = null,
+        Dictionary<string, string>? PassDirectionByJuggler = null
     );
 
     private sealed record Juggler(string Id, string Name);

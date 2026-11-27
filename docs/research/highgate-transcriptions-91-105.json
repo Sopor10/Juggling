@@ -4604,7 +4604,7 @@
         "id": "B-R1",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 1,
+        "startTime": 0,
         "height": 5,
         "heightIsExplicit": true
       },
@@ -4612,7 +4612,7 @@
         "id": "B-L2",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 2,
+        "startTime": 1,
         "height": 3,
         "heightIsExplicit": true
       },
@@ -4620,7 +4620,7 @@
         "id": "B-R3",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 3,
+        "startTime": 2,
         "height": 3,
         "heightIsExplicit": true
       },
@@ -4628,7 +4628,7 @@
         "id": "B-L4",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 0,
+        "startTime": 3,
         "height": 3,
         "heightIsExplicit": true
       }
@@ -4636,7 +4636,7 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "B-R1",
+        "to": "B-L2",
         "cycleOffset": 0
       },
       {
@@ -4657,7 +4657,7 @@
       {
         "from": "B-R1",
         "to": "B-L4",
-        "cycleOffset": 1
+        "cycleOffset": 0
       },
       {
         "from": "B-L2",
@@ -4666,13 +4666,13 @@
       },
       {
         "from": "B-R3",
-        "to": "A-R1",
-        "cycleOffset": 1
+        "to": "A-L4",
+        "cycleOffset": 0
       },
       {
         "from": "B-L4",
         "to": "B-R1",
-        "cycleOffset": 0
+        "cycleOffset": 1
       }
     ],
     "sourceLinks": [
@@ -4750,7 +4750,7 @@
         "id": "B-R1",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 1,
+        "startTime": 0,
         "height": 4,
         "heightIsExplicit": true
       },
@@ -4758,7 +4758,7 @@
         "id": "B-L2",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 2,
+        "startTime": 1,
         "height": 4,
         "heightIsExplicit": true
       },
@@ -4766,7 +4766,7 @@
         "id": "B-R3",
         "jugglerId": "B",
         "hand": "R",
-        "startTime": 3,
+        "startTime": 2,
         "height": 3,
         "heightIsExplicit": true
       },
@@ -4774,7 +4774,7 @@
         "id": "B-L4",
         "jugglerId": "B",
         "hand": "L",
-        "startTime": 0,
+        "startTime": 3,
         "height": 3,
         "heightIsExplicit": true
       }
@@ -4782,7 +4782,7 @@
     "causalEdges": [
       {
         "from": "A-R1",
-        "to": "B-R1",
+        "to": "B-L2",
         "cycleOffset": 0
       },
       {
@@ -4808,17 +4808,17 @@
       {
         "from": "B-L2",
         "to": "B-L4",
-        "cycleOffset": 1
+        "cycleOffset": 0
       },
       {
         "from": "B-R3",
-        "to": "A-R1",
-        "cycleOffset": 1
+        "to": "A-L4",
+        "cycleOffset": 0
       },
       {
         "from": "B-L4",
         "to": "B-R1",
-        "cycleOffset": 0
+        "cycleOffset": 1
       }
     ],
     "sourceLinks": [

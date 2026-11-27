@@ -7,6 +7,23 @@ namespace Siteswaps.Test.CausalDiagram;
 
 public class Highgate136To150StandaloneRecordValidationTests
 {
+    private static readonly Dictionary<string, Dictionary<string, string[]>> CompositeFeastRows =
+        new()
+        {
+            ["highgate-trifle"] = new()
+            {
+                ["Anne"] = "Ben Ben self self Clare self self self self Clare self self".Split(' '),
+                ["Ben"] = "Anne Anne self self self Clare self self Clare self self self".Split(' '),
+                ["Clare"] = "self self self self Anne Ben self self Ben Anne self self".Split(' '),
+            },
+            ["highgate-trilogy"] = new()
+            {
+                ["Anne"] = "Ben self self self self Clare self Clare self self self self Ben self self".Split(' '),
+                ["Ben"] = "Anne self Clare self self self self self self self Clare self Anne self self".Split(' '),
+                ["Clare"] = "self self Ben self self Anne self Anne self self Ben self self self self".Split(' '),
+            },
+        };
+
     private static readonly Dictionary<string, string[][]> PulsarLanes = new()
     {
         ["highgate-pulsar"] =
@@ -151,6 +168,22 @@ public class Highgate136To150StandaloneRecordValidationTests
                 }
             }
 
+            if (CompositeFeastRows.TryGetValue(record.Id, out var feastRows))
+            {
+                record.SourceRows.Should().BeEquivalentTo(feastRows, record.Id);
+                ValidateCompositeFeastRows(record, feastRows);
+
+                var production = CausalDiagramEditorPresets.AllForLoading.Single(preset => preset.Id == record.Id).Create();
+                production.IsValidPattern().Should().BeTrue(record.Id);
+                production
+                    .CausalEdges.Select(edge => (edge.FromThrowId, edge.ToThrowId, edge.CycleOffset))
+                    .Should()
+                    .BeEquivalentTo(
+                        record.CausalEdges.Select(edge => (edge.From, edge.To, edge.CycleOffset)),
+                        record.Id
+                    );
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",
@@ -187,12 +220,43 @@ public class Highgate136To150StandaloneRecordValidationTests
         records.Should().HaveCount(12);
     }
 
+    private static void ValidateCompositeFeastRows(
+        Record record,
+        Dictionary<string, string[]> sourceRows
+    )
+    {
+        var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+        var throwsByJugglerAndTime = record.Throws.ToDictionary(
+            item => (item.JugglerId, item.StartTime)
+        );
+        var edgesBySource = record.CausalEdges.ToDictionary(item => item.From);
+
+        foreach (var (jugglerName, row) in sourceRows)
+        {
+            var jugglerId = jugglerIds[jugglerName];
+            foreach (var source in record.Throws.Where(item => item.JugglerId == jugglerId))
+            {
+                var action = row[(int)source.StartTime % row.Length];
+                var targetJuggler = action == "self" ? jugglerId : jugglerIds[action];
+                var targetTime = source.StartTime + 1;
+                var expectedTarget = throwsByJugglerAndTime[
+                    (targetJuggler, targetTime % record.CycleLength)
+                ];
+                var expectedOffset = (int)(targetTime / record.CycleLength);
+                var edge = edgesBySource[source.Id];
+                edge.To.Should().Be(expectedTarget.Id, source.Id);
+                edge.CycleOffset.Should().Be(expectedOffset, source.Id);
+            }
+        }
+    }
+
     private sealed record Record(
         string Id,
         decimal CycleLength,
         List<Juggler> Jugglers,
         List<Throw> Throws,
-        List<Edge> CausalEdges
+        List<Edge> CausalEdges,
+        Dictionary<string, string[]>? SourceRows = null
     );
 
     private sealed record Juggler(string Id, string Name);

@@ -160,7 +160,7 @@
       },
       {
         "from": "B-L4",
-        "to": "A-R5",
+        "to": "A-L6",
         "cycleOffset": 0
       },
       {
@@ -224,13 +224,13 @@
         "id": "A-L2",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 0.666667
+        "startTime": 0.666666666667
       },
       {
         "id": "A-R3",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 1.333333
+        "startTime": 1.333333333333
       },
       {
         "id": "A-L4",
@@ -242,13 +242,13 @@
         "id": "A-R5",
         "jugglerId": "A",
         "hand": "R",
-        "startTime": 2.666667
+        "startTime": 2.666666666667
       },
       {
         "id": "A-L6",
         "jugglerId": "A",
         "hand": "L",
-        "startTime": 3.333333
+        "startTime": 3.333333333333
       },
       {
         "id": "B-R1",
