@@ -14,7 +14,8 @@ public static class TailscaleServeExtensions
 {
     public static IResourceBuilder<TResource> WithTailscaleServe<TResource>(
         this IResourceBuilder<TResource> resource,
-        IDistributedApplicationBuilder appBuilder)
+        IDistributedApplicationBuilder appBuilder
+    )
         where TResource : IResourceWithEndpoints
     {
         var tailscaleNode = GetTailscaleNode();
@@ -24,9 +25,9 @@ public static class TailscaleServeExtensions
         }
 
         var tailscaleServePort = (int?)null;
-        appBuilder.Services.AddSingleton<IHostedService>(new TailscaleServeCleanup(
-            () => tailscaleServePort,
-            RemoveTailscaleServeRoute));
+        appBuilder.Services.AddSingleton<IHostedService>(
+            new TailscaleServeCleanup(() => tailscaleServePort, RemoveTailscaleServeRoute)
+        );
 
         resource.WithUrls(context =>
         {
@@ -34,7 +35,8 @@ public static class TailscaleServeExtensions
                 url.Endpoint is not null
                 && Uri.TryCreate(url.Url, UriKind.Absolute, out var uri)
                 && uri.Scheme == Uri.UriSchemeHttp
-                && !uri.IsLoopback);
+                && !uri.IsLoopback
+            );
 
             var endpoint = context.GetEndpoint("http");
             if (endpoint is null)
@@ -48,11 +50,13 @@ public static class TailscaleServeExtensions
                 return;
             }
 
-            context.Urls.Add(new()
-            {
-                Url = $"https://{node.DnsName}{(servePort == 443 ? "" : $":{servePort}")}",
-                DisplayText = "Tailscale HTTPS"
-            });
+            context.Urls.Add(
+                new()
+                {
+                    Url = $"https://{node.DnsName}{(servePort == 443 ? "" : $":{servePort}")}",
+                    DisplayText = "Tailscale HTTPS",
+                }
+            );
         });
 
         return resource;
@@ -71,12 +75,16 @@ public static class TailscaleServeExtensions
             using var document = JsonDocument.Parse(result.StandardOutput);
             var self = document.RootElement.GetProperty("Self");
             var dnsName = self.GetProperty("DNSName").GetString()?.TrimEnd('.');
-            var ipv4 = self.GetProperty("TailscaleIPs").EnumerateArray()
+            var ipv4 = self.GetProperty("TailscaleIPs")
+                .EnumerateArray()
                 .Select(ip => ip.GetString())
-                .FirstOrDefault(ip => IPAddress.TryParse(ip, out var address)
-                                      && address.AddressFamily == AddressFamily.InterNetwork);
+                .FirstOrDefault(ip =>
+                    IPAddress.TryParse(ip, out var address)
+                    && address.AddressFamily == AddressFamily.InterNetwork
+                );
 
-            return string.IsNullOrWhiteSpace(dnsName) || !IPAddress.TryParse(ipv4, out var ipv4Address)
+            return
+                string.IsNullOrWhiteSpace(dnsName) || !IPAddress.TryParse(ipv4, out var ipv4Address)
                 ? null
                 : (dnsName, ipv4Address);
         }
@@ -86,7 +94,10 @@ public static class TailscaleServeExtensions
         }
     }
 
-    private static int? ConfigureTailscaleServe((string DnsName, IPAddress Ipv4Address) node, int targetPort)
+    private static int? ConfigureTailscaleServe(
+        (string DnsName, IPAddress Ipv4Address) node,
+        int targetPort
+    )
     {
         try
         {
@@ -114,18 +125,26 @@ public static class TailscaleServeExtensions
                 return null;
             }
 
-            var result = RunProcess("sudo", [
-                "-n", "tailscale", "serve", "--bg", $"--https={port.Value}",
-                $"http://127.0.0.1:{targetPort.ToString(CultureInfo.InvariantCulture)}"
-            ]);
+            var result = RunProcess(
+                "sudo",
+                [
+                    "-n",
+                    "tailscale",
+                    "serve",
+                    "--bg",
+                    $"--https={port.Value}",
+                    $"http://127.0.0.1:{targetPort.ToString(CultureInfo.InvariantCulture)}",
+                ]
+            );
             if (result.ExitCode != 0)
             {
                 return null;
             }
 
             using var updatedStatus = GetTailscaleServeStatus();
-            return updatedStatus is not null
-                   && FindServePort(updatedStatus.RootElement, node.DnsName, targetPort) == port
+            return
+                updatedStatus is not null
+                && FindServePort(updatedStatus.RootElement, node.DnsName, targetPort) == port
                 ? port
                 : null;
         }
@@ -179,8 +198,9 @@ public static class TailscaleServeExtensions
 
     private static int? FindServePort(JsonElement status, string dnsName, int targetPort)
     {
-        if (!status.TryGetProperty("Web", out var web)
-            || !status.TryGetProperty("TCP", out var tcp))
+        if (
+            !status.TryGetProperty("Web", out var web) || !status.TryGetProperty("TCP", out var tcp)
+        )
         {
             return null;
         }
@@ -188,21 +208,29 @@ public static class TailscaleServeExtensions
         foreach (var host in web.EnumerateObject())
         {
             var separator = host.Name.LastIndexOf(':');
-            if (separator < 0
-                || !string.Equals(host.Name[..separator], dnsName, StringComparison.OrdinalIgnoreCase)
+            if (
+                separator < 0
+                || !string.Equals(
+                    host.Name[..separator],
+                    dnsName,
+                    StringComparison.OrdinalIgnoreCase
+                )
                 || !int.TryParse(host.Name[(separator + 1)..], out var port)
                 || !tcp.TryGetProperty(port.ToString(CultureInfo.InvariantCulture), out var tcpPort)
                 || !tcpPort.TryGetProperty("HTTPS", out var https)
-                || !https.GetBoolean())
+                || !https.GetBoolean()
+            )
             {
                 continue;
             }
 
             foreach (var handler in host.Value.GetProperty("Handlers").EnumerateObject())
             {
-                if (handler.Value.TryGetProperty("Proxy", out var proxy)
+                if (
+                    handler.Value.TryGetProperty("Proxy", out var proxy)
                     && Uri.TryCreate(proxy.GetString(), UriKind.Absolute, out var proxyUri)
-                    && proxyUri.Port == targetPort)
+                    && proxyUri.Port == targetPort
+                )
                 {
                     return port;
                 }
@@ -231,9 +259,7 @@ public static class TailscaleServeExtensions
         {
             RunProcess("sudo", ["-n", "tailscale", "serve", $"--https={port}", "off"]);
         }
-        catch
-        {
-        }
+        catch { }
     }
 
     private static FileStream? AcquireServeAllocationLock()
@@ -243,7 +269,12 @@ public static class TailscaleServeExtensions
         {
             try
             {
-                return new FileStream(lockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                return new FileStream(
+                    lockPath,
+                    FileMode.OpenOrCreate,
+                    FileAccess.ReadWrite,
+                    FileShare.None
+                );
             }
             catch (IOException)
             {
@@ -256,13 +287,14 @@ public static class TailscaleServeExtensions
 
     private static (int ExitCode, string StandardOutput, string StandardError) RunProcess(
         string fileName,
-        string[] arguments)
+        string[] arguments
+    )
     {
         var startInfo = new ProcessStartInfo(fileName)
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardError = true,
         };
 
         foreach (var argument in arguments)
@@ -278,7 +310,8 @@ public static class TailscaleServeExtensions
         return (process.ExitCode, standardOutput, standardError);
     }
 
-    private sealed class TailscaleServeCleanup(Func<int?> getPort, Action<int> removeRoute) : IHostedService
+    private sealed class TailscaleServeCleanup(Func<int?> getPort, Action<int> removeRoute)
+        : IHostedService
     {
         public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
