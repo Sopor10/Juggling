@@ -705,64 +705,70 @@ public sealed class CausalDiagramEditorState
             Throws = [],
             CausalEdges = [],
         };
+        ReadJugglers(state, jugglers);
+        ReadThrows(state, throws);
+        ReadCausalEdges(state, edges);
+        return state;
+    }
+
+    private static void ReadJugglers(CausalDiagramEditorState state, JsonElement jugglers)
+    {
         foreach (var item in jugglers.EnumerateArray())
         {
-            if (
-                item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != 2
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-            )
+            if (item.ValueKind != JsonValueKind.Array || item.GetArrayLength() != 2)
                 throw new JsonException();
             state.Jugglers.Add(
-                new EditorJuggler(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException()
-                )
+                new EditorJuggler(RequiredArrayString(item, 0), RequiredArrayString(item, 1))
             );
         }
+    }
+
+    private static void ReadThrows(CausalDiagramEditorState state, JsonElement throws)
+    {
         foreach (var item in throws.EnumerateArray())
         {
             if (
                 item.ValueKind != JsonValueKind.Array
                 || item.GetArrayLength() != 4
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-                || item[2].ValueKind != JsonValueKind.String
                 || !item[3].TryGetDecimal(out var start)
             )
                 throw new JsonException();
             state.Throws.Add(
                 new EditorThrow(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException(),
-                    item[2].GetString() ?? throw new JsonException(),
+                    RequiredArrayString(item, 0),
+                    RequiredArrayString(item, 1),
+                    RequiredArrayString(item, 2),
                     start
                 )
             );
         }
+    }
+
+    private static void ReadCausalEdges(CausalDiagramEditorState state, JsonElement edges)
+    {
         foreach (var item in edges.EnumerateArray())
         {
             if (
                 item.ValueKind != JsonValueKind.Array
                 || item.GetArrayLength() != 4
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-                || item[2].ValueKind != JsonValueKind.String
                 || !item[3].TryGetInt32(out var offset)
             )
                 throw new JsonException();
             state.CausalEdges.Add(
                 new EditorCausalEdge(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException(),
-                    item[2].GetString() ?? throw new JsonException(),
+                    RequiredArrayString(item, 0),
+                    RequiredArrayString(item, 1),
+                    RequiredArrayString(item, 2),
                     offset
                 )
             );
         }
-        return state;
     }
+
+    private static string RequiredArrayString(JsonElement item, int index) =>
+        item[index].ValueKind == JsonValueKind.String
+            ? item[index].GetString() ?? throw new JsonException()
+            : throw new JsonException();
 
     private static JsonElement RequiredProperty(JsonElement root, string name) =>
         root.TryGetProperty(name, out var value)
