@@ -204,11 +204,28 @@ public static class CausalDiagramEditorJifAdapter
             TimeStretchFactor: scale.Value,
             StepCount: decimal.ToInt32(state.CycleLength * scale.Value),
             LimbPermutation: limbPermutation,
-            StartProps: ImmutableDictionary<string, StartProps>.Empty
+            StartProps: ImmutableDictionary<string, StartProps>.Empty,
+            JugglerBeatDurations: GetJugglerBeatDurations(state, rowCounts, scale.Value)
         );
         error = string.Empty;
         return true;
     }
+
+    private static ImmutableDictionary<string, decimal> GetJugglerBeatDurations(
+        CausalDiagramEditorState state,
+        int[] rowCounts,
+        int scale
+    ) =>
+        state
+            .Jugglers.Select(
+                (juggler, index) =>
+                    (Juggler: juggler.Name, Duration: state.CycleLength / rowCounts[index] * scale)
+            )
+            .ToImmutableDictionary(
+                item => item.Juggler,
+                item => item.Duration,
+                StringComparer.Ordinal
+            );
 
     private static bool TryBuildDomainThrows(
         CausalDiagramEditorState state,

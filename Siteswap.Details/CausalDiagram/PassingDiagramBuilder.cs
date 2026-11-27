@@ -69,7 +69,12 @@ public static class PassingDiagramBuilder
             TimeStretchFactor: timeStretch,
             StepCount: basePeriod,
             LimbPermutation: limbPermutation,
-            StartProps: ImmutableDictionary<string, StartProps>.Empty
+            StartProps: ImmutableDictionary<string, StartProps>.Empty,
+            JugglerBeatDurations: jugglers.ToImmutableDictionary(
+                juggler => juggler.Name,
+                _ => (decimal)timeStretch,
+                StringComparer.Ordinal
+            )
         );
         return diagram with
         {

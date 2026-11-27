@@ -101,7 +101,12 @@ public static class SiteswapDiagramBuilder
             TimeStretchFactor: timeStretchFactor,
             StepCount: steps,
             LimbPermutation: Enumerable.Range(0, hands.Length).ToImmutableList(),
-            StartProps: ComputeStartProps(siteswap, hands)
+            StartProps: ComputeStartProps(siteswap, hands),
+            JugglerBeatDurations: jugglers.ToImmutableDictionary(
+                juggler => juggler.Name,
+                _ => timeStretchFactor,
+                StringComparer.Ordinal
+            )
         );
     }
 
@@ -225,7 +230,8 @@ public record DiagramSet(
     decimal TimeStretchFactor,
     int StepCount,
     ImmutableList<int> LimbPermutation,
-    ImmutableDictionary<string, StartProps> StartProps
+    ImmutableDictionary<string, StartProps> StartProps,
+    ImmutableDictionary<string, decimal>? JugglerBeatDurations = null
 )
 {
     public int? HeightOf(DiagramThrow source)
@@ -238,7 +244,15 @@ public record DiagramSet(
                 "A completed causal throw must have exactly one causal arrow."
             );
 
-        var height = arrows[0].Step + 2m * TimeStretchFactor;
+        var beatDuration =
+            JugglerBeatDurations is not null
+            && JugglerBeatDurations.TryGetValue(
+                arrows[0].ToJuggler.Name,
+                out var targetBeatDuration
+            )
+                ? targetBeatDuration
+                : TimeStretchFactor;
+        var height = arrows[0].Step + 2m * beatDuration;
         if (height <= 0 || decimal.Truncate(height) != height || height > int.MaxValue)
             throw new InvalidOperationException(
                 "The causal arrow does not define a positive integral throw height."

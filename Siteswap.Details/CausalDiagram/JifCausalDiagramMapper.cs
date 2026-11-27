@@ -37,7 +37,12 @@ public static class JifCausalDiagramMapper
             TimeStretchFactor: timeStretchFactor,
             StepCount: Math.Max(1, period),
             LimbPermutation: Enumerable.Range(0, hands.Count).ToImmutableList(),
-            StartProps: ImmutableDictionary<string, StartProps>.Empty
+            StartProps: ImmutableDictionary<string, StartProps>.Empty,
+            JugglerBeatDurations: jugglers.ToImmutableDictionary(
+                juggler => juggler.Name,
+                _ => timeStretchFactor,
+                StringComparer.Ordinal
+            )
         );
     }
 
