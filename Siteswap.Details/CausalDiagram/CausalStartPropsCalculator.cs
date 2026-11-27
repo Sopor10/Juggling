@@ -28,12 +28,12 @@ public static class CausalStartPropsCalculator
             _ => new StartProps(Left: 0, Right: 0),
             StringComparer.Ordinal
         );
-        var totalHeight = diagram.Throws.Sum(node => node.Height);
+        var totalHeight = diagram.Throws.Sum(node => diagram.HeightOf(node) ?? 0);
         if (totalHeight % diagram.StepCount != 0)
             throw new InvalidOperationException(
                 "A periodic causal diagram must have an integral prop count."
             );
-        var positiveThrows = diagram.Throws.Where(node => node.Height > 0).ToArray();
+        var positiveThrows = diagram.Throws.Where(node => diagram.HeightOf(node) is > 0).ToArray();
         if (positiveThrows.Length == 0)
             return new CausalStartPropsResult(
                 counts.ToImmutableDictionary(StringComparer.Ordinal),
@@ -60,7 +60,7 @@ public static class CausalStartPropsCalculator
         {
             var node = positiveThrows[index];
             var key = Key(node);
-            var landingHand = GetLandingHand(node, diagram, outgoingArrows);
+            var landingHand = GetLandingHand(node, outgoingArrows);
             var landingTime = GetLandingTime(node, handCount, outgoingArrows);
             if (!throwsByHand.TryGetValue(HandKey(landingHand), out var candidates))
                 throw new InvalidOperationException(
@@ -189,28 +189,24 @@ public static class CausalStartPropsCalculator
     }
 
     private static Hand GetLandingHand(
-        Throw node,
-        DiagramSet diagram,
+        DiagramThrow node,
         IReadOnlyDictionary<NodeKey, DiagramArrow[]> outgoingArrows
     )
     {
         if (outgoingArrows.TryGetValue(Key(node), out var arrows) && arrows.Length == 1)
             return arrows[0].To.Hand;
 
-        if (node.ToLimb is int limb && limb >= 0 && limb < diagram.Hands.Count)
-            return diagram.Hands[limb];
-
         throw new InvalidOperationException($"Throw at {node.Time} has no causal target hand.");
     }
 
     private static decimal GetLandingTime(
-        Throw node,
+        DiagramThrow node,
         decimal handCount,
         IReadOnlyDictionary<NodeKey, DiagramArrow[]> outgoingArrows
     ) =>
         outgoingArrows.TryGetValue(Key(node), out var arrows) && arrows.Length == 1
             ? arrows[0].To.Time + handCount
-            : node.Time + node.Height;
+            : throw new InvalidOperationException($"Throw at {node.Time} has no causal target.");
 
     private static string HandKey(Hand hand) => $"{hand.Person.Name}/{hand.Name}";
 
@@ -219,7 +215,7 @@ public static class CausalStartPropsCalculator
     /// hand order: jugglers alphabetically from top to bottom, right hand before left.
     /// </summary>
     public static ImmutableDictionary<string, StartProps> CalculateWithNaturalRemainder(
-        IReadOnlyList<Throw> throws,
+        IReadOnlyList<DiagramThrow> throws,
         IReadOnlyList<DiagramArrow> causalArrows,
         IReadOnlyList<Person> jugglers,
         int totalProps
@@ -258,7 +254,7 @@ public static class CausalStartPropsCalculator
     }
 
     public static ImmutableDictionary<string, StartProps> Calculate(
-        IReadOnlyList<Throw> throws,
+        IReadOnlyList<DiagramThrow> throws,
         IReadOnlyList<DiagramArrow> causalArrows,
         IReadOnlyList<Person> jugglers
     )
@@ -270,6 +266,7 @@ public static class CausalStartPropsCalculator
         var incoming = causalArrows
             .Select(arrow => new NodeKey(arrow.To.Time, arrow.ToJuggler.Name, arrow.To.Hand.Name))
             .ToHashSet();
+        var outgoing = causalArrows.Select(arrow => Key(arrow.From)).ToHashSet();
         var counts = jugglers.ToDictionary(
             juggler => juggler.Name,
             _ => new StartProps(Left: 0, Right: 0),
@@ -278,7 +275,7 @@ public static class CausalStartPropsCalculator
 
         foreach (var node in throws)
         {
-            if (node.Height <= 0 || incoming.Contains(Key(node)))
+            if (!outgoing.Contains(Key(node)) || incoming.Contains(Key(node)))
                 continue;
 
             var current = counts[node.Hand.Person.Name];
@@ -297,7 +294,8 @@ public static class CausalStartPropsCalculator
         return counts.ToImmutableDictionary(StringComparer.Ordinal);
     }
 
-    private static NodeKey Key(Throw node) => new(node.Time, node.Hand.Person.Name, node.Hand.Name);
+    private static NodeKey Key(DiagramThrow node) =>
+        new(node.Time, node.Hand.Person.Name, node.Hand.Name);
 
     private readonly record struct NodeKey(decimal Time, string Juggler, string Hand);
 }

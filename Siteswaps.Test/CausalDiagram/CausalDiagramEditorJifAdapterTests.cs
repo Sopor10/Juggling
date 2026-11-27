@@ -12,27 +12,13 @@ namespace Siteswaps.Test.CausalDiagram;
 public sealed class CausalDiagramEditorJifAdapterTests
 {
     [Test]
-    public void UserProvidedIrregularAsynchronousDiagram_MapsToPassist()
+    public void ValidFactoryGeneratedPatternsIncludingThirdPhases_MapToPeriodicJif()
     {
-        var state = CreateUserProvidedIrregularPattern();
-        CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
-
-        CausalDiagramEditorJifAdapter
-            .TryMap(decoded!, out var mapped, out var error)
-            .Should()
-            .BeTrue(error);
-        mapped.Should().NotBeNull();
-        mapped!.Jugglers.Should().HaveCount(2);
-        mapped.Throws.Should().NotBeEmpty();
-        mapped.Repetition.Should().NotBeNull();
-    }
-
-    [Test]
-    public void ValidFactoryGeneratedCausalPatterns_AlwaysMapToPeriodicJif()
-    {
+        var testedThirdPhase = false;
         CheckProperty(CausalPatternSeed.Arbitrary, sample =>
         {
             var state = CreateFactoryGeneratedPattern(sample.Value);
+            testedThirdPhase |= state.PresetId == "jugglers-3";
             if (
                 !CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded)
                 || decoded is null
@@ -77,6 +63,7 @@ public sealed class CausalDiagramEditorJifAdapterTests
             }
             return true;
         });
+        testedThirdPhase.Should().BeTrue();
     }
 
     [Test]
@@ -100,16 +87,40 @@ public sealed class CausalDiagramEditorJifAdapterTests
     }
 
     [Test]
-    public void PolyrhythmPresets_AllProducePassistAnimations()
+    public void Polyrhythm23_MapsToPassistWithHandAssignmentsFromLandingTimes()
     {
-        var presets = new[]
-        {
-            CausalDiagramEditorState.CreateFeedingPattern(3, 3, "feeding-3-3"),
-            CausalDiagramEditorState.CreateFeedingPattern(5, 3, "feeding-5-3"),
-            CausalDiagramEditorState.CreateFeeding75(),
-        };
+        var state = CausalDiagramEditorState.CreateFeedingPattern(2, 3, "custom");
 
-        foreach (var state in presets)
+        CausalDiagramEditorJifAdapter
+            .TryMap(state, out var mapped, out var error)
+            .Should()
+            .BeTrue(error);
+        mapped.Should().NotBeNull();
+        mapped!.Props.Should().HaveCount(2);
+        mapped
+            .Throws!.OrderBy(item => item.Time)
+            .Take(5)
+            .Select(item => item.From)
+            .Should()
+            .Equal(0, 1, 2, 3, 1);
+        mapped
+            .Throws!.OrderBy(item => item.Time)
+            .Take(5)
+            .Select(item => item.To)
+            .Should()
+            .Equal(3, 2, 1, 0, 2);
+    }
+
+    [Test]
+    public void OtherCompletePolyrhythmFactoryPatterns_MapToPassist()
+    {
+        foreach (
+            var state in new[]
+            {
+                CausalDiagramEditorState.CreateFeedingPattern(3, 3, "feeding-3-3"),
+                CausalDiagramEditorState.CreateFeedingPattern(5, 3, "feeding-5-3"),
+            }
+        )
             CausalDiagramEditorJifAdapter
                 .TryMap(state, out _, out var error)
                 .Should()
@@ -119,15 +130,13 @@ public sealed class CausalDiagramEditorJifAdapterTests
     [Test]
     public void TemporaryMultipleIncomingArrowsKeepTheDiagramEditableButPauseAnimation()
     {
-        var state = CausalDiagramEditorState.CreateFeeding75();
-        var edgeIndex = state.CausalEdges.FindIndex(edge => edge.FromThrowId == "P1-2");
-        var duplicate = state.CausalEdges.Single(edge => edge.FromThrowId == "P1-1");
+        var state = CausalDiagramEditorState.CreateSiteswapPattern("531");
+        var edgeIndex = state.CausalEdges.FindIndex(edge => edge.FromThrowId == "A4");
         state.CausalEdges[edgeIndex] = state.CausalEdges[edgeIndex] with
         {
-            ToThrowId = duplicate.ToThrowId,
-            CycleOffset = duplicate.CycleOffset,
+            ToThrowId = "A3",
+            CycleOffset = 0,
         };
-        state.SynchronizeHeights();
 
         CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeTrue();
         CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error).Should().BeFalse();
@@ -137,59 +146,11 @@ public sealed class CausalDiagramEditorJifAdapterTests
     [Test]
     public void JugglerWithoutThrowsPausesAnimationWithoutThrowing()
     {
-        var state = CausalDiagramEditorState.CreateFeeding75();
+        var state = CausalDiagramEditorState.CreateFeedingPattern(2, 3, "custom");
         state.Jugglers.Add(new EditorJuggler("J3", "Jongleur 3"));
 
         CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error).Should().BeFalse();
         error.Should().Contain("mindestens einen Wurf");
-    }
-
-    [Test]
-    public void Feeding75_ExpandsIndependentTrackPeriodsToBalancedCommonPeriod()
-    {
-        var state = CausalDiagramEditorState.CreateFeeding75();
-
-        CausalDiagramEditorJifAdapter
-            .TryCreateDiagramSet(state, out var diagram, out var error)
-            .Should()
-            .BeTrue(error);
-        diagram.Should().NotBeNull();
-        diagram!.StepCount.Should().Be(35);
-        diagram.TimeStretchFactor.Should().Be(1m);
-        diagram.CausalArrows.Should().HaveCount(12);
-        diagram.Throws.Should().HaveCount(12);
-        diagram.Throws.Count(item => item.Hand.Person.Name == "A").Should().Be(7);
-        diagram.Throws.Count(item => item.Hand.Person.Name == "B").Should().Be(5);
-        diagram
-            .Throws.Where(item => item.Hand.Person.Name == "A")
-            .Select(item => item.Height)
-            .Should()
-            .OnlyContain(height => height == 5);
-        diagram
-            .Throws.Where(item => item.Hand.Person.Name == "B")
-            .Select(item => item.Height)
-            .Should()
-            .OnlyContain(height => height == 7);
-        diagram.Throws.Should().OnlyContain(item => item.ToLimb.HasValue);
-        CausalDiagramEditorJifAdapter
-            .TryMap(state, out var mapped, out error)
-            .Should()
-            .BeTrue(error);
-        mapped.Should().NotBeNull();
-        mapped!.Jugglers.Should().HaveCount(2);
-        mapped.Jugglers!.Select(juggler => juggler.Position![0]).Should().Equal(1.6m, -1.6m);
-        mapped.Jugglers.Select(juggler => juggler.Position![2]).Should().OnlyContain(z => z == 0m);
-        mapped.Props.Should().HaveCount(2);
-        mapped.Props!.Should().OnlyContain(prop => prop.Type == "club");
-        mapped.Limbs.Should().HaveCount(4);
-        mapped.Repetition.Should().NotBeNull();
-        mapped.Repetition!.Period.Should().Be(14);
-        mapped.TimeStretchFactor.Should().Be(1m);
-        mapped
-            .Throws!.Select(item => item.Duration)
-            .Should()
-            .OnlyContain(duration => duration == 1m || duration == 1.4m);
-        mapped.Throws.Should().HaveCount(24);
     }
 
     [Test]
@@ -203,7 +164,63 @@ public sealed class CausalDiagramEditorJifAdapterTests
             .Should()
             .BeTrue(error);
         mapped.Should().NotBeNull();
-        mapped!.Throws!.OrderBy(item => item.Time).First().From.Should().Be(1);
+        mapped!.Throws!.OrderBy(item => item.Time).First().From.Should().Be(0);
+    }
+
+    [Test]
+    public void DiagramHandSequenceDrivesPassistLimbAssignments()
+    {
+        var state = new CausalDiagramEditorState
+        {
+            PresetId = "custom",
+            ActiveJugglerId = "P1",
+            CycleLength = 4m,
+            Jugglers = [new("P1", "A"), new("P2", "B")],
+            Throws =
+            [
+                new("P1-1", "P1", "R", 0m),
+                new("P1-2", "P1", "L", 1m),
+                new("P1-3", "P1", "R", 2m),
+                new("P1-4", "P1", "L", 3m),
+                new("P2-1", "P2", "R", 0.5m),
+                new("P2-2", "P2", "R", 1.5m),
+                new("P2-3", "P2", "L", 2.5m),
+                new("P2-4", "P2", "L", 3.5m),
+            ],
+            CausalEdges =
+            [
+                new("e1", "P1-1", "P2-1"),
+                new("e2", "P1-2", "P2-2"),
+                new("e3", "P1-3", "P2-3"),
+                new("e4", "P1-4", "P2-4"),
+                new("e5", "P2-1", "P1-2"),
+                new("e6", "P2-2", "P1-3"),
+                new("e7", "P2-3", "P1-4"),
+                new("e8", "P2-4", "P1-1", 1),
+            ],
+        };
+
+        var chronological = state.Throws.OrderBy(node => node.StartTime).ToArray();
+        chronological
+            .Select(node => state.HeightOf(node.Id))
+            .Should()
+            .OnlyContain(height => height == 5m);
+        CausalDiagramEditorJifAdapter
+            .TryMap(state, out var mapped, out var error)
+            .Should()
+            .BeTrue(error);
+        mapped!
+            .Throws!.OrderBy(item => item.Time)
+            .Take(8)
+            .Select(item => item.From)
+            .Should()
+            .Equal(0, 1, 2, 1, 0, 3, 2, 3);
+        mapped
+            .Throws!.OrderBy(item => item.Time)
+            .Take(8)
+            .Select(item => item.To)
+            .Should()
+            .Equal(3, 2, 3, 0, 1, 2, 1, 0);
     }
 
     [Test]
@@ -216,7 +233,7 @@ public sealed class CausalDiagramEditorJifAdapterTests
             .Should()
             .BeTrue(error);
         diagram.Should().NotBeNull();
-        diagram!.CausalArrows.Should().HaveCount(5);
+        diagram!.CausalArrows.Should().HaveCount(6);
         diagram
             .StepCount.Should()
             .Be(SiteswapDiagramBuilder.ComputeSteps(new SiteswapPattern(5, 3, 1), 2));
@@ -292,9 +309,9 @@ public sealed class CausalDiagramEditorJifAdapterTests
             .Equal("R", "L", "R", "L", "R", "L");
         diagram
             .Throws.Take(6)
-            .Select(item => item.Height)
+            .Select(item => diagram.HeightOf(item))
             .Should()
-            .Equal(diagram.Throws.Skip(6).Select(item => item.Height));
+            .Equal(diagram.Throws.Skip(6).Select(item => diagram.HeightOf(item)));
         diagram
             .Throws.Take(6)
             .Select(item => item.ToLimb)
@@ -330,57 +347,23 @@ public sealed class CausalDiagramEditorJifAdapterTests
         error.Should().NotBeNullOrWhiteSpace();
     }
 
-    private static CausalDiagramEditorState CreateUserProvidedIrregularPattern()
-    {
-        var state = CausalDiagramEditorState.CreateFeeding75();
-        state.PresetId = "custom";
-        state.CycleLength = 35m;
-        state.Throws =
-        [
-            new("P1-1", "P1", "R", 0m, 0m),
-            new("P1-2", "P1", "L", 6m, 0m),
-            new("P1-3", "P1", "R", 10m, 0m),
-            new("P1-4", "P1", "L", 15m, 0m),
-            new("P1-5", "P1", "R", 20m, 0m),
-            new("P1-6", "P1", "L", 25m, 0m),
-            new("P1-7", "P1", "R", 30m, 0m),
-            new("P2-1", "P2", "R", 0m, 0m),
-            new("P2-2", "P2", "L", 7m, 0m),
-            new("P2-3", "P2", "R", 14m, 0m),
-            new("P2-4", "P2", "L", 21m, 0m),
-            new("P2-5", "P2", "R", 28m, 0m),
-        ];
-        state.CausalEdges =
-        [
-            new("feed-P1-1", "P1-1", "P1-2", 0),
-            new("feed-P1-2", "P1-2", "P1-3", 0),
-            new("feed-P1-3", "P1-3", "P2-1", 0),
-            new("feed-P1-4", "P1-4", "P1-5", 0),
-            new("feed-P1-5", "P1-5", "P1-4", 0),
-            new("feed-P1-6", "P1-6", "P1-7", 0),
-            new("feed-P1-7", "P1-7", "P1-6", 0),
-            new("feed-P2-1", "P2-1", "P1-1", 0),
-            new("feed-P2-2", "P2-2", "P2-3", 0),
-            new("feed-P2-3", "P2-3", "P2-2", 0),
-            new("feed-P2-4", "P2-4", "P2-5", 0),
-            new("feed-P2-5", "P2-5", "P2-4", 0),
-        ];
-        state.SynchronizeHeights();
-        return state;
-    }
-
     private static CausalDiagramEditorState CreateFactoryGeneratedPattern(int seed)
     {
         var random = new Random(seed);
         CausalDiagramEditorState state;
-        if (random.Next(3) == 0)
+        var variant = random.Next(4);
+        if (variant == 0)
+            return CausalDiagramEditorPresets
+                .All.Single(preset => preset.Id == "jugglers-3")
+                .Create();
+        if (variant == 1)
         {
             var validSiteswaps = new[] { "3", "4", "5", "531", "441", "423", "97531", "756" };
             state = CausalDiagramEditorState.CreateSiteswapPattern(
                 validSiteswaps[random.Next(validSiteswaps.Length)]
             );
         }
-        else if (random.Next(2) == 0)
+        else if (variant == 2)
         {
             state = CausalDiagramEditorState.CreateFeedingPattern(
                 random.Next(2, 9),
@@ -407,24 +390,15 @@ public sealed class CausalDiagramEditorJifAdapterTests
                     .ToList(),
             };
             foreach (var juggler in state.Jugglers)
-            {
                 for (var beat = 0; beat < beatsPerJuggler; beat++)
                 {
                     var id = $"{juggler.Id}-{beat + 1}";
                     state.Throws.Add(
-                        new EditorThrow(
-                            id,
-                            juggler.Id,
-                            beat % 2 == 0 ? "R" : "L",
-                            beat,
-                            beatsPerJuggler
-                        )
+                        new EditorThrow(id, juggler.Id, beat % 2 == 0 ? "R" : "L", beat)
                     );
                     state.CausalEdges.Add(new EditorCausalEdge($"self-{id}", id, id, 1));
                 }
-            }
         }
-
         return state;
     }
 

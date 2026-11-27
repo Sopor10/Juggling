@@ -30,12 +30,12 @@ public class SiteswapDiagramBuilderTest
         diagram.Throws.Count.Should().Be(36);
 
         var firstCausal = diagram.CausalArrows[0];
-        firstCausal.From.Height.Should().Be(7);
+        diagram.HeightOf(firstCausal.From).Should().Be(7);
         firstCausal.Step.Should().Be(3); // 7 - 4 hands
         firstCausal.To.Time.Should().Be(3);
 
         var firstLadder = diagram.LadderArrows[0];
-        firstLadder.From.Height.Should().Be(7);
+        diagram.HeightOf(firstLadder.From).Should().Be(7);
         firstLadder.Step.Should().Be(7);
         firstLadder.To.Time.Should().Be(7);
     }

@@ -56,14 +56,13 @@
                 $"throw-{index + 1}",
                 $"P{Math.Max(0, jugglerIndex) + 1}",
                 item.Hand.Name,
-                item.Time,
-                item.Height
+                item.Time
             );
         }).ToList();
         var handsPerCycle = Math.Max(1, diagram.Hands.Count);
         var edges = diagram.Throws.Select((item, index) =>
         {
-            var causalTarget = index + item.Height - handsPerCycle;
+            var causalTarget = index + (diagram.HeightOf(item) ?? 0) - handsPerCycle;
             var cycleOffset = Math.DivRem(causalTarget, diagram.StepCount, out var targetIndex);
             if (targetIndex < 0)
             {

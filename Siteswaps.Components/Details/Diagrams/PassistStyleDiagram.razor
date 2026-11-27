@@ -114,7 +114,7 @@
                      Y="@((cy + 5).ToString(inv))"
                      CssClass="pd-node-label"
                      TextAnchor="middle">
-                @DetailViewModel.FormatThrow(node.Height)
+                @DetailViewModel.FormatThrow(Diagram.HeightOf(node) ?? 0)
             </SvgText>
         }
     </svg>

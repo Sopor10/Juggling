@@ -521,9 +521,7 @@
     private string HeightLabel(decimal height) => height.ToString("0.##", CultureInfo.InvariantCulture);
     private string SvgNumber(decimal value) => value.ToString(CultureInfo.InvariantCulture);
     private string DerivedHeightLabel(EditorThrow node) =>
-        _state.CausalEdges.Any(edge => edge.FromThrowId == node.Id) || ShowUnconnectedHeight
-            ? HeightLabel(node.Height)
-            : "—";
+        _state.HeightOf(node.Id) is { } height ? HeightLabel(height) : "—";
     private string NodeLabel(EditorThrow node) => $"{JugglerName(node.JugglerId)} · {DerivedHeightLabel(node)} @ {node.StartTime.ToString("0.##", CultureInfo.InvariantCulture)}";
     private static string JugglerActionLabel(string name) => $"{name}: kurz drücken zum Auswählen, lange drücken zum Hinzufügen eines Wurfs";
     private bool IsEditingThrow(string throwId, int cycle) => _editingThrow == (throwId, cycle);
@@ -761,7 +759,7 @@
     private void UpdateThrowStart(EditorThrow item, decimal start)
     {
         _state.Throws[_state.Throws.IndexOf(item)] = EditorThrowPositioning.MoveStart(_state, item, start);
-        _state.SynchronizeHeights();
+        _state.NormalizeCausalEdgeOffsets();
         _selectedId = item.Id;
         PatternChanged();
     }
@@ -832,7 +830,7 @@
         var last = _state.Throws.LastOrDefault(t => t.JugglerId == juggler.Id);
         var start = last is null ? 0m : Math.Min(_state.CycleLength - 0.25m, last.StartTime + 1m);
         var hand = last?.Hand == "R" ? "L" : "R";
-        var item = new EditorThrow(Guid.NewGuid().ToString("N"), juggler.Id, hand, Math.Max(0m, start), 1m);
+        var item = new EditorThrow(Guid.NewGuid().ToString("N"), juggler.Id, hand, Math.Max(0m, start));
         _state.Throws.Add(item);
         _selectedId = item.Id;
         PatternChanged();
@@ -846,10 +844,10 @@
         while (_state.Jugglers.Any(j => j.Id == id)) id = $"J-{Guid.NewGuid():N}";
         _state.Jugglers.Add(new EditorJuggler(id, $"Jongleur {index + 1}"));
         var throwId = $"{id}-1";
-        _state.Throws.Add(new EditorThrow(throwId, id, "R", 0m, 1m));
+        _state.Throws.Add(new EditorThrow(throwId, id, "R", 0m));
         _state.CausalEdges.Add(new EditorCausalEdge($"e-{throwId}", throwId, throwId, -1));
         _state.ActiveJugglerId = id;
-        _state.SynchronizeHeights();
+        _state.NormalizeCausalEdgeOffsets();
         PatternChanged();
     }
 
@@ -885,7 +883,7 @@
         _state = CausalDiagramEditorPresets.All.FirstOrDefault(preset => preset.Id == _preset)?.Create()
             ?? CausalDiagramEditorState.CreateEmpty();
         if (_preset == "custom" && _state.Throws.Count == 0)
-            _state.Throws.Add(new EditorThrow("A1", _state.Jugglers[0].Id, "R", 0m, 1m));
+            _state.Throws.Add(new EditorThrow("A1", _state.Jugglers[0].Id, "R", 0m));
         _state.ActiveJugglerId = _state.Jugglers[0].Id;
         _selectedId = null;
         SyncSetupFromState();
@@ -1199,7 +1197,7 @@
     {
         if (!_state.Jugglers.Any(item => item.Id == _state.ActiveJugglerId))
             _state.ActiveJugglerId = _state.Jugglers[0].Id;
-        _state.SynchronizeHeights();
+        _state.NormalizeCausalEdgeOffsets();
         _selectedId = null;
         _visitedWizardSteps.Add(1);
         _wizardStep = 2;
@@ -1308,7 +1306,7 @@
             return $"1>J{defaultTargetIndex + 1}";
 
         var source = existingThrows[beat % existingThrows.Count];
-        var height = Math.Clamp((int)Math.Round(source.Height, MidpointRounding.AwayFromZero), 1, 100);
+        var height = Math.Clamp((int)Math.Round(_state.HeightOf(source.Id) ?? 1m, MidpointRounding.AwayFromZero), 1, 100);
         var targetIndex = FindTargetJugglerIndex(source, defaultTargetIndex);
         return $"{height}>J{targetIndex + 1}";
     }
