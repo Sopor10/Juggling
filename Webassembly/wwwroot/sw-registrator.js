@@ -32,8 +32,9 @@
         const basePath = new URL(baseHref).pathname;
         const host = window.location.hostname;
         const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+        const isTailscaleHost = host.endsWith('.ts.net');
         const isEmbeddedIdeBrowser = /Electron|Cursor\//i.test(navigator.userAgent || '');
-        return !basePath.includes('/pr-preview/') && !isLocalHost && !isEmbeddedIdeBrowser;
+        return !basePath.includes('/pr-preview/') && !isLocalHost && !isTailscaleHost && !isEmbeddedIdeBrowser;
     }
 
     async function unregisterAll() {
