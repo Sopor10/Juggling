@@ -18,17 +18,16 @@ public static class JifCausalDiagramMapper
 
         var jugglers = CreateJugglers(sourceJugglers);
         var hands = CreateHands(sourceLimbs, jugglers, nameof(jif));
-        var (nodes, arrows) = CreateThrows(sourceThrows, hands, timeStretchFactor, nameof(jif));
+        var period =
+            jif.Repetition?.Period is > 0 ? jif.Repetition.Period.Value
+            : sourceThrows.Count == 0 ? 1
+            : decimal.ToInt32(decimal.Ceiling(sourceThrows.Max(node => node.Time ?? 0m) + 1m));
+        var (nodes, arrows) = CreateThrows(sourceThrows, hands, period, nameof(jif));
         if (nodes.Count == 0)
             throw new ArgumentException(
                 "The JIF has no positive-height throws to draw.",
                 nameof(jif)
             );
-
-        var endTime = nodes.Max(node => node.Time) + 1m;
-        var period = jif.Repetition?.Period is > 0
-            ? jif.Repetition.Period.Value
-            : decimal.ToInt32(decimal.Ceiling(endTime));
 
         return new DiagramSet(
             Hands: hands,
@@ -95,14 +94,26 @@ public static class JifCausalDiagramMapper
         return new Hand(isLeft ? "L" : "R", jugglers[jugglerIndex]);
     }
 
-    private static (ImmutableList<Throw> Nodes, ImmutableList<DiagramArrow> Arrows) CreateThrows(
+    private static (
+        ImmutableList<DiagramThrow> Nodes,
+        ImmutableList<DiagramArrow> Arrows
+    ) CreateThrows(
         IReadOnlyList<JifThrow> sourceThrows,
         ImmutableList<Hand> hands,
-        decimal timeStretchFactor,
+        int period,
         string parameterName
     )
     {
-        var nodes = ImmutableList.CreateBuilder<Throw>();
+        var throwCountsByJuggler = sourceThrows
+            .Where(throwEvent =>
+                throwEvent.Duration is > 0
+                && throwEvent.From is int from
+                && from >= 0
+                && from < hands.Count
+            )
+            .GroupBy(throwEvent => hands[throwEvent.From.GetValueOrDefault()].Person)
+            .ToDictionary(group => group.Key, group => group.Count());
+        var nodes = ImmutableList.CreateBuilder<DiagramThrow>();
         var arrows = ImmutableList.CreateBuilder<DiagramArrow>();
         foreach (var jifThrow in sourceThrows.OrderBy(throwEvent => throwEvent.Time ?? 0m))
         {
@@ -126,10 +137,16 @@ public static class JifCausalDiagramMapper
             var fromHand = hands[fromIndex];
             var toHand = hands[toIndex];
             var time = jifThrow.Time ?? 0m;
-            var node = new Throw(fromHand, decimal.ToInt32(duration), time, toIndex);
+            var node = new DiagramThrow(fromHand, time, toIndex);
             nodes.Add(node);
 
-            var causalStep = duration - 2m * timeStretchFactor;
+            if (!throwCountsByJuggler.TryGetValue(toHand.Person, out var targetThrowCount))
+                throw new ArgumentException(
+                    "Every JIF target juggler must have throws in the repetition period.",
+                    parameterName
+                );
+            var targetBeatDuration = (decimal)period / targetThrowCount;
+            var causalStep = duration - 2m * targetBeatDuration;
             if (decimal.Truncate(causalStep) != causalStep)
                 throw new ArgumentException(
                     "The JIF time scale does not align with whole beat steps.",
@@ -137,7 +154,7 @@ public static class JifCausalDiagramMapper
                 );
 
             var step = decimal.ToInt32(causalStep);
-            var causalTarget = new Throw(toHand, 0, time + causalStep);
+            var causalTarget = new DiagramThrow(toHand, time + causalStep);
             arrows.Add(new DiagramArrow(node, causalTarget, step, toHand.Person, OrbitIndex: -1));
         }
 

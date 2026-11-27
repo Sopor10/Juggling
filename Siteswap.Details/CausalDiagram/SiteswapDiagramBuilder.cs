@@ -28,14 +28,13 @@ public static class SiteswapDiagramBuilder
         var numberOfHands = hands.Length;
         var timeStretchFactor = numberOfHands / 2m;
         var orbitByBeat = OrbitIndices(siteswap);
-        var nodes = new List<Throw>(steps);
+        var nodes = new List<DiagramThrow>(steps);
         for (var beat = 0; beat < steps; beat++)
         {
             var landingLimbIndex = (beat + siteswap.Items[beat]) % numberOfHands;
             nodes.Add(
-                new Throw(
+                new DiagramThrow(
                     hands[beat],
-                    siteswap.Items[beat],
                     beat,
                     landingLimbIndex,
                     orbitByBeat[beat % siteswap.Length]
@@ -54,12 +53,14 @@ public static class SiteswapDiagramBuilder
 
             // Causal: duration - 2 * timeStretchFactor == height - numberOfHands
             var causalTarget = beat + height - numberOfHands;
-            if (causalTarget >= 0 && causalTarget < steps)
+            if (height > 0)
             {
+                var targetBeat = ((causalTarget % steps) + steps) % steps;
+                var target = nodes[targetBeat] with { Time = causalTarget };
                 causal.Add(
                     new DiagramArrow(
                         from,
-                        nodes[causalTarget],
+                        target,
                         Step: height - numberOfHands,
                         ToJuggler: toJuggler,
                         OrbitIndex: orbitByBeat[beat % siteswap.Length]
@@ -69,12 +70,14 @@ public static class SiteswapDiagramBuilder
 
             // Ladder: full flight duration (passist comment: don't subtract dwell)
             var landBeat = beat + height;
-            if (height > 0 && landBeat < steps)
+            if (height > 0)
             {
+                var targetBeat = ((landBeat % steps) + steps) % steps;
+                var target = nodes[targetBeat] with { Time = landBeat };
                 ladder.Add(
                     new DiagramArrow(
                         from,
-                        nodes[landBeat],
+                        target,
                         Step: height,
                         ToJuggler: toJuggler,
                         OrbitIndex: orbitByBeat[beat % siteswap.Length]
@@ -203,18 +206,50 @@ public static class SiteswapDiagramBuilder
     }
 }
 
-public record DiagramArrow(Throw From, Throw To, int Step, Person ToJuggler, int OrbitIndex);
+public record DiagramArrow(
+    DiagramThrow From,
+    DiagramThrow To,
+    int Step,
+    Person ToJuggler,
+    int OrbitIndex
+);
 
 public record StartProps(int Left, int Right);
 
 public record DiagramSet(
     ImmutableList<Hand> Hands,
     ImmutableList<Person> Jugglers,
-    ImmutableList<Throw> Throws,
+    ImmutableList<DiagramThrow> Throws,
     ImmutableList<DiagramArrow> CausalArrows,
     ImmutableList<DiagramArrow> LadderArrows,
     decimal TimeStretchFactor,
     int StepCount,
     ImmutableList<int> LimbPermutation,
     ImmutableDictionary<string, StartProps> StartProps
-);
+)
+{
+    public int? HeightOf(DiagramThrow source)
+    {
+        var arrows = CausalArrows.Where(arrow => arrow.From == source).ToArray();
+        if (arrows.Length == 0)
+            return null;
+        if (arrows.Length != 1)
+            throw new InvalidOperationException(
+                "A completed causal throw must have exactly one causal arrow."
+            );
+
+        var targetThrowCount = Throws.Count(node => node.Hand.Person == arrows[0].ToJuggler);
+        if (targetThrowCount == 0)
+            throw new InvalidOperationException(
+                "A causal target juggler must have throws in the diagram period."
+            );
+
+        var targetBeatDuration = (decimal)StepCount / targetThrowCount;
+        var height = arrows[0].Step + 2m * targetBeatDuration;
+        if (height <= 0 || decimal.Truncate(height) != height || height > int.MaxValue)
+            throw new InvalidOperationException(
+                "The causal arrow does not define a positive integral throw height."
+            );
+        return decimal.ToInt32(height);
+    }
+}

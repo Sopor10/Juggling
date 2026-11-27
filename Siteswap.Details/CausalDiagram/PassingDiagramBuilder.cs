@@ -23,7 +23,7 @@ public static class PassingDiagramBuilder
         var normalizedTimeZones = NormalizeTimeZones(timeZones, distinctZones);
         var jugglers = CreateJugglers(timeZones.Count);
         var hands = CreateHands(jugglers);
-        var nodes = CreateThrows(
+        var throwEntries = CreateThrows(
             timeZones,
             heights,
             targets,
@@ -33,13 +33,14 @@ public static class PassingDiagramBuilder
             diagramPatternPeriod,
             hands
         );
-        if (nodes.Count == 0)
+        if (throwEntries.Count == 0)
             throw new ArgumentException(
                 "The pattern must contain at least one positive-height throw.",
                 nameof(heights)
             );
 
-        var (causalArrows, ladderArrows) = CreateArrows(nodes, hands, timeStretch);
+        var (causalArrows, ladderArrows) = CreateArrows(throwEntries, hands, timeStretch);
+        var nodes = throwEntries.Select(entry => entry.Node).ToList();
         var basePeriod = diagramPatternPeriod * timeStretch;
         var limbPermutation = Enumerable
             .Range(0, timeZones.Count * 2)
@@ -131,7 +132,7 @@ public static class PassingDiagramBuilder
             )
             .ToImmutableList();
 
-    private static List<Throw> CreateThrows(
+    private static List<(DiagramThrow Node, int Height)> CreateThrows(
         IReadOnlyList<int> timeZones,
         IReadOnlyList<IReadOnlyList<int>> heights,
         IReadOnlyList<IReadOnlyList<int>> targets,
@@ -142,7 +143,7 @@ public static class PassingDiagramBuilder
         ImmutableList<Hand> hands
     )
     {
-        var nodes = new List<Throw>();
+        var nodes = new List<(DiagramThrow Node, int Height)>();
         for (var person = 0; person < timeZones.Count; person++)
         {
             for (var beat = 0; beat < diagramPatternPeriod; beat++)
@@ -167,7 +168,7 @@ public static class PassingDiagramBuilder
         return nodes;
     }
 
-    private static Throw CreateThrow(
+    private static (DiagramThrow Node, int Height) CreateThrow(
         int person,
         int beat,
         int height,
@@ -192,28 +193,32 @@ public static class PassingDiagramBuilder
                 / timeStretch;
         var fromLimb = person * 2 + beat % 2;
         var toLimb = targetPerson * 2 + landingLocalBeat % 2;
-        return new Throw(hands[fromLimb], height, time, toLimb);
+        return (new DiagramThrow(hands[fromLimb], time, toLimb), height);
     }
 
     private static (
         ImmutableList<DiagramArrow> Causal,
         ImmutableList<DiagramArrow> Ladder
-    ) CreateArrows(IEnumerable<Throw> nodes, ImmutableList<Hand> hands, int timeStretch)
+    ) CreateArrows(
+        IEnumerable<(DiagramThrow Node, int Height)> nodes,
+        ImmutableList<Hand> hands,
+        int timeStretch
+    )
     {
         var causalArrows = ImmutableList.CreateBuilder<DiagramArrow>();
         var ladderArrows = ImmutableList.CreateBuilder<DiagramArrow>();
-        foreach (var node in nodes)
+        foreach (var (node, height) in nodes)
         {
             var toLimb = node.ToLimb
                 ?? throw new InvalidOperationException(
                     "Every throw must identify its destination limb."
                 );
             var toHand = hands[toLimb];
-            var causalStep = node.Height - 2 * timeStretch;
+            var causalStep = height - 2 * timeStretch;
             causalArrows.Add(
                 new DiagramArrow(
                     node,
-                    new Throw(toHand, 0, node.Time + causalStep),
+                    new DiagramThrow(toHand, node.Time + causalStep),
                     causalStep,
                     toHand.Person,
                     OrbitIndex: -1
@@ -222,8 +227,8 @@ public static class PassingDiagramBuilder
             ladderArrows.Add(
                 new DiagramArrow(
                     node,
-                    new Throw(toHand, 0, node.Time + node.Height),
-                    node.Height,
+                    new DiagramThrow(toHand, node.Time + height),
+                    height,
                     toHand.Person,
                     OrbitIndex: -1
                 )

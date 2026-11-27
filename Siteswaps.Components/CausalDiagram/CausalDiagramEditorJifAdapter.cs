@@ -35,6 +35,13 @@ public static class CausalDiagramEditorJifAdapter
             return true;
         }
 
+        if (state.Throws.Any(node => state.CausalEdges.All(edge => edge.FromThrowId != node.Id)))
+        {
+            error =
+                "Jeder Wurf braucht einen kausalen Pfeil, damit seine Höhe berechnet werden kann.";
+            return false;
+        }
+
         if (
             state
                 .CausalEdges.GroupBy(edge => (edge.ToThrowId, edge.CycleOffset))
@@ -61,14 +68,35 @@ public static class CausalDiagramEditorJifAdapter
         var jugglerIndex = state
             .Jugglers.Select((juggler, index) => (juggler.Id, index))
             .ToDictionary(item => item.Id, item => item.index, StringComparer.Ordinal);
-        var hands = jugglers
-            .SelectMany(person => new[] { new Hand("R", person), new Hand("L", person) })
+        var handOrder = state
+            .Throws.Select((node, index) => (Node: node, Index: index))
+            .OrderBy(item => item.Node.StartTime)
+            .ThenBy(item => item.Index)
+            .Select(item => (item.Node.JugglerId, item.Node.Hand))
+            .Distinct()
+            .ToList();
+        foreach (var juggler in state.Jugglers)
+        {
+            if (!handOrder.Contains((juggler.Id, "R")))
+                handOrder.Add((juggler.Id, "R"));
+            if (!handOrder.Contains((juggler.Id, "L")))
+                handOrder.Add((juggler.Id, "L"));
+        }
+
+        var hands = handOrder
+            .Select(hand => new Hand(hand.Hand, jugglers[jugglerIndex[hand.JugglerId]]))
             .ToImmutableList();
         var handIndex = new Dictionary<(string JugglerId, string Hand), int>();
         for (var index = 0; index < state.Jugglers.Count; index++)
         {
-            handIndex[(state.Jugglers[index].Id, "R")] = index * 2;
-            handIndex[(state.Jugglers[index].Id, "L")] = index * 2 + 1;
+            handIndex[(state.Jugglers[index].Id, "R")] = hands
+                .Select((hand, limb) => (hand, limb))
+                .Single(item => item.hand.Person == jugglers[index] && item.hand.Name == "R")
+                .limb;
+            handIndex[(state.Jugglers[index].Id, "L")] = hands
+                .Select((hand, limb) => (hand, limb))
+                .Single(item => item.hand.Person == jugglers[index] && item.hand.Name == "L")
+                .limb;
         }
 
         var outgoing = state.CausalEdges.ToDictionary(
@@ -79,25 +107,18 @@ public static class CausalDiagramEditorJifAdapter
         var rowCounts = state
             .Jugglers.Select(juggler => state.Throws.Count(node => node.JugglerId == juggler.Id))
             .ToArray();
-        var inferredTargets = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var node in state.Throws)
-        {
-            if (outgoing.TryGetValue(node.Id, out var edge))
-            {
-                inferredTargets[node.Id] = nodesById[edge.ToThrowId].JugglerId;
-                continue;
-            }
-
-            inferredTargets[node.Id] = node.JugglerId;
-        }
+        var inferredTargets = state.Throws.ToDictionary(
+            node => node.Id,
+            node => nodesById[outgoing[node.Id].ToThrowId].JugglerId,
+            StringComparer.Ordinal
+        );
 
         var durations = new Dictionary<string, decimal>(StringComparer.Ordinal);
         var scaleInputs = new List<decimal> { state.CycleLength };
         foreach (var node in state.Throws)
         {
             scaleInputs.Add(node.StartTime);
-            if (!inferredTargets.TryGetValue(node.Id, out var targetJugglerId))
-                continue;
+            var targetJugglerId = inferredTargets[node.Id];
 
             if (
                 !jugglerIndex.ContainsKey(node.JugglerId)
@@ -106,26 +127,17 @@ public static class CausalDiagramEditorJifAdapter
             )
                 return false;
 
+            decimal duration;
+            var edge = outgoing[node.Id];
+            var target = nodesById[edge.ToThrowId];
+            if (!handIndex.ContainsKey((target.JugglerId, target.Hand)))
+                return false;
+            var targetTime = target.StartTime + edge.CycleOffset * state.CycleLength;
             var targetBeatDuration =
                 state.CycleLength
                 / state.Throws.Count(candidate => candidate.JugglerId == targetJugglerId);
-            decimal duration;
-            if (outgoing.TryGetValue(node.Id, out var edge))
-            {
-                var target = nodesById[edge.ToThrowId];
-                if (!handIndex.ContainsKey((target.JugglerId, target.Hand)))
-                    return false;
-                var targetTime = target.StartTime + edge.CycleOffset * state.CycleLength;
-                duration = targetTime - node.StartTime + 2m * targetBeatDuration;
-                scaleInputs.Add(targetTime);
-            }
-            else
-            {
-                var sourceBeatDuration =
-                    state.CycleLength
-                    / state.Throws.Count(candidate => candidate.JugglerId == node.JugglerId);
-                duration = node.Height * sourceBeatDuration;
-            }
+            duration = targetTime - node.StartTime + 2m * targetBeatDuration;
+            scaleInputs.Add(targetTime);
             if (duration <= 0 || duration > int.MaxValue)
                 return false;
 
@@ -175,7 +187,16 @@ public static class CausalDiagramEditorJifAdapter
 
         var limbPermutation = Enumerable
             .Range(0, hands.Count)
-            .Select(limb => limb / 2 * 2 + (limb % 2 + rowCounts[limb / 2] % 2) % 2)
+            .Select(limb =>
+            {
+                var hand = hands[limb];
+                var personIndex = Array.FindIndex(jugglers, person => person == hand.Person);
+                if (rowCounts[personIndex] % 2 == 0)
+                    return limb;
+                var jugglerId = state.Jugglers[personIndex].Id;
+                var otherHand = hand.Name == "R" ? "L" : "R";
+                return handIndex[(jugglerId, otherHand)];
+            })
             .ToImmutableList();
         diagram = new DiagramSet(
             Hands: hands,
@@ -204,11 +225,11 @@ public static class CausalDiagramEditorJifAdapter
         ImmutableList<Hand> hands,
         Dictionary<(string JugglerId, string Hand), int> handIndex,
         int[] rowCounts,
-        out Dictionary<string, Throw> domainThrows,
+        out Dictionary<string, DiagramThrow> domainThrows,
         out string error
     )
     {
-        domainThrows = new Dictionary<string, Throw>(StringComparer.Ordinal);
+        domainThrows = new Dictionary<string, DiagramThrow>(StringComparer.Ordinal);
         error = string.Empty;
         foreach (var node in state.Throws)
         {
@@ -216,46 +237,28 @@ public static class CausalDiagramEditorJifAdapter
             var height = 0;
             if (durations.TryGetValue(node.Id, out var duration))
             {
-                var scaledHeight = duration * scale;
-                if (decimal.Truncate(scaledHeight) != scaledHeight || scaledHeight > int.MaxValue)
+                if (!TryScaleToInteger(duration, scale, out height))
                 {
                     error =
                         "Eine Wurfhöhe lässt sich nicht als ganzzahliger Passist-Zeitschritt darstellen.";
                     return false;
                 }
-                height = decimal.ToInt32(scaledHeight);
-                if (outgoing.TryGetValue(node.Id, out var edge))
-                {
-                    var target = nodesById[edge.ToThrowId];
-                    var landingTime = node.StartTime + duration;
-                    destination = LandingHandAtTime(
-                        state,
-                        target.JugglerId,
-                        landingTime,
-                        jugglerIndex,
-                        handIndex,
-                        rowCounts
-                    );
-                }
-                else
-                {
-                    var landingTime = node.StartTime + duration;
-                    destination = LandingHandAtTime(
-                        state,
-                        inferredTargets[node.Id],
-                        landingTime,
-                        jugglerIndex,
-                        handIndex,
-                        rowCounts
-                    );
-                }
+                var edge = outgoing[node.Id];
+                var target = nodesById[edge.ToThrowId];
+                destination = LandingHandAtTime(
+                    state,
+                    target.JugglerId,
+                    node.StartTime + duration,
+                    jugglerIndex,
+                    handIndex,
+                    rowCounts
+                );
             }
 
             domainThrows.Add(
                 node.Id,
-                new Throw(
+                new DiagramThrow(
                     hands[handIndex[(node.JugglerId, node.Hand)]],
-                    height,
                     node.StartTime * scale,
                     destination
                 )
@@ -269,7 +272,7 @@ public static class CausalDiagramEditorJifAdapter
         int scale,
         Dictionary<string, EditorCausalEdge> outgoing,
         Dictionary<string, EditorThrow> nodesById,
-        Dictionary<string, Throw> domainThrows,
+        Dictionary<string, DiagramThrow> domainThrows,
         Person[] jugglers,
         Dictionary<string, int> jugglerIndex,
         ImmutableList<Hand> hands,
@@ -285,11 +288,14 @@ public static class CausalDiagramEditorJifAdapter
         {
             var target = nodesById[edge.ToThrowId];
             var from = domainThrows[edge.FromThrowId];
-            var targetTime = (target.StartTime + edge.CycleOffset * state.CycleLength) * scale;
-            var stepValue = targetTime - from.Time;
+            var rawTargetTime = target.StartTime + edge.CycleOffset * state.CycleLength;
+            var targetTime = rawTargetTime * scale;
             if (
-                decimal.Truncate(stepValue) != stepValue
-                || stepValue is > int.MaxValue or < int.MinValue
+                !TryScaleToInteger(
+                    rawTargetTime - nodesById[edge.FromThrowId].StartTime,
+                    scale,
+                    out var step
+                )
             )
             {
                 error = "Ein Kausalziel lässt sich nicht auf der Passist-Zeitskala darstellen.";
@@ -303,12 +309,12 @@ public static class CausalDiagramEditorJifAdapter
                 handIndex,
                 rowCounts
             );
-            var to = new Throw(hands[targetHandIndex], 0, targetTime, targetHandIndex);
+            var to = new DiagramThrow(hands[targetHandIndex], targetTime, targetHandIndex);
             causalArrows.Add(
                 new DiagramArrow(
                     from,
                     to,
-                    decimal.ToInt32(stepValue),
+                    step,
                     jugglers[jugglerIndex[target.JugglerId]],
                     OrbitIndex: -1
                 )
@@ -328,7 +334,7 @@ public static class CausalDiagramEditorJifAdapter
         var person = jugglerIndex[target.JugglerId];
         var targetLimb = handIndex[(target.JugglerId, target.Hand)];
         if (rowCounts[person] % 2 == 1 && cycleOffset % 2 != 0)
-            return person * 2 + (targetLimb % 2 == 0 ? 1 : 0);
+            return handIndex[(target.JugglerId, target.Hand == "R" ? "L" : "R")];
         return targetLimb;
     }
 
@@ -374,20 +380,19 @@ public static class CausalDiagramEditorJifAdapter
 
         var period = decimal.ToInt32(state.CycleLength);
         var ordered = state.Throws.OrderBy(node => node.StartTime).ToArray();
+        var heights = ordered.Select(node => state.HeightOf(node.Id) ?? 0m).ToArray();
         if (
             ordered.Length != period
             || ordered.Where((node, index) => node.StartTime != index).Any()
-            || ordered.Any(node =>
-                decimal.Truncate(node.Height) != node.Height
-                || node.Height < 0
-                || node.Height > int.MaxValue
+            || heights.Any(height =>
+                decimal.Truncate(height) != height || height < 0 || height > int.MaxValue
             )
         )
             return false;
 
-        var heights = ordered.Select(node => decimal.ToInt32(node.Height)).ToArray();
+        var siteSwapHeights = heights.Select(decimal.ToInt32).ToArray();
         if (
-            !global::Siteswap.Details.Siteswap.TryCreate(heights, out var siteswap)
+            !global::Siteswap.Details.Siteswap.TryCreate(siteSwapHeights, out var siteswap)
             || siteswap is null
         )
             return false;
@@ -405,7 +410,7 @@ public static class CausalDiagramEditorJifAdapter
             .ToDictionary(item => item.beat, item => item.node);
         foreach (var (node, beat) in ordered.Select((node, beat) => (node, beat)))
         {
-            var height = heights[beat];
+            var height = siteSwapHeights[beat];
             if (height == 0)
             {
                 if (edges.ContainsKey(node.Id))
@@ -444,7 +449,7 @@ public static class CausalDiagramEditorJifAdapter
             if (!TryCreateDiagramSet(state, out var diagram, out error) || diagram is null)
                 return false;
             pattern = JifMapper.Map(
-                ExpandToHandPeriod(diagram),
+                diagram,
                 propType: "club",
                 patternType: "passingSiteswap",
                 colorOrbits: colorOrbits
@@ -514,83 +519,31 @@ public static class CausalDiagramEditorJifAdapter
         };
     }
 
-    private static DiagramSet ExpandToHandPeriod(DiagramSet diagram)
-    {
-        var permutation = diagram.LimbPermutation;
-        var limbMap = Enumerable.Range(0, permutation.Count).ToArray();
-        var repetitions = 1;
-        while (true)
-        {
-            limbMap = limbMap.Select(index => permutation[index]).ToArray();
-            if (limbMap.SequenceEqual(Enumerable.Range(0, permutation.Count)))
-                break;
-            if (++repetitions > 64)
-                throw new InvalidOperationException(
-                    "The hand assignment has an unsupported period."
-                );
-        }
-
-        if (repetitions == 1)
-            return diagram;
-
-        var throws = ImmutableList.CreateBuilder<Throw>();
-        var map = Enumerable.Range(0, permutation.Count).ToArray();
-        for (var repetition = 0; repetition < repetitions; repetition++)
-        {
-            foreach (var item in diagram.Throws)
-            {
-                throws.Add(
-                    item with
-                    {
-                        Time = item.Time + repetition * diagram.StepCount,
-                        Hand = diagram.Hands[map[diagram.Hands.IndexOf(item.Hand)]],
-                        ToLimb = item.ToLimb is { } target ? map[target] : null,
-                    }
-                );
-            }
-            map = map.Select(index => permutation[index]).ToArray();
-        }
-
-        var arrows = ImmutableList.CreateBuilder<DiagramArrow>();
-        map = Enumerable.Range(0, permutation.Count).ToArray();
-        foreach (var item in diagram.CausalArrows)
-        {
-            for (var repetition = 0; repetition < repetitions; repetition++)
-            {
-                var from = item.From with
-                {
-                    Hand = diagram.Hands[map[diagram.Hands.IndexOf(item.From.Hand)]],
-                    Time = item.From.Time + repetition * diagram.StepCount,
-                    ToLimb = item.From.ToLimb is { } fromTarget ? map[fromTarget] : null,
-                };
-                var to = item.To with
-                {
-                    Hand = diagram.Hands[map[diagram.Hands.IndexOf(item.To.Hand)]],
-                    Time = item.To.Time + repetition * diagram.StepCount,
-                    ToLimb = item.To.ToLimb is { } toTarget ? map[toTarget] : null,
-                };
-                arrows.Add(item with { From = from, To = to });
-            }
-            map = map.Select(index => permutation[index]).ToArray();
-        }
-
-        return diagram with
-        {
-            Throws = throws.ToImmutable(),
-            CausalArrows = arrows.ToImmutable(),
-            StepCount = checked(diagram.StepCount * repetitions),
-            LimbPermutation = Enumerable.Range(0, permutation.Count).ToImmutableList(),
-        };
-    }
-
     private static int? FindIntegerScale(IEnumerable<decimal> values)
     {
         for (var scale = 1; scale <= MaximumTimeScale; scale++)
         {
-            if (values.All(value => decimal.Truncate(value * scale) == value * scale))
+            if (values.All(value => IsNearInteger(value * scale)))
                 return scale;
         }
 
         return null;
     }
+
+    private static bool TryScaleToInteger(decimal value, int scale, out int result)
+    {
+        var scaled = value * scale;
+        if (scaled is > int.MaxValue or < int.MinValue || !IsNearInteger(scaled))
+        {
+            result = 0;
+            return false;
+        }
+
+        result = decimal.ToInt32(decimal.Round(scaled, 0, MidpointRounding.AwayFromZero));
+        return true;
+    }
+
+    private static bool IsNearInteger(decimal value) =>
+        Math.Abs(value - decimal.Round(value, 0, MidpointRounding.AwayFromZero))
+        <= 0.000000000000000000000001m;
 }
