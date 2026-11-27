@@ -482,7 +482,10 @@ public class SiteswapLabPageTests
         page.Should().Contain("@L[\"Pass destinations\"]");
         page.Should().Contain("aria-pressed=\"@_showPassDestinations\"");
         page.Should().Contain("ShowPassDestinations=\"_showPassDestinations\"");
-        page.Should().Contain("cell.TargetPerson is int targetPerson ? _direct.People[targetPerson].Name : null");
+        page.Should()
+            .Contain(
+                "cell.TargetPerson is int targetPerson ? _direct.People[targetPerson].Name : null"
+            );
         page.Should().Contain("settings.ShowPassDestinations = _showPassDestinations");
         chipRow.Should().Contain("ShowPassDestinations");
         chipButton.Should().Contain("ShowDestination && Chip.Kind == PassOrSelf.Pass");
