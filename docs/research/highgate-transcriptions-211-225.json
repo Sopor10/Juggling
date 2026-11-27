@@ -133,7 +133,7 @@
       {
         "from": "B-L4",
         "to": "B-R1",
-        "cycleOffset": 1
+        "cycleOffset": 0
       },
       {
         "from": "C-R1",

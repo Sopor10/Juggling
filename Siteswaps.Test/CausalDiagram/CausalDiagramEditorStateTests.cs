@@ -406,7 +406,7 @@ public class CausalDiagramEditorStateTests
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgateWorkInProgress.ToArray();
 
-        presets.Should().HaveCount(58);
+        presets.Should().HaveCount(36);
         foreach (var preset in presets)
         {
             var state = preset.Create();
@@ -429,12 +429,64 @@ public class CausalDiagramEditorStateTests
             .VisibleHighgateWorkInProgress.Select(preset => preset.Id)
             .ToArray();
 
-        presets.Should().HaveCount(270);
+        presets.Should().HaveCount(292);
         presets
             .Select(preset => preset.Id)
             .Concat(workInProgressIds)
             .Should()
             .BeEquivalentTo(ReviewedHighgatePresetIds);
+    }
+
+    [Test]
+    public void HighgatePatterns_UsePrintedBeatPeriodsAndKeepThrowHeightsWhenTimeIsCompacted()
+    {
+        var expectedPeriods = new Dictionary<string, decimal>
+        {
+            ["highgate-sevencountpopcornwithdoublepasses"] = 14,
+            ["highgate-sevencountpopcornwithdoublepassesandheffs"] = 14,
+            ["highgate-sevencountpopcornwithsinglepassesand534"] = 14,
+            ["highgate-sevencountpopcornwithsinglepassesand453"] = 14,
+            ["highgate-sevencountpopcornwithsinglepassesandheffs"] = 14,
+            ["highgate-7778686"] = 14,
+            ["highgate-7786786"] = 14,
+            ["highgate-7777786"] = 14,
+            ["highgate-tenclubonecountfeedingcountdown"] = 8,
+            ["highgate-jimsthreecountasynchversion"] = 14,
+            ["highgate-jims-two-count-async"] = 10,
+            ["highgate-jims-one-count-async"] = 6,
+        };
+
+        foreach (var (id, period) in expectedPeriods)
+        {
+            var state = CausalDiagramEditorPresets
+                .AllForLoading.Single(item => item.Id == id)
+                .Create();
+            state.CycleLength.Should().Be(period, id);
+
+            var expanded = new CausalDiagramEditorState
+            {
+                CycleLength = state.CycleLength * 2,
+                Jugglers = state.Jugglers.ToList(),
+                Throws = state
+                    .Throws.Select(item => item with { StartTime = item.StartTime * 2 })
+                    .ToList(),
+                CausalEdges = state.CausalEdges.ToList(),
+            };
+            foreach (var item in state.Throws)
+                expanded.HeightOf(item.Id).Should().Be(state.HeightOf(item.Id), id);
+        }
+
+        var fourCountTriangle = CausalDiagramEditorPresets
+            .VisibleHighgateWorkInProgress.Single(item =>
+                item.Id == "highgate-tenclubfourcounttriangle"
+            )
+            .Create();
+        fourCountTriangle.HeightOf("B-L4").Should().BeApproximately(9m, 0.000001m);
+        fourCountTriangle
+            .CausalEdges.Single(edge => edge.FromThrowId == "B-L4")
+            .CycleOffset.Should()
+            .Be(0);
+        fourCountTriangle.IsValidPattern().Should().BeFalse();
     }
 
     [Test]

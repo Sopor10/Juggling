@@ -6,7 +6,7 @@ The records are in [highgate-transcriptions-211-225.json](highgate-transcription
 
 | Inventory stable ID | Pattern | 2017 printed page | 2014 printed page | Check |
 |---|---|---:|---:|---|
-| `highgate-tenclubfourcounttriangle` | Ten club four count triangle | 211 | 148 | diagram and row sequences visually checked |
+| `highgate-tenclubfourcounttriangle` | Ten club four count triangle | 211 | 148 | diagram and row sequences visually checked; B-L4 self endpoint uses cycle offset 0, yielding the printed 9 height |
 | `highgate-tenclubthreecounttriangle` | Ten club three count triangle | 211 | 148 | diagram and row sequences visually checked |
 | `highgate-tenclubtwocounttriangle` | Ten club two count triangle | 211–212 | 148 | diagram and row sequences visually checked |
 | `highgate-tenclubonecounttriangle` | Ten club one count triangle | 213 | 149 | diagram and row sequences visually checked |
@@ -21,6 +21,8 @@ The records are in [highgate-transcriptions-211-225.json](highgate-transcription
 | `highgate-tenclubtarimstriangle` | Ten club Tarim's triangle | 219–220 | 154 | 18 nodes / 18 edges; lane offsets and all arrow endpoints checked in both editions |
 
 These two graphs were checked against explicit row sequences, Prechac heights, and diagram artwork in both editions.
+
+The four-count triangle stays WIP: correcting B-L4's self-wrap from one full cycle to the next event in the same cycle restores its 9-height, but the current prop mapper still cannot close the full graph into a periodic prop assignment. The source supports the edge height correction; the overall mapping needs further review.
 
 ## Transcription method and limits
 

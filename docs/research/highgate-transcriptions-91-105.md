@@ -15,7 +15,7 @@ The separate data file `highgate-transcriptions-91-105.json` contains eight seve
 - `highgate-7786786`
 - `highgate-7777786`
 
-These were already present in the runtime catalog; no duplicate import was needed. Each graph contains 28 event nodes and 28 edges, with exactly one outgoing edge per node and no orphan or duplicate source. The transcription nodes and edge triples match their central runtime records exactly. The catalog validity test passed for all presets, and the loader verifies that height synchronization preserves every source cycle offset.
+These were already present in the runtime catalog; no duplicate import was needed. Each graph contains 28 event nodes and 28 edges over a 14-beat cycle: the seven-event hand sequence repeats once to restore alternating hands. Every node has exactly one outgoing edge and there are no orphan or duplicate sources. The transcription nodes and edge triples match their central runtime records exactly. The catalog validity test passed for all presets, and the loader verifies that height synchronization preserves every source cycle offset.
 
 ## Additional ordinary popcorn graphs
 

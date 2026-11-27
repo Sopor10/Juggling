@@ -139,6 +139,12 @@ two-person passing unless separately classified otherwise.
 
 | Eleven periodic presets from 2017 printed pp. 63, 100, 105–106 | Not Likely, Maybe Not, two five-club Why Not/popcorn orders, three Jim’s two-count variations, Seven-club Why Not variation, and 97586/78956/79685 zap patterns | 2014 PDF pp. 34, 64, 67 for matching diagrams | All 11 cyclic graphs preserve explicit heights, holds, routes, endpoints, and offsets; the zap graphs use the documented 2.5-beat half-spin pass. |
 
+## Period units and isolated holds
+
+Twelve runtime graphs had been stored in half-beat ticks even though their Highgate cycles are stated in beats. Their timestamps and cycle lengths are now both divided by two; edge offsets and derived throw heights stay unchanged. This gives the seven-count popcorn patterns and Jim's three-count asynchronous pattern a 14-beat cycle, Jim's two-count asynchronous a 10-beat cycle, Jim's one-count asynchronous a 6-beat cycle, and the ten-club one-count feeding countdown its documented 8-beat cycle. The source transcriptions use the same beat units.
+
+Isolated nodes represent explicit holds: no prop arrives at or leaves that event. The Passist mapping now preserves those nodes as no-throw events while mapping only connected throw events to causal arrows. This allowed 20 reviewed patterns to pass the graph-balance and periodic-prop checks. Rational approximation for thirds also recovered the source beats for two ten-club triangles. These 22 patterns moved from WIP into production. Source diagrams with unmatched causal endpoints remain in the WIP file.
+
 ## Current coverage
 
 The inventory has 919 catalog candidates. At this checkpoint, 385 rows have visual source review: 347 translated rows map to 350 presets, 3 are retained with specific editor-model requirements, 22 still need their graph transcription, and 13 are section, alias, or combined-index entries rather than independent patterns. The other 534 candidates have not yet received page review. The slow-fast graphs on printed pp. 78–79 account for five of the translated rows and presets. Each new preset is checked

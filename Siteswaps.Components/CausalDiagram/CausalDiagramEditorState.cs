@@ -964,7 +964,7 @@ public sealed class CausalDiagramEditorState
                     0,
                     MidpointRounding.AwayFromZero
                 );
-                if (Math.Abs(value - numerator / denominator) <= 0.000000000000000000000001m)
+                if (Math.Abs(value - numerator / denominator) <= 0.000000001m)
                     return Create(new BigInteger(numerator), denominator);
             }
 

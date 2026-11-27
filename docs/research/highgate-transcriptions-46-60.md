@@ -7,7 +7,7 @@ The existing [46–60 JSON chunk](highgate-transcriptions-46-60.json) contains J
 | Inventory ID | 2017 printed page | 2014 printed page | Graph | Direct check |
 |---|---:|---:|---:|---|
 | `highgate-onecount` | 47 | 27 | 4 nodes, 4 causal edges | C# state valid; all offsets preserved |
-| `highgate-jimsthreecountasynchversion` | 49 | 29 | 28 nodes, 24 causal edges | Event rows, holds, and pass/self routes checked against the 2017 diagram and matching 2014 page |
+| `highgate-jimsthreecountasynchversion` | 49 | 29 | 28 nodes / 24 causal edges over 14 beats | The seven-event sequence repeats twice for alternating-hand parity; event rows, holds, and routes are checked against both editions. |
 | `highgate-synchronousonecount` | 47 | 27 | 4 simultaneous throw nodes, 4 causal edges | Both hand tracks and cycle offsets follow the source diagram; imported editor state validates |
 | `highgate-synchronousonecountwithheffs` | 47 | 27 | 8 simultaneous throw nodes, 8 causal edges | Pass/heff sequence, both hand routes, and cycle offsets checked in both diagrams; imported editor state validates |
 

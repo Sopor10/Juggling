@@ -64,7 +64,7 @@ public sealed class Highgate46To60StandaloneRecordValidationTests
             .AllForLoading.Single(preset => preset.Id == "highgate-jimsthreecountasynchversion")
             .Create();
         jimAsyncPreset.IsValidForEditor().Should().BeTrue();
-        jimAsyncPreset.IsValidPattern().Should().BeFalse("the pattern remains under review");
+        jimAsyncPreset.IsValidPattern().Should().BeTrue();
 
         selected["highgate-jimsthreecountasynchversion"].Throws.Should().HaveCount(28);
         selected["highgate-jimsthreecountasynchversion"].CausalEdges.Should().HaveCount(24);

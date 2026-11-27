@@ -5,7 +5,7 @@
     "group": "Highgate Collection",
     "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 49 / PDF p. 50; 2014 PDF p. 29",
     "notation": "77466 · 3.5p233.5p3",
-    "cycleLength": 20,
+    "cycleLength": 10.0,
     "jugglers": [
       {
         "id": "P1",
@@ -21,140 +21,140 @@
         "id": "P1-1",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 0,
+        "startTime": 0.0,
         "height": 3.5
       },
       {
         "id": "P1-2",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 2,
+        "startTime": 1.0,
         "height": 0
       },
       {
         "id": "P1-3",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 4,
+        "startTime": 2.0,
         "height": 3
       },
       {
         "id": "P1-4",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 6,
+        "startTime": 3.0,
         "height": 3.5
       },
       {
         "id": "P1-5",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 8,
+        "startTime": 4.0,
         "height": 3
       },
       {
         "id": "P1-6",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 10,
+        "startTime": 5.0,
         "height": 3.5
       },
       {
         "id": "P1-7",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 12,
+        "startTime": 6.0,
         "height": 0
       },
       {
         "id": "P1-8",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 14,
+        "startTime": 7.0,
         "height": 3
       },
       {
         "id": "P1-9",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 16,
+        "startTime": 8.0,
         "height": 3.5
       },
       {
         "id": "P1-10",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 18,
+        "startTime": 9.0,
         "height": 3
       },
       {
         "id": "P2-11",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 1,
+        "startTime": 0.5,
         "height": 3.5
       },
       {
         "id": "P2-12",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 3,
+        "startTime": 1.5,
         "height": 3
       },
       {
         "id": "P2-13",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 5,
+        "startTime": 2.5,
         "height": 3.5
       },
       {
         "id": "P2-14",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 7,
+        "startTime": 3.5,
         "height": 0
       },
       {
         "id": "P2-15",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 9,
+        "startTime": 4.5,
         "height": 3
       },
       {
         "id": "P2-16",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 11,
+        "startTime": 5.5,
         "height": 3.5
       },
       {
         "id": "P2-17",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 13,
+        "startTime": 6.5,
         "height": 3
       },
       {
         "id": "P2-18",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 15,
+        "startTime": 7.5,
         "height": 3.5
       },
       {
         "id": "P2-19",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 17,
+        "startTime": 8.5,
         "height": 0
       },
       {
         "id": "P2-20",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 19,
+        "startTime": 9.5,
         "height": 3
       }
     ],
@@ -283,7 +283,7 @@
     "group": "Highgate Collection",
     "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 51 / PDF p. 52; 2014 PDF p. 30",
     "notation": "774 · 3.5p23.5p",
-    "cycleLength": 12,
+    "cycleLength": 6.0,
     "jugglers": [
       {
         "id": "P1",
@@ -299,84 +299,84 @@
         "id": "P1-1",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 0,
+        "startTime": 0.0,
         "height": 3.5
       },
       {
         "id": "P1-2",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 2,
+        "startTime": 1.0,
         "height": 0
       },
       {
         "id": "P1-3",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 4,
+        "startTime": 2.0,
         "height": 3.5
       },
       {
         "id": "P1-4",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 6,
+        "startTime": 3.0,
         "height": 3.5
       },
       {
         "id": "P1-5",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 8,
+        "startTime": 4.0,
         "height": 0
       },
       {
         "id": "P1-6",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 10,
+        "startTime": 5.0,
         "height": 3.5
       },
       {
         "id": "P2-7",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 1,
+        "startTime": 0.5,
         "height": 3.5
       },
       {
         "id": "P2-8",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 3,
+        "startTime": 1.5,
         "height": 3.5
       },
       {
         "id": "P2-9",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 5,
+        "startTime": 2.5,
         "height": 0
       },
       {
         "id": "P2-10",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 7,
+        "startTime": 3.5,
         "height": 3.5
       },
       {
         "id": "P2-11",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 9,
+        "startTime": 4.5,
         "height": 3.5
       },
       {
         "id": "P2-12",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 11,
+        "startTime": 5.5,
         "height": 0
       }
     ],
@@ -2471,7 +2471,7 @@
     "group": "Highgate Collection",
     "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 49 / PDF p. 50; 2014 PDF p. 29",
     "notation": "7746666 · 3.5p2333.5p33",
-    "cycleLength": 28,
+    "cycleLength": 14.0,
     "jugglers": [
       {
         "id": "P1",
@@ -2487,196 +2487,196 @@
         "id": "P1-1",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 0,
+        "startTime": 0.0,
         "height": 3.5
       },
       {
         "id": "P1-2",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 2,
+        "startTime": 1.0,
         "height": 0
       },
       {
         "id": "P1-3",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 4,
+        "startTime": 2.0,
         "height": 3
       },
       {
         "id": "P1-4",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 6,
+        "startTime": 3.0,
         "height": 3
       },
       {
         "id": "P1-5",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 8,
+        "startTime": 4.0,
         "height": 3.5
       },
       {
         "id": "P1-6",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 10,
+        "startTime": 5.0,
         "height": 3
       },
       {
         "id": "P1-7",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 12,
+        "startTime": 6.0,
         "height": 3
       },
       {
         "id": "P1-8",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 14,
+        "startTime": 7.0,
         "height": 3.5
       },
       {
         "id": "P1-9",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 16,
+        "startTime": 8.0,
         "height": 0
       },
       {
         "id": "P1-10",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 18,
+        "startTime": 9.0,
         "height": 3
       },
       {
         "id": "P1-11",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 20,
+        "startTime": 10.0,
         "height": 3
       },
       {
         "id": "P1-12",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 22,
+        "startTime": 11.0,
         "height": 3.5
       },
       {
         "id": "P1-13",
         "jugglerId": "P1",
         "hand": "R",
-        "startTime": 24,
+        "startTime": 12.0,
         "height": 3
       },
       {
         "id": "P1-14",
         "jugglerId": "P1",
         "hand": "L",
-        "startTime": 26,
+        "startTime": 13.0,
         "height": 3
       },
       {
         "id": "P2-1",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 1,
+        "startTime": 0.5,
         "height": 3.5
       },
       {
         "id": "P2-2",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 3,
+        "startTime": 1.5,
         "height": 3
       },
       {
         "id": "P2-3",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 5,
+        "startTime": 2.5,
         "height": 3
       },
       {
         "id": "P2-4",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 7,
+        "startTime": 3.5,
         "height": 3.5
       },
       {
         "id": "P2-5",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 9,
+        "startTime": 4.5,
         "height": 0
       },
       {
         "id": "P2-6",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 11,
+        "startTime": 5.5,
         "height": 3
       },
       {
         "id": "P2-7",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 13,
+        "startTime": 6.5,
         "height": 3
       },
       {
         "id": "P2-8",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 15,
+        "startTime": 7.5,
         "height": 3.5
       },
       {
         "id": "P2-9",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 17,
+        "startTime": 8.5,
         "height": 3
       },
       {
         "id": "P2-10",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 19,
+        "startTime": 9.5,
         "height": 3
       },
       {
         "id": "P2-11",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 21,
+        "startTime": 10.5,
         "height": 3.5
       },
       {
         "id": "P2-12",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 23,
+        "startTime": 11.5,
         "height": 0
       },
       {
         "id": "P2-13",
         "jugglerId": "P2",
         "hand": "R",
-        "startTime": 25,
+        "startTime": 12.5,
         "height": 3
       },
       {
         "id": "P2-14",
         "jugglerId": "P2",
         "hand": "L",
-        "startTime": 27,
+        "startTime": 13.5,
         "height": 3
       }
     ],
