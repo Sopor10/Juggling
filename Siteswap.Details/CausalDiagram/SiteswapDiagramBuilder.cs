@@ -238,14 +238,7 @@ public record DiagramSet(
                 "A completed causal throw must have exactly one causal arrow."
             );
 
-        var targetThrowCount = Throws.Count(node => node.Hand.Person == arrows[0].ToJuggler);
-        if (targetThrowCount == 0)
-            throw new InvalidOperationException(
-                "A causal target juggler must have throws in the diagram period."
-            );
-
-        var targetBeatDuration = (decimal)StepCount / targetThrowCount;
-        var height = arrows[0].Step + 2m * targetBeatDuration;
+        var height = arrows[0].Step + 2m * TimeStretchFactor;
         if (height <= 0 || decimal.Truncate(height) != height || height > int.MaxValue)
             throw new InvalidOperationException(
                 "The causal arrow does not define a positive integral throw height."
