@@ -36,7 +36,10 @@ public static class SiteswapLabJifMapper
         }
         catch (ArgumentException)
         {
-            return ImmutableDictionary<string, JifDetails::Siteswap.Details.CausalDiagram.StartProps>.Empty;
+            return ImmutableDictionary<
+                string,
+                JifDetails::Siteswap.Details.CausalDiagram.StartProps
+            >.Empty;
         }
     }
 

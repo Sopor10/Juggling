@@ -413,8 +413,16 @@ public sealed class CausalStartPropsPropertyTests
     public void Siteswap_lab_start_props_are_unavailable_for_incompatible_landing_phases()
     {
         var timeZones = new[] { 0, 1 };
-        IReadOnlyList<int>[] heights = [[3], [3]];
-        IReadOnlyList<int>[] targets = [[0], [1]];
+        IReadOnlyList<int>[] heights =
+        [
+            [3],
+            [3],
+        ];
+        IReadOnlyList<int>[] targets =
+        [
+            [0],
+            [1],
+        ];
 
         SiteswapLabJifMapper
             .CalculateCausalStartProps(timeZones, heights, targets)
