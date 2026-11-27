@@ -12,6 +12,8 @@ namespace Juggling.AppHost.Extensions;
 
 public static class TailscaleServeExtensions
 {
+    private const string TailscaleCommand = "tailscale";
+
     public static IResourceBuilder<TResource> WithTailscaleServe<TResource>(
         this IResourceBuilder<TResource> resource
     )
@@ -65,7 +67,7 @@ public static class TailscaleServeExtensions
     {
         try
         {
-            var result = RunProcess("tailscale", ["status", "--json"]);
+            var result = RunProcess(TailscaleCommand, ["status", "--json"]);
             if (result.ExitCode != 0)
             {
                 return null;
@@ -128,7 +130,7 @@ public static class TailscaleServeExtensions
                 "sudo",
                 [
                     "-n",
-                    "tailscale",
+                    TailscaleCommand,
                     "serve",
                     "--bg",
                     $"--https={port.Value}",
@@ -243,7 +245,7 @@ public static class TailscaleServeExtensions
     {
         try
         {
-            var result = RunProcess("tailscale", ["serve", "status", "--json"]);
+            var result = RunProcess(TailscaleCommand, ["serve", "status", "--json"]);
             return result.ExitCode == 0 ? JsonDocument.Parse(result.StandardOutput) : null;
         }
         catch
@@ -256,9 +258,28 @@ public static class TailscaleServeExtensions
     {
         try
         {
-            RunProcess("sudo", ["-n", "tailscale", "serve", $"--https={port}", "off"]);
+            var result = RunProcess(
+                "sudo",
+                ["-n", TailscaleCommand, "serve", $"--https={port}", "off"]
+            );
+            if (result.ExitCode != 0)
+            {
+                Console.Error.WriteLine(
+                    $"Could not remove the Tailscale Serve route on port {port}: {result.StandardError}"
+                );
+            }
         }
-        catch { }
+        catch (Exception exception)
+            when (exception
+                    is IOException
+                        or InvalidOperationException
+                        or System.ComponentModel.Win32Exception
+            )
+        {
+            Console.Error.WriteLine(
+                $"Could not remove the Tailscale Serve route on port {port}: {exception.Message}"
+            );
+        }
     }
 
     private static FileStream? AcquireServeAllocationLock()
