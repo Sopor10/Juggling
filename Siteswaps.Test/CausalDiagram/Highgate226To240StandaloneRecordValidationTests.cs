@@ -28,15 +28,102 @@ public class Highgate226To240StandaloneRecordValidationTests
         "highgate-twocountlinefeed",
         "highgate-urbanterrorfeedonecountlinefeed",
         "highgate-fourpersonparsnipfeedingfivecountpopcorn",
+        "highgate-fourpersontwocountfeed",
+        "highgate-fourpersonpasspassselffeed",
+        "highgate-fourpersononecountfeedingfourcount",
+        "highgate-fourpersononecountfeedingthreecount",
+        "highgate-fourpersononecountfeedingtwocount",
+        "highgate-fourpersonfunkybookendsfeedingfiveclubwhynot",
+        "highgate-fourpersonmartinsonecountfeedingwhynot",
+        "highgate-fourpersonmartinsonecountfeedingmaybe",
+        "highgate-fourpersononecountfeedingfiveclubwhynot",
+        "highgate-fourpersononecountfeedingparsnip",
     ];
 
-    private static readonly string[][] FourPersonParsnipFeedingFiveCountPopcornRows =
-    [
-        ["heff", "heff", "Ben", "self", "self"],
-        ["Anne", "Clare", "zip", "Clare", "zip"],
-        ["Ben", "zip", "Daniel", "Ben", "zip"],
-        ["Clare", "self", "self", "heff", "heff"],
-    ];
+    private static readonly Dictionary<string, string[][]> FourPersonBaseFeedRows = new()
+    {
+        ["highgate-fourpersontwocountfeed"] =
+        [
+            ["Ben", "self", "self", "self"],
+            ["Anne", "self", "Clare", "self"],
+            ["Daniel", "self", "Ben", "self"],
+            ["Clare", "self", "self", "self"],
+        ],
+        ["highgate-fourpersonpasspassselffeed"] =
+        [
+            ["Ben", "Ben", "self"],
+            ["Anne", "Clare", "self"],
+            ["Daniel", "Ben", "self"],
+            ["Clare", "self", "self"],
+        ],
+        ["highgate-fourpersononecountfeedingfourcount"] =
+        [
+            ["Ben", "self", "self", "self"],
+            ["Anne", "Clare", "Clare", "Clare"],
+            ["Daniel", "Ben", "Ben", "Ben"],
+            ["Clare", "self", "self", "self"],
+        ],
+        ["highgate-fourpersononecountfeedingthreecount"] =
+        [
+            ["Ben", "self", "self"],
+            ["Anne", "Clare", "Clare"],
+            ["Daniel", "Ben", "Ben"],
+            ["Clare", "self", "self"],
+        ],
+        ["highgate-fourpersononecountfeedingtwocount"] =
+        [
+            ["Ben", "self"],
+            ["Anne", "Clare"],
+            ["Daniel", "Ben"],
+            ["Clare", "self"],
+        ],
+    };
+
+    private static readonly Dictionary<string, string[][]> FourPersonPeriodFiveRows = new()
+    {
+        ["highgate-fourpersonparsnipfeedingfivecountpopcorn"] =
+        [
+            ["heff", "heff", "Ben", "self", "self"],
+            ["Anne", "Clare", "zip", "Clare", "zip"],
+            ["Ben", "zip", "Daniel", "Ben", "zip"],
+            ["Clare", "self", "self", "heff", "heff"],
+        ],
+        ["highgate-fourpersonfunkybookendsfeedingfiveclubwhynot"] =
+        [
+            ["heff", "zip", "Ben", "self", "zip"],
+            ["Anne", "Clare", "self", "Clare", "heff"],
+            ["Ben", "heff", "Daniel", "Ben", "self"],
+            ["Clare", "self", "zip", "heff", "zip"],
+        ],
+        ["highgate-fourpersonmartinsonecountfeedingwhynot"] =
+        [
+            ["Ben", "self", "Ben", "heff", "zip"],
+            ["Anne", "Clare", "zip", "Anne", "Clare"],
+            ["Daniel", "Ben", "Daniel", "Ben", "zip"],
+            ["Clare", "heff", "zip", "Clare", "self"],
+        ],
+        ["highgate-fourpersonmartinsonecountfeedingmaybe"] =
+        [
+            ["Ben", "Ben", "self", "zip", "heff"],
+            ["Clare", "Clare", "zip", "Anne", "Anne"],
+            ["Daniel", "Daniel", "Ben", "Ben", "zip"],
+            ["self", "zip", "heff", "Clare", "Clare"],
+        ],
+        ["highgate-fourpersononecountfeedingfiveclubwhynot"] =
+        [
+            ["heff", "zip", "Ben", "self", "zip"],
+            ["Anne", "Clare", "Clare", "Clare", "Clare"],
+            ["Ben", "Ben", "Daniel", "Ben", "Ben"],
+            ["Clare", "self", "zip", "heff", "zip"],
+        ],
+        ["highgate-fourpersononecountfeedingparsnip"] =
+        [
+            ["Ben", "zip", "Ben", "Ben", "zip"],
+            ["Anne", "Anne", "Clare", "Anne", "Clare"],
+            ["Daniel", "Ben", "Daniel", "Daniel", "Ben"],
+            ["Clare", "Clare", "zip", "Clare", "zip"],
+        ],
+    };
 
     [Test]
     public void EveryInRangeStandaloneRecordCreatesAValidEditorStateAndPreservesOffsets()
@@ -129,20 +216,41 @@ public class Highgate226To240StandaloneRecordValidationTests
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
-            if (record.Id == "highgate-fourpersonparsnipfeedingfivecountpopcorn")
-                ValidateFourPersonParsnipFeedingFiveCountPopcorn(record);
+            if (FourPersonPeriodFiveRows.TryGetValue(record.Id, out var periodFiveRows))
+                ValidateFourPersonPeriodFiveFeed(record, periodFiveRows);
+            if (FourPersonBaseFeedRows.TryGetValue(record.Id, out var rows))
+                ValidateFourPersonBaseFeedRows(record, rows);
         }
     }
 
-    private static void ValidateFourPersonParsnipFeedingFiveCountPopcorn(Record record)
+    private static void ValidateFourPersonBaseFeedRows(Record record, string[][] rows)
+    {
+        var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+        foreach (var (jugglerIndex, row) in rows.Select((row, index) => (index, row)))
+        {
+            var jugglerId = record.Jugglers[jugglerIndex].Id;
+            foreach (var source in record.Throws.Where(item => item.JugglerId == jugglerId))
+            {
+                var action = row[(int)source.StartTime % row.Length];
+                var expectedJuggler = action == "self" ? jugglerId : jugglerIds[action];
+                var expectedTime = source.StartTime + 1;
+                var expectedOffset = (int)(expectedTime / record.CycleLength);
+                var expectedTargetTime = expectedTime % record.CycleLength;
+                var target = record.Throws.Single(item =>
+                    item.JugglerId == expectedJuggler && item.StartTime == expectedTargetTime
+                );
+                var edge = record.CausalEdges.Single(item => item.From == source.Id);
+                edge.To.Should().Be(target.Id, source.Id);
+                edge.CycleOffset.Should().Be(expectedOffset, source.Id);
+            }
+        }
+    }
+
+    private static void ValidateFourPersonPeriodFiveFeed(Record record, string[][] rows)
     {
         record.CausalEdges.Select(edge => edge.To).Should().OnlyHaveUniqueItems(record.Id);
         var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
-        foreach (
-            var (jugglerIndex, row) in FourPersonParsnipFeedingFiveCountPopcornRows.Select(
-                (row, index) => (index, row)
-            )
-        )
+        foreach (var (jugglerIndex, row) in rows.Select((row, index) => (index, row)))
         {
             var jugglerId = record.Jugglers[jugglerIndex].Id;
             var firstEventTime = record

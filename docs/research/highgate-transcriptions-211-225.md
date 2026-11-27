@@ -1,6 +1,6 @@
 # Highgate causal transcription batch: printed pp. 211–225
 
-The records are in [highgate-transcriptions-211-225.json](highgate-transcriptions-211-225.json). This batch remains incomplete. Seven records from printed pp. 211–215 and two records from printed p. 216 are visually checked against the 2017 diagrams and 2014 edition.
+The records are in [highgate-transcriptions-211-225.json](highgate-transcriptions-211-225.json). This batch remains incomplete. Seven records from printed pp. 211–215, two from printed p. 216, and two one-count variations from pp. 218–219 are visually checked against the 2017 diagrams and 2014 edition.
 
 ## Source-checked records
 
@@ -16,6 +16,8 @@ The records are in [highgate-transcriptions-211-225.json](highgate-transcription
 
 | `highgate-tenclubpasspasshefftriangle` | Ten club pass pass heff triangle | 216 | 151 | 18 nodes, 18 edges; artwork, Prechac heights, endpoints checked in both editions |
 | `highgate-tenclubfrenchthreecounttriangle` | Ten club French three count triangle | 216 | 151 | 18 nodes, 18 edges; artwork, Prechac heights, endpoints checked in both editions |
+| `highgate-tenclubonecountvariation1` | Ten club one count variation #1 | 218 | 153 | 6 nodes / 6 edges; arrows and two-action source rows checked in both editions |
+| `highgate-tenclubonecountvariation2` | Ten club one count variation #2 | 219 | 154 | 12 nodes / 12 edges; arrows and four-action source rows checked in both editions |
 
 These two graphs were checked against explicit row sequences, Prechac heights, and diagram artwork in both editions.
 
@@ -27,13 +29,13 @@ The editor's causal-edge representation does not separately encode straight/cros
 
 ## State and offset validation
 
-A permanent standalone NUnit test constructs a `CausalDiagramEditorState` for every JSON record, checks unique record/throw/source IDs, edge counts and resolvable endpoints, calls `SynchronizeHeights()`, checks `IsValidForEditor()`, and compares serialized cycle offsets before and after synchronization. For both p. 216 graphs it also checks all 18 source-row actions against their exact landing endpoints and Prechac-derived heights. Result: **9 records checked, 0 errors**.
+A permanent standalone NUnit test constructs a `CausalDiagramEditorState` for every JSON record, checks unique record/throw/source IDs, edge counts and resolvable endpoints, calls `SynchronizeHeights()`, checks `IsValidForEditor()`, and compares serialized cycle offsets before and after synchronization. For both p. 216 graphs it checks all 18 source-row actions against exact landing endpoints and Prechac-derived heights. For the two one-count variations it checks every printed recipient against its arrow endpoint and phase-derived landing time (1.5 beats across the half-beat phase offset, 2 beats for same-phase recipients), including cycle wraps. Result: **11 records checked**.
 
 ## Remaining work
 
 - Printed p. 213 synchronous one-count triangle and synchronous one-count triangle with heffs: paired simultaneous throws and same-time events need supported semantics.
 - Printed p. 216 why-not? triangle: zip and fractional phases require careful diagram tracing.
 - Printed pp. 217–218 isosceles, isosceles variation, Maybe, and asynchronous pass-pass-self graphs include double-pass multiplicity, which the current editor cannot represent as one causal edge per action.
-- Printed pp. 218–222 still have independent single-throw candidates to transcribe: the two one-count variations; two-count/two-count/four-count and Tarim's triangles; pass-pass-self/pass-pass-self/one-count; one-count/one-count/three-count; one-count/one-count/pass-pass-self; and one-count/one-count countdown triangles.
-- Printed pp. 224–225 four-person two-count, pass-pass-self, and one-count feeds remain to transcribe from their four lanes.
+- Printed pp. 219–222 still have independent single-throw candidates to transcribe: two-count/two-count/four-count and Tarim's triangles; pass-pass-self/pass-pass-self/one-count; one-count/one-count/three-count; one-count/one-count/pass-pass-self; and one-count/one-count countdown triangles. Each needs an individual endpoint audit; none is inferred from the one-count variations.
+- Printed pp. 224–225 four-person two-count, pass-pass-self, and one-count feeds remain to transcribe from their four lanes. Their source rows and arrow cycles need full lane-by-lane checking.
 - Printed p. 223 clockwise one-count runaround changes feeder roles and crossing/pass direction after each walk; represent it as phased transitions rather than flattening it into one static graph.

@@ -1851,5 +1851,277 @@
       "The graph records one event per throw and its causal destination. Club multiplicity and straight/crossing spatial trajectory are not separate editor edge properties."
     ],
     "modelCheck": "Verified exact arrow destinations from each row action and Prechac height; 18 nodes, one outgoing edge per node, all endpoints resolve, edge timing is consistent with the stated height."
+  },
+  {
+    "id": "highgate-tenclubonecountvariation1",
+    "label": "Ten club one count variation #1",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 218 / PDF p. 219; compared against The Highgate Collection (2014), printed p. 153 / PDF p. 153. Both diagrams visually checked.",
+    "notation": "Anticlockwise bb8aaa; clockwise aaabb8; one-count feeds; row sequences A: C B; B: A C; C: B A; single passes.",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L2",
+        "to": "A-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      "https://jugglingedge.com/pdf/highgate.pdf",
+      "https://passing.zone/wp-content/uploads/highgate.pdf"
+    ],
+    "catalogStableIds": [
+      "highgate-tenclubonecountvariation1"
+    ],
+    "visualVerification": "Compared the full lane arrows, action rows, and hand labels in 2017 printed p. 218 and 2014 printed p. 153. Every pass endpoint follows the printed receiver. Ben begins on L at time 0; Anne and Clare begin on R at time 0.5. For each source arrow, the diagram lands at the receiver event 1.5 beats later across the phase offset or 2 beats later on the same phase; the corresponding cycle wraps are recorded.",
+    "modelLimitations": [
+      "The graph records one causal edge per pass and its phase/landing endpoint. It does not separately encode the printed straight/crossing trajectory, initial club inventory, or siteswap direction."
+    ]
+  },
+  {
+    "id": "highgate-tenclubonecountvariation2",
+    "label": "Ten club one count variation #2",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 219 / PDF p. 220; compared against The Highgate Collection (2014), printed p. 154 / PDF p. 154. Both diagrams visually checked.",
+    "notation": "Anticlockwise bb8bb8aaaaaa; clockwise aaaaaabb8bb8; one-count feeds; row sequences A: C C B B; B: A A C C; C: B B A A; single passes.",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      },
+      {
+        "id": "C",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 0
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "C-R1",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "C-L2",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "C-R3",
+        "jugglerId": "C",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "C-L4",
+        "jugglerId": "C",
+        "hand": "L",
+        "startTime": 3.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "C-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "C-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R4",
+        "to": "C-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-R1",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-L2",
+        "to": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "C-R3",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "C-L4",
+        "to": "A-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      "https://jugglingedge.com/pdf/highgate.pdf",
+      "https://passing.zone/wp-content/uploads/highgate.pdf"
+    ],
+    "catalogStableIds": [
+      "highgate-tenclubonecountvariation2"
+    ],
+    "visualVerification": "Compared the full lane arrows, action rows, and hand labels in 2017 printed p. 219 and 2014 printed p. 154. Every pass endpoint follows the printed receiver. Ben begins on L at time 0; Anne and Clare begin on R at time 0.5. For each source arrow, the diagram lands at the receiver event 1.5 beats later across the phase offset or 2 beats later on the same phase; the corresponding cycle wraps are recorded.",
+    "modelLimitations": [
+      "The graph records one causal edge per pass and its phase/landing endpoint. It does not separately encode the printed straight/crossing trajectory, initial club inventory, or siteswap direction."
+    ]
   }
 ]

@@ -23,6 +23,22 @@ public class Highgate211To225StandaloneRecordValidationTests
         ],
     };
 
+    private static readonly Dictionary<string, string[][]> OneCountFeedRows = new()
+    {
+        ["highgate-tenclubonecountvariation1"] =
+        [
+            ["Clare", "Ben"],
+            ["Anne", "Clare"],
+            ["Ben", "Anne"],
+        ],
+        ["highgate-tenclubonecountvariation2"] =
+        [
+            ["Clare", "Clare", "Ben", "Ben"],
+            ["Anne", "Anne", "Clare", "Clare"],
+            ["Ben", "Ben", "Anne", "Anne"],
+        ],
+    };
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -97,6 +113,48 @@ public class Highgate211To225StandaloneRecordValidationTests
                 }
             }
 
+            if (OneCountFeedRows.TryGetValue(record.Id, out var feedRows))
+            {
+                var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+                var phases = new Dictionary<string, decimal>
+                {
+                    ["Anne"] = 0.5m,
+                    ["Ben"] = 0m,
+                    ["Clare"] = 0.5m,
+                };
+                foreach (
+                    var (jugglerIndex, sourceRow) in feedRows.Select((row, index) => (index, row))
+                )
+                {
+                    var sourceJuggler = record.Jugglers[jugglerIndex];
+                    var sources = record
+                        .Throws.Where(item => item.JugglerId == sourceJuggler.Id)
+                        .OrderBy(item => item.StartTime)
+                        .ToList();
+                    sources.Should().HaveCount(sourceRow.Length, record.Id);
+                    foreach (var (index, source) in sources.Select((item, i) => (i, item)))
+                    {
+                        var destinationName = sourceRow[index];
+                        var targetJuggler = jugglerIds[destinationName];
+                        var delta =
+                            phases[destinationName] == phases[sourceJuggler.Name] ? 2m : 1.5m;
+                        var landingTime = source.StartTime + delta;
+                        var cycleOffset = (int)Math.Floor(landingTime / record.CycleLength);
+                        var targetTime = landingTime - cycleOffset * record.CycleLength;
+                        var expectedTarget = record.Throws.Single(item =>
+                            item.JugglerId == targetJuggler && item.StartTime == targetTime
+                        );
+                        var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
+
+                        edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
+                        edge.CycleOffset.Should().Be(cycleOffset, record.Id);
+                        (expectedTarget.StartTime + edge.CycleOffset * record.CycleLength + 2m)
+                            .Should()
+                            .Be(source.StartTime + delta + 2m, record.Id);
+                    }
+                }
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",
@@ -132,7 +190,7 @@ public class Highgate211To225StandaloneRecordValidationTests
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
-        records.Should().HaveCount(9);
+        records.Should().HaveCount(11);
     }
 
     private sealed record Record(
