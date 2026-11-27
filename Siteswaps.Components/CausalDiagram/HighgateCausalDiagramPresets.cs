@@ -86,6 +86,12 @@ internal static class HighgateCausalDiagramPresets
                 $"Highgate preset '{pattern.Id}' has a causal edge the editor would silently retime."
             );
         }
+        if (!state.IsValidForEditor())
+        {
+            throw new InvalidDataException(
+                $"Highgate preset '{pattern.Id}' does not describe a valid causal pattern."
+            );
+        }
         return state;
     }
 

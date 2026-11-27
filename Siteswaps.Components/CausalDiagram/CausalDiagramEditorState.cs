@@ -1081,15 +1081,77 @@ public sealed class CausalDiagramEditorState
         )
             return false;
         return state.CausalEdges.All(edge =>
+            {
+                var source = state.Throws.First(node => node.Id == edge.FromThrowId);
+                var target = state.Throws.First(node => node.Id == edge.ToThrowId);
+                return source.Height >= 0
+                    && (
+                        source.HeightIsExplicit
+                        || source.Height == DerivedHeight(state, source, target, edge.CycleOffset)
+                    );
+            }) && IsValidCanonicalSingleJugglerPattern(state);
+    }
+
+    private static bool IsValidCanonicalSingleJugglerPattern(CausalDiagramEditorState state)
+    {
+        if (
+            !state.PresetId.StartsWith("siteswap-", StringComparison.Ordinal)
+            || state.Jugglers.Count != 1
+            || state.CycleLength != decimal.Truncate(state.CycleLength)
+            || state.CycleLength is < 1 or > global::Siteswap.Details.Siteswap.MaxPeriodLength
+        )
+            return true;
+
+        var period = decimal.ToInt32(state.CycleLength);
+        var ordered = state.Throws.OrderBy(node => node.StartTime).ToArray();
+        if (
+            ordered.Length != period
+            || ordered.Where((node, index) => node.StartTime != index).Any()
+            || ordered.Where((node, index) => node.Hand != (index % 2 == 0 ? "R" : "L")).Any()
+            || ordered.Any(node =>
+                decimal.Truncate(node.Height) != node.Height
+                || node.Height < 0
+                || node.Height > int.MaxValue
+            )
+        )
+            return true;
+
+        var heights = ordered.Select(node => decimal.ToInt32(node.Height)).ToArray();
+        if (
+            !global::Siteswap.Details.Siteswap.TryCreate(heights, out var siteswap)
+            || siteswap is null
+        )
+            return false;
+
+        var edges = state.CausalEdges.ToDictionary(
+            edge => edge.FromThrowId,
+            StringComparer.Ordinal
+        );
+        var byBeat = ordered
+            .Select((node, beat) => (node, beat))
+            .ToDictionary(item => item.beat, item => item.node);
+        foreach (var (node, beat) in ordered.Select((node, beat) => (node, beat)))
         {
-            var source = state.Throws.First(node => node.Id == edge.FromThrowId);
-            var target = state.Throws.First(node => node.Id == edge.ToThrowId);
-            return source.Height >= 0
-                && (
-                    source.HeightIsExplicit
-                    || source.Height == DerivedHeight(state, source, target, edge.CycleOffset)
-                );
-        });
+            var height = heights[beat];
+            if (height == 0)
+            {
+                if (edges.ContainsKey(node.Id))
+                    return false;
+                continue;
+            }
+
+            var targetTime = beat + height - 2;
+            var targetBeat = ((targetTime % period) + period) % period;
+            var cycleOffset = (int)Math.Floor((decimal)targetTime / period);
+            if (
+                !edges.TryGetValue(node.Id, out var edge)
+                || edge.ToThrowId != byBeat[targetBeat].Id
+                || edge.CycleOffset != cycleOffset
+            )
+                return false;
+        }
+
+        return edges.Count == heights.Count(height => height > 0);
     }
 
     public void SynchronizeHeights()

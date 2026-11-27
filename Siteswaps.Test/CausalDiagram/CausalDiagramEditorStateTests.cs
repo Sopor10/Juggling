@@ -541,6 +541,38 @@ public class CausalDiagramEditorStateTests
     }
 
     [Test]
+    public void IsValidForEditor_RejectsAnInvalidSiteswapInAProductionEditorState()
+    {
+        var state = CausalDiagramEditorState.CreateSiteswapPattern("97531", "siteswap-97531");
+        var heights = new[] { 7, 4, 5, 8, 5, 7, 4, 5, 8, 5 };
+        var ordered = state.Throws.OrderBy(item => item.StartTime).ToArray();
+        state.CycleLength.Should().Be(10m);
+
+        state.Throws = ordered
+            .Select((item, index) => item with { Height = heights[index], HeightIsExplicit = true })
+            .ToList();
+        state.CausalEdges = ordered
+            .Select(
+                (item, beat) =>
+                {
+                    var targetTime = beat + heights[beat] - 2;
+                    var targetBeat =
+                        ((targetTime % ordered.Length) + ordered.Length) % ordered.Length;
+                    var cycleOffset = (int)Math.Floor((decimal)targetTime / ordered.Length);
+                    return new EditorCausalEdge(
+                        $"e-{item.Id}",
+                        item.Id,
+                        ordered[targetBeat].Id,
+                        cycleOffset
+                    );
+                }
+            )
+            .ToList();
+
+        state.IsValidForEditor().Should().BeFalse();
+    }
+
+    [Test]
     public void HighgateThirteenClubOneCountCountdown_MatchesSourceRowDestinations()
     {
         var state = CausalDiagramEditorPresets
