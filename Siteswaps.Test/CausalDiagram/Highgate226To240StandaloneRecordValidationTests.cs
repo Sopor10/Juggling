@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using FluentAssertions;
 using NUnit.Framework;
@@ -38,6 +39,10 @@ public class Highgate226To240StandaloneRecordValidationTests
         "highgate-fourpersonmartinsonecountfeedingmaybe",
         "highgate-fourpersononecountfeedingfiveclubwhynot",
         "highgate-fourpersononecountfeedingparsnip",
+        "highgate-mildmadnessbox",
+        "highgate-whynotbox",
+        "highgate-maybebox",
+        "highgate-972box",
     ];
 
     private static readonly Dictionary<string, string[][]> FourPersonBaseFeedRows = new()
@@ -122,6 +127,38 @@ public class Highgate226To240StandaloneRecordValidationTests
             ["Anne", "Anne", "Clare", "Anne", "Clare"],
             ["Daniel", "Ben", "Daniel", "Daniel", "Ben"],
             ["Clare", "Clare", "zip", "Clare", "zip"],
+        ],
+    };
+
+    private static readonly Dictionary<string, string[][]> BoxRows = new()
+    {
+        ["highgate-mildmadnessbox"] =
+        [
+            ["Daniel", "Ben", "self", "Daniel", "Ben", "zip", "self"],
+            ["self", "Anne", "Clare", "zip", "self", "Anne", "Clare"],
+            ["self", "Daniel", "Ben", "self", "Daniel", "Ben", "zip"],
+            ["Anne", "Clare", "zip", "self", "Anne", "Clare", "self"],
+        ],
+        ["highgate-whynotbox"] =
+        [
+            ["heff", "zip", "Ben", "self", "Clare"],
+            ["Anne", "heff", "zip", "Clare", "self"],
+            ["Ben", "self", "Daniel", "heff", "zip"],
+            ["Clare", "self", "Anne", "heff", "zip"],
+        ],
+        ["highgate-maybebox"] =
+        [
+            ["heff", "Daniel", "Ben", "self", "zip"],
+            ["Anne", "Clare", "self", "zip", "heff"],
+            ["heff", "Daniel", "Ben", "self", "zip"],
+            ["Clare", "self", "zip", "heff", "Anne"],
+        ],
+        ["highgate-972box"] =
+        [
+            ["Daniel", "Ben*", "zip"],
+            ["Anne", "Clare*", "zip"],
+            ["Ben*", "zip", "Daniel"],
+            ["Clare*", "zip", "Anne"],
         ],
     };
 
@@ -220,6 +257,8 @@ public class Highgate226To240StandaloneRecordValidationTests
                 ValidateFourPersonPeriodFiveFeed(record, periodFiveRows);
             if (FourPersonBaseFeedRows.TryGetValue(record.Id, out var rows))
                 ValidateFourPersonBaseFeedRows(record, rows);
+            if (BoxRows.TryGetValue(record.Id, out var boxRows))
+                ValidateBoxPatternRows(record, boxRows);
         }
     }
 
@@ -307,6 +346,68 @@ public class Highgate226To240StandaloneRecordValidationTests
                 (target.StartTime + edge.CycleOffset * record.CycleLength)
                     .Should()
                     .Be(expectedTime, source.Id);
+            }
+        }
+    }
+
+    private static void ValidateBoxPatternRows(Record record, string[][] rows)
+    {
+        var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+        foreach (var (jugglerIndex, row) in rows.Select((row, index) => (index, row)))
+        {
+            var jugglerId = record.Jugglers[jugglerIndex].Id;
+            foreach (var source in record.Throws.Where(item => item.JugglerId == jugglerId))
+            {
+                var rowIndex = int.Parse(source.Id.Split('-')[1], CultureInfo.InvariantCulture) - 1;
+                var action = row[rowIndex % row.Length];
+                string targetName;
+                decimal threshold;
+                if (action == "zip")
+                {
+                    targetName = record.Jugglers[jugglerIndex].Name;
+                    threshold = source.StartTime - 1;
+                }
+                else if (action == "heff")
+                {
+                    targetName = record.Jugglers[jugglerIndex].Name;
+                    threshold = source.StartTime + 2;
+                }
+                else if (action == "self")
+                {
+                    targetName = record.Jugglers[jugglerIndex].Name;
+                    threshold = source.StartTime + 1;
+                }
+                else
+                {
+                    var isDouble = action.EndsWith('*');
+                    targetName = isDouble ? action[..^1] : action;
+                    threshold = source.StartTime + (isDouble ? 2 : 1);
+                }
+
+                var targetJuggler = jugglerIds[targetName];
+                var previous = action == "zip";
+                var candidates = record
+                    .Throws.Where(item => item.JugglerId == targetJuggler)
+                    .Select(item =>
+                    {
+                        var cycle = (int)
+                            decimal.Floor((threshold - item.StartTime) / record.CycleLength);
+                        var targetTime = item.StartTime + cycle * record.CycleLength;
+                        while (previous ? targetTime > threshold : targetTime < threshold)
+                        {
+                            cycle += previous ? -1 : 1;
+                            targetTime = item.StartTime + cycle * record.CycleLength;
+                        }
+                        return (Throw: item, Cycle: cycle, Time: targetTime);
+                    })
+                    .Where(candidate =>
+                        previous ? candidate.Time <= threshold : candidate.Time >= threshold
+                    )
+                    .OrderBy(candidate => previous ? -candidate.Time : candidate.Time)
+                    .First();
+                var edge = record.CausalEdges.Single(item => item.From == source.Id);
+                edge.To.Should().Be(candidates.Throw.Id, source.Id);
+                edge.CycleOffset.Should().Be(candidates.Cycle, source.Id);
             }
         }
     }

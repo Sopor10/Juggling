@@ -39,6 +39,19 @@ public class Highgate211To225StandaloneRecordValidationTests
         ],
     };
 
+    private static readonly Dictionary<
+        string,
+        (string Destination, int LaneIndexOffset)[][]
+    > SourceEndpointRows = new()
+    {
+        ["highgate-tenclubtarimstriangle"] =
+        [
+            [("Ben", 2), ("Anne", 1), ("Ben", 2)],
+            [("Anne", 1), ("Clare", 0), ("Ben", 1)],
+            [("Clare", 1), ("Anne", 2), ("Clare", 1)],
+        ],
+    };
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -82,78 +95,9 @@ public class Highgate211To225StandaloneRecordValidationTests
                 throwIds.Should().Contain(edge.ToIdValue, record.Id);
             }
 
-            if (SourceRows.TryGetValue(record.Id, out var sourceRows))
-            {
-                var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
-                foreach (
-                    var (jugglerIndex, sourceRow) in sourceRows.Select((row, index) => (index, row))
-                )
-                {
-                    var sourceJuggler = record.Jugglers[jugglerIndex].Id;
-                    foreach (
-                        var source in record.Throws.Where(item => item.JugglerId == sourceJuggler)
-                    )
-                    {
-                        var action = sourceRow[(int)source.StartTime % sourceRow.Length];
-                        var height = action == "heff" ? 4m : 3m;
-                        var landingTime = source.StartTime + height - 2m;
-                        var cycleOffset = (int)Math.Floor(landingTime / record.CycleLength);
-                        var targetJuggler = action is "self" or "heff"
-                            ? sourceJuggler
-                            : jugglerIds[action];
-                        var targetTime = landingTime - cycleOffset * record.CycleLength;
-                        var expectedTarget = record.Throws.Single(item =>
-                            item.JugglerId == targetJuggler && item.StartTime == targetTime
-                        );
-                        var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
-
-                        edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
-                        edge.CycleOffset.Should().Be(cycleOffset, record.Id);
-                    }
-                }
-            }
-
-            if (OneCountFeedRows.TryGetValue(record.Id, out var feedRows))
-            {
-                var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
-                var phases = new Dictionary<string, decimal>
-                {
-                    ["Anne"] = 0.5m,
-                    ["Ben"] = 0m,
-                    ["Clare"] = 0.5m,
-                };
-                foreach (
-                    var (jugglerIndex, sourceRow) in feedRows.Select((row, index) => (index, row))
-                )
-                {
-                    var sourceJuggler = record.Jugglers[jugglerIndex];
-                    var sources = record
-                        .Throws.Where(item => item.JugglerId == sourceJuggler.Id)
-                        .OrderBy(item => item.StartTime)
-                        .ToList();
-                    sources.Should().HaveCount(sourceRow.Length, record.Id);
-                    foreach (var (index, source) in sources.Select((item, i) => (i, item)))
-                    {
-                        var destinationName = sourceRow[index];
-                        var targetJuggler = jugglerIds[destinationName];
-                        var delta =
-                            phases[destinationName] == phases[sourceJuggler.Name] ? 2m : 1.5m;
-                        var landingTime = source.StartTime + delta;
-                        var cycleOffset = (int)Math.Floor(landingTime / record.CycleLength);
-                        var targetTime = landingTime - cycleOffset * record.CycleLength;
-                        var expectedTarget = record.Throws.Single(item =>
-                            item.JugglerId == targetJuggler && item.StartTime == targetTime
-                        );
-                        var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
-
-                        edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
-                        edge.CycleOffset.Should().Be(cycleOffset, record.Id);
-                        (expectedTarget.StartTime + edge.CycleOffset * record.CycleLength + 2m)
-                            .Should()
-                            .Be(source.StartTime + delta + 2m, record.Id);
-                    }
-                }
-            }
+            ValidateHeightDerivedRows(record);
+            ValidateOneCountFeedRows(record);
+            ValidateTarimEndpoints(record);
 
             var state = new CausalDiagramEditorState
             {
@@ -190,7 +134,132 @@ public class Highgate211To225StandaloneRecordValidationTests
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
-        records.Should().HaveCount(11);
+        records.Should().HaveCount(12);
+    }
+
+    private static void ValidateHeightDerivedRows(Record record)
+    {
+        if (SourceRows.TryGetValue(record.Id, out var sourceRows))
+        {
+            var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+            foreach (
+                var (jugglerIndex, sourceRow) in sourceRows.Select((row, index) => (index, row))
+            )
+            {
+                var sourceJuggler = record.Jugglers[jugglerIndex].Id;
+                foreach (var source in record.Throws.Where(item => item.JugglerId == sourceJuggler))
+                {
+                    var action = sourceRow[(int)source.StartTime % sourceRow.Length];
+                    var height = action == "heff" ? 4m : 3m;
+                    var landingTime = source.StartTime + height - 2m;
+                    var cycleOffset = (int)Math.Floor(landingTime / record.CycleLength);
+                    var targetJuggler = action is "self" or "heff"
+                        ? sourceJuggler
+                        : jugglerIds[action];
+                    var targetTime = landingTime - cycleOffset * record.CycleLength;
+                    var expectedTarget = record.Throws.Single(item =>
+                        item.JugglerId == targetJuggler && item.StartTime == targetTime
+                    );
+                    var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
+
+                    edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
+                    edge.CycleOffset.Should().Be(cycleOffset, record.Id);
+                }
+            }
+        }
+    }
+
+    private static void ValidateOneCountFeedRows(Record record)
+    {
+        if (OneCountFeedRows.TryGetValue(record.Id, out var feedRows))
+        {
+            var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+            var phases = new Dictionary<string, decimal>
+            {
+                ["Anne"] = 0.5m,
+                ["Ben"] = 0m,
+                ["Clare"] = 0.5m,
+            };
+            foreach (var (jugglerIndex, sourceRow) in feedRows.Select((row, index) => (index, row)))
+            {
+                var sourceJuggler = record.Jugglers[jugglerIndex];
+                var sources = record
+                    .Throws.Where(item => item.JugglerId == sourceJuggler.Id)
+                    .OrderBy(item => item.StartTime)
+                    .ToList();
+                sources.Should().HaveCount(sourceRow.Length, record.Id);
+                foreach (var (index, source) in sources.Select((item, i) => (i, item)))
+                {
+                    var destinationName = sourceRow[index];
+                    var targetJuggler = jugglerIds[destinationName];
+                    var delta = phases[destinationName] == phases[sourceJuggler.Name] ? 2m : 1.5m;
+                    var landingTime = source.StartTime + delta;
+                    var cycleOffset = (int)Math.Floor(landingTime / record.CycleLength);
+                    var targetTime = landingTime - cycleOffset * record.CycleLength;
+                    var expectedTarget = record.Throws.Single(item =>
+                        item.JugglerId == targetJuggler && item.StartTime == targetTime
+                    );
+                    var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
+
+                    edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
+                    edge.CycleOffset.Should().Be(cycleOffset, record.Id);
+                    (expectedTarget.StartTime + edge.CycleOffset * record.CycleLength + 2m)
+                        .Should()
+                        .Be(source.StartTime + delta + 2m, record.Id);
+                }
+            }
+        }
+    }
+
+    private static void ValidateTarimEndpoints(Record record)
+    {
+        if (SourceEndpointRows.TryGetValue(record.Id, out var endpointRows))
+        {
+            var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
+            foreach (
+                var (jugglerIndex, sourceRow) in endpointRows.Select((row, index) => (index, row))
+            )
+            {
+                var sourceJuggler = record.Jugglers[jugglerIndex];
+                var sources = record
+                    .Throws.Where(item => item.JugglerId == sourceJuggler.Id)
+                    .OrderBy(item => item.StartTime)
+                    .ToList();
+                sources.Should().HaveCount(6, record.Id);
+                foreach (var (index, source) in sources.Select((item, i) => (i, item)))
+                {
+                    var (destinationName, laneIndexOffset) = sourceRow[index % 3];
+                    var targetIndex = index + laneIndexOffset;
+                    var expectedTarget = record
+                        .Throws.Where(item => item.JugglerId == jugglerIds[destinationName])
+                        .OrderBy(item => item.StartTime)
+                        .ElementAt(targetIndex % 6);
+                    var expectedOffset = targetIndex / 6;
+                    var edge = record.CausalEdges.Single(item => item.FromId == source.Id);
+
+                    edge.ToIdValue.Should().Be(expectedTarget.Id, record.Id);
+                    edge.CycleOffset.Should().Be(expectedOffset, record.Id);
+                    var sourceToLanding =
+                        expectedTarget.StartTime
+                        + edge.CycleOffset * record.CycleLength
+                        - source.StartTime;
+                    var expectedPhaseDelta = (sourceJuggler.Name, destinationName) switch
+                    {
+                        ("Anne", "Ben") => 5m / 3m,
+                        ("Anne", "Anne") => 1m,
+                        ("Ben", "Anne") => 4m / 3m,
+                        ("Ben", "Clare") => 2m / 3m,
+                        ("Ben", "Ben") => 1m,
+                        ("Clare", "Anne") => 5m / 3m,
+                        ("Clare", "Clare") => 1m,
+                        _ => throw new AssertionException("Unexpected source action."),
+                    };
+                    sourceToLanding
+                        .Should()
+                        .BeApproximately(expectedPhaseDelta, 0.000002m, record.Id);
+                }
+            }
+        }
     }
 
     private sealed record Record(
