@@ -11,6 +11,7 @@ public record SettingsDto
 
     /// <summary>Local, Global, or Name — default Global.</summary>
     public string ThrowDisplayMode { get; set; } = "Global";
+    public bool ShowPassDestinations { get; set; }
 
     /// <summary>
     /// UI culture: <c>de</c> or <c>en</c>. Empty until the user saves a preference;

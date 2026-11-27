@@ -128,7 +128,7 @@
             .Select(beat =>
             {
                 var globalBeat = (timeZones[person] + beat * pairJugglers) % Session.FeederSiteswap.Items.Length;
-                if (FeedingThrowDisplay.Kind(heights[person][beat], pairJugglers) == PassOrSelf.Self)
+                if (FeedingThrowDisplay.KindFor(heights[person][beat], pairJugglers) == PassOrSelf.Self)
                 {
                     return person;
                 }

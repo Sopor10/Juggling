@@ -42,6 +42,7 @@
   <data name="Remove last beat, Period" xml:space="preserve"><value>Letzten Schlag entfernen, Periode</value></data>
   <data name="Append beat, Period" xml:space="preserve"><value>Schlag anhängen, Periode</value></data>
   <data name="Pass" xml:space="preserve"><value>Pass</value></data>
+  <data name="Pass destinations" xml:space="preserve"><value>Pass-Ziele</value></data>
   <data name="Self" xml:space="preserve"><value>Self</value></data>
   <data name="Passing configuration" xml:space="preserve"><value>Passing-Konfiguration</value></data>
   <data name="People" xml:space="preserve"><value>Personen</value></data>
