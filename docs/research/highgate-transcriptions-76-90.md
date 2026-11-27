@@ -49,7 +49,7 @@ The standalone validator assigns the registered ID `highgate-three-count` so it 
 
 This is a checked partial batch, not completion of printed pp. 76–90. The four independent non-manipulation patterns shown on printed p. 82 are now transcribed as separate source records; the rest of the page range has not been exhaustively inventoried here. The editor graph stores causal nodes and edges; it does not store the club-count starting inventory or the book's color-coded club identity. Those annotations are therefore not reproduced in these records. No included pattern required a model extension.
 
-The slow-fast diagrams on printed pp. 78–79 are documented separately in [highgate-transcriptions-78-79.md](highgate-transcriptions-78-79.md). Three static graphs from this section are registered in the runtime preset list; two other slow-fast graphs still need a complete endpoint/tempo audit.
+The slow-fast diagrams on printed pp. 78–79 are documented separately in [highgate-transcriptions-78-79.md](highgate-transcriptions-78-79.md). Five static graphs from this section are registered in the runtime preset list and have complete endpoint/tempo audits against both editions.
 
 ## Additional seven-club count graphs
 

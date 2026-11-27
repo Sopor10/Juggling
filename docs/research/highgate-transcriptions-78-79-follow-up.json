@@ -1,0 +1,352 @@
+[
+  {
+    "id": "highgate-twocountvspasspassself",
+    "label": "Two count vs pass pass self",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 78 / PDF p. 79; compared against The Highgate Collection (2014), printed p. 50 / PDF p. 50. Both diagrams visually checked.",
+    "notation": "Anne: pass, self, crossing pass, self, crossing pass, self, pass, self; event interval 3/4 beat. Ben: pass, crossing pass, self, crossing pass, pass, self; event interval one beat. Both start R.",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.75
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.25
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.0
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.75
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5.25
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.0
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.0
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.0
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.0
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 78,
+        "pdfPage": 79
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 50,
+        "pdfPage": 50
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-twocountvspasspassself"
+    ],
+    "visualVerification": "Compared arrows and per-lane actions in 2017 printed p. 78 / PDF p. 79 and 2014 printed p. 50 / PDF p. 50. The source drawing shows Anne at 3/4-beat intervals and Ben at one-beat intervals, repeating on six beats. Pass endpoints by source lane index: Anne 0→Ben 1, 2→Ben 2, 4→Ben 3, 6→Ben 5; Ben 0→Anne 1, 1→Anne 2, 3→Anne 4, 4→Anne 6. Self throws connect to the next same-lane event. The printed action rows establish which sources are passes/self; the arrows establish each receiving event.",
+    "modelLimitations": [
+      "The source graph records event timing and causal endpoints; straight/crossing trajectory and the initial club inventory remain in notation."
+    ]
+  },
+  {
+    "id": "highgate-passpassselfvsonecount",
+    "label": "Pass pass self vs one count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 79 / PDF p. 80; compared against The Highgate Collection (2014), printed p. 50 / PDF p. 50. Both diagrams visually checked.",
+    "notation": "Anne: pass, self, crossing pass, crossing pass, self, pass; event interval 2/3 beat. Ben: pass, crossing pass, crossing pass, pass; event interval one beat. Both start R.",
+    "cycleLength": 4,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.666667
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.333333
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.0
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2.666667
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3.333333
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.0
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.0
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.0
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 79,
+        "pdfPage": 80
+      },
+      {
+        "edition": "2014 edition",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "printedPage": 50,
+        "pdfPage": 50
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-passpassselfvsonecount"
+    ],
+    "visualVerification": "Compared arrows and per-lane actions in 2017 printed p. 79 / PDF p. 80 and 2014 printed p. 50 / PDF p. 50. The source drawing shows Anne at 2/3-beat intervals and Ben at one-beat intervals, repeating on four beats. Pass endpoints by source lane index: Anne 0→Ben 1, 2→Ben 2, 3→Ben 3, 5→Ben 4 (next cycle); Ben 0→Anne 1, 1→Anne 2, 2→Anne 4, 3→Anne 5. Anne self throws connect to her next event. The printed action rows and both arrow diagrams agree.",
+    "modelLimitations": [
+      "The source graph records event timing and causal endpoints; straight/crossing trajectory and the initial club inventory remain in notation."
+    ]
+  }
+]

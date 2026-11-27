@@ -29,7 +29,7 @@ The combined CSV has **919 rows** after joining both edition candidate sets by n
 
 The 2017 TOC was cross-checked against the 2017 index; every one of the 14 TOC-only titles is retained as a candidate instead of being silently dropped. The same check added the 59 2014 TOC headings that have no local index entry. Section headings and families are tagged in `entry_kind` so they can be separated from individual-pattern rows during later review.
 
-At this inventory snapshot, **345 candidate rows** are marked as translated standalone causal-editor presets. This is a coverage count of inventory rows, not a count of unique mechanics; aliases and title candidates remain separate until reconciled. The Quasar feast on 2017 printed p. 142 (2014 PDF p. 94) is included in that translated count; the distinct Quasar runaround remains its own pattern.
+At this inventory snapshot, **347 candidate rows** are marked as translated standalone causal-editor presets. This is a coverage count of inventory rows, not a count of unique mechanics; aliases and title candidates remain separate until reconciled. The Quasar feast on 2017 printed p. 142 (2014 PDF p. 94) and five slow-fast patterns on printed pp. 78–79 are included in that translated count; the distinct Quasar runaround remains its own pattern.
 
 The TOC/index reconciliation covers titled entries. It does **not** prove that the books contain no unnamed example patterns embedded in prose or diagrams. Those examples need to be captured during page-by-page pattern review; do not treat the candidate count as a count of every drawable pattern.
 

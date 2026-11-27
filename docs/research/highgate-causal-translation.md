@@ -141,7 +141,7 @@ two-person passing unless separately classified otherwise.
 
 ## Current coverage
 
-The inventory has 919 catalog candidates. At this checkpoint, 383 rows have visual source review: 345 translated rows map to 348 presets, 3 are retained with specific editor-model requirements, 22 still need their graph transcription, and 13 are section, alias, or combined-index entries rather than independent patterns. The other 536 candidates have not yet received page review. Each new preset is checked
+The inventory has 919 catalog candidates. At this checkpoint, 385 rows have visual source review: 347 translated rows map to 350 presets, 3 are retained with specific editor-model requirements, 22 still need their graph transcription, and 13 are section, alias, or combined-index entries rather than independent patterns. The other 534 candidates have not yet received page review. The slow-fast graphs on printed pp. 78–79 account for five of the translated rows and presets. Each new preset is checked
 against `IsValidForEditor()` before it can pass the catalog test; the Highgate
 loader also rejects data if height synchronization changes a source edge offset.
 
