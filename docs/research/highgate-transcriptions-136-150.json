@@ -4532,5 +4532,4123 @@
       "modelCheck": "90 event nodes and 90 edges; cycle length 30; checked by standalone state validation.",
       "manipulationReview": "Ordinary three-person passing; no manipulation role or action in the source."
     }
+  },
+  {
+    "id": "highgate-pulsar",
+    "stable_id": "highgate-pulsar",
+    "label": "Pulsar",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 143 / PDF p. 144; 2014 PDF p. 95 (printed p. 96)",
+    "notation": "3p33p33p3333p3333p33p3333p3333p3",
+    "cycleLength": 24,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P1-15",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P1-16",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P1-17",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P1-18",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P1-19",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P1-20",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P1-21",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P1-22",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 21,
+        "height": 3
+      },
+      {
+        "id": "P1-23",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 22,
+        "height": 3
+      },
+      {
+        "id": "P1-24",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 23,
+        "height": 3
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P2-13",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P2-14",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P2-15",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P2-16",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P2-17",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P2-18",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P2-19",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P2-20",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P2-21",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P2-22",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 21,
+        "height": 3
+      },
+      {
+        "id": "P2-23",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 22,
+        "height": 3
+      },
+      {
+        "id": "P2-24",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 23,
+        "height": 3
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P3-7",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P3-8",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P3-9",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P3-10",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P3-11",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P3-12",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P3-13",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P3-14",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P3-15",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P3-16",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P3-17",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P3-18",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P3-19",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P3-20",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P3-21",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P3-22",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 21,
+        "height": 3
+      },
+      {
+        "id": "P3-23",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 22,
+        "height": 3
+      },
+      {
+        "id": "P3-24",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 23,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P3-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P3-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P1-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-13",
+        "to": "P2-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-14",
+        "to": "P1-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-15",
+        "to": "P1-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-16",
+        "to": "P1-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-17",
+        "to": "P3-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-18",
+        "to": "P1-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-19",
+        "to": "P1-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-20",
+        "to": "P1-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-21",
+        "to": "P3-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-22",
+        "to": "P1-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-23",
+        "to": "P2-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-24",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-7",
+        "to": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-8",
+        "to": "P2-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-10",
+        "to": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-11",
+        "to": "P2-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-12",
+        "to": "P2-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-13",
+        "to": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-14",
+        "to": "P2-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-15",
+        "to": "P3-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-16",
+        "to": "P2-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-17",
+        "to": "P2-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-18",
+        "to": "P2-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-19",
+        "to": "P3-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-20",
+        "to": "P2-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-21",
+        "to": "P2-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-22",
+        "to": "P2-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-23",
+        "to": "P1-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-24",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P3-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-8",
+        "to": "P3-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-9",
+        "to": "P3-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-10",
+        "to": "P3-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-12",
+        "to": "P3-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-13",
+        "to": "P3-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-14",
+        "to": "P3-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-15",
+        "to": "P2-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-16",
+        "to": "P3-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-17",
+        "to": "P1-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-18",
+        "to": "P3-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-19",
+        "to": "P2-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-20",
+        "to": "P3-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-21",
+        "to": "P1-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-22",
+        "to": "P3-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-23",
+        "to": "P3-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-24",
+        "to": "P3-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 143,
+        "pdfPage": 144
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 95
+      }
+    ],
+    "notes": "The source describes a revolving two-count feed and prints all three 24-throw destination lanes. Every throw is height 3; the lanes have even length, so the cycle is 24 beats with hand parity preserved. Each printed destination in lane order determines the recipient; causal edges lead to the recipient's next listed throw event; the editor timing relation yields height 3, including the cycle-wrap offsets.",
+    "variants": [
+      "Two clubs in the right hand and one club in the left hand for each juggler, as stated in the source."
+    ],
+    "modelLimits": "The graph records throw timing, hands, recipient, and cycle offsets. The source color-coding and feeder-role prose are explanatory, not additional causal edges.",
+    "validation": "72 throw nodes and 72 causal edges; endpoints resolve, and each edge targets the next listed event for its recipient, yielding height 3 after synchronization."
+  },
+  {
+    "id": "highgate-ambidextrouspulsarthreecountfeed",
+    "stable_id": "highgate-ambidextrouspulsarthreecountfeed",
+    "label": "Ambidextrous pulsar (three count feed)",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 143 / PDF p. 144; 2014 PDF p. 95 (printed p. 96)",
+    "notation": "3p333p333p333333p333333p333p333333p333333p33",
+    "cycleLength": 36,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P1-15",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P1-16",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P1-17",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P1-18",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P1-19",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P1-20",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P1-21",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P1-22",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 21,
+        "height": 3
+      },
+      {
+        "id": "P1-23",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 22,
+        "height": 3
+      },
+      {
+        "id": "P1-24",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 23,
+        "height": 3
+      },
+      {
+        "id": "P1-25",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 24,
+        "height": 3
+      },
+      {
+        "id": "P1-26",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 25,
+        "height": 3
+      },
+      {
+        "id": "P1-27",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 26,
+        "height": 3
+      },
+      {
+        "id": "P1-28",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 27,
+        "height": 3
+      },
+      {
+        "id": "P1-29",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 28,
+        "height": 3
+      },
+      {
+        "id": "P1-30",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 29,
+        "height": 3
+      },
+      {
+        "id": "P1-31",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 30,
+        "height": 3
+      },
+      {
+        "id": "P1-32",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 31,
+        "height": 3
+      },
+      {
+        "id": "P1-33",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 32,
+        "height": 3
+      },
+      {
+        "id": "P1-34",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 33,
+        "height": 3
+      },
+      {
+        "id": "P1-35",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 34,
+        "height": 3
+      },
+      {
+        "id": "P1-36",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 35,
+        "height": 3
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P2-13",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P2-14",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P2-15",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P2-16",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P2-17",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P2-18",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P2-19",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P2-20",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P2-21",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P2-22",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 21,
+        "height": 3
+      },
+      {
+        "id": "P2-23",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 22,
+        "height": 3
+      },
+      {
+        "id": "P2-24",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 23,
+        "height": 3
+      },
+      {
+        "id": "P2-25",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 24,
+        "height": 3
+      },
+      {
+        "id": "P2-26",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 25,
+        "height": 3
+      },
+      {
+        "id": "P2-27",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 26,
+        "height": 3
+      },
+      {
+        "id": "P2-28",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 27,
+        "height": 3
+      },
+      {
+        "id": "P2-29",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 28,
+        "height": 3
+      },
+      {
+        "id": "P2-30",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 29,
+        "height": 3
+      },
+      {
+        "id": "P2-31",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 30,
+        "height": 3
+      },
+      {
+        "id": "P2-32",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 31,
+        "height": 3
+      },
+      {
+        "id": "P2-33",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 32,
+        "height": 3
+      },
+      {
+        "id": "P2-34",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 33,
+        "height": 3
+      },
+      {
+        "id": "P2-35",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 34,
+        "height": 3
+      },
+      {
+        "id": "P2-36",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 35,
+        "height": 3
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P3-7",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P3-8",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P3-9",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P3-10",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P3-11",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P3-12",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P3-13",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P3-14",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P3-15",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P3-16",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P3-17",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P3-18",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P3-19",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 18,
+        "height": 3
+      },
+      {
+        "id": "P3-20",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 19,
+        "height": 3
+      },
+      {
+        "id": "P3-21",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 20,
+        "height": 3
+      },
+      {
+        "id": "P3-22",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 21,
+        "height": 3
+      },
+      {
+        "id": "P3-23",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 22,
+        "height": 3
+      },
+      {
+        "id": "P3-24",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 23,
+        "height": 3
+      },
+      {
+        "id": "P3-25",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 24,
+        "height": 3
+      },
+      {
+        "id": "P3-26",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 25,
+        "height": 3
+      },
+      {
+        "id": "P3-27",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 26,
+        "height": 3
+      },
+      {
+        "id": "P3-28",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 27,
+        "height": 3
+      },
+      {
+        "id": "P3-29",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 28,
+        "height": 3
+      },
+      {
+        "id": "P3-30",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 29,
+        "height": 3
+      },
+      {
+        "id": "P3-31",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 30,
+        "height": 3
+      },
+      {
+        "id": "P3-32",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 31,
+        "height": 3
+      },
+      {
+        "id": "P3-33",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 32,
+        "height": 3
+      },
+      {
+        "id": "P3-34",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 33,
+        "height": 3
+      },
+      {
+        "id": "P3-35",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 34,
+        "height": 3
+      },
+      {
+        "id": "P3-36",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 35,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P3-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P1-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-13",
+        "to": "P2-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-14",
+        "to": "P1-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-15",
+        "to": "P1-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-16",
+        "to": "P3-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-17",
+        "to": "P1-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-18",
+        "to": "P1-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-19",
+        "to": "P2-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-20",
+        "to": "P1-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-21",
+        "to": "P1-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-22",
+        "to": "P1-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-23",
+        "to": "P1-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-24",
+        "to": "P1-25",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-25",
+        "to": "P3-26",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-26",
+        "to": "P1-27",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-27",
+        "to": "P1-28",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-28",
+        "to": "P1-29",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-29",
+        "to": "P1-30",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-30",
+        "to": "P1-31",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-31",
+        "to": "P3-32",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-32",
+        "to": "P1-33",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-33",
+        "to": "P1-34",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-34",
+        "to": "P2-35",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-35",
+        "to": "P1-36",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-36",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-7",
+        "to": "P3-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-8",
+        "to": "P2-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-9",
+        "to": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-10",
+        "to": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-11",
+        "to": "P2-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-12",
+        "to": "P2-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-13",
+        "to": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-14",
+        "to": "P2-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-15",
+        "to": "P2-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-16",
+        "to": "P2-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-17",
+        "to": "P2-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-18",
+        "to": "P2-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-19",
+        "to": "P1-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-20",
+        "to": "P2-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-21",
+        "to": "P2-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-22",
+        "to": "P3-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-23",
+        "to": "P2-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-24",
+        "to": "P2-25",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-25",
+        "to": "P2-26",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-26",
+        "to": "P2-27",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-27",
+        "to": "P2-28",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-28",
+        "to": "P3-29",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-29",
+        "to": "P2-30",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-30",
+        "to": "P2-31",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-31",
+        "to": "P2-32",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-32",
+        "to": "P2-33",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-33",
+        "to": "P2-34",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-34",
+        "to": "P1-35",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-35",
+        "to": "P2-36",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-36",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P3-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-7",
+        "to": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-8",
+        "to": "P3-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-9",
+        "to": "P3-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-10",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-11",
+        "to": "P3-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-12",
+        "to": "P3-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-13",
+        "to": "P3-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-14",
+        "to": "P3-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-15",
+        "to": "P3-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-16",
+        "to": "P1-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-17",
+        "to": "P3-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-18",
+        "to": "P3-19",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-19",
+        "to": "P3-20",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-20",
+        "to": "P3-21",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-21",
+        "to": "P3-22",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-22",
+        "to": "P2-23",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-23",
+        "to": "P3-24",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-24",
+        "to": "P3-25",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-25",
+        "to": "P1-26",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-26",
+        "to": "P3-27",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-27",
+        "to": "P3-28",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-28",
+        "to": "P2-29",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-29",
+        "to": "P3-30",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-30",
+        "to": "P3-31",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-31",
+        "to": "P1-32",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-32",
+        "to": "P3-33",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-33",
+        "to": "P3-34",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-34",
+        "to": "P3-35",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-35",
+        "to": "P3-36",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-36",
+        "to": "P3-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 143,
+        "pdfPage": 144
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 95
+      }
+    ],
+    "notes": "The source describes the feeder as passing three-count and prints three 36-throw lanes. Every throw is height 3; the 36-beat lane period preserves hand parity. Each printed destination in lane order determines the recipient; causal edges lead to the recipient's next listed throw event; the editor timing relation yields height 3, including the cycle-wrap offsets.",
+    "variants": [
+      "Two clubs in the right hand and one club in the left hand for each juggler, as stated in the source."
+    ],
+    "modelLimits": "The graph records throw timing, hands, recipient, and cycle offsets. The source color-coding and feeder-role prose are explanatory, not additional causal edges.",
+    "validation": "108 throw nodes and 108 causal edges; endpoints resolve, and each edge targets the next listed event for its recipient, yielding height 3 after synchronization."
+  },
+  {
+    "id": "highgate-ambidextrouspulsarpasspassselffeed",
+    "stable_id": "highgate-ambidextrouspulsarpasspassselffeed",
+    "label": "Ambidextrous pulsar (pass pass self feed)",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 144 / PDF p. 145; 2014 PDF p. 96 (printed p. 97)",
+    "notation": "3p3p33p333p333p3p333p333p3",
+    "cycleLength": 18,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P1-15",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P1-16",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P1-17",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P1-18",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P2-13",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P2-14",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P2-15",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P2-16",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P2-17",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P2-18",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P3-7",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P3-8",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P3-9",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P3-10",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P3-11",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P3-12",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P3-13",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P3-14",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P3-15",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P3-16",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P3-17",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P3-18",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P3-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P1-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-13",
+        "to": "P3-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-14",
+        "to": "P1-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-15",
+        "to": "P1-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-16",
+        "to": "P3-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-17",
+        "to": "P2-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-18",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-8",
+        "to": "P2-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-9",
+        "to": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-10",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-11",
+        "to": "P3-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-12",
+        "to": "P2-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-13",
+        "to": "P2-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-14",
+        "to": "P3-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-15",
+        "to": "P2-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-16",
+        "to": "P2-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-17",
+        "to": "P1-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-18",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P3-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-7",
+        "to": "P3-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-9",
+        "to": "P3-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-10",
+        "to": "P3-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-11",
+        "to": "P2-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-12",
+        "to": "P3-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-13",
+        "to": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-14",
+        "to": "P2-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-15",
+        "to": "P3-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-16",
+        "to": "P1-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-17",
+        "to": "P3-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-18",
+        "to": "P3-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 144,
+        "pdfPage": 145
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 96
+      }
+    ],
+    "notes": "The source specifies a pass pass self feeder and prints three 18-throw lanes. Every throw is height 3; cycle length is 18 beats. Each printed destination in lane order determines the recipient; causal edges lead to the recipient's next listed throw event; the editor timing relation yields height 3, including the cycle-wrap offsets.",
+    "variants": [
+      "Two clubs in the right hand and one club in the left hand for each juggler, as stated in the source."
+    ],
+    "modelLimits": "The graph records throw timing, hands, recipient, and cycle offsets. The source color-coding and feeder-role prose are explanatory, not additional causal edges.",
+    "validation": "54 throw nodes and 54 causal edges; endpoints resolve, and each edge targets the next listed event for its recipient, yielding height 3 after synchronization."
+  },
+  {
+    "id": "highgate-ambidextrouspulsarpassselfpassfeed",
+    "stable_id": "highgate-ambidextrouspulsarpassselfpassfeed",
+    "label": "Ambidextrous pulsar (pass self pass feed)",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 144 / PDF p. 145; 2014 PDF p. 96 (printed p. 97)",
+    "notation": "3p33p3p333p333p33p333p333p",
+    "cycleLength": 18,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P1-13",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P1-14",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P1-15",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P1-16",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P1-17",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P1-18",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P2-13",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P2-14",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P2-15",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P2-16",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P2-17",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P2-18",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P3-7",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P3-8",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P3-9",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P3-10",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P3-11",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P3-12",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P3-13",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 12,
+        "height": 3
+      },
+      {
+        "id": "P3-14",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 13,
+        "height": 3
+      },
+      {
+        "id": "P3-15",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 14,
+        "height": 3
+      },
+      {
+        "id": "P3-16",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 15,
+        "height": 3
+      },
+      {
+        "id": "P3-17",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 16,
+        "height": 3
+      },
+      {
+        "id": "P3-18",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 17,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P3-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P3-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P1-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-13",
+        "to": "P3-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-14",
+        "to": "P1-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-15",
+        "to": "P1-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-16",
+        "to": "P3-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-17",
+        "to": "P1-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-18",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-8",
+        "to": "P2-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-9",
+        "to": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-10",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-11",
+        "to": "P2-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-12",
+        "to": "P3-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-13",
+        "to": "P2-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-14",
+        "to": "P2-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-15",
+        "to": "P3-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-16",
+        "to": "P2-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-17",
+        "to": "P2-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-18",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-7",
+        "to": "P3-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-8",
+        "to": "P3-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-10",
+        "to": "P3-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-11",
+        "to": "P3-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-12",
+        "to": "P2-13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-13",
+        "to": "P1-14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-14",
+        "to": "P3-15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-15",
+        "to": "P2-16",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-16",
+        "to": "P1-17",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-17",
+        "to": "P3-18",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-18",
+        "to": "P3-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 144,
+        "pdfPage": 145
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 96
+      }
+    ],
+    "notes": "The source specifies a pass self pass feeder and prints three 18-throw lanes. Every throw is height 3; cycle length is 18 beats. Each printed destination in lane order determines the recipient; causal edges lead to the recipient's next listed throw event; the editor timing relation yields height 3, including the cycle-wrap offsets.",
+    "variants": [
+      "Two clubs in the right hand and one club in the left hand for each juggler, as stated in the source."
+    ],
+    "modelLimits": "The graph records throw timing, hands, recipient, and cycle offsets. The source color-coding and feeder-role prose are explanatory, not additional causal edges.",
+    "validation": "54 throw nodes and 54 causal edges; endpoints resolve, and each edge targets the next listed event for its recipient, yielding height 3 after synchronization."
+  },
+  {
+    "id": "highgate-ambidextrouspulsaronecountfeed",
+    "stable_id": "highgate-ambidextrouspulsaronecountfeed",
+    "label": "Ambidextrous pulsar (one count feed)",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 145 / PDF p. 146; 2014 PDF p. 96 (printed p. 97)",
+    "notation": "3p3p3p33p33p3p33p33p",
+    "cycleLength": 12,
+    "jugglers": [
+      {
+        "id": "P1",
+        "name": "Anne"
+      },
+      {
+        "id": "P2",
+        "name": "Ben"
+      },
+      {
+        "id": "P3",
+        "name": "Clare"
+      }
+    ],
+    "throws": [
+      {
+        "id": "P1-1",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P1-2",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P1-3",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P1-4",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P1-5",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P1-6",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P1-7",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P1-8",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P1-9",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P1-10",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P1-11",
+        "jugglerId": "P1",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P1-12",
+        "jugglerId": "P1",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P2-1",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P2-2",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P2-3",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P2-4",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P2-5",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P2-6",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P2-7",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P2-8",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P2-9",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P2-10",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P2-11",
+        "jugglerId": "P2",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P2-12",
+        "jugglerId": "P2",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      },
+      {
+        "id": "P3-1",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 0,
+        "height": 3
+      },
+      {
+        "id": "P3-2",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 1,
+        "height": 3
+      },
+      {
+        "id": "P3-3",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 2,
+        "height": 3
+      },
+      {
+        "id": "P3-4",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 3,
+        "height": 3
+      },
+      {
+        "id": "P3-5",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 4,
+        "height": 3
+      },
+      {
+        "id": "P3-6",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 5,
+        "height": 3
+      },
+      {
+        "id": "P3-7",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 6,
+        "height": 3
+      },
+      {
+        "id": "P3-8",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 7,
+        "height": 3
+      },
+      {
+        "id": "P3-9",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 8,
+        "height": 3
+      },
+      {
+        "id": "P3-10",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 9,
+        "height": 3
+      },
+      {
+        "id": "P3-11",
+        "jugglerId": "P3",
+        "hand": "R",
+        "startTime": 10,
+        "height": 3
+      },
+      {
+        "id": "P3-12",
+        "jugglerId": "P3",
+        "hand": "L",
+        "startTime": 11,
+        "height": 3
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "P1-1",
+        "to": "P1-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-2",
+        "to": "P2-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-3",
+        "to": "P1-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-4",
+        "to": "P3-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-5",
+        "to": "P2-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-6",
+        "to": "P3-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-7",
+        "to": "P2-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-8",
+        "to": "P1-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-9",
+        "to": "P3-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-10",
+        "to": "P1-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-11",
+        "to": "P3-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P1-12",
+        "to": "P2-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P2-1",
+        "to": "P3-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-2",
+        "to": "P1-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-3",
+        "to": "P3-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-4",
+        "to": "P2-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-5",
+        "to": "P1-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-6",
+        "to": "P2-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-7",
+        "to": "P1-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-8",
+        "to": "P3-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-9",
+        "to": "P2-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-10",
+        "to": "P3-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-11",
+        "to": "P2-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P2-12",
+        "to": "P1-1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "P3-1",
+        "to": "P2-2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-2",
+        "to": "P3-3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-3",
+        "to": "P2-4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-4",
+        "to": "P1-5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-5",
+        "to": "P3-6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-6",
+        "to": "P1-7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-7",
+        "to": "P3-8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-8",
+        "to": "P2-9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-9",
+        "to": "P1-10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-10",
+        "to": "P2-11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-11",
+        "to": "P1-12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "P3-12",
+        "to": "P3-1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 145,
+        "pdfPage": 146
+      },
+      {
+        "edition": "2014 PDF",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 96
+      }
+    ],
+    "notes": "The source specifies a one-count feeder and prints three 12-throw lanes. Every throw is height 3; cycle length is 12 beats. Each printed destination in lane order determines the recipient; causal edges lead to the recipient's next listed throw event; the editor timing relation yields height 3, including the cycle-wrap offsets.",
+    "variants": [
+      "Two clubs in the right hand and one club in the left hand for each juggler, as stated in the source."
+    ],
+    "modelLimits": "The graph records throw timing, hands, recipient, and cycle offsets. The source color-coding and feeder-role prose are explanatory, not additional causal edges.",
+    "validation": "36 throw nodes and 36 causal edges; endpoints resolve, and each edge targets the next listed event for its recipient, yielding height 3 after synchronization."
   }
 ]

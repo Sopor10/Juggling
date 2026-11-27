@@ -1,29 +1,45 @@
-# Highgate feed transcription review: printed pp. 121–135
+# Highgate source transcription review: printed pp. 121–125
 
-The separate [121–135 data file](highgate-transcriptions-121-135.json) already contained Jim's inverted bookends feed. I added two complete three-person causal graphs after checking their body diagrams and per-juggler sequences in both editions.
+The companion [JSON file](highgate-transcriptions-121-135.json) is a separate source-data file. It does not modify the runtime preset catalog or the inventory CSV. This review covers actual 2017 body pages 121–125. Parent work owns printed pp. 126–130; those pages are not included here.
 
-## Added graphs
+## New independent graphs transcribed
 
-| Stable ID | Pattern | Body source pages | Graph |
-|---|---|---|---|
-| `highgate-passpasszipfeedingthreecount` | Pass pass zip feeding three count | 2017 printed p. 120 / PDF p. 121; 2014 PDF p. 80 | Six-beat cycle; 18 nodes and 18 causal edges. Ben's alternating pass/pass/zip lane and Anne/Clare's three-count lanes are repeated with hand parity preserved. |
-| `highgate-passpasszipfeedingfrenchthreecount` | Pass pass zip feeding French three count | 2017 printed p. 120 / PDF p. 121; 2014 PDF p. 80 | Six-beat cycle; 18 nodes and 18 causal edges. Ben's pass/pass/zip lane, Anne's heff/pass/self lane, and Clare's self/heff/pass lane are transcribed. |
+| Stable ID | Pattern | 2017 body page | 2014 body page | Events / edges |
+|---|---|---:|---:|---:|
+| `highgate-whynotfeedingfiveclubwhynotandfivecountpopcorn` | Why Not? feeding five club Why Not? and five count popcorn | 122 (PDF 123) | 81 | 30 / 30 |
+| `highgate-maybefeedingfiveclubwhynotandfivecountpopcorn` | Maybe feeding five club Why Not? and five count popcorn | 123 (PDF 124) | 82 | 30 / 30 |
+| `highgate-parsnipfeedingfivecountpopcornandwhynot` | Parsnip feeding five count popcorn and Why Not? | 123 (PDF 124) | 82 | 30 / 30 |
+| `highgate-parsnipfeedingmaybeandfivecountpopcorn` | Parsnip feeding Maybe and five count popcorn | 123 (PDF 124) | 82 | 30 / 30 |
+| `highgate-funkybookendsfeedingfiveclubwhynotandwhynot` | Funky bookends feeding five club Why Not? and Why Not? | 125 (PDF 126) | 83 | 30 / 30 |
+| `highgate-funkybookendsfeedingmaybeandfiveclubwhynot` | Funky bookends feeding Maybe and five club Why Not? | 125 (PDF 126) | 83 | 30 / 30 |
+| `highgate-martinsonecountfeedingwhynot` | Martin's one count feeding Why Not? | 125 (PDF 126) | 83 | 30 / 30 |
 
-The two 2017 body diagrams appear on printed p. 120 (physical PDF p. 121), although the index candidates in the inventory point to printed p. 123 / PDF p. 124. The matching 2014 diagrams and sequences appear on PDF p. 80. Each of the three extracted diagrams on the two body pages has the same SHA-256 hash across editions. The JSON records cite the body pages and retain the index/body mismatch in their source notes. The inventory now marks both patterns reviewed and translated.
+The titles, row sequences, hand labels, pass destinations, zip arrows, and period-five siteswaps were checked against the printed body diagrams. The 2014 diagrams and sequences were also visually compared at the cited PDF pages. For each pattern the five-action sequence repeats twice, producing a ten-beat cycle with alternating hands. Starting phases follow each pattern's start text; the Parsnip/Maybe row for Anne begins one-and-a-half beats after Ben, with its graph cycle normalized so every lane has ten nodes in the same `[0,10)` period.
 
-Each graph has one outgoing causal edge per event. The zip arrows point back to the preceding Ben event and carry explicit height 1. In the first pattern, Ben's passes use height 3.5 and Anne/Clare's passes use 3.5; self throws are 3. In the French-three-count pattern, all jugglers start in phase, so passes use height 3; heffs use height 4, self throws use 3, and zips use 1. Explicit source heights keep diagram coordinates separate from causal timing.
+Each event has one outgoing causal edge. The transcription uses the source lane action and corresponding arrow: a named pass goes to the named receiver's next event at +1.5 beats; self and heff go to the next and second-next same-lane events; zip goes to the previous same-lane event. Heights are explicit and each endpoint satisfies `target.startTime + cycleOffset × 10 = source.startTime + height − 2`. The JSON was checked for unique event IDs, resolvable endpoints, 30 distinct sources, and the timing equation on all 210 edges.
 
-## Validation
+## Index-to-body page mismatches and scope boundaries
 
-The focused NUnit test constructs both standalone records using an already registered preset ID, runs `SynchronizeHeights`, checks that every cycle offset is preserved, and requires `IsValidForEditor()` to pass. The central catalog-wide test also validates both new presets under their actual IDs:
+The inventory's page column is an index pointer, not a reliable body-diagram location. The following in-scope index candidates point to body pages before this batch, so they were not duplicated here:
 
-```text
-dotnet test Siteswaps.Test/Siteswaps.Test.csproj --no-restore --filter PassPassZipFeedRecordsCreateValidEditorStatesAndPreserveOffsets
-Passed: 1, Failed: 0
-```
+| Inventory ID | Index pointer | Visible 2017 body location | Handling |
+|---|---:|---:|---|
+| `highgate-civilwarfeed` | printed 121 / PDF 122 | printed 117 / PDF 118 | Page mapping issue; no transcription in this batch. |
+| `highgate-martinsmildnessmartinsmadness` | printed 121 / PDF 122 | printed 117 / PDF 118 | Page mapping issue; no transcription in this batch. |
+| `highgate-martinsneurosismartinspsychosis` | printed 122 / PDF 123 | printed 118 / PDF 119 | Page mapping issue; no transcription in this batch. |
+| `highgate-scatteredsunshine` | printed 122 / PDF 123 | printed 119 / PDF 120 | Page mapping issue; no transcription in this batch. |
+| `highgate-jimstwocountfeedrachelsfeed` | printed 123 / PDF 124 | printed 120 / PDF 121 | Diagram starts before this batch; continuation on printed p.121 is not an independent graph, so no transcription here. |
+| `highgate-passpasszipfeedingthreecount` | printed 123 / PDF 124 | printed 120 / PDF 121 | Existing separate record; excluded from this batch as a 106–120 overlap. |
+| `highgate-passpasszipfeedingfrenchthreecount` | printed 123 / PDF 124 | printed 120 / PDF 121 | Existing separate record; excluded from this batch as a 106–120 overlap. |
+| `highgate-jimsinvertedbookendsfeed` | printed 125 / PDF 126 | printed 122 / PDF 123 | Existing separate record; the body graph is on printed p.122. |
 
-The 2017 and 2014 body-page image extractions match byte-for-byte. JSON structural checks confirm 18 unique nodes, 18 unique outgoing edges, and resolvable endpoints per record.
+The `highgate-threepersonperiodfivefeeds` entry is a section heading, not an independent pattern graph. The titles whose index pointers fall on pp. 126–130 are assigned to the parent batch and are intentionally absent here. No manipulation patterns or aliases were added.
 
-## Remaining scope
+## Source links
 
-The inventory lists many other feed and multi-juggler candidates around pp. 121–135. These two diagrams are a bounded source-verified addition, not a claim that the surrounding feeding patterns have been transcribed. The rest need page-by-page diagram or sequence review before their causal edges can be imported.
+- [2017 expanded Highgate PDF, printed p. 122 / PDF p. 123](https://jugglingedge.com/pdf/highgate.pdf#page=123)
+- [2017 expanded Highgate PDF, printed p. 123 / PDF p. 124](https://jugglingedge.com/pdf/highgate.pdf#page=124)
+- [2017 expanded Highgate PDF, printed p. 125 / PDF p. 126](https://jugglingedge.com/pdf/highgate.pdf#page=126)
+- [2014 Highgate PDF, body p. 81](https://passing.zone/wp-content/uploads/highgate.pdf#page=81)
+- [2014 Highgate PDF, body p. 82](https://passing.zone/wp-content/uploads/highgate.pdf#page=82)
+- [2014 Highgate PDF, body p. 83](https://passing.zone/wp-content/uploads/highgate.pdf#page=83)

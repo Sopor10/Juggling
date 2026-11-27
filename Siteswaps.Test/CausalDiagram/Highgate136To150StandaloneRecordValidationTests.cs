@@ -7,6 +7,64 @@ namespace Siteswaps.Test.CausalDiagram;
 
 public class Highgate136To150StandaloneRecordValidationTests
 {
+    private static readonly Dictionary<string, string[][]> PulsarLanes = new()
+    {
+        ["highgate-pulsar"] =
+        [
+            "self self Ben self self self Clare self Ben self Clare self Ben self self self Clare self self self Clare self Ben self".Split(
+                ' '
+            ),
+            "Clare self Anne self Clare self self self Anne self self self Anne self Clare self self self Clare self self self Anne self".Split(
+                ' '
+            ),
+            "Ben self self self Ben self Anne self self self Anne self self self Ben self Anne self Ben self Anne self self self".Split(
+                ' '
+            ),
+        ],
+        ["highgate-ambidextrouspulsarthreecountfeed"] =
+        [
+            "self self self Ben self self self self self Clare self self Ben self self Clare self self Ben self self self self self Clare self self self self self Clare self self Ben self self".Split(
+                ' '
+            ),
+            "Clare self self Anne self self Clare self self self self self Anne self self self self self Anne self self Clare self self self self self Clare self self self self self Anne self self".Split(
+                ' '
+            ),
+            "Ben self self self self self Ben self self Anne self self self self self Anne self self self self self Ben self self Anne self self Ben self self Anne self self self self self".Split(
+                ' '
+            ),
+        ],
+        ["highgate-ambidextrouspulsarpasspassselffeed"] =
+        [
+            "self Ben self self Clare self Ben Clare self Ben self self Clare self self Clare Ben self".Split(
+                ' '
+            ),
+            "Clare Anne self Clare self self Anne self self Anne Clare self self Clare self self Anne self".Split(
+                ' '
+            ),
+            "Ben self self Ben Anne self self Anne self self Ben self Anne Ben self Anne self self".Split(
+                ' '
+            ),
+        ],
+        ["highgate-ambidextrouspulsarpassselfpassfeed"] =
+        [
+            "self self Ben self self Clare Ben self Clare Ben self self Clare self self Clare self Ben".Split(
+                ' '
+            ),
+            "Clare self Anne Clare self self Anne self self Anne self Clare self self Clare self self Anne".Split(
+                ' '
+            ),
+            "Ben self self Ben self Anne self self Anne self self Ben Anne self Ben Anne self self".Split(
+                ' '
+            ),
+        ],
+        ["highgate-ambidextrouspulsaronecountfeed"] =
+        [
+            "self Ben self Clare Ben Clare Ben self Clare self Clare Ben".Split(' '),
+            "Clare Anne Clare self Anne self Anne Clare self Clare self Anne".Split(' '),
+            "Ben self Ben Anne self Anne self Ben Anne Ben Anne self".Split(' '),
+        ],
+    };
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -39,6 +97,52 @@ public class Highgate136To150StandaloneRecordValidationTests
 
         foreach (var record in records)
         {
+            record.CausalEdges.Should().HaveCount(record.Throws.Count, record.Id);
+            var throwsById = record.Throws.ToDictionary(item => item.Id);
+            var endpoints = record.Throws.Select(item => item.Id).ToHashSet();
+            foreach (var edge in record.CausalEdges)
+            {
+                endpoints.Should().Contain(edge.From, record.Id);
+                endpoints.Should().Contain(edge.To, record.Id);
+                var source = throwsById[edge.From];
+                var target = throwsById[edge.To];
+                if (record.Id.Contains("pulsar", StringComparison.Ordinal))
+                {
+                    (target.StartTime + edge.CycleOffset * record.CycleLength + 2)
+                        .Should()
+                        .Be(source.StartTime + source.Height, record.Id);
+                }
+            }
+
+            if (PulsarLanes.TryGetValue(record.Id, out var lanes))
+            {
+                var jugglersByName = record.Jugglers.ToDictionary(
+                    item => item.Name,
+                    item => item.Id
+                );
+                foreach (var (jugglerIndex, lane) in lanes.Select((lane, index) => (index, lane)))
+                {
+                    var sourceJuggler = record.Jugglers[jugglerIndex].Id;
+                    for (var beat = 0; beat < record.CycleLength; beat++)
+                    {
+                        var sourceThrow = record.Throws.Single(item =>
+                            item.JugglerId == sourceJuggler && item.StartTime == beat
+                        );
+                        var recipientName = lane[beat % lane.Length];
+                        var recipient =
+                            recipientName == "self" ? sourceJuggler : jugglersByName[recipientName];
+                        var nextBeat = (beat + 1) % record.CycleLength;
+                        var expectedTarget = record.Throws.Single(item =>
+                            item.JugglerId == recipient && item.StartTime == nextBeat
+                        );
+                        var edge = record.CausalEdges.Single(item => item.From == sourceThrow.Id);
+                        edge.To.Should().Be(expectedTarget.Id, record.Id);
+                        edge.CycleOffset.Should()
+                            .Be(beat + 1 >= record.CycleLength ? 1 : 0, record.Id);
+                    }
+                }
+            }
+
             var state = new CausalDiagramEditorState
             {
                 PresetId = "highgate-three-count",
@@ -72,7 +176,7 @@ public class Highgate136To150StandaloneRecordValidationTests
             state.IsValidForEditor().Should().BeTrue(record.Id);
         }
 
-        records.Should().HaveCount(6);
+        records.Should().HaveCount(11);
     }
 
     private sealed record Record(
