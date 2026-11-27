@@ -17,7 +17,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
         );
         await page.GetByRole(AriaRole.Button, new() { Name = "Weiter zum Diagramm" }).ClickAsync();
         await page.Locator(".arrow-target-handle").First.WaitForAsync();
-        Assert.Equal("2.5", await page.Locator(".pd-node-label").First.TextContentAsync());
+        Assert.Equal("5", await page.Locator(".pd-node-label").First.TextContentAsync());
         Assert.Equal(0, await page.Locator(".animation-unavailable").CountAsync());
 
         await page.Locator(".diagram-options summary").ClickAsync();
@@ -26,7 +26,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
         await timelineWidth.PressAsync("ArrowRight");
         await timelineWidth.PressAsync("Tab");
         Assert.Equal("600", await timelineWidth.InputValueAsync());
-        Assert.Contains("state=j3.", page.Url);
+        Assert.Contains("state=j4.", page.Url);
         await page.Locator(".diagram-options summary").ClickAsync();
 
         var arrowHandle = page.Locator(".arrow-target-handle").First;
@@ -57,7 +57,7 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
             new { edgeId, originalX }
         );
         Assert.NotEqual(originalUrl, page.Url);
-        Assert.Contains("state=j3.", page.Url);
+        Assert.Contains("state=j4.", page.Url);
     }
 
     [Fact]
@@ -219,12 +219,12 @@ public sealed class CausalDiagramArrowDragTests(SharedBlazorFixture host)
 
         Assert.Equal(3, await page.Locator(".pd-juggler-label").CountAsync());
         Assert.Equal(
-            "1",
+            "6",
             await page.Locator(".pd-node-label[data-throw-id='J3-1']").First.TextContentAsync()
         );
         Assert.Equal(0, await page.Locator(".animation-unavailable").CountAsync());
         Assert.False(await page.Locator("#blazor-error-ui").IsVisibleAsync());
-        Assert.Contains("state=j3.", page.Url);
+        Assert.Contains("state=j4.", page.Url);
     }
 
     private sealed class ArrowTouchPoints
