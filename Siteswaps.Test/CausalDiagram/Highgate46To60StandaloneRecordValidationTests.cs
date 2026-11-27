@@ -58,12 +58,10 @@ public sealed class Highgate46To60StandaloneRecordValidationTests
             ValidateRecord(record);
 
         var jimAsync = selected["highgate-jimsthreecountasynchversion"];
-        jimAsync.CausalEdges.Single(edge => edge.SourceId == "P2-4")
-            .TargetId.Should().Be("P1-6");
-        jimAsync.CausalEdges.Single(edge => edge.SourceId == "P2-11")
-            .TargetId.Should().Be("P1-13");
-        CausalDiagramEditorPresets.AllForLoading
-            .Single(preset => preset.Id == "highgate-jimsthreecountasynchversion")
+        jimAsync.CausalEdges.Single(edge => edge.SourceId == "P2-4").TargetId.Should().Be("P1-6");
+        jimAsync.CausalEdges.Single(edge => edge.SourceId == "P2-11").TargetId.Should().Be("P1-13");
+        CausalDiagramEditorPresets
+            .AllForLoading.Single(preset => preset.Id == "highgate-jimsthreecountasynchversion")
             .Create()
             .IsValidPattern()
             .Should()

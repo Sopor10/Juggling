@@ -288,7 +288,8 @@ public class Highgate211To225StandaloneRecordValidationTests
             {
                 foreach (var item in record.Throws)
                 {
-                    record.CausalEdges.Count(edge => edge.ToIdValue == item.Id)
+                    record
+                        .CausalEdges.Count(edge => edge.ToIdValue == item.Id)
                         .Should()
                         .Be(
                             record.CausalEdges.Count(edge => edge.FromId == item.Id),

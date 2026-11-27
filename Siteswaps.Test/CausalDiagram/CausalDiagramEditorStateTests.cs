@@ -645,12 +645,13 @@ public class CausalDiagramEditorStateTests
     public void PresetCatalog_ImportsTheReviewedHighgateCausalDiagrams()
     {
         var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
-        var workInProgressIds = CausalDiagramEditorPresets.VisibleHighgateWorkInProgress
-            .Select(preset => preset.Id)
+        var workInProgressIds = CausalDiagramEditorPresets
+            .VisibleHighgateWorkInProgress.Select(preset => preset.Id)
             .ToArray();
 
         presets.Should().HaveCount(319);
-        presets.Select(preset => preset.Id)
+        presets
+            .Select(preset => preset.Id)
             .Concat(workInProgressIds)
             .Should()
             .BeEquivalentTo(ReviewedHighgatePresetIds);

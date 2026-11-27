@@ -13,14 +13,25 @@ public class Highgate136To150StandaloneRecordValidationTests
             ["highgate-trifle"] = new()
             {
                 ["Anne"] = "Ben Ben self self Clare self self self self Clare self self".Split(' '),
-                ["Ben"] = "Anne Anne self self self Clare self self Clare self self self".Split(' '),
+                ["Ben"] = "Anne Anne self self self Clare self self Clare self self self".Split(
+                    ' '
+                ),
                 ["Clare"] = "self self self self Anne Ben self self Ben Anne self self".Split(' '),
             },
             ["highgate-trilogy"] = new()
             {
-                ["Anne"] = "Ben self self self self Clare self Clare self self self self Ben self self".Split(' '),
-                ["Ben"] = "Anne self Clare self self self self self self self Clare self Anne self self".Split(' '),
-                ["Clare"] = "self self Ben self self Anne self Anne self self Ben self self self self".Split(' '),
+                ["Anne"] =
+                    "Ben self self self self Clare self Clare self self self self Ben self self".Split(
+                        ' '
+                    ),
+                ["Ben"] =
+                    "Anne self Clare self self self self self self self Clare self Anne self self".Split(
+                        ' '
+                    ),
+                ["Clare"] =
+                    "self self Ben self self Anne self Anne self self Ben self self self self".Split(
+                        ' '
+                    ),
             },
         };
 
@@ -173,10 +184,14 @@ public class Highgate136To150StandaloneRecordValidationTests
                 record.SourceRows.Should().BeEquivalentTo(feastRows, record.Id);
                 ValidateCompositeFeastRows(record, feastRows);
 
-                var production = CausalDiagramEditorPresets.AllForLoading.Single(preset => preset.Id == record.Id).Create();
+                var production = CausalDiagramEditorPresets
+                    .AllForLoading.Single(preset => preset.Id == record.Id)
+                    .Create();
                 production.IsValidPattern().Should().BeTrue(record.Id);
                 production
-                    .CausalEdges.Select(edge => (edge.FromThrowId, edge.ToThrowId, edge.CycleOffset))
+                    .CausalEdges.Select(edge =>
+                        (edge.FromThrowId, edge.ToThrowId, edge.CycleOffset)
+                    )
                     .Should()
                     .BeEquivalentTo(
                         record.CausalEdges.Select(edge => (edge.From, edge.To, edge.CycleOffset)),
@@ -226,8 +241,8 @@ public class Highgate136To150StandaloneRecordValidationTests
     )
     {
         var jugglerIds = record.Jugglers.ToDictionary(item => item.Name, item => item.Id);
-        var throwsByJugglerAndTime = record.Throws.ToDictionary(
-            item => (item.JugglerId, item.StartTime)
+        var throwsByJugglerAndTime = record.Throws.ToDictionary(item =>
+            (item.JugglerId, item.StartTime)
         );
         var edgesBySource = record.CausalEdges.ToDictionary(item => item.From);
 

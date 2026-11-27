@@ -52,7 +52,8 @@ public static class CausalDiagramEditorPresets
     public static IReadOnlyList<CausalDiagramEditorPreset> WorkInProgress { get; } =
         HighgateCausalDiagramPresets.WorkInProgress.ToArray();
 
-    public static IEnumerable<CausalDiagramEditorPreset> AllForLoading => All.Concat(WorkInProgress);
+    public static IEnumerable<CausalDiagramEditorPreset> AllForLoading =>
+        All.Concat(WorkInProgress);
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>
         All.Where(preset =>

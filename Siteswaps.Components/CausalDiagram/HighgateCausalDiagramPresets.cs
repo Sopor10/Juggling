@@ -19,15 +19,15 @@ internal static class HighgateCausalDiagramPresets
         WorkInProgressResourceName
     );
 
-    public static IEnumerable<CausalDiagramEditorPreset> All =>
-        ToPresets(Patterns);
+    public static IEnumerable<CausalDiagramEditorPreset> All => ToPresets(Patterns);
 
     public static IEnumerable<CausalDiagramEditorPreset> WorkInProgress =>
         ToPresets(WorkInProgressPatterns);
 
     private static IEnumerable<CausalDiagramEditorPreset> ToPresets(
         IEnumerable<HighgatePatternData> patterns
-    ) => patterns.Select(pattern => new CausalDiagramEditorPreset(
+    ) =>
+        patterns.Select(pattern => new CausalDiagramEditorPreset(
             pattern.Id,
             pattern.Label,
             pattern.Group,

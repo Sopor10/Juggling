@@ -142,7 +142,10 @@ public class Highgate241To255StandaloneRecordValidationTests
         var preset = CausalDiagramEditorPresets.AllForLoading.Single(item => item.Id == id);
         var production = preset.Create();
         production.IsValidPattern().Should().BeTrue(id);
-        production.Throws.Select(item => item.Id).Should().BeEquivalentTo(source.Throws.Select(item => item.Id), id);
+        production
+            .Throws.Select(item => item.Id)
+            .Should()
+            .BeEquivalentTo(source.Throws.Select(item => item.Id), id);
         production
             .CausalEdges.Select(edge => (edge.FromThrowId, edge.ToThrowId, edge.CycleOffset))
             .Should()

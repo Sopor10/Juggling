@@ -42,8 +42,8 @@ public class Highgate321To330RepairValidationTests
                 var startTime = record.SourcePhases![jugglerName];
                 var firstHand = record.SourceFirstHands![jugglerName];
                 var route = record.PassDirectionByJuggler![jugglerName];
-                var events = record.Throws
-                    .Where(item => item.JugglerId == jugglerId)
+                var events = record
+                    .Throws.Where(item => item.JugglerId == jugglerId)
                     .OrderBy(item => item.StartTime)
                     .ToArray();
 
@@ -55,17 +55,25 @@ public class Highgate321To330RepairValidationTests
                     var source = events[eventIndex];
                     var action = row[eventIndex % row.Length];
                     var targetJuggler = action == "self" ? jugglerId : jugglerIds[action];
-                    var targetHand = action == "self"
-                        ? Opposite(source.Hand)
-                        : route == "crossing" ? source.Hand : Opposite(source.Hand);
-                    var target = record.Throws
-                        .Where(item => item.JugglerId == targetJuggler && item.Hand == targetHand)
-                        .SelectMany(item => Enumerable.Range(-1, 4).Select(cycleOffset =>
-                        (
-                            Throw: item,
-                            Offset: cycleOffset,
-                            Time: item.StartTime + cycleOffset * record.CycleLength
-                        )))
+                    var targetHand =
+                        action == "self" ? Opposite(source.Hand)
+                        : route == "crossing" ? source.Hand
+                        : Opposite(source.Hand);
+                    var target = record
+                        .Throws.Where(item =>
+                            item.JugglerId == targetJuggler && item.Hand == targetHand
+                        )
+                        .SelectMany(item =>
+                            Enumerable
+                                .Range(-1, 4)
+                                .Select(cycleOffset =>
+                                    (
+                                        Throw: item,
+                                        Offset: cycleOffset,
+                                        Time: item.StartTime + cycleOffset * record.CycleLength
+                                    )
+                                )
+                        )
                         .Where(candidate => candidate.Time >= source.StartTime + 1)
                         .OrderBy(candidate => candidate.Time)
                         .First();
@@ -74,8 +82,8 @@ public class Highgate321To330RepairValidationTests
                 }
             }
 
-            record.CausalEdges
-                .Select(edge => (edge.From, edge.To, edge.CycleOffset))
+            record
+                .CausalEdges.Select(edge => (edge.From, edge.To, edge.CycleOffset))
                 .Should()
                 .BeEquivalentTo(expectedEdges, record.Id);
 
@@ -88,13 +96,17 @@ public class Highgate321To330RepairValidationTests
             }
             incoming.Should().OnlyContain(pair => pair.Value == outgoing[pair.Key], record.Id);
 
-            var production = CausalDiagramEditorPresets.AllForLoading.Single(item => item.Id == record.Id).Create();
+            var production = CausalDiagramEditorPresets
+                .AllForLoading.Single(item => item.Id == record.Id)
+                .Create();
             production.IsValidPattern().Should().BeTrue(record.Id);
             production
                 .CausalEdges.Select(edge => (edge.FromThrowId, edge.ToThrowId, edge.CycleOffset))
                 .Should()
                 .BeEquivalentTo(
-                    expectedEdges.Select(edge => ((string?)edge.From, (string?)edge.To, edge.CycleOffset)),
+                    expectedEdges.Select(edge =>
+                        ((string?)edge.From, (string?)edge.To, edge.CycleOffset)
+                    ),
                     record.Id
                 );
         }
@@ -107,12 +119,22 @@ public class Highgate321To330RepairValidationTests
         var directory = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
         while (
             directory is not null
-            && !File.Exists(Path.Combine(directory.FullName, "docs/research/highgate-transcriptions-321-330.json"))
+            && !File.Exists(
+                Path.Combine(
+                    directory.FullName,
+                    "docs/research/highgate-transcriptions-321-330.json"
+                )
+            )
         )
             directory = directory.Parent;
         directory.Should().NotBeNull();
         return JsonSerializer.Deserialize<List<Record>>(
-            File.ReadAllText(Path.Combine(directory!.FullName, "docs/research/highgate-transcriptions-321-330.json")),
+            File.ReadAllText(
+                Path.Combine(
+                    directory!.FullName,
+                    "docs/research/highgate-transcriptions-321-330.json"
+                )
+            ),
             JsonOptions
         )!;
     }

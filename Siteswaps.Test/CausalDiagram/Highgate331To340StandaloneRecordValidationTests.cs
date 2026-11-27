@@ -86,7 +86,7 @@ public class Highgate331To340StandaloneRecordValidationTests
                             item.StartTime
                                 + (
                                     record.Id == "highgate-thirteenclubgorillaweave"
-                                        && item.JugglerId != "P2"
+                                    && item.JugglerId != "P2"
                                         ? 0.5m
                                         : 0m
                                 )
@@ -94,8 +94,8 @@ public class Highgate331To340StandaloneRecordValidationTests
                     ),
                     record.Id
                 );
-            var expectedEdges = baseRecord.CausalEdges
-                .Select(edge =>
+            var expectedEdges = baseRecord
+                .CausalEdges.Select(edge =>
                     record.Id == "highgate-thirteenclubgorillaweave"
                         ? edge with
                         {
