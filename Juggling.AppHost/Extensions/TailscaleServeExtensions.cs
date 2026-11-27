@@ -13,8 +13,7 @@ namespace Juggling.AppHost.Extensions;
 public static class TailscaleServeExtensions
 {
     public static IResourceBuilder<TResource> WithTailscaleServe<TResource>(
-        this IResourceBuilder<TResource> resource,
-        IDistributedApplicationBuilder appBuilder
+        this IResourceBuilder<TResource> resource
     )
         where TResource : IResourceWithEndpoints
     {
@@ -25,7 +24,7 @@ public static class TailscaleServeExtensions
         }
 
         var tailscaleServePort = (int?)null;
-        appBuilder.Services.AddSingleton<IHostedService>(
+        resource.ApplicationBuilder.Services.AddSingleton<IHostedService>(
             new TailscaleServeCleanup(() => tailscaleServePort, RemoveTailscaleServeRoute)
         );
 
