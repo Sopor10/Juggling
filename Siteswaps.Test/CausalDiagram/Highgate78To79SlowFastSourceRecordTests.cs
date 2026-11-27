@@ -125,7 +125,7 @@ public class Highgate78To79SlowFastSourceRecordTests
 
             var state = ToState(record);
             var offsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
-            state.SynchronizeHeights();
+            state.NormalizeCausalEdgeOffsets();
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
@@ -171,9 +171,7 @@ public class Highgate78To79SlowFastSourceRecordTests
                     item.Id,
                     item.JugglerId,
                     item.Hand,
-                    item.StartTime,
-                    0m,
-                    false
+                    item.StartTime
                 ))
                 .ToList(),
             CausalEdges = record

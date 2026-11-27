@@ -1,5 +1,5 @@
 using Siteswap.Details.CausalDiagram;
-using DiagramThrow = Siteswap.Details.CausalDiagram.Throw;
+using DiagramThrow = Siteswap.Details.CausalDiagram.DiagramThrow;
 
 namespace Siteswap.Details.Jif;
 
@@ -36,7 +36,7 @@ public static class JifMapper
             .Select((juggler, index) => CreateJuggler(juggler.Name, index, numberOfJugglers))
             .ToList();
         var propCount = (int)siteswap.NumberOfObjects();
-        var propOrbitColors = GetPropOrbitColors(siteswap, diagram.Throws, propCount);
+        var propOrbitColors = GetPropOrbitColors(diagram, siteswap, diagram.Throws, propCount);
         var props = Enumerable
             .Range(0, propCount)
             .Select(i => new JifObject
@@ -53,13 +53,17 @@ public static class JifMapper
             })
             .ToList();
         var throws = diagram
-            .Throws.Select(node => new JifThrow
+            .Throws.Select(node =>
             {
-                Time = node.Time,
-                Duration = node.Height,
-                From = HandIndex(node.Hand),
-                To = (HandIndex(node.Hand) + node.Height) % hands.Count,
-                Label = global::Siteswap.Details.Siteswap.Transform(node.Height),
+                var height = diagram.HeightOf(node) ?? 0;
+                return new JifThrow
+                {
+                    Time = node.Time,
+                    Duration = height,
+                    From = HandIndex(node.Hand),
+                    To = (HandIndex(node.Hand) + height) % hands.Count,
+                    Label = global::Siteswap.Details.Siteswap.Transform(height),
+                };
             })
             .ToList();
 
@@ -93,10 +97,34 @@ public static class JifMapper
     }
 
     private static string[] GetPropOrbitColors(
+        DiagramSet diagram,
         global::Siteswap.Details.Siteswap siteswap,
         IReadOnlyList<DiagramThrow> throws,
         int propCount
     )
+    {
+        var orbitByBeat = GetOrbitByBeat(siteswap);
+        var assignedProps = new bool[throws.Count];
+        var colors = new List<string>(propCount);
+        for (var beat = 0; beat < throws.Count; beat++)
+        {
+            if (assignedProps[beat] || (diagram.HeightOf(throws[beat]) ?? 0) <= 0)
+                continue;
+
+            var orbitIndex = orbitByBeat[beat % siteswap.Length];
+            colors.Add(OrbitColorPalette.For(orbitIndex));
+            MarkPropOrbit(beat, diagram, throws, assignedProps);
+        }
+
+        if (colors.Count != propCount)
+            throw new InvalidOperationException(
+                "Siteswap orbit sizes do not match its prop count."
+            );
+
+        return colors.ToArray();
+    }
+
+    private static int[] GetOrbitByBeat(global::Siteswap.Details.Siteswap siteswap)
     {
         var orbitByBeat = Enumerable.Repeat(-1, siteswap.Length).ToArray();
         var orbits = siteswap.GetOrbits();
@@ -109,30 +137,25 @@ public static class JifMapper
                     orbitByBeat[beat] = orbitIndex;
             }
         }
+        return orbitByBeat;
+    }
 
-        var assignedProps = new bool[throws.Count];
-        var colors = new List<string>(propCount);
-        for (var beat = 0; beat < throws.Count; beat++)
+    private static void MarkPropOrbit(
+        int startBeat,
+        DiagramSet diagram,
+        IReadOnlyList<DiagramThrow> throws,
+        bool[] assignedProps
+    )
+    {
+        var landingBeat = startBeat;
+        while (landingBeat < throws.Count)
         {
-            if (assignedProps[beat] || throws[beat].Height <= 0)
-                continue;
-
-            var orbitIndex = orbitByBeat[beat % siteswap.Length];
-            colors.Add(OrbitColorPalette.For(orbitIndex));
-            var landingBeat = beat;
-            while (landingBeat < throws.Count && throws[landingBeat % throws.Count].Height > 0)
-            {
-                assignedProps[landingBeat % throws.Count] = true;
-                landingBeat += throws[landingBeat % throws.Count].Height;
-            }
+            var landingHeight = diagram.HeightOf(throws[landingBeat % throws.Count]);
+            if (landingHeight is not > 0)
+                break;
+            assignedProps[landingBeat % throws.Count] = true;
+            landingBeat += landingHeight.Value;
         }
-
-        if (colors.Count != propCount)
-            throw new InvalidOperationException(
-                "Siteswap orbit sizes do not match its prop count."
-            );
-
-        return colors.ToArray();
     }
 
     /// <summary>Maps a causal throw diagram to a complete JIF pattern.</summary>
@@ -273,33 +296,38 @@ public static class JifMapper
         DiagramSet diagram,
         IReadOnlyDictionary<Hand, int> handIndices,
         string parameterName
-    ) =>
-        diagram
-            .Throws.Where(node => node.Height > 0)
-            .OrderBy(node => node.Time)
-            .Select(node =>
-            {
-                if (!handIndices.TryGetValue(node.Hand, out var from))
-                    throw new ArgumentException(
-                        "Every causal throw must start at a diagram limb.",
-                        parameterName
-                    );
-                if (node.ToLimb is not int to || to < 0 || to >= diagram.Hands.Count)
-                    throw new ArgumentException(
-                        "Every causal throw must identify its destination limb.",
-                        parameterName
-                    );
+    )
+    {
+        var result = new List<JifThrow>();
+        foreach (var node in diagram.Throws.OrderBy(node => node.Time))
+        {
+            var height = diagram.HeightOf(node);
+            if (height is null)
+                continue;
+            if (!handIndices.TryGetValue(node.Hand, out var from))
+                throw new ArgumentException(
+                    "Every causal throw must start at a diagram limb.",
+                    parameterName
+                );
+            if (node.ToLimb is not int to || to < 0 || to >= diagram.Hands.Count)
+                throw new ArgumentException(
+                    "Every causal throw must identify its destination limb.",
+                    parameterName
+                );
 
-                return new JifThrow
+            result.Add(
+                new JifThrow
                 {
                     Time = node.Time,
-                    Duration = node.Height,
+                    Duration = height.Value,
                     From = from,
                     To = to,
-                    Label = global::Siteswap.Details.Siteswap.Transform(node.Height),
-                };
-            })
-            .ToArray();
+                    Label = global::Siteswap.Details.Siteswap.Transform(height.Value),
+                }
+            );
+        }
+        return result.ToArray();
+    }
 
     private static List<JifThrow> ExpandThrows(
         IReadOnlyList<JifThrow> orderedThrows,

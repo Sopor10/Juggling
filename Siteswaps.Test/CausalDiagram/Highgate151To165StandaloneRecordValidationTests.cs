@@ -203,9 +203,7 @@ public class Highgate151To165StandaloneRecordValidationTests
                         item.Id,
                         item.JugglerId,
                         item.Hand,
-                        item.StartTime,
-                        item.Height,
-                        item.HeightIsExplicit
+                        item.StartTime
                     ))
                     .ToList(),
                 CausalEdges = record
@@ -217,7 +215,7 @@ public class Highgate151To165StandaloneRecordValidationTests
             };
             var offsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
 
-            state.SynchronizeHeights();
+            state.NormalizeCausalEdgeOffsets();
 
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);
@@ -250,7 +248,10 @@ public class Highgate151To165StandaloneRecordValidationTests
                     }
                 }
 
-                state.Throws.Should().OnlyContain(item => item.Height == 3, record.Id);
+                state
+                    .Throws.Select(item => state.HeightOf(item.Id))
+                    .Should()
+                    .OnlyContain(height => height == 3m, record.Id);
             }
         }
 

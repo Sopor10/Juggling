@@ -5,6 +5,17 @@ namespace Siteswap.Details.CausalDiagram;
 /// <summary>Builds the causal event model for a phased, person-to-person passing pattern.</summary>
 public static class PassingDiagramBuilder
 {
+    private sealed record ThrowBuildContext(
+        IReadOnlyList<int> TimeZones,
+        IReadOnlyList<IReadOnlyList<int>> Heights,
+        IReadOnlyList<IReadOnlyList<int>> Targets,
+        IReadOnlyList<int> NormalizedTimeZones,
+        int TimeStretch,
+        int Period,
+        int DiagramPatternPeriod,
+        ImmutableList<Hand> Hands
+    );
+
     public static DiagramSet Build(
         IReadOnlyList<int> timeZones,
         IReadOnlyList<IReadOnlyList<int>> heights,
@@ -23,23 +34,26 @@ public static class PassingDiagramBuilder
         var normalizedTimeZones = NormalizeTimeZones(timeZones, distinctZones);
         var jugglers = CreateJugglers(timeZones.Count);
         var hands = CreateHands(jugglers);
-        var nodes = CreateThrows(
-            timeZones,
-            heights,
-            targets,
-            normalizedTimeZones,
-            timeStretch,
-            period,
-            diagramPatternPeriod,
-            hands
+        var throwEntries = CreateThrows(
+            new ThrowBuildContext(
+                timeZones,
+                heights,
+                targets,
+                normalizedTimeZones,
+                timeStretch,
+                period,
+                diagramPatternPeriod,
+                hands
+            )
         );
-        if (nodes.Count == 0)
+        if (throwEntries.Count == 0)
             throw new ArgumentException(
                 "The pattern must contain at least one positive-height throw.",
                 nameof(heights)
             );
 
-        var (causalArrows, ladderArrows) = CreateArrows(nodes, hands, timeStretch);
+        var (causalArrows, ladderArrows) = CreateArrows(throwEntries, hands, timeStretch);
+        var nodes = throwEntries.Select(entry => entry.Node).ToList();
         var basePeriod = diagramPatternPeriod * timeStretch;
         var limbPermutation = Enumerable
             .Range(0, timeZones.Count * 2)
@@ -55,7 +69,12 @@ public static class PassingDiagramBuilder
             TimeStretchFactor: timeStretch,
             StepCount: basePeriod,
             LimbPermutation: limbPermutation,
-            StartProps: ImmutableDictionary<string, StartProps>.Empty
+            StartProps: ImmutableDictionary<string, StartProps>.Empty,
+            JugglerBeatDurations: jugglers.ToImmutableDictionary(
+                juggler => juggler.Name,
+                _ => (decimal)timeStretch,
+                StringComparer.Ordinal
+            )
         );
         return diagram with
         {
@@ -131,23 +150,14 @@ public static class PassingDiagramBuilder
             )
             .ToImmutableList();
 
-    private static List<Throw> CreateThrows(
-        IReadOnlyList<int> timeZones,
-        IReadOnlyList<IReadOnlyList<int>> heights,
-        IReadOnlyList<IReadOnlyList<int>> targets,
-        IReadOnlyList<int> normalizedTimeZones,
-        int timeStretch,
-        int period,
-        int diagramPatternPeriod,
-        ImmutableList<Hand> hands
-    )
+    private static List<(DiagramThrow Node, int Height)> CreateThrows(ThrowBuildContext context)
     {
-        var nodes = new List<Throw>();
-        for (var person = 0; person < timeZones.Count; person++)
+        var nodes = new List<(DiagramThrow Node, int Height)>();
+        for (var person = 0; person < context.TimeZones.Count; person++)
         {
-            for (var beat = 0; beat < diagramPatternPeriod; beat++)
+            for (var beat = 0; beat < context.DiagramPatternPeriod; beat++)
             {
-                var height = heights[person][beat % period];
+                var height = context.Heights[person][beat % context.Period];
                 if (height == 0)
                     continue;
                 nodes.Add(
@@ -155,10 +165,10 @@ public static class PassingDiagramBuilder
                         person,
                         beat,
                         height,
-                        targets,
-                        normalizedTimeZones,
-                        timeStretch,
-                        hands
+                        context.Targets,
+                        context.NormalizedTimeZones,
+                        context.TimeStretch,
+                        context.Hands
                     )
                 );
             }
@@ -167,7 +177,7 @@ public static class PassingDiagramBuilder
         return nodes;
     }
 
-    private static Throw CreateThrow(
+    private static (DiagramThrow Node, int Height) CreateThrow(
         int person,
         int beat,
         int height,
@@ -192,28 +202,32 @@ public static class PassingDiagramBuilder
                 / timeStretch;
         var fromLimb = person * 2 + beat % 2;
         var toLimb = targetPerson * 2 + landingLocalBeat % 2;
-        return new Throw(hands[fromLimb], height, time, toLimb);
+        return (new DiagramThrow(hands[fromLimb], time, toLimb), height);
     }
 
     private static (
         ImmutableList<DiagramArrow> Causal,
         ImmutableList<DiagramArrow> Ladder
-    ) CreateArrows(IEnumerable<Throw> nodes, ImmutableList<Hand> hands, int timeStretch)
+    ) CreateArrows(
+        IEnumerable<(DiagramThrow Node, int Height)> nodes,
+        ImmutableList<Hand> hands,
+        int timeStretch
+    )
     {
         var causalArrows = ImmutableList.CreateBuilder<DiagramArrow>();
         var ladderArrows = ImmutableList.CreateBuilder<DiagramArrow>();
-        foreach (var node in nodes)
+        foreach (var (node, height) in nodes)
         {
             var toLimb = node.ToLimb
                 ?? throw new InvalidOperationException(
                     "Every throw must identify its destination limb."
                 );
             var toHand = hands[toLimb];
-            var causalStep = node.Height - 2 * timeStretch;
+            var causalStep = height - 2 * timeStretch;
             causalArrows.Add(
                 new DiagramArrow(
                     node,
-                    new Throw(toHand, 0, node.Time + causalStep),
+                    new DiagramThrow(toHand, node.Time + causalStep),
                     causalStep,
                     toHand.Person,
                     OrbitIndex: -1
@@ -222,8 +236,8 @@ public static class PassingDiagramBuilder
             ladderArrows.Add(
                 new DiagramArrow(
                     node,
-                    new Throw(toHand, 0, node.Time + node.Height),
-                    node.Height,
+                    new DiagramThrow(toHand, node.Time + height),
+                    height,
                     toHand.Person,
                     OrbitIndex: -1
                 )

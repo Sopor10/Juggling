@@ -39,7 +39,7 @@ public sealed class CausalDiagramEditorSequenceTests
         );
         var originalGraph = state
             .Throws.Select(item =>
-                (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+                (item.Id, item.JugglerId, item.Hand, item.StartTime, state.HeightOf(item.Id))
             )
             .ToArray();
         state.Version = 5;
@@ -54,7 +54,7 @@ public sealed class CausalDiagramEditorSequenceTests
         decoded.PresetId.Should().Be("highgate-thirteenclubrunaway-before-anne-walk");
         decoded
             .Throws.Select(item =>
-                (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+                (item.Id, item.JugglerId, item.Hand, item.StartTime, decoded.HeightOf(item.Id))
             )
             .Should()
             .Equal(originalGraph);

@@ -68,9 +68,7 @@ public class Highgate91To105StandaloneRecordValidationTests
                         item.Id,
                         item.JugglerId,
                         item.Hand,
-                        item.StartTime,
-                        item.Height,
-                        item.HeightIsExplicit
+                        item.StartTime
                     ))
                     .ToList(),
                 CausalEdges = record
@@ -87,11 +85,14 @@ public class Highgate91To105StandaloneRecordValidationTests
             };
             var offsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
 
-            state.SynchronizeHeights();
+            state.NormalizeCausalEdgeOffsets();
 
             state.Throws.Should().HaveCount(expectedCounts[record.Id], record.Id);
             state.CausalEdges.Should().HaveCount(expectedCounts[record.Id], record.Id);
-            state.Throws.Should().OnlyContain(item => item.HeightIsExplicit, record.Id);
+            state
+                .Throws.Select(item => state.HeightOf(item.Id))
+                .Should()
+                .OnlyContain(height => height.HasValue, record.Id);
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets);
             state.IsValidForEditor().Should().BeTrue(record.Id);
 
@@ -106,12 +107,18 @@ public class Highgate91To105StandaloneRecordValidationTests
                 .Equal(state.Jugglers.Select(item => (item.Id, item.Name)), record.Id);
             imported
                 .Throws.Select(item =>
-                    (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+                    (item.Id, item.JugglerId, item.Hand, item.StartTime, imported.HeightOf(item.Id))
                 )
                 .Should()
                 .Equal(
                     state.Throws.Select(item =>
-                        (item.Id, item.JugglerId, item.Hand, item.StartTime, item.Height)
+                        (
+                            item.Id,
+                            item.JugglerId,
+                            item.Hand,
+                            item.StartTime,
+                            state.HeightOf(item.Id)
+                        )
                     ),
                     record.Id
                 );

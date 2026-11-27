@@ -14,15 +14,25 @@ internal static class HighgateCausalDiagramPresets
         PropertyNameCaseInsensitive = true,
     };
 
-    private static readonly List<HighgatePatternData> Patterns = Load(ResourceName);
+    private static readonly List<HighgatePatternData> SourcePatterns = Load(ResourceName);
+    private static readonly List<HighgatePatternData> Patterns = SourcePatterns
+        .Where(pattern => !IsBareSiteswap(pattern.Label))
+        .ToList();
     private static readonly List<HighgatePatternData> WorkInProgressPatterns = Load(
         WorkInProgressResourceName
     );
 
     public static IEnumerable<CausalDiagramEditorPreset> All => ToPresets(Patterns);
 
+    public static IEnumerable<CausalDiagramEditorPreset> SiteswapSources =>
+        ToPresets(SourcePatterns.Where(pattern => IsBareSiteswap(pattern.Label)));
+
     public static IEnumerable<CausalDiagramEditorPreset> WorkInProgress =>
         ToPresets(WorkInProgressPatterns);
+
+    private static bool IsBareSiteswap(string label) =>
+        !string.IsNullOrWhiteSpace(label)
+        && label.All(character => char.IsAsciiDigit(character) || character is '.' or '-');
 
     private static IEnumerable<CausalDiagramEditorPreset> ToPresets(
         IEnumerable<HighgatePatternData> patterns
@@ -69,9 +79,7 @@ internal static class HighgateCausalDiagramPresets
                     item.Id,
                     item.JugglerId,
                     item.Hand,
-                    item.StartTime,
-                    item.Height ?? 0m,
-                    item.HeightIsExplicit
+                    item.StartTime
                 ))
                 .ToList(),
             CausalEdges = pattern
@@ -87,7 +95,7 @@ internal static class HighgateCausalDiagramPresets
                 .ToList(),
         };
         var sourceCycleOffsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
-        state.SynchronizeHeights();
+        state.NormalizeCausalEdgeOffsets();
         if (
             state
                 .CausalEdges.Where((edge, index) => edge.CycleOffset != sourceCycleOffsets[index])
@@ -96,12 +104,6 @@ internal static class HighgateCausalDiagramPresets
         {
             throw new InvalidDataException(
                 $"Highgate preset '{pattern.Id}' has a causal edge the editor would silently retime."
-            );
-        }
-        if (!state.IsValidForEditor())
-        {
-            throw new InvalidDataException(
-                $"Highgate preset '{pattern.Id}' does not describe a valid causal pattern."
             );
         }
         return state;

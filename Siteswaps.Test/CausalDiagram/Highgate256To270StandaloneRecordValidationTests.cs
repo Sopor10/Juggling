@@ -109,9 +109,7 @@ public class Highgate256To270StandaloneRecordValidationTests
                         item.Id,
                         item.JugglerId,
                         item.Hand,
-                        item.StartTime,
-                        item.Height ?? 0m,
-                        item.HeightIsExplicit
+                        item.StartTime
                     ))
                     .ToList(),
                 CausalEdges = record
@@ -128,7 +126,7 @@ public class Highgate256To270StandaloneRecordValidationTests
             };
             var offsets = state.CausalEdges.Select(edge => edge.CycleOffset).ToArray();
 
-            state.SynchronizeHeights();
+            state.NormalizeCausalEdgeOffsets();
 
             state.CausalEdges.Select(edge => edge.CycleOffset).Should().Equal(offsets, record.Id);
             state.IsValidForEditor().Should().BeTrue(record.Id);

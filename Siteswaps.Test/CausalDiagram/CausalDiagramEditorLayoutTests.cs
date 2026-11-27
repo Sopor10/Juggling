@@ -15,10 +15,10 @@ public sealed class CausalDiagramEditorLayoutTests
             Jugglers = [new EditorJuggler("A", "Anne"), new EditorJuggler("B", "Ben")],
             Throws =
             [
-                new EditorThrow("A-R", "A", "R", 0m, 3m),
-                new EditorThrow("A-L", "A", "L", 0m, 4m),
-                new EditorThrow("B-R", "B", "R", 0m, 3m),
-                new EditorThrow("B-L", "B", "L", 0m, 4m),
+                new EditorThrow("A-R", "A", "R", 0m),
+                new EditorThrow("A-L", "A", "L", 0m),
+                new EditorThrow("B-R", "B", "R", 0m),
+                new EditorThrow("B-L", "B", "L", 0m),
             ],
         };
 
@@ -43,11 +43,7 @@ public sealed class CausalDiagramEditorLayoutTests
         {
             LaneSpacing = 80m,
             Jugglers = [new EditorJuggler("A", "Anne")],
-            Throws =
-            [
-                new EditorThrow("A-R", "A", "R", 0m, 3m),
-                new EditorThrow("A-L", "A", "L", 1m, 3m),
-            ],
+            Throws = [new EditorThrow("A-R", "A", "R", 0m), new EditorThrow("A-L", "A", "L", 1m)],
         };
 
         CausalDiagramEditorLayout.HasHandTracks(state, "A").Should().BeFalse();

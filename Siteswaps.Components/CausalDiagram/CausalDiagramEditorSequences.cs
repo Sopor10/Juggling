@@ -92,7 +92,7 @@ public static class CausalDiagramEditorSequences
             Throws = [.. state.Throws],
             CausalEdges = [.. state.CausalEdges],
         };
-        copy.SynchronizeHeights();
+        copy.NormalizeCausalEdgeOffsets();
         return copy;
     }
 
@@ -123,8 +123,7 @@ public static class CausalDiagramEditorSequences
                     ReadString(node.GetProperty("id")),
                     ReadString(node.GetProperty("jugglerId")),
                     ReadString(node.GetProperty("hand")),
-                    node.GetProperty("startTime").GetDecimal(),
-                    1m
+                    node.GetProperty("startTime").GetDecimal()
                 ))
                 .ToList();
             var edges = item.GetProperty("causalEdges")
@@ -148,7 +147,7 @@ public static class CausalDiagramEditorSequences
                 Throws = throws,
                 CausalEdges = edges,
             };
-            state.SynchronizeHeights();
+            state.NormalizeCausalEdgeOffsets();
             result.Add(id, state);
         }
         return result;

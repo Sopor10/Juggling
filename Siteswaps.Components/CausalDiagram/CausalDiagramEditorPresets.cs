@@ -53,7 +53,7 @@ public static class CausalDiagramEditorPresets
         HighgateCausalDiagramPresets.WorkInProgress.ToArray();
 
     public static IEnumerable<CausalDiagramEditorPreset> AllForLoading =>
-        All.Concat(WorkInProgress);
+        All.Concat(WorkInProgress).Concat(HighgateCausalDiagramPresets.SiteswapSources);
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>
         All.Where(preset =>
@@ -166,5 +166,6 @@ public static class CausalDiagramEditorPresets
     public static bool IsKnownId(string? id) =>
         id is "custom" or "siteswap531" or "feeding75" or "feeding-5-3"
         || All.Any(preset => preset.Id == id)
-        || WorkInProgress.Any(preset => preset.Id == id);
+        || WorkInProgress.Any(preset => preset.Id == id)
+        || HighgateCausalDiagramPresets.SiteswapSources.Any(preset => preset.Id == id);
 }

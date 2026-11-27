@@ -47,7 +47,10 @@ public static class CausalDiagramEditorTableAdapter
                             JugglerId: juggler.Id,
                             Time: time,
                             Chip: new DetailViewModel.ThrowChip(
-                                item.Height.ToString("0.##", CultureInfo.InvariantCulture),
+                                state
+                                    .HeightOf(item.Id)
+                                    ?.ToString("0.##", CultureInfo.InvariantCulture)
+                                    ?? "—",
                                 kind,
                                 Hand: item.Hand
                             )

@@ -89,7 +89,9 @@ public sealed class CausalStartPropsPropertyTests
                         zones,
                         pattern.State.People[targetPerson].TimeZone
                     );
-                    var targetLocalBeat = beat + (zone + node.Height - targetZone) / timeStretch;
+                    var targetLocalBeat =
+                        beat
+                        + (zone + (pattern.Diagram.HeightOf(node) ?? 0) - targetZone) / timeStretch;
                     var expectedHand = targetLocalBeat % 2 == 0 ? "R" : "L";
                     var actualTargetHand = pattern.Diagram.Hands[node.ToLimb!.Value];
 
@@ -243,7 +245,8 @@ public sealed class CausalStartPropsPropertyTests
                     StringComparer.Ordinal
                 );
             var expectedProps =
-                pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+                pattern.Diagram.Throws.Sum(node => pattern.Diagram.HeightOf(node) ?? 0)
+                / pattern.Diagram.StepCount;
             var natural = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
                 pattern.Diagram.Throws,
                 pattern.Diagram.CausalArrows,
@@ -364,7 +367,8 @@ public sealed class CausalStartPropsPropertyTests
             .BeEquivalentTo(analysis.StartProps);
 
         var totalProps =
-            pattern.Diagram.Throws.Sum(node => node.Height) / pattern.Diagram.StepCount;
+            pattern.Diagram.Throws.Sum(node => pattern.Diagram.HeightOf(node) ?? 0)
+            / pattern.Diagram.StepCount;
         var alphabeticalRemainder = CausalStartPropsCalculator.CalculateWithNaturalRemainder(
             pattern.Diagram.Throws,
             pattern.Diagram.CausalArrows,
@@ -410,7 +414,7 @@ public sealed class CausalStartPropsPropertyTests
         var pattern = FeedingPattern.Create(seed);
         var analysis = CausalStartPropsCalculator.AnalyzePeriodicCausalDiagram(pattern.Diagram);
         var distribution = analysis.StartProps;
-        var heightSum = pattern.Diagram.Throws.Sum(node => node.Height);
+        var heightSum = pattern.Diagram.Throws.Sum(node => pattern.Diagram.HeightOf(node) ?? 0);
         (heightSum % pattern.Diagram.StepCount)
             .Should()
             .Be(0, $"seed {seed} should have an integral prop count");
@@ -424,7 +428,7 @@ public sealed class CausalStartPropsPropertyTests
             inventory[(hand.Person.Name, hand.Name)] = hand.Name == "L" ? props.Left : props.Right;
         }
         var throwsByTime = pattern
-            .Diagram.Throws.Where(node => node.Height > 0)
+            .Diagram.Throws.Where(node => pattern.Diagram.HeightOf(node) is > 0)
             .GroupBy(node => node.Time)
             .ToDictionary(
                 group => group.Key,
@@ -433,7 +437,7 @@ public sealed class CausalStartPropsPropertyTests
             );
         var arrivals = new Dictionary<(int Time, string Juggler, string Hand), int>();
         var period = pattern.Diagram.StepCount;
-        var maxHeight = pattern.Diagram.Throws.Max(node => node.Height);
+        var maxHeight = pattern.Diagram.Throws.Max(node => pattern.Diagram.HeightOf(node) ?? 0);
         var fullPeriod = period * analysis.FullPeriodMultiplier;
         var seedTime = decimal.ToInt32(analysis.SeedingCompletionTime);
         var horizon = seedTime + fullPeriod + maxHeight;
@@ -464,7 +468,7 @@ public sealed class CausalStartPropsPropertyTests
 
                     var targetHand = pattern.Diagram.Hands[throwNode.ToLimb!.Value];
                     var landing = (
-                        time + throwNode.Height,
+                        time + (pattern.Diagram.HeightOf(throwNode) ?? 0),
                         targetHand.Person.Name,
                         targetHand.Name
                     );
@@ -490,7 +494,7 @@ public sealed class CausalStartPropsPropertyTests
         int periodMultiplier
     )
     {
-        var totalHeight = diagram.Throws.Sum(node => node.Height);
+        var totalHeight = diagram.Throws.Sum(node => diagram.HeightOf(node) ?? 0);
         if (
             totalHeight % diagram.StepCount != 0
             || startProps.Values.Sum(count => count.Left + count.Right)
@@ -506,13 +510,15 @@ public sealed class CausalStartPropsPropertyTests
         }
 
         var throwsByTime = diagram
-            .Throws.Where(node => node.Height > 0)
+            .Throws.Where(node => diagram.HeightOf(node) is > 0)
             .GroupBy(node => node.Time)
             .ToDictionary(group => group.Key, group => group.ToArray());
         var arrivals = new Dictionary<(int Time, string Juggler, string Hand), int>();
         var period = diagram.StepCount;
-        var horizon = period * (periodMultiplier + 2) + diagram.Throws.Max(node => node.Height);
-        var warmup = period + diagram.Throws.Max(node => node.Height);
+        var horizon =
+            period * (periodMultiplier + 2)
+            + diagram.Throws.Max(node => diagram.HeightOf(node) ?? 0);
+        var warmup = period + diagram.Throws.Max(node => diagram.HeightOf(node) ?? 0);
         var fullPeriod = period * periodMultiplier;
         SimulationSnapshot? firstPeriodicState = null;
         SimulationSnapshot? repeatedPeriodicState = null;
@@ -536,7 +542,7 @@ public sealed class CausalStartPropsPropertyTests
 
                     var targetHand = diagram.Hands[throwNode.ToLimb!.Value];
                     var arrival = (
-                        time + throwNode.Height,
+                        time + (diagram.HeightOf(throwNode) ?? 0),
                         targetHand.Person.Name,
                         targetHand.Name
                     );

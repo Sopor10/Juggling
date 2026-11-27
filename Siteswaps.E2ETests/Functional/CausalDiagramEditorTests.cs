@@ -521,15 +521,13 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             $"{firstJugglerId}-simultaneous",
             source.JugglerId,
             source.Hand == "R" ? "L" : "R",
-            source.StartTime,
-            source.Height,
-            HeightIsExplicit: true
+            source.StartTime
         );
         state.Throws.Add(synchronousThrow);
         state.CausalEdges.Add(
             new EditorCausalEdge("A-simultaneous-edge", synchronousThrow.Id, targetId)
         );
-        state.SynchronizeHeights();
+        state.NormalizeCausalEdgeOffsets();
         var anneLeftThrows = state.Throws.Count(item =>
             item.JugglerId == firstJugglerId && item.Hand == "L"
         );
