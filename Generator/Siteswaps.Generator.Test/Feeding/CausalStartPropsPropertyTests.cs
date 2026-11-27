@@ -409,6 +409,27 @@ public sealed class CausalStartPropsPropertyTests
             .BeTrue("the causal cycle's phase determines which hand holds the club at start");
     }
 
+    [Test]
+    public void Siteswap_lab_start_props_are_unavailable_for_incompatible_landing_phases()
+    {
+        var timeZones = new[] { 0, 1 };
+        IReadOnlyList<int>[] heights =
+        [
+            [3],
+            [3],
+        ];
+        IReadOnlyList<int>[] targets =
+        [
+            [0],
+            [1],
+        ];
+
+        SiteswapLabJifMapper
+            .CalculateCausalStartProps(timeZones, heights, targets)
+            .Should()
+            .BeEmpty();
+    }
+
     private static void AssertFeedingSimulation(int seed)
     {
         var pattern = FeedingPattern.Create(seed);

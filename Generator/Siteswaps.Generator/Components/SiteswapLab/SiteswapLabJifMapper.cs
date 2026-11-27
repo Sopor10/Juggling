@@ -28,9 +28,19 @@ public static class SiteswapLabJifMapper
                     StringComparer.Ordinal
                 );
 
-        return JifDetails::Siteswap
-            .Details.CausalDiagram.PassingDiagramBuilder.Build(timeZones, heights, targets)
-            .StartProps;
+        try
+        {
+            return JifDetails::Siteswap
+                .Details.CausalDiagram.PassingDiagramBuilder.Build(timeZones, heights, targets)
+                .StartProps;
+        }
+        catch (ArgumentException)
+        {
+            return ImmutableDictionary<
+                string,
+                JifDetails::Siteswap.Details.CausalDiagram.StartProps
+            >.Empty;
+        }
     }
 
     public static string MapViaCausalDiagram(

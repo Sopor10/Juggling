@@ -270,8 +270,8 @@ public class SiteswapLabPageTests
         page.Should().Contain("Rotate starting position");
         page.Should().Contain("StartClubsClass=\"lab-start-props\"");
         page.Should().Contain("CausalStartProps");
-        page.Should().Contain("LeftClubs: clubs.Left");
-        page.Should().Contain("RightClubs: clubs.Right");
+        page.Should().Contain("LeftClubs: clubs?.Left");
+        page.Should().Contain("RightClubs: clubs?.Right");
         page.Should().Contain("Start clubs");
         css.Should().Contain(".lab-start-props");
         css.Should().Contain(".lab-rotate");

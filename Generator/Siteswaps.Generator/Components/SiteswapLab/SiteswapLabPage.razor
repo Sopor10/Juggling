@@ -335,15 +335,17 @@
             );
             return _direct.People.Select((person, index) =>
             {
-                var clubs = causalStarts[person.Name];
+                causalStarts.TryGetValue(person.Name, out var clubs);
                 return new PatternTable.PatternRow(
                     person.Name,
                     Phase: _direct.TimelinePhaseFor(index),
                     PhaseCount: _direct.ActiveTimeZoneCount,
-                    LeftClubs: clubs.Left,
-                    RightClubs: clubs.Right,
+                    LeftClubs: clubs?.Left,
+                    RightClubs: clubs?.Right,
                     TimeZone: person.TimeZone,
-                    StartClubsAriaLabel: L["Start clubs {0}: left {1}, right {2}", person.Name, clubs.Left, clubs.Right].Value
+                    StartClubsAriaLabel: clubs is null
+                        ? null
+                        : L["Start clubs {0}: left {1}, right {2}", person.Name, clubs.Left, clubs.Right].Value
                 );
             }).ToList();
         }
