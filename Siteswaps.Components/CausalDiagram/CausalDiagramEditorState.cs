@@ -7,6 +7,7 @@ namespace Siteswaps.Components.CausalDiagram;
 public sealed class CausalDiagramEditorState
 {
     private const string CompactTokenPrefix = "j4.";
+    private const string SequenceCompactTokenPrefix = "j5.";
     private const int MaximumTokenLength = 300_000;
     private const int MaximumDecodedPayloadBytes = 220_000;
 
@@ -18,6 +19,10 @@ public sealed class CausalDiagramEditorState
     );
 
     public int Version { get; set; } = 4;
+
+    /// <summary>Optional finite-sequence selection; the graph remains the ordinary periodic state.</summary>
+    public string? SequenceId { get; set; }
+    public int? SequencePhaseIndex { get; set; }
     public string PresetId { get; set; } = "custom";
     public string ActiveJugglerId { get; set; } = "A";
     public decimal CycleLength { get; set; } = 7m;
@@ -29,6 +34,30 @@ public sealed class CausalDiagramEditorState
     public List<EditorJuggler> Jugglers { get; set; } = [];
     public List<EditorThrow> Throws { get; set; } = [];
     public List<EditorCausalEdge> CausalEdges { get; set; } = [];
+
+    /// <summary>Checks whether the state can be safely displayed and edited.</summary>
+    public bool IsValidForEditor() => IsValid(this);
+
+    /// <summary>Checks graph balance and whether the mapped throws form a periodic juggle.</summary>
+    public bool IsValidPattern() =>
+        IsValidForEditor()
+        && HasBalancedCausalEdges(this)
+        && CausalDiagramEditorJifAdapter.TryMap(this, out _, out _);
+
+    internal bool HasBalancedCausalEdges() => HasBalancedCausalEdges(this);
+
+    private static bool HasBalancedCausalEdges(CausalDiagramEditorState state)
+    {
+        var incomingCounts = state
+            .CausalEdges.GroupBy(edge => edge.ToThrowId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+        var outgoingCounts = state
+            .CausalEdges.GroupBy(edge => edge.FromThrowId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+        return state.Throws.All(node =>
+            incomingCounts.GetValueOrDefault(node.Id) == outgoingCounts.GetValueOrDefault(node.Id)
+        );
+    }
 
     public static CausalDiagramEditorState CreateSiteswap531() =>
         CreateSiteswapPattern("531", "siteswap-531");
@@ -543,6 +572,11 @@ public sealed class CausalDiagramEditorState
         {
             writer.WriteStartObject();
             writer.WriteNumber("v", Version);
+            if (Version >= 5)
+            {
+                writer.WriteString("x", SequenceId);
+                writer.WriteNumber("z", SequencePhaseIndex ?? 0);
+            }
             writer.WriteString("p", PresetId);
             writer.WriteString("a", ActiveJugglerId);
             writer.WriteNumber("c", CycleLength);
@@ -584,7 +618,8 @@ public sealed class CausalDiagramEditorState
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
-        return CompactTokenPrefix + ToBase64Url(output.ToArray());
+        return (Version >= 5 ? SequenceCompactTokenPrefix : CompactTokenPrefix)
+            + ToBase64Url(output.ToArray());
     }
 
     public static bool TryDecode(string? token, out CausalDiagramEditorState? state)
@@ -592,13 +627,18 @@ public sealed class CausalDiagramEditorState
         state = null;
         if (string.IsNullOrWhiteSpace(token) || token.Length > MaximumTokenLength)
             return false;
-        if (!token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
+        var isSequenceToken = token.StartsWith(
+            SequenceCompactTokenPrefix,
+            StringComparison.Ordinal
+        );
+        if (!isSequenceToken && !token.StartsWith(CompactTokenPrefix, StringComparison.Ordinal))
             return false;
         try
         {
+            var prefix = isSequenceToken ? SequenceCompactTokenPrefix : CompactTokenPrefix;
             var decoded = DeserializeCompact(
-                DecodePayload(token[CompactTokenPrefix.Length..]),
-                expectedVersion: 4
+                DecodePayload(token[prefix.Length..]),
+                expectedVersion: isSequenceToken ? 5 : 4
             );
             if (decoded is not null)
                 decoded.NormalizeCausalEdgeOffsets();
@@ -659,68 +699,76 @@ public sealed class CausalDiagramEditorState
             SnapStep = snapStep,
             TimelineWidth = ReadOptionalDecimal(root, "w", 560m),
             LaneSpacing = ReadOptionalDecimal(root, "l", 105m),
+            SequenceId = version >= 5 ? RequiredString(root, "x") : null,
+            SequencePhaseIndex = version >= 5 ? RequiredInt(root, "z") : null,
             Jugglers = [],
             Throws = [],
             CausalEdges = [],
         };
+        ReadJugglers(state, jugglers);
+        ReadThrows(state, throws);
+        ReadCausalEdges(state, edges);
+        return state;
+    }
+
+    private static void ReadJugglers(CausalDiagramEditorState state, JsonElement jugglers)
+    {
         foreach (var item in jugglers.EnumerateArray())
         {
-            if (
-                item.ValueKind != JsonValueKind.Array
-                || item.GetArrayLength() != 2
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-            )
+            if (item.ValueKind != JsonValueKind.Array || item.GetArrayLength() != 2)
                 throw new JsonException();
             state.Jugglers.Add(
-                new EditorJuggler(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException()
-                )
+                new EditorJuggler(RequiredArrayString(item, 0), RequiredArrayString(item, 1))
             );
         }
+    }
+
+    private static void ReadThrows(CausalDiagramEditorState state, JsonElement throws)
+    {
         foreach (var item in throws.EnumerateArray())
         {
             if (
                 item.ValueKind != JsonValueKind.Array
                 || item.GetArrayLength() != 4
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-                || item[2].ValueKind != JsonValueKind.String
                 || !item[3].TryGetDecimal(out var start)
             )
                 throw new JsonException();
             state.Throws.Add(
                 new EditorThrow(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException(),
-                    item[2].GetString() ?? throw new JsonException(),
+                    RequiredArrayString(item, 0),
+                    RequiredArrayString(item, 1),
+                    RequiredArrayString(item, 2),
                     start
                 )
             );
         }
+    }
+
+    private static void ReadCausalEdges(CausalDiagramEditorState state, JsonElement edges)
+    {
         foreach (var item in edges.EnumerateArray())
         {
             if (
                 item.ValueKind != JsonValueKind.Array
                 || item.GetArrayLength() != 4
-                || item[0].ValueKind != JsonValueKind.String
-                || item[1].ValueKind != JsonValueKind.String
-                || item[2].ValueKind != JsonValueKind.String
                 || !item[3].TryGetInt32(out var offset)
             )
                 throw new JsonException();
             state.CausalEdges.Add(
                 new EditorCausalEdge(
-                    item[0].GetString() ?? throw new JsonException(),
-                    item[1].GetString() ?? throw new JsonException(),
-                    item[2].GetString() ?? throw new JsonException(),
+                    RequiredArrayString(item, 0),
+                    RequiredArrayString(item, 1),
+                    RequiredArrayString(item, 2),
                     offset
                 )
             );
         }
-        return state;
     }
+
+    private static string RequiredArrayString(JsonElement item, int index) =>
+        item[index].ValueKind == JsonValueKind.String
+            ? item[index].GetString() ?? throw new JsonException()
+            : throw new JsonException();
 
     private static JsonElement RequiredProperty(JsonElement root, string name) =>
         root.TryGetProperty(name, out var value)
@@ -774,7 +822,7 @@ public sealed class CausalDiagramEditorState
     {
         if (
             state is null
-            || state.Version != 4
+            || state.Version is not (4 or 5)
             || state.Jugglers is null
             || state.Throws is null
             || state.CausalEdges is null
@@ -789,6 +837,21 @@ public sealed class CausalDiagramEditorState
             || state.Jugglers.Count is < 1 or > 16
             || state.Throws.Count > 500
             || state.CausalEdges.Count > 2_000
+            || (
+                state.Version == 5
+                && (
+                    state.SequenceId is null
+                    || state.SequencePhaseIndex is null
+                    || !CausalDiagramEditorSequences.IsValidSelection(
+                        state.SequenceId,
+                        state.SequencePhaseIndex.Value
+                    )
+                )
+            )
+            || (
+                state.Version == 4
+                && (state.SequenceId is not null || state.SequencePhaseIndex is not null)
+            )
         )
             return false;
         if (
@@ -833,13 +896,7 @@ public sealed class CausalDiagramEditorState
                 .Count() != state.CausalEdges.Count
         )
             return false;
-        return state.CausalEdges.All(edge =>
-        {
-            var source = state.Throws.First(node => node.Id == edge.FromThrowId);
-            var target = state.Throws.First(node => node.Id == edge.ToThrowId);
-            var height = DerivedHeight(state, source, target, edge.CycleOffset);
-            return height >= 0 && height <= 10_000;
-        });
+        return true;
     }
 
     public decimal? HeightOf(string throwId)
@@ -888,23 +945,11 @@ public sealed class CausalDiagramEditorState
 
             var phase = nodes[0].StartTime % beatDuration;
             durations.Add(BeatFraction.Approximate(phase));
-            for (var index = 0; index < nodes.Length; index++)
-            {
-                var expected = (phase + index * beatDuration) % CycleLength;
-                var deviation = (nodes[index].StartTime - expected) % beatDuration;
-                if (deviation < 0)
-                    deviation += beatDuration;
-                if (
-                    deviation <= 0.000000000000000000000001m
-                    || beatDuration - deviation <= 0.000000000000000000000001m
-                )
-                    deviation = 0;
-                durations.Add(BeatFraction.Approximate(deviation));
-            }
         }
 
         var globalBeat = durations.Aggregate(BeatFraction.GreatestCommonDivisor);
-        return globalBeat.ToDecimal();
+        var result = globalBeat.ToDecimal();
+        return result > 0 ? result : CycleLength / Math.Max(1, Throws.Count);
     }
 
     private readonly record struct BeatFraction(BigInteger Numerator, BigInteger Denominator)
@@ -919,7 +964,7 @@ public sealed class CausalDiagramEditorState
                     0,
                     MidpointRounding.AwayFromZero
                 );
-                if (Math.Abs(value - numerator / denominator) <= 0.000000000000000000000001m)
+                if (Math.Abs(value - numerator / denominator) <= 0.000000001m)
                     return Create(new BigInteger(numerator), denominator);
             }
 
@@ -1006,12 +1051,15 @@ public sealed class CausalDiagramEditorState
         if (targetThrowCount == 0)
             return 0;
         var targetBeatDuration = state.CycleLength / targetThrowCount;
+        var globalBeatDuration = state.GetGlobalBeatDuration();
+        if (globalBeatDuration <= 0)
+            return 0;
         return (
                 target.StartTime
                 + cycleOffset * state.CycleLength
                 - source.StartTime
                 + 2m * targetBeatDuration
-            ) / state.GetGlobalBeatDuration();
+            ) / globalBeatDuration;
     }
 
     private static bool ValidText(string? value, int length) =>

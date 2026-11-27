@@ -107,6 +107,10 @@ export function unbindOutsideClose(element) {
     outsideCloseHandlers.delete(element);
 }
 
+export function closeDetails(element) {
+    if (element?.open) element.open = false;
+}
+
 export function startJugglerHold(dotnet, jugglerId, pointerId, originX, originY) {
     stopJugglerHold();
     const target = [...document.querySelectorAll(".juggler-add-target")]

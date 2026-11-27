@@ -1,0 +1,8872 @@
+[
+  {
+    "id": "highgate-funkybookendsvsparsnip",
+    "label": "Funky bookends vs parsnip",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 61–61 / PDF p. 62–62; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "7772677782",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R9",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 61,
+        "pdfPage": 62
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-funkybookendsvsparsnip"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 35,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-parsnipvsfunkybookends",
+    "label": "Parsnip vs funky bookends",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 61–61 / PDF p. 62–62; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "7778277726",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 61,
+        "pdfPage": 62
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-parsnipvsfunkybookends"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 35,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-8978226",
+    "label": "8978226",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 66–66 / PDF p. 67–67; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "43.5p134.5p41",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 66,
+        "pdfPage": 67
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-8978226"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 39,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-9788226",
+    "label": "9788226",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 66–66 / PDF p. 67–67; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "4.5p4133.5p41",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 66,
+        "pdfPage": 67
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-9788226"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 39,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-7882962",
+    "label": "7882962",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 66–66 / PDF p. 67–67; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p44.5p1413",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R13",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 66,
+        "pdfPage": 67
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-7882962"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 39,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-8897226",
+    "label": "8897226",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 66–66 / PDF p. 67–67; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "44.5p1343.5p1",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 66,
+        "pdfPage": 67
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-8897226"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 39,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-9268827",
+    "label": "9268827",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 67–67 / PDF p. 68–68; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "4.5p343.5p141",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 6.5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 7.5
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 8.5
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 9.5
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 10.5
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 11.5
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 12.5
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 13.5
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-L14",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R13",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R13",
+        "cycleOffset": -1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R13",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 67,
+        "pdfPage": 68
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-9268827"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 40,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-9682782",
+    "label": "9682782",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 67–67 / PDF p. 68–68; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "4.5p43.5p1314",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R13",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 67,
+        "pdfPage": 68
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-9682782"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 40,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-7892682",
+    "label": "7892682",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 67–67 / PDF p. 68–68; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p4.5p31414",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R13",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 67,
+        "pdfPage": 68
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-7892682"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 40,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-7786266",
+    "label": "Jim's three count · why not? variation",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 67–67 / PDF p. 68–68; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p4133.5p33",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 67,
+        "pdfPage": 68
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-jimsthreecountwhynotvariation"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 40,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-7266867",
+    "label": "Jim's three count · not why variation",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 68–68 / PDF p. 69–69; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p343.5p133",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 6.5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 7.5
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 8.5
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 9.5
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 10.5
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 11.5
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 12.5
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 13.5
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-L14",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R13",
+        "to": "B-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R13",
+        "cycleOffset": -1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 68,
+        "pdfPage": 69
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-jimsthreecountnotwhyvariation"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 41,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-7966266",
+    "label": "Jim's three count · maybe not variation",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 68–68 / PDF p. 69–69; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p3134.5p33",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 68,
+        "pdfPage": 69
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-jimsthreecountmaybenotvariation"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 41,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-9667266",
+    "label": "9667266",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 68–68 / PDF p. 69–69; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "4.5p31333.5p3",
+    "cycleLength": 14,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10.5
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11.5
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12.5
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 68,
+        "pdfPage": 69
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-9667266"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 41,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-972",
+    "label": "972 · right-handed start",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 68–68 / PDF p. 69–69; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "4.5p13.5p",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 68,
+        "pdfPage": 69
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-972"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 41,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-972alternativestart",
+    "label": "972 · alternative start (729)",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 70–70 / PDF p. 71–71; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p4.5p1",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R3",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R5",
+        "cycleOffset": -1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L6",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R5",
+        "cycleOffset": 0
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 70,
+        "pdfPage": 71
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-972alternativestart"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 42,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-passselfzap",
+    "label": "Pass self zap",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 71–71 / PDF p. 72–72; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p32.5p",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 71,
+        "pdfPage": 72
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-passselfzap"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 43,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-75666",
+    "label": "75666",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 72–72 / PDF p. 73–73; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p332.5p3",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 72,
+        "pdfPage": 73
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-75666"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 44,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-75756",
+    "label": "75756",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 72–72 / PDF p. 73–73; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p3.5p32.5p2.5p",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 72,
+        "pdfPage": 73
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-75756"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 44,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-zapzapheff",
+    "label": "Zap zap heff",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 72–72 / PDF p. 73–73; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "2.5p2.5p4",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 72,
+        "pdfPage": 73
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-zapzapheff"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 44,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-56685",
+    "label": "56685",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 72–72 / PDF p. 73–73; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "2.5p32.5p34",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-L2",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 72,
+        "pdfPage": 73
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-56685"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 44,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-78456",
+    "label": "78456",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 73–73 / PDF p. 74–74; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p2342.5p",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "A-L10",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 73,
+        "pdfPage": 74
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-78456"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 45,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-75864",
+    "label": "75864",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 73–73 / PDF p. 74–74; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p422.5p3",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6.5
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7.5
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8.5
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 73,
+        "pdfPage": 74
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-75864"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 45,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-74685",
+    "label": "74685",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded PDF), printed p. 73–73 / PDF p. 74–74; action sequences and Prechac notation transcribed from the source page.",
+    "notation": "3.5p32.5p24",
+    "cycleLength": 10,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 6.5
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 7.5
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 8.5
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 9.5
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "B-L2",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded PDF",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 73,
+        "pdfPage": 74
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-74685"
+    ],
+    "visualVerification": {
+      "status": "visually verified",
+      "edition": "2014 Highgate Collection",
+      "printedPage": 45,
+      "checks": [
+        "throw arrows and destinations",
+        "hand labels",
+        "relative timing and phase offsets",
+        "holds and source text where shown"
+      ],
+      "notes": "Graph checked against the printed causal diagram; siteswap/Prechac/action text cross-checked against the corresponding 2017 expanded-edition source page."
+    }
+  },
+  {
+    "id": "highgate-asailorwenttosea",
+    "label": "A sailor went to sea",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded), printed p. 74 / PDF p. 75; The Highgate Collection (2014), PDF p. 46.",
+    "notation": "Eight-action hand-clapping pattern; two crossing passes and a hurried self after each.",
+    "cycleLength": 8,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 1
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 74,
+        "pdfPage": 75
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 46
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-asailorwenttosea"
+    ],
+    "visualVerification": "2017 expanded causal rows and the matching 2014 diagram/sequence were compared by event order, recipient, hand route and cycle continuation. Every arrow is transcribed from the next event it causes; see the source note for the exact pages and interpretation."
+  },
+  {
+    "id": "highgate-countdown",
+    "label": "Countdown",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded), printed p. 75 / PDF p. 76; The Highgate Collection (2014), PDF p. 47.",
+    "notation": "The 15-beat countdown segment, repeated with the other hand; one beat per throw.",
+    "cycleLength": 30,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R6",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L7",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "A-R8",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "A-L9",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "A-R10",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "A-L11",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "A-R12",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "A-R13",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 24
+      },
+      {
+        "id": "A-L13",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 25
+      },
+      {
+        "id": "A-R14",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 26
+      },
+      {
+        "id": "A-L14",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 27
+      },
+      {
+        "id": "A-R15",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 28
+      },
+      {
+        "id": "A-L15",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 29
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R6",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "B-L7",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R8",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "B-L9",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "B-R10",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 20
+      },
+      {
+        "id": "B-L11",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "B-R12",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "B-R13",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 24
+      },
+      {
+        "id": "B-L13",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 25
+      },
+      {
+        "id": "B-R14",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 26
+      },
+      {
+        "id": "B-L14",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 27
+      },
+      {
+        "id": "B-R15",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 28
+      },
+      {
+        "id": "B-L15",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 29
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L5",
+        "to": "B-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R6",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "B-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L7",
+        "to": "A-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R8",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L9",
+        "to": "A-R10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R10",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "A-L11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L11",
+        "to": "A-R12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R12",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "A-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R13",
+        "to": "B-L13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L13",
+        "to": "B-R14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R14",
+        "to": "A-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L14",
+        "to": "B-R15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R15",
+        "to": "A-L15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L15",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L5",
+        "to": "A-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R6",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "A-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L7",
+        "to": "B-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R8",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L9",
+        "to": "B-R10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R10",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "B-L11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L11",
+        "to": "B-R12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R12",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-R13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R13",
+        "to": "A-L13",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L13",
+        "to": "A-R14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R14",
+        "to": "B-L14",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L14",
+        "to": "A-R15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R15",
+        "to": "B-L15",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L15",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 75,
+        "pdfPage": 76
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 47
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-countdown"
+    ],
+    "visualVerification": "2017 expanded causal rows and the matching 2014 diagram/sequence were compared by event order, recipient, hand route and cycle continuation. Every arrow is transcribed from the next event it causes; see the source note for the exact pages and interpretation."
+  },
+  {
+    "id": "highgate-geometriccountdown",
+    "label": "Geometric countdown",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded), printed p. 75 / PDF p. 76; The Highgate Collection (2014), PDF p. 47.",
+    "notation": "The 9-beat geometric countdown segment, repeated with the other hand; one beat per throw.",
+    "cycleLength": 18,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R6",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "A-L7",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "A-R8",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "A-L9",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R6",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 12
+      },
+      {
+        "id": "B-L7",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 13
+      },
+      {
+        "id": "B-R8",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 14
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "B-L9",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 17
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L5",
+        "to": "B-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R6",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L7",
+        "to": "B-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R8",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "B-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L9",
+        "to": "A-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L5",
+        "to": "A-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R6",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L7",
+        "to": "A-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R8",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "A-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L9",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 75,
+        "pdfPage": 76
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 47
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-geometriccountdown"
+    ],
+    "visualVerification": "2017 expanded causal rows and the matching 2014 diagram/sequence were compared by event order, recipient, hand route and cycle continuation. Every arrow is transcribed from the next event it causes; see the source note for the exact pages and interpretation."
+  },
+  {
+    "id": "highgate-fizzbuzz",
+    "label": "Fizz buzz",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded), printed p. 75 / PDF p. 76; The Highgate Collection (2014), PDF p. 47.",
+    "notation": "12-beat fizz-buzz pattern; passes fall on the multiples of three or four, with straight passes.",
+    "cycleLength": 12,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "A-R6",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R6",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R4",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L5",
+        "to": "A-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R6",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L5",
+        "to": "B-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R6",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 75,
+        "pdfPage": 76
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 47
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-fizzbuzz"
+    ],
+    "visualVerification": "2017 expanded causal rows and the matching 2014 diagram/sequence were compared by event order, recipient, hand route and cycle continuation. Every arrow is transcribed from the next event it causes; see the source note for the exact pages and interpretation."
+  },
+  {
+    "id": "highgate-jimsfizzbuzzsynchronousversion",
+    "label": "Jim's fizz buzz (synchronous version)",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The New Highgate Collection (2017 expanded), printed p. 75–76 / PDF pp. 76–77; matching diagram in The Highgate Collection (2014), PDF p. 47.",
+    "notation": "Synchronous fizz-buzz diagram; Anne passes straight, Ben passes crossing. Source action rows include the marked hurried same-hand throws.",
+    "cycleLength": 24,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 6
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 7
+      },
+      {
+        "id": "A-R6",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "A-R7",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 9
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 10
+      },
+      {
+        "id": "A-R8",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 11
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 12
+      },
+      {
+        "id": "A-R9",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 13
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 14
+      },
+      {
+        "id": "A-L7",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 15
+      },
+      {
+        "id": "A-R10",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "A-L8",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "A-L9",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 18
+      },
+      {
+        "id": "A-R11",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 19
+      },
+      {
+        "id": "A-L10",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 20
+      },
+      {
+        "id": "A-L11",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 21
+      },
+      {
+        "id": "A-R12",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 22
+      },
+      {
+        "id": "A-L12",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 23
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R2",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-L3",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 4
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 6
+      },
+      {
+        "id": "B-R4",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 7
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 8
+      },
+      {
+        "id": "B-L5",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 9
+      },
+      {
+        "id": "B-R6",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 10
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 11
+      },
+      {
+        "id": "B-L7",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 12
+      },
+      {
+        "id": "B-R7",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 13
+      },
+      {
+        "id": "B-L8",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 14
+      },
+      {
+        "id": "B-R8",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 15
+      },
+      {
+        "id": "B-R9",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 16
+      },
+      {
+        "id": "B-L9",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 17
+      },
+      {
+        "id": "B-R10",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 18
+      },
+      {
+        "id": "B-L10",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 19
+      },
+      {
+        "id": "B-L11",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 20
+      },
+      {
+        "id": "B-R11",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 21
+      },
+      {
+        "id": "B-L12",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 22
+      },
+      {
+        "id": "B-R12",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 23
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "B-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L2",
+        "to": "A-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R5",
+        "to": "A-L3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L3",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R6",
+        "to": "B-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R7",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "A-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R8",
+        "to": "B-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L5",
+        "to": "A-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R9",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "B-R8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L7",
+        "to": "B-R9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R10",
+        "to": "A-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L8",
+        "to": "B-R10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L9",
+        "to": "A-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R11",
+        "to": "B-L11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L10",
+        "to": "B-R11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L11",
+        "to": "A-R12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R12",
+        "to": "A-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L12",
+        "to": "B-R1",
+        "cycleOffset": 1
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "B-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L3",
+        "to": "B-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R3",
+        "to": "A-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R4",
+        "to": "A-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L5",
+        "to": "B-R6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R6",
+        "to": "B-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L6",
+        "to": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L7",
+        "to": "B-R7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R7",
+        "to": "B-L8",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L8",
+        "to": "A-L7",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R8",
+        "to": "A-R10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R9",
+        "to": "B-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L9",
+        "to": "A-L9",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R10",
+        "to": "B-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L10",
+        "to": "A-L10",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L11",
+        "to": "A-L11",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R11",
+        "to": "B-L12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L12",
+        "to": "B-R12",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R12",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 75,
+        "pdfPage": 76
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 47
+      }
+    ],
+    "catalogStableIds": [
+      "highgate-jimsfizzbuzzsynchronousversion"
+    ],
+    "visualVerification": "2017 expanded causal rows and the matching 2014 diagram/sequence were compared by event order, recipient, hand route and cycle continuation. Every arrow is transcribed from the next event it causes; see the source note for the exact pages and interpretation."
+  }
+]

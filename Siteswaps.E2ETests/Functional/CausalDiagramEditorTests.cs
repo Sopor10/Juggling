@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
+using Siteswaps.Components.CausalDiagram;
 using Xunit;
 using Program = Siteswaps.E2ETests.Server.Program;
 
@@ -9,6 +10,91 @@ namespace Siteswaps.E2ETests.Functional;
 public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
     : IClassFixture<SharedBlazorFixture>
 {
+    [Fact]
+    public async Task RunawayPhaseNavigation_LoadsThePhaseGraphAndPreservesItsJ5Deeplink()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        await OpenEditor(session.Page, E2EBaseUrl.FromFixture(host.Fixture));
+
+        await SelectPresetAsync(session.Page, "highgate-thirteenclubrunaway-initial-urban-terror");
+        var navigation = session.Page.Locator(".runaway-sequence");
+        await Assertions
+            .Expect(
+                navigation.GetByRole(
+                    AriaRole.Button,
+                    new() { Name = "1. Initial urban-terror feed" }
+                )
+            )
+            .ToHaveAttributeAsync("aria-pressed", "true");
+        var firstPhaseToken = GetStateToken(session.Page.Url);
+        firstPhaseToken.Should().StartWith("j5.");
+        CausalDiagramEditorState
+            .TryDecode(firstPhaseToken, out var firstPhaseState)
+            .Should()
+            .BeTrue();
+        firstPhaseState!.SequenceId.Should().Be("highgate-thirteenclubrunaway");
+        firstPhaseState.SequencePhaseIndex.Should().Be(0);
+        firstPhaseState.PresetId.Should().Be("highgate-thirteenclubrunaway-initial-urban-terror");
+        await Assertions
+            .Expect(
+                navigation.GetByText(
+                    new System.Text.RegularExpressions.Regex("Daniel: Walks across")
+                )
+            )
+            .ToBeVisibleAsync();
+
+        await navigation
+            .GetByRole(AriaRole.Button, new() { Name = "2. Pass-pass-self after Daniel walks" })
+            .ClickAsync();
+        await Assertions
+            .Expect(
+                navigation.GetByRole(
+                    AriaRole.Button,
+                    new() { Name = "2. Pass-pass-self after Daniel walks" }
+                )
+            )
+            .ToHaveAttributeAsync("aria-pressed", "true");
+        var phaseTwoUrl = session.Page.Url;
+        var phaseTwoToken = GetStateToken(phaseTwoUrl);
+        phaseTwoToken.Should().StartWith("j5.");
+        CausalDiagramEditorState.TryDecode(phaseTwoToken, out var phaseTwoState).Should().BeTrue();
+        phaseTwoState!.SequenceId.Should().Be("highgate-thirteenclubrunaway");
+        phaseTwoState!.SequencePhaseIndex.Should().Be(1);
+        phaseTwoState.PresetId.Should().Be("highgate-thirteenclubrunaway-after-daniel-walk");
+
+        var restoredPage = await session.Context.NewPageAsync();
+        var restoredUri = new UriBuilder(phaseTwoUrl);
+        restoredUri.Query = string.Join(
+            '&',
+            restoredUri
+                .Query.TrimStart('?')
+                .Split('&', StringSplitOptions.RemoveEmptyEntries)
+                .Where(parameter => !parameter.StartsWith("step=", StringComparison.Ordinal))
+                .Append("step=2")
+        );
+        await restoredPage.GotoAsync(restoredUri.Uri.ToString());
+        await restoredPage
+            .Locator(".diagram-scroll")
+            .WaitForAsync(
+                new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30_000 }
+            );
+        await Assertions.Expect(restoredPage.Locator(".runaway-sequence")).ToBeVisibleAsync();
+        await Assertions
+            .Expect(
+                restoredPage
+                    .Locator(".runaway-sequence")
+                    .GetByRole(
+                        AriaRole.Button,
+                        new() { Name = "2. Pass-pass-self after Daniel walks" }
+                    )
+            )
+            .ToHaveAttributeAsync("aria-pressed", "true");
+        var restoredToken = GetStateToken(restoredPage.Url);
+        CausalDiagramEditorState.TryDecode(restoredToken, out var restoredState).Should().BeTrue();
+        restoredState!.SequencePhaseIndex.Should().Be(1);
+        restoredState.PresetId.Should().Be(phaseTwoState.PresetId);
+    }
+
     [Fact]
     public async Task CustomFeedingState_PersistsAndRestoresCompleteDeeplink()
     {
@@ -360,6 +446,7 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         var page = await context.NewPageAsync();
         await OpenEditor(page, E2EBaseUrl.FromFixture(host.Fixture));
         await SelectPresetAsync(page, "feeding-7-5");
+        await page.Locator(".juggler-add-target[data-juggler-id='P1']").PressAsync("Enter");
         await OpenDiagramOptions(page);
         var repetitions = page.Locator(".diagram-options").GetByLabel("Wiederholungen");
         await repetitions.FillAsync("20");
@@ -405,6 +492,139 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             "node => getComputedStyle(node).stroke"
         );
         focusStroke.Should().Be("rgb(0, 179, 255)");
+    }
+
+    [Fact]
+    public async Task MobileSynchronousThrows_KeepHandTracksAndTableEventsDistinct()
+    {
+        var browser = host.Fixture.Context?.Browser
+            ?? throw new InvalidOperationException("Playwright browser is not available.");
+        await using var context = await browser.NewContextAsync(
+            new BrowserNewContextOptions
+            {
+                IsMobile = true,
+                HasTouch = true,
+                ViewportSize = new ViewportSize { Width = 390, Height = 844 },
+            }
+        );
+        await BlazorTestServerProxy.InstallAsync(context, host.Fixture);
+        await E2ECulture.InstallAsync(context);
+        var page = await context.NewPageAsync();
+
+        var state = CausalDiagramEditorState.CreateFeedingPattern(3, 3, "custom");
+        state.Repetitions = 1;
+        var firstJugglerId = state.Jugglers[0].Id;
+        var firstJugglerName = state.Jugglers[0].Name;
+        var source = state.Throws.First(item => item.JugglerId == firstJugglerId);
+        var targetId = state.CausalEdges.Single(edge => edge.FromThrowId == source.Id).ToThrowId;
+        var synchronousThrow = new EditorThrow(
+            $"{firstJugglerId}-simultaneous",
+            source.JugglerId,
+            source.Hand == "R" ? "L" : "R",
+            source.StartTime
+        );
+        state.Throws.Add(synchronousThrow);
+        state.CausalEdges.Add(
+            new EditorCausalEdge("A-simultaneous-edge", synchronousThrow.Id, targetId)
+        );
+        state.NormalizeCausalEdgeOffsets();
+        var anneLeftThrows = state.Throws.Count(item =>
+            item.JugglerId == firstJugglerId && item.Hand == "L"
+        );
+        var anneRightThrows = state.Throws.Count(item =>
+            item.JugglerId == firstJugglerId && item.Hand == "R"
+        );
+        var token = Uri.EscapeDataString(state.Encode());
+        var response = await page.GotoAsync(
+            new Uri(
+                E2EBaseUrl.FromFixture(host.Fixture),
+                $"causal-diagram-editor?state={token}"
+            ).AbsoluteUri
+        );
+        Assert.Equal(200, response?.Status);
+        await page.Locator(".diagram-scroll").WaitForAsync();
+
+        var pair = await page.EvaluateAsync<SimultaneousNodeMetrics>(
+            """
+            jugglerId => {
+              const nodes = [...document.querySelectorAll('.pd-node')]
+                .filter(node => node.dataset.jugglerId === jugglerId);
+              const byX = new Map();
+              for (const node of nodes) {
+                const key = node.getAttribute('cx');
+                byX.set(key, [...(byX.get(key) ?? []), node]);
+              }
+              const pair = [...byX.values()].find(items => items.length > 1);
+              if (!pair) return null;
+              const throwIds = pair.map(node => node.dataset.throwId);
+              const targets = throwIds.map(id => document.querySelector(`.throw-hit-target[data-throw-id="${id}"]`));
+              const centers = targets.map(target => {
+                const rect = target.getBoundingClientRect();
+                return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2,
+                  width: rect.width, height: rect.height, id: target.dataset.throwId };
+              });
+              return { centers };
+            }
+            """,
+            firstJugglerId
+        );
+        Assert.NotNull(pair);
+        Assert.Equal(2, pair!.Centers.Length);
+        Assert.All(pair.Centers, target =>
+        {
+            Assert.True(target.Width >= 44);
+            Assert.True(target.Height >= 44);
+            Assert.InRange(target.X, 0, 390);
+            Assert.InRange(target.Y, 0, 844);
+        });
+        Assert.True(Math.Abs(pair.Centers[0].Y - pair.Centers[1].Y) >= 56);
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Tabelle einblenden" })
+            .ScrollIntoViewIfNeededAsync();
+        var tableToggle = page.GetByRole(AriaRole.Button, new() { Name = "Tabelle einblenden" });
+        var toggleBox = await tableToggle.BoundingBoxAsync();
+        Assert.NotNull(toggleBox);
+        await page.Touchscreen.TapAsync(
+            (float)(toggleBox!.X + toggleBox.Width / 2),
+            (float)(toggleBox.Y + toggleBox.Height / 2)
+        );
+        var leftRowHeader = page.GetByRole(
+            AriaRole.Rowheader,
+            new() { Name = $"{firstJugglerName} · L" }
+        );
+        var rightRowHeader = page.GetByRole(
+            AriaRole.Rowheader,
+            new() { Name = $"{firstJugglerName} · R" }
+        );
+        await Assertions.Expect(leftRowHeader).ToBeVisibleAsync();
+        await Assertions.Expect(rightRowHeader).ToBeVisibleAsync();
+        var leftRow = leftRowHeader.Locator("..");
+        var rightRow = rightRowHeader.Locator("..");
+        Assert.Equal(anneLeftThrows, await leftRow.Locator(".sdv-beat").CountAsync());
+        Assert.Equal(anneRightThrows, await rightRow.Locator(".sdv-beat").CountAsync());
+
+        var touchTarget = page.Locator($".throw-hit-target[data-throw-id='{synchronousThrow.Id}']");
+        await touchTarget.ScrollIntoViewIfNeededAsync();
+        var touchBox = await touchTarget.BoundingBoxAsync();
+        Assert.NotNull(touchBox);
+        await touchTarget.EvaluateAsync(
+            "node => node.addEventListener('pointerdown', event => window.__syncTouchDownPrevented = event.defaultPrevented)"
+        );
+        await page.Locator(".diagram-canvas")
+            .EvaluateAsync(
+                "svg => svg.addEventListener('gotpointercapture', event => window.__syncTouchCaptured = svg.hasPointerCapture(event.pointerId))"
+            );
+        var originalX = await touchTarget.GetAttributeAsync("cx");
+        var startX = touchBox!.X + touchBox.Width / 2;
+        var startY = touchBox.Y + touchBox.Height / 2;
+        var cdp = await context.NewCDPSessionAsync(page);
+        await DispatchTouch(cdp, "touchStart", startX, startY);
+        await DispatchTouch(cdp, "touchMove", startX + 35, startY);
+        await DispatchTouch(cdp, "touchMove", startX + 80, startY);
+        await DispatchTouchEnd(cdp);
+        await Assertions.Expect(touchTarget).Not.ToHaveAttributeAsync("cx", originalX!);
+        Assert.True(await page.EvaluateAsync<bool>("() => window.__syncTouchDownPrevented"));
+        Assert.True(await page.EvaluateAsync<bool>("() => window.__syncTouchCaptured"));
     }
 
     private static async Task OpenDiagramOptions(IPage page)
@@ -486,6 +706,15 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         }
     }
 
+    private static string GetStateToken(string url)
+    {
+        var stateParameter = new Uri(url)
+            .Query.TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Single(parameter => parameter.StartsWith("state=", StringComparison.Ordinal));
+        return Uri.UnescapeDataString(stateParameter["state=".Length..]);
+    }
+
     private static Task SaveDesignScreenshotAsync(IPage page, string fileName)
     {
         var directory = Environment.GetEnvironmentVariable("CAUSAL_DIAGRAM_SCREENSHOT_DIR");
@@ -558,5 +787,19 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         public double SvgWidth { get; set; }
         public double TargetDiameter { get; set; }
         public double CenterGap { get; set; }
+    }
+
+    private sealed class SimultaneousNodeMetrics
+    {
+        public required SimultaneousNodeCenter[] Centers { get; init; }
+    }
+
+    private sealed class SimultaneousNodeCenter
+    {
+        public double X { get; init; }
+        public double Y { get; init; }
+        public double Width { get; init; }
+        public double Height { get; init; }
+        public required string Id { get; init; }
     }
 }

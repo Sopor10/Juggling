@@ -5,6 +5,338 @@ namespace Siteswaps.Test.CausalDiagram;
 
 public class CausalDiagramEditorStateTests
 {
+    private static readonly string[] ReviewedHighgatePresetIds =
+    {
+        "highgate-7786266",
+        "highgate-7266867",
+        "highgate-7966266",
+        "highgate-972",
+        "highgate-972alternativestart",
+        "highgate-passselfzap",
+        "highgate-zapzapheff",
+        "highgate-funkybookendsvsparsnip",
+        "highgate-parsnipvsfunkybookends",
+        "highgate-alatedouble",
+        "highgate-alatesingle",
+        "highgate-aselfdouble",
+        "highgate-fiveclubthreecount",
+        "highgate-parsnip",
+        "highgate-fiveclubwhynot",
+        "highgate-fiveclubnotwhy",
+        "highgate-jimsthreecountasynchversion",
+        "highgate-synchronousonecount",
+        "highgate-synchronousonecountwithheffs",
+        "highgate-asailorwenttosea",
+        "highgate-countdown",
+        "highgate-geometriccountdown",
+        "highgate-fizzbuzz",
+        "highgate-jimsfizzbuzzsynchronousversion",
+        "highgate-779667withcrossingdoubles",
+        "highgate-777966withstraightdoubles",
+        "highgate-sevenclubthreecountondoubles",
+        "highgate-sevenclubthreecountonsinglestechno",
+        "highgate-sevenclubfourcounttripleself",
+        "highgate-sevenclubfourcountondoubles",
+        "highgate-8x6x68x8x6withcrossingsinglesandstraightdoubles",
+        "highgate-sevenclubwhynotstylepattern",
+        "highgate-sevenclubnotwhystylepattern",
+        "highgate-sevenclubmaybestylepattern1",
+        "highgate-sevenclubmaybestylepattern2",
+        "highgate-fiveclubonecount",
+        "highgate-jims-one-count-async",
+        "highgate-jims-two-count-async",
+        "highgate-frenchthreecount",
+        "highgate-civilwarfeed",
+        "highgate-gorillafeed",
+        "highgate-onecountfeedingbookendsandinvertedbookends",
+        "highgate-onecountfeedingcountdown",
+        "highgate-onecountfeedingpasspassselfandthreecount",
+        "highgate-passpassselffeed",
+        "highgate-suburbanterrorfeed",
+        "highgate-twocountfeed",
+        "highgate-martinsonecountfeedingfiveclubwhynotandfunkybookends",
+        "highgate-martinsonecountfeedingmaybe",
+        "highgate-onecountfeedingfiveclubwhynotandmartinsonecount",
+        "highgate-onecountfeedingwhynotandparsnip",
+        "highgate-ambidextrouspulsaronecountfeed",
+        "highgate-ambidextrouspulsarpasspassselffeed",
+        "highgate-ambidextrouspulsarpassselfpassfeed",
+        "highgate-ambidextrouspulsarthreecountfeed",
+        "highgate-extendedtarimstriangle",
+        "highgate-onecountonecountcountdowntriangle",
+        "highgate-onecountonecountpasspassselftriangle",
+        "highgate-onecountonecountthreecounttriangle",
+        "highgate-passpassselfpasspassselfcountdowntriangle",
+        "highgate-pulsar",
+        "highgate-tarimstriangle",
+        "highgate-twocounttwocountfourcounttriangle",
+        "highgate-clockwiseonecountrunaround",
+        "highgate-tenclubgorilla",
+        "highgate-fourpersonparsnipfeedingfivecountpopcorn",
+        "highgate-tenclubfrenchthreecounttriangle",
+        "highgate-tenclubpasspasshefftriangle",
+        "highgate-fourpersononecountfeedingfourcount",
+        "highgate-fourpersononecountfeedingthreecount",
+        "highgate-fourpersononecountfeedingtwocount",
+        "highgate-fourpersonpasspassselffeed",
+        "highgate-fourpersontwocountfeed",
+        "highgate-tenclubonecountvariation1",
+        "highgate-tenclubonecountvariation2",
+        "highgate-972box",
+        "highgate-maybebox",
+        "highgate-mildmadnessbox",
+        "highgate-tenclubtarimstriangle",
+        "highgate-whynotbox",
+        "highgate-three-count",
+        "highgate-sixcount",
+        "highgate-fourcount",
+        "highgate-twocount",
+        "highgate-fivecount-ambidextrous",
+        "highgate-threecount-ambidextrous",
+        "highgate-jimsthreecount",
+        "highgate-threecount-both-crossing",
+        "highgate-passpassself",
+        "highgate-chocolatebar",
+        "highgate-bookends",
+        "highgate-invertedbookends",
+        "highgate-onecountwithzaps",
+        "highgate-zapholdself",
+        "highgate-sevenclubnotwhyvariation1",
+        "highgate-sevenclubnotwhyvariation2",
+        "highgate-sevenclubnotwhyvariation3",
+        "highgate-sevenclubmaybevariation",
+        "highgate-copenhagencountdown",
+        "highgate-oslocountdown",
+        "highgate-sevencountpopcornwithdoublepasses",
+        "highgate-sevencountpopcornwithdoublepassesandheffs",
+        "highgate-sevencountpopcornwithsinglepassesand534",
+        "highgate-sevencountpopcornwithsinglepassesand453",
+        "highgate-sevencountpopcornwithsinglepassesandheffs",
+        "highgate-whynot",
+        "highgate-whynotalternativestart",
+        "highgate-notwhy",
+        "highgate-notwhyalternativestart",
+        "highgate-maybe",
+        "highgate-maybealternativestart",
+        "highgate-passpasszipfeedingthreecount",
+        "highgate-passpasszipfeedingfrenchthreecount",
+        "highgate-classicsixcountpopcorn",
+        "highgate-sixcountpopcornwithheffs",
+        "highgate-fivecountpopcorn",
+        "highgate-fivecountpopcornwithheffs",
+        "highgate-fivecountpopcornwithdoublepassesandheffs",
+        "highgate-fourcountpopcorn",
+        "highgate-fourcountpopcornwithheffs",
+        "highgate-threepersonpasspassselffeastjedsnightmare",
+        "highgate-threepersonpassselfpassfeastantiquasar",
+        "highgate-threepersonpasspassselffeastdoublethreecount",
+        "highgate-trifle",
+        "highgate-trilogy",
+        "highgate-threepersonfourcountdropbackline",
+        "highgate-anticlockwisetwocountrunaround",
+        "highgate-clockwisetwocountrunaround",
+        "highgate-anticlockwisepasspassselfrunaround",
+        "highgate-clockwisepasspassselfrunaround",
+        "highgate-passselfzip",
+        "highgate-therecipe",
+        "highgate-fourfourone",
+        "highgate-fourfourfourzero",
+        "highgate-aselftriple",
+        "highgate-58552",
+        "highgate-doublezapzip531",
+        "highgate-doublehold42",
+        "highgate-sevenclubonecountonsingles",
+        "highgate-jimsfizzbuzzasynchronousversion",
+        "highgate-jimsbookendsakabrainstormasynchronousversion",
+        "highgate-jimsinvertedbookendsfeed",
+        "highgate-threepersonchocolatebarfeast1",
+        "highgate-threepersonchocolatebarfeast2",
+        "highgate-threepersonchocolatebarfeast3",
+        "highgate-threepersonbookendsfeast1",
+        "highgate-threepersonbookendsfeast2",
+        "highgate-threepersonbookendsfeast3",
+        "highgate-threepersoninvertedbookendsfeast1",
+        "highgate-threepersoninvertedbookendsfeast2",
+        "highgate-threepersoninvertedbookendsfeast3",
+        "highgate-threepersontwocountfeast",
+        "highgate-threepersononecountfeast",
+        "highgate-threepersoncountdownfeast",
+        "highgate-quasar",
+        "highgate-fourcountvsthreecount",
+        "highgate-threecountvstwocount",
+        "highgate-twocountvspasspassself",
+        "highgate-twocountvsonecount",
+        "highgate-passpassselfvsonecount",
+        "highgate-fourcounttriangleonins",
+        "highgate-threecounttriangleonins",
+        "highgate-twocounttriangleoninsandouts",
+        "highgate-onecounttriangleoninsandouts",
+        "highgate-passpassselftriangle",
+        "highgate-twocountfeastrunaround",
+        "highgate-trafficlightspattern",
+        "highgate-antiquasarrunaround",
+        "highgate-quasarrunaround",
+        "highgate-anticlockwisepulsarrunaround",
+        "highgate-onecount",
+        "highgate-sevenclubtwocountonsingles",
+        "highgate-anearlydouble",
+        "highgate-anearlytriple",
+        "highgate-alatetriple",
+        "highgate-averylatetriple",
+        "highgate-thirteenclubfourcountbox",
+        "highgate-thirteenclubonecountfeedingcountdown",
+        "highgate-thirteenclubthreecountbox",
+        "highgate-thirteenclubthreecountboxvariation",
+        "highgate-thirteenclubtwocountbox",
+        "highgate-thirteenclubchocolatesquare",
+        "highgate-weirdpasspassselfbox",
+        "highgate-thirteenclubtwocountlinefeed",
+        "highgate-thirteencluburbanterrorfeedonecountlinefeed",
+        "highgate-thirteenclubfourcount",
+        "highgate-thirteenclubthreecount",
+        "highgate-thirteenclubtwocount",
+        "highgate-thirteenclubonecount",
+        "highgate-tenclubonecountfeedingcountdown",
+        "highgate-passpassselffeedingfrenchthreecount",
+        "highgate-passpasshefffeedingfrenchthreecount",
+        "highgate-asynchronouspasspasshefffeedingthreecount",
+        "highgate-tenclubtwocountfeedonsingles",
+        "highgate-tenclubonecountfeedingpasspassselfandthreecount",
+        "highgate-tenclubonecountfeedingbookendsandinvertedbookends",
+        "highgate-tenclubsuburbanterrorfeed",
+        "highgate-fourpersononecountfeedingpasspassself",
+        "highgate-fourpersononecountfeedingchocolatebar",
+        "highgate-fourpersononecountfeedingbookends",
+        "highgate-fourpersononecountfeedinginvertedbookends",
+        "highgate-fourpersononecountfeedingcountdown",
+        "highgate-fourpersoncivilwarfeed",
+        "highgate-mixedcountfeed",
+        "highgate-passpassselfbox",
+        "highgate-chocolatesquare",
+        "highgate-bookendsbox",
+        "highgate-invertedbookendsbox",
+        "highgate-twocountlinefeed",
+        "highgate-urbanterrorfeedonecountlinefeed",
+        "highgate-tenclubfourcounttriangle",
+        "highgate-tenclubthreecounttriangle",
+        "highgate-tenclubtwocounttriangle",
+        "highgate-tenclubonecounttriangle",
+        "highgate-fourpersonfourcountfeast",
+        "highgate-fourpersonthreecountfeast",
+        "highgate-fourpersontwocountfeast",
+        "highgate-fourpersononecountfeast",
+        "highgate-fourpersonpasspassselffeast",
+        "highgate-fourpersonbookendsfeast",
+        "highgate-fourpersontwocountrevolvingfeed",
+        "highgate-fourpersononecountrevolvingfeed",
+        "highgate-fourpersonquasar",
+        "highgate-fourpersonfizzbuzzfeast",
+        "highgate-fourpersonselflessfizzbuzz",
+        "highgate-aidansfeast1",
+        "highgate-aidansfeast2",
+        "highgate-aidansfeast3",
+        "highgate-aidansfeast4",
+        "highgate-bookendslinefeed",
+        "highgate-mobmildnessmadness",
+        "highgate-parsniplinefeed",
+        "highgate-mobneurosispsychosis",
+        "highgate-funkybookendslinefeed",
+        "highgate-onecountfeedingfiveclubwhynotandfunkybookends",
+        "highgate-onecountfeedingwhynotandfiveclubwhynot",
+        "highgate-onecountfeedingmaybeandfiveclubwhynot",
+        "highgate-londonsburning",
+        "highgate-rotator",
+        "highgate-pistons",
+        "highgate-flyingtrapeze",
+        "highgate-benzenering",
+        "highgate-dosado",
+        "highgate-threeleafclover",
+        "highgate-stickytriangle",
+        "highgate-theweave",
+        "highgate-dresserdrawerweave",
+        "highgate-fourpersonfourcountdropbackline1",
+        "highgate-fourcounty",
+        "highgate-fourcountdropbacky",
+        "highgate-fourpersonfourcountdropbackline2",
+        "highgate-threecounty",
+        "highgate-fourcounttrapeze",
+        "highgate-alloutcivilwarfeed",
+        "highgate-bookendsinvertedbookendsbox",
+        "highgate-doubleurbanterrorfeed",
+        "highgate-threecountaccommodation",
+        "highgate-lowfatchocolatebox",
+        "highgate-bookshelf",
+        "highgate-chocolatebookshelf",
+        "highgate-countdownaccommodation1",
+        "highgate-countdownaccommodation2",
+        "highgate-jimsthreecounty",
+        "highgate-rowrowrowyourboat",
+        "highgate-rowrowrowyourboatambidextrousvariation",
+        "highgate-frerejacques",
+        "highgate-fourpersonthreecountrickspicnic",
+        "highgate-fourpersontwocountrickspicnic",
+        "highgate-fourpersononecountrickspicnic",
+        "highgate-funkybookendsparsnipbox",
+        "highgate-tenclubonecounttrianglewithsingleanddoublepasses1",
+        "highgate-tenclubonecounttrianglewithsingleanddoublepasses2",
+        "highgate-tenclubpasspassselftriangle",
+        "highgate-rotatingy",
+        "highgate-thirteenclubtwocountfeed",
+        "highgate-thirteenclubpasspassselffeed",
+        "highgate-thirteenclubonecountfeedingfourcount",
+        "highgate-thirteenclubonecountfeedingthreecount",
+        "highgate-thirteenclubonecountfeedingtwocount",
+        "highgate-thirteenclubonecountfeedingpasspassself",
+        "highgate-thirteenclubonecountfeedingchocolatebar",
+        "highgate-thirteenclubonecountfeedingbookends",
+        "highgate-thirteenclubonecountfeedinginvertedbookends",
+        "highgate-thirteenclubdoubleurbanterrorfeed",
+        "highgate-thirteenclubthreecountaccommodation",
+        "highgate-thirteenclublowfatchocolatebox",
+        "highgate-thirteenclubbookshelf",
+        "highgate-thirteenclubchocolatebookshelf",
+        "highgate-thirteenclubcountdownaccommodation",
+        "highgate-karamazovshuffle",
+        "highgate-rotatingλ",
+        "highgate-cyclone",
+        "highgate-seattleshuffle",
+        "highgate-itsagoodonecountdownweave",
+        "highgate-gorillaweave",
+        "highgate-thirteenclubpasspassselffeedingfrenchthreecount",
+        "highgate-thirteenclubpasspasshefffeedingthreecount",
+        "highgate-thirteenclub972feedingthreecount",
+        "highgate-thirteenclub972feedingfrenchthreecount",
+        "highgate-onecountfeeding972",
+        "highgate-thirteenclubwhynotfeedingfivecountpopcorn",
+        "highgate-thirteenclubmaybefeedingfivecountpopcorn",
+        "highgate-thirteenclubfunkybookendsfeedingwhynot",
+        "highgate-thirteenclubfunkybookendsfeedingmaybe",
+        "highgate-thirteenclubmartinsonecountfeedingfivecountpopcorn",
+        "highgate-thirteenclubmartinsonecountfeedingfunkybookends",
+        "highgate-thirteenclubonecountfeedingwhynot",
+        "highgate-thirteenclubonecountfeedingmaybe",
+        "highgate-thirteenclubonecountfeedingmartinsonecount",
+        "highgate-thirteenonecountlinefeedfeedingfourcountandtwocount",
+        "highgate-thirteenclubonecountlinefeedfeedingfrenchthreecount",
+        "highgate-thirteenclubparsniplinefeedfeedingfivecountpopcorn",
+        "highgate-thirteenclubfunkybookendslinefeedfeedingfivecoun-cde45e90c5",
+        "highgate-thirteenclubmartinsonecountlinefeedfeedingfiveco-44febdca3e",
+        "highgate-thirteenclubonecountlinefeedfeedingfivecountpopcornandparsnip",
+        "highgate-thirteenclubonecountlinefeedfeedingwhynotandfivecountpopcorn",
+        "highgate-thirteenclubonecountlinefeedfeedingmaybeandfivecountpopcorn",
+        "highgate-thirteenclubweave",
+        "highgate-thirteenclubdresserdrawerweave",
+        "highgate-thirteenclubgorillaweave",
+        "highgate-sevenclubjimstwocountvariation1",
+        "highgate-sevenclubjimstwocountvariation2",
+        "highgate-sevenclubjimstwocountvariation3",
+        "highgate-sevenclubwhynotvariation",
+        "highgate-notlikely",
+        "highgate-maybenot",
+        "highgate-fivecountpopcornvsfiveclubwhynot",
+        "highgate-fiveclubwhynotvsfivecountpopcorn",
+    };
+
     [Test]
     public void Encode_RoundTripsNodesHandsAndExplicitCausalEdgesWithoutCachedHeights()
     {
@@ -56,6 +388,119 @@ public class CausalDiagramEditorStateTests
                 .BeTrue(preset.Id);
             decoded.Should().BeEquivalentTo(state);
         }
+    }
+
+    [Test]
+    public void PresetCatalog_EveryProductionPresetCreatesAValidPattern()
+    {
+        var invalidPresetIds = CausalDiagramEditorPresets
+            .All.Where(preset => !preset.Create().IsValidPattern())
+            .Select(preset => preset.Id)
+            .ToArray();
+
+        invalidPresetIds.Should().BeEmpty(string.Join(", ", invalidPresetIds));
+    }
+
+    [Test]
+    public void WorkInProgressPatterns_RemainSelectableAndEditableButAreNotValidPresets()
+    {
+        var presets = CausalDiagramEditorPresets.VisibleHighgateWorkInProgress.ToArray();
+
+        presets.Should().HaveCount(36);
+        foreach (var preset in presets)
+        {
+            var state = preset.Create();
+            state.PresetId.Should().Be(preset.Id);
+            state.IsValidForEditor().Should().BeTrue(preset.Id);
+            state.IsValidPattern().Should().BeFalse(preset.Id);
+            CausalDiagramEditorState
+                .TryDecode(state.Encode(), out var decoded)
+                .Should()
+                .BeTrue(preset.Id);
+            decoded!.IsValidPattern().Should().BeFalse(preset.Id);
+        }
+    }
+
+    [Test]
+    public void PresetCatalog_ImportsReviewedHighgatePatternsWithWorkInProgressSeparately()
+    {
+        var presets = CausalDiagramEditorPresets.VisibleHighgate.ToArray();
+        var workInProgressIds = CausalDiagramEditorPresets
+            .VisibleHighgateWorkInProgress.Select(preset => preset.Id)
+            .ToArray();
+
+        presets.Should().HaveCount(292);
+        presets
+            .Select(preset => preset.Id)
+            .Concat(workInProgressIds)
+            .Should()
+            .BeEquivalentTo(ReviewedHighgatePresetIds);
+    }
+
+    [Test]
+    public void HighgatePatterns_UsePrintedBeatPeriodsAndKeepThrowHeightsWhenTimeIsCompacted()
+    {
+        var expectedPeriods = new Dictionary<string, decimal>
+        {
+            ["highgate-sevencountpopcornwithdoublepasses"] = 14,
+            ["highgate-sevencountpopcornwithdoublepassesandheffs"] = 14,
+            ["highgate-sevencountpopcornwithsinglepassesand534"] = 14,
+            ["highgate-sevencountpopcornwithsinglepassesand453"] = 14,
+            ["highgate-sevencountpopcornwithsinglepassesandheffs"] = 14,
+            ["highgate-7778686"] = 14,
+            ["highgate-7786786"] = 14,
+            ["highgate-7777786"] = 14,
+            ["highgate-tenclubonecountfeedingcountdown"] = 8,
+            ["highgate-jimsthreecountasynchversion"] = 14,
+            ["highgate-jims-two-count-async"] = 10,
+            ["highgate-jims-one-count-async"] = 6,
+        };
+
+        foreach (var (id, period) in expectedPeriods)
+        {
+            var state = CausalDiagramEditorPresets
+                .AllForLoading.Single(item => item.Id == id)
+                .Create();
+            state.CycleLength.Should().Be(period, id);
+
+            var expanded = new CausalDiagramEditorState
+            {
+                CycleLength = state.CycleLength * 2,
+                Jugglers = state.Jugglers.ToList(),
+                Throws = state
+                    .Throws.Select(item => item with { StartTime = item.StartTime * 2 })
+                    .ToList(),
+                CausalEdges = state.CausalEdges.ToList(),
+            };
+            foreach (var item in state.Throws)
+                expanded.HeightOf(item.Id).Should().Be(state.HeightOf(item.Id), id);
+        }
+
+        var fourCountTriangle = CausalDiagramEditorPresets
+            .VisibleHighgateWorkInProgress.Single(item =>
+                item.Id == "highgate-tenclubfourcounttriangle"
+            )
+            .Create();
+        fourCountTriangle.HeightOf("B-L4").Should().BeApproximately(9m, 0.000001m);
+        fourCountTriangle
+            .CausalEdges.Single(edge => edge.FromThrowId == "B-L4")
+            .CycleOffset.Should()
+            .Be(0);
+        fourCountTriangle.IsValidPattern().Should().BeFalse();
+    }
+
+    [Test]
+    public void IsValidPattern_RejectsUnbalancedProductionPresetAfterLoading()
+    {
+        var state = CausalDiagramEditorPresets
+            .All.Single(preset => preset.Id == "siteswap-531")
+            .Create();
+        state.IsValidPattern().Should().BeTrue();
+
+        state.CausalEdges.RemoveAt(0);
+
+        state.IsValidForEditor().Should().BeTrue();
+        state.IsValidPattern().Should().BeFalse();
     }
 
     [Test]

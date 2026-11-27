@@ -32,10 +32,10 @@ public class FilterDslResources
 
         AND - Both conditions must be true
             Example: ground AND noZeros
-            
+
         OR - At least one condition must be true
             Example: ground OR excited
-            
+
         NOT - Negates the following condition
             Example: NOT ground
 
@@ -58,18 +58,18 @@ public class FilterDslResources
 
         1. Numbers - Integer values
            Example: minOcc(5, 2)
-           
+
         2. Wildcards (*) - Matches any value in pattern()
            Example: pattern(5, *, 1) - matches 531, 541, 551, etc.
-           
+
         3. Pass/Self (p/s) - Matches pass or self in pattern() (requires numberOfJugglers)
            Example: pattern(p, s, p) - Pass, Self, Pass sequence
            p: matches pass throws (ungerade Zahlen bei Passing)
            s: matches self throws (gerade Zahlen bei Passing)
-           
+
         4. Number Lists [n1, n2, ...] - Multiple allowed values
            Example: occ([5,7,9], 2) - throw value can be 5, 7, or 9
-           
+
         Whitespace is flexible:
         - minOcc(5,2) and minOcc( 5 , 2 ) are equivalent
         - [5,7,9] and [ 5, 7, 9 ] are equivalent
@@ -319,7 +319,7 @@ public class FilterDslResources
 
         No parameters.
 
-        A ground-state siteswap can be entered directly from the basic pattern 
+        A ground-state siteswap can be entered directly from the basic pattern
         (cascade for odd numbers, fountain for even) without transition throws.
 
         Examples:
@@ -339,7 +339,7 @@ public class FilterDslResources
 
         No parameters.
 
-        An excited-state siteswap requires special transition throws to enter 
+        An excited-state siteswap requires special transition throws to enter
         and exit the pattern. The juggling state differs from the basic pattern.
 
         Examples:
@@ -377,7 +377,7 @@ public class FilterDslResources
 
         No parameters.
 
-        A zero throw means an empty hand pause. Patterns without zeros 
+        A zero throw means an empty hand pause. Patterns without zeros
         have continuous throwing from both hands.
 
         Examples:

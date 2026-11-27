@@ -1,0 +1,370 @@
+[
+  {
+    "id": "highgate-fiveclubonecount",
+    "label": "Five club one count",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 40 / PDF p. 41; 2014 PDF p. 23",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 0.5
+      },
+      {
+        "id": "A-R2",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 1.5
+      },
+      {
+        "id": "A-L3",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 2.5
+      },
+      {
+        "id": "A-R4",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 3.5
+      },
+      {
+        "id": "A-L5",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 4.5
+      },
+      {
+        "id": "A-R6",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "B-R1",
+        "to": "A-R2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R2",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "A-L5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L5",
+        "to": "B-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Siteswap 744; Prechac 3.5p22. Ben starts with pass, hold, hold; Anne starts one and a half beats later with pass, hold, hold. Ben’s passes cross; Anne’s passes are straight. Empty hold beats are retained as nodes with no causal edges.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 40,
+        "pdfPage": 41
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 23
+      }
+    ],
+    "reviewStatus": {
+      "visualReview": "verified against 2017 printed p. 40/PDF p. 41",
+      "editionComparison": "diagram/sequence visually cross-checked against 2014 PDF p. 23",
+      "modelCheck": "Visual diagrams and pass/hold/hold descriptions match. The half-beat phase and unconnected hold nodes are preserved. Structural IsValidForEditor invariants pass with a registered placeholder preset ID; cycle offsets unchanged."
+    }
+  },
+  {
+    "id": "highgate-zapholdself",
+    "label": "Zap hold self",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 40 / PDF p. 41; 2014 PDF p. 23",
+    "cycleLength": 6,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L2",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "A-R3",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 2
+      },
+      {
+        "id": "A-L4",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 3
+      },
+      {
+        "id": "A-R5",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 4
+      },
+      {
+        "id": "A-L6",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 5
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L2",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      },
+      {
+        "id": "B-R3",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 2.5
+      },
+      {
+        "id": "B-L4",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 3.5
+      },
+      {
+        "id": "B-R5",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 4.5
+      },
+      {
+        "id": "B-L6",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 5.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "B-L2",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L2",
+        "to": "A-R3",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-R3",
+        "to": "A-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L4",
+        "to": "B-L4",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L4",
+        "to": "B-R5",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R5",
+        "to": "A-L6",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L6",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Siteswap 564; Prechac 2.5p23. Anne repeats zap, hold, self. Ben starts half a beat later and repeats self, zap, hold. Zaps are half-spin passes. Hold beats remain explicit and have no causal edge.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 40,
+        "pdfPage": 41
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 23
+      }
+    ],
+    "reviewStatus": {
+      "visualReview": "verified against 2017 printed p. 40/PDF p. 41",
+      "editionComparison": "diagram/sequence visually cross-checked against 2014 PDF p. 23",
+      "modelCheck": "Visual diagrams and zap/hold/self descriptions match. Half-beat phase, 2.5-height zap edges, self edges, and unconnected holds are preserved. Structural IsValidForEditor invariants pass with a registered placeholder preset ID; cycle offsets unchanged."
+    }
+  },
+  {
+    "id": "highgate-onecountwithzaps",
+    "label": "One count with zaps",
+    "group": "Highgate Collection",
+    "source": "Aidan Burns, The Highgate Collection: 2017 expanded PDF printed p. 41 / PDF p. 42; 2014 PDF p. 24",
+    "cycleLength": 2,
+    "jugglers": [
+      {
+        "id": "A",
+        "name": "Anne"
+      },
+      {
+        "id": "B",
+        "name": "Ben"
+      }
+    ],
+    "throws": [
+      {
+        "id": "A-R1",
+        "jugglerId": "A",
+        "hand": "R",
+        "startTime": 0
+      },
+      {
+        "id": "A-L1",
+        "jugglerId": "A",
+        "hand": "L",
+        "startTime": 1
+      },
+      {
+        "id": "B-R1",
+        "jugglerId": "B",
+        "hand": "R",
+        "startTime": 0.5
+      },
+      {
+        "id": "B-L1",
+        "jugglerId": "B",
+        "hand": "L",
+        "startTime": 1.5
+      }
+    ],
+    "causalEdges": [
+      {
+        "from": "A-R1",
+        "to": "B-R1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-R1",
+        "to": "A-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "A-L1",
+        "to": "B-L1",
+        "cycleOffset": 0
+      },
+      {
+        "from": "B-L1",
+        "to": "A-R1",
+        "cycleOffset": 1
+      }
+    ],
+    "notation": "Siteswap 5; Prechac 2.5p. Anne starts with two clubs in her right hand and one in her left; Ben starts half a beat later with one in each hand. Anne’s zaps cross; Ben’s zaps are straight.",
+    "sourceLinks": [
+      {
+        "edition": "2017 expanded",
+        "url": "https://jugglingedge.com/pdf/highgate.pdf",
+        "printedPage": 41,
+        "pdfPage": 42
+      },
+      {
+        "edition": "2014",
+        "url": "https://passing.zone/wp-content/uploads/highgate.pdf",
+        "pdfPage": 24
+      }
+    ],
+    "reviewStatus": {
+      "visualReview": "verified against 2017 printed p. 41/PDF p. 42",
+      "editionComparison": "diagram/sequence visually cross-checked against 2014 PDF p. 24",
+      "modelCheck": "Visual diagrams and crossing/straight zap directions match. Half-beat phase and alternating hands are preserved. Structural IsValidForEditor invariants pass with a registered placeholder preset ID; cycle offsets unchanged."
+    }
+  }
+]

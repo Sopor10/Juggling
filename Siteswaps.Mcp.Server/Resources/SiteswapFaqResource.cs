@@ -12,8 +12,8 @@ public class SiteswapFaqResource
         """
         # Siteswap Basics
 
-        The idea behind siteswap is to keep track of the order that balls are thrown and caught, 
-        and ONLY that. Since no matter how you juggle, you're catching and throwing in SOME order, 
+        The idea behind siteswap is to keep track of the order that balls are thrown and caught,
+        and ONLY that. Since no matter how you juggle, you're catching and throwing in SOME order,
         there will always be some siteswap describing it.
 
         ## What Siteswap Describes
@@ -27,9 +27,9 @@ public class SiteswapFaqResource
         - Specific throwing techniques
 
         ## Key Principle
-        While each ball is in its arc, a certain number of other throws occur. 
+        While each ball is in its arc, a certain number of other throws occur.
         In a 3-ball cascade, while each ball is in its arc, exactly TWO other throws occur.
-        This is why the cascade is notated as "3" - each throw allows for 2 intervening throws 
+        This is why the cascade is notated as "3" - each throw allows for 2 intervening throws
         before that hand needs to catch again.
         """;
 
@@ -92,19 +92,19 @@ public class SiteswapFaqResource
         - 4 balls: xx--
         - 5 balls: xxx--
 
-        Ground state patterns can be entered and exited easily. You can start and stop 
+        Ground state patterns can be entered and exited easily. You can start and stop
         juggling them naturally.
 
         ### Excited State
         Any state that is NOT the ground state. These patterns require a "setup" to enter
         and a "transition" to exit cleanly.
 
-        Example: The pattern "441" keeps you in ground state (xx-), but "531" is also 
+        Example: The pattern "441" keeps you in ground state (xx-), but "531" is also
         ground state. However, "51" (3-ball shower) cycles through excited states.
 
         ## Finding Transitions
         To get from one pattern to another, you need to find a transition sequence.
-        The state diagram shows all possible transitions between states for a given 
+        The state diagram shows all possible transitions between states for a given
         number of balls.
         """;
 

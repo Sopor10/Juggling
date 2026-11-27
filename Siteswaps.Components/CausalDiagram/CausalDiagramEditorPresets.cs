@@ -13,37 +13,47 @@ public static class CausalDiagramEditorPresets
     private const string SynchronousGroup = "Synchron";
 
     public static IReadOnlyList<CausalDiagramEditorPreset> All { get; } =
-    [
-        Siteswap("siteswap-3", "3 · 3-Keulen-Kaskade", "3"),
-        Siteswap("siteswap-4", "4 · Fountain", "4"),
-        Siteswap("siteswap-5", "5 · Cascade", "5"),
-        Siteswap("siteswap-531", "531", "531"),
-        Siteswap("siteswap-441", "441", "441"),
-        Siteswap("siteswap-423", "423", "423"),
-        Siteswap("siteswap-97531", "97531", "97531"),
-        FourHanded("four-hand-period-3", "4-händig · Periode 3", 3),
-        FourHanded("four-hand-period-4", "4-händig · Periode 4", 4),
-        FourHanded("four-hand-period-5", "4-händig · Periode 5", 5),
-        Feeding("feeding-3-3", "3:3 Polyrhythmus", 3, 3),
-        Feeding("feeding-3-4", "3:4 Polyrhythmus", 3, 4),
-        Feeding("feeding-5-3", "5:3 Polyrhythmus", 5, 3),
-        new(
-            "feeding-7-5",
-            "2 Jongleure · Polyrhythmus 7:5",
-            AsynchronousGroup,
-            CausalDiagramEditorState.CreateFeeding75
-        ),
-        Juggler("jugglers-1", "1 Jongleur", 1),
-        Juggler("jugglers-2", "2 Jongleure · asynchron", 2),
-        Juggler("jugglers-3", "3 Jongleure", 3),
-        Juggler("jugglers-4", "4 Jongleure", 4),
-        new(
-            "jugglers-2-synchronous-4",
-            "2 Jongleure · synchron (4 Beats)",
-            SynchronousGroup,
-            CreateSynchronousFourBeatPair
-        ),
-    ];
+        new CausalDiagramEditorPreset[]
+        {
+            Siteswap("siteswap-3", "3 · 3-Keulen-Kaskade", "3"),
+            Siteswap("siteswap-4", "4 · Fountain", "4"),
+            Siteswap("siteswap-5", "5 · Cascade", "5"),
+            Siteswap("siteswap-531", "531", "531"),
+            Siteswap("siteswap-441", "441", "441"),
+            Siteswap("siteswap-423", "423", "423"),
+            Siteswap("siteswap-97531", "97531", "97531"),
+            FourHanded("four-hand-period-3", "4-händig · Periode 3", 3),
+            FourHanded("four-hand-period-4", "4-händig · Periode 4", 4),
+            FourHanded("four-hand-period-5", "4-händig · Periode 5", 5),
+            Feeding("feeding-3-3", "3:3 Polyrhythmus", 3, 3),
+            Feeding("feeding-3-4", "3:4 Polyrhythmus", 3, 4),
+            Feeding("feeding-5-3", "5:3 Polyrhythmus", 5, 3),
+            new(
+                "feeding-7-5",
+                "2 Jongleure · Polyrhythmus 7:5",
+                AsynchronousGroup,
+                CausalDiagramEditorState.CreateFeeding75
+            ),
+            Juggler("jugglers-1", "1 Jongleur", 1),
+            Juggler("jugglers-2", "2 Jongleure · asynchron", 2),
+            Juggler("jugglers-3", "3 Jongleure", 3),
+            Juggler("jugglers-4", "4 Jongleure", 4),
+            new(
+                "jugglers-2-synchronous-4",
+                "2 Jongleure · synchron (4 Beats)",
+                SynchronousGroup,
+                CreateSynchronousFourBeatPair
+            ),
+        }
+            .Concat(HighgateCausalDiagramPresets.All)
+            .Concat(CausalDiagramEditorSequences.RunawayPhasePresets)
+            .ToArray();
+
+    public static IReadOnlyList<CausalDiagramEditorPreset> WorkInProgress { get; } =
+        HighgateCausalDiagramPresets.WorkInProgress.ToArray();
+
+    public static IEnumerable<CausalDiagramEditorPreset> AllForLoading =>
+        All.Concat(WorkInProgress).Concat(HighgateCausalDiagramPresets.SiteswapSources);
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleAsynchronous =>
         All.Where(preset =>
@@ -58,6 +68,12 @@ public static class CausalDiagramEditorPresets
 
     public static IEnumerable<CausalDiagramEditorPreset> VisibleSynchronous =>
         All.Where(preset => preset.Id == "jugglers-2-synchronous-4");
+
+    public static IEnumerable<CausalDiagramEditorPreset> VisibleHighgate =>
+        All.Where(preset => preset.Group == "Highgate Collection");
+
+    public static IEnumerable<CausalDiagramEditorPreset> VisibleHighgateWorkInProgress =>
+        WorkInProgress.Where(preset => preset.Group == "Highgate Collection");
 
     private static CausalDiagramEditorPreset Siteswap(string id, string label, string pattern) =>
         new(id, label, AsynchronousGroup, () =>
@@ -149,5 +165,7 @@ public static class CausalDiagramEditorPresets
 
     public static bool IsKnownId(string? id) =>
         id is "custom" or "siteswap531" or "feeding75" or "feeding-5-3"
-        || All.Any(preset => preset.Id == id);
+        || All.Any(preset => preset.Id == id)
+        || WorkInProgress.Any(preset => preset.Id == id)
+        || HighgateCausalDiagramPresets.SiteswapSources.Any(preset => preset.Id == id);
 }

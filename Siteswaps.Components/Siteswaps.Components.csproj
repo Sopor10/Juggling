@@ -23,4 +23,13 @@
     <_ContentIncludedByDefault Remove="Generator\GeneratorView.razor" />
     <_ContentIncludedByDefault Remove="Generator\GeneratorViewFluxor.razor" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CausalDiagram\Data\highgate-causal-patterns.json" />
+    <EmbeddedResource Include="CausalDiagram\Data\highgate-causal-patterns-work-in-progress.json" />
+    <EmbeddedResource
+      Include="..\docs\research\highgate-runaway-source-states.json"
+      Link="CausalDiagram\Data\highgate-runaway-source-states.json"
+      LogicalName="Siteswaps.Components.CausalDiagram.Data.highgate-runaway-source-states.json"
+    />
+  </ItemGroup>
 </Project>

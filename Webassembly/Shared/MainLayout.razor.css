@@ -11,6 +11,13 @@
     overflow: hidden;
 }
 
+.page:has(.passing-intro) {
+    height: auto;
+    min-height: 100vh;
+    max-height: none;
+    overflow: visible;
+}
+
 main {
     flex: 1;
     display: flex;
@@ -35,4 +42,11 @@ main {
 
 .content:has(.wizard-page) {
     overflow: hidden;
+}
+
+.content:has(.passing-intro) {
+    display: block;
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
 }

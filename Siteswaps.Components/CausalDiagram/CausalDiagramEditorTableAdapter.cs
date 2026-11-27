@@ -6,7 +6,12 @@ namespace Siteswaps.Components.CausalDiagram;
 /// <summary>Projects editor throws onto a shared time grid, preserving asynchronous offsets.</summary>
 public static class CausalDiagramEditorTableAdapter
 {
-    public sealed record Row(string Juggler, IReadOnlyList<DetailViewModel.ThrowChip?> Cells);
+    public sealed record Row(
+        string JugglerId,
+        string Juggler,
+        string? Hand,
+        IReadOnlyList<IReadOnlyList<DetailViewModel.ThrowChip>> Cells
+    );
 
     public sealed record Table(IReadOnlyList<decimal> Times, IReadOnlyList<Row> Rows);
 
@@ -55,19 +60,38 @@ public static class CausalDiagramEditorTableAdapter
             .ToList();
 
         var times = events.Select(item => item.Time).Distinct().Order().ToList();
-        var rows = state
-            .Jugglers.Select(juggler => new Row(
-                juggler.Name,
-                times
-                    .Select(time =>
-                        events
-                            .Where(item => item.JugglerId == juggler.Id && item.Time == time)
-                            .Select(item => item.Chip)
-                            .FirstOrDefault()
+        var rows = new List<Row>();
+        foreach (var juggler in state.Jugglers)
+        {
+            var jugglerEvents = events.Where(item => item.JugglerId == juggler.Id).ToList();
+            var hasSimultaneousEvents = jugglerEvents
+                .GroupBy(item => item.Time)
+                .Any(group => group.Count() > 1);
+            var hands = hasSimultaneousEvents ? new string?[] { "L", "R" } : [null];
+
+            foreach (var hand in hands)
+            {
+                rows.Add(
+                    new Row(
+                        juggler.Id,
+                        juggler.Name,
+                        hand,
+                        times
+                            .Select(time =>
+                                (IReadOnlyList<DetailViewModel.ThrowChip>)
+                                    jugglerEvents
+                                        .Where(item =>
+                                            item.Time == time
+                                            && (hand is null || item.Chip.Hand == hand)
+                                        )
+                                        .Select(item => item.Chip)
+                                        .ToList()
+                            )
+                            .ToList()
                     )
-                    .ToList()
-            ))
-            .ToList();
+                );
+            }
+        }
         return new Table(times, rows);
     }
 }

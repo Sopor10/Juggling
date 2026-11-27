@@ -19,6 +19,13 @@ public static class CausalDiagramEditorJifAdapter
         diagram = null;
         error = "Dieses Diagramm kann nicht als Passist-Animation dargestellt werden.";
 
+        if (!state.HasBalancedCausalEdges())
+        {
+            error =
+                "Jeder Kausalknoten muss gleich viele eingehende und ausgehende Pfeile haben; prüfe mehrere eingehende Pfeile oder fehlende Verbindungen.";
+            return false;
+        }
+
         if (state.Jugglers.Count == 0 || state.Throws.Count == 0 || state.CycleLength <= 0)
             return false;
 
@@ -33,13 +40,6 @@ public static class CausalDiagramEditorJifAdapter
         {
             error = string.Empty;
             return true;
-        }
-
-        if (state.Throws.Any(node => state.CausalEdges.All(edge => edge.FromThrowId != node.Id)))
-        {
-            error =
-                "Jeder Wurf braucht einen kausalen Pfeil, damit seine Höhe berechnet werden kann.";
-            return false;
         }
 
         if (
@@ -107,13 +107,16 @@ public static class CausalDiagramEditorJifAdapter
             .ToArray();
         var inferredTargets = state.Throws.ToDictionary(
             node => node.Id,
-            node => nodesById[outgoing[node.Id].ToThrowId].JugglerId,
+            node =>
+                outgoing.TryGetValue(node.Id, out var edge)
+                    ? nodesById[edge.ToThrowId].JugglerId
+                    : node.JugglerId,
             StringComparer.Ordinal
         );
 
         var durations = new Dictionary<string, decimal>(StringComparer.Ordinal);
         var scaleInputs = new List<decimal> { state.CycleLength };
-        foreach (var node in state.Throws)
+        foreach (var node in state.Throws.Where(node => outgoing.ContainsKey(node.Id)))
         {
             scaleInputs.Add(node.StartTime);
             var targetJugglerId = inferredTargets[node.Id];
@@ -557,6 +560,5 @@ public static class CausalDiagramEditorJifAdapter
     }
 
     private static bool IsNearInteger(decimal value) =>
-        Math.Abs(value - decimal.Round(value, 0, MidpointRounding.AwayFromZero))
-        <= 0.000000000000000000000001m;
+        Math.Abs(value - decimal.Round(value, 0, MidpointRounding.AwayFromZero)) <= 0.000000001m;
 }

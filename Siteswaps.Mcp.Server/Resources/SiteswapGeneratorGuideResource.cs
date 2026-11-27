@@ -267,13 +267,13 @@ public class SiteswapGeneratorGuideResource
 
         ## Practical Applications
 
-        1. **Finding transitions**: 
+        1. **Finding transitions**:
            State filters help find patterns that switch between specific states
 
-        2. **Learnability**: 
+        2. **Learnability**:
            Ground state patterns are easier to start and stop
 
-        3. **Combination with other filters**: 
+        3. **Combination with other filters**:
            State + Occurrence = Specific patterns in desired state
         """;
 
@@ -287,7 +287,7 @@ public class SiteswapGeneratorGuideResource
 
         ## Basics
 
-        In passing siteswaps, the throw height modulo number of jugglers 
+        In passing siteswaps, the throw height modulo number of jugglers
         determines the target juggler:
 
         | Jugglers | Self | Pass to J1 | Pass to J2 |
@@ -398,7 +398,7 @@ public class SiteswapGeneratorGuideResource
 
         ### AND Logic (Default)
         All top-level filters are combined with AND:
-        - minOccurrence: `5:1` + maxOccurrence: `5:2` 
+        - minOccurrence: `5:1` + maxOccurrence: `5:2`
         - → Exactly 1 or 2 fives
 
         ### OR Logic (with Pipe)
