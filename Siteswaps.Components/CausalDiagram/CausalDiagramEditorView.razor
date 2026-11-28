@@ -237,7 +237,7 @@
                     var nodeY = RowY(JugglerIndex(item.JugglerId));
                     var menuX = nodeX > SvgWidth - 150 ? nodeX - 142 : nodeX + 30;
                     <g class="throw-edit-actions">
-                        <g class="throw-delete-action" role="button" tabindex="0" aria-label="@DeleteThrowAccessibleLabel(item)" @onclick="() => DeleteThrow(item.Id)" @onkeydown="e => HandleThrowActionKey(item.Id, e, delete: true)">
+                        <g class="throw-delete-action" role="button" tabindex="0" aria-label="Wurf löschen" @onclick="() => DeleteThrow(item.Id)" @onkeydown="e => HandleThrowActionKey(item.Id, e, delete: true)">
                             <circle class="throw-action-hit-target" cx="@SvgNumber(nodeX - 30)" cy="@(nodeY - 32)" r="22" />
                             <circle class="throw-action-icon" cx="@SvgNumber(nodeX - 30)" cy="@(nodeY - 32)" r="12" />
                             <SvgText X="@((nodeX - 30).ToString(CultureInfo.InvariantCulture))" Y="@((nodeY - 27).ToString(CultureInfo.InvariantCulture))" TextAnchor="middle">−</SvgText>
@@ -1112,8 +1112,6 @@
         _handMenuThrow = null;
         PatternChanged();
     }
-
-    private string DeleteThrowAccessibleLabel(EditorThrow node) => "Wurf löschen";
 
     private bool IsPresetSelected(string id) => _preset == id || _selectedSavedPresetId == id;
 

@@ -129,11 +129,10 @@
 .causal-editor-table-section { display: grid; justify-items: start; gap: .75rem; }
 .causal-editor-throw-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; padding: .25rem 0; }
 .causal-editor-throw-actions-row { display: flex; min-width: 0; gap: .5rem; }
-.causal-editor-throw-actions-row .editor-action { min-height: 44px; }
+.causal-editor-throw-actions-row .editor-action { min-height: 44px; white-space: normal; }
 .causal-editor-throw-actions-row [data-testid="add-multiplex-throw"] { min-width: 0; }
 .causal-editor-clear-selection { width: 44px; flex: 0 0 44px; padding: 0; font-size: 1.25rem; }
 .causal-editor-throw-actions span { color: var(--decision-color-text-muted); font-size: .85rem; }
-.causal-editor-throw-actions-row .editor-action { white-space: normal; }
 .causal-editor-table-toggle { min-height: 44px; }
 .causal-editor-table-scroll { width: 100%; max-width: 100%; overflow: auto; box-sizing: border-box; padding: 4px 6px 12px; border: 1px solid var(--decision-color-border-subtle); border-radius: var(--decision-radius-control); background: var(--decision-color-white); }
 .causal-editor-pattern-table { width: max-content; border-collapse: separate; border-spacing: 3px 4px; }
