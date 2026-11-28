@@ -42,17 +42,6 @@ public static class CausalDiagramEditorJifAdapter
             return false;
         }
 
-        if (
-            state
-                .CausalEdges.GroupBy(edge => (edge.ToThrowId, edge.CycleOffset))
-                .Any(group => group.Count() > 1)
-        )
-        {
-            error =
-                "Ein Wurfknoten hat mehrere eingehende Pfeile. Passe die Verbindungen an, damit die Passist-Animation wieder eindeutig ist.";
-            return false;
-        }
-
         return TryCreateCustomDiagramSet(state, out diagram, out error);
     }
 
@@ -103,7 +92,13 @@ public static class CausalDiagramEditorJifAdapter
         );
         var nodesById = state.Throws.ToDictionary(node => node.Id, StringComparer.Ordinal);
         var rowCounts = state
-            .Jugglers.Select(juggler => state.Throws.Count(node => node.JugglerId == juggler.Id))
+            .Jugglers.Select(juggler =>
+                state
+                    .Throws.Where(node => node.JugglerId == juggler.Id)
+                    .Select(node => node.StartTime)
+                    .Distinct()
+                    .Count()
+            )
             .ToArray();
         var inferredTargets = state.Throws.ToDictionary(
             node => node.Id,
@@ -133,7 +128,11 @@ public static class CausalDiagramEditorJifAdapter
             var targetTime = target.StartTime + edge.CycleOffset * state.CycleLength;
             var targetBeatDuration =
                 state.CycleLength
-                / state.Throws.Count(candidate => candidate.JugglerId == targetJugglerId);
+                / state
+                    .Throws.Where(candidate => candidate.JugglerId == targetJugglerId)
+                    .Select(candidate => candidate.StartTime)
+                    .Distinct()
+                    .Count();
             duration = targetTime - node.StartTime + 2m * targetBeatDuration;
             scaleInputs.Add(targetTime);
             if (duration <= 0 || duration > int.MaxValue)
@@ -244,7 +243,7 @@ public static class CausalDiagramEditorJifAdapter
     {
         domainThrows = new Dictionary<string, DiagramThrow>(StringComparer.Ordinal);
         error = string.Empty;
-        foreach (var node in state.Throws)
+        foreach (var (node, throwIndex) in state.Throws.Select((node, index) => (node, index)))
         {
             int? destination = null;
             var height = 0;
@@ -273,7 +272,8 @@ public static class CausalDiagramEditorJifAdapter
                 new DiagramThrow(
                     hands[handIndex[(node.JugglerId, node.Hand)]],
                     node.StartTime * scale,
-                    destination
+                    destination,
+                    OrbitIndex: throwIndex
                 )
             );
         }
@@ -505,7 +505,12 @@ public static class CausalDiagramEditorJifAdapter
         // Normalize local beat heights to Passist's shared clock using the fastest row beat.
         var fastestBeat = state
             .Jugglers.Select(juggler =>
-                state.CycleLength / state.Throws.Count(node => node.JugglerId == juggler.Id)
+                state.CycleLength
+                / state
+                    .Throws.Where(node => node.JugglerId == juggler.Id)
+                    .Select(node => node.StartTime)
+                    .Distinct()
+                    .Count()
             )
             .Min();
         if (fastestBeat <= 1m)

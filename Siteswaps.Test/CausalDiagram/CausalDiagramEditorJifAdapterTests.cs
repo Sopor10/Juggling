@@ -33,7 +33,7 @@ public sealed class CausalDiagramEditorJifAdapterTests
             var table = CausalDiagramEditorTableAdapter.Map(decoded);
             if (
                 table.Rows.Count != decoded.Jugglers.Count
-                || table.Rows.Sum(row => row.Cells.Count(chip => chip is not null))
+                || table.Rows.Sum(row => row.Cells.Sum(chips => chips?.Count ?? 0))
                     != decoded.Throws.Count * decoded.Repetitions
             )
                 throw new InvalidOperationException(
@@ -79,11 +79,48 @@ public sealed class CausalDiagramEditorJifAdapterTests
         table.Rows.Should().HaveCount(2);
         table
             .Rows.SelectMany(row => row.Cells)
-            .Count(cell => cell is not null)
+            .Sum(cell => cell?.Count ?? 0)
             .Should()
             .Be(state.Throws.Count * state.Repetitions);
         table.Rows[0].Cells.Any(cell => cell is null).Should().BeTrue();
         table.Rows[1].Cells.Any(cell => cell is null).Should().BeTrue();
+    }
+
+    [Test]
+    public void MultiplexBeat_PreservesAllThrowsInTableAndPassistAnimation()
+    {
+        var state = CausalDiagramEditorState.CreateFeeding75();
+        CausalDiagramEditorJifAdapter
+            .TryMap(state, out var baseline, out var baselineError)
+            .Should()
+            .BeTrue(baselineError);
+        var source = state.Throws.Single(node => node.Id == "P1-1");
+        var edge = state.CausalEdges.Single(candidate => candidate.FromThrowId == source.Id);
+        const string duplicateId = "P1-multiplex";
+        state.Throws.Add(source with { Id = duplicateId });
+        state.CausalEdges.Add(edge with { Id = "e-P1-multiplex", FromThrowId = duplicateId });
+
+        CausalDiagramEditorState.TryDecode(state.Encode(), out var decoded).Should().BeTrue();
+        var multiplex = decoded!
+            .Throws.Where(node =>
+                node.JugglerId == source.JugglerId && node.StartTime == source.StartTime
+            )
+            .ToArray();
+        multiplex.Should().HaveCount(2);
+        var table = CausalDiagramEditorTableAdapter.Map(decoded);
+        var beatColumn = table.Times.ToList().IndexOf(source.StartTime);
+        table.Rows[0].Cells[beatColumn].Should().HaveCount(2);
+        table.Rows[0].Cells[beatColumn]!.Should().OnlyContain(chip => chip.Hand != null);
+
+        CausalDiagramEditorJifAdapter
+            .TryMap(decoded, out var mapped, out var error)
+            .Should()
+            .BeTrue(error);
+        mapped!.Throws.Should().NotBeEmpty();
+        mapped
+            .Throws!.Count(throwEvent => throwEvent.Time == source.StartTime)
+            .Should()
+            .Be(baseline!.Throws!.Count(throwEvent => throwEvent.Time == source.StartTime) + 1);
     }
 
     [Test]
@@ -128,7 +165,7 @@ public sealed class CausalDiagramEditorJifAdapterTests
     }
 
     [Test]
-    public void TemporaryMultipleIncomingArrowsKeepTheDiagramEditableButPauseAnimation()
+    public void MultipleIncomingArrows_MapToPassist()
     {
         var state = CausalDiagramEditorState.CreateSiteswapPattern("531");
         var edgeIndex = state.CausalEdges.FindIndex(edge => edge.FromThrowId == "A4");
@@ -139,8 +176,11 @@ public sealed class CausalDiagramEditorJifAdapterTests
         };
 
         CausalDiagramEditorState.TryDecode(state.Encode(), out _).Should().BeTrue();
-        CausalDiagramEditorJifAdapter.TryMap(state, out _, out var error).Should().BeFalse();
-        error.Should().Contain("mehrere eingehende Pfeile");
+        CausalDiagramEditorJifAdapter
+            .TryMap(state, out var mapped, out var error)
+            .Should()
+            .BeTrue(error);
+        mapped.Should().NotBeNull();
     }
 
     [Test]
