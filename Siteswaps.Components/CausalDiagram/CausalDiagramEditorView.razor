@@ -432,9 +432,20 @@
     }
     private int SvgHeight => Math.Max(180, RowY(_state.Jugglers.Count - 1) + 75);
     private CausalDiagramEditorTableAdapter.Table EditorTable => CausalDiagramEditorTableAdapter.Map(_state);
-    private string SelectedThrowDescription => _state.Throws.FirstOrDefault(item => item.Id == _selectedId) is { } selected
-        ? $"{JugglerName(selected.JugglerId)} · Beat {selected.StartTime.ToString("0.##", CultureInfo.InvariantCulture)} · {MultiplexCount(selected)} Würfe · {(_state.CausalEdges.Any(edge => edge.FromThrowId == selected.Id) ? "verbunden" : "ohne Pfeil")}"
-        : "";
+    private string SelectedThrowDescription
+    {
+        get
+        {
+            var selected = _state.Throws.FirstOrDefault(item => item.Id == _selectedId);
+            if (selected is null)
+                return "";
+
+            var connection = _state.CausalEdges.Any(edge => edge.FromThrowId == selected.Id)
+                ? "verbunden"
+                : "ohne Pfeil";
+            return $"{JugglerName(selected.JugglerId)} · Beat {selected.StartTime.ToString("0.##", CultureInfo.InvariantCulture)} · {MultiplexCount(selected)} Würfe · {connection}";
+        }
+    }
 
     protected override void OnParametersSet()
     {
@@ -513,38 +524,53 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && !Embedded)
-        {
-            if (_wizardStep == 1 && string.IsNullOrEmpty(SetupToken))
-                PersistSetupDraft();
-            else if (WizardStep is null)
-                UrlStateNavigation.SetQueryParameter(
-                    "step",
-                    _wizardStep.ToString(CultureInfo.InvariantCulture),
-                    replace: true
-                );
-        }
+        if (!firstRender)
+            return;
+        if (!Embedded)
+            InitializeWizardLocation();
+        if (ShouldLoadEditorModule)
+            await InitializeEditorModuleAsync();
+    }
 
-        if (firstRender && (ShowOptions || AllowNodeMove || AllowThrowActions || AllowJugglerActions || AllowArrowEditing || ShowHorizontalScrollCue))
-        {
-            _module = await JS.InvokeAsync<IJSObjectReference>(
-                "import",
-                Navigation.ToAbsoluteUri(
-                    $"_content/Siteswaps.Components/causalDiagramEditor.js?v={Uri.EscapeDataString(EditorBuildVersion)}"
-                ).ToString()
+    private bool ShouldLoadEditorModule => ShowOptions
+        || AllowNodeMove
+        || AllowThrowActions
+        || AllowJugglerActions
+        || AllowArrowEditing
+        || ShowHorizontalScrollCue;
+
+    private void InitializeWizardLocation()
+    {
+        if (_wizardStep == 1 && string.IsNullOrEmpty(SetupToken))
+            PersistSetupDraft();
+        else if (WizardStep is null)
+            UrlStateNavigation.SetQueryParameter(
+                "step",
+                _wizardStep.ToString(CultureInfo.InvariantCulture),
+                replace: true
             );
-            _dotNetRef = DotNetObjectReference.Create(this);
-            await _module.InvokeVoidAsync("bindTouchDragTargets", _svg);
-            if (ShowHorizontalScrollCue)
-                await _module.InvokeVoidAsync("bindDiagramScrollCue", _svg);
-            if (ShowAnimation)
-                await _module.InvokeVoidAsync("bindOrbitRadioKeys", _orbitToggle);
-            if (ShowOptions) await _module.InvokeVoidAsync("bindOutsideClose", _diagramOptions);
-            if (!Embedded)
-            {
-                _savedPresets = (await _module.InvokeAsync<SavedEditorPreset[]>("getSavedEditorPresets"))?.ToList() ?? [];
-                await InvokeAsync(StateHasChanged);
-            }
+    }
+
+    private async Task InitializeEditorModuleAsync()
+    {
+        _module = await JS.InvokeAsync<IJSObjectReference>(
+            "import",
+            Navigation.ToAbsoluteUri(
+                $"_content/Siteswaps.Components/causalDiagramEditor.js?v={Uri.EscapeDataString(EditorBuildVersion)}"
+            ).ToString()
+        );
+        _dotNetRef = DotNetObjectReference.Create(this);
+        await _module.InvokeVoidAsync("bindTouchDragTargets", _svg);
+        if (ShowHorizontalScrollCue)
+            await _module.InvokeVoidAsync("bindDiagramScrollCue", _svg);
+        if (ShowAnimation)
+            await _module.InvokeVoidAsync("bindOrbitRadioKeys", _orbitToggle);
+        if (ShowOptions)
+            await _module.InvokeVoidAsync("bindOutsideClose", _diagramOptions);
+        if (!Embedded)
+        {
+            _savedPresets = (await _module.InvokeAsync<SavedEditorPreset[]>("getSavedEditorPresets"))?.ToList() ?? [];
+            await InvokeAsync(StateHasChanged);
         }
     }
 
