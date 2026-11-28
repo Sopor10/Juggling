@@ -877,21 +877,23 @@ public sealed class CausalDiagramEditorState
         var durations = new List<BeatFraction> { BeatFraction.Approximate(CycleLength) };
         foreach (var juggler in Jugglers)
         {
-            var nodes = Throws
+            var eventTimes = Throws
                 .Where(node => node.JugglerId == juggler.Id)
-                .OrderBy(node => node.StartTime)
+                .Select(node => node.StartTime)
+                .Distinct()
+                .Order()
                 .ToArray();
-            var beatDuration = CycleLength / Math.Max(1, nodes.Length);
+            var beatDuration = CycleLength / Math.Max(1, eventTimes.Length);
             durations.Add(BeatFraction.Approximate(beatDuration));
-            if (nodes.Length == 0)
+            if (eventTimes.Length == 0)
                 continue;
 
-            var phase = nodes[0].StartTime % beatDuration;
+            var phase = eventTimes[0] % beatDuration;
             durations.Add(BeatFraction.Approximate(phase));
-            for (var index = 0; index < nodes.Length; index++)
+            for (var index = 0; index < eventTimes.Length; index++)
             {
                 var expected = (phase + index * beatDuration) % CycleLength;
-                var deviation = (nodes[index].StartTime - expected) % beatDuration;
+                var deviation = (eventTimes[index] - expected) % beatDuration;
                 if (deviation < 0)
                     deviation += beatDuration;
                 if (
@@ -1002,10 +1004,14 @@ public sealed class CausalDiagramEditorState
         int cycleOffset
     )
     {
-        var targetThrowCount = state.Throws.Count(node => node.JugglerId == target.JugglerId);
-        if (targetThrowCount == 0)
+        var targetBeatCount = state
+            .Throws.Where(node => node.JugglerId == target.JugglerId)
+            .Select(node => node.StartTime)
+            .Distinct()
+            .Count();
+        if (targetBeatCount == 0)
             return 0;
-        var targetBeatDuration = state.CycleLength / targetThrowCount;
+        var targetBeatDuration = state.CycleLength / targetBeatCount;
         return (
                 target.StartTime
                 + cycleOffset * state.CycleLength

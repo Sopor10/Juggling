@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.Playwright;
 using PlaywrightTesting.Infrastructure;
@@ -168,6 +170,225 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         await Assertions
             .Expect(stage.Locator(".test-passist-widget"))
             .ToHaveAttributeAsync("data-throws", "24");
+    }
+
+    [Fact]
+    public async Task MultiplexCanBeAddedOnMobileAndAppearsInTableAndPassistAnimation()
+    {
+        var browser = host.Fixture.Context?.Browser
+            ?? throw new InvalidOperationException("Playwright browser is not available.");
+        await using var context = await browser.NewContextAsync(
+            new BrowserNewContextOptions
+            {
+                Locale = E2ECulture.Locale,
+                IsMobile = true,
+                HasTouch = true,
+                ViewportSize = new ViewportSize { Width = 390, Height = 844 },
+            }
+        );
+        await BlazorTestServerProxy.InstallAsync(context, host.Fixture);
+        await E2ECulture.InstallAsync(context);
+        var page = await context.NewPageAsync();
+        await OpenEditor(page, E2EBaseUrl.FromFixture(host.Fixture));
+        await page.Locator(".diagram-options summary").ClickAsync();
+        await SelectPresetAsync(page, "feeding-7-5");
+        (await page.Locator(".diagram-options").EvaluateAsync<bool>("details => details.open"))
+            .Should()
+            .BeFalse("the mobile canvas should be touch-accessible after applying a preset");
+        var optionsToggle = page.Locator(".diagram-options summary");
+        await optionsToggle.TapAsync();
+        var timelineWidth = page.Locator(".diagram-options input[type=range]").First;
+        await timelineWidth.FocusAsync();
+        await timelineWidth.PressAsync("Home");
+        await timelineWidth.PressAsync("Tab");
+        (await timelineWidth.InputValueAsync()).Should().Be("280");
+        await optionsToggle.TapAsync();
+
+        var diagramScrollCue = page.Locator(".diagram-scroll-cue");
+        await page.WaitForFunctionAsync(
+            "() => document.querySelector('.diagram-scroll-frame')?.classList.contains('has-horizontal-overflow')"
+        );
+        await Assertions.Expect(diagramScrollCue).ToBeVisibleAsync();
+
+        var throwTargets = page.Locator(".throw-hit-target");
+        var originalCount = await throwTargets.CountAsync();
+        var animationWidget = page.Locator(".causal-editor-animation .test-passist-widget");
+        await AssertPassistRadioControlsAsync(page);
+        var originalAnimatedThrows = int.Parse(
+            await animationWidget.GetAttributeAsync("data-throws") ?? "0",
+            CultureInfo.InvariantCulture
+        );
+        var originalTarget = page.Locator(
+            ".throw-hit-target[data-throw-id='P1-1'][data-cycle='0']"
+        );
+        var originalId = await originalTarget.GetAttributeAsync("data-throw-id");
+        var selectedJuggler = await originalTarget.GetAttributeAsync("data-juggler-id");
+        var selectedTime = await originalTarget.GetAttributeAsync("data-start-time");
+        var selectedBeatKey = $"{selectedJuggler}|{selectedTime}";
+        var beatCountsBefore = await GetThrowCountsByBeat(page);
+        await originalTarget.TapAsync();
+        await Assertions.Expect(originalTarget).ToHaveAttributeAsync("aria-pressed", "true");
+        var addMultiplex = page.GetByTestId("add-multiplex-throw");
+        await Assertions.Expect(addMultiplex).ToBeEnabledAsync();
+        var addBox = await addMultiplex.BoundingBoxAsync();
+        addBox.Should().NotBeNull();
+        addBox!.Width.Should().BeGreaterThanOrEqualTo(44);
+        addBox.Height.Should().BeGreaterThanOrEqualTo(44);
+        ((double)addBox.Y + addBox.Height)
+            .Should()
+            .BeLessThanOrEqualTo(await page.EvaluateAsync<double>("window.innerHeight"));
+        var actionBarBox = await page.Locator(".causal-editor-throw-actions").BoundingBoxAsync();
+        actionBarBox.Should().NotBeNull();
+        actionBarBox!.Height.Should().BeLessThan(120);
+        await addMultiplex.TapAsync();
+
+        (await throwTargets.CountAsync()).Should().Be(originalCount + 2);
+        var animatedThrowsAfterAdd = int.Parse(
+            await animationWidget.GetAttributeAsync("data-throws") ?? "0",
+            CultureInfo.InvariantCulture
+        );
+        animatedThrowsAfterAdd.Should().BeGreaterThan(originalAnimatedThrows);
+        var beatCountsAfter = await GetThrowCountsByBeat(page);
+        beatCountsAfter.Keys.Should().BeEquivalentTo(beatCountsBefore.Keys);
+        foreach (var beat in beatCountsBefore)
+            beatCountsAfter[beat.Key]
+                .Should()
+                .Be(beat.Value + (beat.Key == selectedBeatKey ? 1 : 0));
+        var newId = await page.Locator(".throw-hit-target[aria-pressed='true']")
+            .First.GetAttributeAsync("data-throw-id");
+        newId.Should().NotBe(originalId);
+        (
+            await page.Locator($".throw-hit-target[data-throw-id='{newId}'][data-cycle='0']")
+                .GetAttributeAsync("aria-label")
+        )
+            .Should()
+            .Contain("Multiplex");
+        var originalGroupBox = await originalTarget.BoundingBoxAsync();
+        var duplicateGroupBox = await page.Locator(
+                $".throw-hit-target[data-throw-id='{newId}'][data-cycle='0']"
+            )
+            .BoundingBoxAsync();
+        originalGroupBox.Should().NotBeNull();
+        duplicateGroupBox.Should().NotBeNull();
+        Math.Abs(
+                originalGroupBox!.X
+                    + originalGroupBox.Width / 2
+                    - duplicateGroupBox!.X
+                    - duplicateGroupBox.Width / 2
+            )
+            .Should()
+            .BeGreaterThanOrEqualTo(Math.Max(originalGroupBox.Width, duplicateGroupBox.Width));
+        await AssertMinimumSpacingMatchesDisplayAsync(page, optionsToggle);
+
+        foreach (var targetId in new[] { originalId, newId })
+        {
+            var target = page.Locator(
+                $".throw-hit-target[data-throw-id='{targetId}'][data-cycle='0']"
+            );
+            await target.TapAsync();
+            (
+                await page.Locator(".throw-hit-target[aria-pressed='true']")
+                    .First.GetAttributeAsync("data-throw-id")
+            )
+                .Should()
+                .Be(targetId);
+        }
+
+        await AssertMultiplexTableAndScrollAsync(page);
+        await DeleteAddedThrowAsync(
+            page,
+            throwTargets,
+            newId,
+            originalId,
+            originalCount,
+            originalAnimatedThrows
+        );
+        await originalTarget.TapAsync();
+        var clearSelection = page.GetByRole(
+            AriaRole.Button,
+            new() { Name = "Knotenauswahl aufheben" }
+        );
+        await Assertions.Expect(clearSelection).ToBeVisibleAsync();
+        await clearSelection.TapAsync();
+        await Assertions.Expect(clearSelection).ToHaveCountAsync(0);
+        await AssertMobileHitTargetsAndNoPageOverflowAsync(page, throwTargets);
+    }
+
+    [Fact]
+    public async Task MultiplexAddsOnlyOneThrowAtTheSelectedBeatOnDesktop()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await OpenEditor(page, E2EBaseUrl.FromFixture(host.Fixture));
+        await SelectPresetAsync(page, "feeding-7-5");
+
+        var throwTargets = page.Locator(".throw-hit-target");
+        var originalCount = await throwTargets.CountAsync();
+        var animationWidget = page.Locator(".causal-editor-animation .test-passist-widget");
+        var originalAnimatedThrows = int.Parse(
+            await animationWidget.GetAttributeAsync("data-throws") ?? "0",
+            CultureInfo.InvariantCulture
+        );
+        var source = page.Locator(".throw-hit-target[data-throw-id='P1-1'][data-cycle='0']");
+        var sourceId = await source.GetAttributeAsync("data-throw-id");
+        var sourceJuggler = await source.GetAttributeAsync("data-juggler-id");
+        var sourceTime = await source.GetAttributeAsync("data-start-time");
+        var sourceKey = $"{sourceJuggler}|{sourceTime}";
+        var countsBefore = await GetThrowCountsByBeat(page);
+        await source.ClickAsync();
+
+        var addThrow = page.GetByTestId("add-multiplex-throw");
+        await Assertions.Expect(addThrow).ToBeEnabledAsync();
+        await Assertions.Expect(addThrow).ToContainTextAsync("Beat 0 hinzufügen");
+        await addThrow.ClickAsync();
+
+        (await throwTargets.CountAsync()).Should().Be(originalCount + 2);
+        var countsAfter = await GetThrowCountsByBeat(page);
+        countsAfter.Keys.Should().BeEquivalentTo(countsBefore.Keys);
+        foreach (var beat in countsBefore)
+            countsAfter[beat.Key].Should().Be(beat.Value + (beat.Key == sourceKey ? 1 : 0));
+        (await animationWidget.GetAttributeAsync("data-throws"))
+            .Should()
+            .NotBe(originalAnimatedThrows.ToString(CultureInfo.InvariantCulture));
+
+        var addedId = await page.Locator(".throw-hit-target[aria-pressed='true']")
+            .First.GetAttributeAsync("data-throw-id");
+        addedId.Should().NotBe(sourceId);
+        await page.GetByRole(AriaRole.Button, new() { Name = "Wurf löschen" }).ClickAsync();
+        (await throwTargets.CountAsync()).Should().Be(originalCount);
+        (await page.Locator($".throw-hit-target[data-throw-id='{sourceId}']").CountAsync())
+            .Should()
+            .Be(2);
+        (await animationWidget.GetAttributeAsync("data-throws"))
+            .Should()
+            .Be(originalAnimatedThrows.ToString(CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public async Task ArrowTargetHandle_CanChangeDestinationWithKeyboard()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        await OpenEditor(session.Page, E2EBaseUrl.FromFixture(host.Fixture));
+
+        var handle = session.Page.Locator(".arrow-target-handle").First;
+        (await handle.GetAttributeAsync("aria-label")).Should().Contain("Enter");
+        var originalTargetId = await handle.GetAttributeAsync("data-target-throw-id");
+        originalTargetId.Should().NotBeNullOrWhiteSpace();
+        await handle.FocusAsync();
+        await handle.PressAsync("Enter");
+        await Assertions
+            .Expect(handle)
+            .Not.ToHaveAttributeAsync("data-target-throw-id", originalTargetId!);
+        var focusedBeforeTab = await session.Page.EvaluateAsync<string>(
+            "() => { const item = document.activeElement; return [item?.getAttribute('class'), item?.getAttribute('data-edge-id'), item?.getAttribute('data-cycle')].join('|'); }"
+        );
+        await handle.PressAsync("Tab");
+        var focusedAfterTab = await session.Page.EvaluateAsync<string>(
+            "() => { const item = document.activeElement; return [item?.getAttribute('class'), item?.getAttribute('data-edge-id'), item?.getAttribute('data-cycle')].join('|'); }"
+        );
+        focusedAfterTab
+            .Should()
+            .NotBe(focusedBeforeTab, "Tab must move focus past the arrow endpoint");
     }
 
     [Fact]
@@ -534,6 +755,139 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
                 ["touchPoints"] = Array.Empty<object>(),
             }
         );
+
+    private static async Task<double> GetReportedMinimumThrowSpacing(IPage page)
+    {
+        var spacingOutput = await page.Locator(".diagram-options output").First.InnerTextAsync();
+        return Regex
+            .Matches(spacingOutput, @"min\. Abstand zwischen Wurfknoten ([0-9.]+) px")
+            .Cast<Match>()
+            .Select(match => double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture))
+            .Min();
+    }
+
+    private static async Task AssertPassistRadioControlsAsync(IPage page)
+    {
+        var orbitToggle = page.GetByRole(AriaRole.Radio, new() { Name = "Orbits" });
+        var passSelfToggle = page.GetByRole(AriaRole.Radio, new() { Name = "Pass / Self" });
+        (await orbitToggle.BoundingBoxAsync())!.Height.Should().BeGreaterThanOrEqualTo(44);
+        (await passSelfToggle.BoundingBoxAsync())!.Height.Should().BeGreaterThanOrEqualTo(44);
+        await orbitToggle.FocusAsync();
+        await orbitToggle.PressAsync("ArrowRight");
+        await Assertions.Expect(passSelfToggle).ToBeFocusedAsync();
+        await Assertions.Expect(passSelfToggle).ToHaveAttributeAsync("aria-checked", "true");
+        await passSelfToggle.PressAsync("ArrowLeft");
+        await Assertions.Expect(orbitToggle).ToBeFocusedAsync();
+        await Assertions.Expect(orbitToggle).ToHaveAttributeAsync("aria-checked", "true");
+    }
+
+    private static async Task AssertMinimumSpacingMatchesDisplayAsync(
+        IPage page,
+        ILocator optionsToggle
+    )
+    {
+        var minimumSameLaneGap = await page.EvaluateAsync<double>(
+            """
+            () => {
+              const rows = new Map();
+              for (const target of document.querySelectorAll('.throw-hit-target')) {
+                const key = target.getAttribute('cy');
+                const centers = rows.get(key) ?? [];
+                centers.push(Number(target.getAttribute('cx')));
+                rows.set(key, centers);
+              }
+              const gaps = [...rows.values()].flatMap(centers => {
+                const ordered = centers.sort((a, b) => a - b);
+                return ordered.slice(1).map((center, index) => center - ordered[index]);
+              });
+              return Math.min(...gaps);
+            }
+            """
+        );
+        minimumSameLaneGap.Should().BeGreaterThanOrEqualTo(56);
+        await optionsToggle.TapAsync();
+        (await GetReportedMinimumThrowSpacing(page))
+            .Should()
+            .BeApproximately(minimumSameLaneGap, 2);
+        await optionsToggle.TapAsync();
+    }
+
+    private static async Task AssertMultiplexTableAndScrollAsync(IPage page)
+    {
+        await page.GetByRole(AriaRole.Button, new() { Name = "Tabelle einblenden" }).TapAsync();
+        var hasMultiplexCell = await page.Locator(".causal-editor-pattern-table tbody td")
+            .EvaluateAllAsync<bool>(
+                "cells => cells.some(cell => cell.querySelectorAll('.sdv-beat').length > 1 && [...cell.querySelectorAll('.sdv-beat')].every(chip => chip.getAttribute('aria-label')?.includes('Hand')))"
+            );
+        hasMultiplexCell.Should().BeTrue();
+        var geometry = await page.Locator(".causal-editor-table-scroll")
+            .EvaluateAsync<double[]>(
+                "element => { element.scrollLeft = 0; const timeHeader = element.querySelector('thead th:nth-child(2)'); const rowHeader = element.querySelector('tbody th[scope=row]'); const firstTimeX = timeHeader.getBoundingClientRect().x; const firstRowX = rowHeader.getBoundingClientRect().x; element.scrollLeft = Math.min(120, element.scrollWidth - element.clientWidth); const scrolledTimeX = timeHeader.getBoundingClientRect().x; const scrolledRowX = rowHeader.getBoundingClientRect().x; return [firstTimeX, scrolledTimeX, firstRowX, scrolledRowX, element.scrollLeft]; }"
+            );
+        (geometry[0] - geometry[1]).Should().BeGreaterThan(40);
+        Math.Abs(geometry[2] - geometry[3]).Should().BeLessThan(4);
+        geometry[4].Should().BeGreaterThan(40);
+    }
+
+    private static async Task<Dictionary<string, int>> GetThrowCountsByBeat(IPage page)
+    {
+        var beats = await page.Locator(".throw-hit-target[data-cycle='0']")
+            .EvaluateAllAsync<string[]>(
+                "targets => targets.map(target => `${target.dataset.jugglerId}|${target.dataset.startTime}`)"
+            );
+        return beats
+            .GroupBy(beat => beat, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+    }
+
+    private static async Task DeleteAddedThrowAsync(
+        IPage page,
+        ILocator throwTargets,
+        string? newId,
+        string? originalId,
+        int originalCount,
+        int originalAnimatedThrows
+    )
+    {
+        var deleteThrow = page.GetByRole(AriaRole.Button, new() { Name = "Wurf löschen" });
+        await Assertions.Expect(deleteThrow).ToBeVisibleAsync();
+        var deleteBox = await deleteThrow.BoundingBoxAsync();
+        deleteBox.Should().NotBeNull();
+        deleteBox!.Width.Should().BeGreaterThanOrEqualTo(44);
+        deleteBox.Height.Should().BeGreaterThanOrEqualTo(44);
+        var beforeDelete = await throwTargets.CountAsync();
+        await deleteThrow.TapAsync();
+        (await throwTargets.CountAsync()).Should().Be(beforeDelete - 2);
+        (await throwTargets.CountAsync()).Should().Be(originalCount);
+        (await page.Locator($".throw-hit-target[data-throw-id='{newId}']").CountAsync())
+            .Should()
+            .Be(0);
+        (await page.Locator($".throw-hit-target[data-throw-id='{originalId}']").CountAsync())
+            .Should()
+            .Be(2);
+        await page.WaitForFunctionAsync(
+            "expected => Number(document.querySelector('.causal-editor-animation .test-passist-widget')?.getAttribute('data-throws') ?? '0') === expected",
+            originalAnimatedThrows
+        );
+    }
+
+    private static async Task AssertMobileHitTargetsAndNoPageOverflowAsync(
+        IPage page,
+        ILocator throwTargets
+    )
+    {
+        var hitTarget = await throwTargets.First.BoundingBoxAsync();
+        hitTarget.Should().NotBeNull();
+        hitTarget!.Width.Should().BeGreaterThanOrEqualTo(44);
+        hitTarget.Height.Should().BeGreaterThanOrEqualTo(44);
+        (
+            await page.EvaluateAsync<int>(
+                "document.documentElement.scrollWidth <= window.innerWidth ? 0 : 1"
+            )
+        )
+            .Should()
+            .Be(0);
+    }
 
     private sealed class MobileDiagramMetrics
     {

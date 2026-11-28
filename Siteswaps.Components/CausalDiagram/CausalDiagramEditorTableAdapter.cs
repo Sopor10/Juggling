@@ -6,7 +6,10 @@ namespace Siteswaps.Components.CausalDiagram;
 /// <summary>Projects editor throws onto a shared time grid, preserving asynchronous offsets.</summary>
 public static class CausalDiagramEditorTableAdapter
 {
-    public sealed record Row(string Juggler, IReadOnlyList<DetailViewModel.ThrowChip?> Cells);
+    public sealed record Row(
+        string Juggler,
+        IReadOnlyList<IReadOnlyList<DetailViewModel.ThrowChip>?> Cells
+    );
 
     public sealed record Table(IReadOnlyList<decimal> Times, IReadOnlyList<Row> Rows);
 
@@ -29,15 +32,22 @@ public static class CausalDiagramEditorTableAdapter
                         var edge = state.CausalEdges.FirstOrDefault(candidate =>
                             candidate.FromThrowId == item.Id
                         );
-                        var targetJuggler = edge is null
+                        var targetJugglerId = edge is null
                             ? null
                             : state
                                 .Throws.FirstOrDefault(candidate => candidate.Id == edge.ToThrowId)
                                 ?.JugglerId;
                         var kind =
-                            targetJuggler is not null && targetJuggler != juggler.Id
+                            targetJugglerId is not null && targetJugglerId != juggler.Id
                                 ? Siteswap.Details.PassOrSelf.Pass
                                 : Siteswap.Details.PassOrSelf.Self;
+                        var destination = targetJugglerId is null
+                            ? null
+                            : state
+                                .Jugglers.FirstOrDefault(candidate =>
+                                    candidate.Id == targetJugglerId
+                                )
+                                ?.Name;
                         return (
                             JugglerId: juggler.Id,
                             Time: time,
@@ -47,6 +57,7 @@ public static class CausalDiagramEditorTableAdapter
                                     ?.ToString("0.##", CultureInfo.InvariantCulture)
                                     ?? "—",
                                 kind,
+                                Destination: destination,
                                 Hand: item.Hand
                             )
                         );
@@ -63,7 +74,10 @@ public static class CausalDiagramEditorTableAdapter
                         events
                             .Where(item => item.JugglerId == juggler.Id && item.Time == time)
                             .Select(item => item.Chip)
-                            .FirstOrDefault()
+                            .ToArray()
+                    )
+                    .Select(chips =>
+                        chips.Length == 0 ? null : (IReadOnlyList<DetailViewModel.ThrowChip>)chips
                     )
                     .ToList()
             ))

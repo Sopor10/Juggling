@@ -2,6 +2,8 @@ let activeMove;
 let activePressCleanup;
 const outsideCloseHandlers = new WeakMap();
 const touchDragHandlers = new WeakMap();
+const diagramScrollCueHandlers = new WeakMap();
+const orbitRadioHandlers = new WeakMap();
 const savedEditorPresetsKey = "siteswaps.causal-diagram-editor.presets.v1";
 
 export function getSavedEditorPresets() {
@@ -51,6 +53,19 @@ function releasePointer(element, pointerId) {
 export function bindTouchDragTargets(svg) {
     if (!svg || touchDragHandlers.has(svg)) return;
     const activeTouchGuards = new Map();
+    const keyDown = event => {
+        const control = event.target.closest?.(
+            ".throw-hit-target, .arrow-target-handle, .juggler-add-target, .throw-delete-action, .throw-menu-action, .throw-hand-menu [role=button]"
+        );
+        if (!control || !svg.contains(control)) return;
+        const keys = ["Enter", " "];
+        if (control.matches(".arrow-target-handle"))
+            keys.push("ArrowLeft", "ArrowRight");
+        else if (control.matches(".throw-hit-target"))
+            keys.push("Escape", "ArrowLeft", "ArrowRight", "Delete", "Backspace");
+        if (keys.includes(event.key)) event.preventDefault();
+    };
+    svg.addEventListener("keydown", keyDown, true);
     const pointerDown = event => {
         if (event.pointerType === "mouse" && !window.matchMedia("(pointer: coarse)").matches) return;
         const target = event.target.closest?.(".throw-hit-target, .arrow-target-handle, .juggler-add-target");
@@ -80,15 +95,78 @@ export function bindTouchDragTargets(svg) {
         activeTouchGuards.set(event.pointerId, () => cleanup(true));
     };
     svg.addEventListener("pointerdown", pointerDown, { capture: true, passive: false });
-    touchDragHandlers.set(svg, { pointerDown, activeTouchGuards });
+    touchDragHandlers.set(svg, { pointerDown, keyDown, activeTouchGuards });
 }
 
 export function unbindTouchDragTargets(svg) {
     const binding = touchDragHandlers.get(svg);
     if (!binding) return;
     svg.removeEventListener("pointerdown", binding.pointerDown, true);
+    svg.removeEventListener("keydown", binding.keyDown, true);
     for (const cleanup of binding.activeTouchGuards.values()) cleanup();
     touchDragHandlers.delete(svg);
+}
+
+export function bindDiagramScrollCue(svg) {
+    const frame = svg?.closest(".diagram-scroll-frame");
+    const scroller = frame?.querySelector(".diagram-scroll");
+    if (!frame || !scroller || diagramScrollCueHandlers.has(svg)) return;
+    const update = () => frame.classList.toggle("has-horizontal-overflow", scroller.scrollWidth > scroller.clientWidth + 1);
+    const observer = new ResizeObserver(update);
+    observer.observe(scroller);
+    observer.observe(svg);
+    scroller.addEventListener("scroll", update, { passive: true });
+    update();
+    diagramScrollCueHandlers.set(svg, { frame, scroller, observer, update });
+}
+
+export function unbindDiagramScrollCue(svg) {
+    const binding = diagramScrollCueHandlers.get(svg);
+    if (!binding) return;
+    binding.observer.disconnect();
+    binding.scroller.removeEventListener("scroll", binding.update);
+    binding.frame.classList.remove("has-horizontal-overflow");
+    diagramScrollCueHandlers.delete(svg);
+}
+
+export function bindOrbitRadioKeys(group) {
+    if (!group || orbitRadioHandlers.has(group)) return;
+    const keyDown = event => {
+        const radios = [...group.querySelectorAll('[role="radio"]')];
+        const currentIndex = radios.indexOf(event.target.closest?.('[role="radio"]'));
+        if (currentIndex < 0) return;
+        let nextIndex;
+        switch (event.key) {
+            case "ArrowRight":
+            case "ArrowDown":
+                nextIndex = (currentIndex + 1) % radios.length;
+                break;
+            case "ArrowLeft":
+            case "ArrowUp":
+                nextIndex = (currentIndex + radios.length - 1) % radios.length;
+                break;
+            case "Home":
+                nextIndex = 0;
+                break;
+            case "End":
+                nextIndex = radios.length - 1;
+                break;
+            default:
+                return;
+        }
+        event.preventDefault();
+        radios[nextIndex].focus();
+        radios[nextIndex].click();
+    };
+    group.addEventListener("keydown", keyDown);
+    orbitRadioHandlers.set(group, keyDown);
+}
+
+export function unbindOrbitRadioKeys(group) {
+    const keyDown = orbitRadioHandlers.get(group);
+    if (!keyDown) return;
+    group.removeEventListener("keydown", keyDown);
+    orbitRadioHandlers.delete(group);
 }
 
 export function bindOutsideClose(element) {
@@ -98,6 +176,10 @@ export function bindOutsideClose(element) {
     };
     document.addEventListener("pointerdown", pointerDown, true);
     outsideCloseHandlers.set(element, pointerDown);
+}
+
+export function closeDiagramOptionsOnMobile(element) {
+    if (element && window.matchMedia("(max-width: 700px)").matches) element.open = false;
 }
 
 export function unbindOutsideClose(element) {
