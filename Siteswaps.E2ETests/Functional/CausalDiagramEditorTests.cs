@@ -222,6 +222,10 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
             ".throw-hit-target[data-throw-id='P1-1'][data-cycle='0']"
         );
         var originalId = await originalTarget.GetAttributeAsync("data-throw-id");
+        var selectedJuggler = await originalTarget.GetAttributeAsync("data-juggler-id");
+        var selectedTime = await originalTarget.GetAttributeAsync("data-start-time");
+        var selectedBeatKey = $"{selectedJuggler}|{selectedTime}";
+        var beatCountsBefore = await GetThrowCountsByBeat(page);
         await originalTarget.TapAsync();
         await Assertions.Expect(originalTarget).ToHaveAttributeAsync("aria-pressed", "true");
         var addMultiplex = page.GetByTestId("add-multiplex-throw");
@@ -230,14 +234,26 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         addBox.Should().NotBeNull();
         addBox!.Width.Should().BeGreaterThanOrEqualTo(44);
         addBox.Height.Should().BeGreaterThanOrEqualTo(44);
-        await addMultiplex.ScrollIntoViewIfNeededAsync();
+        ((double)addBox.Y + addBox.Height)
+            .Should()
+            .BeLessThanOrEqualTo(await page.EvaluateAsync<double>("window.innerHeight"));
+        var actionBarBox = await page.Locator(".causal-editor-throw-actions").BoundingBoxAsync();
+        actionBarBox.Should().NotBeNull();
+        actionBarBox!.Height.Should().BeLessThan(120);
         await addMultiplex.TapAsync();
 
-        (await throwTargets.CountAsync()).Should().BeGreaterThan(originalCount);
-        await page.WaitForFunctionAsync(
-            "expected => Number(document.querySelector('.causal-editor-animation .test-passist-widget')?.getAttribute('data-throws') ?? '0') > expected",
-            originalAnimatedThrows
+        (await throwTargets.CountAsync()).Should().Be(originalCount + 2);
+        var animatedThrowsAfterAdd = int.Parse(
+            await animationWidget.GetAttributeAsync("data-throws") ?? "0",
+            CultureInfo.InvariantCulture
         );
+        animatedThrowsAfterAdd.Should().BeGreaterThan(originalAnimatedThrows);
+        var beatCountsAfter = await GetThrowCountsByBeat(page);
+        beatCountsAfter.Keys.Should().BeEquivalentTo(beatCountsBefore.Keys);
+        foreach (var beat in beatCountsBefore)
+            beatCountsAfter[beat.Key]
+                .Should()
+                .Be(beat.Value + (beat.Key == selectedBeatKey ? 1 : 0));
         var newId = await page.Locator(".throw-hit-target[aria-pressed='true']")
             .First.GetAttributeAsync("data-throw-id");
         newId.Should().NotBe(originalId);
@@ -279,8 +295,73 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         }
 
         await AssertMultiplexTableAndScrollAsync(page);
-        await DeleteMultiplexOrbitAsync(page, throwTargets, newId, originalAnimatedThrows);
+        await DeleteAddedThrowAsync(
+            page,
+            throwTargets,
+            newId,
+            originalId,
+            originalCount,
+            originalAnimatedThrows
+        );
+        await originalTarget.TapAsync();
+        var clearSelection = page.GetByRole(
+            AriaRole.Button,
+            new() { Name = "Knotenauswahl aufheben" }
+        );
+        await Assertions.Expect(clearSelection).ToBeVisibleAsync();
+        await clearSelection.TapAsync();
+        await Assertions.Expect(clearSelection).ToHaveCountAsync(0);
         await AssertMobileHitTargetsAndNoPageOverflowAsync(page, throwTargets);
+    }
+
+    [Fact]
+    public async Task MultiplexAddsOnlyOneThrowAtTheSelectedBeatOnDesktop()
+    {
+        await using var session = await WizardBrowserSession.CreateAsync(host.Fixture);
+        var page = session.Page;
+        await OpenEditor(page, E2EBaseUrl.FromFixture(host.Fixture));
+        await SelectPresetAsync(page, "feeding-7-5");
+
+        var throwTargets = page.Locator(".throw-hit-target");
+        var originalCount = await throwTargets.CountAsync();
+        var animationWidget = page.Locator(".causal-editor-animation .test-passist-widget");
+        var originalAnimatedThrows = int.Parse(
+            await animationWidget.GetAttributeAsync("data-throws") ?? "0",
+            CultureInfo.InvariantCulture
+        );
+        var source = page.Locator(".throw-hit-target[data-throw-id='P1-1'][data-cycle='0']");
+        var sourceId = await source.GetAttributeAsync("data-throw-id");
+        var sourceJuggler = await source.GetAttributeAsync("data-juggler-id");
+        var sourceTime = await source.GetAttributeAsync("data-start-time");
+        var sourceKey = $"{sourceJuggler}|{sourceTime}";
+        var countsBefore = await GetThrowCountsByBeat(page);
+        await source.ClickAsync();
+
+        var addThrow = page.GetByTestId("add-multiplex-throw");
+        await Assertions.Expect(addThrow).ToBeEnabledAsync();
+        await Assertions.Expect(addThrow).ToContainTextAsync("Beat 0 hinzufügen");
+        await addThrow.ClickAsync();
+
+        (await throwTargets.CountAsync()).Should().Be(originalCount + 2);
+        var countsAfter = await GetThrowCountsByBeat(page);
+        countsAfter.Keys.Should().BeEquivalentTo(countsBefore.Keys);
+        foreach (var beat in countsBefore)
+            countsAfter[beat.Key].Should().Be(beat.Value + (beat.Key == sourceKey ? 1 : 0));
+        (await animationWidget.GetAttributeAsync("data-throws"))
+            .Should()
+            .NotBe(originalAnimatedThrows.ToString(CultureInfo.InvariantCulture));
+
+        var addedId = await page.Locator(".throw-hit-target[aria-pressed='true']")
+            .First.GetAttributeAsync("data-throw-id");
+        addedId.Should().NotBe(sourceId);
+        await page.GetByRole(AriaRole.Button, new() { Name = "Wurf löschen" }).ClickAsync();
+        (await throwTargets.CountAsync()).Should().Be(originalCount);
+        (await page.Locator($".throw-hit-target[data-throw-id='{sourceId}']").CountAsync())
+            .Should()
+            .Be(2);
+        (await animationWidget.GetAttributeAsync("data-throws"))
+            .Should()
+            .Be(originalAnimatedThrows.ToString(CultureInfo.InvariantCulture));
     }
 
     [Fact]
@@ -748,17 +829,27 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         geometry[4].Should().BeGreaterThan(40);
     }
 
-    private static async Task DeleteMultiplexOrbitAsync(
+    private static async Task<Dictionary<string, int>> GetThrowCountsByBeat(IPage page)
+    {
+        var beats = await page.Locator(".throw-hit-target[data-cycle='0']")
+            .EvaluateAllAsync<string[]>(
+                "targets => targets.map(target => `${target.dataset.jugglerId}|${target.dataset.startTime}`)"
+            );
+        return beats
+            .GroupBy(beat => beat, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+    }
+
+    private static async Task DeleteAddedThrowAsync(
         IPage page,
         ILocator throwTargets,
         string? newId,
+        string? originalId,
+        int originalCount,
         int originalAnimatedThrows
     )
     {
-        var deleteThrow = page.GetByRole(
-            AriaRole.Button,
-            new() { Name = "Multiplex-Orbit löschen" }
-        );
+        var deleteThrow = page.GetByRole(AriaRole.Button, new() { Name = "Wurf löschen" });
         await Assertions.Expect(deleteThrow).ToBeVisibleAsync();
         var deleteBox = await deleteThrow.BoundingBoxAsync();
         deleteBox.Should().NotBeNull();
@@ -766,10 +857,14 @@ public sealed class CausalDiagramEditorTests(SharedBlazorFixture host)
         deleteBox.Height.Should().BeGreaterThanOrEqualTo(44);
         var beforeDelete = await throwTargets.CountAsync();
         await deleteThrow.TapAsync();
-        (await throwTargets.CountAsync()).Should().BeLessThan(beforeDelete);
+        (await throwTargets.CountAsync()).Should().Be(beforeDelete - 2);
+        (await throwTargets.CountAsync()).Should().Be(originalCount);
         (await page.Locator($".throw-hit-target[data-throw-id='{newId}']").CountAsync())
             .Should()
             .Be(0);
+        (await page.Locator($".throw-hit-target[data-throw-id='{originalId}']").CountAsync())
+            .Should()
+            .Be(2);
         await page.WaitForFunctionAsync(
             "expected => Number(document.querySelector('.causal-editor-animation .test-passist-widget')?.getAttribute('data-throws') ?? '0') === expected",
             originalAnimatedThrows

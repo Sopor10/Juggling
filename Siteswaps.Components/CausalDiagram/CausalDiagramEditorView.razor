@@ -193,7 +193,7 @@
                     var nodeY = RowY(JugglerIndex(item.JugglerId));
                     @if (AllowNodeMove || AllowThrowActions)
                     {
-                        <circle class="throw-hit-target @(IsEditingThrow(item.Id, currentCycle) ? "editing" : "")" data-throw-id="@item.Id" data-cycle="@currentCycle" cx="@SvgNumber(nodeX)" cy="@nodeY" r="28" tabindex="0" role="button" aria-label="@ThrowAccessibleLabel(item, currentCycle)" aria-pressed="@Aria(item.Id == _selectedId)" @onclick="() => HandleThrowClick(item.Id, currentCycle)" @onkeydown="e => HandleThrowKey(item.Id, currentCycle, e)" @onpointerdown="e => BeginThrowInteraction(item.Id, currentCycle, e)" />
+                        <circle class="throw-hit-target @(IsEditingThrow(item.Id, currentCycle) ? "editing" : "")" data-throw-id="@item.Id" data-juggler-id="@item.JugglerId" data-start-time="@item.StartTime.ToString(CultureInfo.InvariantCulture)" data-cycle="@currentCycle" cx="@SvgNumber(nodeX)" cy="@nodeY" r="28" tabindex="0" role="button" aria-label="@ThrowAccessibleLabel(item, currentCycle)" aria-pressed="@Aria(item.Id == _selectedId)" @onclick="() => HandleThrowClick(item.Id, currentCycle)" @onkeydown="e => HandleThrowKey(item.Id, currentCycle, e)" @onpointerdown="e => BeginThrowInteraction(item.Id, currentCycle, e)" />
                     }
                     <g class="throw-node-visual @(IsEditingThrow(item.Id, currentCycle) ? "wiggling" : "")">
                         <circle class="pd-node @(item.Hand == "L" ? "left" : "right") @(item.Id == _selectedId ? "selected" : "") @(connectionIssueIds.Contains(item.Id) ? "connection-error" : "")" data-juggler-id="@item.JugglerId" data-throw-id="@item.Id" cx="@SvgNumber(nodeX)" cy="@nodeY" r="20" pointer-events="none" />
@@ -267,10 +267,16 @@
       </div>
       @if (AllowThrowActions)
       {
-        <section class="causal-editor-throw-actions" aria-label="Würfe bearbeiten">
-          <button type="button" class="editor-action" data-testid="add-multiplex-throw" disabled="@(!CanAddMultiplexThrow)" @onclick="AddMultiplexThrow">
-            + Gesamten Wurfverlauf duplizieren
-          </button>
+        <section class="causal-editor-throw-actions @(Embedded ? "" : "mobile-sticky") @(_selectedId is null ? "" : "has-selection")" aria-label="Würfe bearbeiten">
+          <div class="causal-editor-throw-actions-row">
+            <button type="button" class="editor-action" data-testid="add-multiplex-throw" disabled="@(!CanAddMultiplexThrow)" @onclick="AddMultiplexThrow">
+              + @AddMultiplexButtonLabel
+            </button>
+            @if (_selectedId is not null)
+            {
+              <button type="button" class="editor-action causal-editor-clear-selection" aria-label="Knotenauswahl aufheben" title="Auswahl schließen" @onclick="ClearThrowSelection">×</button>
+            }
+          </div>
           @if (_selectedId is not null)
           {
             <span role="status" aria-live="polite">Ausgewählt: @SelectedThrowDescription</span>
@@ -1044,51 +1050,40 @@
         var source = _state.Throws.FirstOrDefault(item => item.Id == _selectedId);
         if (source is null)
             return;
-
-        var originalNodes = _state.Throws.ToDictionary(node => node.Id, StringComparer.Ordinal);
-        var originalEdges = _state.CausalEdges.ToDictionary(edge => edge.FromThrowId, StringComparer.Ordinal);
-        var orbit = GetCausalOrbit(source.Id, originalEdges);
-        if (_state.Throws.Count + orbit.Count > 500)
+        var sourceEdge = _state.CausalEdges.FirstOrDefault(edge => edge.FromThrowId == source.Id);
+        if (sourceEdge is null || _state.Throws.Count >= 500)
             return;
 
-        var clones = orbit.ToDictionary(id => id, _ => Guid.NewGuid().ToString("N"), StringComparer.Ordinal);
-        foreach (var originalId in orbit)
-            _state.Throws.Add(originalNodes[originalId] with { Id = clones[originalId] });
-        foreach (var originalId in orbit)
-        {
-            if (!originalEdges.TryGetValue(originalId, out var edge))
-                continue;
-            var targetId = clones.TryGetValue(edge.ToThrowId, out var clonedTarget) ? clonedTarget : edge.ToThrowId;
-            _state.CausalEdges.Add(
-                new EditorCausalEdge($"e-{clones[originalId]}", clones[originalId], targetId, edge.CycleOffset)
-            );
-        }
-        _selectedId = clones[source.Id];
+        var cloneId = Guid.NewGuid().ToString("N");
+        _state.Throws.Add(source with { Id = cloneId });
+        _state.CausalEdges.Add(
+            new EditorCausalEdge($"e-{cloneId}", cloneId, sourceEdge.ToThrowId, sourceEdge.CycleOffset)
+        );
+        _selectedId = cloneId;
         _editingThrow = (_selectedId, 0);
         PatternChanged();
     }
 
     private bool CanAddMultiplexThrow => _selectedId is not null
         && _state.CausalEdges.Any(edge => edge.FromThrowId == _selectedId)
-        && _state.Throws.Count + GetCausalOrbit(_selectedId).Count <= 500;
+        && _state.Throws.Count < 500;
 
-    private List<string> GetCausalOrbit(
-        string sourceId,
-        IReadOnlyDictionary<string, EditorCausalEdge>? edgeMap = null
-    )
+    private string AddMultiplexButtonLabel
     {
-        edgeMap ??= _state.CausalEdges.ToDictionary(edge => edge.FromThrowId, StringComparer.Ordinal);
-        var orbit = new List<string>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        var currentId = sourceId;
-        while (seen.Add(currentId) && edgeMap.TryGetValue(currentId, out var edge))
+        get
         {
-            orbit.Add(currentId);
-            currentId = edge.ToThrowId;
+            var selected = _state.Throws.FirstOrDefault(item => item.Id == _selectedId);
+            return selected is null
+                ? "Knoten wählen, um einzelnen Wurf hinzuzufügen"
+                : $"Einzelnen Wurf bei {JugglerName(selected.JugglerId)}, Beat {selected.StartTime.ToString("0.##", CultureInfo.InvariantCulture)} hinzufügen";
         }
-        if (orbit.Count == 0)
-            orbit.Add(sourceId);
-        return orbit;
+    }
+
+    private void ClearThrowSelection()
+    {
+        _selectedId = null;
+        _editingThrow = null;
+        _handMenuThrow = null;
     }
 
     private void AddJuggler()
@@ -1110,39 +1105,15 @@
     {
         var item = _state.Throws.FirstOrDefault(throwNode => throwNode.Id == id);
         if (item is null) return;
-        var deleteIds = ShouldDeleteMultiplexOrbit(item)
-            ? GetCausalOrbit(item.Id).ToHashSet(StringComparer.Ordinal)
-            : new HashSet<string>([item.Id], StringComparer.Ordinal);
-        _state.Throws.RemoveAll(throwNode => deleteIds.Contains(throwNode.Id));
-        _state.CausalEdges.RemoveAll(edge => deleteIds.Contains(edge.FromThrowId) || deleteIds.Contains(edge.ToThrowId));
+        _state.Throws.RemoveAll(throwNode => throwNode.Id == item.Id);
+        _state.CausalEdges.RemoveAll(edge => edge.FromThrowId == item.Id || edge.ToThrowId == item.Id);
         _selectedId = null;
         _editingThrow = null;
         _handMenuThrow = null;
         PatternChanged();
     }
 
-    private string DeleteThrowAccessibleLabel(EditorThrow node) => ShouldDeleteMultiplexOrbit(node)
-        ? "Multiplex-Orbit löschen"
-        : "Wurf löschen";
-
-    private bool ShouldDeleteMultiplexOrbit(EditorThrow node) =>
-        MultiplexCount(node) > 1 && CausalOrbitClosesAtSource(node.Id);
-
-    private bool CausalOrbitClosesAtSource(string sourceId)
-    {
-        var edges = _state.CausalEdges.ToDictionary(edge => edge.FromThrowId, StringComparer.Ordinal);
-        var seen = new HashSet<string>(StringComparer.Ordinal) { sourceId };
-        var currentId = sourceId;
-        while (edges.TryGetValue(currentId, out var edge))
-        {
-            currentId = edge.ToThrowId;
-            if (currentId == sourceId)
-                return true;
-            if (!seen.Add(currentId))
-                return false;
-        }
-        return false;
-    }
+    private string DeleteThrowAccessibleLabel(EditorThrow node) => "Wurf löschen";
 
     private bool IsPresetSelected(string id) => _preset == id || _selectedSavedPresetId == id;
 
