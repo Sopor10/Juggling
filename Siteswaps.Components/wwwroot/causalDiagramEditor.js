@@ -58,13 +58,11 @@ export function bindTouchDragTargets(svg) {
             ".throw-hit-target, .arrow-target-handle, .juggler-add-target, .throw-delete-action, .throw-menu-action, .throw-hand-menu [role=button]"
         );
         if (!control || !svg.contains(control)) return;
-        const keys = control.matches(".arrow-target-handle")
-            ? ["Enter", " ", "ArrowLeft", "ArrowRight"]
-            : control.matches(".throw-hit-target")
-                ? ["Enter", " ", "Escape", "ArrowLeft", "ArrowRight", "Delete", "Backspace"]
-                : control.matches(".juggler-add-target")
-                    ? ["Enter", " "]
-                    : ["Enter", " "];
+        const keys = ["Enter", " "];
+        if (control.matches(".arrow-target-handle"))
+            keys.push("ArrowLeft", "ArrowRight");
+        else if (control.matches(".throw-hit-target"))
+            keys.push("Escape", "ArrowLeft", "ArrowRight", "Delete", "Backspace");
         if (keys.includes(event.key)) event.preventDefault();
     };
     svg.addEventListener("keydown", keyDown, true);
